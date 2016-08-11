@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link href="index.css" media="all" rel="stylesheet" type="text/css" />
+    
+    <link href="../../plovr/plovr.css" media="all" rel="stylesheet" type="text/css" />
+    
+    <script src="index.plovr.json" type="text/javascript"></script>
+
+    <title>code modules</title>
+  </head>
+
+  <body>
+
+    <div class="container-fluid">
+
+      <div class="row-fluid">
+
+        <div class="span12">
+          <h4 id="title">Code Modules</h4>
+          <p>Google Closure Compiler and Google Closure Library enable to split your application into more code modules (standalone JS files). Andvantage is you can download code of some complex component when you really need it. However there are some limitations.</p>
+          <p>If you want to use these code modules, you need to write your app in quite different way. Without modules you need exactly one input point for compiler. With code modules you need one input point per module. And there is more. If you compile your application into multiple code modules, you cannot compile it in RAW mode and source maps are broken. This makes debugging very painful.</p>
+          <p>This example shows how you are able to combine both approaches (with or without modules) with jpad. Changing jpad.ENABLE_MODULES variable enables/disables code modules on without any other changes in your code. If you want to debug, just disable code modules and you can compile it in RAW mode or use source maps.</p>
+          <p>Modules are <span id="modules-state" class="bold"></span> now.
+            <a id="link-toggle-modules" href="#"></a>
+          </p>
+          <p>Open dev console to see logs and
+            <a id="link-dialog" href="#">click to open dialog</a>.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <script type="text/javascript">main();</script>
+
+  </body>
+</html>

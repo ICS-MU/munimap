@@ -1,0 +1,32 @@
+{
+  "id": "example-module-index-modon",
+
+  "inherits": "index.plovr.json",
+
+  "define": {
+    "goog.DEBUG": false,
+    "goog.LOCALE": "cs",
+    "goog.asserts.ENABLE_ASSERTS": false,
+    "goog.dom.ASSUME_STANDARDS_MODE": true,
+    "jpad.ENABLE_MODULES": true
+  },
+
+  "mode": "ADVANCED",
+
+  "modules": {
+    "app": {
+      "inputs": "index.js",
+      "deps": []
+    },
+    "dialog": {
+      "inputs": "dialog.init.modon.js",
+      "deps": ["app"]
+    }
+  },
+
+  "module-output-path": "index_%s.js",
+
+  "module-info-path": "index_module_info.js",
+
+  "module-production-uri": "index_%s.js"
+}

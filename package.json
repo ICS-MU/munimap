@@ -1,0 +1,55 @@
+{
+  "name": "jpad",
+  "license": "Apache-2.0",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jirik/jpad.git"
+  },
+  "engines": {
+    "node": ">= 0.6.0"
+  },
+  "devDependencies": {
+    "acorn": "^3.0.4",
+    "async": "1.5.2",
+    "browserify": "13.0.0",
+    "chai": "^3.5.0",
+    "cheerio": "^0.20.0",
+    "css": "^2.2.1",
+    "derequire": "2.0.3",
+    "express": "~4.13.0",
+    "fs-extra": "^0.26.5",
+    "glob": "^7.0.0",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^2.0.2",
+    "gulp-concat": "^2.6.0",
+    "gulp-debug": "^2.1.2",
+    "gulp-gjslint": "^0.1.5",
+    "gulp-live-server": "^0.0.29",
+    "gulp-load-plugins": "^1.2.0",
+    "gulp-mocha": "^2.2.0",
+    "gulp-newer": "^1.1.0",
+    "gulp-open": "^1.0.0",
+    "gulp-shell": "^0.5.2",
+    "gulp-util": "^3.0.7",
+    "gulp-watch": "^4.3.5",
+    "mocha": "^2.4.5",
+    "pbf": "1.3.5",
+    "pixelworks": "1.0.0",
+    "rbush": "1.4.2",
+    "recast": "^0.11.2",
+    "request": "^2.69.0",
+    "run-sequence": "^1.1.5",
+    "through2": "^2.0.1",
+    "tree-model": "^1.0.4",
+    "vector-tile": "1.2.0",
+    "vinyl-paths": "^2.1.0",
+    "yargs": "^4.2.0"
+  },
+  "keywords": [
+    "ol3",
+    "google closure",
+    "devstack"
+  ],
+  "dependencies": {}
+}

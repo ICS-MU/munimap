@@ -1,0 +1,10 @@
+@import url("//maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css");
+@import url("../../_lib/closure-library/closure/goog/css/dialog.css");
+
+.container-fluid {
+  padding: 20px;
+}
+
+.bold {
+  font-weight: bold;
+}

@@ -1,0 +1,110 @@
+@import url("../../../_lib/ol3/css/ol.css");
+@import url("../../../_lib/ol3/examples/popup.css");
+@import url("../../../_lib/closure-library/closure/goog/css/combobox.css");
+@import url("../../../_lib/closure-library/closure/goog/css/common.css");
+@import url("../../../_lib/closure-library/closure/goog/css/menu.css");
+@import url("../../../_lib/closure-library/closure/goog/css/menubutton.css");
+@import url("../../../_lib/closure-library/closure/goog/css/menuitem.css");
+@import url("../../../_lib/font-awesome/css/font-awesome.min.css");
+
+.ol-popup {
+  border-radius: 6px;
+  bottom: auto;
+  min-width: 0;
+}
+.ol-popup:before {
+  left: 19px;
+  border-left-color: #cccccc;
+  border-width: 6px; 
+}
+.ol-popup:after {
+  /*left positioning (+ margin) influences ics.map.info.POPUP_TALE_INDENT constant*/
+  left: 19px;
+  border-left-color: white;
+  /*border-width influences ics.map.info.POPUP_TALE_HEIGHT constant*/
+  border-width: 5px;
+}
+.ol-popup.hide-tale:before {
+  display: none;
+}
+.ol-popup.hide-tale:after {
+  display: none;
+}
+
+.info {
+  background-color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  padding: 10px 9px;
+  position: absolute;
+  transition: left 0.5s, top 0.5s;
+  white-space: nowrap;
+  z-index: 5;
+}
+.info > div {
+  float: left;
+  clear: both;
+}
+.complex, .building {
+  font-weight: bold;
+  line-height: normal;
+  padding-bottom: 3px
+}
+.floor {
+  margin-top: 3px;
+}
+.floor .goog-menu-button {
+  background: white;
+  margin-left: 0;
+}
+.floor .goog-menu-button-outer-box,
+.floor .goog-menu-button-focused .goog-menu-button-outer-box {
+  border: solid 1px #99a9c8;
+}
+.floor .goog-menu-button-inner-box {
+  padding: 0;
+}
+.floor .goog-menu-button-focused .goog-menu-button-inner-box {
+  border-color: #99a9c8;
+}
+.floor .goog-menu-button-caption {
+  border-right: solid 1px /*#99a9c8*/ #ccd3e3;
+  font-weight: normal;
+  line-height: 20px;
+  padding: 3px 2px 3px 10px;
+  width: 50px;
+}
+.floor .goog-menu-button-hover .goog-menu-button-caption {
+  border-right-color: #7af;
+}
+.floor .goog-menu-button-dropdown {
+  background: none;
+  margin: 3px 8px 3px 5px;
+  width: 10px;
+}
+.floor .goog-menu-button-dropdown:before {
+  content: '\f107';
+  font-family: fontawesome;
+  font-size: 18px;
+}
+.goog-menuitem {
+  font-size: 12px;
+  padding: 4px 6px;
+  width: 50px;
+}
+.goog-menuitem-highlight {
+  border: none;
+}
+  
+.munimap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.ol-control button {
+  background-color: #002776;
+}
+.ol-control button:hover,
+.ol-control button:focus {
+  background-color: #003190;
+}
