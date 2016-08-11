@@ -56,7 +56,7 @@ ics.map.building.STORE = new ol.source.Vector({
         type: function() {
           return ics.map.building.TYPE;
         },
-        processor: ics.map.building.load.Processor
+        processor: ics.map.building.load.processor
       }
   ),
   strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
@@ -290,7 +290,7 @@ ics.map.building.getUnits = function(building) {
  * @return {goog.Thenable<ics.map.load.Processor.Options>}
  * @protected
  */
-ics.map.building.load.ComplexProcessor = function(options) {
+ics.map.building.load.complexProcessor = function(options) {
   var newBuildings = options.new;
   var complexIdsToLoad = [];
   var buildingsToLoadComplex = [];
@@ -313,7 +313,8 @@ ics.map.building.load.ComplexProcessor = function(options) {
   if (complexIdsToLoad.length) {
     //    console.log('complexIds', complexIdsToLoad);
     return ics.map.complex.loadByIds({
-      ids: complexIdsToLoad
+      ids: complexIdsToLoad,
+      processor: ics.map.building.load.complexUnitsProcessor
     }).then(function(complexes) {
       buildingsToLoadComplex.forEach(function(building) {
         var complexId = building.get('arealId');
@@ -343,7 +344,45 @@ ics.map.building.load.ComplexProcessor = function(options) {
  * @return {goog.Thenable<ics.map.load.Processor.Options>}
  * @protected
  */
-ics.map.building.load.UnitsProcessor = function(options) {
+ics.map.building.load.complexUnitsProcessor = function(options) {
+  var newComplexes = options.new;
+  var complexIdsToLoad = newComplexes.map(function(complex) {
+    return complex.get('inetId');
+  });
+
+  if (complexIdsToLoad.length) {
+    return ics.map.unit.loadByHeadquartersComplexIds(complexIdsToLoad)
+        .then(function(units) {
+          newComplexes.forEach(function(complex) {
+            var complexUnits = units.filter(function(unit) {
+              return unit.get('areal_sidelni_id') === complex.get('inetId');
+            });
+            complex.set(ics.map.complex.UNITS_FIELD_NAME, complexUnits);
+//            if(complexUnits.length) {
+//              console.log('complex units',
+//                  complex.get('nazevPrez')+':',
+//                  ics.map.complex.getUnits(complex).map(function(unit) {
+//                    return unit.get('zkratka_cs');
+//                  })
+//                  );
+//            }
+          });
+          return goog.Promise.resolve(options);
+        });
+  } else {
+    return goog.Promise.resolve(options);
+  }
+
+
+};
+
+
+/**
+ * @param {ics.map.load.Processor.Options} options
+ * @return {goog.Thenable<ics.map.load.Processor.Options>}
+ * @protected
+ */
+ics.map.building.load.unitsProcessor = function(options) {
   var newBuildings = options.new;
   var buildingIdsToLoad = newBuildings.map(function(building) {
     return building.get('inetId');
@@ -358,14 +397,14 @@ ics.map.building.load.UnitsProcessor = function(options) {
               return unit.get('budova_sidelni_id') === building.get('inetId');
             });
             building.set(ics.map.building.UNITS_FIELD_NAME, buildingUnits);
-            //        if(buildingUnits.length) {
-            //          console.log('building units',
-            //              ics.map.building.getTitleWithoutOrgUnit(building)+':',
-            //              ics.map.building.getUnits(building).map(function(unit) {
-            //                return unit.get('zkratka_cs');
-            //              })
-            //              );
-            //        }
+//            if(buildingUnits.length) {
+//              console.log('building units',
+//                  ics.map.building.getTitleWithoutOrgUnit(building)+':',
+//                  ics.map.building.getUnits(building).map(function(unit) {
+//                    return unit.get('zkratka_cs');
+//                  })
+//                  );
+//            }
           });
           return goog.Promise.resolve(options);
         });
@@ -383,10 +422,10 @@ ics.map.building.load.UnitsProcessor = function(options) {
  * @param {ics.map.load.Processor.Options} options
  * @return {goog.Thenable<ics.map.load.Processor.Options>}
  */
-ics.map.building.load.Processor = function(options) {
+ics.map.building.load.processor = function(options) {
   return goog.Promise.all([
-    ics.map.building.load.ComplexProcessor(options),
-    ics.map.building.load.UnitsProcessor(options)
+    ics.map.building.load.complexProcessor(options),
+    ics.map.building.load.unitsProcessor(options)
   ]).then(function(result) {
     goog.asserts.assertArray(result);
     result.forEach(function(opts) {

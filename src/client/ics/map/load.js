@@ -99,7 +99,7 @@ ics.map.load.buildingsByCode = function(options) {
     codes: options.codes,
     likeExprs: options.likeExprs,
     type: ics.map.building.TYPE,
-    processor: ics.map.building.load.Processor
+    processor: ics.map.building.load.processor
   });
 };
 
@@ -175,7 +175,9 @@ ics.map.load.featuresForMap =
     projection: projection,
     method: options.method,
     postContent: isPost ? qdata.toString() : undefined,
-    processor: options.processor
+    processor: options.processor,
+    newProcessedFeatures:
+        ics.map.load.ProcessorCache.getNewProcessedFeatures(type)
   });
 };
 
@@ -218,7 +220,9 @@ ics.map.load.features = function(options) {
     type: type,
     url: url,
     method: options.method,
-    processor: options.processor
+    processor: options.processor,
+    newProcessedFeatures:
+        ics.map.load.ProcessorCache.getNewProcessedFeatures(type)
   });
 };
 
@@ -320,40 +324,55 @@ ics.map.load.featuresFromUrl = function(options) {
           goog.asserts.assert(!!json);
           //console.log(json);
           // dataProjection will be read from document
-          var allExistingFeatures = source.getFeatures();
-          var existingLoadedFeatures = [];
+          var allStoredFeatures = source.getFeatures();
+          var loadedStoredFeatures = [];
           json.features = json.features.filter(function(fObject) {
             var pkValue = fObject.attributes[primaryKey];
-            return !allExistingFeatures.find(function(feature) {
+            return !allStoredFeatures.find(function(feature) {
               var equals = feature.get(primaryKey) === pkValue;
               if (equals) {
-                existingLoadedFeatures.push(feature);
+                loadedStoredFeatures.push(feature);
               }
               return equals;
             });
           });
-          var newFeatures = format.readFeatures(json, {
+          var allNewProcessedFeatures = options.newProcessedFeatures || [];
+          var loadedNewProcessedFeatures = [];
+          json.features = json.features.filter(function(fObject) {
+            var pkValue = fObject.attributes[primaryKey];
+            return !allNewProcessedFeatures.find(function(feature) {
+              var equals = feature.get(primaryKey) === pkValue;
+              if (equals) {
+                loadedNewProcessedFeatures.push(feature);
+              }
+              return equals;
+            });
+          });
+          var newLoadedFeatures = format.readFeatures(json, {
             featureProjection: projection
           });
-          newFeatures.forEach(function(feature) {
+          newLoadedFeatures.forEach(function(feature) {
             feature.set(ics.map.type.NAME, options.type);
           });
-          var features = newFeatures.concat(existingLoadedFeatures);
-          var processor = options.processor ||
-              ics.map.load.DefaultProcessor;
-          var procOpts = {
-            all: features,
-            new: newFeatures,
-            existing: existingLoadedFeatures
-          };
-          processor(procOpts).then(function(procOptions) {
-            goog.asserts.assert(procOpts === procOptions);
-            goog.asserts.assert(
-                goog.array.equals(procOpts.all, procOptions.all));
-            goog.asserts.assert(
-                goog.array.equals(procOpts.new, procOptions.new));
-            goog.asserts.assert(
-                goog.array.equals(procOpts.existing, procOptions.existing));
+          goog.array.extend(allNewProcessedFeatures, newLoadedFeatures);
+          ics.map.load.waitForNewProcessedFeatures({
+            source: source,
+            loadedNewProcessedFeatures: loadedNewProcessedFeatures
+          }).then(function() {
+            var allLoadedFeatures =
+                newLoadedFeatures.concat(loadedStoredFeatures);
+            var processor = options.processor ||
+                ics.map.load.defaultProcessor;
+            var procOpts = {
+              all: allLoadedFeatures,
+              new: newLoadedFeatures,
+              existing: loadedStoredFeatures.concat(loadedNewProcessedFeatures)
+            };
+            return processor(procOpts);
+          }).then(function(procOptions) {
+            goog.array.removeAllIf(allNewProcessedFeatures, function(f) {
+              return goog.array.contains(newLoadedFeatures, f);
+            });
             source.addFeatures(procOptions.new);
             resolve(procOptions.all);
           });
@@ -371,10 +390,48 @@ ics.map.load.featuresFromUrl = function(options) {
  *   projection: (ol.proj.Projection|undefined),
  *   method: (string|undefined),
  *   postContent: (string|undefined),
- *   processor: (ics.map.load.Processor|undefined)
+ *   processor: (ics.map.load.Processor|undefined),
+ *   newProcessedFeatures: (Array<ol.Feature>|undefined)
  * }}
  */
 ics.map.load.featuresFromUrl.Options;
+
+
+/**
+ * @param {ics.map.load.waitForNewProcessedFeatures.Options} options
+ * @return {goog.Thenable<boolean>}
+ * @protected
+ */
+ics.map.load.waitForNewProcessedFeatures = function(options) {
+  var loadedNewProcessedFeatures = options.loadedNewProcessedFeatures.concat();
+  if(!loadedNewProcessedFeatures.length) {
+    return goog.Promise.resolve(true);
+  }
+  return new goog.Promise(function(resolve, reject) {
+    var source = options.source;
+    /**
+     * @param {ol.source.VectorEvent} evt
+     */
+    var addFeatureHandler = function(evt) {
+      var feature = evt.feature;
+      goog.array.remove(loadedNewProcessedFeatures, feature);
+      if(!loadedNewProcessedFeatures.length) {
+        source.un('addfeature', addFeatureHandler);
+        resolve(true);
+      }
+    };
+    source.on('addfeature', addFeatureHandler);
+  });
+};
+
+
+/**
+ * @typedef {{
+ *   source: (ol.source.Vector),
+ *   loadedNewProcessedFeatures: (Array<ol.Feature>)
+ * }}
+ */
+ics.map.load.waitForNewProcessedFeatures.Options;
 
 
 /**
@@ -405,11 +462,43 @@ ics.map.load.Processor.Options;
 
 
 /**
+ * newProcessedFeatures: Cache of new features that are currently being
+ * processed, but are not yet stored in the store.
+ * @type {Array<{
+ *   type: ics.map.type.Options,
+ *   newProcessedFeatures: Array<ol.Feature>
+ * }>}
+ * @protected
+ */
+ics.map.load.ProcessorCache = [];
+
+
+/**
+ * @param {ics.map.type.Options} type
+ * @return {Array<ol.Feature>}
+ * @protected
+ */
+ics.map.load.ProcessorCache.getNewProcessedFeatures = function(type) {
+  var cache = ics.map.load.ProcessorCache.find(function(c) {
+    return c.type === type;
+  });
+  if(!cache) {
+    cache = {
+      type: type,
+      newProcessedFeatures: []
+    };
+    ics.map.load.ProcessorCache.push(cache);
+  }
+  return cache.newProcessedFeatures;
+};
+
+
+/**
  * @param {ics.map.load.Processor.Options} options
  * @return {goog.Thenable<ics.map.load.Processor.Options>}
  * @protected
  */
-ics.map.load.DefaultProcessor = function(options) {
+ics.map.load.defaultProcessor = function(options) {
   return goog.Promise.resolve(options);
 };
 
