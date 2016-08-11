@@ -1,0 +1,18 @@
+{
+  "name": "kompas",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "closure-compiler-src": "git://github.com/google/closure-compiler.git#v20151216",
+    "closure-externs": "git://github.com/jirik/closure-externs#890dbf165f617582d1111555ac9b8ef51554ec6e",
+    "closure-library": "git://github.com/google/closure-library#fe66ad635ad3ff2bc8ee85933e4bf86bfa7523fb",
+    "closure-linter": "git://github.com/google/closure-linter#5c27529075bb88bdc45e73008f496dec8438d658",
+    "ol3": "git://github.com/jirik/ol3.git#ab59753e2d808f9825dda0ac1ee3a7539c136b64",
+    "plovr": "https://github.com/bolinfest/plovr/releases/download/v5.0.1/plovr.jar",
+    "proj4js": "http://download.osgeo.org/proj4js/proj4js-1.1.0.zip",
+    "turf": "https://raw.githubusercontent.com/Turfjs/turf/v2.0.2/turf.min.js",
+    "prettyprint": "https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js",
+    "font-awesome": "git://github.com/FortAwesome/Font-Awesome.git",
+    "webfontloader": "git://github.com/typekit/webfontloader.git"
+  }
+}

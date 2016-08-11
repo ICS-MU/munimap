@@ -1,0 +1,14 @@
+{
+  "id": "example-ol3-index-dev",
+
+  "debug": true,
+
+  "inherits": "index.plovr.json",
+  "define": {
+    "goog.DEBUG": true,
+    "goog.LOCALE": "cs",
+    "goog.asserts.ENABLE_ASSERTS": true,
+    "goog.dom.ASSUME_STANDARDS_MODE": true
+  }
+
+}
