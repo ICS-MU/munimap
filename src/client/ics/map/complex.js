@@ -18,6 +18,12 @@ ics.map.complex.RESOLUTION = ics.map.range.createResolution(1.19, 6.4);
 
 
 /**
+ * @type {string}
+ */
+ics.map.complex.UNITS_FIELD_NAME = 'pracoviste';
+
+
+/**
  * @type {ol.source.Vector}
  * @const
  */
@@ -126,14 +132,29 @@ ics.map.complex.loadByIds = function(options) {
     type: ics.map.complex.TYPE,
     method: 'POST',
     returnGeometry: true,
-    where: 'inetId IN (' + options.ids.join() + ')'
+    where: 'inetId IN (' + options.ids.join() + ')',
+    processor: options.processor
   });
 };
 
 
 /**
  * @typedef {{
- *   ids: (Array<number>)
+ *   ids: (Array<number>),
+ *   processor: (ics.map.load.Processor|undefined)
  * }}
  */
 ics.map.complex.loadByIds.Options;
+
+
+/**
+ * @param {ol.Feature} complex
+ * @return {Array<ol.Feature>}
+ */
+ics.map.complex.getUnits = function(complex) {
+  var result = complex.get(ics.map.complex.UNITS_FIELD_NAME);
+  goog.asserts.assert(result === null || result instanceof Array);
+  return result;
+};
+
+
