@@ -169,3 +169,38 @@ ics.map.style.getLabelHeight = function(title, fontSize) {
   var lineHeight = 1.2 * fontSize;
   return rowCount * lineHeight;
 };
+
+
+/**
+ * @param {string} title
+ * @param {function(ol.Feature):ol.geom.Geometry} geometryFunction
+ * @param {number} fontSize
+ * @return {Array.<ol.style.Style>}
+ */
+ics.map.style.getLabelWithPin =
+    function(title, geometryFunction, fontSize) {
+  var textStyle = new ol.style.Style({
+    geometry: geometryFunction,
+    text: new ol.style.Text({
+      font: 'bold ' + fontSize + 'px arial',
+      fill: ics.map.style.TEXT_FILL,
+      offsetY: ics.map.style.getLabelHeight(title, fontSize) / 2 + 2,
+      stroke: ics.map.style.TEXT_STROKE,
+      text: title
+    }),
+    zIndex: 4
+  });
+
+  var pin = new ol.style.Style({
+    geometry: geometryFunction,
+    text: new ol.style.Text({
+      text: '\uf041',
+      font: 'normal ' + ics.map.marker.style.PIN_SIZE + 'px FontAwesome',
+      fill: ics.map.style.TEXT_FILL,
+      offsetY: - ics.map.marker.style.PIN_SIZE / 2,
+      stroke: ics.map.style.TEXT_STROKE
+    }),
+    zIndex: 4
+  });
+  return [textStyle, pin];
+};

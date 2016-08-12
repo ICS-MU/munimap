@@ -20,7 +20,21 @@ ics.map.complex.RESOLUTION = ics.map.range.createResolution(1.19, 6.4);
 /**
  * @type {string}
  */
+ics.map.complex.ID_FIELD_NAME = 'inetId';
+
+
+/**
+ * @type {string}
+ */
 ics.map.complex.UNITS_FIELD_NAME = 'pracoviste';
+
+
+/**
+ *
+ * @type {number}
+ * @protected
+ */
+ics.map.complex.FONT_SIZE = 14;
 
 
 /**
@@ -35,7 +49,7 @@ ics.map.complex.STORE = new ol.source.Vector();
  * @type {ics.map.type.Options}
  */
 ics.map.complex.TYPE = {
-  primaryKey: 'inetId',
+  primaryKey: ics.map.complex.ID_FIELD_NAME,
   serviceUrl: ics.map.load.MUNIMAP_URL,
   store: ics.map.complex.STORE,
   layerId: 4,
@@ -81,7 +95,8 @@ ics.map.complex.style.function = function(options, feature, resolution) {
   if (markers.length && ics.map.building.isBuilding(markers[0])) {
     var buildingCount = /**@type {number}*/(feature.get('pocetBudov'));
     if (buildingCount === 1) {
-      var complexId = /**@type {number}*/(feature.get('inetId'));
+      var complexId =
+          /**@type {number}*/(feature.get(ics.map.complex.ID_FIELD_NAME));
       showLabel = !markers.some(function(marker) {
         var markerComplexId = marker.get('arealId');
         if (goog.isDefAndNotNull(markerComplexId)) {
@@ -98,22 +113,31 @@ ics.map.complex.style.function = function(options, feature, resolution) {
     if (ics.map.style.LABEL_CACHE[uid]) {
       return ics.map.style.LABEL_CACHE[uid];
     }
-
+    goog.asserts.assertInstanceof(feature, ol.Feature);
     var title = /**@type {string}*/ (feature.get('nazevPrez'));
     title = title.split(', ')[0];
-    title = ics.map.style.alignTextToRows(title.split(' '), ' ');
-    var textStyle = new ol.style.Style({
-      geometry: ics.map.geom.CENTER_GEOMETRY_FUNCTION,
-      text: new ol.style.Text({
-        font: 'bold 14px arial',
-        fill: ics.map.style.TEXT_FILL,
-        stroke: ics.map.style.TEXT_STROKE,
-        text: title
-      }),
-      zIndex: 4
-    });
 
-    var result = textStyle;
+    var style;
+    var units = ics.map.complex.getUnits(feature);
+    if (units.length > 0) {
+      var titleParts = ics.map.unit.getTitleParts(units);
+      titleParts.push(title);
+      style = ics.map.style.getLabelWithPin(titleParts.join('\n'),
+          ics.map.geom.CENTER_GEOMETRY_FUNCTION, ics.map.complex.FONT_SIZE);
+    } else {
+      title = ics.map.style.alignTextToRows(title.split(' '), ' ');
+      style = new ol.style.Style({
+        geometry: ics.map.geom.CENTER_GEOMETRY_FUNCTION,
+        text: new ol.style.Text({
+          font: 'bold ' + ics.map.complex.FONT_SIZE + 'px arial',
+          fill: ics.map.style.TEXT_FILL,
+          stroke: ics.map.style.TEXT_STROKE,
+          text: title
+        }),
+        zIndex: 1
+      });
+    }
+    var result = style;
     goog.asserts.assertString(uid);
     ics.map.style.LABEL_CACHE[uid] = result;
     return result;
