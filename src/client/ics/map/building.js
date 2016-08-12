@@ -79,7 +79,7 @@ ics.map.building.STORE = new ol.source.Vector({
         type: function() {
           return ics.map.building.TYPE;
         },
-        processor: ics.map.building.load.Processor
+        processor: ics.map.building.load.processor
       }
   ),
   strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
@@ -461,7 +461,7 @@ ics.map.building.load.UnitsProcessor = function(options) {
  * @param {ics.map.load.Processor.Options} options
  * @return {goog.Thenable<ics.map.load.Processor.Options>}
  */
-ics.map.building.load.Processor = function(options) {
+ics.map.building.load.processor = function(options) {
   return goog.Promise.all([
     ics.map.building.load.ComplexProcessor(options),
     ics.map.building.load.UnitsProcessor(options)
