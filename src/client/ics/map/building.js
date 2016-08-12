@@ -273,17 +273,17 @@ ics.map.building.refreshActive = function(map) {
 
 /**
  * @param {ol.Feature} building
- * @param {string=} separator
+ * @param {string=} opt_separator
  * @return {string} building title without organizational unit
  */
-ics.map.building.getTitleWithoutOrgUnit = function(building, separator) {
+ics.map.building.getTitleWithoutOrgUnit = function(building, opt_separator) {
   var result;
   var title =
       /**@type {string}*/ (building.get(ics.map.building.TITLE_FIELD_NAME));
   result = title.split(', ');
   result.shift();
   result.reverse();
-  result = result.join(separator || ', ');
+  result = result.join(opt_separator || ', ');
   return result;
 };
 
@@ -295,9 +295,8 @@ ics.map.building.getTitleWithoutOrgUnit = function(building, separator) {
  */
 ics.map.building.getLabel = function(feature, resolution) {
   var titleParts = [];
-  var units = goog.asserts.assertArray(
-      feature.get(ics.map.building.UNITS_FIELD_NAME));
-  if (units.length) {
+  var units = ics.map.building.getUnits(feature);
+  if (units.length > 0) {
     if (units.length > 3) {
       var unitAbbrs = [];
       units.forEach(function(unit) {
@@ -321,7 +320,7 @@ ics.map.building.getLabel = function(feature, resolution) {
         if (goog.isDefAndNotNull(bldgType)) {
           goog.asserts.assertString(bldgLabel);
           goog.asserts.assertString(bldgType);
-          if (!units.length) {
+          if (units.length === 0) {
             titleParts.push(ics.map.style.alignTextToRows([bldgType,
               bldgLabel], ' '));
           } else {
@@ -358,7 +357,7 @@ ics.map.building.getComplex = function(building) {
  */
 ics.map.building.getUnits = function(building) {
   var result = building.get(ics.map.building.UNITS_FIELD_NAME);
-  goog.asserts.assert(result === null || result instanceof Array);
+  goog.asserts.assertArray(result);
   return result;
 };
 
@@ -428,7 +427,7 @@ ics.map.building.load.complexUnitsProcessor = function(options) {
     return complex.get('inetId');
   });
 
- if (complexIdsToLoad.length) {
+  if (complexIdsToLoad.length) {
     return ics.map.unit.loadByHeadquartersComplexIds(complexIdsToLoad)
         .then(function(units) {
           newComplexes.forEach(function(complex) {
@@ -436,14 +435,14 @@ ics.map.building.load.complexUnitsProcessor = function(options) {
               return unit.get('areal_sidelni_id') === complex.get('inetId');
             });
             complex.set(ics.map.complex.UNITS_FIELD_NAME, complexUnits);
-//            if(complexUnits.length) {
-//              console.log('complex units',
-//                  complex.get('nazevPrez')+':',
-//                  ics.map.complex.getUnits(complex).map(function(unit) {
-//                    return unit.get('zkratka_cs');
-//                  })
-//                  );
-//            }
+            //            if(complexUnits.length) {
+            //              console.log('complex units',
+            //                  complex.get('nazevPrez')+':',
+            //                  ics.map.complex.getUnits(complex).map(function(unit) {
+            //                    return unit.get('zkratka_cs');
+            //                  })
+            //                  );
+            //            }
           });
           return goog.Promise.resolve(options);
         });

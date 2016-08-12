@@ -186,8 +186,7 @@ ics.map.building.style.labelFunction =
   if (!marked && resolution < ics.map.complex.RESOLUTION.min &&
       (!isActive || (isActive &&
           !ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)))) {
-    var units = goog.asserts.assertArray(
-        feature.get(ics.map.building.UNITS_FIELD_NAME));
+    var units = ics.map.building.getUnits(feature);
     if (!ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)) {
       if (units.length > 0) {
         var title = ics.map.building.getLabel(feature, resolution);
