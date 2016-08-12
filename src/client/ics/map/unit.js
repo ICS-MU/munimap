@@ -65,3 +65,12 @@ ics.map.unit.loadByHeadquartersIds = function(buildingIds) {
 };
 
 
+/**
+ * @param {Array<number>} complexIds
+ * @return {goog.Thenable<Array<ol.Feature>>} promise of features contained
+ * in server response
+ */
+ics.map.unit.loadByHeadquartersComplexIds = function(complexIds) {
+  var where = 'areal_sidelni_id IN (' + complexIds.join() + ')';
+  return ics.map.unit.load(where);
+};
