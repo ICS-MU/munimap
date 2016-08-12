@@ -186,13 +186,15 @@ ics.map.building.style.labelFunction =
   if (!marked && resolution < ics.map.complex.RESOLUTION.min &&
       (!isActive || (isActive &&
           !ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)))) {
+    var geometryFunction = goog.partial(
+        ics.map.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, options.map);
     var units = ics.map.building.getUnits(feature);
     if (!ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)) {
       if (units.length > 0) {
         var title = ics.map.building.getLabel(feature, resolution);
         if (goog.isDef(title)) {
-          result = ics.map.building.style.getLabelWithPin(
-              title, options.map, ics.map.building.style.FONT_SIZE);
+          result = ics.map.style.getLabelWithPin(
+              title, geometryFunction, ics.map.building.style.FONT_SIZE);
         }
       } else {
         result = ics.map.building.style.defaultLabelFunction(
@@ -209,13 +211,11 @@ ics.map.building.style.labelFunction =
       var title = ics.map.building.getLabel(feature, resolution);
       if (goog.isDef(title)) {
         if (units.length > 0) {
-          result = ics.map.building.style.getLabelWithPin(
-              title, options.map, ics.map.building.style.BIG_FONT_SIZE);
+          result = ics.map.style.getLabelWithPin(
+              title, geometryFunction, ics.map.building.style.BIG_FONT_SIZE);
         } else {
           result = new ol.style.Style({
-            geometry: goog.partial(
-                ics.map.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION,
-                options.map),
+            geometry: geometryFunction,
             text: new ol.style.Text({
               font: 'bold ' + ics.map.building.style.BIG_FONT_SIZE + 'px arial',
               fill: ics.map.style.TEXT_FILL,
@@ -233,43 +233,6 @@ ics.map.building.style.labelFunction =
     }
   }
   return result;
-};
-
-
-/**
- * @param {string} title
- * @param {ol.Map} map
- * @param {number} fontSize
- * @return {Array.<ol.style.Style>}
- * @protected
- */
-ics.map.building.style.getLabelWithPin = function(title, map, fontSize) {
-  var intersectFunction = goog.partial(
-      ics.map.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, map);
-  var textStyle = new ol.style.Style({
-    geometry: intersectFunction,
-    text: new ol.style.Text({
-      font: 'bold ' + fontSize + 'px arial',
-      fill: ics.map.style.TEXT_FILL,
-      offsetY: ics.map.style.getLabelHeight(title, fontSize) / 2 + 2,
-      stroke: ics.map.style.TEXT_STROKE,
-      text: title
-    }),
-    zIndex: 4
-  });
-
-  var pin = new ol.style.Style({
-    geometry: intersectFunction,
-    text: new ol.style.Text({
-      text: '\uf041',
-      font: 'normal ' + ics.map.marker.style.PIN_SIZE + 'px FontAwesome',
-      fill: ics.map.style.TEXT_FILL,
-      offsetY: - ics.map.marker.style.PIN_SIZE / 2,
-      stroke: ics.map.style.TEXT_STROKE
-    }),
-    zIndex: 4
-  });
-  return [textStyle, pin];
 };
 
 

@@ -429,7 +429,9 @@ ics.map.handleClickOnCluster = function(map, cluster) {
  * @prototype
  */
 ics.map.handleClickOnComplex = function(map, complex) {
-  var complexId = /**@type {number}*/ (complex.get('inetId'));
+  var complexId = /**@type {number}*/ (
+      complex.get(ics.map.complex.ID_FIELD_NAME)
+      );
   var complexBldgs = ics.map.building.STORE.getFeatures().filter(
       function(bldg) {
         var cId = bldg.get('arealId');

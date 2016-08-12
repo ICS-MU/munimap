@@ -294,23 +294,8 @@ ics.map.building.getTitleWithoutOrgUnit = function(building, opt_separator) {
  * @return {string}
  */
 ics.map.building.getLabel = function(feature, resolution) {
-  var titleParts = [];
   var units = ics.map.building.getUnits(feature);
-  if (units.length > 0) {
-    if (units.length > 3) {
-      var unitAbbrs = [];
-      units.forEach(function(unit) {
-        unitAbbrs.push(
-            /**@type {string}*/(unit.get(ics.map.unit.ABBR_FIELD_NAME)));
-      });
-      titleParts.push(unitAbbrs.join(', '));
-    } else {
-      units.forEach(function(unit) {
-        titleParts.push(/**@type {string}*/
-            (unit.get(ics.map.unit.TITLE_CS_FIELD_NAME)));
-      });
-    }
-  }
+  var titleParts = ics.map.unit.getTitleParts(units);
   if (goog.isDefAndNotNull(
       feature.get(ics.map.building.COMPLEX_ID_FIELD_NAME))) {
     var bldgLabel = feature.get(ics.map.building.ABBR_FIELD_NAME);
@@ -424,7 +409,7 @@ ics.map.building.load.complexProcessor = function(options) {
 ics.map.building.load.complexUnitsProcessor = function(options) {
   var newComplexes = options.new;
   var complexIdsToLoad = newComplexes.map(function(complex) {
-    return complex.get('inetId');
+    return complex.get(ics.map.complex.ID_FIELD_NAME);
   });
 
   if (complexIdsToLoad.length) {
@@ -432,7 +417,8 @@ ics.map.building.load.complexUnitsProcessor = function(options) {
         .then(function(units) {
           newComplexes.forEach(function(complex) {
             var complexUnits = units.filter(function(unit) {
-              return unit.get('areal_sidelni_id') === complex.get('inetId');
+              return unit.get('areal_sidelni_id') ===
+                  complex.get(ics.map.complex.ID_FIELD_NAME);
             });
             complex.set(ics.map.complex.UNITS_FIELD_NAME, complexUnits);
             //            if(complexUnits.length) {

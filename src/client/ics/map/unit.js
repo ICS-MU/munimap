@@ -6,12 +6,14 @@ goog.require('ics.map.range');
 
 /**
  * @type {string}
+ * @protected
  */
 ics.map.unit.ABBR_FIELD_NAME = 'zkratka_cs';
 
 
 /**
  * @type {string}
+ * @protected
  */
 ics.map.unit.TITLE_CS_FIELD_NAME = 'nazevk_cs';
 
@@ -73,4 +75,29 @@ ics.map.unit.loadByHeadquartersIds = function(buildingIds) {
 ics.map.unit.loadByHeadquartersComplexIds = function(complexIds) {
   var where = 'areal_sidelni_id IN (' + complexIds.join() + ')';
   return ics.map.unit.load(where);
+};
+
+
+/**
+ * @param {Array.<ol.Feature>} units
+ * @return {Array.<string>}
+ */
+ics.map.unit.getTitleParts = function(units) {
+  var titleParts = [];
+  if (units.length > 0) {
+    if (units.length > 3) {
+      var unitAbbrs = [];
+      units.forEach(function(unit) {
+        unitAbbrs.push(
+            /**@type {string}*/(unit.get(ics.map.unit.ABBR_FIELD_NAME)));
+      });
+      titleParts.push(unitAbbrs.join(', '));
+    } else {
+      units.forEach(function(unit) {
+        titleParts.push(/**@type {string}*/
+            (unit.get(ics.map.unit.TITLE_CS_FIELD_NAME)));
+      });
+    }
+  }
+  return titleParts;
 };
