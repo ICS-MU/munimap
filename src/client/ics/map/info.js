@@ -135,12 +135,12 @@ ics.map.info.setBuildingTitle = function(map, building) {
   var complexEl = goog.dom.getElementByClass('complex', element);
   var bel = goog.dom.getElementByClass('building', element);
   if (building) {
-    var title = /**@type {string}*/ (building.get('nazev'));
+    var title = /**@type {string}*/ (building.get(ics.map.building.TITLE_FIELD_NAME));
     var complex = ics.map.building.getComplex(building);
     if (goog.isDefAndNotNull(complex)) {
       var complexTitle = /**@type {string}*/ (complex.get('nazevPrez'));
-      var buildingType = /**@type {string}*/ (building.get('budovaTyp'));
-      var buildingTitle = /**@type {string}*/ (building.get('oznaceni'));
+      var buildingType = /**@type {string}*/ (building.get(ics.map.building.TYPE_FIELD_NAME));
+      var buildingTitle = /**@type {string}*/ (building.get(ics.map.building.ABBR_FIELD_NAME));
       if (goog.isDefAndNotNull(buildingType) &&
               goog.isDefAndNotNull(buildingTitle)) {
         title = buildingType + ' ' + buildingTitle;

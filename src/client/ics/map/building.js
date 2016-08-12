@@ -33,6 +33,12 @@ ics.map.building.LIKE_EXPR_REGEX = /^[A-Z_]{3}[0-9_]{2}$/gi;
 
 /**
  * @type {string}
+ */
+ics.map.building.ABBR_FIELD_NAME = 'oznaceni';
+
+
+/**
+ * @type {string}
  * @protected
  */
 ics.map.building.COMPLEX_FIELD_NAME = 'areal';
@@ -40,7 +46,24 @@ ics.map.building.COMPLEX_FIELD_NAME = 'areal';
 
 /**
  * @type {string}
- * @protected
+ */
+ics.map.building.COMPLEX_ID_FIELD_NAME = 'arealId';
+
+
+/**
+ * @type {string}
+ */
+ics.map.building.TITLE_FIELD_NAME = 'nazev';
+
+
+/**
+ * @type {string}
+ */
+ics.map.building.TYPE_FIELD_NAME = 'budovaTyp';
+
+
+/**
+ * @type {string}
  */
 ics.map.building.UNITS_FIELD_NAME = 'pracoviste';
 
@@ -56,7 +79,7 @@ ics.map.building.STORE = new ol.source.Vector({
         type: function() {
           return ics.map.building.TYPE;
         },
-        processor: ics.map.building.load.processor
+        processor: ics.map.building.load.Processor
       }
   ),
   strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
@@ -250,16 +273,71 @@ ics.map.building.refreshActive = function(map) {
 
 /**
  * @param {ol.Feature} building
+ * @param {string=} separator
  * @return {string} building title without organizational unit
  */
-ics.map.building.getTitleWithoutOrgUnit = function(building) {
+ics.map.building.getTitleWithoutOrgUnit = function(building, separator) {
   var result;
-  var title = /**@type {string}*/ (building.get('nazev'));
+  var title =
+      /**@type {string}*/ (building.get(ics.map.building.TITLE_FIELD_NAME));
   result = title.split(', ');
   result.shift();
   result.reverse();
-  result = result.join(', ');
+  result = result.join(separator || ', ');
   return result;
+};
+
+
+/**
+ * @param {ol.Feature} feature
+ * @param {number} resolution
+ * @return {string}
+ */
+ics.map.building.getLabel = function(feature, resolution) {
+  var titleParts = [];
+  var units = goog.asserts.assertArray(
+      feature.get(ics.map.building.UNITS_FIELD_NAME));
+  if (units.length) {
+    if (units.length > 3) {
+      var unitAbbrs = [];
+      units.forEach(function(unit) {
+        unitAbbrs.push(
+            /**@type {string}*/(unit.get(ics.map.unit.ABBR_FIELD_NAME)));
+      });
+      titleParts.push(unitAbbrs.join(', '));
+    } else {
+      units.forEach(function(unit) {
+        titleParts.push(/**@type {string}*/
+            (unit.get(ics.map.unit.TITLE_CS_FIELD_NAME)));
+      });
+    }
+  }
+  if (goog.isDefAndNotNull(
+      feature.get(ics.map.building.COMPLEX_ID_FIELD_NAME))) {
+    var bldgLabel = feature.get(ics.map.building.ABBR_FIELD_NAME);
+    if (goog.isDefAndNotNull(bldgLabel)) {
+      if (ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)) {
+        var bldgType = feature.get(ics.map.building.TYPE_FIELD_NAME);
+        if (goog.isDefAndNotNull(bldgType)) {
+          goog.asserts.assertString(bldgLabel);
+          goog.asserts.assertString(bldgType);
+          if (!units.length) {
+            titleParts.push(ics.map.style.alignTextToRows([bldgType,
+              bldgLabel], ' '));
+          } else {
+            titleParts.push(bldgType + ' ' + bldgLabel);
+          }
+        }
+      } else {
+        titleParts.push(bldgLabel);
+      }
+    } else {
+      titleParts.push(ics.map.building.getTitleWithoutOrgUnit(feature, '\n'));
+    }
+  } else {
+    titleParts.push(ics.map.building.getTitleWithoutOrgUnit(feature, '\n'));
+  }
+  return titleParts.join('\n');
 };
 
 
@@ -290,12 +368,12 @@ ics.map.building.getUnits = function(building) {
  * @return {goog.Thenable<ics.map.load.Processor.Options>}
  * @protected
  */
-ics.map.building.load.complexProcessor = function(options) {
+ics.map.building.load.ComplexProcessor = function(options) {
   var newBuildings = options.new;
   var complexIdsToLoad = [];
   var buildingsToLoadComplex = [];
   newBuildings.forEach(function(building) {
-    var complexId = building.get('arealId');
+    var complexId = building.get(ics.map.building.COMPLEX_ID_FIELD_NAME);
     if (goog.isNumber(complexId)) {
       var complex = ics.map.complex.getById(complexId);
       if (complex) {
@@ -313,11 +391,10 @@ ics.map.building.load.complexProcessor = function(options) {
   if (complexIdsToLoad.length) {
     //    console.log('complexIds', complexIdsToLoad);
     return ics.map.complex.loadByIds({
-      ids: complexIdsToLoad,
-      processor: ics.map.building.load.complexUnitsProcessor
+      ids: complexIdsToLoad
     }).then(function(complexes) {
       buildingsToLoadComplex.forEach(function(building) {
-        var complexId = building.get('arealId');
+        var complexId = building.get(ics.map.building.COMPLEX_ID_FIELD_NAME);
         var complex = ics.map.complex.getById(complexId, complexes);
         if (!complex) {
           throw new Error('Complex ' + complexId + ' not found.');
@@ -344,45 +421,7 @@ ics.map.building.load.complexProcessor = function(options) {
  * @return {goog.Thenable<ics.map.load.Processor.Options>}
  * @protected
  */
-ics.map.building.load.complexUnitsProcessor = function(options) {
-  var newComplexes = options.new;
-  var complexIdsToLoad = newComplexes.map(function(complex) {
-    return complex.get('inetId');
-  });
-
-  if (complexIdsToLoad.length) {
-    return ics.map.unit.loadByHeadquartersComplexIds(complexIdsToLoad)
-        .then(function(units) {
-          newComplexes.forEach(function(complex) {
-            var complexUnits = units.filter(function(unit) {
-              return unit.get('areal_sidelni_id') === complex.get('inetId');
-            });
-            complex.set(ics.map.complex.UNITS_FIELD_NAME, complexUnits);
-//            if(complexUnits.length) {
-//              console.log('complex units',
-//                  complex.get('nazevPrez')+':',
-//                  ics.map.complex.getUnits(complex).map(function(unit) {
-//                    return unit.get('zkratka_cs');
-//                  })
-//                  );
-//            }
-          });
-          return goog.Promise.resolve(options);
-        });
-  } else {
-    return goog.Promise.resolve(options);
-  }
-
-
-};
-
-
-/**
- * @param {ics.map.load.Processor.Options} options
- * @return {goog.Thenable<ics.map.load.Processor.Options>}
- * @protected
- */
-ics.map.building.load.unitsProcessor = function(options) {
+ics.map.building.load.UnitsProcessor = function(options) {
   var newBuildings = options.new;
   var buildingIdsToLoad = newBuildings.map(function(building) {
     return building.get('inetId');
@@ -397,14 +436,14 @@ ics.map.building.load.unitsProcessor = function(options) {
               return unit.get('budova_sidelni_id') === building.get('inetId');
             });
             building.set(ics.map.building.UNITS_FIELD_NAME, buildingUnits);
-//            if(buildingUnits.length) {
-//              console.log('building units',
-//                  ics.map.building.getTitleWithoutOrgUnit(building)+':',
-//                  ics.map.building.getUnits(building).map(function(unit) {
-//                    return unit.get('zkratka_cs');
-//                  })
-//                  );
-//            }
+            //        if(buildingUnits.length) {
+            //          console.log('building units',
+            //              ics.map.building.getTitleWithoutOrgUnit(building)+':',
+            //              ics.map.building.getUnits(building).map(function(unit) {
+            //                return unit.get('zkratka_cs');
+            //              })
+            //              );
+            //        }
           });
           return goog.Promise.resolve(options);
         });
@@ -422,10 +461,10 @@ ics.map.building.load.unitsProcessor = function(options) {
  * @param {ics.map.load.Processor.Options} options
  * @return {goog.Thenable<ics.map.load.Processor.Options>}
  */
-ics.map.building.load.processor = function(options) {
+ics.map.building.load.Processor = function(options) {
   return goog.Promise.all([
-    ics.map.building.load.complexProcessor(options),
-    ics.map.building.load.unitsProcessor(options)
+    ics.map.building.load.ComplexProcessor(options),
+    ics.map.building.load.UnitsProcessor(options)
   ]).then(function(result) {
     goog.asserts.assertArray(result);
     result.forEach(function(opts) {
