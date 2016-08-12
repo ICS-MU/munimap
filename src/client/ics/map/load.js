@@ -404,7 +404,7 @@ ics.map.load.featuresFromUrl.Options;
  */
 ics.map.load.waitForNewProcessedFeatures = function(options) {
   var loadedNewProcessedFeatures = options.loadedNewProcessedFeatures.concat();
-  if(!loadedNewProcessedFeatures.length) {
+  if (!loadedNewProcessedFeatures.length) {
     return goog.Promise.resolve(true);
   }
   return new goog.Promise(function(resolve, reject) {
@@ -415,7 +415,7 @@ ics.map.load.waitForNewProcessedFeatures = function(options) {
     var addFeatureHandler = function(evt) {
       var feature = evt.feature;
       goog.array.remove(loadedNewProcessedFeatures, feature);
-      if(!loadedNewProcessedFeatures.length) {
+      if (!loadedNewProcessedFeatures.length) {
         source.un('addfeature', addFeatureHandler);
         resolve(true);
       }
@@ -482,7 +482,7 @@ ics.map.load.ProcessorCache.getNewProcessedFeatures = function(type) {
   var cache = ics.map.load.ProcessorCache.find(function(c) {
     return c.type === type;
   });
-  if(!cache) {
+  if (!cache) {
     cache = {
       type: type,
       newProcessedFeatures: []
