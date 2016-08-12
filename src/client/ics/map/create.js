@@ -116,13 +116,54 @@ ics.map.create = function(options) {
         evt.context.globalCompositeOperation = 'source-over';
       });
 
+      var munimapEl = goog.dom.createDom('div', 'munimap');
+      var infoEl = goog.dom.createDom('div', 'ol-popup info');
+      var complexEl = goog.dom.createDom('div', 'complex');
+      var bldgEl = goog.dom.createDom('div', 'building');
+      var floorEl = goog.dom.createDom('div', 'floor');
+      goog.dom.appendChild(infoEl, complexEl);
+      goog.dom.appendChild(infoEl, bldgEl);
+      goog.dom.appendChild(infoEl, floorEl);
+      goog.dom.appendChild(munimapEl, infoEl);
+      goog.dom.appendChild(target, munimapEl);
+
+      var map = new ol.Map({
+        controls: ol.control.defaults({
+          attributionOptions: {
+            tipLabel:
+                ics.map.lang.getMsg(ics.map.lang.Translations.ATTRIBUTIONS)
+          },
+          rotate: false,
+          zoomOptions: {
+            zoomInTipLabel:
+                ics.map.lang.getMsg(ics.map.lang.Translations.ZOOM_IN),
+            zoomOutTipLabel:
+                ics.map.lang.getMsg(ics.map.lang.Translations.ZOOM_OUT)
+          }
+        }),
+        layers: [
+          raster
+        ],
+        target: munimapEl,
+        view: view
+      });
+
+
       var markerSource = new ol.source.Vector({
         attributions: [muAttribution],
         features: markers
       });
+
+      var markerOptions = {
+        map: map,
+        markerSource: markerSource,
+        markerLabel: options.markerLabel
+      };
+
       var markerLayer = new ol.layer.Vector({
         id: ics.map.marker.LAYER_ID,
         source: markerSource,
+        style: goog.partial(ics.map.marker.style.function, markerOptions),
         maxResolution: ics.map.marker.RESOLUTION.max,
         updateWhileAnimating: true,
         updateWhileInteracting: false
@@ -223,6 +264,8 @@ ics.map.create = function(options) {
       var markerClusterLayer = new ol.layer.Vector({
         id: ics.map.marker.cluster.LAYER_ID,
         source: markerClusterSrc,
+        style: goog.partial(
+                ics.map.marker.cluster.style.function, markerOptions),
         minResolution: clusterResolution.min,
         updateWhileAnimating: true,
         updateWhileInteracting: true
@@ -230,6 +273,10 @@ ics.map.create = function(options) {
 
       var buildingLabels = new ol.layer.Vector({
         source: buildingsStore,
+        style: goog.partial(ics.map.building.style.labelFunction, {
+            map: map,
+            markerSource: markerSource
+          }),
         updateWhileAnimating: true,
         updateWhileInteracting: false
 
@@ -246,67 +293,17 @@ ics.map.create = function(options) {
         updateWhileAnimating: true,
         updateWhileInteracting: true
       });
-
-      var munimapEl = goog.dom.createDom('div', 'munimap');
-      var infoEl = goog.dom.createDom('div', 'ol-popup info');
-      var complexEl = goog.dom.createDom('div', 'complex');
-      var bldgEl = goog.dom.createDom('div', 'building');
-      var floorEl = goog.dom.createDom('div', 'floor');
-      goog.dom.appendChild(infoEl, complexEl);
-      goog.dom.appendChild(infoEl, bldgEl);
-      goog.dom.appendChild(infoEl, floorEl);
-      goog.dom.appendChild(munimapEl, infoEl);
-      goog.dom.appendChild(target, munimapEl);
-
-      var map = new ol.Map({
-        controls: ol.control.defaults({
-          attributionOptions: {
-            tipLabel:
-                ics.map.lang.getMsg(ics.map.lang.Translations.ATTRIBUTIONS)
-          },
-          rotate: false,
-          zoomOptions: {
-            zoomInTipLabel:
-                ics.map.lang.getMsg(ics.map.lang.Translations.ZOOM_IN),
-            zoomOutTipLabel:
-                ics.map.lang.getMsg(ics.map.lang.Translations.ZOOM_OUT)
-          }
-        }),
-        layers: [
-          raster,
-          buildings,
-          rooms,
-          activeRooms,
-          doors,
-          poi,
-          complexes,
-          markerClusterLayer,
-          buildingLabels,
-          roomLabels,
-          markerLayer
-        ],
-        target: munimapEl,
-        view: view
-      });
-
-      var markerOptions = {
-        map: map,
-        markerSource: markerSource,
-        markerLabel: options.markerLabel
-      };
-
-      markerLayer.setStyle(
-          goog.partial(ics.map.marker.style.function, markerOptions));
-
-      markerClusterLayer.setStyle(
-          goog.partial(ics.map.marker.cluster.style.function, markerOptions));
-
-      buildingLabels.setStyle(
-          goog.partial(ics.map.building.style.labelFunction, {
-            map: map,
-            markerSource: markerSource
-          })
-      );
+      
+      map.addLayer(buildings);
+      map.addLayer(rooms);
+      map.addLayer(activeRooms);
+      map.addLayer(doors);
+      map.addLayer(poi);
+      map.addLayer(complexes);
+      map.addLayer(markerClusterLayer);
+      map.addLayer(buildingLabels);
+      map.addLayer(roomLabels);
+      map.addLayer(markerLayer);
 
       var floorSelect = new goog.ui.Select();
       floorSelect.render(floorEl);
