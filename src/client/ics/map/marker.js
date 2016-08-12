@@ -162,7 +162,6 @@ ics.map.marker.style.ROOM = new ol.style.Style({
 /**
  * @type {number}
  * @const
- * @protected
  */
 ics.map.marker.style.PIN_SIZE = 25;
 
@@ -177,13 +176,11 @@ ics.map.marker.style.PIN = new ol.style.Style({
   text: new ol.style.Text({
     text: '\uf041',
     font: 'normal ' + ics.map.marker.style.PIN_SIZE + 'px FontAwesome',
-    fill: new ol.style.Fill({
-      color: '#e51c23'
-    }),
+    fill: ics.map.marker.style.TEXT_FILL,
     offsetY: - ics.map.marker.style.PIN_SIZE / 2,
     stroke: ics.map.style.TEXT_STROKE
   }),
-  zIndex: 4
+  zIndex: 6
 });
 
 
@@ -257,9 +254,9 @@ ics.map.marker.style.labelFunction = function(options, feature, resolution) {
       fontSize = 11;
     } else if (ics.map.building.isBuilding(feature) &&
         ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)) {
-      fontSize = 17;
+      fontSize = ics.map.building.style.BIG_FONT_SIZE;
     } else {
-      fontSize = 13;
+      fontSize = ics.map.building.style.FONT_SIZE;
     }
     var textStyle = new ol.style.Style({
       geometry: ics.map.building.isBuilding(feature) ?
@@ -272,7 +269,7 @@ ics.map.marker.style.labelFunction = function(options, feature, resolution) {
         stroke: ics.map.style.TEXT_STROKE,
         text: title
       }),
-      zIndex: 4
+      zIndex: 6
     });
 
     var pin;
@@ -282,13 +279,11 @@ ics.map.marker.style.labelFunction = function(options, feature, resolution) {
         text: new ol.style.Text({
           text: '\uf041',
           font: 'normal ' + ics.map.marker.style.PIN_SIZE + 'px FontAwesome',
-          fill: new ol.style.Fill({
-            color: '#e51c23'
-          }),
+          fill: ics.map.marker.style.TEXT_FILL,
           offsetY: - ics.map.marker.style.PIN_SIZE / 2,
           stroke: ics.map.style.TEXT_STROKE
         }),
-        zIndex: 4
+        zIndex: 6
       });
     } else {
       pin = ics.map.marker.style.PIN;

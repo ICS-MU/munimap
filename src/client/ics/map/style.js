@@ -143,42 +143,14 @@ ics.map.style.getDefaultLabel = function(feature, resolution) {
     }
     title = clusteredFeatures.length + 'x ' + featureTypeName;
   } else {
-    var fTitle;
-    var adjustBldgTitle = true;
-    if (feature instanceof ol.Feature && ics.map.building.isBuilding(feature)) {
-      if (goog.isDefAndNotNull(feature.get('arealId'))) {
-        var bldgLabel = feature.get('oznaceni');
-        if (goog.isDefAndNotNull(bldgLabel)) {
-          if (ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)) {
-            var bldgType = feature.get('budovaTyp');
-            if (goog.isDefAndNotNull(bldgType)) {
-              goog.asserts.assertString(bldgLabel);
-              goog.asserts.assertString(bldgType);
-              fTitle = ics.map.style.alignTextToRows([bldgType,
-                bldgLabel], ' ');
-            }
-          } else {
-            fTitle = bldgLabel;
-          }
-          adjustBldgTitle = false;
-        }
-      }
-      if (!goog.isDefAndNotNull(fTitle)) {
-        fTitle = feature.get('nazev');
-        adjustBldgTitle = true;
-      }
+    goog.asserts.assertInstanceof(feature, ol.Feature);
+    if (ics.map.building.isBuilding(feature)) {
+      title = ics.map.building.getLabel(feature, resolution);
+      goog.asserts.assertString(title);
     } else {
-      fTitle = feature.get('nazev') || feature.get('cislo');
-    }
-    if (fTitle) {
-      title = goog.asserts.assertString(fTitle);
-      if (feature instanceof ol.Feature &&
-          ics.map.building.isBuilding(feature) && adjustBldgTitle) {
-        title = title.split(', ');
-        title.shift();
-        title.reverse();
-        title = title.join('\n');
-      } else {
+      title = feature.get('nazev') || feature.get('cislo');
+      if (goog.isDef(title)) {
+        goog.asserts.assertString(title);
         title = ics.map.room.style.alignRoomTitleToRows(title);
       }
     }
