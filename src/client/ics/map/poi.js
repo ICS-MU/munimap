@@ -20,17 +20,7 @@ ics.map.poi.RESOLUTION = ics.map.range.createResolution(0, 1.195);
  * @type {ol.source.Vector}
  * @const
  */
-ics.map.poi.STORE = new ol.source.Vector({
-  loader: goog.partial(
-      ics.map.poi.load,
-      {
-        floorsGetter: ics.map.floor.getActiveFloors
-      }
-  ),
-  strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-    tileSize: 512
-  }))
-});
+ics.map.poi.STORE = new ol.source.Vector();
 
 
 /**
@@ -65,6 +55,54 @@ ics.map.poi.Purpose = {
 
 
 /**
+ * @type {string}
+ * @const
+ */
+ics.map.poi.ACTIVE_LAYER_ID = 'active-poi';
+
+
+/**
+ * @param {ol.Map} map
+ * @return {ol.source.Vector}
+ */
+ics.map.poi.createActiveStore = function(map) {
+  return new ol.source.Vector({
+    loader: goog.partial(
+        ics.map.poi.loadActive,
+        {
+          floorsGetter: ics.map.floor.getActiveFloors,
+          map: map
+        }
+    ),
+    strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+      tileSize: 512
+    }))
+  });
+};
+
+
+/**
+ * @param {ol.Map} map
+ * @return {ol.layer.Vector}
+ */
+ics.map.poi.getActiveLayer = function(map) {
+  var layers = map.getLayers().getArray();
+  var result = layers.find(ics.map.poi.isActiveLayer);
+  goog.asserts.assertInstanceof(result, ol.layer.Vector);
+  return result;
+};
+
+
+/**
+ * @param {ol.layer.Base} layer
+ * @return {boolean}
+ */
+ics.map.poi.isActiveLayer = function(layer) {
+  return layer.get('id') === ics.map.poi.ACTIVE_LAYER_ID;
+};
+
+
+/**
  * @param {ol.Feature} feature
  * @return {boolean}
  */
@@ -81,7 +119,7 @@ ics.map.poi.isPoi = function(feature) {
  * @param {ol.proj.Projection} projection
  * @this {ol.source.Vector}
  */
-ics.map.poi.load = function(options, extent, resolution, projection) {
+ics.map.poi.loadActive = function(options, extent, resolution, projection) {
   var floors = options.floorsGetter();
   var entrances = [
     ics.map.poi.Purpose.BUILDING_ENTRANCE,
@@ -101,5 +139,13 @@ ics.map.poi.load = function(options, extent, resolution, projection) {
     where: where,
     method: 'POST'
   };
-  ics.map.load.featuresForMap(opts, extent, resolution, projection);
+  ics.map.load.featuresForMap(opts, extent, resolution, projection).then(
+      function(pois) {
+        var activeLayer = ics.map.poi.getActiveLayer(options.map);
+        var activeStore = activeLayer.getSource();
+        //check if active floor has changed
+        var poisToAdd =
+            ics.map.store.getNotYetAddedFeatures(activeStore, pois);
+        activeStore.addFeatures(poisToAdd);
+      });
 };
