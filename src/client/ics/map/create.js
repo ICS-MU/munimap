@@ -198,7 +198,7 @@ ics.map.create = function(options) {
       var roomsStore = ics.map.room.DEFAULT_STORE;
       roomsStore.setAttributions([muAttribution]);
       var rooms = new ol.layer.Vector({
-        id: ics.map.room.LAYER_ID,
+        id: ics.map.room.DEFAULT_LAYER_ID,
         maxResolution: ics.map.floor.RESOLUTION.max,
         opacity: 0.4,
         source: roomsStore,
@@ -213,9 +213,10 @@ ics.map.create = function(options) {
 
       rooms.once('precompose', ics.map.room.style.setCorridorStyle);
 
-      var activeRoomsStore = ics.map.room.ACTIVE_STORE;
+      var activeRoomsStore = ics.map.room.createActiveStore(map);
       activeRoomsStore.setAttributions([muAttribution]);
       var activeRooms = new ol.layer.Vector({
+        id: ics.map.room.ACTIVE_LAYER_ID,
         maxResolution: ics.map.floor.RESOLUTION.max,
         source: activeRoomsStore,
         style: goog.partial(ics.map.room.style.function, {
@@ -265,7 +266,7 @@ ics.map.create = function(options) {
         id: ics.map.marker.cluster.LAYER_ID,
         source: markerClusterSrc,
         style: goog.partial(
-                ics.map.marker.cluster.style.function, markerOptions),
+            ics.map.marker.cluster.style.function, markerOptions),
         minResolution: clusterResolution.min,
         updateWhileAnimating: true,
         updateWhileInteracting: true
@@ -274,9 +275,9 @@ ics.map.create = function(options) {
       var buildingLabels = new ol.layer.Vector({
         source: buildingsStore,
         style: goog.partial(ics.map.building.style.labelFunction, {
-            map: map,
-            markerSource: markerSource
-          }),
+          map: map,
+          markerSource: markerSource
+        }),
         updateWhileAnimating: true,
         updateWhileInteracting: false
 
@@ -293,7 +294,7 @@ ics.map.create = function(options) {
         updateWhileAnimating: true,
         updateWhileInteracting: true
       });
-      
+
       map.addLayer(buildings);
       map.addLayer(rooms);
       map.addLayer(activeRooms);

@@ -505,7 +505,8 @@ ics.map.load.defaultProcessor = function(options) {
 
 /**
  * @typedef {{
- *   floorsGetter: (function(): Array.<string>)
+ *   floorsGetter: (function(): Array.<string>),
+ *   map: (ol.Map)
  * }}
  */
 ics.map.load.floorBasedActive.Options;

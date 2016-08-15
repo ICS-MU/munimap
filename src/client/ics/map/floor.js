@@ -72,8 +72,10 @@ ics.map.floor.getActiveFloors = function() {
  * @param {ol.Map} map
  */
 ics.map.floor.refreshFloorBasedLayers = function(map) {
-  ics.map.room.ACTIVE_STORE.clear();
-  var rooms = ics.map.room.getLayer(map);
+  var activeLayer = ics.map.room.getActiveLayer(map);
+  var activeStore = activeLayer.getSource();
+  activeStore.clear();
+  var rooms = ics.map.room.getDefaultLayer(map);
   rooms.changed();
   ics.map.door.STORE.clear();
   ics.map.poi.STORE.clear();
