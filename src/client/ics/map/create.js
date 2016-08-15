@@ -265,7 +265,7 @@ ics.map.create = function(options) {
         id: ics.map.marker.cluster.LAYER_ID,
         source: markerClusterSrc,
         style: goog.partial(
-                ics.map.marker.cluster.style.function, markerOptions),
+            ics.map.marker.cluster.style.function, markerOptions),
         minResolution: clusterResolution.min,
         updateWhileAnimating: true,
         updateWhileInteracting: true
@@ -274,9 +274,9 @@ ics.map.create = function(options) {
       var buildingLabels = new ol.layer.Vector({
         source: buildingsStore,
         style: goog.partial(ics.map.building.style.labelFunction, {
-            map: map,
-            markerSource: markerSource
-          }),
+          map: map,
+          markerSource: markerSource
+        }),
         updateWhileAnimating: true,
         updateWhileInteracting: false
 
@@ -293,7 +293,7 @@ ics.map.create = function(options) {
         updateWhileAnimating: true,
         updateWhileInteracting: true
       });
-      
+
       map.addLayer(buildings);
       map.addLayer(rooms);
       map.addLayer(activeRooms);
