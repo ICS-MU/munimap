@@ -29,19 +29,7 @@ ics.map.room.LIKE_EXPR_REGEX =
  * @type {ol.source.Vector}
  * @const
  */
-ics.map.room.STORE = new ol.source.Vector({
-  loader: goog.partial(
-      ics.map.load.featuresForMap,
-      {
-        type: function() {
-          return ics.map.room.TYPE;
-        }
-      }
-  ),
-  strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-    tileSize: 512
-  }))
-});
+ics.map.room.STORE = new ol.source.Vector();
 
 
 /**
@@ -235,21 +223,6 @@ ics.map.room.isInActiveFloor = function(room) {
 
 
 /**
- *
- * @param {ol.source.Vector} store
- * @param {Array.<ol.Feature>} features
- * @return {Array.<ol.Feature>}
- * @protected
- */
-ics.map.room.getNotYetAddedRooms = function(store, features) {
-  var storedFeatures = store.getFeatures();
-  return features.filter(function(feature) {
-    return storedFeatures.indexOf(feature) === -1;
-  });
-};
-
-
-/**
  * @param {ics.map.load.floorBasedActive.Options} options
  * @param {ol.Extent} extent
  * @param {number} resolution
@@ -276,7 +249,7 @@ ics.map.room.loadActive = function(options, extent, resolution, projection) {
           var activeStore = activeLayer.getSource();
           //check if active floor has changed
           var roomsToAdd =
-              ics.map.room.getNotYetAddedRooms(activeStore, rooms);
+              ics.map.store.getNotYetAddedFeatures(activeStore, rooms);
           activeStore.addFeatures(roomsToAdd);
         });
   }
@@ -293,8 +266,8 @@ ics.map.room.loadActive = function(options, extent, resolution, projection) {
 ics.map.room.loadDefault = function(options, extent, resolution, projection) {
   ics.map.load.featuresForMap(options, extent, resolution, projection).then(
       function(rooms) {
-        var roomsToAdd =
-            ics.map.room.getNotYetAddedRooms(ics.map.room.DEFAULT_STORE, rooms);
+        var roomsToAdd = ics.map.store.getNotYetAddedFeatures(
+            ics.map.room.DEFAULT_STORE, rooms);
         ics.map.room.DEFAULT_STORE.addFeatures(roomsToAdd);
       });
 };

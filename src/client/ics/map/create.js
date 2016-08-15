@@ -230,10 +230,10 @@ ics.map.create = function(options) {
 
       activeRooms.once('precompose', ics.map.room.style.setCorridorStyle);
 
-      var doorsStore = ics.map.door.STORE;
+      var doorsStore = ics.map.door.createActiveStore(map);
       doorsStore.setAttributions([muAttribution]);
       var doors = new ol.layer.Vector({
-        id: ics.map.door.LAYER_ID,
+        id: ics.map.door.ACTIVE_LAYER_ID,
         maxResolution: ics.map.door.RESOLUTION.max,
         source: doorsStore,
         style: ics.map.door.STYLE,
