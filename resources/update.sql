@@ -331,7 +331,7 @@ SELECT
 FROM sde_publ.sde.DVERE;
 
 DELETE FROM dbo.PRACOVISTE;
-INSERT INTO dbo.PRACOVISTE(objectid, nazevk_cs, nazevk_en, zkratka_cs, zkratka_en, budova_sidelni_id, areal_sidelni_id)
+INSERT INTO dbo.PRACOVISTE(objectid, nazevk_cs, nazevk_en, zkratka_cs, zkratka_en, budova_sidelni_id, areal_sidelni_id, priorita)
 SELECT
   ROW_NUMBER() OVER (ORDER BY prac.nazevk_cs) AS OBJECTID, 
   prac.nazevk_cs,
@@ -339,5 +339,11 @@ SELECT
   prac.zkratka_cs,
   prac.zkratka_en,
   prac.budova_sidelni_id,
-  bud.arealId AS areal_sidelni_id
-FROM sde.sde.PRACOVISTE prac, sde_munimap.dbo.budovy bud WHERE prac.budova_sidelni_id = bud.inetId;
+  bud.arealId AS areal_sidelni_id,
+  CASE
+    WHEN prac.nazevk_cs LIKE '%fakulta%' OR prac.nazevk_cs LIKE '%rektorát%'
+      THEN 1
+      ELSE 0
+  END AS priorita
+FROM sde.sde.PRACOVISTE prac, sde_munimap.dbo.budovy bud
+WHERE prac.budova_sidelni_id = bud.inetId;
