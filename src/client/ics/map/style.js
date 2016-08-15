@@ -200,7 +200,7 @@ ics.map.style.getLabelWithPin =
       offsetY: - ics.map.marker.style.PIN_SIZE / 2,
       stroke: ics.map.style.TEXT_STROKE
     }),
-    zIndex: 4
+    zIndex: 5
   });
   return [textStyle, pin];
 };

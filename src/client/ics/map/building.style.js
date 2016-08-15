@@ -196,7 +196,13 @@ ics.map.building.style.labelFunction =
             goog.isDefAndNotNull(complex)) {
           result = null;
         } else {
-          var title = ics.map.building.getLabel(feature, resolution);
+          var title;
+          if (ics.map.range.contains(
+              ics.map.complex.RESOLUTION_BIG, resolution)) {
+            title = ics.map.unit.getTitleParts(units).join('\n');
+          } else {
+            title = ics.map.building.getLabel(feature, resolution);
+          }
           if (goog.isDef(title)) {
             result = ics.map.style.getLabelWithPin(
                 title, geometryFunction, ics.map.building.style.FONT_SIZE);
