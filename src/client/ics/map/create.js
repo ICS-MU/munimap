@@ -242,9 +242,10 @@ ics.map.create = function(options) {
 
       });
 
-      var poiStore = ics.map.poi.STORE;
+      var poiStore = ics.map.poi.createActiveStore(map);
       poiStore.setAttributions([muAttribution]);
       var poi = new ol.layer.Vector({
+        id: ics.map.poi.ACTIVE_LAYER_ID,
         maxResolution: ics.map.poi.RESOLUTION.max,
         source: poiStore,
         style: ics.map.poi.style.function,

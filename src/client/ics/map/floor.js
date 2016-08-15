@@ -77,10 +77,15 @@ ics.map.floor.refreshFloorBasedLayers = function(map) {
   activeRoomStore.clear();
   var rooms = ics.map.room.getDefaultLayer(map);
   rooms.changed();
+
   var activeDoorLayer = ics.map.door.getActiveLayer(map);
   var activeDoorStore = activeDoorLayer.getSource();
   activeDoorStore.clear();
-  ics.map.poi.STORE.clear();
+
+  var activePoiLayer = ics.map.poi.getActiveLayer(map);
+  var activePoiStore = activePoiLayer.getSource();
+  activePoiStore.clear();
+
   var markers = ics.map.marker.getLayer(map);
   markers.changed();
 };
