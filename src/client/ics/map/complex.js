@@ -34,7 +34,7 @@ ics.map.complex.UNITS_FIELD_NAME = 'pracoviste';
  * @type {number}
  * @protected
  */
-ics.map.complex.FONT_SIZE = 14;
+ics.map.complex.FONT_SIZE = 13;
 
 
 /**

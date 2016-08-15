@@ -299,10 +299,10 @@ ics.map.create = function(options) {
       map.addLayer(activeRooms);
       map.addLayer(doors);
       map.addLayer(poi);
+      map.addLayer(roomLabels);
+      map.addLayer(buildingLabels);
       map.addLayer(complexes);
       map.addLayer(markerClusterLayer);
-      map.addLayer(buildingLabels);
-      map.addLayer(roomLabels);
       map.addLayer(markerLayer);
 
       var floorSelect = new goog.ui.Select();
