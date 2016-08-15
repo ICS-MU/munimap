@@ -15,6 +15,13 @@ ics.map.unit.ABBR_FIELD_NAME = 'zkratka_cs';
  * @type {string}
  * @protected
  */
+ics.map.unit.PRIORITY_FIELD_NAME = 'priorita';
+
+
+/**
+ * @type {string}
+ * @protected
+ */
 ics.map.unit.TITLE_CS_FIELD_NAME = 'nazevk_cs';
 
 
@@ -79,6 +86,30 @@ ics.map.unit.loadByHeadquartersComplexIds = function(complexIds) {
 
 
 /**
+ * @param {ol.Feature} unit
+ * @return {?string}
+ * @protected
+ */
+ics.map.unit.getTitle = function(unit) {
+  var result = unit.get(ics.map.unit.TITLE_CS_FIELD_NAME);
+  goog.asserts.assert(result === null || goog.isString(result));
+  return result;
+};
+
+
+/**
+ * @param {ol.Feature} unit
+ * @return {number}
+ * @protected
+ */
+ics.map.unit.getPriority = function(unit) {
+  var result = unit.get(ics.map.unit.PRIORITY_FIELD_NAME);
+  goog.asserts.assertNumber(result);
+  return result;
+};
+
+
+/**
  * @param {Array.<ol.Feature>} units
  * @return {Array.<string>}
  */
@@ -88,14 +119,20 @@ ics.map.unit.getTitleParts = function(units) {
     if (units.length > 3) {
       var unitAbbrs = [];
       units.forEach(function(unit) {
-        unitAbbrs.push(
-            /**@type {string}*/(unit.get(ics.map.unit.ABBR_FIELD_NAME)));
+        if (ics.map.unit.getPriority(unit) > 0) {
+          titleParts.push(ics.map.unit.getTitle(unit));
+        } else {
+          var abbr = unit.get(ics.map.unit.ABBR_FIELD_NAME);
+          goog.asserts.assert(abbr === null || goog.isString(abbr));
+          if (abbr) {
+            unitAbbrs.push(abbr);
+          }
+        }
       });
       titleParts.push(unitAbbrs.join(', '));
     } else {
       units.forEach(function(unit) {
-        titleParts.push(/**@type {string}*/
-            (unit.get(ics.map.unit.TITLE_CS_FIELD_NAME)));
+        titleParts.push(ics.map.unit.getTitle(unit));
       });
     }
   }
