@@ -213,7 +213,7 @@ ics.map.getBufferValue = function(extent) {
 ics.map.getMainFeatureAtPixel = function(map, pixel) {
   var mainFeature;
   var features = [];
-  var rooms = ics.map.room.getLayer(map);
+  var rooms = ics.map.room.getDefaultLayer(map);
   var doors = ics.map.door.getLayer(map);
   var markerClusterLayer = ics.map.marker.cluster.getLayer(map);
   var markerLayer = ics.map.marker.getLayer(map);

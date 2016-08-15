@@ -58,20 +58,23 @@ ics.map.room.TYPE = {
 
 
 /**
- * @type {ol.source.Vector}
- * @const
+ * @param {ol.Map} map
+ * @return {ol.source.Vector}
  */
-ics.map.room.ACTIVE_STORE = new ol.source.Vector({
-  loader: goog.partial(
-      ics.map.room.loadActive,
-      {
-        floorsGetter: ics.map.floor.getActiveFloors
-      }
-  ),
-  strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-    tileSize: 512
-  }))
-});
+ics.map.room.createActiveStore = function(map) {
+  return new ol.source.Vector({
+    loader: goog.partial(
+        ics.map.room.loadActive,
+        {
+          floorsGetter: ics.map.floor.getActiveFloors,
+          map: map
+        }
+    ),
+    strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+      tileSize: 512
+    }))
+  });
+};
 
 
 /**
@@ -96,16 +99,23 @@ ics.map.room.DEFAULT_STORE = new ol.source.Vector({
  * @type {string}
  * @const
  */
-ics.map.room.LAYER_ID = 'room';
+ics.map.room.DEFAULT_LAYER_ID = 'room';
+
+
+/**
+ * @type {string}
+ * @const
+ */
+ics.map.room.ACTIVE_LAYER_ID = 'active-room';
 
 
 /**
  * @param {ol.Map} map
  * @return {ol.layer.Vector}
  */
-ics.map.room.getLayer = function(map) {
+ics.map.room.getDefaultLayer = function(map) {
   var layers = map.getLayers().getArray();
-  var result = layers.find(ics.map.room.isLayer);
+  var result = layers.find(ics.map.room.isDefaultLayer);
   goog.asserts.assertInstanceof(result, ol.layer.Vector);
   return result;
 };
@@ -115,8 +125,29 @@ ics.map.room.getLayer = function(map) {
  * @param {ol.layer.Base} layer
  * @return {boolean}
  */
-ics.map.room.isLayer = function(layer) {
-  return layer.get('id') === ics.map.room.LAYER_ID;
+ics.map.room.isDefaultLayer = function(layer) {
+  return layer.get('id') === ics.map.room.DEFAULT_LAYER_ID;
+};
+
+
+/**
+ * @param {ol.Map} map
+ * @return {ol.layer.Vector}
+ */
+ics.map.room.getActiveLayer = function(map) {
+  var layers = map.getLayers().getArray();
+  var result = layers.find(ics.map.room.isActiveLayer);
+  goog.asserts.assertInstanceof(result, ol.layer.Vector);
+  return result;
+};
+
+
+/**
+ * @param {ol.layer.Base} layer
+ * @return {boolean}
+ */
+ics.map.room.isActiveLayer = function(layer) {
+  return layer.get('id') === ics.map.room.ACTIVE_LAYER_ID;
 };
 
 
@@ -241,10 +272,12 @@ ics.map.room.loadActive = function(options, extent, resolution, projection) {
     };
     ics.map.load.featuresForMap(opts, extent, resolution, projection).then(
         function(rooms) {
+          var activeLayer = ics.map.room.getActiveLayer(options.map);
+          var activeStore = activeLayer.getSource();
           //check if active floor has changed
           var roomsToAdd =
-              ics.map.room.getNotYetAddedRooms(ics.map.room.ACTIVE_STORE, rooms);
-          ics.map.room.ACTIVE_STORE.addFeatures(roomsToAdd);
+              ics.map.room.getNotYetAddedRooms(activeStore, rooms);
+          activeStore.addFeatures(roomsToAdd);
         });
   }
 };
