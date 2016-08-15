@@ -18,6 +18,13 @@ ics.map.complex.RESOLUTION = ics.map.range.createResolution(1.19, 6.4);
 
 
 /**
+ * @type {ics.map.Range}
+ * @const
+ */
+ics.map.complex.RESOLUTION_BIG = ics.map.range.createResolution(4.77, 6.4);
+
+
+/**
  * @type {string}
  */
 ics.map.complex.ID_FIELD_NAME = 'inetId';
@@ -108,23 +115,29 @@ ics.map.complex.style.function = function(options, feature, resolution) {
     }
   }
   if (showLabel) {
-    var uid = ics.map.store.getUid(feature);
-    goog.asserts.assertString(uid);
-    if (ics.map.style.LABEL_CACHE[uid]) {
-      return ics.map.style.LABEL_CACHE[uid];
-    }
     goog.asserts.assertInstanceof(feature, ol.Feature);
-    var title = /**@type {string}*/ (feature.get('nazevPrez'));
-    title = title.split(', ')[0];
+    var title;
+    var uid = ics.map.store.getUid(feature);
+    if (!ics.map.range.contains(ics.map.complex.RESOLUTION_BIG, resolution)) {
+      goog.asserts.assertString(uid);
+      if (ics.map.style.LABEL_CACHE[uid]) {
+        return ics.map.style.LABEL_CACHE[uid];
+      }
+
+      title = /**@type {string}*/ (feature.get('nazevPrez'));
+      title = title.split(', ')[0];
+    }
 
     var style;
     var units = ics.map.complex.getUnits(feature);
     if (units.length > 0) {
       var titleParts = ics.map.unit.getTitleParts(units);
-      titleParts.push(title);
+      if (title) {
+        titleParts.push(title);
+      }
       style = ics.map.style.getLabelWithPin(titleParts.join('\n'),
           ics.map.geom.CENTER_GEOMETRY_FUNCTION, ics.map.complex.FONT_SIZE);
-    } else {
+    } else if (title) {
       title = ics.map.style.alignTextToRows(title.split(' '), ' ');
       style = new ol.style.Style({
         geometry: ics.map.geom.CENTER_GEOMETRY_FUNCTION,
@@ -137,9 +150,11 @@ ics.map.complex.style.function = function(options, feature, resolution) {
         zIndex: 1
       });
     }
-    var result = style;
-    goog.asserts.assertString(uid);
-    ics.map.style.LABEL_CACHE[uid] = result;
+    var result = style || null;
+    if (!ics.map.range.contains(ics.map.complex.RESOLUTION_BIG, resolution)) {
+      goog.asserts.assertString(uid);
+      ics.map.style.LABEL_CACHE[uid] = result;
+    }
     return result;
   }
   return null;
