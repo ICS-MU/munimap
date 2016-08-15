@@ -24,3 +24,17 @@ ics.map.store.getUid = function(feature) {
   }
   return uid;
 };
+
+
+/**
+ *
+ * @param {ol.source.Vector} store
+ * @param {Array.<ol.Feature>} features
+ * @return {Array.<ol.Feature>}
+ */
+ics.map.store.getNotYetAddedFeatures = function(store, features) {
+  var storedFeatures = store.getFeatures();
+  return features.filter(function(feature) {
+    return storedFeatures.indexOf(feature) === -1;
+  });
+};

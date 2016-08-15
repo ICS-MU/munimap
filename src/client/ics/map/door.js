@@ -25,17 +25,7 @@ ics.map.door.RESOLUTION = ics.map.range.createResolution(0, 0.13);
  * @type {ol.source.Vector}
  * @const
  */
-ics.map.door.STORE = new ol.source.Vector({
-  loader: goog.partial(
-      ics.map.door.load,
-      {
-        floorsGetter: ics.map.floor.getActiveFloors
-      }
-  ),
-  strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-    tileSize: 512
-  }))
-});
+ics.map.door.STORE = new ol.source.Vector();
 
 
 /**
@@ -55,16 +45,36 @@ ics.map.door.TYPE = {
  * @type {string}
  * @const
  */
-ics.map.door.LAYER_ID = 'door';
+ics.map.door.ACTIVE_LAYER_ID = 'active-door';
+
+
+/**
+ * @param {ol.Map} map
+ * @return {ol.source.Vector}
+ */
+ics.map.door.createActiveStore = function(map) {
+  return new ol.source.Vector({
+    loader: goog.partial(
+        ics.map.door.loadActive,
+        {
+          floorsGetter: ics.map.floor.getActiveFloors,
+          map: map
+        }
+    ),
+    strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+      tileSize: 512
+    }))
+  });
+};
 
 
 /**
  * @param {ol.Map} map
  * @return {ol.layer.Vector}
  */
-ics.map.door.getLayer = function(map) {
+ics.map.door.getActiveLayer = function(map) {
   var layers = map.getLayers().getArray();
-  var result = layers.find(ics.map.door.isLayer);
+  var result = layers.find(ics.map.door.isActiveLayer);
   goog.asserts.assertInstanceof(result, ol.layer.Vector);
   return result;
 };
@@ -74,8 +84,8 @@ ics.map.door.getLayer = function(map) {
  * @param {ol.layer.Base} layer
  * @return {boolean}
  */
-ics.map.door.isLayer = function(layer) {
-  return layer.get('id') === ics.map.door.LAYER_ID;
+ics.map.door.isActiveLayer = function(layer) {
+  return layer.get('id') === ics.map.door.ACTIVE_LAYER_ID;
 };
 
 
@@ -86,7 +96,7 @@ ics.map.door.isLayer = function(layer) {
  * @param {ol.proj.Projection} projection
  * @this {ol.source.Vector}
  */
-ics.map.door.load = function(options, extent, resolution, projection) {
+ics.map.door.loadActive = function(options, extent, resolution, projection) {
   var floors = options.floorsGetter();
   var where;
   if (floors.length > 0) {
@@ -100,7 +110,15 @@ ics.map.door.load = function(options, extent, resolution, projection) {
       where: where,
       method: 'POST'
     };
-    ics.map.load.featuresForMap(opts, extent, resolution, projection);
+    ics.map.load.featuresForMap(opts, extent, resolution, projection).then(
+        function(doors) {
+          var activeLayer = ics.map.door.getActiveLayer(options.map);
+          var activeStore = activeLayer.getSource();
+          //check if active floor has changed
+          var doorsToAdd =
+              ics.map.store.getNotYetAddedFeatures(activeStore, doors);
+          activeStore.addFeatures(doorsToAdd);
+        });
   }
 };
 
