@@ -183,7 +183,7 @@ ics.map.building.style.labelFunction =
   var isActive = ics.map.building.isActive(feature);
 
   var result = null;
-  if (!marked && resolution < ics.map.complex.RESOLUTION.min &&
+  if (!marked && resolution < ics.map.complex.RESOLUTION.max &&
       (!isActive || (isActive &&
           !ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)))) {
     var geometryFunction = goog.partial(
@@ -191,12 +191,18 @@ ics.map.building.style.labelFunction =
     var units = ics.map.building.getUnits(feature);
     if (!ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)) {
       if (units.length > 0) {
-        var title = ics.map.building.getLabel(feature, resolution);
-        if (goog.isDef(title)) {
-          result = ics.map.style.getLabelWithPin(
-              title, geometryFunction, ics.map.building.style.FONT_SIZE);
+        var complex = ics.map.building.getComplex(feature);
+        if (ics.map.range.contains(ics.map.complex.RESOLUTION, resolution) &&
+            goog.isDefAndNotNull(complex)) {
+          result = null;
+        } else {
+          var title = ics.map.building.getLabel(feature, resolution);
+          if (goog.isDef(title)) {
+            result = ics.map.style.getLabelWithPin(
+                title, geometryFunction, ics.map.building.style.FONT_SIZE);
+          }
         }
-      } else {
+      } else if (resolution < ics.map.complex.RESOLUTION.min) {
         result = ics.map.building.style.defaultLabelFunction(
             options.map, feature, resolution);
       }
