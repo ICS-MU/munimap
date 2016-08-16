@@ -449,11 +449,11 @@ ics.map.create.loadFonts = function() {
         ]
       },
       'timeout': 2000,
-      'active': function() {
-        resolve('fonts loaded');
+      'fontactive': function(font) {
+        resolve('font '+font+' loaded');
       },
-      'inactive': function() {
-        reject('fonts failed to load');
+      'fontinactive': function(font) {
+        reject('font '+font+' failed to load');
       }
     });
   });
