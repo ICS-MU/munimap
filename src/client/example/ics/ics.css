@@ -55,6 +55,18 @@ ol.inline>li {
   background: url(../../_lib/ol3/examples/resources/map-background.jpg) repeat;
   margin-bottom: 10px;
 }
+.multi-map {
+  width: 49%;
+  height: 400px;
+  background: url(../../_lib/ol3/examples/resources/map-background.jpg) repeat;
+  margin-bottom: 10px;
+}
+.left {
+  float: left;
+}
+.right {
+  float: right;
+}
 .ol-attribution.ol-logo-only,
 .ol-attribution.ol-uncollapsible {
   max-width: calc(100% - 3em);
@@ -116,6 +128,7 @@ pre {
 .example {
   padding: 20px 20px;
   background-color: lightgrey;
+  clear: both;
 }
 .footer ul {
   list-style-type: none;
