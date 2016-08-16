@@ -188,7 +188,8 @@ ics.map.create = function(options) {
       var buildings = new ol.layer.Vector({
         source: buildingsStore,
         style: goog.partial(ics.map.building.style.function, {
-          markerSource: markerSource
+          markerSource: markerSource,
+          map: map
         }),
         updateWhileAnimating: true,
         updateWhileInteracting: true
@@ -324,6 +325,7 @@ ics.map.create = function(options) {
       var mapVars = {
         info: infoEl,
         floorSelect: floorSelect,
+        activeBuilding: null,
         activeFloor: null
       };
       map.set(ics.map.VARS_NAME, mapVars);
@@ -450,10 +452,10 @@ ics.map.create.loadFonts = function() {
       },
       'timeout': 2000,
       'fontactive': function(font) {
-        resolve('font '+font+' loaded');
+        resolve('font ' + font + ' loaded');
       },
       'fontinactive': function(font) {
-        reject('font '+font+' failed to load');
+        reject('font ' + font + ' failed to load');
       }
     });
   });

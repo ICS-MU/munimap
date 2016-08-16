@@ -11,6 +11,7 @@ goog.require('ol.extent');
  * @typedef {{
  *   info: Element,
  *   floorSelect: goog.ui.Select,
+ *   activeBuilding:? (string),
  *   activeFloor:? (ics.map.floor.Options)
  * }}
  */
@@ -66,24 +67,24 @@ ics.map.changeFloor = function(map, featureOrCode) {
     building = ics.map.building.getByCode(floorCode);
   }
 
+  var mapVars = ics.map.getVars(map);
   if (building) {
     var locCode = /**@type {string}*/ (building.get('polohKod'));
-    if (ics.map.building.active !== locCode) {
-      ics.map.building.active = locCode;
+    if (mapVars.activeBuilding !== locCode) {
+      mapVars.activeBuilding = locCode;
       building.changed();
       ics.map.info.setBuildingTitle(map, building);
     }
     ics.map.info.refreshElementPosition(map);
   }
 
-  var activeFloor = ics.map.getVars(map).activeFloor;
+  var activeFloor = mapVars.activeFloor;
   if (floorCode) {
     if (!activeFloor || activeFloor.locationCode !== floorCode) {
       ics.map.setActiveFloor(map, building, floorCode);
     }
   } else {
     if (goog.isDefAndNotNull(activeFloor)) {
-      var mapVars = ics.map.getVars(map);
       mapVars.activeFloor = null;
       ics.map.floor.refreshFloorBasedLayers(map);
     }
@@ -94,9 +95,9 @@ ics.map.changeFloor = function(map, featureOrCode) {
         ics.map.info.refreshFloorSelect(map, floors);
       });
     } else {
-      if (ics.map.building.active) {
-        building = ics.map.building.getByCode(ics.map.building.active);
-        ics.map.building.active = null;
+      if (mapVars.activeBuilding) {
+        building = ics.map.building.getByCode(mapVars.activeBuilding);
+        mapVars.activeBuilding = null;
         building.changed();
       }
       ics.map.info.refreshFloorSelect(map, null);
@@ -248,7 +249,7 @@ ics.map.getMainFeatureAtPixel = function(map, pixel) {
 ics.map.isFeatureClickable = function(map, feature, resolution) {
   if (ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)) {
     if (ics.map.building.isBuilding(feature)) {
-      return !ics.map.building.isActive(feature) &&
+      return !ics.map.building.isActive(feature, map) &&
           ics.map.building.hasInnerGeometry(feature);
     } else if (ics.map.room.isRoom(feature)) {
       return !ics.map.room.isInActiveFloor(feature, map);
