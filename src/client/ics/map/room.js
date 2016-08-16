@@ -51,13 +51,7 @@ ics.map.room.TYPE = {
  */
 ics.map.room.createActiveStore = function(map) {
   return new ol.source.Vector({
-    loader: goog.partial(
-        ics.map.room.loadActive,
-        {
-          floorsGetter: ics.map.floor.getActiveFloors,
-          map: map
-        }
-    ),
+    loader: goog.partial(ics.map.room.loadActive, {map: map}),
     strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
       tileSize: 512
     }))
@@ -212,13 +206,14 @@ ics.map.room.assertCodeOrLikeExpr = function(code) {
 
 /**
  * @param {ol.Feature} room
+ * @param {ol.Map} map
  * @return {boolean}
  */
-ics.map.room.isInActiveFloor = function(room) {
+ics.map.room.isInActiveFloor = function(room, map) {
   ics.map.room.assertRoom(room);
   var locCode = /**@type {string}*/(room.get('polohKod'));
-  return !!ics.map.floor.active &&
-      locCode.startsWith(ics.map.floor.active.locationCode);
+  var activeFloor = ics.map.getVars(map).activeFloor;
+  return !!activeFloor && locCode.startsWith(activeFloor.locationCode);
 };
 
 
@@ -230,7 +225,7 @@ ics.map.room.isInActiveFloor = function(room) {
  * @this {ol.source.Vector}
  */
 ics.map.room.loadActive = function(options, extent, resolution, projection) {
-  var floors = options.floorsGetter();
+  var floors = ics.map.floor.getActiveFloors(options.map);
   var where;
   if (floors.length > 0) {
     var conditions = [];

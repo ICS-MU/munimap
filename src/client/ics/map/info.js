@@ -163,16 +163,18 @@ ics.map.info.setBuildingTitle = function(map, building) {
 
 /**
  * @param {goog.ui.Select} floorSelect
+ * @param {ol.Map} map
  * @return {goog.ui.MenuItem}
  * @protected
  */
-ics.map.info.findActiveFloorItem = function(floorSelect) {
+ics.map.info.findActiveFloorItem = function(floorSelect, map) {
   var activeItem;
-  if (ics.map.floor.active) {
+  var activeFloor = ics.map.getVars(map).activeFloor;
+  if (activeFloor) {
     floorSelect.getMenu().forEachChild(function(item) {
       var floor = /**@type (ol.Feature)*/ (item.getModel());
       var floorCode = /**@type (string)*/ (floor.get('polohKod'));
-      if (floorCode === ics.map.floor.active.locationCode) {
+      if (floorCode === activeFloor.locationCode) {
         activeItem = item;
         return;
       }
@@ -203,7 +205,7 @@ ics.map.info.refreshFloorSelect = function(map, floors) {
       goog.dom.setProperties(itemElement,
           {title: ics.map.info.getLabel(floorCode)});
     });
-    var activeFloorItem = ics.map.info.findActiveFloorItem(floorSelect);
+    var activeFloorItem = ics.map.info.findActiveFloorItem(floorSelect, map);
     if (activeFloorItem) {
       floorSelect.setSelectedItem(activeFloorItem);
     } else {

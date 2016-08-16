@@ -201,8 +201,9 @@ ics.map.marker.style.function = function(options, feature, resolution) {
   var result = [];
   if (ics.map.room.isRoom(feature)) {
     var locCode = /**@type {string}*/ (feature.get('polohKod'));
-    var inActiveFloor = ics.map.floor.active &&
-        ics.map.floor.getActiveFloors().some(function(floorCode) {
+    var activeFloor = ics.map.getVars(options.map).activeFloor;
+    var inActiveFloor = activeFloor &&
+        ics.map.floor.getActiveFloors(options.map).some(function(floorCode) {
           return locCode.startsWith(floorCode);
         });
     if (ics.map.range.contains(ics.map.floor.RESOLUTION, resolution) &&

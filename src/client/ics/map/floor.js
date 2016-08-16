@@ -12,12 +12,6 @@ ics.map.floor.RESOLUTION = ics.map.range.createResolution(0, 0.3);
 
 
 /**
- * @type {?ics.map.floor.Options}
- */
-ics.map.floor.active = null;
-
-
-/**
  * @typedef {{
  *   locationCode: (string),
  *   floorLayerId: (number)
@@ -47,15 +41,17 @@ ics.map.floor.TYPE = {
 
 
 /**
+ * @param {ol.Map} map
  * @return {Array.<string>}
  */
-ics.map.floor.getActiveFloors = function() {
+ics.map.floor.getActiveFloors = function(map) {
   var codes = [];
-  if (ics.map.floor.active) {
+  var activeFloor = ics.map.getVars(map).activeFloor;
+  if (activeFloor) {
     var floors = ics.map.floor.STORE.getFeatures();
     var active = floors.filter(function(floor) {
       var layerId = /**@type {number}*/ (floor.get('vrstvaId'));
-      if (layerId === ics.map.floor.active.floorLayerId) {
+      if (layerId === activeFloor.floorLayerId) {
         return true;
       }
       return false;

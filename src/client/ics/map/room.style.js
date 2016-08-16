@@ -105,7 +105,7 @@ ics.map.room.style.function = function(options, feature, resolution) {
   var marked = markers.indexOf(feature) >= 0;
 
   var locCode = /**@type {string}*/ (feature.get('polohKod'));
-  var activeFlooors = ics.map.floor.getActiveFloors();
+  var activeFlooors = ics.map.floor.getActiveFloors(options.map);
   var inActiveBuilding = activeFlooors.some(function(floor) {
     return locCode.startsWith(floor.substr(0, 5));
   });
@@ -161,7 +161,8 @@ ics.map.room.style.function = function(options, feature, resolution) {
 /**
  * @typedef {{
  *   markerSource: ol.source.Vector,
- *   isActive: (boolean)
+ *   isActive: (boolean),
+ *   map: ol.Map
  * }}
  */
 ics.map.room.style.function.Options;
@@ -183,8 +184,10 @@ ics.map.room.style.LABEL_CACHE = {};
 ics.map.room.style.labelFunction = function(options, feature, resolution) {
   var locCode = /**@type {string}*/(feature.get('polohKod'));
   var result = [];
-  if (ics.map.floor.active &&
-      locCode.startsWith(ics.map.floor.active.locationCode)) {
+  var map = options.map;
+  goog.asserts.assertInstanceof(map, ol.Map);
+  var activeFloor = ics.map.getVars(map).activeFloor;
+  if (activeFloor && locCode.startsWith(activeFloor.locationCode)) {
     var markerSource = options.markerSource;
     var markers = markerSource.getFeatures();
     var labelCache;

@@ -204,7 +204,8 @@ ics.map.create = function(options) {
         source: roomsStore,
         style: goog.partial(ics.map.room.style.function, {
           markerSource: markerSource,
-          isActive: false
+          isActive: false,
+          map: map
         }),
         updateWhileAnimating: true,
         updateWhileInteracting: true
@@ -221,7 +222,8 @@ ics.map.create = function(options) {
         source: activeRoomsStore,
         style: goog.partial(ics.map.room.style.function, {
           markerSource: markerSource,
-          isActive: true
+          isActive: true,
+          map: map
         }),
         updateWhileAnimating: true,
         updateWhileInteracting: true
@@ -248,7 +250,7 @@ ics.map.create = function(options) {
         id: ics.map.poi.ACTIVE_LAYER_ID,
         maxResolution: ics.map.poi.RESOLUTION.max,
         source: poiStore,
-        style: ics.map.poi.style.function,
+        style: goog.partial(ics.map.poi.style.function, {map: map}),
         updateWhileAnimating: true,
         updateWhileInteracting: true
 
@@ -290,7 +292,8 @@ ics.map.create = function(options) {
         source: activeRoomsStore,
         style: goog.partial(ics.map.room.style.labelFunction, {
           markerSource: markerSource,
-          markerLabel: options.markerLabel
+          markerLabel: options.markerLabel,
+          map: map
         }),
         updateWhileAnimating: true,
         updateWhileInteracting: true
@@ -313,14 +316,15 @@ ics.map.create = function(options) {
         var newFloor =
             /**@type (ol.Feature)*/ (floorSelect.getSelectedItem().getModel());
         var newLocCode = /**@type (string)*/ (newFloor.get('polohKod'));
-        if (!ics.map.floor.active ||
-            ics.map.floor.active.locationCode !== newLocCode) {
+        var activeFloor = ics.map.getVars(map).activeFloor;
+        if (!activeFloor || activeFloor.locationCode !== newLocCode) {
           ics.map.changeFloor(map, newLocCode);
         }
       });
       var mapVars = {
         info: infoEl,
-        floorSelect: floorSelect
+        floorSelect: floorSelect,
+        activeFloor: null
       };
       map.set(ics.map.VARS_NAME, mapVars);
 

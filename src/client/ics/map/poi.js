@@ -67,13 +67,7 @@ ics.map.poi.ACTIVE_LAYER_ID = 'active-poi';
  */
 ics.map.poi.createActiveStore = function(map) {
   return new ol.source.Vector({
-    loader: goog.partial(
-        ics.map.poi.loadActive,
-        {
-          floorsGetter: ics.map.floor.getActiveFloors,
-          map: map
-        }
-    ),
+    loader: goog.partial(ics.map.poi.loadActive, {map: map}),
     strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
       tileSize: 512
     }))
@@ -120,7 +114,7 @@ ics.map.poi.isPoi = function(feature) {
  * @this {ol.source.Vector}
  */
 ics.map.poi.loadActive = function(options, extent, resolution, projection) {
-  var floors = options.floorsGetter();
+  var floors = ics.map.floor.getActiveFloors(options.map);
   var entrances = [
     ics.map.poi.Purpose.BUILDING_ENTRANCE,
     ics.map.poi.Purpose.BUILDING_COMPLEX_ENTRANCE,

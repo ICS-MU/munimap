@@ -45,9 +45,11 @@ ics.map.style.NO_GEOMETRY_FILL = new ol.style.Fill({
 
 
 /**
+ * The same options are ics.map.marker.style.labelFunction.Options
  * @typedef {{
  *   markerSource: ol.source.Vector,
- *   markerLabel: (ics.map.create.MarkerLabel|undefined)
+ *   markerLabel: (ics.map.create.MarkerLabel|undefined),
+ *   map: (ol.Map|undefined)
  * }}
  */
 ics.map.style.MarkersAwareOptions;
