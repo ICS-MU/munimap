@@ -12,12 +12,6 @@ goog.require('ol.tilegrid.TileGrid');
 
 
 /**
- * @type {?string}
- */
-ics.map.building.active = null;
-
-
-/**
  * @type {RegExp}
  * @protected
  */
@@ -204,22 +198,26 @@ ics.map.building.getByCode = function(code) {
 
 /**
  * @param {ol.Feature} building
+ * @param {ol.Map} map
  * @return {boolean}
  */
-ics.map.building.isActive = function(building) {
+ics.map.building.isActive = function(building, map) {
   ics.map.building.assertBuilding(building);
   var locCode = /**@type {string}*/(building.get('polohKod'));
-  return locCode === ics.map.building.active;
+  var activeBuilding = ics.map.getVars(map).activeBuilding;
+  return locCode === activeBuilding;
 };
 
 
 /**
  * @param {ol.Extent} extent
+ * @param {ol.Map} map
  * @return {boolean}
  */
-ics.map.building.isActiveInExtent = function(extent) {
-  if (goog.isDefAndNotNull(ics.map.building.active)) {
-    var building = ics.map.building.getByCode(ics.map.building.active);
+ics.map.building.isActiveInExtent = function(extent, map) {
+  var activeBuilding = ics.map.getVars(map).activeBuilding;
+  if (goog.isDefAndNotNull(activeBuilding)) {
+    var building = ics.map.building.getByCode(activeBuilding);
     var geom = building.getGeometry();
     return geom.intersectsExtent(extent);
   }
@@ -238,8 +236,8 @@ ics.map.building.refreshActive = function(map) {
     var viewExt = map.getView().calculateExtent(size);
     var refExt =
         ol.extent.buffer(viewExt, ics.map.getBufferValue(viewExt));
-    if (!ics.map.building.active ||
-        !ics.map.building.isActiveInExtent(refExt)) {
+    var activeBuilding = ics.map.getVars(map).activeBuilding;
+    if (!activeBuilding || !ics.map.building.isActiveInExtent(refExt, map)) {
       if (ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)) {
         var selectFeature;
         var maxArea;

@@ -52,7 +52,8 @@ ics.map.info.refreshVisibility = function(map) {
   var view = map.getView();
   var res = view.getResolution();
   goog.asserts.assertNumber(res);
-  var isShown = !!ics.map.building.active &&
+  var activeBuilding = ics.map.getVars(map).activeBuilding;
+  var isShown = !!activeBuilding &&
       ics.map.range.contains(ics.map.floor.RESOLUTION, res);
   var element = ics.map.getVars(map).info;
   goog.style.setElementShown(element, isShown);
@@ -64,8 +65,9 @@ ics.map.info.refreshVisibility = function(map) {
  */
 ics.map.info.refreshElementPosition = function(map) {
   var element = ics.map.getVars(map).info;
-  if (goog.isDefAndNotNull(ics.map.building.active)) {
-    var building = ics.map.building.getByCode(ics.map.building.active);
+  var activeBuilding = ics.map.getVars(map).activeBuilding;
+  if (goog.isDefAndNotNull(activeBuilding)) {
+    var building = ics.map.building.getByCode(activeBuilding);
 
     var view = map.getView();
     var viewExtent = view.calculateExtent(map.getSize() || null);

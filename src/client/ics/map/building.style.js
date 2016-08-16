@@ -147,9 +147,11 @@ ics.map.building.style.function =
       result = ics.map.building.style.NO_GEOMETRY;
     }
   }
-  var isActive = ics.map.building.active &&
-      ics.map.building.active ===
-          /**@type {string} */ (feature.get('polohKod'));
+  var map = options.map;
+  goog.asserts.assertInstanceof(map, ol.Map);
+  var activeBuilding = ics.map.getVars(map).activeBuilding;
+  var isActive = activeBuilding &&
+      activeBuilding === /**@type {string} */ (feature.get('polohKod'));
   if (isActive &&
       ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)) {
     var selectedFill = new ol.style.Fill({
@@ -180,7 +182,7 @@ ics.map.building.style.labelFunction =
   var markerSource = options.markerSource;
   var markers = markerSource.getFeatures();
   var marked = markers.indexOf(feature) >= 0;
-  var isActive = ics.map.building.isActive(feature);
+  var isActive = ics.map.building.isActive(feature, options.map);
 
   var result = null;
   if (!marked && resolution < ics.map.complex.RESOLUTION.max &&

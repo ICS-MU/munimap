@@ -194,7 +194,7 @@ ics.map.marker.style.function = function(options, feature, resolution) {
   goog.asserts.assertInstanceof(feature, ol.Feature);
   if (ics.map.range.contains(ics.map.floor.RESOLUTION, resolution) &&
       ics.map.building.isBuilding(feature) &&
-      ics.map.building.isActive(feature)) {
+      ics.map.building.isActive(feature, options.map)) {
     return null;
   }
 
