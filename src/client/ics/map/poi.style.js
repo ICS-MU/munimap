@@ -223,11 +223,12 @@ ics.map.poi.style.TOILET_W = [
 
 
 /**
+ * @param {ics.map.load.floorBasedActive.Options} options
  * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
-ics.map.poi.style.function = function(feature, resolution) {
+ics.map.poi.style.function = function(options, feature, resolution) {
   var result = ics.map.poi.STYLE;
   var poiType = feature.get('typ');
   var showInfo = ics.map.range.contains(
@@ -248,7 +249,7 @@ ics.map.poi.style.function = function(feature, resolution) {
       var floorCode = feature.get('polohKodPodlazi');
       var defaultFloor =
           goog.asserts.assertNumber(feature.get('vychoziPodlazi'));
-      var activeFloors = ics.map.floor.getActiveFloors();
+      var activeFloors = ics.map.floor.getActiveFloors(options.map);
       var notInBldgWithActiveFloor = activeFloors.every(function(floor) {
         var bldgCode = floor.substr(0, 5);
         return !floorCode.startsWith(bldgCode);

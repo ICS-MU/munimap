@@ -10,7 +10,8 @@ goog.require('ol.extent');
 /**
  * @typedef {{
  *   info: Element,
- *   floorSelect: goog.ui.Select
+ *   floorSelect: goog.ui.Select,
+ *   activeFloor:? (ics.map.floor.Options)
  * }}
  */
 ics.map.Vars;
@@ -75,14 +76,15 @@ ics.map.changeFloor = function(map, featureOrCode) {
     ics.map.info.refreshElementPosition(map);
   }
 
+  var activeFloor = ics.map.getVars(map).activeFloor;
   if (floorCode) {
-    if (!ics.map.floor.active ||
-        ics.map.floor.active.locationCode !== floorCode) {
+    if (!activeFloor || activeFloor.locationCode !== floorCode) {
       ics.map.setActiveFloor(map, building, floorCode);
     }
   } else {
-    if (goog.isDefAndNotNull(ics.map.floor.active)) {
-      ics.map.floor.active = null;
+    if (goog.isDefAndNotNull(activeFloor)) {
+      var mapVars = ics.map.getVars(map);
+      mapVars.activeFloor = null;
       ics.map.floor.refreshFloorBasedLayers(map);
     }
     if (building) {
@@ -111,7 +113,7 @@ ics.map.changeFloor = function(map, featureOrCode) {
  * @protected
  */
 ics.map.getActiveFloorCodeForBuilding = function(map, building) {
-  var activeFloors = ics.map.floor.getActiveFloors();
+  var activeFloors = ics.map.floor.getActiveFloors(map);
   var floorCode = activeFloors.find(function(code) {
     return code.substr(0, 5) === building.get('polohKod');
   });
@@ -161,17 +163,17 @@ ics.map.setActiveFloor = function(map, building, floorCode) {
           /**@type {string}*/ (floor.get('polohKod'));
     });
     var atSameLayerAsActive =
-        ics.map.floor.getActiveFloors().some(function(code) {
+        ics.map.floor.getActiveFloors(map).some(function(code) {
           return code === floorCode;
         });
-    ics.map.floor.active =
-        ics.map.floor.getFloorObject(newActiveFloor || null);
+    var mapVars = ics.map.getVars(map);
+    mapVars.activeFloor = ics.map.floor.getFloorObject(newActiveFloor || null);
     ics.map.info.refreshFloorSelect(map, floors);
     if (atSameLayerAsActive) {
       return null;
     } else {
       return ics.map.floor.loadFloors(
-          'vrstvaId = ' + ics.map.floor.active.floorLayerId);
+          'vrstvaId = ' + mapVars.activeFloor.floorLayerId);
     }
   }).then(function(floors) {
     if (!!floors) {
@@ -249,7 +251,7 @@ ics.map.isFeatureClickable = function(map, feature, resolution) {
       return !ics.map.building.isActive(feature) &&
           ics.map.building.hasInnerGeometry(feature);
     } else if (ics.map.room.isRoom(feature)) {
-      return !ics.map.room.isInActiveFloor(feature);
+      return !ics.map.room.isInActiveFloor(feature, map);
     } else {
       return false;
     }

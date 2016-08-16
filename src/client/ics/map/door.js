@@ -54,13 +54,7 @@ ics.map.door.ACTIVE_LAYER_ID = 'active-door';
  */
 ics.map.door.createActiveStore = function(map) {
   return new ol.source.Vector({
-    loader: goog.partial(
-        ics.map.door.loadActive,
-        {
-          floorsGetter: ics.map.floor.getActiveFloors,
-          map: map
-        }
-    ),
+    loader: goog.partial(ics.map.door.loadActive, {map: map}),
     strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
       tileSize: 512
     }))
@@ -97,7 +91,7 @@ ics.map.door.isActiveLayer = function(layer) {
  * @this {ol.source.Vector}
  */
 ics.map.door.loadActive = function(options, extent, resolution, projection) {
-  var floors = options.floorsGetter();
+  var floors = ics.map.floor.getActiveFloors(options.map);
   var where;
   if (floors.length > 0) {
     var conditions = [];
