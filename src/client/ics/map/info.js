@@ -211,7 +211,8 @@ ics.map.info.refreshFloorSelect = function(map, floors) {
     if (activeFloorItem) {
       floorSelect.setSelectedItem(activeFloorItem);
     } else {
-      floorSelect.setSelectedItem(null);
+      var text = ics.map.lang.getMsg(ics.map.lang.Translations.INFOBOX_CHOOSE);
+      floorSelect.setDefaultCaption(goog.dom.createTextNode(text));
     }
   }
 };
