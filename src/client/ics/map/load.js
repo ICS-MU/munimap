@@ -360,7 +360,8 @@ ics.map.load.featuresFromUrl = function(options) {
             loadedNewProcessedFeatures: loadedNewProcessedFeatures
           }).then(function() {
             var allLoadedFeatures =
-                newLoadedFeatures.concat(loadedStoredFeatures);
+                newLoadedFeatures.concat(loadedStoredFeatures,
+                    loadedNewProcessedFeatures);
             var processor = options.processor ||
                 ics.map.load.defaultProcessor;
             var procOpts = {
