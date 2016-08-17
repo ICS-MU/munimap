@@ -5,6 +5,7 @@ goog.require('ics.map.complex');
 goog.require('ics.map.floor');
 goog.require('ics.map.geom');
 goog.require('ics.map.marker.cluster.style');
+goog.require('ics.map.marker.style');
 goog.require('ics.map.range');
 goog.require('ics.map.store');
 goog.require('ics.map.style');
@@ -151,7 +152,7 @@ ics.map.building.style.function =
   goog.asserts.assertInstanceof(map, ol.Map);
   var activeBuilding = ics.map.getVars(map).activeBuilding;
   var isActive = activeBuilding &&
-      activeBuilding === /**@type {string} */ (feature.get('polohKod'));
+      activeBuilding === ics.map.building.getLocationCode(feature);
   if (isActive &&
       ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)) {
     var selectedFill = new ol.style.Fill({

@@ -145,6 +145,9 @@
             var titleParts = clusteredFeatures.map(function(cf) {
               return getHeadquartersLabels(cf, resolution);
             });
+            titleParts = titleParts.filter(function(part) {
+              return !!part;
+            });
             title = ics.map.style.alignTextToRows(titleParts, ', ');
           }
         } else {
