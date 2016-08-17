@@ -11,7 +11,7 @@ goog.require('ol.style.Style');
  * @type {ics.map.Range}
  * @const
  */
-ics.map.marker.RESOLUTION = ics.map.range.createResolution(0, 8.5);
+ics.map.marker.RESOLUTION = ics.map.range.createResolution(0, 2.39);
 
 
 /**

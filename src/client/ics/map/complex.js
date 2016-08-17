@@ -14,14 +14,7 @@ goog.require('ol.style.Text');
  * @type {ics.map.Range}
  * @const
  */
-ics.map.complex.RESOLUTION = ics.map.range.createResolution(1.19, 6.4);
-
-
-/**
- * @type {ics.map.Range}
- * @const
- */
-ics.map.complex.RESOLUTION_BIG = ics.map.range.createResolution(4.77, 6.4);
+ics.map.complex.RESOLUTION = ics.map.range.createResolution(1.19, 4.77);
 
 
 /**
@@ -90,6 +83,17 @@ ics.map.complex.isComplex = function(feature) {
 
 
 /**
+ * @param {ol.Feature} complex
+ * @return {number}
+ */
+ics.map.complex.getBuildingCount = function(complex) {
+  var result = complex.get('pocetBudov');
+  goog.asserts.assertNumber(result);
+  return result;
+};
+
+
+/**
  * @param {ics.map.style.MarkersAwareOptions} options
  * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
@@ -97,64 +101,54 @@ ics.map.complex.isComplex = function(feature) {
  */
 ics.map.complex.style.function = function(options, feature, resolution) {
   var showLabel = true;
-  var markerSource = options.markerSource;
-  var markers = markerSource.getFeatures();
-  if (markers.length && ics.map.building.isBuilding(markers[0])) {
-    var buildingCount = /**@type {number}*/(feature.get('pocetBudov'));
-    if (buildingCount === 1) {
-      var complexId =
-          /**@type {number}*/(feature.get(ics.map.complex.ID_FIELD_NAME));
-      showLabel = !markers.some(function(marker) {
-        var markerComplexId = marker.get('arealId');
-        if (goog.isDefAndNotNull(markerComplexId)) {
-          goog.asserts.assertNumber(markerComplexId);
-          return markerComplexId === complexId;
-        }
-        return false;
-      });
+
+  goog.asserts.assertInstanceof(feature, ol.Feature);
+  var bldgCount = ics.map.complex.getBuildingCount(feature);
+  if (bldgCount === 1) {
+    showLabel = ics.map.complex.getUnits(feature).length === 0;
+    if (showLabel) {
+      var markerSource = options.markerSource;
+      var markers = markerSource.getFeatures();
+      if (markers.length && ics.map.building.isBuilding(markers[0])) {
+        var complexId =
+            /**@type {number}*/(feature.get(ics.map.complex.ID_FIELD_NAME));
+        var isMarked = markers.some(function(marker) {
+          var markerComplexId = marker.get('arealId');
+          if (goog.isDefAndNotNull(markerComplexId)) {
+            goog.asserts.assertNumber(markerComplexId);
+            return markerComplexId === complexId;
+          }
+          return false;
+        });
+        showLabel = !isMarked;
+      }
     }
   }
   if (showLabel) {
     goog.asserts.assertInstanceof(feature, ol.Feature);
     var title;
     var uid = ics.map.store.getUid(feature);
-    if (!ics.map.range.contains(ics.map.complex.RESOLUTION_BIG, resolution)) {
-      goog.asserts.assertString(uid);
-      if (ics.map.style.LABEL_CACHE[uid]) {
-        return ics.map.style.LABEL_CACHE[uid];
-      }
-
-      title = /**@type {string}*/ (feature.get('nazevPrez'));
-      title = title.split(', ')[0];
+    goog.asserts.assertString(uid);
+    if (ics.map.style.LABEL_CACHE[uid]) {
+      return ics.map.style.LABEL_CACHE[uid];
     }
 
-    var style;
-    var units = ics.map.complex.getUnits(feature);
-    if (units.length > 0) {
-      var titleParts = ics.map.unit.getTitleParts(units);
-      if (title) {
-        titleParts.push(title);
-      }
-      style = ics.map.style.getLabelWithPin(titleParts.join('\n'),
-          ics.map.geom.CENTER_GEOMETRY_FUNCTION, ics.map.complex.FONT_SIZE);
-    } else if (title) {
-      title = ics.map.style.alignTextToRows(title.split(' '), ' ');
-      style = new ol.style.Style({
-        geometry: ics.map.geom.CENTER_GEOMETRY_FUNCTION,
-        text: new ol.style.Text({
-          font: 'bold ' + ics.map.complex.FONT_SIZE + 'px arial',
-          fill: ics.map.style.TEXT_FILL,
-          stroke: ics.map.style.TEXT_STROKE,
-          text: title
-        }),
-        zIndex: 1
-      });
-    }
-    var result = style || null;
-    if (!ics.map.range.contains(ics.map.complex.RESOLUTION_BIG, resolution)) {
-      goog.asserts.assertString(uid);
-      ics.map.style.LABEL_CACHE[uid] = result;
-    }
+    title = /**@type {string}*/ (feature.get('nazevPrez'));
+    title = title.split(', ')[0];
+    title = ics.map.style.alignTextToRows(title.split(' '), ' ');
+    var style = new ol.style.Style({
+      geometry: ics.map.geom.CENTER_GEOMETRY_FUNCTION,
+      text: new ol.style.Text({
+        font: 'bold ' + ics.map.complex.FONT_SIZE + 'px arial',
+        fill: ics.map.style.TEXT_FILL,
+        stroke: ics.map.style.TEXT_STROKE,
+        text: title
+      }),
+      zIndex: 1
+    });
+    var result = style;
+
+    ics.map.style.LABEL_CACHE[uid] = result;
     return result;
   }
   return null;

@@ -317,8 +317,8 @@ ics.map.create = function(options) {
       map.addLayer(doors);
       map.addLayer(poi);
       map.addLayer(roomLabels);
-      map.addLayer(buildingLabels);
       map.addLayer(complexes);
+      map.addLayer(buildingLabels);
       map.addLayer(markerClusterLayer);
       map.addLayer(markerLayer);
 
