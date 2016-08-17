@@ -147,6 +147,7 @@ ics.map.create = function(options) {
         target: munimapEl,
         view: view
       });
+      ics.map.LIST.push(map);
 
 
       var markerSource = new ol.source.Vector({
@@ -258,12 +259,22 @@ ics.map.create = function(options) {
       });
 
       var clusterResolution = ics.map.marker.cluster.BUILDING_RESOLUTION;
-      if (markers && markers.length && ics.map.room.isRoom(markers[0])) {
+      if (markers.length && ics.map.room.isRoom(markers[0])) {
         clusterResolution = ics.map.marker.cluster.ROOM_RESOLUTION;
+      }
+      var clusterFeatures = markers.concat();
+      if (ics.map.range.contains(
+          ics.map.marker.cluster.BUILDING_RESOLUTION, view.getResolution())) {
+        var loadedBldgs = ics.map.building.STORE.getFeatures();
+        var bldgsToAdd =
+            ics.map.building.getNotMarkedHeadquaters(loadedBldgs, markers);
+        clusterFeatures = clusterFeatures.concat(bldgsToAdd);
       }
       var markerClusterSrc = new ol.source.Cluster({
         attributions: [muAttribution],
-        source: markerSource,
+        source: new ol.source.Vector({
+          features: clusterFeatures
+        }),
         distance: 50
       });
       var markerClusterLayer = new ol.layer.Vector({
@@ -322,11 +333,13 @@ ics.map.create = function(options) {
           ics.map.changeFloor(map, newLocCode);
         }
       });
+
       var mapVars = {
         info: infoEl,
         floorSelect: floorSelect,
         activeBuilding: null,
-        activeFloor: null
+        activeFloor: null,
+        currentResolution: goog.asserts.assertNumber(view.getResolution())
       };
       map.set(ics.map.VARS_NAME, mapVars);
 
@@ -354,6 +367,8 @@ ics.map.create = function(options) {
         ics.map.building.refreshActive(map);
         ics.map.info.refreshVisibility(map);
       });
+
+      map.on('precompose', ics.map.marker.cluster.handleMapPrecomposeEvt);
 
       view.on('change:resolution', function(evt) {
 

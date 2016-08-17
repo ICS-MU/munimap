@@ -12,7 +12,8 @@ goog.require('ol.extent');
  *   info: Element,
  *   floorSelect: goog.ui.Select,
  *   activeBuilding:? (string),
- *   activeFloor:? (ics.map.floor.Options)
+ *   activeFloor:? (ics.map.floor.Options),
+ *   currentResolution: (number)
  * }}
  */
 ics.map.Vars;
@@ -23,6 +24,13 @@ ics.map.Vars;
  * @const
  */
 ics.map.VARS_NAME = 'munimapVars';
+
+
+/**
+ * @type {Array.<ol.Map>}
+ * @const
+ */
+ics.map.LIST = [];
 
 
 /**
@@ -69,7 +77,7 @@ ics.map.changeFloor = function(map, featureOrCode) {
 
   var mapVars = ics.map.getVars(map);
   if (building) {
-    var locCode = /**@type {string}*/ (building.get('polohKod'));
+    var locCode = ics.map.building.getLocationCode(building);
     if (mapVars.activeBuilding !== locCode) {
       mapVars.activeBuilding = locCode;
       building.changed();
@@ -89,7 +97,7 @@ ics.map.changeFloor = function(map, featureOrCode) {
       ics.map.floor.refreshFloorBasedLayers(map);
     }
     if (building) {
-      var buildingCode = /**@type {string}*/ (building.get('polohKod'));
+      var buildingCode = ics.map.building.getLocationCode(building);
       var where = 'polohKod LIKE \'' + buildingCode + '%\'';
       ics.map.floor.loadFloors(where).then(function(floors) {
         ics.map.info.refreshFloorSelect(map, floors);
@@ -116,7 +124,7 @@ ics.map.changeFloor = function(map, featureOrCode) {
 ics.map.getActiveFloorCodeForBuilding = function(map, building) {
   var activeFloors = ics.map.floor.getActiveFloors(map);
   var floorCode = activeFloors.find(function(code) {
-    return code.substr(0, 5) === building.get('polohKod');
+    return code.substr(0, 5) === ics.map.building.getLocationCode(building);
   });
   if (!floorCode) {
     var markerSource = ics.map.marker.getStore(map);
@@ -124,8 +132,7 @@ ics.map.getActiveFloorCodeForBuilding = function(map, building) {
     if (markedFeatures.length > 0) {
       var firstMarked = markedFeatures.find(function(marked) {
         if (ics.map.room.isRoom(marked)) {
-          var buildingLocCode =
-              /**@type {string}*/ (building.get('polohKod'));
+          var buildingLocCode = ics.map.building.getLocationCode(building);
           var roomLocCode =
               /**@type {string}*/ (marked.get('polohKod'));
           return roomLocCode.substr(0, 5) === buildingLocCode;
@@ -156,7 +163,7 @@ ics.map.getActiveFloorCodeForBuilding = function(map, building) {
  * @protected
  */
 ics.map.setActiveFloor = function(map, building, floorCode) {
-  var buildingCode = /**@type {string}*/ (building.get('polohKod'));
+  var buildingCode = ics.map.building.getLocationCode(building);
   var where = 'polohKod LIKE \'' + buildingCode + '%\'';
   ics.map.floor.loadFloors(where).then(function(floors) {
     var newActiveFloor = floors.find(function(floor) {

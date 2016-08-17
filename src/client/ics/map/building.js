@@ -47,6 +47,12 @@ ics.map.building.COMPLEX_ID_FIELD_NAME = 'arealId';
 /**
  * @type {string}
  */
+ics.map.building.LOCATION_CODE_FIELD_NAME = 'polohKod';
+
+
+/**
+ * @type {string}
+ */
 ics.map.building.TITLE_FIELD_NAME = 'nazev';
 
 
@@ -68,7 +74,7 @@ ics.map.building.UNITS_FIELD_NAME = 'pracoviste';
  */
 ics.map.building.STORE = new ol.source.Vector({
   loader: goog.partial(
-      ics.map.load.featuresForMap,
+      ics.map.building.featuresForMap,
       {
         type: function() {
           return ics.map.building.TYPE;
@@ -83,11 +89,39 @@ ics.map.building.STORE = new ol.source.Vector({
 
 
 /**
+ * @param {ics.map.load.featuresForMap.Options} options
+ * @param {ol.Extent} extent
+ * @param {number} resolution
+ * @param {ol.proj.Projection} projection
+ * @return {goog.Thenable<Array<ol.Feature>>} promise of features contained
+ * in server response
+ * @this {ol.source.Vector}
+ */
+ics.map.building.featuresForMap =
+    function(options, extent, resolution, projection) {
+  return ics.map.load.featuresForMap(options, extent, resolution, projection).
+      then(function(buildings) {
+        if (buildings.length) {
+          ics.map.LIST.forEach(function(map) {
+            var view = map.getView();
+            var res = view ? view.getResolution() : null;
+            if (res && ics.map.range.contains(
+                ics.map.marker.cluster.BUILDING_RESOLUTION, res)) {
+              ics.map.marker.cluster.addHeadquaters(map, buildings);
+            }
+          });
+        }
+        return goog.Promise.resolve(buildings);
+      });
+};
+
+
+/**
  *
  * @type {ics.map.type.Options}
  */
 ics.map.building.TYPE = {
-  primaryKey: 'polohKod',
+  primaryKey: ics.map.building.LOCATION_CODE_FIELD_NAME,
   serviceUrl: ics.map.load.MUNIMAP_URL,
   store: ics.map.building.STORE,
   layerId: 2,
@@ -118,7 +152,7 @@ ics.map.building.assertBuilding = function(feature) {
  * @return {boolean}
  */
 ics.map.building.isBuilding = function(feature) {
-  var code = feature.get('polohKod');
+  var code = feature.get(ics.map.building.LOCATION_CODE_FIELD_NAME);
   return goog.isString(code) && ics.map.building.isCode(code);
 };
 
@@ -198,12 +232,51 @@ ics.map.building.getByCode = function(code) {
 
 /**
  * @param {ol.Feature} building
+ * @return {string}
+ */
+ics.map.building.getLocationCode = function(building) {
+  var result = building.get(ics.map.building.LOCATION_CODE_FIELD_NAME);
+  goog.asserts.assertString(result);
+  return result;
+};
+
+
+/**
+ * @param {Array.<ol.Feature>} buildings
+ * @param {Array.<ol.Feature>} markers
+ * @return {Array.<ol.Feature>}
+ */
+ics.map.building.getNotMarkedHeadquaters = function(buildings, markers) {
+  var headquaters = ics.map.building.getHeadquaters(buildings);
+  if (markers.length) {
+    headquaters = headquaters.filter(function(bldg) {
+      return !goog.array.contains(markers, bldg);
+    });
+  }
+  return headquaters;
+};
+
+
+/**
+ * @param {Array.<ol.Feature>} buildings
+ * @return {Array.<ol.Feature>}
+ * @protected
+ */
+ics.map.building.getHeadquaters = function(buildings) {
+  return buildings.filter(function(bldg) {
+    return ics.map.building.getUnits(bldg).length > 0;
+  });
+};
+
+
+/**
+ * @param {ol.Feature} building
  * @param {ol.Map} map
  * @return {boolean}
  */
 ics.map.building.isActive = function(building, map) {
   ics.map.building.assertBuilding(building);
-  var locCode = /**@type {string}*/(building.get('polohKod'));
+  var locCode = ics.map.building.getLocationCode(building);
   var activeBuilding = ics.map.getVars(map).activeBuilding;
   return locCode === activeBuilding;
 };

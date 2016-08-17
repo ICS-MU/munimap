@@ -45,6 +45,30 @@ ics.map.style.NO_GEOMETRY_FILL = new ol.style.Fill({
 
 
 /**
+ * @type {number}
+ * @const
+ */
+ics.map.style.PIN_SIZE = 25;
+
+
+/**
+ * @type {ol.style.Style}
+ * @const
+ */
+ics.map.style.PIN = new ol.style.Style({
+  geometry: ics.map.geom.CENTER_GEOMETRY_FUNCTION,
+  text: new ol.style.Text({
+    text: '\uf041',
+    font: 'normal ' + ics.map.style.PIN_SIZE + 'px FontAwesome',
+    fill: ics.map.style.TEXT_FILL,
+    offsetY: - ics.map.style.PIN_SIZE / 2,
+    stroke: ics.map.style.TEXT_STROKE
+  }),
+  zIndex: 6
+});
+
+
+/**
  * The same options are ics.map.marker.style.labelFunction.Options
  * @typedef {{
  *   markerSource: ol.source.Vector,
@@ -137,13 +161,20 @@ ics.map.style.getDefaultLabel = function(feature, resolution) {
   var uid = ics.map.store.getUid(feature);
   if (!uid) {
     var clusteredFeatures = feature.get('features');
-    var featureTypeName;
-    if (ics.map.building.isBuilding(clusteredFeatures[0])) {
-      featureTypeName = 'budova';
-    } else if (ics.map.room.isRoom(clusteredFeatures[0])) {
-      featureTypeName = 'místnost';
+    var titleParts = [];
+    var rooms = clusteredFeatures.filter(function(feat) {
+      return ics.map.room.isRoom(feat);
+    });
+    if (rooms.length) {
+      titleParts.push(rooms.length + 'x místnost');
     }
-    title = clusteredFeatures.length + 'x ' + featureTypeName;
+    var bldgs = clusteredFeatures.filter(function(feat) {
+      return ics.map.building.isBuilding(feat);
+    });
+    if (bldgs.length) {
+      titleParts.push(bldgs.length + 'x budova');
+    }
+    title = titleParts.join('\n');
   } else {
     goog.asserts.assertInstanceof(feature, ol.Feature);
     if (ics.map.building.isBuilding(feature)) {
@@ -197,9 +228,9 @@ ics.map.style.getLabelWithPin =
     geometry: geometryFunction,
     text: new ol.style.Text({
       text: '\uf041',
-      font: 'normal ' + ics.map.marker.style.PIN_SIZE + 'px FontAwesome',
+      font: 'normal ' + ics.map.style.PIN_SIZE + 'px FontAwesome',
       fill: ics.map.style.TEXT_FILL,
-      offsetY: - ics.map.marker.style.PIN_SIZE / 2,
+      offsetY: - ics.map.style.PIN_SIZE / 2,
       stroke: ics.map.style.TEXT_STROKE
     }),
     zIndex: 5
