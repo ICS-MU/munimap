@@ -194,14 +194,12 @@ ics.map.building.style.labelFunction =
     var units = ics.map.building.getUnits(feature);
     if (!ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)) {
       if (units.length > 0) {
-        var complex = ics.map.building.getComplex(feature);
-        if (ics.map.range.contains(ics.map.complex.RESOLUTION, resolution) &&
-            goog.isDefAndNotNull(complex)) {
-          result = null;
-        } else {
+        if (resolution < ics.map.marker.cluster.BUILDING_RESOLUTION.min) {
           var title;
-          if (ics.map.range.contains(
-              ics.map.complex.RESOLUTION_BIG, resolution)) {
+          var complex = ics.map.building.getComplex(feature);
+          if (ics.map.range.contains(ics.map.complex.RESOLUTION, resolution) &&
+              goog.isDefAndNotNull(complex) &&
+              ics.map.complex.getBuildingCount(complex) > 1) {
             title = ics.map.unit.getTitleParts(units).join('\n');
           } else {
             title = ics.map.building.getLabel(feature, resolution);

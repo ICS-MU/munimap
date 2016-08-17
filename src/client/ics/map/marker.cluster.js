@@ -18,7 +18,7 @@ ics.map.marker.cluster.ROOM_RESOLUTION =
  * @const
  */
 ics.map.marker.cluster.BUILDING_RESOLUTION =
-    ics.map.range.createResolution(6.4, Number.POSITIVE_INFINITY);
+    ics.map.range.createResolution(2.39, Number.POSITIVE_INFINITY);
 
 
 /**
@@ -177,7 +177,7 @@ ics.map.marker.cluster.style.MULTIPLE_MARKED = new ol.style.Style({
     fill: ics.map.marker.style.FILL,
     stroke: new ol.style.Stroke({
       color: '#ffffff',
-      width: 2
+      width: 3
     })
   })
 });
