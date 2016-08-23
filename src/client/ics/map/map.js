@@ -276,6 +276,9 @@ ics.map.isFeatureClickable = function(map, feature, resolution) {
       return poiType === ics.map.poi.Purpose.BUILDING_ENTRANCE ||
           poiType === ics.map.poi.Purpose.BUILDING_COMPLEX_ENTRANCE;
     }
+    if (ics.map.room.isRoom(feature) && markers.indexOf(feature) >= 0) {
+      return true;
+    }
     if (ics.map.range.contains(ics.map.range.createResolution(
         ics.map.floor.RESOLUTION.max, ics.map.complex.RESOLUTION.min),
         resolution)) {
