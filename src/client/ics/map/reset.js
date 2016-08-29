@@ -45,6 +45,10 @@ ics.map.reset = function(map, options) {
       markerSource.clear();
       markerSource.addFeatures(markers);
 
+      var clusterSource = ics.map.marker.cluster.getSource(map);
+      clusterSource.clear();
+      clusterSource.addFeatures(markers);
+
       var size = map.getSize();
       goog.asserts.assert(goog.isDefAndNotNull(size));
       var oldExtent = map.getView().calculateExtent(size);

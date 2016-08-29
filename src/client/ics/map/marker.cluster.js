@@ -63,7 +63,6 @@ ics.map.marker.cluster.getStore = function(map) {
 /**
  * @param {ol.Map} map
  * @return {ol.source.Vector}
- * @protected
  */
 ics.map.marker.cluster.getSource = function(map) {
   var clusterStore = ics.map.marker.cluster.getStore(map);
