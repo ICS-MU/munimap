@@ -157,10 +157,11 @@ ics.map.style.alignTextToRows = function(parts, separator) {
  * @return {string|undefined}
  */
 ics.map.style.getDefaultLabel = function(feature, resolution) {
+  goog.asserts.assertInstanceof(feature, ol.Feature);
   var title;
   var uid = ics.map.store.getUid(feature);
   if (!uid) {
-    var clusteredFeatures = feature.get('features');
+    var clusteredFeatures = ics.map.cluster.getFeatures(feature);
     var titleParts = [];
     var rooms = clusteredFeatures.filter(function(feat) {
       return ics.map.room.isRoom(feat);
@@ -176,7 +177,6 @@ ics.map.style.getDefaultLabel = function(feature, resolution) {
     }
     title = titleParts.join('\n');
   } else {
-    goog.asserts.assertInstanceof(feature, ol.Feature);
     if (ics.map.building.isBuilding(feature)) {
       title = ics.map.building.getLabel(feature, resolution);
       goog.asserts.assertString(title);

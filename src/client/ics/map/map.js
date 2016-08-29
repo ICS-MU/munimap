@@ -225,7 +225,7 @@ ics.map.getMainFeatureAtPixel = function(map, pixel) {
   var features = [];
   var rooms = ics.map.room.getDefaultLayer(map);
   var doors = ics.map.door.getActiveLayer(map);
-  var markerClusterLayer = ics.map.marker.cluster.getLayer(map);
+  var markerClusterLayer = ics.map.cluster.getLayer(map);
   var markerLayer = ics.map.marker.getLayer(map);
   map.forEachFeatureAtPixel(pixel, function(feature, layer) {
     if (layer === doors || layer === rooms) {
@@ -307,7 +307,7 @@ ics.map.handleClickOnPixel = function(map, pixel) {
     var viewExtent = view.calculateExtent(size);
     goog.asserts.assertNumber(resolution);
     if (ics.map.range.contains(
-        ics.map.marker.cluster.BUILDING_RESOLUTION, resolution) &&
+        ics.map.cluster.BUILDING_RESOLUTION, resolution) &&
         !ics.map.cluster.isCluster(clickedFeature)) {
       return;
     }

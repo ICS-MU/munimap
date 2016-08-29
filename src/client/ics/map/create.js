@@ -11,6 +11,7 @@ goog.require('ics.map.assert');
 goog.require('ics.map.building');
 goog.require('ics.map.building.style');
 goog.require('ics.map.cluster');
+goog.require('ics.map.cluster.style');
 goog.require('ics.map.complex');
 goog.require('ics.map.complex.style');
 goog.require('ics.map.door');
@@ -19,8 +20,6 @@ goog.require('ics.map.floor');
 goog.require('ics.map.info');
 goog.require('ics.map.lang');
 goog.require('ics.map.marker');
-goog.require('ics.map.marker.cluster');
-goog.require('ics.map.marker.cluster.style');
 goog.require('ics.map.poi');
 goog.require('ics.map.poi.style');
 goog.require('ics.map.room');
@@ -258,13 +257,13 @@ ics.map.create = function(options) {
 
       });
 
-      var clusterResolution = ics.map.marker.cluster.BUILDING_RESOLUTION;
+      var clusterResolution = ics.map.cluster.BUILDING_RESOLUTION;
       if (markers.length && ics.map.room.isRoom(markers[0])) {
-        clusterResolution = ics.map.marker.cluster.ROOM_RESOLUTION;
+        clusterResolution = ics.map.cluster.ROOM_RESOLUTION;
       }
       var clusterFeatures = markers.concat();
       if (ics.map.range.contains(
-          ics.map.marker.cluster.BUILDING_RESOLUTION, view.getResolution())) {
+          ics.map.cluster.BUILDING_RESOLUTION, view.getResolution())) {
         var loadedBldgs = ics.map.building.STORE.getFeatures();
         var bldgsToAdd =
             ics.map.building.getNotMarkedHeadquaters(loadedBldgs, markers);
@@ -278,10 +277,10 @@ ics.map.create = function(options) {
         distance: 50
       });
       var markerClusterLayer = new ol.layer.Vector({
-        id: ics.map.marker.cluster.LAYER_ID,
+        id: ics.map.cluster.LAYER_ID,
         source: markerClusterSrc,
         style: goog.partial(
-            ics.map.marker.cluster.style.function, markerOptions),
+            ics.map.cluster.style.function, markerOptions),
         minResolution: clusterResolution.min,
         updateWhileAnimating: true,
         updateWhileInteracting: true
@@ -368,7 +367,7 @@ ics.map.create = function(options) {
         ics.map.info.refreshVisibility(map);
       });
 
-      map.on('precompose', ics.map.marker.cluster.handleMapPrecomposeEvt);
+      map.on('precompose', ics.map.cluster.handleMapPrecomposeEvt);
 
       view.on('change:resolution', function(evt) {
 

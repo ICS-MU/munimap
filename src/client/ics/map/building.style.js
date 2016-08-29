@@ -1,10 +1,10 @@
 goog.provide('ics.map.building.STYLE');
 goog.provide('ics.map.building.style');
 
+goog.require('ics.map.cluster.style');
 goog.require('ics.map.complex');
 goog.require('ics.map.floor');
 goog.require('ics.map.geom');
-goog.require('ics.map.marker.cluster.style');
 goog.require('ics.map.marker.style');
 goog.require('ics.map.range');
 goog.require('ics.map.store');
@@ -107,7 +107,7 @@ ics.map.building.style.function =
   var marked = markers.indexOf(feature) >= 0;
   if (marked) {
     if (!ics.map.range.contains(
-        ics.map.marker.cluster.BUILDING_RESOLUTION, resolution)) {
+        ics.map.cluster.BUILDING_RESOLUTION, resolution)) {
       var result;
       if (ics.map.building.hasInnerGeometry(feature)) {
         if (ics.map.marker.style.WHITE_TO_GREY_CACHE[resColor.resolution]) {
@@ -194,7 +194,7 @@ ics.map.building.style.labelFunction =
     var units = ics.map.building.getUnits(feature);
     if (!ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)) {
       if (units.length > 0) {
-        if (resolution < ics.map.marker.cluster.BUILDING_RESOLUTION.min) {
+        if (resolution < ics.map.cluster.BUILDING_RESOLUTION.min) {
           var title;
           var complex = ics.map.building.getComplex(feature);
           if (ics.map.range.contains(ics.map.complex.RESOLUTION, resolution) &&

@@ -106,8 +106,8 @@ ics.map.building.featuresForMap =
             var view = map.getView();
             var res = view ? view.getResolution() : null;
             if (res && ics.map.range.contains(
-                ics.map.marker.cluster.BUILDING_RESOLUTION, res)) {
-              ics.map.marker.cluster.addHeadquaters(map, buildings);
+                ics.map.cluster.BUILDING_RESOLUTION, res)) {
+              ics.map.cluster.addHeadquaters(map, buildings);
             }
           });
         }
