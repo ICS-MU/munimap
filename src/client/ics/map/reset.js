@@ -48,6 +48,15 @@ ics.map.reset = function(map, options) {
       var clusterSource = ics.map.cluster.getSource(map);
       clusterSource.clear();
       clusterSource.addFeatures(markers);
+      var clusterLayer = ics.map.cluster.getLayer(map);
+      var oldMinRes = clusterLayer.getMinResolution();
+      var clusterResolution = ics.map.cluster.BUILDING_RESOLUTION;
+      if (markers.length && ics.map.room.isRoom(markers[0])) {
+        clusterResolution = ics.map.cluster.ROOM_RESOLUTION;
+      }
+      if (oldMinRes !== clusterResolution.min) {
+        clusterLayer.setMinResolution(clusterResolution.min);
+      }
 
       var size = map.getSize();
       goog.asserts.assert(goog.isDefAndNotNull(size));
