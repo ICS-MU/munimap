@@ -66,12 +66,12 @@
       ics.map.create({
         target: 'map',
         zoom: 17,
-        markers: ['BMA01']
+        markers: ['BMA01N05055', 'BMA01N05070']
       }).then(function(map) {
         var button = document.getElementById('resetButton');
         button.onclick = function() {
           ics.map.reset(map, {
-            markers: ['BMB01']
+            markers: ['BMB01', 'BMB05']
           });
         };
       });
