@@ -143,7 +143,7 @@ ics.map.marker.style.function = function(options, feature, resolution) {
 
     var markedRoomResolution = ics.map.range.createResolution(
         ics.map.floor.RESOLUTION.max,
-        ics.map.marker.cluster.ROOM_RESOLUTION.min
+        ics.map.cluster.ROOM_RESOLUTION.min
         );
     if (ics.map.range.contains(markedRoomResolution, resolution)) {
       result.push(ics.map.marker.style.ROOM);
@@ -151,7 +151,7 @@ ics.map.marker.style.function = function(options, feature, resolution) {
   }
   if (!ics.map.room.isRoom(feature) ||
       !ics.map.range.contains(
-      ics.map.marker.cluster.ROOM_RESOLUTION, resolution)) {
+      ics.map.cluster.ROOM_RESOLUTION, resolution)) {
     var textStyle =
         ics.map.marker.style.labelFunction(options, feature, resolution);
     if (goog.isDefAndNotNull(textStyle)) {
@@ -191,8 +191,8 @@ ics.map.marker.style.labelFunction = function(options, feature, resolution) {
     }
     var markers = options.markerSource.getFeatures();
     var isMarked = goog.array.contains(markers, feature) ||
-        (goog.isDefAndNotNull(feature.get('features')) &&
-            ics.map.marker.cluster.containsMarker(options.map, feature));
+        (ics.map.cluster.getFeatures(feature).length &&
+            ics.map.cluster.containsMarker(options.map, feature));
     var fill = isMarked ?
         ics.map.marker.style.TEXT_FILL :
         ics.map.style.TEXT_FILL;

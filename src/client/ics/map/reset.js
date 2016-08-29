@@ -45,7 +45,7 @@ ics.map.reset = function(map, options) {
       markerSource.clear();
       markerSource.addFeatures(markers);
 
-      var clusterSource = ics.map.marker.cluster.getSource(map);
+      var clusterSource = ics.map.cluster.getSource(map);
       clusterSource.clear();
       clusterSource.addFeatures(markers);
 
