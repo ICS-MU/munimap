@@ -205,6 +205,20 @@ ics.map.room.assertCodeOrLikeExpr = function(code) {
 
 
 /**
+ * @param {ol.Feature} feature
+ * @return {string|undefined}
+ */
+ics.map.room.getTitle = function(feature) {
+  var title = feature.get('nazev') || feature.get('cislo');
+  if (goog.isDef(title)) {
+    goog.asserts.assertString(title);
+    title = ics.map.room.style.alignRoomTitleToRows(title);
+  }
+  return title;
+};
+
+
+/**
  * @param {ol.Feature} room
  * @param {ol.Map} map
  * @return {boolean}

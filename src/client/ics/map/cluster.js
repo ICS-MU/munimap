@@ -218,13 +218,31 @@ ics.map.cluster.style.function = function(options, feature, resolution) {
   var features = ics.map.cluster.getFeatures(feature);
   var result;
   if (features.length > 1) {
-    var containsMarker =
-        ics.map.cluster.containsMarker(options.map, feature);
-    var circleStyle = containsMarker ?
-        ics.map.cluster.style.MULTIPLE_MARKED :
-        ics.map.cluster.style.MULTIPLE;
+    var circleStyle;
+    var labelStyle =
+        ics.map.cluster.style.multipleLabelFunction(options, feature, resolution);
+    if (ics.map.cluster.containsMarker(options.map, feature)) {
+      var markers = options.markerSource.getFeatures();
+      var markedFeatures = features.filter(function(feat) {
+        return goog.array.contains(markers, feat);
+      });
+      circleStyle = new ol.style.Style({
+        geometry: ics.map.geom.getGeometryCenterOfFeatures(markedFeatures),
+        image: new ol.style.Circle({
+          radius: ics.map.cluster.style.RADIUS,
+          fill: ics.map.marker.style.FILL,
+          stroke: new ol.style.Stroke({
+            color: '#ffffff',
+            width: 3
+          })
+        }),
+        zIndex: 7
+      });
+    } else {
+      circleStyle = ics.map.cluster.style.MULTIPLE;
+    }
     result = [
-      ics.map.cluster.style.labelFunction(options, feature, resolution),
+      labelStyle,
       circleStyle
     ];
   } else {
@@ -240,32 +258,55 @@ ics.map.cluster.style.function = function(options, feature, resolution) {
  * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style}
+ * @protected
  */
-ics.map.cluster.style.labelFunction =
+ics.map.cluster.style.multipleLabelFunction =
     function(options, feature, resolution) {
+  goog.asserts.assertInstanceof(feature, ol.Feature);
+  var map = options.map;
+  var containsMarker = ics.map.cluster.containsMarker(map, feature);
+  var markedFeatures;
+  if (containsMarker) {
+    var markers = options.markerSource.getFeatures();
+    var features = ics.map.cluster.getFeatures(feature);
+    markedFeatures = features.filter(function(feat) {
+      return goog.array.contains(markers, feat);
+    });
+  }
+
   var title;
   if (goog.isDef(options.markerLabel)) {
     title = options.markerLabel(feature, resolution);
   }
   if (!goog.isDefAndNotNull(title)) {
-    title = ics.map.style.getDefaultLabel(feature, resolution);
+    if (containsMarker) {
+      var titleParts = [];
+      if (ics.map.building.isBuilding(markedFeatures[0])) {
+        var allUnits = ics.map.unit.getUnitsOfFeatures(markedFeatures || []);
+        titleParts = ics.map.unit.getTitleParts(allUnits);
+      } else {
+        markedFeatures.forEach(function(room) {
+          titleParts.push(ics.map.style.getDefaultLabel(room, resolution));
+        });
+      }
+      title = titleParts.join('\n');
+    } else {
+      title = ics.map.style.getDefaultLabel(feature, resolution);
+    }
   }
+
   if (title) {
-    var map = options.map;
-    goog.asserts.assertInstanceof(feature, ol.Feature);
-    var intersectFunction = goog.partial(
-        ics.map.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, map);
     var fontSize = 13;
     var offsetY = ics.map.style.getLabelHeight(title, fontSize) / 2 +
         ics.map.cluster.style.RADIUS + 2;
-    var containsMarker = ics.map.cluster.containsMarker(map, feature);
     var fill = containsMarker ?
         ics.map.marker.style.TEXT_FILL :
         ics.map.style.TEXT_FILL;
+    var geometry = containsMarker ?
+        ics.map.geom.getGeometryCenterOfFeatures(markedFeatures || []) :
+        ics.map.geom.CENTER_GEOMETRY_FUNCTION;
     var textStyle = new ol.style.Style({
-      geometry: ics.map.building.isBuilding(feature) ?
-          intersectFunction :
-          ics.map.geom.CENTER_GEOMETRY_FUNCTION,
+      geometry: geometry,
       text: new ol.style.Text({
         font: 'bold ' + fontSize + 'px arial',
         fill: fill,
@@ -273,7 +314,7 @@ ics.map.cluster.style.labelFunction =
         stroke: ics.map.style.TEXT_STROKE,
         text: title
       }),
-      zIndex: 4
+      zIndex: containsMarker ? 7 : 4
     });
     return textStyle;
   } else {

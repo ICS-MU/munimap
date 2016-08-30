@@ -90,6 +90,18 @@ ics.map.unit.loadByHeadquartersComplexIds = function(complexIds) {
  * @return {?string}
  * @protected
  */
+ics.map.unit.getAbbr = function(unit) {
+  var result = unit.get(ics.map.unit.ABBR_FIELD_NAME);
+  goog.asserts.assert(result === null || goog.isString(result));
+  return result;
+};
+
+
+/**
+ * @param {ol.Feature} unit
+ * @return {?string}
+ * @protected
+ */
 ics.map.unit.getTitle = function(unit) {
   var result = unit.get(ics.map.unit.TITLE_CS_FIELD_NAME);
   goog.asserts.assert(result === null || goog.isString(result));
@@ -110,6 +122,20 @@ ics.map.unit.getPriority = function(unit) {
 
 
 /**
+ * @param {Array.<ol.Feature>} features
+ * @return {Array.<ol.Feature>}
+ */
+ics.map.unit.getUnitsOfFeatures = function(features) {
+  var allUnits = [];
+  features.forEach(function(feat) {
+    var units = ics.map.building.getUnits(feat);
+    allUnits = allUnits.concat(units);
+  });
+  return allUnits;
+};
+
+
+/**
  * @param {Array.<ol.Feature>} units
  * @return {Array.<string>}
  */
@@ -122,8 +148,7 @@ ics.map.unit.getTitleParts = function(units) {
         if (ics.map.unit.getPriority(unit) > 0) {
           titleParts.push(ics.map.unit.getTitle(unit));
         } else {
-          var abbr = unit.get(ics.map.unit.ABBR_FIELD_NAME);
-          goog.asserts.assert(abbr === null || goog.isString(abbr));
+          var abbr = ics.map.unit.getAbbr(unit);
           if (abbr) {
             unitAbbrs.push(abbr);
           }
