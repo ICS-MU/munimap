@@ -73,6 +73,20 @@ ics.map.geom.getGeometryCenter = function(geometry, opt_useOlInteriorPoint) {
 
 
 /**
+ *
+ * @param {Array.<ol.Feature>} features
+ * @return {ol.geom.Point}
+ */
+ics.map.geom.getGeometryCenterOfFeatures = function(features) {
+  var geomArray = features.map(function(feature) {
+    return feature.getGeometry();
+  });
+  var geomCollection = new ol.geom.GeometryCollection(geomArray);
+  return ics.map.geom.getGeometryCenter(geomCollection);
+};
+
+
+/**
  * @param {ol.Feature} feature
  * @param {ol.Extent} extent
  * @param {!ol.format.GeoJSON} format

@@ -161,19 +161,26 @@ ics.map.style.getDefaultLabel = function(feature, resolution) {
   var title;
   var uid = ics.map.store.getUid(feature);
   if (!uid) {
-    var clusteredFeatures = ics.map.cluster.getFeatures(feature);
     var titleParts = [];
-    var rooms = clusteredFeatures.filter(function(feat) {
-      return ics.map.room.isRoom(feat);
-    });
-    if (rooms.length) {
-      titleParts.push(rooms.length + 'x místnost');
-    }
-    var bldgs = clusteredFeatures.filter(function(feat) {
+    var units;
+    var clusteredFeatures = ics.map.cluster.getFeatures(feature);
+    var areAllBuildings = clusteredFeatures.every(function(feat) {
       return ics.map.building.isBuilding(feat);
     });
-    if (bldgs.length) {
-      titleParts.push(bldgs.length + 'x budova');
+    if (areAllBuildings) {
+      if (clusteredFeatures.length === 1) {
+        units = ics.map.building.getUnits(clusteredFeatures[0]);
+      } else {
+        units = ics.map.unit.getUnitsOfFeatures(clusteredFeatures);
+      }
+      titleParts = ics.map.unit.getTitleParts(units);
+    } else {
+      var rooms = clusteredFeatures.filter(function(feat) {
+        return ics.map.room.isRoom(feat);
+      });
+      rooms.forEach(function(room) {
+        titleParts.push(ics.map.room.getTitle(room));
+      });
     }
     title = titleParts.join('\n');
   } else {
@@ -181,11 +188,7 @@ ics.map.style.getDefaultLabel = function(feature, resolution) {
       title = ics.map.building.getLabel(feature, resolution);
       goog.asserts.assertString(title);
     } else {
-      title = feature.get('nazev') || feature.get('cislo');
-      if (goog.isDef(title)) {
-        goog.asserts.assertString(title);
-        title = ics.map.room.style.alignRoomTitleToRows(title);
-      }
+      title = ics.map.room.getTitle(feature);
     }
   }
   return title;
