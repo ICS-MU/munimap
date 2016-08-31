@@ -369,22 +369,22 @@ ics.map.building.getLabel = function(feature, resolution) {
   var titleParts = ics.map.unit.getTitleParts(units);
   if (goog.isDefAndNotNull(
       feature.get(ics.map.building.COMPLEX_ID_FIELD_NAME))) {
-    var bldgLabel = feature.get(ics.map.building.ABBR_FIELD_NAME);
-    if (goog.isDefAndNotNull(bldgLabel)) {
+    var bldgAbbr = feature.get(ics.map.building.ABBR_FIELD_NAME);
+    if (goog.isDefAndNotNull(bldgAbbr)) {
       if (ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)) {
         var bldgType = feature.get(ics.map.building.TYPE_FIELD_NAME);
         if (goog.isDefAndNotNull(bldgType)) {
-          goog.asserts.assertString(bldgLabel);
+          goog.asserts.assertString(bldgAbbr);
           goog.asserts.assertString(bldgType);
           if (units.length === 0) {
             titleParts.push(ics.map.style.alignTextToRows([bldgType,
-              bldgLabel], ' '));
+              bldgAbbr], ' '));
           } else {
-            titleParts.push(bldgType + ' ' + bldgLabel);
+            titleParts.push(bldgType + ' ' + bldgAbbr);
           }
         }
       } else {
-        titleParts.push(bldgLabel);
+        titleParts.push(bldgAbbr);
       }
     } else {
       titleParts.push(ics.map.building.getTitleWithoutOrgUnit(feature, '\n'));
