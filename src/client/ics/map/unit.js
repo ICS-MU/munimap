@@ -141,25 +141,23 @@ ics.map.unit.getUnitsOfFeatures = function(features) {
  */
 ics.map.unit.getTitleParts = function(units) {
   var titleParts = [];
-  if (units.length > 0) {
-    if (units.length > 3) {
-      var unitAbbrs = [];
-      units.forEach(function(unit) {
-        if (ics.map.unit.getPriority(unit) > 0) {
-          titleParts.push(ics.map.unit.getTitle(unit));
-        } else {
-          var abbr = ics.map.unit.getAbbr(unit);
-          if (abbr) {
-            unitAbbrs.push(abbr);
-          }
-        }
-      });
-      titleParts.push(unitAbbrs.join(', '));
-    } else {
-      units.forEach(function(unit) {
+  if (units.length > 3) {
+    var unitAbbrs = [];
+    units.forEach(function(unit) {
+      if (ics.map.unit.getPriority(unit) > 0) {
         titleParts.push(ics.map.unit.getTitle(unit));
-      });
-    }
+      } else {
+        var abbr = ics.map.unit.getAbbr(unit);
+        if (abbr) {
+          unitAbbrs.push(abbr);
+        }
+      }
+    });
+    titleParts.push(unitAbbrs.join(', '));
+  } else {
+    units.forEach(function(unit) {
+      titleParts.push(ics.map.unit.getTitle(unit));
+    });
   }
   return titleParts;
 };
