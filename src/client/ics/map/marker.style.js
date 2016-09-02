@@ -169,6 +169,7 @@ ics.map.marker.style.function = function(options, feature, resolution) {
  * @return Array.<ol.style.Style>
  */
 ics.map.marker.style.labelFunction = function(options, feature, resolution) {
+  var styleArray = [];
   var title;
   if (goog.isDef(options.markerLabel)) {
     title = options.markerLabel(feature, resolution);
@@ -176,8 +177,14 @@ ics.map.marker.style.labelFunction = function(options, feature, resolution) {
   if (!goog.isDefAndNotNull(title)) {
     title = ics.map.style.getDefaultLabel(feature, resolution);
   }
+
+  goog.asserts.assertInstanceof(feature, ol.Feature);
+  var markers = options.markerSource.getFeatures();
+  var isMarked = goog.array.contains(markers, feature) ||
+      (ics.map.cluster.getFeatures(feature).length &&
+          ics.map.cluster.containsMarker(options.map, feature));
+
   if (title) {
-    goog.asserts.assertInstanceof(feature, ol.Feature);
     var intersectFunction = goog.partial(
         ics.map.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, options.map);
     var fontSize;
@@ -189,10 +196,6 @@ ics.map.marker.style.labelFunction = function(options, feature, resolution) {
     } else {
       fontSize = ics.map.building.style.FONT_SIZE;
     }
-    var markers = options.markerSource.getFeatures();
-    var isMarked = goog.array.contains(markers, feature) ||
-        (ics.map.cluster.getFeatures(feature).length &&
-            ics.map.cluster.containsMarker(options.map, feature));
     var fill = isMarked ?
         ics.map.marker.style.TEXT_FILL :
         ics.map.style.TEXT_FILL;
@@ -209,31 +212,31 @@ ics.map.marker.style.labelFunction = function(options, feature, resolution) {
       }),
       zIndex: 6
     });
-
-    var pin;
-    if (ics.map.building.isBuilding(feature)) {
-      pin = new ol.style.Style({
-        geometry: intersectFunction,
-        text: new ol.style.Text({
-          text: '\uf041',
-          font: 'normal ' + ics.map.style.PIN_SIZE + 'px FontAwesome',
-          fill: fill,
-          offsetY: - ics.map.style.PIN_SIZE / 2,
-          stroke: ics.map.style.TEXT_STROKE
-        }),
-        zIndex: 6
-      });
-    } else {
-      if (isMarked) {
-        pin = ics.map.marker.style.PIN;
-      } else {
-        pin = ics.map.style.PIN;
-      }
-    }
-    return [textStyle, pin];
-  } else {
-    return null;
+    styleArray.push(textStyle);
   }
+
+  var pin;
+  if (ics.map.building.isBuilding(feature)) {
+    pin = new ol.style.Style({
+      geometry: intersectFunction,
+      text: new ol.style.Text({
+        text: '\uf041',
+        font: 'normal ' + ics.map.style.PIN_SIZE + 'px FontAwesome',
+        fill: fill,
+        offsetY: - ics.map.style.PIN_SIZE / 2,
+        stroke: ics.map.style.TEXT_STROKE
+      }),
+      zIndex: 6
+    });
+  } else {
+    if (isMarked) {
+      pin = ics.map.marker.style.PIN;
+    } else {
+      pin = ics.map.style.PIN;
+    }
+  }
+  styleArray.push(pin);
+  return styleArray;
 };
 
 

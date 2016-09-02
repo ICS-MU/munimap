@@ -210,11 +210,11 @@ ics.map.room.assertCodeOrLikeExpr = function(code) {
  */
 ics.map.room.getTitle = function(feature) {
   var title = feature.get('nazev') || feature.get('cislo');
-  if (goog.isDef(title)) {
+  if (goog.isDefAndNotNull(title)) {
     goog.asserts.assertString(title);
     title = ics.map.room.style.alignRoomTitleToRows(title);
   }
-  return title;
+  return title || undefined;
 };
 
 

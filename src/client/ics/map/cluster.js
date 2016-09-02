@@ -218,9 +218,13 @@ ics.map.cluster.style.function = function(options, feature, resolution) {
   var features = ics.map.cluster.getFeatures(feature);
   var result;
   if (features.length > 1) {
+    result = [];
     var circleStyle;
-    var labelStyle =
-        ics.map.cluster.style.multipleLabelFunction(options, feature, resolution);
+    var labelStyle = ics.map.cluster.style.multipleLabelFunction(
+        options, feature, resolution);
+    if (goog.isDefAndNotNull(labelStyle)) {
+      result.push(labelStyle);
+    }
     if (ics.map.cluster.containsMarker(options.map, feature)) {
       var markers = options.markerSource.getFeatures();
       var markedFeatures = features.filter(function(feat) {
@@ -241,10 +245,7 @@ ics.map.cluster.style.function = function(options, feature, resolution) {
     } else {
       circleStyle = ics.map.cluster.style.MULTIPLE;
     }
-    result = [
-      labelStyle,
-      circleStyle
-    ];
+    result.push(circleStyle);
   } else {
     result =
         ics.map.marker.style.labelFunction(options, feature, resolution);
@@ -286,7 +287,10 @@ ics.map.cluster.style.multipleLabelFunction =
         titleParts = ics.map.unit.getTitleParts(allUnits);
       } else {
         markedFeatures.forEach(function(room) {
-          titleParts.push(ics.map.style.getDefaultLabel(room, resolution));
+          var roomTitle = ics.map.style.getDefaultLabel(room, resolution);
+          if (goog.isDefAndNotNull(roomTitle)) {
+            titleParts.push(roomTitle);
+          }
         });
       }
       title = titleParts.join('\n');
