@@ -99,7 +99,6 @@ ics.map.marker.style.ROOM = new ol.style.Style({
 /**
  * @type {ol.style.Style}
  * @const
- * @protected
  */
 ics.map.marker.style.PIN = new ol.style.Style({
   geometry: ics.map.geom.CENTER_GEOMETRY_FUNCTION,
@@ -190,9 +189,7 @@ ics.map.marker.style.labelFunction = function(options, feature, resolution) {
   }
 
   var markers = options.markerSource.getFeatures();
-  var isMarked = goog.array.contains(markers, feature) ||
-      (ics.map.cluster.getFeatures(feature).length &&
-          ics.map.cluster.containsMarker(options.map, feature));
+  var isMarked = goog.array.contains(markers, feature);
 
   var fill = isMarked ?
       ics.map.marker.style.TEXT_FILL :
