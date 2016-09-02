@@ -262,19 +262,12 @@ ics.map.create = function(options) {
         clusterResolution = ics.map.cluster.ROOM_RESOLUTION;
       }
       var clusterFeatures = markers.concat();
-      if (ics.map.range.contains(
-          ics.map.cluster.BUILDING_RESOLUTION, view.getResolution())) {
-        var loadedBldgs = ics.map.building.STORE.getFeatures();
-        var bldgsToAdd =
-            ics.map.building.getNotMarkedHeadquaters(loadedBldgs, markers);
-        clusterFeatures = clusterFeatures.concat(bldgsToAdd);
-      }
       var markerClusterSrc = new ol.source.Cluster({
         attributions: [muAttribution],
         source: new ol.source.Vector({
           features: clusterFeatures
         }),
-        distance: 50
+        distance: 60
       });
       var markerClusterLayer = new ol.layer.Vector({
         id: ics.map.cluster.LAYER_ID,
@@ -341,6 +334,8 @@ ics.map.create = function(options) {
         currentResolution: goog.asserts.assertNumber(view.getResolution())
       };
       map.set(ics.map.VARS_NAME, mapVars);
+
+      ics.map.cluster.updateClusteredFeatures(map, view.getResolution());
 
       map.on('pointermove', function(evt) {
         if (evt.dragging) {
