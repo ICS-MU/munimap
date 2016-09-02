@@ -335,11 +335,18 @@ ics.map.cluster.style.pinFunction = function(options, feature, resolution) {
   if (goog.isDef(options.markerLabel)) {
     title = options.markerLabel(feature, resolution);
   }
-  if (!goog.isDefAndNotNull(title)) {
-    title = ics.map.cluster.style.getDefaultLabel(feature, resolution);
-  }
-  
   var isMarked = ics.map.cluster.containsMarker(options.map, feature);
+  if (!goog.isDefAndNotNull(title)) {
+    if (isMarked) {
+      var allMarkers = options.markerSource.getFeatures();
+      title = ics.map.cluster.style.getMarkedDefaultLabel(allMarkers,
+          feature, resolution);
+    } else {
+      title =
+          ics.map.cluster.style.getUnmarkedDefaultLabel(feature, resolution);
+    }
+  }
+
 
   var fill = isMarked ?
       ics.map.marker.style.TEXT_FILL :
@@ -380,12 +387,12 @@ ics.map.cluster.style.multipleLabelFunction =
   goog.asserts.assertInstanceof(feature, ol.Feature);
   var map = options.map;
   var containsMarker = ics.map.cluster.containsMarker(map, feature);
-  var markedFeatures;
+  var markers;
   if (containsMarker) {
-    var markers = options.markerSource.getFeatures();
-    var features = ics.map.cluster.getFeatures(feature);
-    markedFeatures = features.filter(function(feat) {
-      return goog.array.contains(markers, feat);
+    var allMarkers = options.markerSource.getFeatures();
+    var clusteredFeatures = ics.map.cluster.getFeatures(feature);
+    markers = clusteredFeatures.filter(function(feat) {
+      return goog.array.contains(allMarkers, feat);
     });
   }
 
@@ -395,27 +402,11 @@ ics.map.cluster.style.multipleLabelFunction =
   }
   if (!goog.isDefAndNotNull(title)) {
     if (containsMarker) {
-      var titleParts = [];
-      if (ics.map.building.isBuilding(markedFeatures[0])) {
-        var range = ics.map.cluster.getResolutionRange(resolution);
-        var units;
-        if(range === ics.map.cluster.Resolutions.MARKERS_AND_FACULTIES) {
-          units = ics.map.unit.getFacultiesOfBuildings(markedFeatures || []);
-        } else {
-          units = ics.map.unit.getUnitsOfBuildings(markedFeatures || []);
-        }
-        titleParts = ics.map.unit.getTitleParts(units);
-      } else {
-        markedFeatures.forEach(function(room) {
-          var roomTitle = ics.map.style.getDefaultLabel(room, resolution);
-          if (goog.isDefAndNotNull(roomTitle)) {
-            titleParts.push(roomTitle);
-          }
-        });
-      }
-      title = titleParts.join('\n');
+      title = ics.map.cluster.style.getMarkedDefaultLabel(allMarkers || [],
+          feature, resolution);
     } else {
-      title = ics.map.cluster.style.getDefaultLabel(feature, resolution);
+      title =
+          ics.map.cluster.style.getUnmarkedDefaultLabel(feature, resolution);
     }
   }
 
@@ -427,7 +418,7 @@ ics.map.cluster.style.multipleLabelFunction =
         ics.map.marker.style.TEXT_FILL :
         ics.map.style.TEXT_FILL;
     var geometry = containsMarker ?
-        ics.map.geom.getGeometryCenterOfFeatures(markedFeatures || []) :
+        ics.map.geom.getGeometryCenterOfFeatures(markers || []) :
         ics.map.geom.CENTER_GEOMETRY_FUNCTION;
     var textStyle = new ol.style.Style({
       geometry: geometry,
@@ -448,40 +439,93 @@ ics.map.cluster.style.multipleLabelFunction =
 
 
 /**
+ * Clustered features are buildings only.
  * @param {ol.Feature} feature
  * @param {number} resolution
  * @return {string}
  * @protected
  */
-ics.map.cluster.style.getDefaultLabel = function(feature, resolution) {
+ics.map.cluster.style.getUnmarkedDefaultLabel = function(feature, resolution) {
   goog.asserts.assertInstanceof(feature, ol.Feature);
   var title;
 
   var titleParts = [];
   var units;
-  var clusteredFeatures = ics.map.cluster.getFeatures(feature);
-  var areAllBuildings = clusteredFeatures.every(function(feat) {
-    return ics.map.building.isBuilding(feat);
-  });
-  if (areAllBuildings) {
-    var range = ics.map.cluster.getResolutionRange(resolution);
-    if(range === ics.map.cluster.Resolutions.MARKERS_AND_FACULTIES) {
-      units = ics.map.unit.getFacultiesOfBuildings(clusteredFeatures);
-    } else {
-      units = ics.map.unit.getUnitsOfBuildings(clusteredFeatures);
+  var clusteredBuildings = ics.map.cluster.getFeatures(feature);
+
+  var range = ics.map.cluster.getResolutionRange(resolution);
+  if (range === ics.map.cluster.Resolutions.MARKERS_AND_FACULTIES) {
+    units = ics.map.unit.getFacultiesOfBuildings(clusteredBuildings);
+    if (units.length >= 10) {
+      return ics.map.cluster.style.MU_LABEL;
     }
-    titleParts = ics.map.unit.getTitleParts(units);
   } else {
-    var rooms = clusteredFeatures.filter(function(feat) {
-      return ics.map.room.isRoom(feat);
+    units = ics.map.unit.getUnitsOfBuildings(clusteredBuildings);
+  }
+  titleParts = ics.map.unit.getTitleParts(units);
+
+  title = titleParts.join('\n');
+  return title;
+};
+
+
+/**
+ * @tzpe {string}
+ * @protected
+ * 2const
+ */
+ics.map.cluster.style.MU_LABEL = 'Masarykova univerzita';
+
+
+/**
+ * Clustered features are buildings only.
+ * @param {Array<ol.Feature>} allMarkers
+ * @param {ol.Feature} feature
+ * @param {number} resolution
+ * @return {string}
+ * @protected
+ */
+ics.map.cluster.style.getMarkedDefaultLabel =
+    function(allMarkers, feature, resolution) {
+  var clusteredFeatures = ics.map.cluster.getFeatures(feature);
+  var markers = clusteredFeatures.filter(function(feat) {
+    return goog.array.contains(allMarkers, feat);
+  });
+
+  var title;
+  var titleParts = [];
+
+  if (ics.map.building.isBuilding(markers[0])) {
+    var range = ics.map.cluster.getResolutionRange(resolution);
+    var units = [];
+    var unitsFunc =
+        range === ics.map.cluster.Resolutions.MARKERS_AND_FACULTIES ?
+            ics.map.building.getFaculties :
+            ics.map.building.getUnits;
+    var buildingsWithoutUnits = [];
+    markers.forEach(function(markedBuilding) {
+      var uns = unitsFunc(markedBuilding);
+      if (uns.length) {
+        goog.array.extend(units, uns);
+      } else {
+        buildingsWithoutUnits.push(markedBuilding);
+      }
     });
-    rooms.forEach(function(room) {
-      var roomTitle = ics.map.room.getDefaultLabel(room);
-      if (goog.isDef(roomTitle)) {
+    titleParts = ics.map.unit.getTitleParts(units);
+    buildingsWithoutUnits.forEach(function(building) {
+      var buildingTitle =
+          ics.map.building.getDefaultLabel(building, resolution);
+      titleParts.push(buildingTitle);
+    });
+  } else {
+    markers.forEach(function(room) {
+      var roomTitle = ics.map.style.getDefaultLabel(room, resolution);
+      if (goog.isDefAndNotNull(roomTitle)) {
         titleParts.push(roomTitle);
       }
     });
   }
+
   title = titleParts.join('\n');
   return title;
 };
