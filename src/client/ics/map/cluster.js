@@ -2,6 +2,7 @@ goog.provide('ics.map.cluster');
 goog.provide('ics.map.cluster.style');
 
 goog.require('goog.array');
+goog.require('goog.object');
 goog.require('ics.map.marker.style');
 goog.require('ics.map.range');
 goog.require('ol.Feature');
@@ -28,6 +29,63 @@ ics.map.cluster.BUILDING_RESOLUTION =
  * @const
  */
 ics.map.cluster.LAYER_ID = 'markercluster';
+
+
+/**
+ * @enum {ics.map.Range}
+ * @const
+ * @protected
+ */
+ics.map.cluster.Resolutions = {
+  MARKERS_ONLY: ics.map.range.createResolution(0, 2.39),
+  MARKERS_AND_UNITS: ics.map.range.createResolution(2.39, 9),
+  MARKERS_AND_FACULTIES:
+      ics.map.range.createResolution(9, Number.POSITIVE_INFINITY)
+};
+
+
+/**
+ * @param {ol.Map} map
+ * @param {number|ics.map.Range} resolution
+ * @return {Array<ol.Feature>}
+ * @protected
+ */
+ics.map.cluster.getClusteredFeatures = function(map, resolution) {
+  var range = goog.isNumber(resolution) ?
+      ics.map.cluster.getResolutionRange(resolution) : resolution;
+  var ranges = ics.map.cluster.Resolutions;
+  var result;
+  var markers = ics.map.marker.getFeatures(map).concat();
+  var bldgs = ics.map.building.STORE.getFeatures();
+  switch (range) {
+    case ranges.MARKERS_ONLY:
+      result = markers;
+      break;
+    case ranges.MARKERS_AND_UNITS:
+      result = markers.concat(ics.map.building.filterHeadquaters(bldgs));
+      break;
+    case ranges.MARKERS_AND_FACULTIES:
+      result = markers.concat(
+          ics.map.building.filterFacultyHeadquaters(bldgs)
+          );
+      break;
+  }
+  result = result || [];
+  goog.array.removeDuplicates(result);
+  return result;
+};
+
+
+/**
+ * @param {number} resolution
+ * @return {ics.map.Range}
+ * @protected
+ */
+ics.map.cluster.getResolutionRange = function(resolution) {
+  return goog.object.findValue(ics.map.cluster.Resolutions, function(range) {
+    return ics.map.range.contains(range, resolution);
+  });
+};
 
 
 /**
@@ -109,22 +167,6 @@ ics.map.cluster.getSourceFeatures = function(map) {
 
 /**
  * @param {ol.Map} map
- * @param {Array.<ol.Feature>} buildings
- */
-ics.map.cluster.addHeadquaters = function(map, buildings) {
-  var markers = ics.map.marker.getFeatures(map);
-  var bldgsToAdd =
-      ics.map.building.getNotMarkedHeadquaters(buildings, markers);
-  var clusterFeatures = ics.map.cluster.getSourceFeatures(map);
-  bldgsToAdd = bldgsToAdd.filter(function(bldg) {
-    return !goog.array.contains(clusterFeatures, bldg);
-  });
-  ics.map.cluster.getSource(map).addFeatures(bldgsToAdd);
-};
-
-
-/**
- * @param {ol.Map} map
  * @param {ol.Feature} cluster
  * @return {boolean}
  */
@@ -143,25 +185,52 @@ ics.map.cluster.containsMarker = function(map, cluster) {
 ics.map.cluster.handleMapPrecomposeEvt = function(evt) {
   var map = /**@type {ol.Map}*/(evt.target);
   var mapVars = ics.map.getVars(map);
-  var oldRes = mapVars.currentResolution;
-
   var viewState = evt.frameState.viewState;
+
+  var oldRes = mapVars.currentResolution;
   var res = viewState.resolution;
-  if (ics.map.range.contains(
-      ics.map.cluster.BUILDING_RESOLUTION, oldRes) &&
-      !ics.map.range.contains(
-      ics.map.cluster.BUILDING_RESOLUTION, res)) {
-    var clusterSource = ics.map.cluster.getSource(map);
-    clusterSource.clear();
-    clusterSource.addFeatures(ics.map.marker.getFeatures(map).concat());
-  } else if (ics.map.range.contains(
-      ics.map.cluster.BUILDING_RESOLUTION, res) &&
-      !ics.map.range.contains(
-      ics.map.cluster.BUILDING_RESOLUTION, oldRes)) {
-    var bldgs = ics.map.building.STORE.getFeatures();
-    ics.map.cluster.addHeadquaters(map, bldgs);
+
+  var oldRange = ics.map.cluster.getResolutionRange(oldRes);
+  var range = ics.map.cluster.getResolutionRange(res);
+
+  if (range !== oldRange) {
+    ics.map.cluster.updateClusteredFeatures(map, res);
   }
+
   mapVars.currentResolution = res;
+};
+
+
+/**
+ * @param {ol.Map} map
+ * @param {number} resolution
+ */
+ics.map.cluster.updateClusteredFeatures = function(map, resolution) {
+  var oldFeatures = ics.map.cluster.getSourceFeatures(map);
+  var features = ics.map.cluster.getClusteredFeatures(map, resolution);
+  var allFeatures = oldFeatures.concat(features);
+  goog.array.removeDuplicates(allFeatures);
+
+  var bucket = goog.array.bucket(allFeatures, function(feature) {
+    if (oldFeatures.indexOf(feature) >= 0 &&
+        features.indexOf(feature) < 0) {
+      return 'remove';
+    } else if (oldFeatures.indexOf(feature) < 0 &&
+        features.indexOf(feature) >= 0) {
+      return 'add';
+    } else {
+      return undefined;
+    }
+  });
+
+  var featuresToRemove = bucket['remove'] || [];
+  var featuresToAdd = bucket['add'] || [];
+
+  var source = ics.map.cluster.getSource(map);
+  featuresToRemove.forEach(function(feature) {
+    source.removeFeature(feature);
+  });
+  source.addFeatures(featuresToAdd);
 };
 
 

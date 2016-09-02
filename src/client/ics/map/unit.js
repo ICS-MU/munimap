@@ -112,7 +112,6 @@ ics.map.unit.getTitle = function(unit) {
 /**
  * @param {ol.Feature} unit
  * @return {number}
- * @protected
  */
 ics.map.unit.getPriority = function(unit) {
   var result = unit.get(ics.map.unit.PRIORITY_FIELD_NAME);

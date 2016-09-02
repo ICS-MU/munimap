@@ -105,9 +105,8 @@ ics.map.building.featuresForMap =
           ics.map.LIST.forEach(function(map) {
             var view = map.getView();
             var res = view ? view.getResolution() : null;
-            if (res && ics.map.range.contains(
-                ics.map.cluster.BUILDING_RESOLUTION, res)) {
-              ics.map.cluster.addHeadquaters(map, buildings);
+            if (res) {
+              ics.map.cluster.updateClusteredFeatures(map, res);
             }
           });
         }
@@ -243,28 +242,24 @@ ics.map.building.getLocationCode = function(building) {
 
 /**
  * @param {Array.<ol.Feature>} buildings
- * @param {Array.<ol.Feature>} markers
  * @return {Array.<ol.Feature>}
  */
-ics.map.building.getNotMarkedHeadquaters = function(buildings, markers) {
-  var headquaters = ics.map.building.getHeadquaters(buildings);
-  if (markers.length) {
-    headquaters = headquaters.filter(function(bldg) {
-      return !goog.array.contains(markers, bldg);
-    });
-  }
-  return headquaters;
+ics.map.building.filterHeadquaters = function(buildings) {
+  return buildings.filter(function(bldg) {
+    return ics.map.building.getUnits(bldg).length > 0;
+  });
 };
 
 
 /**
  * @param {Array.<ol.Feature>} buildings
  * @return {Array.<ol.Feature>}
- * @protected
  */
-ics.map.building.getHeadquaters = function(buildings) {
+ics.map.building.filterFacultyHeadquaters = function(buildings) {
   return buildings.filter(function(bldg) {
-    return ics.map.building.getUnits(bldg).length > 0;
+    return ics.map.building.getUnits(bldg).some(function(unit) {
+      return ics.map.unit.getPriority(unit) > 0;
+    });
   });
 };
 
