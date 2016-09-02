@@ -317,9 +317,54 @@ ics.map.cluster.style.function = function(options, feature, resolution) {
     result.push(circleStyle);
   } else {
     result =
-        ics.map.marker.style.labelFunction(options, feature, resolution);
+        ics.map.cluster.style.pinFunction(options, feature, resolution);
   }
   return result;
+};
+
+
+/**
+ * @param {ics.map.marker.style.labelFunction.Options} options
+ * @param {ol.Feature} feature
+ * @param {number} resolution
+ * @return Array.<ol.style.Style>
+ */
+ics.map.cluster.style.pinFunction = function(options, feature, resolution) {
+  var styleArray = [];
+  var title;
+  if (goog.isDef(options.markerLabel)) {
+    title = options.markerLabel(feature, resolution);
+  }
+  if (!goog.isDefAndNotNull(title)) {
+    title = ics.map.cluster.style.getDefaultLabel(feature, resolution);
+  }
+  
+  var isMarked = ics.map.cluster.containsMarker(options.map, feature);
+
+  var fill = isMarked ?
+      ics.map.marker.style.TEXT_FILL :
+      ics.map.style.TEXT_FILL;
+
+  var fontSize = ics.map.building.style.FONT_SIZE;
+
+  var geometry = ics.map.geom.CENTER_GEOMETRY_FUNCTION;
+
+  var opts = {
+    fill: fill,
+    fontSize: fontSize,
+    geometry: geometry,
+    title: title,
+    zIndex: 6
+  };
+  if (title) {
+    var textStyle = ics.map.style.getTextStyleWithOffsetY(opts);
+    styleArray.push(textStyle);
+  }
+  var pin = isMarked ?
+      ics.map.marker.style.PIN :
+      ics.map.style.PIN;
+  styleArray.push(pin);
+  return styleArray;
 };
 
 
@@ -364,7 +409,7 @@ ics.map.cluster.style.multipleLabelFunction =
       }
       title = titleParts.join('\n');
     } else {
-      title = ics.map.style.getDefaultLabel(feature, resolution);
+      title = ics.map.cluster.style.getDefaultLabel(feature, resolution);
     }
   }
 
@@ -393,4 +438,43 @@ ics.map.cluster.style.multipleLabelFunction =
   } else {
     return null;
   }
+};
+
+
+/**
+ * @param {ol.Feature} feature
+ * @param {number} resolution
+ * @return {string}
+ * @protected
+ */
+ics.map.cluster.style.getDefaultLabel = function(feature, resolution) {
+  goog.asserts.assertInstanceof(feature, ol.Feature);
+  var title;
+
+  var titleParts = [];
+  var units;
+  var clusteredFeatures = ics.map.cluster.getFeatures(feature);
+  var areAllBuildings = clusteredFeatures.every(function(feat) {
+    return ics.map.building.isBuilding(feat);
+  });
+  if (areAllBuildings) {
+    if (clusteredFeatures.length === 1) {
+      units = ics.map.building.getUnits(clusteredFeatures[0]);
+    } else {
+      units = ics.map.unit.getUnitsOfFeatures(clusteredFeatures);
+    }
+    titleParts = ics.map.unit.getTitleParts(units);
+  } else {
+    var rooms = clusteredFeatures.filter(function(feat) {
+      return ics.map.room.isRoom(feat);
+    });
+    rooms.forEach(function(room) {
+      var roomTitle = ics.map.room.getDefaultLabel(room);
+      if (goog.isDef(roomTitle)) {
+        titleParts.push(roomTitle);
+      }
+    });
+  }
+  title = titleParts.join('\n');
+  return title;
 };

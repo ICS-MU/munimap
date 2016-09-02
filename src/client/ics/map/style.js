@@ -160,39 +160,12 @@ ics.map.style.getDefaultLabel = function(feature, resolution) {
   goog.asserts.assertInstanceof(feature, ol.Feature);
   var title;
   var uid = ics.map.store.getUid(feature);
-  if (!uid) {
-    var titleParts = [];
-    var units;
-    var clusteredFeatures = ics.map.cluster.getFeatures(feature);
-    var areAllBuildings = clusteredFeatures.every(function(feat) {
-      return ics.map.building.isBuilding(feat);
-    });
-    if (areAllBuildings) {
-      if (clusteredFeatures.length === 1) {
-        units = ics.map.building.getUnits(clusteredFeatures[0]);
-      } else {
-        units = ics.map.unit.getUnitsOfFeatures(clusteredFeatures);
-      }
-      titleParts = ics.map.unit.getTitleParts(units);
-    } else {
-      var rooms = clusteredFeatures.filter(function(feat) {
-        return ics.map.room.isRoom(feat);
-      });
-      rooms.forEach(function(room) {
-        var roomTitle = ics.map.room.getDefaultLabel(room);
-        if (goog.isDef(roomTitle)) {
-          titleParts.push(roomTitle);
-        }
-      });
-    }
-    title = titleParts.join('\n');
+  goog.asserts.assert(!!uid);
+  if (ics.map.building.isBuilding(feature)) {
+    title = ics.map.building.getDefaultLabel(feature, resolution);
+    goog.asserts.assertString(title);
   } else {
-    if (ics.map.building.isBuilding(feature)) {
-      title = ics.map.building.getDefaultLabel(feature, resolution);
-      goog.asserts.assertString(title);
-    } else {
-      title = ics.map.room.getDefaultLabel(feature);
-    }
+    title = ics.map.room.getDefaultLabel(feature);
   }
   return title;
 };
