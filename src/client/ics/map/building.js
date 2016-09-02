@@ -446,6 +446,19 @@ ics.map.building.getUnits = function(building) {
 
 
 /**
+ * @param {ol.Feature} building
+ * @return {Array<ol.Feature>}
+ */
+ics.map.building.getFaculties = function(building) {
+  var units = ics.map.building.getUnits(building);
+  var result = units.filter(function(unit) {
+    return ics.map.unit.getPriority(unit) > 0;
+  });
+  return result;
+};
+
+
+/**
  * @param {ics.map.load.Processor.Options} options
  * @return {goog.Thenable<ics.map.load.Processor.Options>}
  * @protected
