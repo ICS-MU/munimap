@@ -359,9 +359,40 @@ ics.map.building.getTitleWithoutOrgUnit = function(building, opt_separator) {
  * @param {number} resolution
  * @return {string}
  */
-ics.map.building.getLabel = function(feature, resolution) {
+ics.map.building.getDefaultLabel = function(feature, resolution) {
+  var result = [];
+  var namePart = ics.map.building.getNamePart(feature, resolution);
+  if (namePart) {
+    result.push(namePart);
+  }
+  var addressPart = ics.map.building.getAddressPart(feature, resolution);
+  if (addressPart) {
+    result.push(addressPart);
+  }
+  return result.join('\n');
+};
+
+
+/**
+ * @param {ol.Feature} feature
+ * @param {number} resolution
+ * @return {string}
+ * @protected
+ */
+ics.map.building.getNamePart = function(feature, resolution) {
   var units = ics.map.building.getUnits(feature);
   var titleParts = ics.map.unit.getTitleParts(units);
+  return titleParts.join('\n');
+};
+
+
+/**
+ * @param {ol.Feature} feature
+ * @param {number} resolution
+ * @return {string}
+ */
+ics.map.building.getAddressPart = function(feature, resolution) {
+  var titleParts = [];
   if (goog.isDefAndNotNull(
       feature.get(ics.map.building.COMPLEX_ID_FIELD_NAME))) {
     var bldgAbbr = feature.get(ics.map.building.ABBR_FIELD_NAME);
@@ -371,6 +402,7 @@ ics.map.building.getLabel = function(feature, resolution) {
         if (goog.isDefAndNotNull(bldgType)) {
           goog.asserts.assertString(bldgAbbr);
           goog.asserts.assertString(bldgType);
+          var units = ics.map.building.getUnits(feature);
           if (units.length === 0) {
             titleParts.push(ics.map.style.alignTextToRows([bldgType,
               bldgAbbr], ' '));

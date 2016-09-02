@@ -170,16 +170,25 @@ ics.map.marker.style.function = function(options, feature, resolution) {
  */
 ics.map.marker.style.labelFunction = function(options, feature, resolution) {
   var styleArray = [];
+  goog.asserts.assertInstanceof(feature, ol.Feature);
+  var isBuilding = ics.map.building.isBuilding(feature);
+
   var title;
   if (goog.isDef(options.markerLabel)) {
-    title = options.markerLabel(feature, resolution);
+    var titleParts = [];
+    var name = options.markerLabel(feature, resolution);
+    if (name) {
+      titleParts.push(name);
+    }
+    if (isBuilding) {
+      titleParts.push(ics.map.building.getAddressPart(feature, resolution));
+    }
+    title = titleParts.join('\n');
   }
   if (!goog.isDefAndNotNull(title)) {
     title = ics.map.style.getDefaultLabel(feature, resolution);
   }
 
-  goog.asserts.assertInstanceof(feature, ol.Feature);
-  var isBuilding = ics.map.building.isBuilding(feature);
   var markers = options.markerSource.getFeatures();
   var isMarked = goog.array.contains(markers, feature) ||
       (ics.map.cluster.getFeatures(feature).length &&

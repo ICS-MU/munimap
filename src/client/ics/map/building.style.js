@@ -207,7 +207,7 @@ ics.map.building.style.labelFunction =
               ics.map.complex.getBuildingCount(complex) > 1) {
             title = ics.map.unit.getTitleParts(units).join('\n');
           } else {
-            title = ics.map.building.getLabel(feature, resolution);
+            title = ics.map.building.getDefaultLabel(feature, resolution);
           }
           if (goog.isDef(title)) {
             opts.title = title;
@@ -226,7 +226,7 @@ ics.map.building.style.labelFunction =
           return ics.map.building.style.LABEL_CACHE[uid];
         }
       }
-      var title = ics.map.building.getLabel(feature, resolution);
+      var title = ics.map.building.getDefaultLabel(feature, resolution);
       if (goog.isDef(title)) {
         if (units.length > 0) {
           opts.title = title;
