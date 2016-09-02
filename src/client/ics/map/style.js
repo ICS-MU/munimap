@@ -211,35 +211,70 @@ ics.map.style.getLabelHeight = function(title, fontSize) {
 
 
 /**
- * @param {string} title
- * @param {function(ol.Feature):ol.geom.Geometry} geometryFunction
- * @param {number} fontSize
+ * @param {ics.map.style.getLabelWithPin.Options} options
+ * @return {ol.style.Style}
+ */
+ics.map.style.getTextStyleWithOffsetY = function(options) {
+  var fontSize = options.fontSize;
+  var title = options.title;
+
+  var result;
+  if (goog.isDef(title) && goog.isDef(fontSize)) {
+    result = new ol.style.Style({
+      geometry: options.geometry,
+      text: new ol.style.Text({
+        font: 'bold ' + fontSize + 'px arial',
+        fill: options.fill,
+        offsetY: ics.map.style.getLabelHeight(title, fontSize) / 2 + 2,
+        stroke: ics.map.style.TEXT_STROKE,
+        text: title
+      }),
+      zIndex: options.zIndex || 4
+    });
+  }
+  return result || null;
+};
+
+
+/**
+ * @param {ics.map.style.getLabelWithPin.Options} options
  * @return {Array.<ol.style.Style>}
  */
 ics.map.style.getLabelWithPin =
-    function(title, geometryFunction, fontSize) {
-  var textStyle = new ol.style.Style({
-    geometry: geometryFunction,
-    text: new ol.style.Text({
-      font: 'bold ' + fontSize + 'px arial',
-      fill: ics.map.style.TEXT_FILL,
-      offsetY: ics.map.style.getLabelHeight(title, fontSize) / 2 + 2,
-      stroke: ics.map.style.TEXT_STROKE,
-      text: title
-    }),
-    zIndex: 4
-  });
+    function(options) {
+  var fill = options.fill;
+  var geometry = options.geometry;
+  var zIndex = options.zIndex;
 
+  var result = [];
   var pin = new ol.style.Style({
-    geometry: geometryFunction,
+    geometry: geometry,
     text: new ol.style.Text({
       text: '\uf041',
       font: 'normal ' + ics.map.style.PIN_SIZE + 'px FontAwesome',
-      fill: ics.map.style.TEXT_FILL,
+      fill: fill,
       offsetY: - ics.map.style.PIN_SIZE / 2,
       stroke: ics.map.style.TEXT_STROKE
     }),
-    zIndex: 5
+    zIndex: zIndex || 5
   });
-  return [textStyle, pin];
+  result.push(pin);
+
+  if (goog.isDefAndNotNull(options.title)) {
+    var textStyle = ics.map.style.getTextStyleWithOffsetY(options);
+    result.push(textStyle);
+  }
+  return result;
 };
+
+
+/**
+ * @typedef {{
+ *   fill: (ol.style.Fill),
+ *   fontSize: (number|undefined),
+ *   geometry: (function(ol.Feature):ol.geom.Geometry|ol.geom.Geometry),
+ *   title: (string|undefined),
+ *   zIndex: (number|undefined)
+ * }}
+ */
+ics.map.style.getLabelWithPin.Options;

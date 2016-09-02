@@ -179,63 +179,51 @@ ics.map.marker.style.labelFunction = function(options, feature, resolution) {
   }
 
   goog.asserts.assertInstanceof(feature, ol.Feature);
+  var isBuilding = ics.map.building.isBuilding(feature);
   var markers = options.markerSource.getFeatures();
   var isMarked = goog.array.contains(markers, feature) ||
       (ics.map.cluster.getFeatures(feature).length &&
           ics.map.cluster.containsMarker(options.map, feature));
 
-  if (title) {
-    var intersectFunction = goog.partial(
-        ics.map.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, options.map);
-    var fontSize;
-    if (ics.map.room.isRoom(feature)) {
-      fontSize = 11;
-    } else if (ics.map.building.isBuilding(feature) &&
-        ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)) {
-      fontSize = ics.map.building.style.BIG_FONT_SIZE;
-    } else {
-      fontSize = ics.map.building.style.FONT_SIZE;
-    }
-    var fill = isMarked ?
-        ics.map.marker.style.TEXT_FILL :
-        ics.map.style.TEXT_FILL;
-    var textStyle = new ol.style.Style({
-      geometry: ics.map.building.isBuilding(feature) ?
-          intersectFunction :
-          ics.map.geom.CENTER_GEOMETRY_FUNCTION,
-      text: new ol.style.Text({
-        font: 'bold ' + fontSize + 'px arial',
-        fill: fill,
-        offsetY: ics.map.style.getLabelHeight(title, fontSize) / 2 + 2,
-        stroke: ics.map.style.TEXT_STROKE,
-        text: title
-      }),
-      zIndex: 6
-    });
-    styleArray.push(textStyle);
+  var fill = isMarked ?
+      ics.map.marker.style.TEXT_FILL :
+      ics.map.style.TEXT_FILL;
+
+  var fontSize;
+  if (ics.map.room.isRoom(feature)) {
+    fontSize = 11;
+  } else if (isBuilding &&
+      ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)) {
+    fontSize = ics.map.building.style.BIG_FONT_SIZE;
+  } else {
+    fontSize = ics.map.building.style.FONT_SIZE;
   }
 
-  var pin;
-  if (ics.map.building.isBuilding(feature)) {
-    pin = new ol.style.Style({
-      geometry: intersectFunction,
-      text: new ol.style.Text({
-        text: '\uf041',
-        font: 'normal ' + ics.map.style.PIN_SIZE + 'px FontAwesome',
-        fill: fill,
-        offsetY: - ics.map.style.PIN_SIZE / 2,
-        stroke: ics.map.style.TEXT_STROKE
-      }),
-      zIndex: 6
-    });
+  var intersectFunction = goog.partial(
+      ics.map.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, options.map);
+  var geometry = isBuilding ?
+      intersectFunction :
+      ics.map.geom.CENTER_GEOMETRY_FUNCTION;
+
+  var opts = {
+    fill: fill,
+    fontSize: fontSize,
+    geometry: geometry,
+    title: title,
+    zIndex: 6
+  };
+  if (isBuilding) {
+    styleArray = ics.map.style.getLabelWithPin(opts);
   } else {
-    if (isMarked) {
-      pin = ics.map.marker.style.PIN;
-    } else {
-      pin = ics.map.style.PIN;
+    if (title) {
+      var textStyle = ics.map.style.getTextStyleWithOffsetY(opts);
+      styleArray.push(textStyle);
     }
+    var pin = isMarked ?
+        ics.map.marker.style.PIN :
+        ics.map.style.PIN;
+    styleArray.push(pin);
   }
-  styleArray.push(pin);
   return styleArray;
 };
 

@@ -192,6 +192,11 @@ ics.map.building.style.labelFunction =
     var geometryFunction = goog.partial(
         ics.map.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, options.map);
     var units = ics.map.building.getUnits(feature);
+    var opts = {
+      fill: ics.map.style.TEXT_FILL,
+      fontSize: ics.map.building.style.FONT_SIZE,
+      geometry: geometryFunction
+    };
     if (!ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)) {
       if (units.length > 0) {
         if (resolution < ics.map.cluster.BUILDING_RESOLUTION.min) {
@@ -205,8 +210,8 @@ ics.map.building.style.labelFunction =
             title = ics.map.building.getLabel(feature, resolution);
           }
           if (goog.isDef(title)) {
-            result = ics.map.style.getLabelWithPin(
-                title, geometryFunction, ics.map.building.style.FONT_SIZE);
+            opts.title = title;
+            result = ics.map.style.getLabelWithPin(opts);
           }
         }
       } else if (resolution < ics.map.complex.RESOLUTION.min) {
@@ -224,8 +229,8 @@ ics.map.building.style.labelFunction =
       var title = ics.map.building.getLabel(feature, resolution);
       if (goog.isDef(title)) {
         if (units.length > 0) {
-          result = ics.map.style.getLabelWithPin(
-              title, geometryFunction, ics.map.building.style.BIG_FONT_SIZE);
+          opts.title = title;
+          result = ics.map.style.getLabelWithPin(opts);
         } else {
           result = new ol.style.Style({
             geometry: geometryFunction,
