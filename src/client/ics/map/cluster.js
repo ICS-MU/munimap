@@ -397,8 +397,14 @@ ics.map.cluster.style.multipleLabelFunction =
     if (containsMarker) {
       var titleParts = [];
       if (ics.map.building.isBuilding(markedFeatures[0])) {
-        var allUnits = ics.map.unit.getUnitsOfFeatures(markedFeatures || []);
-        titleParts = ics.map.unit.getTitleParts(allUnits);
+        var range = ics.map.cluster.getResolutionRange(resolution);
+        var units;
+        if(range === ics.map.cluster.Resolutions.MARKERS_AND_FACULTIES) {
+          units = ics.map.unit.getFacultiesOfBuildings(markedFeatures || []);
+        } else {
+          units = ics.map.unit.getUnitsOfBuildings(markedFeatures || []);
+        }
+        titleParts = ics.map.unit.getTitleParts(units);
       } else {
         markedFeatures.forEach(function(room) {
           var roomTitle = ics.map.style.getDefaultLabel(room, resolution);
@@ -458,10 +464,11 @@ ics.map.cluster.style.getDefaultLabel = function(feature, resolution) {
     return ics.map.building.isBuilding(feat);
   });
   if (areAllBuildings) {
-    if (clusteredFeatures.length === 1) {
-      units = ics.map.building.getUnits(clusteredFeatures[0]);
+    var range = ics.map.cluster.getResolutionRange(resolution);
+    if(range === ics.map.cluster.Resolutions.MARKERS_AND_FACULTIES) {
+      units = ics.map.unit.getFacultiesOfBuildings(clusteredFeatures);
     } else {
-      units = ics.map.unit.getUnitsOfFeatures(clusteredFeatures);
+      units = ics.map.unit.getUnitsOfBuildings(clusteredFeatures);
     }
     titleParts = ics.map.unit.getTitleParts(units);
   } else {

@@ -121,16 +121,28 @@ ics.map.unit.getPriority = function(unit) {
 
 
 /**
- * @param {Array.<ol.Feature>} features
+ * @param {Array.<ol.Feature>} buildings
  * @return {Array.<ol.Feature>}
  */
-ics.map.unit.getUnitsOfFeatures = function(features) {
-  var allUnits = [];
-  features.forEach(function(feat) {
-    var units = ics.map.building.getUnits(feat);
-    allUnits = allUnits.concat(units);
-  });
-  return allUnits;
+ics.map.unit.getUnitsOfBuildings = function(buildings) {
+  return buildings.reduce(function(prev, building) {
+    var units = ics.map.building.getUnits(building);
+    goog.array.extend(prev, units);
+    return prev;
+  }, []);
+};
+
+
+/**
+ * @param {Array.<ol.Feature>} buildings
+ * @return {Array.<ol.Feature>}
+ */
+ics.map.unit.getFacultiesOfBuildings = function(buildings) {
+  return buildings.reduce(function(prev, building) {
+    var units = ics.map.building.getFaculties(building);
+    goog.array.extend(prev, units);
+    return prev;
+  }, []);
 };
 
 
