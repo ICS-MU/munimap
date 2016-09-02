@@ -179,7 +179,7 @@ ics.map.style.getDefaultLabel = function(feature, resolution) {
         return ics.map.room.isRoom(feat);
       });
       rooms.forEach(function(room) {
-        var roomTitle = ics.map.room.getTitle(room);
+        var roomTitle = ics.map.room.getDefaultLabel(room);
         if (goog.isDef(roomTitle)) {
           titleParts.push(roomTitle);
         }
@@ -188,10 +188,10 @@ ics.map.style.getDefaultLabel = function(feature, resolution) {
     title = titleParts.join('\n');
   } else {
     if (ics.map.building.isBuilding(feature)) {
-      title = ics.map.building.getLabel(feature, resolution);
+      title = ics.map.building.getDefaultLabel(feature, resolution);
       goog.asserts.assertString(title);
     } else {
-      title = ics.map.room.getTitle(feature);
+      title = ics.map.room.getDefaultLabel(feature);
     }
   }
   return title;

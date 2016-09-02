@@ -208,7 +208,17 @@ ics.map.room.assertCodeOrLikeExpr = function(code) {
  * @param {ol.Feature} feature
  * @return {string|undefined}
  */
-ics.map.room.getTitle = function(feature) {
+ics.map.room.getDefaultLabel = function(feature) {
+  return ics.map.room.getNamePart(feature);
+};
+
+
+/**
+ * @param {ol.Feature} feature
+ * @return {string|undefined}
+ * @protected
+ */
+ics.map.room.getNamePart = function(feature) {
   var title = feature.get('nazev') || feature.get('cislo');
   if (goog.isDefAndNotNull(title)) {
     goog.asserts.assertString(title);
