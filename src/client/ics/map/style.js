@@ -179,7 +179,10 @@ ics.map.style.getDefaultLabel = function(feature, resolution) {
         return ics.map.room.isRoom(feat);
       });
       rooms.forEach(function(room) {
-        titleParts.push(ics.map.room.getTitle(room));
+        var roomTitle = ics.map.room.getTitle(room);
+        if (goog.isDef(roomTitle)) {
+          titleParts.push(roomTitle);
+        }
       });
     }
     title = titleParts.join('\n');
