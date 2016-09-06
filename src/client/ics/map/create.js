@@ -191,6 +191,7 @@ ics.map.create = function(options) {
           markerSource: markerSource,
           map: map
         }),
+        maxResolution: ics.map.complex.RESOLUTION.max,
         updateWhileAnimating: true,
         updateWhileInteracting: true
 
