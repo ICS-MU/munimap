@@ -176,13 +176,13 @@ ics.map.marker.style.labelFunction = function(options, feature, resolution) {
   if (goog.isDef(options.markerLabel)) {
     var titleParts = [];
     var name = options.markerLabel(feature, resolution);
-    if (name) {
+    if(goog.isDefAndNotNull(name)) {
       titleParts.push(name);
+      if (isBuilding) {
+        titleParts.push(ics.map.building.getAddressPart(feature, resolution));
+      }
+      title = titleParts.join('\n');
     }
-    if (isBuilding) {
-      titleParts.push(ics.map.building.getAddressPart(feature, resolution));
-    }
-    title = titleParts.join('\n');
   }
   if (!goog.isDefAndNotNull(title)) {
     title = ics.map.style.getDefaultLabel(feature, resolution);
