@@ -61,3 +61,16 @@ ics.map.marker.getFeatures = function(map) {
   var store = ics.map.marker.getStore(map);
   return store.getFeatures();
 };
+
+
+/**
+ * @param {ol.Map} map
+ * @param {ol.Feature} feature
+ * @return {boolean}
+ */
+ics.map.marker.isMarker = function(map, feature) {
+  var result = ics.map.marker.getFeatures(map).indexOf(feature) >= 0;
+  return result;
+};
+
+
