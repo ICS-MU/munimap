@@ -2,7 +2,7 @@ goog.provide('ics.map.geom');
 
 
 /**
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @return {ol.geom.Point}
  * @const
  */

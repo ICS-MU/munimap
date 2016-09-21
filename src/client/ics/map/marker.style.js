@@ -97,20 +97,38 @@ ics.map.marker.style.ROOM = new ol.style.Style({
 
 
 /**
+ * @type {ol.style.Text}
+ * @const
+ */
+ics.map.marker.style.PIN_TEXT = new ol.style.Text({
+  text: '\uf041',
+  font: 'normal ' + ics.map.style.PIN_SIZE + 'px FontAwesome',
+  fill: ics.map.marker.style.TEXT_FILL,
+  offsetY: - ics.map.style.PIN_SIZE / 2,
+  stroke: ics.map.style.TEXT_STROKE
+});
+
+
+/**
+ * @param {ol.geom.Geometry|ol.style.GeometryFunction} geometry
+ * @return {ol.style.Style}
+ */
+ics.map.marker.style.createPinFromGeometry = function(geometry) {
+  return new ol.style.Style({
+    geometry: geometry,
+    text: ics.map.marker.style.PIN_TEXT,
+    zIndex: 6
+  });
+};
+
+
+/**
  * @type {ol.style.Style}
  * @const
  */
-ics.map.marker.style.PIN = new ol.style.Style({
-  geometry: ics.map.geom.CENTER_GEOMETRY_FUNCTION,
-  text: new ol.style.Text({
-    text: '\uf041',
-    font: 'normal ' + ics.map.style.PIN_SIZE + 'px FontAwesome',
-    fill: ics.map.marker.style.TEXT_FILL,
-    offsetY: - ics.map.style.PIN_SIZE / 2,
-    stroke: ics.map.style.TEXT_STROKE
-  }),
-  zIndex: 6
-});
+ics.map.marker.style.PIN = ics.map.marker.style.createPinFromGeometry(
+    ics.map.geom.CENTER_GEOMETRY_FUNCTION
+    );
 
 
 /**
@@ -176,7 +194,7 @@ ics.map.marker.style.labelFunction = function(options, feature, resolution) {
   if (goog.isDef(options.markerLabel)) {
     var titleParts = [];
     var name = options.markerLabel(feature, resolution);
-    if(goog.isDefAndNotNull(name)) {
+    if (goog.isDefAndNotNull(name)) {
       titleParts.push(name);
       if (isBuilding) {
         titleParts.push(ics.map.building.getAddressPart(feature, resolution));

@@ -9,6 +9,14 @@ goog.require('ol.Feature');
 
 
 /**
+ * @type {string}
+ * @protected
+ * @const
+ */
+ics.map.cluster.style.MU_LABEL = 'Masarykova univerzita';
+
+
+/**
  * @type {ics.map.Range}
  * @const
  */
@@ -286,7 +294,16 @@ ics.map.cluster.style.function = function(options, feature, resolution) {
   goog.asserts.assertInstanceof(feature, ol.Feature);
   var features = ics.map.cluster.getFeatures(feature);
   var result;
-  if (features.length > 1) {
+  var markedFeatures = features.filter(
+      goog.partial(ics.map.marker.isMarker, options.map)
+      );
+  if (features.length === 1) {
+    result = ics.map.cluster.style.pinFunction(
+        options, feature, features[0], resolution);
+  } else if (markedFeatures.length === 1) {
+    result = ics.map.cluster.style.pinFunction(
+        options, feature, markedFeatures[0], resolution);
+  } else {
     result = [];
     var circleStyle;
     var labelStyle = ics.map.cluster.style.multipleLabelFunction(
@@ -294,11 +311,7 @@ ics.map.cluster.style.function = function(options, feature, resolution) {
     if (goog.isDefAndNotNull(labelStyle)) {
       result.push(labelStyle);
     }
-    if (ics.map.cluster.containsMarker(options.map, feature)) {
-      var markers = options.markerSource.getFeatures();
-      var markedFeatures = features.filter(function(feat) {
-        return goog.array.contains(markers, feat);
-      });
+    if (markedFeatures.length) {
       circleStyle = new ol.style.Style({
         geometry: ics.map.geom.getGeometryCenterOfFeatures(markedFeatures),
         image: new ol.style.Circle({
@@ -315,9 +328,6 @@ ics.map.cluster.style.function = function(options, feature, resolution) {
       circleStyle = ics.map.cluster.style.MULTIPLE;
     }
     result.push(circleStyle);
-  } else {
-    result =
-        ics.map.cluster.style.pinFunction(options, feature, resolution);
   }
   return result;
 };
@@ -325,25 +335,29 @@ ics.map.cluster.style.function = function(options, feature, resolution) {
 
 /**
  * @param {ics.map.marker.style.labelFunction.Options} options
+ * @param {ol.Feature} clusterFeature
  * @param {ol.Feature} feature
  * @param {number} resolution
  * @return Array.<ol.style.Style>
+ * @protected
  */
-ics.map.cluster.style.pinFunction = function(options, feature, resolution) {
+ics.map.cluster.style.pinFunction =
+    function(options, clusterFeature, feature, resolution) {
   var styleArray = [];
   var title;
   if (goog.isDef(options.markerLabel)) {
-    title = options.markerLabel(feature, resolution);
+    title = options.markerLabel(clusterFeature, resolution);
   }
-  var isMarked = ics.map.cluster.containsMarker(options.map, feature);
+  var isMarked = ics.map.marker.isMarker(options.map, feature);
   if (!goog.isDefAndNotNull(title)) {
     if (isMarked) {
       var allMarkers = options.markerSource.getFeatures();
       title = ics.map.cluster.style.getMarkedDefaultLabel(allMarkers,
-          feature, resolution);
+          clusterFeature, resolution);
     } else {
       title =
-          ics.map.cluster.style.getUnmarkedDefaultLabel(feature, resolution);
+          ics.map.cluster.style.getUnmarkedDefaultLabel(clusterFeature,
+              resolution);
     }
   }
 
@@ -354,7 +368,8 @@ ics.map.cluster.style.pinFunction = function(options, feature, resolution) {
 
   var fontSize = ics.map.building.style.FONT_SIZE;
 
-  var geometry = ics.map.geom.CENTER_GEOMETRY_FUNCTION;
+  var geometry = feature.getGeometry();
+  goog.asserts.assert(!!geometry);
 
   var opts = {
     fill: fill,
@@ -368,7 +383,7 @@ ics.map.cluster.style.pinFunction = function(options, feature, resolution) {
     styleArray.push(textStyle);
   }
   var pin = isMarked ?
-      ics.map.marker.style.PIN :
+      ics.map.marker.style.createPinFromGeometry(geometry) :
       ics.map.style.PIN;
   styleArray.push(pin);
   return styleArray;
@@ -467,14 +482,6 @@ ics.map.cluster.style.getUnmarkedDefaultLabel = function(feature, resolution) {
   title = titleParts.join('\n');
   return title;
 };
-
-
-/**
- * @tzpe {string}
- * @protected
- * 2const
- */
-ics.map.cluster.style.MU_LABEL = 'Masarykova univerzita';
 
 
 /**
