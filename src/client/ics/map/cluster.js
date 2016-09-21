@@ -495,35 +495,42 @@ ics.map.cluster.style.getMarkedDefaultLabel =
   var title;
   var titleParts = [];
 
-  if (ics.map.building.isBuilding(markers[0])) {
-    var range = ics.map.cluster.getResolutionRange(resolution);
-    var units = [];
-    var unitsFunc =
-        range === ics.map.cluster.Resolutions.MARKERS_AND_FACULTIES ?
-            ics.map.building.getFaculties :
-            ics.map.building.getUnits;
-    var buildingsWithoutUnits = [];
-    markers.forEach(function(markedBuilding) {
-      var uns = unitsFunc(markedBuilding);
-      if (uns.length) {
-        goog.array.extend(units, uns);
-      } else {
-        buildingsWithoutUnits.push(markedBuilding);
-      }
-    });
-    titleParts = ics.map.unit.getTitleParts(units);
-    buildingsWithoutUnits.forEach(function(building) {
-      var buildingTitle =
-          ics.map.building.getDefaultLabel(building, resolution);
-      titleParts.push(buildingTitle);
-    });
+  if (markers.length > 3) {
+    var markerType = ics.map.building.isBuilding(markers[0]) ?
+        'budova' :
+        'místnost';
+    titleParts.push(markers.length + 'x ' + markerType);
   } else {
-    markers.forEach(function(room) {
-      var roomTitle = ics.map.style.getDefaultLabel(room, resolution);
-      if (goog.isDefAndNotNull(roomTitle)) {
-        titleParts.push(roomTitle);
-      }
-    });
+    if (ics.map.building.isBuilding(markers[0])) {
+      var range = ics.map.cluster.getResolutionRange(resolution);
+      var units = [];
+      var unitsFunc =
+          range === ics.map.cluster.Resolutions.MARKERS_AND_FACULTIES ?
+              ics.map.building.getFaculties :
+              ics.map.building.getUnits;
+      var buildingsWithoutUnits = [];
+      markers.forEach(function(markedBuilding) {
+        var uns = unitsFunc(markedBuilding);
+        if (uns.length) {
+          goog.array.extend(units, uns);
+        } else {
+          buildingsWithoutUnits.push(markedBuilding);
+        }
+      });
+      titleParts = ics.map.unit.getTitleParts(units);
+      buildingsWithoutUnits.forEach(function(building) {
+        var buildingTitle =
+            ics.map.building.getDefaultLabel(building, resolution);
+        titleParts.push(buildingTitle);
+      });
+    } else {
+      markers.forEach(function(room) {
+        var roomTitle = ics.map.style.getDefaultLabel(room, resolution);
+        if (goog.isDefAndNotNull(roomTitle)) {
+          titleParts.push(roomTitle);
+        }
+      });
+    }
   }
 
   title = titleParts.join('\n');
