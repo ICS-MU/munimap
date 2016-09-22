@@ -17,7 +17,7 @@ goog.require('ol.source.Vector');
  * Layer source to cluster vector data.
  *
  * @constructor
- * @param {olx.source.ClusterOptions} options Constructor options.
+ * @param {ics.map.source.Cluster.Options} options Constructor options.
  * @extends {ol.source.Vector}
  * @api
  */
@@ -58,6 +58,19 @@ ics.map.source.Cluster = function(options) {
       ics.map.source.Cluster.prototype.onSourceChange_, this);
 };
 goog.inherits(ics.map.source.Cluster, ol.source.Vector);
+
+
+/**
+ * @typedef {{attributions: (Array.<ol.Attribution>|undefined),
+ *     distance: (number|undefined),
+ *     extent: (ol.Extent|undefined),
+ *     format: (ol.format.Feature|undefined),
+ *     logo: (string|undefined),
+ *     projection: ol.proj.ProjectionLike,
+ *     source: ol.source.Vector,
+ *     wrapX: (boolean|undefined)}}
+ */
+ics.map.source.Cluster.Options;
 
 
 /**
