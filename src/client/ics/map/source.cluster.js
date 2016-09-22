@@ -12,6 +12,7 @@ goog.require('ol.geom.Point');
 goog.require('ol.source.Vector');
 
 
+
 /**
  * @classdesc
  * Layer source to cluster vector data.
@@ -43,6 +44,12 @@ ics.map.source.Cluster = function(options) {
   this.distance_ = options.distance !== undefined ? options.distance : 20;
 
   /**
+   * @type {ics.map.source.Cluster.CompareFunction|undefined}
+   * @private
+   */
+  this.compareFn_ = options.compareFn;
+
+  /**
    * @type {Array.<ol.Feature>}
    * @private
    */
@@ -68,9 +75,17 @@ goog.inherits(ics.map.source.Cluster, ol.source.Vector);
  *     logo: (string|undefined),
  *     projection: ol.proj.ProjectionLike,
  *     source: ol.source.Vector,
- *     wrapX: (boolean|undefined)}}
+ *     wrapX: (boolean|undefined),
+ *     compareFn: (ics.map.source.Cluster.CompareFunction|undefined)
+ *     }}
  */
 ics.map.source.Cluster.Options;
+
+
+/**
+ * @typedef {function(ol.Feature, ol.Feature): number}
+ */
+ics.map.source.Cluster.CompareFunction;
 
 
 /**
@@ -121,12 +136,15 @@ ics.map.source.Cluster.prototype.cluster_ = function() {
   var extent = ol.extent.createEmpty();
   var mapDistance = this.distance_ * this.resolution_;
   var features = this.source_.getFeatures();
+  if (this.compareFn_) {
+    features.sort(this.compareFn_);
+  }
 
   /**
    * @type {!Object.<string, boolean>}
    */
   var clustered = {};
-  
+
   /**
    * @type {Array<ol.Feature>}
    */
@@ -136,7 +154,7 @@ ics.map.source.Cluster.prototype.cluster_ = function() {
     var feature = features[i];
     if (!(goog.getUid(feature).toString() in clustered)) {
       var geometry = feature.getGeometry();
-      if(!geometry) {
+      if (!geometry) {
         noGeometry.push(feature);
         continue;
       }
@@ -184,4 +202,23 @@ ics.map.source.Cluster.prototype.createCluster_ = function(features) {
   var cluster = new ol.Feature(new ol.geom.Point(centroid));
   cluster.set('features', features);
   return cluster;
+};
+
+
+/**
+ * @param {ol.Map} map
+ * @param {ol.Feature} f1
+ * @param {ol.Feature} f2
+ * @return {number}
+ */
+ics.map.source.Cluster.compareFn = function(map, f1, f2) {
+  var m1 = ics.map.marker.isMarker(map, f1);
+  var m2 = ics.map.marker.isMarker(map, f2);
+  var result = m2 - m1;
+  if (!result) {
+    var n1 = f1.get('nazev') || f1.get('polohKod');
+    var n2 = f2.get('nazev') || f2.get('polohKod');
+    result = n1.localeCompare(n2);
+  }
+  return result;
 };
