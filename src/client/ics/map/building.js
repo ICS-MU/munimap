@@ -365,9 +365,15 @@ ics.map.building.getDefaultLabel = function(feature, resolution) {
   if (namePart) {
     result.push(namePart);
   }
-  var addressPart = ics.map.building.getAddressPart(feature, resolution);
-  if (addressPart) {
-    result.push(addressPart);
+
+  var complex = ics.map.building.getComplex(feature);
+  if (!namePart ||
+      !complex || ics.map.complex.getBuildingCount(complex) === 1 ||
+      resolution < ics.map.complex.RESOLUTION.min) {
+    var addressPart = ics.map.building.getAddressPart(feature, resolution);
+    if (addressPart) {
+      result.push(addressPart);
+    }
   }
   return result.join('\n');
 };
@@ -393,8 +399,7 @@ ics.map.building.getNamePart = function(feature, resolution) {
  */
 ics.map.building.getAddressPart = function(feature, resolution) {
   var titleParts = [];
-  if (goog.isDefAndNotNull(
-      feature.get(ics.map.building.COMPLEX_ID_FIELD_NAME))) {
+  if (goog.isDefAndNotNull(ics.map.building.getComplex(feature))) {
     var bldgAbbr = feature.get(ics.map.building.ABBR_FIELD_NAME);
     if (goog.isDefAndNotNull(bldgAbbr)) {
       if (ics.map.range.contains(ics.map.floor.RESOLUTION, resolution)) {
