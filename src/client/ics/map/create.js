@@ -35,7 +35,7 @@ goog.require('ol.layer.Image');
 goog.require('ol.layer.Tile');
 goog.require('ol.layer.Vector');
 goog.require('ol.proj');
-goog.require('ol.source.Cluster');
+goog.require('ics.map.source.Cluster');
 goog.require('ol.source.OSM');
 goog.require('ol.source.Raster');
 
@@ -263,7 +263,7 @@ ics.map.create = function(options) {
         clusterResolution = ics.map.cluster.ROOM_RESOLUTION;
       }
       var clusterFeatures = markers.concat();
-      var markerClusterSrc = new ol.source.Cluster({
+      var markerClusterSrc = new ics.map.source.Cluster({
         attributions: [muAttribution],
         source: new ol.source.Vector({
           features: clusterFeatures

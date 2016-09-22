@@ -157,7 +157,7 @@ ics.map.cluster.getStore = function(map) {
  */
 ics.map.cluster.getSource = function(map) {
   var clusterStore = ics.map.cluster.getStore(map);
-  goog.asserts.assertInstanceof(clusterStore, ol.source.Cluster);
+  goog.asserts.assertInstanceof(clusterStore, ics.map.source.Cluster);
   return clusterStore.getSource();
 };
 
