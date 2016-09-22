@@ -25,6 +25,7 @@ goog.require('ics.map.poi.style');
 goog.require('ics.map.room');
 goog.require('ics.map.room.label');
 goog.require('ics.map.room.style');
+goog.require('ics.map.source.Cluster');
 goog.require('ics.map.store');
 goog.require('ics.map.style');
 goog.require('ol.Map');
@@ -35,7 +36,6 @@ goog.require('ol.layer.Image');
 goog.require('ol.layer.Tile');
 goog.require('ol.layer.Vector');
 goog.require('ol.proj');
-goog.require('ics.map.source.Cluster');
 goog.require('ol.source.OSM');
 goog.require('ol.source.Raster');
 
@@ -268,7 +268,8 @@ ics.map.create = function(options) {
         source: new ol.source.Vector({
           features: clusterFeatures
         }),
-        distance: 60
+        compareFn: goog.partial(ics.map.source.Cluster.compareFn, map),
+        distance: 80
       });
       var markerClusterLayer = new ol.layer.Vector({
         id: ics.map.cluster.LAYER_ID,
