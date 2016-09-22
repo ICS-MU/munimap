@@ -17,10 +17,10 @@
   <body>
 
     <div>
-        <h1>Popis rozhrazní knihovny munimap:</h1>
+        <h1>Popis rozhraní knihovny munimap:</h1>
         <ul>
           <li><a href="#create">funkce ics.map.create</a></li>
-            <li><a href="#reset">metoda ics.map.reset</a></li>
+            <li><a href="#reset">funkce ics.map.reset</a></li>
         </ul>
         <div>
           <h2 id="create">Funkce ics.map.create</h2>
@@ -44,19 +44,19 @@
             <tr>
               <td>markers</td>
               <td>Array.&lt;string&gt;|undefined</td>
-              <td>Polohové kódy budovy (s případnými podtržíky pro LIKE dotaz) nebo polohové kódy místnosti (bez podtržítek), které mají být na mapě označeny. Pokud je undefined, nic se nezvýrazní.</td>
+              <td>polohové kódy budov, nebo polohové kódy místností (s případnými podtržítky pro LIKE dotaz), které mají být na mapě označeny; pokud je undefined, nic se nezvýrazní</td>
               <td>undefined</td>
             </tr>
             <tr>
               <td>zoomTo</td>
               <td>Array.&lt;string&gt;|string|undefined</td>
-              <td>Polohové kódy budov (s případnými podtržíky pro LIKE dotaz) nebo polohové kódy místnosti (bez podtržítek), na které se má mapa zazoomovat. Pokud je undefined a jsou zadány markery, převezme hodnotu z markers.</td>
+              <td>polohové kódy budov, nebo polohové kódy místností (s případnými podtržítky pro LIKE dotaz), na které se má mapa zazoomovat; pokud je undefined a jsou zadány markery, převezme hodnotu z markers</td>
               <td>undefined</td>
             </tr>
             <tr>
               <td>zoom</td>
               <td>number|undefined</td>
-              <td>Výchozí zoom mapy; není-li zadán, je dopočítán podle zoomTo, případně zobrazí celé Brno.</td>
+              <td>výchozí zoom mapy; není-li zadán, je dopočítán podle zoomTo, případně zobrazí celé Brno</td>
               <td>něco rozumného pro zobrazení Brna</td>
             </tr>
             <tr>
