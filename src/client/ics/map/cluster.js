@@ -361,7 +361,6 @@ ics.map.cluster.style.pinFunction =
     }
   }
 
-
   var fill = isMarked ?
       ics.map.marker.style.TEXT_FILL :
       ics.map.style.TEXT_FILL;
@@ -526,8 +525,14 @@ ics.map.cluster.style.getMarkedDefaultLabel =
       });
       titleParts = ics.map.unit.getTitleParts(units);
       buildingsWithoutUnits.forEach(function(building) {
-        var buildingTitle =
-            ics.map.building.getDefaultLabel(building, resolution);
+        var buildingTitle;
+        var bUnits = ics.map.building.getUnits(building);
+        if (bUnits.length) {
+          buildingTitle = ics.map.unit.getTitleParts(bUnits);
+        } else {
+          buildingTitle =
+              ics.map.building.getDefaultLabel(building, resolution);
+        }
         titleParts.push(buildingTitle);
       });
     } else {
