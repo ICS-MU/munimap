@@ -338,7 +338,7 @@ ics.map.cluster.style.function = function(options, feature, resolution) {
  * @param {ol.Feature} clusterFeature
  * @param {ol.Feature} feature
  * @param {number} resolution
- * @return Array.<ol.style.Style>
+ * @return {Array.<ol.style.Style>}
  * @protected
  */
 ics.map.cluster.style.pinFunction =
