@@ -275,9 +275,9 @@ ics.map.create = function(options) {
         source: markerClusterSrc,
         style: goog.partial(
             ics.map.cluster.style.function, markerOptions),
-        minResolution: clusterResolution.min,
+        minResolution: clusterResolution.min/*,
         updateWhileAnimating: true,
-        updateWhileInteracting: true
+        updateWhileInteracting: true*/
       });
 
       var buildingLabels = new ol.layer.Vector({
