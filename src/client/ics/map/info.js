@@ -203,6 +203,7 @@ ics.map.info.refreshFloorSelect = function(map, floors) {
       var floorLabel = ics.map.info.getLabelAbbr(floorCode);
       var item = new goog.ui.MenuItem(floorLabel, floor);
       floorSelect.addItem(item);
+      item.enableClassName('floor-select-item', true);
       var itemElement = item.getElement();
       goog.dom.setProperties(itemElement,
           {title: ics.map.info.getLabel(floorCode)});
