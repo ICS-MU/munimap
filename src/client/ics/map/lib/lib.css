@@ -5,7 +5,7 @@
 @import url("../../../_lib/closure-library/closure/goog/css/menu.css");
 @import url("../../../_lib/closure-library/closure/goog/css/menubutton.css");
 @import url("../../../_lib/closure-library/closure/goog/css/menuitem.css");
-@import url("../../../_lib/font-awesome/css/font-awesome.min.css");
+@import url("../font/font.css");
 
 .ol-popup {
   border-radius: 6px;
@@ -55,6 +55,7 @@
 }
 .floor .goog-menu-button {
   background: white;
+  line-height: 20px;
   margin-left: 0;
 }
 .floor .goog-menu-button-outer-box,
@@ -69,6 +70,7 @@
 }
 .floor .goog-menu-button-caption {
   border-right: solid 1px /*#99a9c8*/ #ccd3e3;
+  box-sizing: content-box;
   font-weight: normal;
   line-height: 20px;
   padding: 3px 2px 3px 10px;
@@ -83,9 +85,10 @@
   width: 10px;
 }
 .floor .goog-menu-button-dropdown:before {
+  box-sizing: content-box;
   content: '\f107';
-  font-family: fontawesome;
-  font-size: 18px;
+  font-family: 'MunimapFont';
+  font-size: 11px;
 }
 .goog-menuitem {
   font-size: 12px;

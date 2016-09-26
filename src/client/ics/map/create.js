@@ -453,8 +453,8 @@ ics.map.create.loadFonts = function() {
     WebFont.load({
       'classes': false,
       'custom': {
-        'families': ['FontAwesome'],
-        'testStrings': {'FontAwesome': '\uf129' },
+        'families': ['MunimapFont'],
+        'testStrings': {'MunimapFont': '\uf129' },
         'urls': [
           jpad.DEV ?
               './lib/lib.css' :

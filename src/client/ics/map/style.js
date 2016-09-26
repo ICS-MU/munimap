@@ -59,7 +59,7 @@ ics.map.style.PIN = new ol.style.Style({
   geometry: ics.map.geom.CENTER_GEOMETRY_FUNCTION,
   text: new ol.style.Text({
     text: '\uf041',
-    font: 'normal ' + ics.map.style.PIN_SIZE + 'px FontAwesome',
+    font: 'normal ' + ics.map.style.PIN_SIZE + 'px MunimapFont',
     fill: ics.map.style.TEXT_FILL,
     offsetY: - ics.map.style.PIN_SIZE / 2,
     stroke: ics.map.style.TEXT_STROKE
@@ -224,7 +224,7 @@ ics.map.style.getLabelWithPin =
     geometry: geometry,
     text: new ol.style.Text({
       text: '\uf041',
-      font: 'normal ' + ics.map.style.PIN_SIZE + 'px FontAwesome',
+      font: 'normal ' + ics.map.style.PIN_SIZE + 'px MunimapFont',
       fill: fill,
       offsetY: - ics.map.style.PIN_SIZE / 2,
       stroke: ics.map.style.TEXT_STROKE
