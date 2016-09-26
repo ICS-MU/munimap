@@ -78,7 +78,7 @@ ics.map.poi.style.ICON_HEIGHT = 24;
 ics.map.poi.style.BACKGROUND_SQUARE = new ol.style.Style({
   text: new ol.style.Text({
     text: '\uf0c8',
-    font: 'normal ' + ics.map.poi.style.ICON_HEIGHT + 'px FontAwesome',
+    font: 'normal ' + ics.map.poi.style.ICON_HEIGHT + 'px MunimapFont',
     fill: new ol.style.Fill({
       color: '#666'
     })
@@ -96,7 +96,7 @@ ics.map.poi.style.ELEVATOR = [
   new ol.style.Style({
     text: new ol.style.Text({
       text: '\uf183\uf07d',
-      font: 'normal 16px FontAwesome',
+      font: 'normal 16px MunimapFont',
       fill: new ol.style.Fill({
         color: 'white'
       })
@@ -115,7 +115,7 @@ ics.map.poi.style.ENTRANCE = [
   new ol.style.Style({
     text: new ol.style.Text({
       text: '\uf090',
-      font: 'normal 16px FontAwesome',
+      font: 'normal 16px MunimapFont',
       fill: new ol.style.Fill({
         color: 'white'
       })
@@ -134,8 +134,8 @@ ics.map.poi.style.INFORMATION = [
   new ol.style.Style({
     text: new ol.style.Text({
       text: '\uf129',
-      offsetY: 2,
-      font: 'normal 18px FontAwesome',
+      offsetY: 1,
+      font: 'normal 18px MunimapFont',
       fill: new ol.style.Fill({
         color: 'white'
       })
@@ -154,7 +154,7 @@ ics.map.poi.style.TOILET = [
   new ol.style.Style({
     text: new ol.style.Text({
       text: '\uf182\uf183',
-      font: 'normal 14px FontAwesome',
+      font: 'normal 14px MunimapFont',
       fill: new ol.style.Fill({
         color: 'white'
       })
@@ -173,7 +173,7 @@ ics.map.poi.style.TOILET_IM = [
   new ol.style.Style({
     text: new ol.style.Text({
       text: '\uf193',
-      font: 'bold 16px FontAwesome',
+      font: 'bold 16px MunimapFont',
       fill: new ol.style.Fill({
         color: 'white'
       })
@@ -192,8 +192,7 @@ ics.map.poi.style.TOILET_M = [
   new ol.style.Style({
     text: new ol.style.Text({
       text: '\uf183',
-      offsetY: 1,
-      font: 'normal 18px FontAwesome',
+      font: 'normal 18px MunimapFont',
       fill: new ol.style.Fill({
         color: 'white'
       })
@@ -212,8 +211,7 @@ ics.map.poi.style.TOILET_W = [
   new ol.style.Style({
     text: new ol.style.Text({
       text: '\uf182',
-      offsetY: 1,
-      font: 'normal 18px FontAwesome',
+      font: 'normal 18px MunimapFont',
       fill: new ol.style.Fill({
         color: 'white'
       })

@@ -102,7 +102,7 @@ ics.map.marker.style.ROOM = new ol.style.Style({
  */
 ics.map.marker.style.PIN_TEXT = new ol.style.Text({
   text: '\uf041',
-  font: 'normal ' + ics.map.style.PIN_SIZE + 'px FontAwesome',
+  font: 'normal ' + ics.map.style.PIN_SIZE + 'px MunimapFont',
   fill: ics.map.marker.style.TEXT_FILL,
   offsetY: - ics.map.style.PIN_SIZE / 2,
   stroke: ics.map.style.TEXT_STROKE

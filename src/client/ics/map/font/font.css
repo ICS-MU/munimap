@@ -1,0 +1,11 @@
+@font-face {
+  font-family: 'MunimapFont';
+  src: url('fontello.eot?92211460');
+  src: url('fontello.eot?92211460#iefix') format('embedded-opentype'),
+       url('fontello.woff2?92211460') format('woff2'),
+       url('fontello.woff?92211460') format('woff'),
+       url('fontello.ttf?92211460') format('truetype'),
+       url('fontello.svg?92211460#fontello') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}

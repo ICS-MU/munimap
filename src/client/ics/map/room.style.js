@@ -290,7 +290,7 @@ ics.map.room.style.getClassroomIcon = function(offsetY) {
     text: new ol.style.Text({
       text: '\uf0c8',
       offsetY: offsetY,
-      font: 'normal ' + ics.map.poi.style.ICON_HEIGHT + 'px FontAwesome',
+      font: 'normal ' + ics.map.poi.style.ICON_HEIGHT + 'px MunimapFont',
       fill: new ol.style.Fill({
         color: '#666'
       })
@@ -304,7 +304,7 @@ ics.map.room.style.getClassroomIcon = function(offsetY) {
       text: new ol.style.Text({
         text: '\uf19d',
         offsetY: offsetY,
-        font: 'normal 15px FontAwesome',
+        font: 'normal 15px MunimapFont',
         fill: new ol.style.Fill({
           color: 'white'
         })
