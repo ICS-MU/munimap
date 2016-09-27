@@ -33,14 +33,6 @@ var jpad = {
       dest: '_lib/prettyprint/'
     },
     {
-      src: 'bower_components/font-awesome/css/',
-      dest: '_lib/font-awesome/css/'
-    },
-    {
-      src: 'bower_components/font-awesome/fonts/',
-      dest: '_lib/font-awesome/fonts/'
-    },
-    {
       src: 'bower_components/webfontloader/webfontloader.js',
       dest: '_lib/webfontloader/webfontloader.js'
     }
@@ -54,7 +46,8 @@ var jpad = {
   },
   srcClientMappings: [
     '**/*.png',
-    '**/web.config'
+    '**/web.config',
+    '**/fontello.*'
   ],
   generateSourceMaps: false,
   buildWithModulesOn: false
