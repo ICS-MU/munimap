@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
     <link href="ics.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="../../munimap.css" media="all" rel="stylesheet" type="text/css" />
     
     <link href="../../plovr/plovr.css" media="all" rel="stylesheet" type="text/css" />
     
@@ -15,11 +16,10 @@
     <title>munimap - zvýrazněné fakulty</title>
   </head>
   <body>
+    <h1>munimap - zvýrazněné fakulty</h1>
+    <div id="map" class="map">
+    </div>
     <div class="content">
-      <div id="map" class="map">
-      </div>
-      <div class="example">
-        <h3 id="title">munimap - zvýrazněné fakulty</h3>
         <pre class="prettyprint">
 &lt;script type="text/javascript"&gt;
       ics.map.create({
@@ -36,16 +36,12 @@
 &lt;/script&gt;
         </pre>
       </div>
-      <div class="footer">
-        <ul>
-          <li><a href="helloworld.html">vložení mapy</a></li>
-          <li><a href="building.html">zvýraznění budovy</a></li>
-          <li><a href="room.html">zvýraznění místnosti</a></li>
-          <li><a href='language.html'>změna jazyka</a></li>
-          <li>zvýrazněné fakulty</li>
-          <li><a href='reset.html'>reset mapy</a></li>
-          <li><a href='multiple.html'>více map</a></li>
-        </ul>
+    <div class="footer">
+      <div class="left">
+        <a href="../../">munimap</a> &gt; <a href="../">příklady použití</a> &gt; zvýrazněné fakulty
+      </div>
+      <div class="right">
+        &copy; <a href="http://www.ics.muni.cz/">Ústav výpočetní techniky MU</a>
       </div>
     </div>
     <script type="text/javascript">
