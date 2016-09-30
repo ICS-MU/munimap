@@ -113,3 +113,19 @@
 .ol-control button:focus {
   background-color: #003190;
 }
+.ol-attribution li {
+  font-weight: normal;
+}
+.ol-attribution li > a:hover {
+  text-decoration: underline;
+}
+.ol-attribution li:before {
+  content: none !important;
+}
+
+.ol-attribution a:after {
+  content: none !important;
+}
+.ol-attribution a {
+  padding-right: 0px !important;
+}

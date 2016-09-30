@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
     <link href="ics.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="../../munimap.css" media="all" rel="stylesheet" type="text/css" />
     
     <link href="../../plovr/plovr.css" media="all" rel="stylesheet" type="text/css" />
     
@@ -16,11 +17,10 @@
   </head>
 
   <body>
-    <div class="content">
+    <h1>munimap - zvýraznění místnosti</h1>
       <div id="map" class="map">
       </div>
-      <div class="example">
-        <h3 id="title">munimap - zvýraznění místnosti</h3>
+      <div class="content">
         <p>
           Na konec stránky (před uzavírací značku <code>&lt;/body&gt;</code>) vložte následující kód,
           ten ovládá nastavení mapy:
@@ -35,7 +35,7 @@
 &lt;/script&gt;
         </pre>
         <p>
-          Parametry metody <code>ics.map.create</code> jsou následující:
+          Parametry funkce <code>ics.map.create</code> jsou následující:
         </p>
         <ul>
           <li><code>target</code> - určuje id elementu, do kterého se mapa vykreslí.</li>
@@ -48,16 +48,12 @@
           <a href="https://maps.muni.cz/kompas" target="_blank">Kompas</a>.
         </p>
       </div>
-      <div class="footer">
-        <ul>
-          <li><a href="helloworld.html">vložení mapy</a></li>
-          <li><a href="building.html">zvýraznění budovy</a></li>
-          <li>zvýraznění místnosti</li>
-          <li><a href="language.html">změna jazyka</a></li>
-          <li><a href='faculties.html'>zvýrazněné fakulty</a></li>
-          <li><a href='reset.html'>reset mapy</a></li>
-          <li><a href='multiple.html'>více map</a></li>
-        </ul>
+    <div class="footer">
+      <div class="left">
+        <a href="../../">munimap</a> &gt; <a href="../">příklady použití</a> &gt; zvýraznění místnosti
+      </div>
+      <div class="right">
+        &copy; <a href="http://www.ics.muni.cz/">Ústav výpočetní techniky MU</a>
       </div>
     </div>
     <script type="text/javascript">

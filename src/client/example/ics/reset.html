@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
     <link href="ics.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="../../munimap.css" media="all" rel="stylesheet" type="text/css" />
     
     <link href="../../plovr/plovr.css" media="all" rel="stylesheet" type="text/css" />
     
@@ -16,20 +17,19 @@
   </head>
 
   <body>
+    <h1>munimap - reset mapy</h1>
+    <div id="map" class="map">
+    </div>
     <div class="content">
-      <div id="map" class="map">
-      </div>
-      <div class="example">
-        <h3 id="title">munimap - reset mapy</h3>
         <p>
-          Pomocí metody <code>ics.map.reset</code> lze přenastavit parametry mapy.
-          Chybějící parametry (oproti parametrům původního volání metody
+          Pomocí funkce <code>ics.map.reset</code> lze přenastavit parametry mapy.
+          Chybějící parametry (oproti parametrům původního volání funkce
           <code>ics.map.create</code>) se nastaví na výchozí hodnotu.
         </p>
         <p>
-          Metodu <code>ics.map.reset</code> voláme v callbacku metody 
+          Funkci <code>ics.map.reset</code> voláme v callbacku funkce 
           <code>ics.map.create</code>, kde již máme k dispozici objekt mapy.
-          Tento objekt předáme jako parametr metodě <code>ics.map.reset</code>.
+          Tento objekt předáme jako parametr funkci <code>ics.map.reset</code>.
         </p>
         <button id="resetButton">RESET</button>
           - Tlačítko pro reset mapy (id je resetButton)
@@ -50,16 +50,12 @@
 &lt;/script&gt;
         </pre>
       </div>
-      <div class="footer">
-        <ul>
-          <li><a href="helloworld.html">vložení mapy</a></li>
-          <li><a href="building.html">zvýraznění budovy</a></li>
-          <li><a href="room.html">zvýraznění místnosti</a></li>
-          <li><a href="language.html">změna jazyka</a></li>
-          <li><a href='faculties.html'>zvýrazněné fakulty</a></li>
-          <li>reset mapy</li>
-          <li><a href='multiple.html'>více map</a></li>
-        </ul>
+    <div class="footer">
+      <div class="left">
+        <a href="../../">munimap</a> &gt; <a href="../">příklady použití</a> &gt; reset mapy
+      </div>
+      <div class="right">
+        &copy; <a href="http://www.ics.muni.cz/">Ústav výpočetní techniky MU</a>
       </div>
     </div>
     <script type="text/javascript">
