@@ -13,7 +13,6 @@ goog.require('ol.style.Style');
 /**
  * @enum {ics.map.Range}
  * @const
- * @protected
  */
 ics.map.poi.style.Resolution = {
   INFORMATION: ics.map.floor.RESOLUTION,

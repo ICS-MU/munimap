@@ -71,6 +71,20 @@
       "css": "location",
       "code": 61505,
       "src": "fontawesome"
+    },
+    {
+      "uid": "e5eb76c1da310374d6672d0575da4fd5",
+      "css": "staircase",
+      "code": 59392,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M583.8 187.5L583.8 435.3 302.6 435.3 302.6 683.1 51.8 683.1 51.8 815.1 434.7 815.1 434.7 567.3 715.8 567.3 715.8 319.6 947.6 319.6 947.6 187.5 583.8 187.5Z",
+        "width": 1000
+      },
+      "search": [
+        "schody_final"
+      ]
     }
   ]
 }
