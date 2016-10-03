@@ -55,6 +55,45 @@ ics.map.room.style.staircase;
 
 
 /**
+ * @type {ol.style.Style}
+ * @protected
+ * @const
+ */
+ics.map.room.style.STAIRCASE_BACKGROUND_ICON = new ol.style.Style({
+  geometry: ics.map.geom.CENTER_GEOMETRY_FUNCTION,
+  text: new ol.style.Text({
+    text: '\uf0c8',
+    font: 'normal ' + ics.map.poi.style.ICON_HEIGHT + 'px MunimapFont',
+    fill: new ol.style.Fill({
+      color: '#666'
+    })
+  }),
+  zIndex: 5
+});
+
+
+/**
+ * @type {Array<ol.style.Style>}
+ * @protected
+ * @const
+ */
+ics.map.room.style.STAIRCASE_STYLE_ICON = [
+  ics.map.room.style.STAIRCASE_BACKGROUND_ICON,
+  new ol.style.Style({
+    geometry: ics.map.geom.CENTER_GEOMETRY_FUNCTION,
+    text: new ol.style.Text({
+      text: '\ue800',
+      font: 'normal 16px MunimapFont',
+      fill: new ol.style.Fill({
+        color: 'white'
+      })
+    }),
+    zIndex: 5
+  })
+];
+
+
+/**
  *
  * @param {ol.events.Event} event
  */
@@ -141,7 +180,13 @@ ics.map.room.style.function = function(options, feature, resolution) {
         case 'komunikace obecně':
           if (purposesToOmit.indexOf(purpose) === -1) {
             if (purpose === 'schodiště') {
-              result = ics.map.room.style.staircase;
+              if (options.isActive && ics.map.range.contains(
+                  ics.map.poi.style.Resolution.STAIRS, resolution)) {
+                result = goog.array.concat(ics.map.room.style.staircase,
+                    ics.map.room.style.STAIRCASE_STYLE_ICON);
+              } else {
+                result = ics.map.room.style.staircase;
+              }
             } else {
               result = ics.map.room.style.corridor;
             }
