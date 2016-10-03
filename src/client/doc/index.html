@@ -8,78 +8,137 @@
     <meta name="author" content="" />
     <meta http-equiv="cache-control" content="no-cache" />
     
+    <link href="../munimap.css" media="all" rel="stylesheet" type="text/css" />
     <link href="doc.css" media="all" rel="stylesheet" type="text/css" />
 
-    <title>Popis rozhrazní knihovny munimap</title>
+    <title>munimap - popis rozhraní</title>
 
   </head>
 
   <body>
-
-    <div>
-        <h1>Popis rozhraní knihovny munimap:</h1>
-        <ul>
-          <li><a href="#create">funkce ics.map.create</a></li>
-            <li><a href="#reset">funkce ics.map.reset</a></li>
-        </ul>
-        <div>
-          <h2 id="create">Funkce ics.map.create</h2>
-          <p>Vykreslí mapu do příslušného elementu podle zadaných parametrů.</p>
-          <h3>Specifikace</h3>
-          <p>ics.map.create(options: Object): Thenable&lt;ol.Map&gt;</p>
-          <h3>Vstup</h3>
-          <table>
-            <tr>
-              <th>Název parametru</th>
-              <th>Typ</th>
-              <th>Popis</th>
-              <th>Defaultní hodnota</th>
-            </tr>
-            <tr>
-              <td>target</td>
-              <td>string|Element</td>
-              <td>id elementu nebo element, do kterého se vykreslí mapa</td>
-              <td>žádná</td>
-            </tr>
-            <tr>
-              <td>markers</td>
-              <td>Array.&lt;string&gt;|undefined</td>
-              <td>polohové kódy budov, nebo polohové kódy místností (s případnými podtržítky pro LIKE dotaz), které mají být na mapě označeny; pokud je undefined, nic se nezvýrazní</td>
-              <td>undefined</td>
-            </tr>
-            <tr>
-              <td>zoomTo</td>
-              <td>Array.&lt;string&gt;|string|undefined</td>
-              <td>polohové kódy budov, nebo polohové kódy místností (s případnými podtržítky pro LIKE dotaz), na které se má mapa zazoomovat; pokud je undefined a jsou zadány markery, převezme hodnotu z markers</td>
-              <td>undefined</td>
-            </tr>
-            <tr>
-              <td>zoom</td>
-              <td>number|undefined</td>
-              <td>výchozí zoom mapy; není-li zadán, je dopočítán podle zoomTo, případně zobrazí celé Brno</td>
-              <td>něco rozumného pro zobrazení Brna</td>
-            </tr>
-            <tr>
-              <td>center</td>
-              <td>ol.Coordinate|undefined</td>
-              <td>výchozí střed mapy v zeměpisné šířce a délce (EPSG:4326); není-li zadán, je dopočítán podle zoomTo, případně zobrazí celé Brno</td>
-              <td>něco rozumného pro zobrazení Brna</td>
-            </tr>
-            <tr>
-              <td>language</td>
-              <td>ics.map.lang.Enum|undefined</td>
-              <td>jazyk; možné hodnoty jsou cs a en</td>
-              <td>cs</td>
-            </tr>
-          </table>
-          <h3>Výstup</h3>
-          <p>goog.Promise&lt;ol.Map&gt;</p>
-
-          <hr />
-          <h2 id="reset">Funkce ics.map.reset</h2>
-          
-        </div>
+    <h1>munimap - popis rozhraní</h1>
+    <ul>
+      <li><a href="#create">funkce ics.map.create</a></li>
+      <li><a href="#reset">funkce ics.map.reset</a></li>
+    </ul>
+    <div class="content">
+        <h2 id="create">Funkce ics.map.create</h2>
+        <p>Vykreslí mapu do příslušného elementu podle zadaných parametrů.</p>
+        <h3>Specifikace</h3>
+        <p>ics.map.create(options: Object): Thenable&lt;ol.Map&gt;</p>
+        <h3>Vstup</h3>
+        <table>
+          <tr>
+            <th>Název parametru</th>
+            <th>Typ</th>
+            <th>Popis</th>
+            <th>Výchozí hodnota</th>
+          </tr>
+          <tr>
+            <td>target</td>
+            <td>string|Element</td>
+            <td>id elementu nebo element, do kterého se vykreslí mapa</td>
+            <td>žádná</td>
+          </tr>
+          <tr>
+            <td>markers</td>
+            <td>Array.&lt;string&gt;|undefined</td>
+            <td>polohové kódy budov, nebo polohové kódy místností (s případnými podtržítky pro LIKE dotaz), které mají být na mapě označeny; pokud je undefined, nic se nezvýrazní</td>
+            <td>undefined</td>
+          </tr>
+          <tr>
+            <td>markerLabel</td>
+            <td>undefined|function((ol.Feature|ol.render.Feature), number): (string|null|undefined)</td>
+            <td>funkce pro zobrazení vlastních popisků budov a místností</td>
+            <td>undefined</td>
+          </tr>
+          <tr>
+            <td>zoomTo</td>
+            <td>Array.&lt;string&gt;|string|undefined</td>
+            <td>polohové kódy budov, nebo polohové kódy místností (s případnými podtržítky pro LIKE dotaz), na které se má mapa zazoomovat; pokud je undefined a jsou zadány markery, převezme hodnotu z markers</td>
+            <td>undefined</td>
+          </tr>
+          <tr>
+            <td>zoom</td>
+            <td>number|undefined</td>
+            <td>výchozí zoom mapy; není-li zadán, je dopočítán podle zoomTo, případně zobrazí celé Brno</td>
+            <td>undefined</td>
+          </tr>
+          <tr>
+            <td>center</td>
+            <td>ol.Coordinate|undefined</td>
+            <td>výchozí střed mapy v zeměpisné šířce a délce (EPSG:4326); není-li zadán, je dopočítán podle zoomTo, případně zobrazí celé Brno</td>
+            <td>undefined</td>
+          </tr>
+          <tr>
+            <td>language</td>
+            <td>ics.map.lang.Enum|undefined</td>
+            <td>jazyk; možné hodnoty jsou cs a en</td>
+            <td>cs</td>
+          </tr>
+        </table>
+        <h3>Výstup</h3>
+        <p>goog.Promise&lt;ol.Map&gt;</p>
     </div>
-    
+    <div class="content">
+        <h2 id="reset">Funkce ics.map.reset</h2>
+        <p>Přenastaví zadané parametry mapy na nové hodnoty, ostatní parametry nastaví na výchozí hodnoty.</p>
+        <h3>Specifikace</h3>
+        <p>ics.map.reset(map: ol.Map, options: Object): Thenable&lt;ol.Map&gt;</p>
+        <h3>Vstup</h3>
+        <p>
+          Vstupem je již existující mapa vytvořená pomocí funkce ics.map.create a 
+          objekt s parametry, které chceme přenastavit. Oproti funkci ics.map.create
+          nejsou potřeba parametry target a lang, jelikož ty jsou definovány pro původní mapu.
+        </p>
+        <table>
+          <tr>
+            <th>Název parametru</th>
+            <th>Typ</th>
+            <th>Popis</th>
+            <th>Výchozí hodnota</th>
+          </tr>
+          <tr>
+            <td>markers</td>
+            <td>Array.&lt;string&gt;|undefined</td>
+            <td>polohové kódy budov, nebo polohové kódy místností (s případnými podtržítky pro LIKE dotaz), které mají být na mapě označeny; pokud je undefined, nic se nezvýrazní</td>
+            <td>undefined</td>
+          </tr>
+          <tr>
+            <td>markerLabel</td>
+            <td>undefined|function((ol.Feature|ol.render.Feature), number): (string|null|undefined)</td>
+            <td>funkce pro vlastní definici popisků budov a místností</td>
+            <td>undefined</td>
+          </tr>
+          <tr>
+            <td>zoomTo</td>
+            <td>Array.&lt;string&gt;|string|undefined</td>
+            <td>polohové kódy budov, nebo polohové kódy místností (s případnými podtržítky pro LIKE dotaz), na které se má mapa zazoomovat; pokud je undefined a jsou zadány markery, převezme hodnotu z markers</td>
+            <td>undefined</td>
+          </tr>
+          <tr>
+            <td>zoom</td>
+            <td>number|undefined</td>
+            <td>výchozí zoom mapy; není-li zadán, je dopočítán podle zoomTo, případně zobrazí celé Brno</td>
+            <td>undefined</td>
+          </tr>
+          <tr>
+            <td>center</td>
+            <td>ol.Coordinate|undefined</td>
+            <td>výchozí střed mapy v zeměpisné šířce a délce (EPSG:4326); není-li zadán, je dopočítán podle zoomTo, případně zobrazí celé Brno</td>
+            <td>undefined</td>
+          </tr>
+        </table>
+        <h3>Výstup</h3>
+        <p>goog.Promise&lt;ol.Map&gt;</p>
+    </div>
+    <div class="footer">
+      <div class="left">
+        <a href="../">munimap</a> &gt; popis rozhraní
+      </div>
+      <div class="right">
+        &copy; <a href="http://www.ics.muni.cz/">Ústav výpočetní techniky MU</a>
+      </div>
+    </div>
   </body>
 </html>
