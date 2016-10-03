@@ -160,6 +160,7 @@ ics.map.load.featuresForMap =
     'inSR': '3857',
     'outFields': '*',
     'outSR': '3857',
+    'geometryPrecision': 2,
     'where': options.where || '1=1'
   };
   var qdata = goog.Uri.QueryData.createFromMap(params);
@@ -210,6 +211,7 @@ ics.map.load.features = function(options) {
     'returnGeometry': returnGeom.toString(),
     'outFields': '*',
     'outSR': '3857',
+    'geometryPrecision': 2,
     'where': options.where || '1=1'
   };
   var qdata = goog.Uri.QueryData.createFromMap(params);
