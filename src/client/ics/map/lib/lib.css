@@ -112,6 +112,7 @@
 .ol-control button:hover,
 .ol-control button:focus {
   background-color: #003190;
+  cursor: pointer;
 }
 .ol-attribution li {
   font-weight: normal;
