@@ -1,0 +1,20 @@
+{
+  "id": "example-munimap-turf-dev",
+
+  "debug": true,
+
+  "inherits": "turf.plovr.json",
+  "define": {
+    "goog.DEBUG": true,
+    "goog.LOCALE": "cs",
+    "goog.asserts.ENABLE_ASSERTS": true,
+    "goog.dom.ASSUME_STANDARDS_MODE": true,
+    "ol.ENABLE_DOM": false,
+    "ol.ENABLE_IMAGE": false,
+    "ol.ENABLE_VECTOR": true,
+    "ol.ENABLE_WEBGL": false,
+    "ol.ENABLE_PROJ4JS": false,
+    "jpad.DEV": true
+  }
+
+}
