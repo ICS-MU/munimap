@@ -18,14 +18,14 @@
   <body>
     <h1>munimap - popis rozhraní</h1>
     <ul>
-      <li><a href="#create">funkce ics.map.create</a></li>
-      <li><a href="#reset">funkce ics.map.reset</a></li>
+      <li><a href="#create">funkce munimap.create</a></li>
+      <li><a href="#reset">funkce munimap.reset</a></li>
     </ul>
     <div class="content">
-        <h2 id="create">Funkce ics.map.create</h2>
+        <h2 id="create">Funkce munimap.create</h2>
         <p>Vykreslí mapu do příslušného elementu podle zadaných parametrů.</p>
         <h3>Specifikace</h3>
-        <p>ics.map.create(options: Object): Thenable&lt;ol.Map&gt;</p>
+        <p>munimap.create(options: Object): Thenable&lt;ol.Map&gt;</p>
         <h3>Vstup</h3>
         <table>
           <tr>
@@ -72,7 +72,7 @@
           </tr>
           <tr>
             <td>language</td>
-            <td>ics.map.lang.Enum|undefined</td>
+            <td>munimap.lang.Enum|undefined</td>
             <td>jazyk; možné hodnoty jsou cs a en</td>
             <td>cs</td>
           </tr>
@@ -81,14 +81,14 @@
         <p>goog.Promise&lt;ol.Map&gt;</p>
     </div>
     <div class="content">
-        <h2 id="reset">Funkce ics.map.reset</h2>
+        <h2 id="reset">Funkce munimap.reset</h2>
         <p>Přenastaví zadané parametry mapy na nové hodnoty, ostatní parametry nastaví na výchozí hodnoty.</p>
         <h3>Specifikace</h3>
-        <p>ics.map.reset(map: ol.Map, options: Object): Thenable&lt;ol.Map&gt;</p>
+        <p>munimap.reset(map: ol.Map, options: Object): Thenable&lt;ol.Map&gt;</p>
         <h3>Vstup</h3>
         <p>
-          Vstupem je již existující mapa vytvořená pomocí funkce ics.map.create a 
-          objekt s parametry, které chceme přenastavit. Oproti funkci ics.map.create
+          Vstupem je již existující mapa vytvořená pomocí funkce munimap.create a 
+          objekt s parametry, které chceme přenastavit. Oproti funkci munimap.create
           nejsou potřeba parametry target a lang, jelikož ty jsou definovány pro původní mapu.
         </p>
         <table>

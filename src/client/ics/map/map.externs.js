@@ -1,5 +1,0 @@
-/**
- * @type {Object}
- */
-icsx.map;
-
