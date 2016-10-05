@@ -1,11 +1,11 @@
-@import url("../../_lib/ol3/css/ol.css");
-@import url("../../_lib/ol3/examples/popup.css");
-@import url("../../_lib/closure-library/closure/goog/css/combobox.css");
-@import url("../../_lib/closure-library/closure/goog/css/common.css");
-@import url("../../_lib/closure-library/closure/goog/css/menu.css");
-@import url("../../_lib/closure-library/closure/goog/css/menubutton.css");
-@import url("../../_lib/closure-library/closure/goog/css/menuitem.css");
-@import url("../font/font.css");
+@import url("_lib/ol3/css/ol.css");
+@import url("_lib/ol3/examples/popup.css");
+@import url("_lib/closure-library/closure/goog/css/combobox.css");
+@import url("_lib/closure-library/closure/goog/css/common.css");
+@import url("_lib/closure-library/closure/goog/css/menu.css");
+@import url("_lib/closure-library/closure/goog/css/menubutton.css");
+@import url("_lib/closure-library/closure/goog/css/menuitem.css");
+@import url("munimap/font/font.css");
 
 .ol-popup {
   border-radius: 6px;

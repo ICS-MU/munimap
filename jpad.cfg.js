@@ -38,7 +38,7 @@ var jpad = {
     }
   ],
   bundle: {
-    plovr: 'munimap/lib/lib.plovr.json',
+    plovr: 'munimaplib.plovr.json',
     filesToPrepend: [
       '_lib/turf/index.js',
       '_lib/webfontloader/webfontloader.js'

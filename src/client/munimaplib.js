@@ -1,4 +1,4 @@
-goog.provide('munimap.lib');
+goog.provide('munimaplib');
 
 goog.require('munimap.create');
 goog.require('munimap.reset');

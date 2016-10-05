@@ -458,8 +458,8 @@ munimap.create.loadFonts = function() {
         'testStrings': {'MunimapFont': '\uf129' },
         'urls': [
           jpad.DEV ?
-              './lib/lib.css' :
-              '//maps.muni.cz/munimap/munimap/lib/lib.css'
+              './../munimaplib.css' :
+              '//maps.muni.cz/munimap/munimaplib.css'
         ]
       },
       'timeout': 2000,
