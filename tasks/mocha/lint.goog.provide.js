@@ -118,7 +118,10 @@ describe('namespace', function() {
         var correctDirNode = findCorrectDir(namespace);
         var correctDir = correctDirNode.model.path;
         
-        var completeCorrectDir = 'src/client/'+correctDir;
+        var completeCorrectDir = 'src/client';
+        if(correctDir) {
+          completeCorrectDir += '/'+correctDir;
+        }
         
         it('should be provided by file located in appropriate dir, e.g. ' +
             completeCorrectDir, function () {
