@@ -5,9 +5,9 @@ var StringDecoder = require('string_decoder').StringDecoder;
 var cheerio = require('cheerio');
 var jpad = require('./jpad.js');
 
-var PLUGIN_NAME = 'gulp-html-path-abs';
+var PLUGIN_NAME = 'gulp-html-processor';
 
-function htmlPathAbsolutizer(options) {
+function htmlProcessor(options) {
 //  options = options || {};
 //  var prefixText = options.prefixText;
 //  if (!prefixText) {
@@ -29,6 +29,7 @@ function htmlPathAbsolutizer(options) {
         includeModulesOnFolder: options.includeModulesOnFolder
       });
       var outtxt = $.html();
+      outtxt = jpad.fillTemplateInHtml(outtxt);
       file.contents = new Buffer(outtxt);
     }
     if (file.isStream()) {
@@ -40,4 +41,4 @@ function htmlPathAbsolutizer(options) {
 }
 
 // Exporting the plugin main function
-module.exports = htmlPathAbsolutizer;
+module.exports = htmlProcessor;

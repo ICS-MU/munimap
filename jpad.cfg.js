@@ -2,6 +2,7 @@
 
 var jpad = {
   appPath: '/munimap/',
+  prodDomain: 'maps.muni.cz',
   plovrPattern: 'src/client/**/*.plovr.json',
   plovrHtmlPattern: 'src/client/**/*.html',
   port: 9000,

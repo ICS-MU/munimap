@@ -1,6 +1,6 @@
 'use strict';
 var spawn = require('child_process').spawn;
-var htmlpathabs = require('./util/htmlpathabs.js');
+var processhtml = require('./util/processhtml.js');
 var jspathabs = require('./util/jspathabs.js');
 var plovrpathupd = require('./util/plovrpathupd.js');
 var vinylPaths = require('vinyl-paths');
@@ -67,23 +67,23 @@ module.exports = function (gulp, plugins, jpadCfg) {
         }));
   });
   
-  gulp.task('htmlpathabsmodoff', function() {
+  gulp.task('processhtmlmodoff', function() {
     var src = './src/client/**/*.html';
     var modFolder = jpadCfg.modulesOffFolder;
     var dest = './temp/'+modFolder+'/precompile/client';
     return gulp.src(src)
         .pipe(plugins.newer(dest))
-        .pipe(htmlpathabs({includeModulesOnFolder: false}))
+        .pipe(processhtml({includeModulesOnFolder: false}))
         .pipe(gulp.dest(dest));
   });
   
-  gulp.task('htmlpathabsmodon', function() {
+  gulp.task('processhtmlmodon', function() {
     var src = './src/client/**/*.html';
     var modFolder = jpadCfg.modulesOnFolder;
     var dest = './temp/'+modFolder+'/precompile/client';
     return gulp.src(src)
         .pipe(plugins.newer(dest))
-        .pipe(htmlpathabs({includeModulesOnFolder: true}))
+        .pipe(processhtml({includeModulesOnFolder: true}))
         .pipe(gulp.dest(dest));
   });
   
