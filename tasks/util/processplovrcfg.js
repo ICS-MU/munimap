@@ -8,9 +8,9 @@ var jpadCfg = require('../../jpad.cfg.js');
 
 
 
-var PLUGIN_NAME = 'gulp-js-path-abs';
+var PLUGIN_NAME = 'gulp-plovr-cfg-processor';
 
-function plovrPathUpdater(options) {
+function plovrCfgProcessor(options) {
   var decoder = new StringDecoder('utf8');
   
   // Creating a stream through which each file will pass
@@ -45,4 +45,4 @@ function plovrPathUpdater(options) {
 }
 
 // Exporting the plugin main function
-module.exports = plovrPathUpdater;
+module.exports = plovrCfgProcessor;
