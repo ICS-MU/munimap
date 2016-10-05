@@ -219,7 +219,7 @@ plovr.updatePaths = function(json, plovrSrcPath, plovrDestPath, modulesOn) {
         p = path.resolve(p);
         p = path.relative(destDir, p).replace(/\\/g, '/');
         if(rp === '.') {
-          p += '/../client'
+          p += './../client';
         }
       } else {
         p = replacePath(p);
