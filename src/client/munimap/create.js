@@ -451,15 +451,18 @@ munimap.create.calculateView = function(options, markers, zoomTos) {
  */
 munimap.create.loadFonts = function() {
   return new goog.Promise(function(resolve, reject) {
+    var cssurl = jpad.APP_PATH + 'munimaplib.css';
+    if (!jpad.DEV) {
+      cssurl = '//' + jpad.PROD_DOMAIN + cssurl;
+    }
+
     WebFont.load({
       'classes': false,
       'custom': {
         'families': ['MunimapFont'],
         'testStrings': {'MunimapFont': '\uf129' },
         'urls': [
-          jpad.DEV ?
-              './../munimaplib.css' :
-              '//maps.muni.cz/munimap/munimaplib.css'
+          cssurl
         ]
       },
       'timeout': 2000,

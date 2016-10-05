@@ -18,3 +18,17 @@ jpad.DEV = /* !DON'T CHANGE IT! */ false; /* !DON'T CHANGE IT! */
  */
 jpad.ENABLE_MODULES = /* !DON'T CHANGE IT! */ false; /* !DON'T CHANGE IT! */
 
+
+/**
+ * @define {string} Application path.
+ * CHANGE THIS VARIABLE VALUE inside jpad.cfg.js, property 'appPath'.
+ */
+jpad.APP_PATH = /* !DON'T CHANGE IT! */ '/'; /* !DON'T CHANGE IT! */
+
+
+/**
+ * @define {string} Production domain.
+ * CHANGE THIS VARIABLE VALUE inside jpad.cfg.js, property 'prodDomain'.
+ */
+jpad.PROD_DOMAIN = /* !DON'T CHANGE IT! */ 'localhost'; /* !DON'T CHANGE IT! */
+

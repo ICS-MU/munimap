@@ -101,8 +101,11 @@ munimap.room.style.setCorridorStyle = function(event) {
   if (!goog.isDefAndNotNull(munimap.room.style.corridor)) {
     var context = event.context;
     var image = new Image();
-    image.src = jpad.DEV ? './room.style.coridors.bg.png' :
-            '//maps.muni.cz/munimap/munimap/room.style.coridors.bg.png';
+    var imgsrc = './room.style.coridors.bg.png';
+    if (!jpad.DEV) {
+      imgsrc = '//' + jpad.PROD_DOMAIN + imgsrc;
+    }
+    image.src = imgsrc;
     image.onload = function() {
       var pattern = context.createPattern(image, 'repeat');
       var corridorFill = new ol.style.Fill({
