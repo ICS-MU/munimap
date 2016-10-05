@@ -1,4 +1,4 @@
-goog.provide('example.munimap.turf');
+goog.provide('example.turf');
 
 goog.require('jpad');
 goog.require('munimap');
@@ -20,7 +20,7 @@ goog.require('ol.source.Vector');
 /**
  * Compiled turf example
  */
-example.munimap.turf.try = function() {
+example.turf.try = function() {
   var mapDiv = goog.dom.getElement('map');
   var osmLayer = new ol.layer.Tile({
     source: new ol.source.OSM()
@@ -59,4 +59,4 @@ example.munimap.turf.try = function() {
 
 };
 
-goog.exportSymbol('main', example.munimap.turf.try);
+goog.exportSymbol('main', example.turf.try);

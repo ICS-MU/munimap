@@ -6,21 +6,21 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
     <link href="ics.css" media="all" rel="stylesheet" type="text/css" />
-    <link href="../../munimap.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="../munimap.css" media="all" rel="stylesheet" type="text/css" />
     
-    <link href="../../plovr/plovr.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="../plovr/plovr.css" media="all" rel="stylesheet" type="text/css" />
     
-    <script src="../../munimaplib.plovr.json" type="text/javascript"></script>
-    <script src="../../_lib/prettyprint/index.js" type="text/javascript"></script>
-    
-    <title>munimap - zvýraznění místnosti</title>
+    <script src="../munimaplib.plovr.json" type="text/javascript"></script>
+    <script src="../_lib/prettyprint/index.js" type="text/javascript"></script>
+
+    <title>munimap - zvýraznění budovy</title>
   </head>
 
   <body>
-    <h1>munimap - zvýraznění místnosti</h1>
-      <div id="map" class="map">
-      </div>
-      <div class="content">
+    <h1>munimap - zvýraznění budovy</h1>
+    <div id="map" class="map">
+    </div>
+    <div class="content">
         <p>
           Na konec stránky (před uzavírací značku <code>&lt;/body&gt;</code>) vložte následující kód,
           ten ovládá nastavení mapy:
@@ -29,8 +29,8 @@
 &lt;script type="text/javascript"&gt;
   munimap.create({
     target: 'map',
-    zoom: 20,
-    markers: ['BMA01N05070']
+    zoom: 17,
+    markers: ['BMA01']
   });
 &lt;/script&gt;
         </pre>
@@ -40,17 +40,17 @@
         <ul>
           <li><code>target</code> - určuje id elementu, do kterého se mapa vykreslí.</li>
           <li><code>zoom</code> - určuje úroveň přiblížení mapy po načtení stránky.</li>
-          <li><code>markers</code> - určuje, která místnost či místnosti se v mapě označí a mapa se na ně vycentruje.</li>
+          <li><code>markers</code> - určuje, která budova či budovy se v mapě označí a mapa se na ně vycentruje.</li>
         </ul>
         <p>
-          Parametr <code>markers</code> akceptuje polohový kód místnosti (nebo jejich seznam oddělený čárkou).
-          Tyto polohové kódy můžete k jednotlivým místnostem dohledat například v aplikaci
+          Parametr <code>markers</code> akceptuje polohový kód budovy (nebo jejich seznam oddělený čárkou).
+          Tyto polohové kódy můžete k jednotlivým budovám dohledat například v aplikaci
           <a href="https://maps.muni.cz/kompas" target="_blank">Kompas</a>.
         </p>
       </div>
     <div class="footer">
       <div class="left">
-        <a href="../../">munimap</a> &gt; <a href="../">příklady použití</a> &gt; zvýraznění místnosti
+        <a href="../">munimap</a> &gt; <a href="index.html">příklady použití</a> &gt; zvýraznění budovy
       </div>
       <div class="right">
         &copy; <a href="http://www.ics.muni.cz/">Ústav výpočetní techniky MU</a>
@@ -59,8 +59,8 @@
     <script type="text/javascript">
       munimap.create({
         target: 'map',
-        zoom: 20,
-        markers: ['BMA01N05070']
+        zoom: 17,
+        markers: ['BMA01']
       });
     </script>
   </body>

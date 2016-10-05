@@ -1,6 +1,6 @@
 {
 
-  "id": "example-munimap-turf",
+  "id": "example-turf",
 
   "ambiguate-properties": false,
 
@@ -33,7 +33,7 @@
     "visibility": "ERROR"
   },
   
-  "closure-library": "../../../../../bower_components/closure-library/closure/goog",
+  "closure-library": "../../../../bower_components/closure-library/closure/goog",
   
   "define": {
     "goog.DEBUG": false,
@@ -56,19 +56,19 @@
 
 
   "externs": [
-    "../../../../../bower_components/ol3/externs/olx.js",
-    "../../../../../bower_components/ol3/externs/bingmaps.js",
-    "../../../../../bower_components/ol3/externs/closure-compiler.js",
-    "../../../../../bower_components/ol3/externs/esrijson.js",
-    "../../../../../bower_components/ol3/externs/geojson.js",
-    "../../../../../bower_components/ol3/externs/topojson.js",
-    "../../../../../bower_components/ol3/externs/oli.js",
-    "../../../../../bower_components/ol3/externs/proj4js.js",
-    "../../../../../bower_components/ol3/externs/tilejson.js",
-    "../../../turf/turf.externs.js",
-    "../../../webfontloader/webfontloader.externs.js",
-    "../../../munimap/munimap.externs.js",
-    "../../../munimap/create.externs.js"
+    "../../../../bower_components/ol3/externs/olx.js",
+    "../../../../bower_components/ol3/externs/bingmaps.js",
+    "../../../../bower_components/ol3/externs/closure-compiler.js",
+    "../../../../bower_components/ol3/externs/esrijson.js",
+    "../../../../bower_components/ol3/externs/geojson.js",
+    "../../../../bower_components/ol3/externs/topojson.js",
+    "../../../../bower_components/ol3/externs/oli.js",
+    "../../../../bower_components/ol3/externs/proj4js.js",
+    "../../../../bower_components/ol3/externs/tilejson.js",
+    "../../turf/turf.externs.js",
+    "../../webfontloader/webfontloader.externs.js",
+    "../../munimap/munimap.externs.js",
+    "../../munimap/create.externs.js"
   ],
 
   "inputs": [
@@ -87,9 +87,9 @@
   "output-wrapper": "(function(){%output%})();",
 
   "paths": [
-    "../../../../../bower_components/ol3/build/ol.ext",
-    "../../../../../bower_components/ol3/src",
-    "../../../../client/"
+    "../../../../bower_components/ol3/build/ol.ext",
+    "../../../../bower_components/ol3/src",
+    "../../../client/"
   ],
   
   "source-map-output-name": "index.js.map",
