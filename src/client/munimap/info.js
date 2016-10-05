@@ -137,12 +137,18 @@ munimap.info.setBuildingTitle = function(map, building) {
   var complexEl = goog.dom.getElementByClass('complex', element);
   var bel = goog.dom.getElementByClass('building', element);
   if (building) {
-    var title = /**@type {string}*/ (building.get(munimap.building.TITLE_FIELD_NAME));
+    var title = /**@type {string}*/ (
+        building.get(munimap.building.TITLE_FIELD_NAME)
+        );
     var complex = munimap.building.getComplex(building);
     if (goog.isDefAndNotNull(complex)) {
       var complexTitle = /**@type {string}*/ (complex.get('nazevPrez'));
-      var buildingType = /**@type {string}*/ (building.get(munimap.building.TYPE_FIELD_NAME));
-      var buildingTitle = /**@type {string}*/ (building.get(munimap.building.ABBR_FIELD_NAME));
+      var buildingType = /**@type {string}*/ (
+          building.get(munimap.building.TYPE_FIELD_NAME)
+          );
+      var buildingTitle = /**@type {string}*/ (
+          building.get(munimap.building.ABBR_FIELD_NAME)
+          );
       if (goog.isDefAndNotNull(buildingType) &&
               goog.isDefAndNotNull(buildingTitle)) {
         title = buildingType + ' ' + buildingTitle;

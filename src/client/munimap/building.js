@@ -537,14 +537,6 @@ munimap.building.load.complexUnitsProcessor = function(options) {
                   complex.get(munimap.complex.ID_FIELD_NAME);
             });
             complex.set(munimap.complex.UNITS_FIELD_NAME, complexUnits);
-            //            if(complexUnits.length) {
-            //              console.log('complex units',
-            //                  complex.get('nazevPrez')+':',
-            //                  munimap.complex.getUnits(complex).map(function(unit) {
-            //                    return unit.get('zkratka_cs');
-            //                  })
-            //                  );
-            //            }
           });
           return goog.Promise.resolve(options);
         });
@@ -574,14 +566,6 @@ munimap.building.load.unitsProcessor = function(options) {
               return unit.get('budova_sidelni_id') === building.get('inetId');
             });
             building.set(munimap.building.UNITS_FIELD_NAME, buildingUnits);
-            //        if(buildingUnits.length) {
-            //          console.log('building units',
-            //              munimap.building.getTitleWithoutOrgUnit(building)+':',
-            //              munimap.building.getUnits(building).map(function(unit) {
-            //                return unit.get('zkratka_cs');
-            //              })
-            //              );
-            //        }
           });
           return goog.Promise.resolve(options);
         });
