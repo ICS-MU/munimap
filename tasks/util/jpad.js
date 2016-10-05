@@ -217,10 +217,11 @@ plovr.updatePaths = function(json, plovrSrcPath, plovrDestPath, modulesOn) {
       if(rp.indexOf('..')!==0 && p.indexOf(srcClientDir)===0) {
         p = path.join('./temp/'+modFolder+'/precompile/client', rp);
         p = path.resolve(p);
-        p = path.relative(destDir, p).replace(/\\/g, '/');
+        p = path.relative(destDir, p);
         if(rp === '.') {
-          p += './../client';
+          p = path.join(p, './../client');
         }
+        p = p.replace(/\\/g, '/');
       } else {
         p = replacePath(p);
       }
