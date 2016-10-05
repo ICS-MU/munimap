@@ -8,7 +8,7 @@ var jpad = require('./jpad.js');
 
 var PLUGIN_NAME = 'css-import-local-upd';
 
-function plovrPathUpdater(options) {
+function cssImportLocalUpdater(options) {
   var decoder = new StringDecoder('utf8');
   
   // Creating a stream through which each file will pass
@@ -39,4 +39,4 @@ function plovrPathUpdater(options) {
 }
 
 // Exporting the plugin main function
-module.exports = plovrPathUpdater;
+module.exports = cssImportLocalUpdater;

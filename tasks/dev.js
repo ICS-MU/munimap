@@ -2,7 +2,7 @@
 var spawn = require('child_process').spawn;
 var processhtml = require('./util/processhtml.js');
 var jspathabs = require('./util/jspathabs.js');
-var plovrpathupd = require('./util/plovrpathupd.js');
+var processplovrcfg = require('./util/processplovrcfg.js');
 var vinylPaths = require('vinyl-paths');
 var path = require("path");
 var fs = require("fs-extra");
@@ -132,7 +132,7 @@ module.exports = function (gulp, plugins, jpadCfg) {
     var dest = './temp/'+modFolder+'/precompile/client';
     return gulp.src(src)
         .pipe(plugins.newer(dest))
-        .pipe(plovrpathupd({modulesOn: false}))
+        .pipe(processplovrcfg({modulesOn: false}))
         .pipe(gulp.dest(dest));
   });
   gulp.task('precompile:plovr:modon', function() {
@@ -143,7 +143,7 @@ module.exports = function (gulp, plugins, jpadCfg) {
     var dest = './temp/'+modFolder+'/precompile/client';
     return gulp.src(src)
         .pipe(plugins.newer(dest))
-        .pipe(plovrpathupd({modulesOn: true}))
+        .pipe(processplovrcfg({modulesOn: true}))
         .pipe(gulp.dest(dest));
   });
   
