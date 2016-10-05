@@ -114,6 +114,7 @@ module.exports = function (gulp, plugins, jpadCfg) {
         build: true
       });
       var htmlout = $.html();
+      htmlout = jpad.fillTemplateInHtml(htmlout);
       fs.writeFileSync(localHtmlPath, htmlout, {encoding: 'utf-8'});
     });
     

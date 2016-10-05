@@ -118,6 +118,23 @@ var absolutizePathsInHtml = function($, htmlPath, options) {
 };
 
 /**
+ * @param {string} html
+ * @return {string}
+ */
+var fillTemplateInHtml = function(html) {
+  var props = {
+    appPath: jpadCfg.appPath,
+    prodDomain: jpadCfg.prodDomain
+  };
+  html = html.replace(/{jpad\.(\w+)}/gm, function(match, prop) {
+    var propVal = props[prop];
+    return propVal || '';
+  });
+  return html;
+};
+
+
+/**
  * @param {type} ast
  */
 var absolutizePathsInJs = function(ast, jsPath, includeModulesOnFolder) {
@@ -426,6 +443,7 @@ plovr.srcToPrecompilePath = function(srcCfgPath) {
 
 module.exports = {
   absolutizePathsInHtml: absolutizePathsInHtml,
+  fillTemplateInHtml: fillTemplateInHtml,
   absolutizePathsInJs: absolutizePathsInJs,
   getDirNamesOfFile: getDirNamesOfFile,
   getNamespaceParts: getNamespaceParts,

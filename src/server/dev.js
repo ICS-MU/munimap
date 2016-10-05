@@ -112,7 +112,7 @@ var serveHtmlFiles = function(req, res, next, modulesOn) {
       next();
       return;
     }
-    var gulpTask = modulesOn ? 'htmlpathabsmodon' : 'htmlpathabsmodoff';
+    var gulpTask = modulesOn ? 'processhtmlmodon' : 'processhtmlmodoff';
     gulp.start(gulpTask, function(err) {
       var precompiledPath =
           path.relative(__dirname+'/../../src/client/', localHtmlPath);
