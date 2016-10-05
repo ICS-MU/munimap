@@ -138,13 +138,13 @@ code {
 }
 .map {
   height: 400px;
-  background: url(../../_lib/ol3/examples/resources/map-background.jpg) repeat;
+  background: url(../_lib/ol3/examples/resources/map-background.jpg) repeat;
   margin: 20px;
 }
 .multi-map {
   width: 46%;
   height: 400px;
-  background: url(../../_lib/ol3/examples/resources/map-background.jpg) repeat;
+  background: url(../_lib/ol3/examples/resources/map-background.jpg) repeat;
   margin: 0px 20px 20px 20px;
 }
 .content {
