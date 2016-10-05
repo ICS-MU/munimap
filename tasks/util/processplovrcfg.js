@@ -32,6 +32,10 @@ function plovrCfgProcessor(options) {
       //console.log(destPath);
 
       jpad.plovr.updatePaths(json, srcPath, destPath, options.modulesOn);
+      
+      json['define']['jpad.APP_PATH'] = jpadCfg.appPath;
+      json['define']['jpad.PROD_DOMAIN'] = jpadCfg.prodDomain;
+      
       var output = JSON.stringify(json, null, '  ');
       var outtxt = output;
       file.contents = new Buffer(outtxt);
