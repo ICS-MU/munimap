@@ -1,9 +1,9 @@
 {
-  "id": "munimap-lib-dev",
+  "id": "munimaplib-dev",
 
   "debug": true,
 
-  "inherits": "lib.plovr.json",
+  "inherits": "munimaplib.plovr.json",
   "define": {
     "goog.DEBUG": true,
     "goog.asserts.ENABLE_ASSERTS": true,
