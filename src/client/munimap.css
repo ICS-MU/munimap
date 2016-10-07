@@ -21,6 +21,10 @@ h1 {
   margin: 20px;
 }
 
+h4 {
+  margin: 0px;
+}
+
 p {
   padding: 5px;
   background-color: lightgrey;
@@ -37,7 +41,8 @@ a:hover {
   color: red;
 }
 ul {
-  padding-left: 20px;
+  padding-left: 10px;
+  margin: 0px 20px 0px 20px;
 }
 li {
   list-style-type: square;
@@ -66,14 +71,16 @@ li > a {
   margin-right: 50px;
 }
 .munimap-links {
-  font-size: xx-large;
+  font-size: x-large;
   font-weight: bold;
   display: inline-block;
+  margin: 20px;
 }
 .munimap-links li {
   /*display: inline;
   padding: 50px;*/
   text-align: left;
+  list-style-type: none;
 }
 .center {
   text-align: center;
