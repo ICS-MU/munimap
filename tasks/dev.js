@@ -40,10 +40,15 @@ module.exports = function (gulp, plugins, jpadCfg) {
   });
   
   gulp.task('dev:serve', ['dev:serve:plovr'], function (cb) {
+    var options = {
+      env: {
+        JPAD_APP_PATH: jpadCfg.appPath
+      }
+    }
     //run dev server 
     var server = plugins.liveServer(
         './src/server/dev.js',
-        undefined,
+        options,
         false
     );
     server.start();

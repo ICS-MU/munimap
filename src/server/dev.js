@@ -14,6 +14,8 @@ var request = require("request");
 var gulp = require('gulp');
 var gulpPlugins = require('gulp-load-plugins')();
 
+jpadCfg.appPath = process.env.JPAD_APP_PATH;
+
 var appPath = jpadCfg.appPath;
 var port = jpadCfg.port;
 

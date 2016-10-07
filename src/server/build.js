@@ -5,6 +5,8 @@ var app = express();
 var path = require("path");
 var jpadCfg = require('./../../jpad.cfg.js');
 
+jpadCfg.appPath = process.env.JPAD_APP_PATH;
+
 var appPath = jpadCfg.appPath;
 var port = jpadCfg.port;
 
