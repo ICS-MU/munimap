@@ -91,7 +91,8 @@ var absolutizePathsInHtml = function($, htmlPath, options) {
   $('[href]').each(function(i, elem) {
       var href = $(this).attr('href');
       if(!(goog.string.startsWith(href, '/') ||
-          goog.string.contains(href, '//'))) {
+          goog.string.contains(href, '//') ||
+          goog.string.startsWith(href, 'mailto:'))) {
         href = url.resolve('/'+htmlPath, href);
         href = jpadCfg.appPath + href.substr(1);
         if(includeModulesOnFolder) {
