@@ -18,22 +18,27 @@
 
   <body>
     <h1>munimap - reset mapy</h1>
+    <div class="navigation">
+      <div class="left">
+        <a href="../">munimap</a> &gt; <a href="index.html">příklady použití</a> &gt; reset mapy
+      </div>
+    </div>
     <div id="map" class="map">
     </div>
     <div class="content">
-        <p>
-          Pomocí funkce <code>munimap.reset</code> lze přenastavit parametry mapy.
-          Chybějící parametry (oproti parametrům původního volání funkce
-          <code>munimap.create</code>) se nastaví na výchozí hodnotu.
-        </p>
-        <p>
-          Funkci <code>munimap.reset</code> voláme v callbacku funkce 
-          <code>munimap.create</code>, kde již máme k dispozici objekt mapy.
-          Tento objekt předáme jako parametr funkci <code>munimap.reset</code>.
-        </p>
-        <button id="resetButton">RESET</button>
-          - Tlačítko pro reset mapy (id je resetButton)
-        <pre class="prettyprint">
+      <p>
+        Pomocí funkce <code><a href="../doc/#reset">munimap.reset</a></code> lze přenastavit parametry mapy.
+        Chybějící parametry (oproti parametrům původního volání funkce
+        <code><a href="../doc/#create">munimap.create</a></code>) se nastaví na výchozí hodnotu.
+      </p>
+      <p>
+        Funkci <code><a href="../doc/#reset">munimap.reset</a></code> voláme v callbacku funkce 
+        <code><a href="../doc/#create">munimap.create</a></code>, kde již máme k dispozici objekt mapy.
+        Tento objekt předáme callbacku jako parametr.
+      </p>
+      <button id="resetButton">RESET</button>
+        - Tlačítko pro reset mapy (id je resetButton)
+      <pre class="prettyprint">
 &lt;script type="text/javascript"&gt;
   munimap.create({
     target: 'map',
@@ -48,14 +53,14 @@
     };
   });
 &lt;/script&gt;
-        </pre>
-      </div>
-    <div class="footer">
+      </pre>
+    </div>
+    <div class="navigation">
       <div class="left">
         <a href="../">munimap</a> &gt; <a href="index.html">příklady použití</a> &gt; reset mapy
       </div>
       <div class="right">
-        &copy; <a href="http://www.ics.muni.cz/">Ústav výpočetní techniky MU</a>
+        &copy; <a href="http://www.ics.muni.cz/" target="_blank">Ústav výpočetní techniky MU</a>
       </div>
     </div>
     <script type="text/javascript">

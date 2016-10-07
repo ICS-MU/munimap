@@ -18,33 +18,39 @@
 
   <body>
     <h1>munimap - změna jazyka</h1>
+    <div class="navigation">
+      <div class="left">
+        <a href="../">munimap</a> &gt; <a href="index.html">příklady použití</a> &gt; změna jazyka
+      </div>
+    </div>
     <div id="map" class="map">
     </div>
     <div class="content">
-        <p>
-          Knihovna munimap je dostupná v češtine a angličtině. Jazyk, který je v mapě
-          použit, si vyberete pomocí parametru <code>lang</code> funkce <code>create</code>. Pro češtinu použijte
-          jako hodnotu tohoto parametru řetězec <code>cs</code> a pro angličtinu <code>en</code>:
-        </p>
-        <pre class="prettyprint">
+      <p>
+        Knihovna munimap je dostupná v češtine a angličtině. Jazyk, který je v mapě
+        použit, si vyberete pomocí parametru <code><a href="../doc/#lang">lang</a></code> funkce
+        <code><a href="../doc/#create">munimap.create</a></code>. Pro češtinu použijte
+        jako hodnotu tohoto parametru řetězec <code>cs</code> a pro angličtinu <code>en</code>:
+      </p>
+      <pre class="prettyprint">
 &lt;script type="text/javascript"&gt;
   munimap.create({
     target: 'map',
     lang: 'en'
   });
 &lt;/script&gt;
-        </pre>
-        <p>
-          Změnu jazyka můžete ověřit například v bublinovém popisku tlačítek pro přiblížení
-          a oddálení mapy.
-        </p>
-      </div>
-    <div class="footer">
+      </pre>
+      <p>
+        Změnu jazyka můžete ověřit například v bublinovém popisku tlačítek pro přiblížení
+        a oddálení mapy.
+      </p>
+    </div>
+    <div class="navigation">
       <div class="left">
         <a href="../">munimap</a> &gt; <a href="index.html">příklady použití</a> &gt; změna jazyka
       </div>
       <div class="right">
-        &copy; <a href="http://www.ics.muni.cz/">Ústav výpočetní techniky MU</a>
+        &copy; <a href="http://www.ics.muni.cz/" target="_blank">Ústav výpočetní techniky MU</a>
       </div>
     </div>
     <script type="text/javascript">

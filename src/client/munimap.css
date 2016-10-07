@@ -9,6 +9,7 @@ body {
   margin: 20px;
   padding: 20px;
   background-color: lightgrey;
+  overflow: hidden;
 }
 
 h1 {
@@ -35,21 +36,46 @@ a:link {
 a:hover {
   color: red;
 }
+ul {
+  padding-left: 20px;
+}
+li {
+  list-style-type: square;
+}
 li > a {
   font-weight: bold;
   color: #002776;
-  list-style-type: square;
 }
 
-.footer {
+.navigation {
   font-size: medium;
   font-weight: normal;
   margin: 20px;
   padding-bottom: 20px;
+  clear: both;
 }
 .left {
   float: left;
 }
 .right {
   float: right;
+}
+.content > .left {
+  margin-left: 50px;
+}
+.content > .right {
+  margin-right: 50px;
+}
+.munimap-links {
+  font-size: xx-large;
+  font-weight: bold;
+  display: inline-block;
+}
+.munimap-links li {
+  /*display: inline;
+  padding: 50px;*/
+  text-align: left;
+}
+.center {
+  text-align: center;
 }

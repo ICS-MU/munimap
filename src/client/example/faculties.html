@@ -13,35 +13,63 @@
     <script src="../munimaplib.plovr.json" type="text/javascript"></script>
     <script src="../_lib/prettyprint/index.js" type="text/javascript"></script>
 
-    <title>munimap - zvýrazněné fakulty</title>
+    <title>munimap - zvýraznění fakult</title>
   </head>
   <body>
-    <h1>munimap - zvýrazněné fakulty</h1>
+    <h1>munimap - zvýraznění fakult</h1>
+    <div class="navigation">
+      <div class="left">
+        <a href="../">munimap</a> &gt; <a href="index.html">příklady použití</a> &gt; zvýraznění fakult
+      </div>
+    </div>
     <div id="map" class="map">
     </div>
     <div class="content">
-        <pre class="prettyprint">
+      <p>
+        Pro zvýraznění více budov stačí do parametru <code>markers</code>
+        vložit více polohových kódů oddělených čárkou. V tomto příkladě je navíc využit
+        i parametr <code>markerLabel</code> pro změnu popisku.
+      </p>
+      <pre class="prettyprint">
 &lt;script type="text/javascript"&gt;
-      munimap.create({
-        target: 'map',
-        markers: ['BNA01', 'BBA01', 'BHA18', 'BHA35', 'BMA01', 'BMB02', 'BPA11',
-          'BVA04', 'BVB01', 'BVC01'],
-        markerLabel: function(feature, resolution) {
-          var clusteredFeatures = feature.get('features');
-          if(clusteredFeatures  && clusteredFeatures.length > 9) {
-            return 'Masarykova univerzita';
-          }
-        }
-      });
+  munimap.create({
+    target: 'map',
+    markers: ['BNA01', 'BBA01', 'BHA18', 'BHA35', 'BMA01', 'BMB02', 'BPA11',
+      'BVA04', 'BVB01', 'BVC01'],
+    markerLabel: function(feature, resolution) {
+      var clusteredFeatures = feature.get('features');
+      if(clusteredFeatures && clusteredFeatures.length > 9) {
+        return 'Masarykova univerzita';
+      }
+    }
+  });
 &lt;/script&gt;
-        </pre>
-      </div>
-    <div class="footer">
+      </pre>
+      <p>
+        Parametry funkce <code><a href="../doc/#create">munimap.create</a></code> jsou následující:
+      </p>
+      <ul>
+        <li><code><a href="../doc/#target">target</a></code> - určuje id elementu, do kterého se mapa vykreslí</li>
+        <li><code><a href="../doc/#markers">markers</a></code> - určuje, která budova či budovy se v mapě označí a mapa se na ně vycentruje</li>
+        <li><code><a href="../doc/#markerLabel">markerLabel</a></code> - definuje funkci pro zobrazení vlastních popisků budov a místností</li>
+      </ul>
+      <p>
+        Parametr <code>markers</code> akceptuje polohový kód budovy (nebo jejich seznam oddělený čárkou).
+        Tyto polohové kódy můžete k jednotlivým budovám dohledat například v aplikaci
+        <a href="https://maps.muni.cz/kompas" target="_blank">Kompas</a>.
+      </p>
+      <p>
+        Parametr <code>markerLabel</code> je experimentální. V tomto konkrétním příkladě
+        je do něj přiřazena funkce, která změní popisek shluku budov na "Masarykova univerzita",
+        pokud jsou všechny zvýrazněné budovy shluknuté (jejich počet je větší než 9, označili jsme jich 10).
+      </p>
+    </div>
+    <div class="navigation">
       <div class="left">
-        <a href="../">munimap</a> &gt; <a href="index.html">příklady použití</a> &gt; zvýrazněné fakulty
+        <a href="../">munimap</a> &gt; <a href="index.html">příklady použití</a> &gt; zvýraznění fakult
       </div>
       <div class="right">
-        &copy; <a href="http://www.ics.muni.cz/">Ústav výpočetní techniky MU</a>
+        &copy; <a href="http://www.ics.muni.cz/" target="_blank">Ústav výpočetní techniky MU</a>
       </div>
     </div>
     <script type="text/javascript">
@@ -51,7 +79,7 @@
           'BVA04', 'BVB01', 'BVC01'],
         markerLabel: function(feature, resolution) {
           var clusteredFeatures = feature.get('features');
-          if(clusteredFeatures  && clusteredFeatures.length > 9) {
+          if(clusteredFeatures && clusteredFeatures.length > 9) {
             return 'Masarykova univerzita';
           }
         }
