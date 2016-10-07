@@ -1,6 +1,7 @@
 goog.provide('munimap.assert');
 
 
+goog.require('assert');
 goog.require('munimap.building');
 goog.require('munimap.lang');
 goog.require('munimap.room');
@@ -11,8 +12,8 @@ goog.require('munimap.room');
  */
 munimap.assert.markers = function(markers) {
   if (markers !== undefined) {
-    goog.asserts.assert(goog.isArray(markers),
-        'Markers should be an array of strings.');
+    assert(goog.isArray(markers) && markers.every(goog.isString),
+        'Markers should be an array of strings.'); 
     var onlyBuildings = markers.every(munimap.building.isCodeOrLikeExpr);
     if (!onlyBuildings) {
       var onlyRooms = markers.every(munimap.room.isCodeOrLikeExpr);
@@ -30,10 +31,10 @@ munimap.assert.markers = function(markers) {
  */
 munimap.assert.target = function(target) {
   if (goog.isString(target)) {
-    goog.asserts.assertElement(goog.dom.getElement(target),
+    assert.element(goog.dom.getElement(target),
         'Target element "' + target + '" not found in document.');
   } else {
-    goog.asserts.assert(document.body.contains(target),
+    assert(document.body.contains(target),
         'Target element is not in document.');
   }
 };
@@ -43,7 +44,7 @@ munimap.assert.target = function(target) {
  * @param {number|undefined} zoom
  */
 munimap.assert.zoom = function(zoom) {
-  goog.asserts.assert(zoom === undefined || (zoom >= 0 && zoom <= 30),
+  assert(zoom === undefined || (zoom >= 0 && zoom <= 30),
       'Zoom should be in range <0,30>.');
 };
 
@@ -53,7 +54,7 @@ munimap.assert.zoom = function(zoom) {
  */
 munimap.assert.zoomTo = function(zoomTo) {
   if (zoomTo !== undefined) {
-    goog.asserts.assert(goog.isArray(zoomTo) || goog.isString(zoomTo),
+    assert(goog.isArray(zoomTo) || goog.isString(zoomTo),
         'ZoomTo should be string or array of strings.');
     zoomTo = goog.isString(zoomTo) ? [zoomTo] : zoomTo;
     var onlyBuildings = zoomTo.every(munimap.building.isCodeOrLikeExpr);

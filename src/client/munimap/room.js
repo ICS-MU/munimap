@@ -1,5 +1,6 @@
 goog.provide('munimap.room');
 
+goog.require('assert');
 goog.require('munimap.floor');
 goog.require('munimap.load');
 goog.require('munimap.load.floorBasedActive');
@@ -137,7 +138,7 @@ munimap.room.isActiveLayer = function(layer) {
  * @param {string} code
  */
 munimap.room.assertCode = function(code) {
-  goog.asserts.assert(!!munimap.room.isCode(code),
+  assert(!!munimap.room.isCode(code),
       'Location code of room should consist of 3 letters and 2 digits, ' +
       'one of the letters \'N\', \'M\', \'P\', \'S\' or \'Z\' ' +
       'followed by 5 digits, and optionally 1 letter.');
@@ -196,7 +197,7 @@ munimap.room.isCodeOrLikeExpr = function(maybeCodeOrLikeExpr) {
  * @param {string} code
  */
 munimap.room.assertCodeOrLikeExpr = function(code) {
-  goog.asserts.assert(!!code.match(munimap.room.LIKE_EXPR_REGEX),
+  assert(!!code.match(munimap.room.LIKE_EXPR_REGEX),
       'Location code of building should consist of 3 letters and 2 digits, ' +
       'one of the letters \'N\', \'M\', \'P\', \'S\' or \'Z\' ' +
       'followed by 5 digits, and optionally 1 letter. ' +
@@ -234,7 +235,7 @@ munimap.room.getNamePart = function(feature) {
  * @return {boolean}
  */
 munimap.room.isInActiveFloor = function(room, map) {
-  munimap.room.assertRoom(room);
+  goog.asserts.assert(munimap.room.isRoom(room));
   var locCode = /**@type {string}*/(room.get('polohKod'));
   var activeFloor = munimap.getVars(map).activeFloor;
   return !!activeFloor && locCode.startsWith(activeFloor.locationCode);

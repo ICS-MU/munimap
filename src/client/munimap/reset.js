@@ -1,5 +1,6 @@
 goog.provide('munimap.reset');
 
+goog.require('assert');
 goog.require('goog.asserts');
 goog.require('munimap.assert');
 goog.require('munimap.create');
@@ -79,11 +80,9 @@ munimap.reset = function(map, options) {
  * @param {munimapx.reset.Options} options
  */
 munimap.reset.assertOptions = function(options) {
-  goog.asserts.assert(
-      options.zoom === undefined || options.zoomTo === undefined,
+  assert(options.zoom === undefined || options.zoomTo === undefined,
       'Zoom and zoomTo options can\'t be defined together.');
-  goog.asserts.assert(
-      options.center === undefined || options.zoomTo === undefined,
+  assert(options.center === undefined || options.zoomTo === undefined,
       'Center and zoomTo options can\'t be defined together.');
   munimap.assert.zoom(options.zoom);
   munimap.assert.zoomTo(options.zoomTo);
