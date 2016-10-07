@@ -5,7 +5,14 @@ table {
 td, th {
   border: 1px solid black;
   border-collapse: collapse;
-  padding-left: 8px;
-  padding-right: 8px;
+  padding: 8px;
   background-color: white;
+}
+.experimental {
+  color: red;
+  font-weight: bold;
+}
+.mandatory {
+  color: green;
+  font-weight: bold;
 }

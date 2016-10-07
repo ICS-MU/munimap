@@ -18,17 +18,22 @@
 
   <body>
     <h1>munimap - více map na stránce</h1>
+    <div class="navigation">
+      <div class="left">
+        <a href="../">munimap</a> &gt; <a href="index.html">příklady použití</a> &gt; více map na stránce
+      </div>
+    </div>
     <div id="map" class="multi-map left">
     </div>
     <div id="map2" class="multi-map right">
     </div>
     <div class="content">
-        <p>
-          Na stránku můžete vložit více map. Stačí do těla stránky umístit
-          další elementy <code>&lt;div&gt;</code> s jedinečnými atributy id.
-          Tyto id potom použijte ve volání dalších funkcí <code>munimap.create</code>.
-        </p>
-        <pre class="prettyprint">
+      <p>
+        Na stránku můžete vložit více map. Stačí do těla stránky umístit
+        další elementy <code>&lt;div&gt;</code> s jedinečnými atributy id.
+        Tyto id potom použijte ve volání dalších funkcí <code><a href="../doc/#create">munimap.create</a></code>.
+      </p>
+      <pre class="prettyprint">
 &lt;script type="text/javascript"&gt;
   munimap.create({
     target: 'map',
@@ -41,14 +46,14 @@
     markers: ['BMA01']
   });
 &lt;/script&gt;
-        </pre>
-      </div>
-    <div class="footer">
+      </pre>
+    </div>
+    <div class="navigation">
       <div class="left">
         <a href="../">munimap</a> &gt; <a href="index.html">příklady použití</a> &gt; více map na stránce
       </div>
       <div class="right">
-        &copy; <a href="http://www.ics.muni.cz/">Ústav výpočetní techniky MU</a>
+        &copy; <a href="http://www.ics.muni.cz/" target="_blank">Ústav výpočetní techniky MU</a>
       </div>
     </div>
     <script type="text/javascript">

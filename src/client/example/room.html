@@ -18,14 +18,19 @@
 
   <body>
     <h1>munimap - zvýraznění místnosti</h1>
-      <div id="map" class="map">
+    <div class="navigation">
+      <div class="left">
+        <a href="../">munimap</a> &gt; <a href="index.html">příklady použití</a> &gt; zvýraznění místnosti
       </div>
-      <div class="content">
-        <p>
-          Na konec stránky (před uzavírací značku <code>&lt;/body&gt;</code>) vložte následující kód,
-          ten ovládá nastavení mapy:
-        </p>
-        <pre class="prettyprint">
+    </div>
+    <div id="map" class="map">
+    </div>
+    <div class="content">
+      <p>
+        Na konec stránky (před uzavírací značku <code>&lt;/body&gt;</code>) vložte následující kód,
+        ten ovládá nastavení mapy:
+      </p>
+      <pre class="prettyprint">
 &lt;script type="text/javascript"&gt;
   munimap.create({
     target: 'map',
@@ -33,27 +38,27 @@
     markers: ['BMA01N05070']
   });
 &lt;/script&gt;
-        </pre>
-        <p>
-          Parametry funkce <code>munimap.create</code> jsou následující:
-        </p>
-        <ul>
-          <li><code>target</code> - určuje id elementu, do kterého se mapa vykreslí.</li>
-          <li><code>zoom</code> - určuje úroveň přiblížení mapy po načtení stránky.</li>
-          <li><code>markers</code> - určuje, která místnost či místnosti se v mapě označí a mapa se na ně vycentruje.</li>
-        </ul>
-        <p>
-          Parametr <code>markers</code> akceptuje polohový kód místnosti (nebo jejich seznam oddělený čárkou).
-          Tyto polohové kódy můžete k jednotlivým místnostem dohledat například v aplikaci
-          <a href="https://maps.muni.cz/kompas" target="_blank">Kompas</a>.
-        </p>
-      </div>
-    <div class="footer">
+      </pre>
+      <p>
+        Parametry funkce <code><a href="../doc/#create">munimap.create</a></code> jsou následující:
+      </p>
+      <ul>
+        <li><code><a href="../doc/#target">target</a></code> - určuje id elementu, do kterého se mapa vykreslí</li>
+        <li><code><a href="../doc/#zoom">zoom</a></code> - určuje úroveň přiblížení mapy po načtení stránky</li>
+        <li><code><a href="../doc/#markers">markers</a></code> - určuje, která místnost či místnosti se v mapě označí a mapa se na ně vycentruje</li>
+      </ul>
+      <p>
+        Parametr <code>markers</code> akceptuje polohový kód místnosti (nebo jejich seznam oddělený čárkou).
+        Tyto polohové kódy můžete k jednotlivým místnostem dohledat například v aplikaci
+        <a href="https://maps.muni.cz/kompas" target="_blank">Kompas</a>.
+      </p>
+    </div>
+    <div class="navigation">
       <div class="left">
         <a href="../">munimap</a> &gt; <a href="index.html">příklady použití</a> &gt; zvýraznění místnosti
       </div>
       <div class="right">
-        &copy; <a href="http://www.ics.muni.cz/">Ústav výpočetní techniky MU</a>
+        &copy; <a href="http://www.ics.muni.cz/" target="_blank">Ústav výpočetní techniky MU</a>
       </div>
     </div>
     <script type="text/javascript">

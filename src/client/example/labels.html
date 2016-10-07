@@ -17,15 +17,20 @@
   </head>
   <body>
     <h1>munimap - vlastní popisky budov</h1>
+    <div class="navigation">
+      <div class="left">
+        <a href="../">munimap</a> &gt; <a href="index.html">příklady použití</a> &gt; vlastní popisky budov
+      </div>
+    </div>
     <div id="map" class="map">
     </div>
     <div class="content">
-        <p>
-          Pokročilejší uživatelé si mohou například předefinovat popisky budov.
-          Toho lze dosáhnout předáním vlastní funkce, která vrací popisky,
-          do parametru <code>markerLabel</code> funkce <code>munimap.create</code>.
-        </p>
-        <pre class="prettyprint">
+      <p>
+        Pokročilejší uživatelé si mohou například předefinovat popisky budov.
+        Toho lze dosáhnout předáním vlastní funkce, která vrací popisky,
+        do parametru <code>markerLabel</code> funkce <code><a href="../doc/#create">munimap.create</a></code>.
+      </p>
+      <pre class="prettyprint">
 &lt;script type="text/javascript"&gt;
   /**
    * @param {ol.Feature|ol.render.Feature} feature
@@ -111,14 +116,14 @@
     markerLabel: getHeadquartersLabels
   });
 &lt;/script&gt;
-        </pre>
-      </div>
-    <div class="footer">
+      </pre>
+    </div>
+    <div class="navigation">
       <div class="left">
         <a href="../">munimap</a> &gt; <a href="index.html">příklady použití</a> &gt; vlastní popisky budov
       </div>
       <div class="right">
-        &copy; <a href="http://www.ics.muni.cz/">Ústav výpočetní techniky MU</a>
+        &copy; <a href="http://www.ics.muni.cz/" target="_blank">Ústav výpočetní techniky MU</a>
       </div>
     </div>
     <script type="text/javascript">

@@ -129,4 +129,9 @@
 }
 .ol-attribution a {
   padding-right: 0px !important;
+  color: #002776;
+  font-weight: bold;
+}
+.ol-attribution a:hover {
+  color: red;
 }
