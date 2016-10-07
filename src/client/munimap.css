@@ -43,7 +43,6 @@ li {
   list-style-type: square;
 }
 li > a {
-  font-weight: bold;
   color: #002776;
 }
 
