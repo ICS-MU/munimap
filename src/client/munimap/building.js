@@ -1,6 +1,7 @@
 goog.provide('munimap.building');
 goog.provide('munimap.building.load');
 
+goog.require('assert');
 goog.require('munimap.load');
 goog.require('munimap.store');
 goog.require('munimap.type');
@@ -132,17 +133,8 @@ munimap.building.TYPE = {
  * @param {string} code
  */
 munimap.building.assertCode = function(code) {
-  goog.asserts.assert(!!munimap.building.isCode(code),
+  assert(!!munimap.building.isCode(code),
       'Location code of building should consist of 3 letters and 2 digits.');
-};
-
-
-/**
- * @param {ol.Feature} feature
- */
-munimap.building.assertBuilding = function(feature) {
-  goog.asserts.assert(!!munimap.building.isBuilding(feature),
-      'Feature does not have value of building\'s primary key.');
 };
 
 
@@ -189,7 +181,7 @@ munimap.building.isCodeOrLikeExpr = function(maybeCodeOrLikeExpr) {
  * @param {string} code
  */
 munimap.building.assertCodeOrLikeExpr = function(code) {
-  goog.asserts.assert(!!code.match(munimap.building.LIKE_EXPR_REGEX),
+  assert(!!code.match(munimap.building.LIKE_EXPR_REGEX),
       'Location code of building should consist of 3 letters and 2 digits. ' +
       'Any of these characters might be replaced with _ wildcard.');
 };
@@ -270,7 +262,7 @@ munimap.building.filterFacultyHeadquaters = function(buildings) {
  * @return {boolean}
  */
 munimap.building.isActive = function(building, map) {
-  munimap.building.assertBuilding(building);
+  goog.asserts.assert(munimap.building.isBuilding(building));
   var locCode = munimap.building.getLocationCode(building);
   var activeBuilding = munimap.getVars(map).activeBuilding;
   return locCode === activeBuilding;

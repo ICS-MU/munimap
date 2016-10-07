@@ -399,11 +399,9 @@ munimap.create.MarkerLabel;
  */
 munimap.create.assertOptions = function(options) {
   munimap.assert.target(options.target);
-  goog.asserts.assert(
-      options.zoom === undefined || options.zoomTo === undefined,
+  assert(options.zoom === undefined || options.zoomTo === undefined,
       'Zoom and zoomTo options can\'t be defined together.');
-  goog.asserts.assert(
-      options.center === undefined || options.zoomTo === undefined,
+  assert(options.center === undefined || options.zoomTo === undefined,
       'Center and zoomTo options can\'t be defined together.');
   munimap.assert.zoom(options.zoom);
   munimap.assert.zoomTo(options.zoomTo);
