@@ -270,7 +270,11 @@ module.exports = function (gulp, plugins, jpadCfg) {
         //run dev server 
         var server = plugins.liveServer(
             './src/server/build.js',
-            undefined,
+            {
+              env: {
+                JPAD_APP_PATH: jpadCfg.appPath
+              }
+            },
             false
         );
         server.start();

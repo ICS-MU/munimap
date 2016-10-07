@@ -27,9 +27,33 @@ var argv = require('yargs')
         describe: 'Compile into multiple modules.' +
             ' Related to \'build\' task only.'
     })
+    .option('d', {
+        type: 'string',
+        alias: 'dir',
+        describe: 'Name of the directory' +
+            ' that will be added to the end of application path.' +
+            ' "v2n" / "v3n" takes first 2 or 3 numbers from app version.' +
+            ' "none" means no directory will be added.',
+        default: 'testing',
+        choices: ['testing', 'latest', 'v2n', 'v3n', 'none']
+    })
     .help('H')
     .alias('H', 'Help')
     .argv;
+
+if(argv.d === 'none') {
+  var dir = '';
+} else if (argv.d === 'v2n') {
+  dir = jpadCfg.appVersion.split('.').slice(0, 2).join('.');
+} else if (argv.d === 'v3n') {
+  dir = jpadCfg.appVersion.split('.').slice(0, 3).join('.');
+} else {
+  dir = argv.d;
+}
+if(dir) {
+  jpadCfg.appPath += dir + '/';
+}
+console.log('Application path set to', jpadCfg.appPath);
 
 jpadCfg.generateSourceMaps = !!argv.s;
 jpadCfg.buildWithModulesOn = !!argv.m;
