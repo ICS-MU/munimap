@@ -2,7 +2,7 @@ goog.provide('munimap.geom');
 
 
 /**
- * @param {ol.Feature|ol.render.Feature} feature
+ * @param {ol.Feature} feature
  * @return {ol.geom.Point}
  * @const
  */

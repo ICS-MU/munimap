@@ -1,14 +1,6 @@
 goog.provide('munimap.poi.STYLE');
 goog.provide('munimap.poi.style');
 
-goog.require('ol.Feature');
-goog.require('ol.render.Feature');
-goog.require('ol.style.Circle');
-goog.require('ol.style.Fill');
-goog.require('ol.style.RegularShape');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
-
 
 /**
  * @enum {munimap.Range}
@@ -221,7 +213,7 @@ munimap.poi.style.TOILET_W = [
 
 /**
  * @param {munimap.load.floorBasedActive.Options} options
- * @param {ol.Feature|ol.render.Feature} feature
+ * @param {ol.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */

@@ -6,8 +6,6 @@ goog.require('goog.array');
 goog.require('goog.asserts');
 goog.require('goog.net.XhrManager');
 goog.require('jpad');
-goog.require('ol.format.EsriJSON');
-goog.require('ol.proj');
 
 
 /**

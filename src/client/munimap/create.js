@@ -28,16 +28,6 @@ goog.require('munimap.room.style');
 goog.require('munimap.source.Cluster');
 goog.require('munimap.store');
 goog.require('munimap.style');
-goog.require('ol.Map');
-goog.require('ol.View');
-goog.require('ol.format.GeoJSON');
-goog.require('ol.interaction.Select');
-goog.require('ol.layer.Image');
-goog.require('ol.layer.Tile');
-goog.require('ol.layer.Vector');
-goog.require('ol.proj');
-goog.require('ol.source.OSM');
-goog.require('ol.source.Raster');
 
 
 /**
@@ -166,7 +156,8 @@ munimap.create = function(options) {
         style: goog.partial(munimap.marker.style.function, markerOptions),
         maxResolution: munimap.marker.RESOLUTION.max,
         updateWhileAnimating: true,
-        updateWhileInteracting: false
+        updateWhileInteracting: false,
+        renderOrder: null
       });
 
       var complexesStore = munimap.complex.STORE;
@@ -179,8 +170,8 @@ munimap.create = function(options) {
         minResolution: munimap.complex.RESOLUTION.min,
         maxResolution: munimap.complex.RESOLUTION.max,
         updateWhileAnimating: true,
-        updateWhileInteracting: true
-
+        updateWhileInteracting: true,
+        renderOrder: null
       });
 
       var buildingsStore = munimap.building.STORE;
@@ -193,8 +184,8 @@ munimap.create = function(options) {
         }),
         maxResolution: munimap.complex.RESOLUTION.max,
         updateWhileAnimating: true,
-        updateWhileInteracting: true
-
+        updateWhileInteracting: true,
+        renderOrder: null
       });
 
       var roomsStore = munimap.room.DEFAULT_STORE;
@@ -210,8 +201,8 @@ munimap.create = function(options) {
           map: map
         }),
         updateWhileAnimating: true,
-        updateWhileInteracting: true
-
+        updateWhileInteracting: true,
+        renderOrder: null
       });
 
       rooms.once('precompose', munimap.room.style.setCorridorStyle);
@@ -228,8 +219,8 @@ munimap.create = function(options) {
           map: map
         }),
         updateWhileAnimating: true,
-        updateWhileInteracting: true
-
+        updateWhileInteracting: true,
+        renderOrder: null
       });
 
       activeRooms.once('precompose', munimap.room.style.setCorridorStyle);
@@ -242,8 +233,8 @@ munimap.create = function(options) {
         source: doorsStore,
         style: munimap.door.STYLE,
         updateWhileAnimating: true,
-        updateWhileInteracting: true
-
+        updateWhileInteracting: true,
+        renderOrder: null
       });
 
       var poiStore = munimap.poi.createActiveStore(map);
@@ -254,8 +245,8 @@ munimap.create = function(options) {
         source: poiStore,
         style: goog.partial(munimap.poi.style.function, {map: map}),
         updateWhileAnimating: true,
-        updateWhileInteracting: true
-
+        updateWhileInteracting: true,
+        renderOrder: null
       });
 
       var clusterResolution = munimap.cluster.BUILDING_RESOLUTION;
@@ -263,7 +254,7 @@ munimap.create = function(options) {
         clusterResolution = munimap.cluster.ROOM_RESOLUTION;
       }
       var clusterFeatures = markers.concat();
-      var markerClusterSrc = new munimap.source.Cluster({
+      var markerClusterSrc = new ol.source.Cluster({
         attributions: [muAttribution],
         source: new ol.source.Vector({
           features: clusterFeatures
@@ -276,7 +267,8 @@ munimap.create = function(options) {
         source: markerClusterSrc,
         style: goog.partial(
             munimap.cluster.style.function, markerOptions),
-        minResolution: clusterResolution.min/*,
+        minResolution: clusterResolution.min,
+        renderOrder: null/*,
         updateWhileAnimating: true,
         updateWhileInteracting: true*/
       });
@@ -288,8 +280,8 @@ munimap.create = function(options) {
           markerSource: markerSource
         }),
         updateWhileAnimating: true,
-        updateWhileInteracting: false
-
+        updateWhileInteracting: false,
+        renderOrder: null
       });
 
       var roomLabels = new ol.layer.Vector({
@@ -302,7 +294,8 @@ munimap.create = function(options) {
           map: map
         }),
         updateWhileAnimating: true,
-        updateWhileInteracting: true
+        updateWhileInteracting: true,
+        renderOrder: null
       });
 
       map.addLayer(buildings);
@@ -388,7 +381,7 @@ munimap.create = function(options) {
 /**
  *
  * @typedef {
- *    function((ol.Feature|ol.render.Feature), number): (string|null|undefined)
+ *    function((ol.Feature), number): (string|null|undefined)
  * }
  */
 munimap.create.MarkerLabel;

@@ -2,9 +2,6 @@ goog.provide('munimap.room.STYLE');
 goog.provide('munimap.room.style');
 
 goog.require('munimap.style');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
 
 
 /**
@@ -94,8 +91,7 @@ munimap.room.style.STAIRCASE_STYLE_ICON = [
 
 
 /**
- *
- * @param {ol.events.Event} event
+ * @param {ol.render.Event} event
  */
 munimap.room.style.setCorridorStyle = function(event) {
   if (!goog.isDefAndNotNull(munimap.room.style.corridor)) {
@@ -137,7 +133,7 @@ munimap.room.style.setCorridorStyle = function(event) {
 
 /**
  * @param {munimap.room.style.function.Options} options
- * @param {ol.Feature|ol.render.Feature} feature
+ * @param {ol.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
@@ -225,7 +221,7 @@ munimap.room.style.LABEL_CACHE = {};
 
 /**
  * @param {munimap.style.MarkersAwareOptions} options
- * @param {ol.Feature|ol.render.Feature} feature
+ * @param {ol.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */

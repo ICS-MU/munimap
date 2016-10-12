@@ -5,7 +5,6 @@ goog.require('goog.array');
 goog.require('goog.object');
 goog.require('munimap.marker.style');
 goog.require('munimap.range');
-goog.require('ol.Feature');
 
 
 /**
@@ -157,7 +156,7 @@ munimap.cluster.getStore = function(map) {
  */
 munimap.cluster.getSource = function(map) {
   var clusterStore = munimap.cluster.getStore(map);
-  goog.asserts.assertInstanceof(clusterStore, munimap.source.Cluster);
+  goog.asserts.assertInstanceof(clusterStore, ol.source.Cluster);
   return clusterStore.getSource();
 };
 
@@ -286,7 +285,7 @@ munimap.cluster.style.MULTIPLE_MARKED = new ol.style.Style({
 
 /**
  * @param {munimap.marker.style.labelFunction.Options} options
- * @param {ol.Feature|ol.render.Feature} feature
+ * @param {ol.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
@@ -391,7 +390,7 @@ munimap.cluster.style.pinFunction =
 
 /**
  * @param {munimap.marker.style.labelFunction.Options} options
- * @param {ol.Feature|ol.render.Feature} feature
+ * @param {ol.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style}
  * @protected

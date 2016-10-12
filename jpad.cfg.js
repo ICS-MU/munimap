@@ -23,6 +23,10 @@ var jpad = {
       dest: '_lib/ol3/examples/popup.css'
     },
     {
+      src: 'bower_components/ol3/munimap/build/ol.js',
+      dest: '_lib/ol/ol.js'
+    },
+    {
       src: 'bower_components/closure-library/closure/goog/css/',
       dest: '_lib/closure-library/closure/goog/css/'
     },
@@ -42,6 +46,7 @@ var jpad = {
   bundle: {
     plovr: 'munimaplib.plovr.json',
     filesToPrepend: [
+      '_lib/ol/ol.js',
       '_lib/turf/index.js',
       '_lib/webfontloader/webfontloader.js'
     ]

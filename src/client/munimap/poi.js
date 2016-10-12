@@ -4,9 +4,6 @@ goog.require('munimap.load');
 goog.require('munimap.load.floorBasedActive');
 goog.require('munimap.store');
 goog.require('munimap.type');
-goog.require('ol.loadingstrategy');
-goog.require('ol.source.Vector');
-goog.require('ol.tilegrid.TileGrid');
 
 
 /**

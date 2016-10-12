@@ -4,10 +4,6 @@ goog.require('goog.style');
 goog.require('goog.ui.MenuItem');
 goog.require('munimap');
 goog.require('munimap.building');
-goog.require('ol.Extent');
-goog.require('ol.Map');
-goog.require('ol.extent');
-goog.require('ol.format.GeoJSON');
 
 
 /**

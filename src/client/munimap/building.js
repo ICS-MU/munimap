@@ -6,10 +6,6 @@ goog.require('munimap.load');
 goog.require('munimap.store');
 goog.require('munimap.type');
 goog.require('munimap.unit');
-goog.require('ol.format.GeoJSON');
-goog.require('ol.loadingstrategy');
-goog.require('ol.source.Vector');
-goog.require('ol.tilegrid.TileGrid');
 
 
 /**
