@@ -2,11 +2,10 @@ goog.provide('munimap.store');
 
 goog.require('goog.net.XhrManager');
 goog.require('munimap.load');
-goog.require('ol.Map');
 
 
 /**
- * @param {ol.Feature|ol.render.Feature} feature
+ * @param {ol.Feature} feature
  * @return {?string}
  */
 munimap.store.getUid = function(feature) {

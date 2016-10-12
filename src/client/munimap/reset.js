@@ -7,7 +7,6 @@ goog.require('munimap.create');
 goog.require('munimap.load');
 goog.require('munimap.marker');
 goog.require('munimap.move');
-goog.require('ol.extent');
 
 
 /**

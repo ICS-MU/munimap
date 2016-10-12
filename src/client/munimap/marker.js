@@ -2,9 +2,6 @@ goog.provide('munimap.marker');
 
 goog.require('munimap.range');
 goog.require('munimap.style');
-goog.require('ol.style.Circle');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Style');
 
 
 /**

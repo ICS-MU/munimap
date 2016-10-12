@@ -39,11 +39,6 @@
     "goog.DEBUG": false,
     "goog.asserts.ENABLE_ASSERTS": true,
     "goog.dom.ASSUME_STANDARDS_MODE": true,
-    "ol.ENABLE_DOM": false,
-    "ol.ENABLE_IMAGE": false,
-    "ol.ENABLE_VECTOR": true,
-    "ol.ENABLE_WEBGL": false,
-    "ol.ENABLE_PROJ4JS": false,
     "jpad.DEV": false
   },
 
@@ -55,11 +50,11 @@
 
 
   "externs": [
-    "../../bower_components/ol3/externs/olx.js",
+    "../../bower_components/ol3/munimap/build/ol.externs.js",
+    "../../bower_components/ol3/munimap/externs/missing.js",
     "../../bower_components/ol3/externs/bingmaps.js",
     "../../bower_components/ol3/externs/closure-compiler.js",
     "../../bower_components/ol3/externs/esrijson.js",
-    "../../bower_components/ol3/externs/geojson.js",
     "../../bower_components/ol3/externs/topojson.js",
     "../../bower_components/ol3/externs/oli.js",
     "../../bower_components/ol3/externs/proj4js.js",
@@ -87,8 +82,6 @@
   "output-wrapper": "(function(){%output%})();",
 
   "paths": [
-    "../../bower_components/ol3/build/ol.ext",
-    "../../bower_components/ol3/src",
     "../client/"
   ],
   

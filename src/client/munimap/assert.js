@@ -13,7 +13,7 @@ goog.require('munimap.room');
 munimap.assert.markers = function(markers) {
   if (markers !== undefined) {
     assert(goog.isArray(markers) && markers.every(goog.isString),
-        'Markers should be an array of strings.'); 
+        'Markers should be an array of strings.');
     var onlyBuildings = markers.every(munimap.building.isCodeOrLikeExpr);
     if (!onlyBuildings) {
       var onlyRooms = markers.every(munimap.room.isCodeOrLikeExpr);

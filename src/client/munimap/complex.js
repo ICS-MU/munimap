@@ -5,9 +5,6 @@ goog.require('munimap.load');
 goog.require('munimap.range');
 goog.require('munimap.store');
 goog.require('munimap.style');
-goog.require('ol.source.Vector');
-goog.require('ol.style.Style');
-goog.require('ol.style.Text');
 
 
 /**
@@ -95,7 +92,7 @@ munimap.complex.getBuildingCount = function(complex) {
 
 /**
  * @param {munimap.style.MarkersAwareOptions} options
- * @param {ol.Feature|ol.render.Feature} feature
+ * @param {ol.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array<ol.style.Style>}
  */

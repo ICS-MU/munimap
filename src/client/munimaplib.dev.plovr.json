@@ -8,11 +8,6 @@
     "goog.DEBUG": true,
     "goog.asserts.ENABLE_ASSERTS": true,
     "goog.dom.ASSUME_STANDARDS_MODE": true,
-    "ol.ENABLE_DOM": false,
-    "ol.ENABLE_IMAGE": false,
-    "ol.ENABLE_VECTOR": true,
-    "ol.ENABLE_WEBGL": false,
-    "ol.ENABLE_PROJ4JS": false,
     "jpad.DEV": true
   }
 

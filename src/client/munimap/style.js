@@ -1,12 +1,6 @@
 goog.provide('munimap.style');
 
 goog.require('munimap.geom');
-goog.require('ol.Feature');
-goog.require('ol.geom.Geometry');
-goog.require('ol.geom.Point');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
 
 
 /**
@@ -152,7 +146,7 @@ munimap.style.alignTextToRows = function(parts, separator) {
 
 /**
  *
- * @param {ol.Feature|ol.render.Feature} feature
+ * @param {ol.Feature} feature
  * @param {number} resolution
  * @return {string|undefined}
  */

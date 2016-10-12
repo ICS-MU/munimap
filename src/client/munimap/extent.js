@@ -1,17 +1,11 @@
 goog.provide('munimap.extent');
 
-goog.require('ol.extent');
-goog.require('ol.render.Feature');
-
 
 /**
- * @param {ol.Feature|ol.render.Feature} feature
+ * @param {ol.Feature} feature
  * @return {ol.Extent}
  */
 munimap.extent.ofFeature = function(feature) {
-  if (feature instanceof ol.render.Feature) {
-    return feature.getExtent();
-  }
   var geom = feature.getGeometry();
   if (geom) {
     return geom.getExtent();
@@ -22,19 +16,15 @@ munimap.extent.ofFeature = function(feature) {
 
 
 /**
- * @param {Array<ol.Feature|ol.render.Feature>} features
+ * @param {Array<ol.Feature>} features
  * @return {ol.Extent}
  */
 munimap.extent.ofFeatures = function(features) {
   var extent = ol.extent.createEmpty();
   features.forEach(function(feature) {
-    if (feature instanceof ol.render.Feature) {
-      var ext = feature.getExtent();
-    } else {
-      var geom = feature.getGeometry();
-      if (geom) {
-        ext = geom.getExtent();
-      }
+    var geom = feature.getGeometry();
+    if (geom) {
+      var ext = geom.getExtent();
     }
     if (ext) {
       ol.extent.extend(extent, ext);

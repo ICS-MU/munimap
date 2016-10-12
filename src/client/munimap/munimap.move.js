@@ -11,11 +11,13 @@ munimap.move.setAnimation = function(map, ext1, ext2) {
   var duration = munimap.move.getAnimationDuration(ext1, ext2);
   var pan = ol.animation.pan({
     duration: duration,
-    source: /** @type {ol.Coordinate} */ (view.getCenter())
+    source: /** @type {ol.Coordinate} */ (view.getCenter()),
+    easing: null
   });
   var zoom = ol.animation.zoom({
     duration: duration,
-    resolution: /** @type {number} */ (view.getResolution())
+    resolution: /** @type {number} */ (view.getResolution()),
+    easing: null
   });
   map.beforeRender(pan, zoom);
 };

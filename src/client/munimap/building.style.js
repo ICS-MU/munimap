@@ -9,12 +9,6 @@ goog.require('munimap.marker.style');
 goog.require('munimap.range');
 goog.require('munimap.store');
 goog.require('munimap.style');
-goog.require('ol.Feature');
-goog.require('ol.style.Circle');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
-goog.require('ol.style.Text');
 
 
 /**
@@ -90,7 +84,7 @@ munimap.building.style.BIG_FONT_SIZE = 15;
 
 /**
  * @param {munimap.style.MarkersAwareOptions} options
- * @param {ol.Feature|ol.render.Feature} feature
+ * @param {ol.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
@@ -173,7 +167,7 @@ munimap.building.style.function =
 
 /**
  * @param {munimap.marker.style.labelFunction.Options} options
- * @param {ol.Feature|ol.render.Feature} feature
+ * @param {ol.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
@@ -256,7 +250,7 @@ munimap.building.style.labelFunction =
 
 /**
  * @param {ol.Map} map
- * @param {ol.Feature|ol.render.Feature} feature
+ * @param {ol.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array<ol.style.Style>}
  * @protected
