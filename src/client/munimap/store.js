@@ -5,7 +5,7 @@ goog.require('munimap.load');
 
 
 /**
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @return {?string}
  */
 munimap.store.getUid = function(feature) {

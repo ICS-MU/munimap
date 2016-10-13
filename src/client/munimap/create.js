@@ -381,7 +381,7 @@ munimap.create = function(options) {
 /**
  *
  * @typedef {
- *    function((ol.Feature), number): (string|null|undefined)
+ *    function((ol.Feature|ol.render.Feature), number): (string|null|undefined)
  * }
  */
 munimap.create.MarkerLabel;

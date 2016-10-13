@@ -285,7 +285,7 @@ munimap.cluster.style.MULTIPLE_MARKED = new ol.style.Style({
 
 /**
  * @param {munimap.marker.style.labelFunction.Options} options
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
@@ -390,7 +390,7 @@ munimap.cluster.style.pinFunction =
 
 /**
  * @param {munimap.marker.style.labelFunction.Options} options
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style}
  * @protected

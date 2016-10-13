@@ -133,7 +133,7 @@ munimap.room.style.setCorridorStyle = function(event) {
 
 /**
  * @param {munimap.room.style.function.Options} options
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
@@ -221,7 +221,7 @@ munimap.room.style.LABEL_CACHE = {};
 
 /**
  * @param {munimap.style.MarkersAwareOptions} options
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
