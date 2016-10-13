@@ -341,9 +341,11 @@ SELECT
   prac.budova_sidelni_id,
   bud.arealId AS areal_sidelni_id,
   CASE
-    WHEN prac.nazevk_cs LIKE '%fakulta%' OR prac.nazevk_cs LIKE '%rektorát%'
+    WHEN prac.nazevk_cs LIKE '%fakulta%'
       THEN 1
-      ELSE 0
+    WHEN prac.nazevk_cs LIKE '%rektorát%'
+      THEN 2
+    ELSE 0
   END AS priorita
 FROM sde.sde.PRACOVISTE prac, sde_munimap.dbo.budovy bud
 WHERE prac.budova_sidelni_id = bud.inetId;
