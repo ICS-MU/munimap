@@ -152,16 +152,33 @@ munimap.unit.getFacultiesOfBuildings = function(buildings) {
  */
 munimap.unit.getTitleParts = function(units) {
   var titleParts = [];
+  units.sort(function(unit1, unit2) {
+    var priority1 = munimap.unit.getPriority(unit1);
+    var priority2 = munimap.unit.getPriority(unit2);
+    var result = priority2 - priority1;
+    if (result === 0) {
+      var title1 = munimap.unit.getTitle(unit1);
+      var title2 = munimap.unit.getTitle(unit2);
+      return title1.localeCompare(title2);
+    } else {
+      return result;
+    }
+  });
   if (units.length > 3) {
     var unitAbbrs = [];
     units.forEach(function(unit) {
-      if (munimap.unit.getPriority(unit) > 0) {
-        titleParts.push(munimap.unit.getTitle(unit));
-      } else {
-        var abbr = munimap.unit.getAbbr(unit);
-        if (abbr) {
-          unitAbbrs.push(abbr);
-        }
+      var priority = munimap.unit.getPriority(unit);
+      switch (priority) {
+        case 0:
+          var abbr = munimap.unit.getAbbr(unit);
+          if (abbr) {
+            unitAbbrs.push(abbr);
+          }
+          break;
+        case 1:
+        case 2:
+          titleParts.push(munimap.unit.getTitle(unit));
+          break;
       }
     });
     titleParts.push(unitAbbrs.join(', '));
