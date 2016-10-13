@@ -84,7 +84,7 @@ munimap.building.style.BIG_FONT_SIZE = 15;
 
 /**
  * @param {munimap.style.MarkersAwareOptions} options
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
@@ -167,7 +167,7 @@ munimap.building.style.function =
 
 /**
  * @param {munimap.marker.style.labelFunction.Options} options
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
@@ -250,7 +250,7 @@ munimap.building.style.labelFunction =
 
 /**
  * @param {ol.Map} map
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array<ol.style.Style>}
  * @protected

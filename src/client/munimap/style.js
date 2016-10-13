@@ -146,7 +146,7 @@ munimap.style.alignTextToRows = function(parts, separator) {
 
 /**
  *
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return {string|undefined}
  */

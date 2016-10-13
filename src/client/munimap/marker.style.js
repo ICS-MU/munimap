@@ -133,7 +133,7 @@ munimap.marker.style.PIN = munimap.marker.style.createPinFromGeometry(
 
 /**
  * @param {munimap.marker.style.labelFunction.Options} options
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return {Array.<ol.style.Style>}
  */
@@ -181,7 +181,7 @@ munimap.marker.style.function = function(options, feature, resolution) {
 
 /**
  * @param {munimap.marker.style.labelFunction.Options} options
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return Array.<ol.style.Style>
  */

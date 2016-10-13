@@ -92,7 +92,7 @@ munimap.complex.getBuildingCount = function(complex) {
 
 /**
  * @param {munimap.style.MarkersAwareOptions} options
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array<ol.style.Style>}
  */

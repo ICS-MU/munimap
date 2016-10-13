@@ -213,7 +213,7 @@ munimap.poi.style.TOILET_W = [
 
 /**
  * @param {munimap.load.floorBasedActive.Options} options
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
