@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link href="ics.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="../munimap.css" media="all" rel="stylesheet" type="text/css" />
+    
+    <link href="../plovr/plovr.css" media="all" rel="stylesheet" type="text/css" />
+    
+    <script src="../munimaplib.plovr.json" type="text/javascript"></script>
+    <script src="../_lib/prettyprint/index.js" type="text/javascript"></script>
+
+    <title>munimap - změna podkladové mapy</title>
+  </head>
+
+  <body>
+    <h1>munimap - změna podkladové mapy</h1>
+    <div class="navigation">
+      <div class="left">
+        <a href="../">munimap</a> &gt; <a href="index.html">příklady použití</a> &gt; změna podkladové mapy
+      </div>
+    </div>
+    <div id="map" class="map">
+    </div>
+    <div class="content">
+      <p>
+        Podkladovou mapu si vyberete pomocí parametru <code><a href="../doc/#baseMap">baseMap</a></code> funkce
+        <code><a href="../doc/#create">munimap.create</a></code>. Pro barevnou OpenStreetMapu použijte
+        jako hodnotu tohoto parametru řetězec <code>osm</code> a pro její černobílou variantu pak <code>osm-bw</code>.
+        Výchozí hodnota je <code>osm-bw</code>, pokud tedy parametr <code><a href="../doc/#baseMap">baseMap</a></code> vynecháte,
+        zobrazí se černobílá mapa.
+      </p>
+      <pre class="prettyprint">
+&lt;script type="text/javascript"&gt;
+  munimap.create({
+    target: 'map',
+    baseMap: 'osm'
+  });
+&lt;/script&gt;
+      </pre>
+    </div>
+    <div class="navigation">
+      <div class="left">
+        <a href="../">munimap</a> &gt; <a href="index.html">příklady použití</a> &gt; změna podkladové mapy
+      </div>
+      <div class="right">
+        &copy; <a href="http://www.ics.muni.cz/" target="_blank">Ústav výpočetní techniky MU</a>
+      </div>
+    </div>
+    <script type="text/javascript">
+      munimap.create({
+        target: 'map',
+        baseMap: 'osm'
+      });
+    </script>
+  </body>
+</html>
