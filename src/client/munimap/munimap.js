@@ -24,6 +24,16 @@ munimap.VARS_NAME = 'munimapVars';
 
 
 /**
+ *
+ * @enum {string}
+ */
+munimap.BaseMaps = {
+  OSM: 'osm',
+  OSM_BW: 'osm-bw'
+};
+
+
+/**
  * @type {Array.<ol.Map>}
  * @const
  */

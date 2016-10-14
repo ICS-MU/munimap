@@ -2,6 +2,7 @@ goog.provide('munimap.assert');
 
 
 goog.require('assert');
+goog.require('munimap');
 goog.require('munimap.building');
 goog.require('munimap.lang');
 goog.require('munimap.room');
@@ -90,6 +91,24 @@ munimap.assert.lang = function(lang) {
       }
     } else {
       goog.asserts.fail('Parameter lang should be string.');
+    }
+  }
+};
+
+
+/**
+ * @param {string|undefined} baseMap
+ */
+munimap.assert.baseMap = function(baseMap) {
+  if (baseMap !== undefined) {
+    if (goog.isString(baseMap)) {
+      var baseMaps = goog.object.getValues(munimap.BaseMaps);
+      if (!goog.array.contains(baseMaps, baseMap)) {
+        goog.asserts.fail('Parameter baseMap contains unknown value. ' +
+            'List of possible values: ' + baseMaps.join(', ') + '.');
+      }
+    } else {
+      goog.asserts.fail('Parameter baseMap should be string.');
     }
   }
 };

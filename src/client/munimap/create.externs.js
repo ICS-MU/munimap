@@ -12,7 +12,8 @@ munimapx.create;
  *   zoomTo: (Array.<string>|string|undefined),
  *   markers: (Array.<string>|undefined),
  *   markerLabel: (munimap.create.MarkerLabel|undefined),
- *   lang: (string|undefined)
+ *   lang: (string|undefined),
+ *   baseMap: (string|undefined)
  * }}
  */
 munimapx.create.Options;

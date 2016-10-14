@@ -61,7 +61,8 @@ munimap.create = function(options) {
         markers: markers,
         markerLabel: options.markerLabel,
         target: target,
-        lang: options.lang
+        lang: options.lang,
+        baseMap: options.baseMap || munimap.BaseMaps.OSM_BW
       };
     }).then(function(options) {
       var target = options.target;
@@ -77,33 +78,42 @@ munimap.create = function(options) {
         html: munimap.lang.getMsg(munimap.lang.Translations.MU_ATTRIBUTION_HTML)
       });
 
-      var raster = new ol.layer.Tile({
-        source: new ol.source.OSM({
-          attributions: [osmAttribution],
-          crossOrigin: null
-        })
-      });
+      var raster;
 
-      raster.on('precompose', function(evt) {
-        var ctx = evt.context;
-        ctx.fillStyle = '#dddddd';
-        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      switch (options.baseMap) {
+        case munimap.BaseMaps.OSM:
+        case munimap.BaseMaps.OSM_BW:
+        default:
+          raster = new ol.layer.Tile({
+            source: new ol.source.OSM({
+              attributions: [osmAttribution],
+              crossOrigin: null
+            })
+          });
+      }
 
-        //set opacity of the layer according to current resolution
-        var resolution = evt.frameState.viewState.resolution;
-        var resColor = munimap.style.RESOLUTION_COLOR.find(
-            function(obj, i, arr) {
-              return resolution > obj.resolution || i === (arr.length - 1);
-            });
-        raster.setOpacity(resColor.opacity);
-      });
-      raster.on('postcompose', function(evt) {
-        var ctx = evt.context;
-        evt.context.globalCompositeOperation = 'color';
-        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        evt.fillStyle = '#000000';
-        evt.context.globalCompositeOperation = 'source-over';
-      });
+      if (options.baseMap === munimap.BaseMaps.OSM_BW) {
+        raster.on('precompose', function(evt) {
+          var ctx = evt.context;
+          ctx.fillStyle = '#dddddd';
+          ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+          //set opacity of the layer according to current resolution
+          var resolution = evt.frameState.viewState.resolution;
+          var resColor = munimap.style.RESOLUTION_COLOR.find(
+              function(obj, i, arr) {
+                return resolution > obj.resolution || i === (arr.length - 1);
+              });
+          raster.setOpacity(resColor.opacity);
+        });
+        raster.on('postcompose', function(evt) {
+          var ctx = evt.context;
+          evt.context.globalCompositeOperation = 'color';
+          ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+          evt.fillStyle = '#000000';
+          evt.context.globalCompositeOperation = 'source-over';
+        });
+      }
 
       var munimapEl = goog.dom.createDom('div', 'munimap');
       var infoEl = goog.dom.createDom('div', 'ol-popup info');
@@ -400,6 +410,7 @@ munimap.create.assertOptions = function(options) {
   munimap.assert.zoomTo(options.zoomTo);
   munimap.assert.markers(options.markers);
   munimap.assert.lang(options.lang);
+  munimap.assert.baseMap(options.baseMap);
 };
 
 
