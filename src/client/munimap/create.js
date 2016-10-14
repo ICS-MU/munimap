@@ -6,6 +6,7 @@ goog.require('goog.object');
 goog.require('goog.style');
 goog.require('goog.ui.MenuItem');
 goog.require('goog.ui.Select');
+goog.require('goog.userAgent');
 goog.require('munimap');
 goog.require('munimap.assert');
 goog.require('munimap.building');
@@ -92,20 +93,20 @@ munimap.create = function(options) {
           });
       }
 
-      if (options.baseMap === munimap.BaseMaps.OSM_BW) {
-        raster.on('precompose', function(evt) {
-          var ctx = evt.context;
-          ctx.fillStyle = '#dddddd';
-          ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      raster.on('precompose', function(evt) {
+        var ctx = evt.context;
+        ctx.fillStyle = '#dddddd';
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-          //set opacity of the layer according to current resolution
-          var resolution = evt.frameState.viewState.resolution;
-          var resColor = munimap.style.RESOLUTION_COLOR.find(
-              function(obj, i, arr) {
-                return resolution > obj.resolution || i === (arr.length - 1);
-              });
-          raster.setOpacity(resColor.opacity);
-        });
+        //set opacity of the layer according to current resolution
+        var resolution = evt.frameState.viewState.resolution;
+        var resColor = munimap.style.RESOLUTION_COLOR.find(
+            function(obj, i, arr) {
+              return resolution > obj.resolution || i === (arr.length - 1);
+            });
+        raster.setOpacity(resColor.opacity);
+      });
+      if (options.baseMap === munimap.BaseMaps.OSM_BW && !goog.userAgent.IE) {
         raster.on('postcompose', function(evt) {
           var ctx = evt.context;
           evt.context.globalCompositeOperation = 'color';
