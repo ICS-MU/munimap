@@ -53,7 +53,6 @@ var jpad = {
   },
   srcClientMappings: [
     '**/*.png',
-    '**/web.config',
     '**/fontello.*'
   ],
   generateSourceMaps: false,
