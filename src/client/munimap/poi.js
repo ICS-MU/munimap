@@ -99,7 +99,7 @@ munimap.poi.isActiveLayer = function(layer) {
  */
 munimap.poi.isPoi = function(feature) {
   var type = /**@type {munimap.type.Options}*/ (feature.get(munimap.type.NAME));
-  return type.name === munimap.poi.TYPE.name;
+  return type === munimap.poi.TYPE;
 };
 
 
