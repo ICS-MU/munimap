@@ -78,6 +78,11 @@ munimap.create = function(options) {
       var muAttribution = new ol.Attribution({
         html: munimap.lang.getMsg(munimap.lang.Translations.MU_ATTRIBUTION_HTML)
       });
+      var munimapAttribution = new ol.Attribution({
+        html: munimap.lang.getMsg(
+            munimap.lang.Translations.MUNIMAP_ATTRIBUTION_HTML)
+      });
+      var muAttributions = [munimapAttribution, muAttribution];
 
       var raster;
 
@@ -151,7 +156,7 @@ munimap.create = function(options) {
 
 
       var markerSource = new ol.source.Vector({
-        attributions: [muAttribution],
+        attributions: muAttributions,
         features: markers
       });
 
@@ -172,7 +177,7 @@ munimap.create = function(options) {
       });
 
       var complexesStore = munimap.complex.STORE;
-      complexesStore.setAttributions([muAttribution]);
+      complexesStore.setAttributions(muAttributions);
       var complexes = new ol.layer.Vector({
         source: complexesStore,
         style: goog.partial(munimap.complex.style.function, {
@@ -186,7 +191,7 @@ munimap.create = function(options) {
       });
 
       var buildingsStore = munimap.building.STORE;
-      buildingsStore.setAttributions([muAttribution]);
+      buildingsStore.setAttributions(muAttributions);
       var buildings = new ol.layer.Vector({
         source: buildingsStore,
         style: goog.partial(munimap.building.style.function, {
@@ -200,7 +205,7 @@ munimap.create = function(options) {
       });
 
       var roomsStore = munimap.room.DEFAULT_STORE;
-      roomsStore.setAttributions([muAttribution]);
+      roomsStore.setAttributions(muAttributions);
       var rooms = new ol.layer.Vector({
         id: munimap.room.DEFAULT_LAYER_ID,
         maxResolution: munimap.floor.RESOLUTION.max,
@@ -219,7 +224,7 @@ munimap.create = function(options) {
       rooms.once('precompose', munimap.room.style.setCorridorStyle);
 
       var activeRoomsStore = munimap.room.createActiveStore(map);
-      activeRoomsStore.setAttributions([muAttribution]);
+      activeRoomsStore.setAttributions(muAttributions);
       var activeRooms = new ol.layer.Vector({
         id: munimap.room.ACTIVE_LAYER_ID,
         maxResolution: munimap.floor.RESOLUTION.max,
@@ -237,7 +242,7 @@ munimap.create = function(options) {
       activeRooms.once('precompose', munimap.room.style.setCorridorStyle);
 
       var doorsStore = munimap.door.createActiveStore(map);
-      doorsStore.setAttributions([muAttribution]);
+      doorsStore.setAttributions(muAttributions);
       var doors = new ol.layer.Vector({
         id: munimap.door.ACTIVE_LAYER_ID,
         maxResolution: munimap.door.RESOLUTION.max,
@@ -249,7 +254,7 @@ munimap.create = function(options) {
       });
 
       var poiStore = munimap.poi.createActiveStore(map);
-      poiStore.setAttributions([muAttribution]);
+      poiStore.setAttributions(muAttributions);
       var poi = new ol.layer.Vector({
         id: munimap.poi.ACTIVE_LAYER_ID,
         maxResolution: munimap.poi.RESOLUTION.max,
@@ -266,7 +271,7 @@ munimap.create = function(options) {
       }
       var clusterFeatures = markers.concat();
       var markerClusterSrc = new ol.source.Cluster({
-        attributions: [muAttribution],
+        attributions: muAttributions,
         source: new ol.source.Vector({
           features: clusterFeatures
         }),

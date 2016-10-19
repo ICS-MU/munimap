@@ -1,5 +1,6 @@
 goog.provide('munimap.lang');
 
+goog.require('jpad');
 
 /**
  * Language of the application
@@ -16,6 +17,7 @@ munimap.lang.Translations = {
   ATTRIBUTIONS: 'ATTRIBUTIONS',
   MU_ATTRIBUTION_HTML: 'MU_ATTRIBUTION_HTML',
   OSM_ATTRIBUTION_HTML: 'OSM_ATTRIBUTION_HTML',
+  MUNIMAP_ATTRIBUTION_HTML: 'MUNIMAP_ATTRIBUTION_HTML',
   ZOOM_IN: 'ZOOM_IN',
   ZOOM_OUT: 'ZOOM_OUT',
   INFOBOX_CHOOSE: 'INFOBOX_CHOOSE',
@@ -40,10 +42,12 @@ munimap.lang.Translations = {
 munimap.lang.CS_TRANSLATIONS = {
   'ATTRIBUTIONS': 'Zdroje dat',
   'MU_ATTRIBUTION_HTML': '© <a href="http://www.muni.cz/?lang=cs"' +
-      ' target="_blank">Masarykova univerzita</a>.',
+      ' target="_blank">Masarykova univerzita</a>',
   'OSM_ATTRIBUTION_HTML':
       '© Přispěvatelé <a href="http://www.openstreetmap.org/copyright"' +
-      ' target="_blank">OpenStreetMap</a>.',
+      ' target="_blank">OpenStreetMap</a>',
+  'MUNIMAP_ATTRIBUTION_HTML': '<a href="//' + jpad.PROD_DOMAIN + jpad.APP_PATH + 
+      '" target="_blank" title="Mapová knihovna munimap">munimap</a>',
   'ZOOM_IN': 'Přiblížit',
   'ZOOM_OUT': 'Oddálit',
   'INFOBOX_CHOOSE': 'Vyberte',
@@ -68,10 +72,12 @@ munimap.lang.CS_TRANSLATIONS = {
 munimap.lang.EN_TRANSLATIONS = {
   'ATTRIBUTIONS': 'Attributions',
   'MU_ATTRIBUTION_HTML': '© <a href="http://www.muni.cz/?lang=en"' +
-      ' target="_blank">Masaryk University</a>.',
+      ' target="_blank">Masaryk University</a>',
   'OSM_ATTRIBUTION_HTML':
       '© <a href="http://www.openstreetmap.org/copyright"' +
-      ' target="_blank">OpenStreetMap</a> contributors.',
+      ' target="_blank">OpenStreetMap</a> contributors',
+  'MUNIMAP_ATTRIBUTION_HTML': '<a href="//' + jpad.PROD_DOMAIN + jpad.APP_PATH + 
+      '" target="_blank" title="munimap mapping library">munimap</a>',
   'ZOOM_IN': 'Zoom in',
   'ZOOM_OUT': 'Zoom out',
   'INFOBOX_CHOOSE': 'Choose',
