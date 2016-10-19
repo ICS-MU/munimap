@@ -116,6 +116,8 @@
 }
 .ol-attribution li {
   font-weight: normal;
+  margin-right: 7px;
+  display: inline-block;
 }
 .ol-attribution li > a:hover {
   text-decoration: underline;
