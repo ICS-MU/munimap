@@ -2,6 +2,7 @@ goog.provide('munimap.lang');
 
 goog.require('jpad');
 
+
 /**
  * Language of the application
  * @type {string}
@@ -46,7 +47,7 @@ munimap.lang.CS_TRANSLATIONS = {
   'OSM_ATTRIBUTION_HTML':
       '© Přispěvatelé <a href="http://www.openstreetmap.org/copyright"' +
       ' target="_blank">OpenStreetMap</a>',
-  'MUNIMAP_ATTRIBUTION_HTML': '<a href="//' + jpad.PROD_DOMAIN + jpad.APP_PATH + 
+  'MUNIMAP_ATTRIBUTION_HTML': '<a href="//' + jpad.PROD_DOMAIN + jpad.APP_PATH +
       '" target="_blank" title="Mapová knihovna munimap">munimap</a>',
   'ZOOM_IN': 'Přiblížit',
   'ZOOM_OUT': 'Oddálit',
@@ -76,7 +77,7 @@ munimap.lang.EN_TRANSLATIONS = {
   'OSM_ATTRIBUTION_HTML':
       '© <a href="http://www.openstreetmap.org/copyright"' +
       ' target="_blank">OpenStreetMap</a> contributors',
-  'MUNIMAP_ATTRIBUTION_HTML': '<a href="//' + jpad.PROD_DOMAIN + jpad.APP_PATH + 
+  'MUNIMAP_ATTRIBUTION_HTML': '<a href="//' + jpad.PROD_DOMAIN + jpad.APP_PATH +
       '" target="_blank" title="munimap mapping library">munimap</a>',
   'ZOOM_IN': 'Zoom in',
   'ZOOM_OUT': 'Zoom out',

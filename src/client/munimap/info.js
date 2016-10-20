@@ -298,15 +298,15 @@ munimap.info.getLabelAbbr = function(floorCode) {
   var num = parseInt(floorCode.substr(1), 10);
   var numLabel = '';
   var mezzanineNumLabel = '';
+  var types = munimap.info.FloorTypes;
   if (munimap.lang.active === munimap.lang.Abbr.ENGLISH) {
-    numLabel = num;
+    numLabel = (letter === types.UNDERGROUND_MEZZANINE) ? num - 1 : num;
     mezzanineNumLabel = '.5';
   } else if (munimap.lang.active === munimap.lang.Abbr.CZECH) {
-    numLabel = num;
+    numLabel = (letter === types.UNDERGROUND_MEZZANINE) ? num - 1 : num;
     mezzanineNumLabel = ',5';
   }
   var label;
-  var types = munimap.info.FloorTypes;
   var floorTypeString;
   switch (letter) {
     case types.UNDERGROUND:
@@ -321,6 +321,7 @@ munimap.info.getLabelAbbr = function(floorCode) {
       label = (munimap.lang.active === munimap.lang.Abbr.ENGLISH) ?
               floorTypeString + numLabel + mezzanineNumLabel :
           numLabel + mezzanineNumLabel + '. ' + floorTypeString;
+      break;
     case types.MEZZANINE:
       floorTypeString =
           munimap.lang.getMsg(munimap.lang.Translations.FLOOR_MEZZANINE_ABBR);
