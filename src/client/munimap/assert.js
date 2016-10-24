@@ -2,6 +2,8 @@ goog.provide('munimap.assert');
 
 
 goog.require('assert');
+goog.require('goog.asserts');
+goog.require('jpad.func');
 goog.require('munimap');
 goog.require('munimap.building');
 goog.require('munimap.lang');
@@ -13,15 +15,20 @@ goog.require('munimap.room');
  */
 munimap.assert.markers = function(markers) {
   if (markers !== undefined) {
-    assert(goog.isArray(markers) && markers.every(goog.isString),
-        'Markers should be an array of strings.');
-    var onlyBuildings = markers.every(munimap.building.isCodeOrLikeExpr);
-    if (!onlyBuildings) {
-      var onlyRooms = markers.every(munimap.room.isCodeOrLikeExpr);
-      if (!onlyRooms) {
+    assert(goog.isArray(markers), 'Markers should be an array.');
+    
+    if(markers.every(goog.isString)) {
+      if(!markers.every(munimap.building.isCodeOrLikeExpr) &&
+          !markers.every(munimap.room.isCodeOrLikeExpr)) {
         goog.asserts.fail('Markers should contain only building or only room' +
             ' location codes or corresponding LIKE expressions.');
       }
+    } else if(markers.every(goog.partial(jpad.func.instanceof, ol.Feature))) {
+      var featureMarkers = /** @type {Array<ol.Feature>} */(markers);
+      featureMarkers.forEach(munimap.marker.custom.assertSuitable);
+    } else {
+      goog.asserts.fail('Markers should contain only strings or ' +
+          'only instances of ol.Feature');
     }
   }
 };
