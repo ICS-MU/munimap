@@ -20,3 +20,11 @@ munimap.type.NAME = 'featureType';
 munimap.type.Options;
 
 
+/**
+ * @typedef {{
+ *   name: (string)
+ * }}
+ */
+munimap.type.SimpleOptions;
+
+

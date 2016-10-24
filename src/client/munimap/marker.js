@@ -1,5 +1,7 @@
 goog.provide('munimap.marker');
+goog.provide('munimap.marker.custom');
 
+goog.require('assert');
 goog.require('munimap.range');
 goog.require('munimap.style');
 
@@ -68,6 +70,59 @@ munimap.marker.getFeatures = function(map) {
 munimap.marker.isMarker = function(map, feature) {
   var result = munimap.marker.getFeatures(map).indexOf(feature) >= 0;
   return result;
+};
+
+
+
+
+/**
+ * @type {munimap.type.SimpleOptions}
+ * @const
+ */
+munimap.marker.custom.TYPE = {
+  name: 'custom-marker'
+};
+
+
+/**
+ * @param {ol.Feature} feature
+ * @return {boolean}
+ */
+munimap.marker.custom.isCustom = function(feature) {
+  var fType = feature.get(munimap.type.NAME);
+  return fType === munimap.marker.custom.TYPE;
+};
+
+
+/**
+ * True if the feature is suitable to become custom marker.
+ * @param {ol.Feature} feature
+ * @return {boolean}
+ */
+munimap.marker.custom.isSuitable = function(feature) {
+  var geom = feature.getGeometry();
+  return geom instanceof ol.geom.Point;
+};
+
+
+/**
+ * True if the feature is suitable to become custom marker.
+ * @param {ol.Feature} feature
+ * @return {boolean}
+ */
+munimap.marker.custom.assertSuitable = function(feature) {
+  return assert(munimap.marker.custom.isSuitable(feature),
+      'Custom marker represented by ol.Feature must have ol.Point geometry');
+};
+
+
+/**
+ * Decorate feature to become custom marker. Should be called only if
+ * munimap.marker.custom.isSuitable returned true.
+ * @param {ol.Feature} feature
+ */
+munimap.marker.custom.decorate = function(feature) {
+  feature.set(munimap.type.NAME, munimap.marker.custom.TYPE);
 };
 
 
