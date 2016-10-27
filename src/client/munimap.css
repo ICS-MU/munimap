@@ -1,35 +1,23 @@
 body {
   margin: 0px;
-  padding: 0px;
+  padding: 0;
   font-family: sans-serif;
   font-size: 16px;
 }
-
-.content {
-  margin: 20px;
-  padding: 20px;
-  background-color: lightgrey;
-  overflow: hidden;
-}
-
 h1 {
-  font-size: xx-large;
+  border-bottom: solid 1px #ddd;
+  font-size: 38px;
   line-height: 38px;
-  color: white;
-  background-color: #002776;
   padding: 20px;
   margin: 20px;
+  margin-bottom: 0;
 }
-
-h4 {
+h3, h4 {
   margin: 0px;
 }
-
 p {
-  padding: 5px;
-  background-color: lightgrey;
+  padding: 0 5px;
 }
-
 a {
   color: #002776;
   padding: 0px;
@@ -38,7 +26,7 @@ a:link {
   text-decoration: none;
 }
 a:hover {
-  color: red;
+  color: #e51c23;
 }
 ul {
   padding-left: 10px;
@@ -47,41 +35,150 @@ ul {
 li {
   list-style-type: square;
 }
-li > a {
+
+#map-example {
+  min-height: 150px;
+  position: relative;
+}
+
+.munimap-logo {
+  font-family: Tahoma, sans-serif;
+  font-weight: bold; 
+}
+h3 .munimap-logo {
+  font-size: 26px;
+}
+.munimap-logo > .muni,
+a:hover .munimap-logo > .map {
   color: #002776;
+  font-size: 100%;
+  text-shadow: none;
+  vertical-align: initial;
+}
+.munimap-logo > .map ,
+a:hover .munimap-logo > .muni {
+  /*background: none;*/
+  color: #fff;
+  margin: 0;
+  letter-spacing: 1px;
+  text-shadow: -1px 0 #002776, 0 1px #002776, 1px 0 #002776, 0 -1px #002776;
+}
+h1 > a .munimap-logo > .map,
+h1 > a:hover .munimap-logo > .muni {
+  font-size: 92%;
+  vertical-align: 1px;
+}
+h3 > .munimap-logo > .map, h4 > .munimap-logo > .map {
+  font-size: 90%;
+  vertical-align: 1px;
+}
+
+.left, .right {
+  display: inline-block;
+  height: 100%;
+  margin: 0;
+  padding: 0 10px;
+  position: relative;
+  vertical-align: top;
+}
+.left {
+  left: 0;
+}
+.right {
+  right: 0;
+}
+
+.header {
+  padding-left: 100px;
+}
+
+.footer {
+  bottom: 0;
+  border-top: solid 1px #ddd;
+  font-size: 12px;
+  font-weight: normal;
+  padding-top: 5px;
+  position: relative;
+}
+.footer > .left, .footer > .right {
+  height: auto;
+  margin-bottom: 5px;
+  position: absolute;
 }
 
 .navigation {
-  font-size: medium;
-  font-weight: normal;
+  color: #002776;
+  font-size: 18px;
+  font-weight: bold;
   margin: 20px;
-  padding-bottom: 20px;
-  clear: both;
 }
-.left {
-  float: left;
+.navigation.top {
+  margin-top: 0;
 }
-.right {
-  float: right;
+.navigation.bottom {
+  margin-bottom: 0;
 }
-.content > .left {
-  margin-left: 50px;
+
+.separator {
+  border-bottom: dotted 1px #ddd;
+  width: 100%;
 }
-.content > .right {
-  margin-right: 50px;
+
+.content {
+  margin: 20px 0;
+  overflow: hidden;
+  padding: 0 20px;
 }
+.content p {
+  text-align: justify; 
+}
+
+.columns {
+  position: relative;  
+}
+.columns > div {
+  margin: 0 auto;
+  padding: 0 2%;
+  width: 85%;
+}
+
 .munimap-links {
-  font-size: x-large;
+  font-size: 24px;
   font-weight: bold;
   display: inline-block;
   margin: 20px;
+  width: 80%;
 }
-.munimap-links li {
-  /*display: inline;
-  padding: 50px;*/
-  text-align: left;
-  list-style-type: none;
+.munimap-links a, .munimap-links.inverse a:hover {
+  border: solid 2px #002776;
+  background-color: #002776;
+  color: #fff;
+  display: block;
+  margin: auto;
+  margin-bottom: 10px;
+  max-width: 550px;
+  padding: 15px 10%;
+  text-align: center;
+  text-transform: uppercase;
+  width: 100%;
 }
+.munimap-links.inverse a, .munimap-links a:hover {
+  background-color: #fff;
+  color: #002776;
+}
+
 .center {
   text-align: center;
+}
+
+@media (min-width: 700px) {
+  body {
+    padding: 0 100px;
+  }
+  .header {
+    padding-left: 20px;
+  }
+  .columns > div {
+    width: 45%;
+  }
 }

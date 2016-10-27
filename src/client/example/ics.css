@@ -136,14 +136,16 @@ code {
   color: black;
   font-family: monospace;
 }
-.map {
+.content > .map {
   height: 400px;
   background: url(../_lib/ol3/examples/resources/map-background.jpg) repeat;
   margin: 20px;
+  padding: 0;
 }
-.multi-map {
+.content > .multi-map {
   width: 46%;
   height: 400px;
   background: url(../_lib/ol3/examples/resources/map-background.jpg) repeat;
   margin: 0px 20px 20px 20px;
+  padding: 0;
 }
