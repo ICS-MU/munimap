@@ -125,6 +125,7 @@ var absolutizePathsInHtml = function($, htmlPath, options) {
 var fillTemplateInHtml = function(html) {
   var props = {
     appPath: jpadCfg.appPath,
+    olVersion: jpadCfg.olVersion,
     prodDomain: jpadCfg.prodDomain
   };
   html = html.replace(/{jpad\.(\w+)}/gm, function(match, prop) {
