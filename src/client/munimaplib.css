@@ -133,6 +133,7 @@
   padding-right: 0px !important;
   color: #002776;
   font-weight: bold;
+  background-image: none !important;
 }
 .ol-attribution a:hover {
   color: red;
