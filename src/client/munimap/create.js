@@ -445,6 +445,14 @@ munimap.create.calculateView = function(options, markers, zoomTos) {
     var extent = munimap.extent.ofFeatures(zoomTos);
     if (options.zoom === undefined && options.center === undefined) {
       view.fit(extent, [target.offsetWidth, target.offsetHeight]);
+      if(munimap.marker.custom.isCustom(zoomTos[0])) {
+        if(view.getResolution() < munimap.floor.RESOLUTION.max) {
+          var res = view.constrainResolution(
+              munimap.floor.RESOLUTION.max, undefined, 1
+          );
+          view.setResolution(res);
+        }
+      }
     } else if (options.center === undefined) {
       view.setCenter(ol.extent.getCenter(extent));
     }
