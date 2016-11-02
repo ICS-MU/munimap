@@ -101,7 +101,13 @@ munimap.marker.custom.isCustom = function(feature) {
  */
 munimap.marker.custom.isSuitable = function(feature) {
   var geom = feature.getGeometry();
-  return geom instanceof ol.geom.Point;
+  var result = geom instanceof ol.geom.Point;
+  if(result) {
+    var proj = ol.proj.get('EPSG:4326');
+    var projExtent = proj.getExtent();
+    result = ol.extent.containsCoordinate(projExtent, geom.getCoordinates());
+  }
+  return result;
 };
 
 
@@ -112,7 +118,8 @@ munimap.marker.custom.isSuitable = function(feature) {
  */
 munimap.marker.custom.assertSuitable = function(feature) {
   return assert(munimap.marker.custom.isSuitable(feature),
-      'Custom marker represented by ol.Feature must have ol.Point geometry');
+      'Custom marker represented by ol.Feature must have ol.Point geometry ' +
+      'with appropriate longitude (-180;180) and latitude (-90, 90).');
 };
 
 
@@ -123,6 +130,9 @@ munimap.marker.custom.assertSuitable = function(feature) {
  */
 munimap.marker.custom.decorate = function(feature) {
   feature.set(munimap.type.NAME, munimap.marker.custom.TYPE);
+  var geom = feature.getGeometry();
+  var transformFn = ol.proj.getTransform('EPSG:4326', 'EPSG:3857');
+  geom.applyTransform(transformFn);
 };
 
 
