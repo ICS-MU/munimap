@@ -43,8 +43,8 @@ munimap.create = function(options) {
   return new goog.Promise(function(resolve, reject) {
     goog.Promise.all([
       options,
-      munimap.create.loadOrDecorateFeatures(options.markers),
-      munimap.create.loadOrDecorateFeatures(options.zoomTo),
+      munimap.create.loadOrDecorateMarkers(options.markers),
+      munimap.load.featuresFromParam(options.zoomTo),
       munimap.create.loadFonts()
     ]).then(function(results) {
       var options = results[0];
@@ -467,7 +467,7 @@ munimap.create.calculateView = function(options, markers, zoomTos) {
  * @param {Array.<string>|Array.<ol.Feature>|string|undefined} featuresLike
  * @return {goog.Thenable<Array<ol.Feature>>} promise of features
  */
-munimap.create.loadOrDecorateFeatures = function(featuresLike) {
+munimap.create.loadOrDecorateMarkers = function(featuresLike) {
   var result;
   if(goog.isArray(featuresLike) && featuresLike[0] instanceof ol.Feature) {
     var features = /** @type {Array<ol.Feature>} */(featuresLike);
