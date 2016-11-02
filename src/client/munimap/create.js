@@ -43,8 +43,8 @@ munimap.create = function(options) {
   return new goog.Promise(function(resolve, reject) {
     goog.Promise.all([
       options,
-      munimap.load.featuresFromParam(options.markers),
-      munimap.load.featuresFromParam(options.zoomTo),
+      munimap.create.loadOrDecorateFeatures(options.markers),
+      munimap.create.loadOrDecorateFeatures(options.zoomTo),
       munimap.create.loadFonts()
     ]).then(function(results) {
       var options = results[0];
@@ -451,6 +451,28 @@ munimap.create.calculateView = function(options, markers, zoomTos) {
   }
 
   return view;
+};
+
+
+/**
+ * Load features by location codes or decorate custom markers.
+ * @param {Array.<string>|Array.<ol.Feature>|string|undefined} featuresLike
+ * @return {goog.Thenable<Array<ol.Feature>>} promise of features
+ */
+munimap.create.loadOrDecorateFeatures = function(featuresLike) {
+  var result;
+  if(goog.isArray(featuresLike) && featuresLike[0] instanceof ol.Feature) {
+    var features = /** @type {Array<ol.Feature>} */(featuresLike);
+    features.forEach(function(feature) {
+      munimap.marker.custom.decorate(feature);
+    });
+    result = /** @type {goog.Thenable<Array<ol.Feature>>} */(
+        goog.Promise.resolve(features)
+    );
+  } else {
+    result = munimap.load.featuresFromParam(featuresLike);
+  }
+  return result;
 };
 
 
