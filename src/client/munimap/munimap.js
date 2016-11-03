@@ -260,7 +260,9 @@ munimap.getMainFeatureAtPixel = function(map, pixel) {
  * @param {number} resolution
  */
 munimap.isFeatureClickable = function(map, feature, resolution) {
-  if (munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
+  if(munimap.marker.custom.isCustom(feature)) {
+    return false;
+  } else if (munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
     if (munimap.building.isBuilding(feature)) {
       return !munimap.building.isActive(feature, map) &&
           munimap.building.hasInnerGeometry(feature);
@@ -309,6 +311,10 @@ munimap.handleClickOnPixel = function(map, pixel) {
   if (clickedFeature) {
     var view = map.getView();
     var resolution = view.getResolution();
+    goog.asserts.assertNumber(resolution);
+    if (!munimap.isFeatureClickable(map, clickedFeature, resolution)) {
+      return;
+    }
     var size = map.getSize() || null;
     var viewExtent = view.calculateExtent(size);
     goog.asserts.assertNumber(resolution);

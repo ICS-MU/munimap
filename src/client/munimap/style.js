@@ -158,6 +158,8 @@ munimap.style.getDefaultLabel = function(feature, resolution) {
   if (munimap.building.isBuilding(feature)) {
     title = munimap.building.getDefaultLabel(feature, resolution);
     goog.asserts.assertString(title);
+  } else if (munimap.marker.custom.isCustom(feature)) {
+    return munimap.marker.custom.getLabel(feature);
   } else {
     title = munimap.room.getDefaultLabel(feature);
   }

@@ -189,6 +189,8 @@ munimap.marker.style.labelFunction = function(options, feature, resolution) {
   var styleArray = [];
   goog.asserts.assertInstanceof(feature, ol.Feature);
   var isBuilding = munimap.building.isBuilding(feature);
+  var isRoom = munimap.room.isRoom(feature);
+  var isCustomMarker = munimap.marker.custom.isCustom(feature);
 
   var title;
   if (goog.isDef(options.markerLabel)) {
@@ -214,7 +216,7 @@ munimap.marker.style.labelFunction = function(options, feature, resolution) {
       munimap.style.TEXT_FILL;
 
   var fontSize;
-  if (munimap.room.isRoom(feature)) {
+  if (isRoom) {
     fontSize = 11;
   } else if (isBuilding &&
       munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
@@ -236,7 +238,7 @@ munimap.marker.style.labelFunction = function(options, feature, resolution) {
     title: title,
     zIndex: 6
   };
-  if (isBuilding) {
+  if (isBuilding || isCustomMarker) {
     styleArray = munimap.style.getLabelWithPin(opts);
   } else {
     if (title) {
