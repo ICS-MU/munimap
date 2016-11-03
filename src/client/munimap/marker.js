@@ -85,12 +85,30 @@ munimap.marker.custom.TYPE = {
 
 
 /**
+ * @type {string}
+ * @const
+ */
+munimap.marker.custom.LABEL_FIELD_NAME = 'label';
+
+
+/**
  * @param {ol.Feature} feature
  * @return {boolean}
  */
 munimap.marker.custom.isCustom = function(feature) {
   var fType = feature.get(munimap.type.NAME);
   return fType === munimap.marker.custom.TYPE;
+};
+
+
+/**
+ * @param {ol.Feature} feature
+ * @return {string|undefined}
+ */
+munimap.marker.custom.getLabel = function(feature) {
+  var label = feature.get(munimap.marker.custom.LABEL_FIELD_NAME);
+  goog.asserts.assert(label === undefined || goog.isString(label));
+  return label;
 };
 
 

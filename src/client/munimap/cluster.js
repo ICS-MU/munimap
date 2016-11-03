@@ -499,14 +499,21 @@ munimap.cluster.style.getMarkedDefaultLabel =
 
   var title;
   var titleParts = [];
-
+  
+  var firstMarker = markers[0];
+  
   if (markers.length > 3) {
-    var markerType = munimap.building.isBuilding(markers[0]) ?
-        'budova' :
-        'místnost';
+    var markerType;
+    if(munimap.building.isBuilding(firstMarker)) {
+      markerType = 'budova';
+    } else if(munimap.room.isRoom(firstMarker)) {
+      markerType = 'místnost';
+    } else {
+      markerType = 'místo';
+    }
     titleParts.push(markers.length + 'x ' + markerType);
   } else {
-    if (munimap.building.isBuilding(markers[0])) {
+    if (munimap.building.isBuilding(firstMarker)) {
       var range = munimap.cluster.getResolutionRange(resolution);
       var units = [];
       var unitsFunc =
@@ -533,6 +540,13 @@ munimap.cluster.style.getMarkedDefaultLabel =
               munimap.building.getDefaultLabel(building, resolution);
         }
         titleParts.push(buildingTitle);
+      });
+    } else if (munimap.marker.custom.isCustom(firstMarker)) {
+      markers.forEach(function(customMarker) {
+        var cmTitle = munimap.marker.custom.getLabel(customMarker);
+        if (goog.isDefAndNotNull(cmTitle)) {
+          titleParts.push(cmTitle);
+        }
       });
     } else {
       markers.forEach(function(room) {
