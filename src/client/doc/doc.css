@@ -1,19 +1,42 @@
+h3 {
+  margin-top: 10px;
+}
+
 table {
   border: 1px solid black;
   border-collapse: collapse;
   font-size: 80%;
 }
-td, th {
+th {
+  border: solid 2px #fff;
+  background-color: #002776;
+  color: #fff;
+}
+th:first-child {
+  border-left: 1px solid black;
+} 
+th:last-child {
+  border-right: 1px solid black;
+}
+td {
   border: 1px solid black;
   border-collapse: collapse;
+}
+th, td {
+  max-width: 800px;
   padding: 8px;
-  background-color: white;
+  
+}
+td.param-type, th.param-type {
+  max-width: 350px;
 }
 .experimental {
-  color: red;
-  font-weight: bold;
+  color: #e51c23;
 }
 .mandatory {
   color: green;
+  font-weight: bold;
+}
+td a, th a {
   font-weight: bold;
 }
