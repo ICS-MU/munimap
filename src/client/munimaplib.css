@@ -115,9 +115,10 @@
   cursor: pointer;
 }
 .ol-attribution li {
+  display: inline-block;
   font-weight: normal;
   margin-right: 7px;
-  display: inline-block;
+  padding-left: 0;
 }
 .ol-attribution li > a:hover {
   text-decoration: underline;
