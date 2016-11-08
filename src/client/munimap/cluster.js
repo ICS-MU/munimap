@@ -5,6 +5,7 @@ goog.require('goog.array');
 goog.require('goog.object');
 goog.require('munimap.marker.style');
 goog.require('munimap.range');
+goog.require('munimap.string');
 
 
 /**
@@ -548,6 +549,7 @@ munimap.cluster.style.getMarkedDefaultLabel =
           titleParts.push(cmTitle);
         }
       });
+      titleParts.sort(munimap.string.localeCompare);
     } else {
       markers.forEach(function(room) {
         var roomTitle = munimap.style.getDefaultLabel(room, resolution);
