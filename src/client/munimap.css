@@ -41,6 +41,7 @@ li {
   position: relative;
 }
 
+/** munimap-logo **/
 .munimap-logo {
   font-family: Tahoma, sans-serif;
   font-weight: bold; 
@@ -48,23 +49,26 @@ li {
 h3 .munimap-logo {
   font-size: 26px;
 }
-.munimap-logo > .muni,
-a:hover .munimap-logo > .map {
+.munimap-logo > .muni {
   color: #002776;
   font-size: 100%;
   text-shadow: none;
   vertical-align: initial;
 }
-.munimap-logo > .map ,
-a:hover .munimap-logo > .muni {
+a .munimap-logo:hover > .muni {
+  color: #e51c23;
+}
+.munimap-logo > .map {
   /*background: none;*/
   color: #fff;
   margin: 0;
   letter-spacing: 1px;
   text-shadow: -1px 0 #002776, 0 1px #002776, 1px 0 #002776, 0 -1px #002776;
 }
-h1 > a .munimap-logo > .map,
-h1 > a:hover .munimap-logo > .muni {
+a .munimap-logo:hover > .map {
+  text-shadow: -1px 0 #e51c23, 0 1px #e51c23, 1px 0 #e51c23, 0 -1px #e51c23;
+}
+h1 > a .munimap-logo > .map {
   font-size: 92%;
   vertical-align: 1px;
 }
@@ -117,6 +121,12 @@ h3 > .munimap-logo > .map, h4 > .munimap-logo > .map {
 }
 .navigation.bottom {
   margin-bottom: 0;
+}
+.navigation > div > .munimap-logo > .map {
+  font-size: 97%;
+}
+.navigation > div > span:last-child{
+  font-weight: normal;
 }
 
 .separator {
