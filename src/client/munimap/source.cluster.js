@@ -12,8 +12,8 @@ munimap.source.Cluster.compareFn = function(map, f1, f2) {
   var m2 = munimap.marker.isMarker(map, f2);
   var result = m2 - m1;
   if (!result) {
-    var n1 = f1.get('nazev') || f1.get('polohKod');
-    var n2 = f2.get('nazev') || f2.get('polohKod');
+    var n1 = f1.get('nazev') || f1.get('polohKod') || f1.get('label') || '';
+    var n2 = f2.get('nazev') || f2.get('polohKod') || f2.get('label') || '';
     result = n1.localeCompare(n2);
   }
   return result;
