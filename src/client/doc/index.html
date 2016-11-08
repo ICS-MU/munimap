@@ -78,112 +78,122 @@
     <h1><a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> - popis rozhraní</h1>
     <div class="navigation top">
       <div>
-        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; popis rozhraní
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <span>popis rozhraní</span>
       </div>
     </div>
     <div class="content">
+      <p>Pro formální popis rozhraní používáme <a href="https://github.com/google/closure-compiler/wiki/Annotating-JavaScript-for-the-Closure-Compiler">javascriptovou anotaci</a>.</p>
       <ul>
         <li><a href="#create">funkce munimap.create</a></li>
         <li><a href="#reset">funkce munimap.reset</a></li>
       </ul>
       <h2 id="create">Funkce munimap.create</h2>
-      <p>Vytvoří mapové okno do zadaného elementu.</p>
+      <p>Do zadaného elementu vloží mapové okno vytvořené dle zadaných parametrů.</p>
       <h3>Specifikace</h3>
-      <p>munimap.create(options: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">Object</a>): <a href="https://promisesaplus.com/" target="_blank">Thenable</a>&lt;<a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Map.html" target="_blank">ol.Map</a>&gt;</p>
+      <p class="specification">munimap.create(options: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">Object</a>): <a href="https://google.github.io/closure-library/api/goog.Promise.html" target="_blank">goog.Promise</a>&lt;<a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Map.html" target="_blank">ol.Map</a>&gt;</p>
       <h3>Vstup</h3>
+      <p>Objekt definující požadované vlastnosti vytvářené mapy pomocí těchto parametrů:</p>
       <table>
         <tr>
           <th class="param-name">Název parametru</th>
           <th class="param-type">Typ</th>
-          <th>Popis</th>
-          <th>Výchozí hodnota</th>
+          <th class="param-desc">Popis</th>
         </tr>
         <tr id="target">
           <td class="param-name"><b>target</b></td>
           <td class="param-type">string | <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element" target="_blank">Element</a></td>
-          <td>
+          <td class="param-desc">
             <ul>
               <li>id elementu nebo element, do kterého se vloží mapové okno</li>
               <li>parametr je <span class="mandatory">povinný</span></li>
             </ul>
           </td>
-          <td>žádná</td>
         </tr>
         <tr id="markers">
           <td class="param-name">markers</td>
           <td class="param-type">Array.&lt;string&gt; | undefined</td>
-          <td>
+          <td class="param-desc">
             <ul>
               <li>pole polohových kódů budov, nebo polohových kódů místností, které mají být v mapě zvýrazněny</li>
               <li>v polohových kódech je možné využít zástupného znaku '_'</li>
-              <li>pokud parametr není zadán, nic se v mapě nezvýrazní</li>
-              <li class="tip">pro zjištění polohových kódů budov či místností lze použít aplikaci <a href='https://kompas.muni.cz/'>Kompas</a></li>
+              <li>není-li parametr zadán, nic se v mapě nezvýrazní</li>
             </ul>
+            <div class="hint">
+              <p>pro zjištění polohových kódů budov či místností lze použít aplikaci <a href='https://kompas.muni.cz/'>Kompas</a></p>
+            </div>
           </td>
-          <td>undefined</td>
         </tr>
         <tr id="markerLabel">
           <td class="param-name">markerLabel</td>
           <td class="param-type">function((<a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Feature.html" target="_blank">ol.Feature</a> | <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.render.Feature.html" target="_blank">ol.render.Feature</a>), number): (string | null | undefined) | undefined</td>
-          <td>funkce pro definici vlastních popisků zvýrazněných budov či místností (<span class="experimental">experimentální</span>)</td>
-          <td>undefined</td>
+          <td class="param-desc">
+            <ul>
+              <li>funkce pro úpravu textu popisků zvýrazněných budov či místností</li>
+              <li>není-li parametr zadán, zobrazí se stejný text popisku jako v případě, kdy budova či místnost nejsou označeny</li>
+            </ul>
+            <div class="experimental">
+              <p>experimentální funkcionalita</p>
+            </div>
+          </td>
         </tr>
         <tr id="zoomTo">
           <td class="param-name">zoomTo</td>
           <td class="param-type">Array.&lt;string&gt; | string | undefined</td>
-          <td>
+          <td class="param-desc">
             <ul>
               <li>pole polohových kódů budov, nebo polohových kódů místností, na které se má mapa zazoomovat</li>
               <li>v polohových kódech je možné využít zástupného znaku '_'</li>
-              <li>pokud je undefined a jsou zadány markery, převezme hodnotu z markers</li>
+              <li>není-li parametr zadán a současně je zadán parametr markers, převezme hodnotu tohoto parametru</li>
             </ul>
+            <div class="hint">
+              <p>pro zjištění polohových kódů budov či místností lze použít aplikaci <a href='https://kompas.muni.cz/'>Kompas</a></p>
+            </div>
           </td>
-          <td>undefined</td>
         </tr>
         <tr id="zoom">
           <td class="param-name">zoom</td>
           <td class="param-type">number | undefined</td>
-          <td>
+          <td class="param-desc">
             <ul>
               <li>výchozí zoom mapy</li>
-              <li>není-li zadán, je dopočítán podle zoomTo, případně zobrazí celé Brno</li>
+              <li>není-li parametr zadán, je dopočítán podle zoomTo, případně se zobrazí celé Brno</li>
             </ul>
           </td>
-          <td>undefined</td>
         </tr>
         <tr id="center">
           <td class="param-name">center</td>
           <td class="param-type"><a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.html#.Coordinate" target="_blank">ol.Coordinate</a> | undefined</td>
-          <td>
+          <td class="param-desc">
             <ul>
               <li>výchozí střed mapy v zeměpisné šířce a délce (<a href="http://spatialreference.org/ref/epsg/wgs-84/" target="_blank">EPSG:4326</a>)</li>
-              <li>není-li zadán, je dopočítán podle zoomTo, případně zobrazí celé Brno</li>
+              <li>není-li parametr zadán, je dopočítán podle zoomTo, případně se zobrazí celé Brno</li>
             </ul>
           </td>
-          <td>undefined</td>
         </tr>
         <tr id="lang">
           <td class="param-name">lang</td>
           <td class="param-type">string | undefined</td>
-          <td>
+          <td class="param-desc">
             <ul>
               <li>jazyk</li>
               <li>možné hodnoty jsou 'cs' a 'en'</li>
+              <li>výchozí nastavení je 'cs'</li>
             </ul>
           </td>
-          <td>cs</td>
         </tr>
         <tr id="baseMap">
           <td class="param-name">baseMap</td>
           <td class="param-type">string | undefined</td>
-          <td>
+          <td class="param-desc">
             <ul>
               <li>podkladová mapa</li>
-              <li>možné hodnoty jsou osm pro barevnou OpenStreetMapu a osm-bw pro její černobílou verzi</li> 
-              <li>(<span class="experimental">V prohlížečích Internet Explorer je podkladová mapa zobrazena vždy barevně nezávisle na hodnotě parametru baseMap.</span>)</li>
+              <li>možné hodnoty jsou 'osm' pro barevnou OpenStreetMapu a 'osm-bw' pro její černobílou verzi</li>
+              <li>výchozí nastavení je 'osm-bw'</li>
             </ul>
+            <div class="warning">
+              <p>v prohlížečích Internet Explorer (mimo Edge) je podkladová mapa zobrazena vždy barevně nezávisle na hodnotě parametru baseMap</p>
+            </div>
           </td>
-          <td>osm-bw</td>
         </tr>
       </table>
       <h3>Výstup</h3>
@@ -194,11 +204,11 @@
       <h2 id="reset">Funkce munimap.reset</h2>
       <p>Přenastaví zadané parametry mapy na nové hodnoty, ostatní parametry nastaví na výchozí hodnoty.</p>
       <h3>Specifikace</h3>
-      <p>munimap.reset(map: <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Map.html" target="_blank">ol.Map</a>, options: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">Object</a>): <a href="https://promisesaplus.com/" target="_blank">Thenable</a>&lt;<a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Map.html" target="_blank">ol.Map</a>&gt;</p>
+      <p class="specification">munimap.reset(map: <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Map.html" target="_blank">ol.Map</a>, options: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">Object</a>): <a href="https://google.github.io/closure-library/api/goog.Promise.html" target="_blank">goog.Promise</a>&lt;<a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Map.html" target="_blank">ol.Map</a>&gt;</p>
       <h3>Vstup</h3>
       <p>
-        Vstupem je již existující mapa vytvořená pomocí funkce munimap.create a 
-        objekt s parametry, které chceme přenastavit. Oproti funkci munimap.create
+        Již existující mapa vytvořená pomocí funkce <a href="#create">munimap.create</a> a 
+        objekt s parametry, které mají být přenastaveny. Oproti funkci munimap.create
         nejsou potřeba parametry target a lang, jelikož ty jsou definovány pro původní mapu.
       </p>
       <table>
@@ -206,60 +216,67 @@
           <th class="param-name">Název parametru</th>
           <th class="param-type">Typ</th>
           <th>Popis</th>
-          <th>Výchozí hodnota</th>
         </tr>
         <tr>
           <td class="param-name">markers</td>
           <td class="param-type">Array.&lt;string&gt; | undefined</td>
-          <td>
+          <td class="param-desc">
             <ul>
               <li>pole polohových kódů budov, nebo polohových kódů místností, které mají být v mapě zvýrazněny</li>
               <li>v polohových kódech je možné využít zástupného znaku '_'</li>
-              <li>pokud parametr není zadán, nic se v mapě nezvýrazní</li>
-              <li class="tip">pro zjištění polohových kódů budov či místností lze použít aplikaci <a href='https://kompas.muni.cz/'>Kompas</a></li>
+              <li>není-li parametr zadán, nic se v mapě nezvýrazní</li>
             </ul>
+            <div class="hint">
+              <p>pro zjištění polohových kódů budov či místností lze použít aplikaci <a href='https://kompas.muni.cz/'>Kompas</a></p>
+            </div>
           </td>
-          <td>undefined</td>
         </tr>
         <tr>
           <td class="param-name">markerLabel</td>
           <td class="param-type">function((<a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Feature.html" target="_blank">ol.Feature</a> | <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.render.Feature.html" target="_blank">ol.render.Feature</a>), number): (string | null | undefined) | undefined</td>
-          <td>funkce pro definici vlastních popisků zvýrazněných budov či místností (<span class="experimental">experimentální</span>)</td>
-          <td>undefined</td>
+          <td class="param-desc">
+            <ul>
+              <li>funkce pro pro úpravu textu popisků zvýrazněných budov či místností</li>
+              <li>není-li parametr zadán, zobrazí se stejný text popisku jako v případě, kdy budova či místnost nejsou označeny</li>
+            </ul>
+            <div class="experimental">
+              <p>experimentální funkcionalita</p>
+            </div>
+          </td>
         </tr>
         <tr>
           <td class="param-name">zoomTo</td>
           <td class="param-type">Array.&lt;string&gt; | string | undefined</td>
-          <td>
+          <td class="param-desc">
             <ul>
               <li>pole polohových kódů budov, nebo polohových kódů místností, na které se má mapa zazoomovat</li>
               <li>v polohových kódech je možné využít zástupného znaku '_'</li>
-              <li>pokud je undefined a jsou zadány markery, převezme hodnotu z markers</li>
+              <li>není-li parametr zadán a současně je zadán parametr markers, převezme hodnotu tohoto parametru</li>
             </ul>
+            <div class="hint">
+              <p>pro zjištění polohových kódů budov či místností lze použít aplikaci <a href='https://kompas.muni.cz/'>Kompas</a></p>
+            </div>
           </td>
-          <td>undefined</td>
         </tr>
         <tr>
           <td class="param-name">zoom</td>
           <td class="param-type">number | undefined</td>
-          <td>
+          <td class="param-desc">
             <ul>
               <li>výchozí zoom mapy</li>
-              <li>není-li zadán, je dopočítán podle zoomTo, případně zobrazí celé Brno</li>
+              <li>není-li zadán, je dopočítán podle zoomTo, případně se zobrazí celé Brno</li>
             </ul>
           </td>
-          <td>undefined</td>
         </tr>
         <tr>
           <td class="param-name">center</td>
           <td class="param-type"><a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.html#.Coordinate" target="_blank">ol.Coordinate</a> | undefined</td>
-          <td>
+          <td class="param-desc">
             <ul>
               <li>výchozí střed mapy v zeměpisné šířce a délce (<a href="http://spatialreference.org/ref/epsg/wgs-84/" target="_blank">EPSG:4326</a>)</li>
-              <li>není-li zadán, je dopočítán podle zoomTo, případně zobrazí celé Brno</li>
+              <li>není-li zadán, je dopočítán podle zoomTo, případně se zobrazí celé Brno</li>
             </ul>
           </td>
-          <td>undefined</td>
         </tr>
       </table>
       <h3>Výstup</h3>
@@ -267,7 +284,7 @@
     </div>
     <div class="navigation bottom">
       <div>
-        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; popis rozhraní
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <span>popis rozhraní</span>
       </div>
     </div>
     <div class="footer">

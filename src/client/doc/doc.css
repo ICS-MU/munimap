@@ -1,7 +1,6 @@
 h3 {
   margin-top: 10px;
 }
-
 table {
   border: 1px solid black;
   border-collapse: collapse;
@@ -30,13 +29,53 @@ th, td {
 td.param-type, th.param-type {
   max-width: 350px;
 }
-.experimental {
+td.param-type a, th.param-type a {
+  font-weight: bold;
+}
+td.param-desc, th.param-desc {
+  max-width: 750px;
+}
+
+.specification a {
+  font-weight: bold;
+}
+
+.experimental, .warning {
   color: #e51c23;
 }
 .mandatory {
   color: green;
   font-weight: bold;
 }
-td a, th a {
+
+div.hint, div.experimental, div.warning {
+  padding-left: 10px;
+  position: relative;
+}
+div.hint:before, div.experimental:before, div.warning:before {
   font-weight: bold;
+  position: absolute;
+}
+div.hint:before, div.experimental:before{
+  color: #002776;
+  font-size: 9px;
+  top: 4px;
+}
+div.hint:before {
+  content: 'TIP';
+  left: 10px;
+}
+div.experimental:before {
+  content: 'TEST';
+  left: 5px;
+}
+div.warning:before {
+  content: '!';
+  left: 14px;
+}
+div.hint p, div.experimental p , div.warning p {
+  display: inline-block;
+  margin: 0;
+  padding-left: 20px;
+  text-align: left;
 }
