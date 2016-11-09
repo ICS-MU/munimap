@@ -142,7 +142,7 @@ INSERT INTO dbo.MISTNOSTI(objectid, Shape, polohKod, cislo, nazev, ucel_nazev, u
       WHEN (mi.PROROZVRH LIKE 'A' AND mi.PROVYUKU LIKE 'A')
         THEN
           CASE
-            WHEN (mis.mistnost_oznaceni IS NOT NULL AND mis.mistnost_oznaceni!=mi.cislo AND mis.mistnost_oznaceni!=mi.nazev)
+            WHEN (mis.mistnost_oznaceni IS NOT NULL AND mis.mistnost_oznaceni!=mi.nazev)
               THEN 
                 CASE
                   WHEN mi.nazev LIKE '%' + mis.mistnost_oznaceni + '%' 
