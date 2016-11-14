@@ -11,12 +11,13 @@ INSERT INTO dbo.ADRESY(adresaId, ulice, cislo, psc, mesto, stat, poznamka)
   FROM sde.sde.FM_ADRESA;
 
 DELETE FROM dbo.AREALY;
-INSERT INTO dbo.AREALY(objectid, Shape, inetId, nazevPrez, mesto, nazevPrezPridatUlici)
+INSERT INTO dbo.AREALY(objectid, Shape, inetId, nazevPrez, nazevPrezEn, mesto, nazevPrezPridatUlici)
 SELECT
     ROW_NUMBER() OVER (ORDER BY ai.AREAL_ID),
     a.Shape AS Shape,
     ai.AREAL_ID AS inetId,
     ai.NAZEV_PREZ AS nazevPrez,
+    ISNULL(ai.NAZEV_PREZ_EN,ai.NAZEV_PREZ) AS nazevPrezEn,
     ai.MESTO AS mesto,
     ai.NAZEV_PREZ_PRIDAT_ULICI AS nazevPrezPridatUlici
   FROM sde.sde.fm_areal ai
@@ -37,12 +38,13 @@ INSERT INTO dbo.PODLAZI(objectid, polohKod, vrstvaId)
   WHERE hasGeometry = 1 AND polohKod NOT LIKE '_____S%';
 
 DELETE FROM dbo.BUDOVY;
-INSERT INTO dbo.BUDOVY(objectid, Shape, polohKod, nazev, vychoziPodlazi, maVnitrniGeometrii, arealId, oznaceni, budovaTyp, inetId)
+INSERT INTO dbo.BUDOVY(objectid, Shape, polohKod, nazev, nazevEn, vychoziPodlazi, maVnitrniGeometrii, arealId, oznaceni, budovaTyp, inetId)
   SELECT
     ROW_NUMBER() OVER (ORDER BY polohKod) AS objectid,
     Shape,
     b.polohKod,
     nazev,
+    ISNULL(nazev_en, nazev),
     CASE
       WHEN (
         SELECT COUNT (p.polohKod)
@@ -128,7 +130,7 @@ INSERT INTO dbo.AREAL_VSTUP(arealVstupId, arealId, polohKodBudova, adresaId, pop
     ON av.budova_id = b.inetId;
 
 DELETE FROM dbo.MISTNOSTI;
-INSERT INTO dbo.MISTNOSTI(objectid, Shape, polohKod, cislo, nazev, ucel_nazev, ucel_skupina_nazev, pro_rozvrh, pro_vyuku, ucel_gis, vychoziPodlazi)		
+INSERT INTO dbo.MISTNOSTI(objectid, Shape, polohKod, cislo, nazev, nazevEn, ucel_nazev, ucel_skupina_nazev, pro_rozvrh, pro_vyuku, ucel_gis, vychoziPodlazi)		
   SELECT
     ROW_NUMBER() OVER (ORDER BY COALESCE(mg.POLOH_KOD, mi.POLOH_KOD), mg.objectid, mi.MISTNOST_ID),
     mg.Shape,
@@ -158,6 +160,26 @@ INSERT INTO dbo.MISTNOSTI(objectid, Shape, polohKod, cislo, nazev, ucel_nazev, u
           END
         ELSE NULL
     END AS nazev,
+    CASE
+      WHEN (mi.PROROZVRH LIKE 'A' AND mi.PROVYUKU LIKE 'A')
+        THEN
+          CASE
+            WHEN (mis.mistnost_oznaceni IS NOT NULL AND mis.mistnost_oznaceni!=ISNULL(mi.nazev_en,''))
+              THEN 
+                CASE
+                  WHEN ISNULL(mi.nazev_en,'') LIKE '%' + mis.mistnost_oznaceni + '%' 
+                    THEN mi.nazev_en
+                    ELSE
+                      CASE
+                        WHEN mis.mistnost_oznaceni LIKE '%' +ISNULL(mi.nazev_en,'') + '%'
+                          THEN mis.mistnost_oznaceni
+                          ELSE mis.mistnost_oznaceni + ' / ' + mi.nazev_en
+                      END
+                END
+              ELSE ISNULL(mi.nazev_en, mi.nazev)
+          END
+        ELSE NULL
+    END AS nazevEn,
     mi.nazev_ucel AS ucel_nazev,
     us.NAZEV AS ucel_skupina_nazev,
     mi.PROROZVRH AS pro_rozvrh,
