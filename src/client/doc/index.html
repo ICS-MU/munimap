@@ -88,7 +88,7 @@
         <li><a href="#reset">funkce munimap.reset</a></li>
       </ul>
       <h2 id="create">Funkce munimap.create</h2>
-      <p>Do zadaného elementu vloží mapové okno vytvořené dle zadaných parametrů.</p>
+      <p>Vytvoří mapu do zadaného elementu a vykreslí ji dle zadaných parametrů.</p>
       <h3>Specifikace</h3>
       <p class="specification">munimap.create(options: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">Object</a>): <a href="https://google.github.io/closure-library/api/goog.Promise.html" target="_blank">goog.Promise</a>&lt;<a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Map.html" target="_blank">ol.Map</a>&gt;</p>
       <h3>Vstup</h3>
@@ -145,6 +145,7 @@
               <li>pole polohových kódů budov, nebo polohových kódů místností, na které se má mapa zazoomovat</li>
               <li>v polohových kódech je možné využít zástupného znaku '_'</li>
               <li>není-li parametr zadán a současně je zadán parametr markers, převezme hodnotu tohoto parametru</li>
+              <li>není povoleno použítí parametru zároveň s parametrem <code><a href="../doc/#center">center</a></code></li>                            
             </ul>
             <div class="hint">
               <p>pro zjištění polohových kódů budov či místností lze použít aplikaci <a href='https://kompas.muni.cz/'>Kompas</a></p>
@@ -158,7 +159,11 @@
             <ul>
               <li>výchozí zoom mapy</li>
               <li>není-li parametr zadán, je dopočítán podle zoomTo, případně se zobrazí celé Brno</li>
+              <li>je akceptováno celé kladné číslo v rozsahu 0 až 23, kdy 0 je pohled na celý svět a 23 je největší povolený zoom</li>
             </ul>
+            <div class="hint">              
+              <p>zoom 13 odpovídá pohledu na celé Brno</p>
+            </div>              
           </td>
         </tr>
         <tr id="center">
@@ -168,6 +173,7 @@
             <ul>
               <li>výchozí střed mapy v zeměpisné šířce a délce (<a href="http://spatialreference.org/ref/epsg/wgs-84/" target="_blank">EPSG:4326</a>)</li>
               <li>není-li parametr zadán, je dopočítán podle zoomTo, případně se zobrazí celé Brno</li>
+              <li>není povoleno použítí parametru zároveň s parametrem <code><a href="../doc/#zoomTo">zoomTo</a></code></li>                            
             </ul>
           </td>
         </tr>
