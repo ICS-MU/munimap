@@ -352,7 +352,7 @@ munimap.cluster.style.pinFunction =
   if (!goog.isDefAndNotNull(title)) {
     if (isMarked) {
       var allMarkers = options.markerSource.getFeatures();
-      title = munimap.cluster.style.getMarkedDefaultLabel(allMarkers,
+      title = munimap.cluster.style.getMarkedDefaultLabel(options, allMarkers,
           clusterFeature, resolution);
     } else {
       title =
@@ -416,8 +416,8 @@ munimap.cluster.style.multipleLabelFunction =
   }
   if (!goog.isDefAndNotNull(title)) {
     if (containsMarker) {
-      title = munimap.cluster.style.getMarkedDefaultLabel(allMarkers || [],
-          feature, resolution);
+      title = munimap.cluster.style.getMarkedDefaultLabel(options,
+          allMarkers || [], feature, resolution);
     } else {
       title =
           munimap.cluster.style.getUnmarkedDefaultLabel(feature, resolution);
@@ -485,6 +485,7 @@ munimap.cluster.style.getUnmarkedDefaultLabel = function(feature, resolution) {
 
 /**
  * Clustered features are buildings only.
+ * @param {munimap.marker.style.labelFunction.Options} options
  * @param {Array<ol.Feature>} allMarkers
  * @param {ol.Feature} feature
  * @param {number} resolution
@@ -492,13 +493,12 @@ munimap.cluster.style.getUnmarkedDefaultLabel = function(feature, resolution) {
  * @protected
  */
 munimap.cluster.style.getMarkedDefaultLabel =
-    function(allMarkers, feature, resolution) {
+    function(options, allMarkers, feature, resolution) {
   var clusteredFeatures = munimap.cluster.getFeatures(feature);
   var markers = clusteredFeatures.filter(function(feat) {
     return goog.array.contains(allMarkers, feat);
   });
 
-  var title;
   var titleParts = [];
   
   var firstMarker = markers[0];
@@ -514,52 +514,69 @@ munimap.cluster.style.getMarkedDefaultLabel =
     }
     titleParts.push(markers.length + 'x ' + markerType);
   } else {
-    if (munimap.building.isBuilding(firstMarker)) {
-      var range = munimap.cluster.getResolutionRange(resolution);
-      var units = [];
-      var unitsFunc =
-          range === munimap.cluster.Resolutions.MARKERS_AND_FACULTIES ?
-              munimap.building.getFaculties :
-              munimap.building.getUnits;
-      var buildingsWithoutUnits = [];
-      markers.forEach(function(markedBuilding) {
-        var uns = unitsFunc(markedBuilding);
-        if (uns.length) {
-          goog.array.extend(units, uns);
+    if (goog.isDef(options.markerLabel)) {
+      markers = markers.filter(function(marker) {
+        var title = options.markerLabel(marker, resolution);
+        if(goog.isDefAndNotNull(title)) {
+          if(title) {
+            titleParts.push(title);
+          }
+          return false;
         } else {
-          buildingsWithoutUnits.push(markedBuilding);
+          return true;
         }
       });
-      titleParts = munimap.unit.getTitleParts(units);
-      buildingsWithoutUnits.forEach(function(building) {
-        var buildingTitle;
-        var bUnits = munimap.building.getUnits(building);
-        if (bUnits.length) {
-          buildingTitle = munimap.unit.getTitleParts(bUnits);
-        } else {
-          buildingTitle =
-              munimap.building.getDefaultLabel(building, resolution);
-        }
-        titleParts.push(buildingTitle);
-      });
-    } else if (munimap.marker.custom.isCustom(firstMarker)) {
-      markers.forEach(function(customMarker) {
-        var cmTitle = munimap.marker.custom.getLabel(customMarker);
-        if (goog.isDefAndNotNull(cmTitle)) {
-          titleParts.push(cmTitle);
-        }
-      });
-      titleParts.sort(munimap.string.localeCompare);
-    } else {
-      markers.forEach(function(room) {
-        var roomTitle = munimap.style.getDefaultLabel(room, resolution);
-        if (goog.isDefAndNotNull(roomTitle)) {
-          titleParts.push(roomTitle);
-        }
-      });
+      firstMarker = markers[0];
+    }
+    
+    if(markers.length) {
+      if (munimap.building.isBuilding(firstMarker)) {
+        var range = munimap.cluster.getResolutionRange(resolution);
+        var units = [];
+        var unitsFunc =
+            range === munimap.cluster.Resolutions.MARKERS_AND_FACULTIES ?
+                munimap.building.getFaculties :
+                munimap.building.getUnits;
+        var buildingsWithoutUnits = [];
+        markers.forEach(function(markedBuilding) {
+          var uns = unitsFunc(markedBuilding);
+          if (uns.length) {
+            goog.array.extend(units, uns);
+          } else {
+            buildingsWithoutUnits.push(markedBuilding);
+          }
+        });
+        titleParts = munimap.unit.getTitleParts(units);
+        buildingsWithoutUnits.forEach(function(building) {
+          var buildingTitle;
+          var bUnits = munimap.building.getUnits(building);
+          if (bUnits.length) {
+            buildingTitle = munimap.unit.getTitleParts(bUnits);
+          } else {
+            buildingTitle = 
+               munimap.building.getDefaultLabel(building, resolution);
+          }
+          titleParts.push(buildingTitle);
+        });
+      } else if (munimap.marker.custom.isCustom(firstMarker)) {
+        markers.forEach(function(customMarker) {
+          var cmTitle = munimap.marker.custom.getLabel(customMarker);
+          if (goog.isDefAndNotNull(cmTitle)) {
+            titleParts.push(cmTitle);
+          }
+        });
+        titleParts.sort(munimap.string.localeCompare);
+      } else {
+        markers.forEach(function(room) {
+          var roomTitle = munimap.style.getDefaultLabel(room, resolution);
+          if (goog.isDefAndNotNull(roomTitle)) {
+            titleParts.push(roomTitle);
+          }
+        });
+      }
     }
   }
 
-  title = titleParts.join('\n');
+  var title = titleParts.join('\n');
   return title;
 };
