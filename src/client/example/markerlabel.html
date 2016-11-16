@@ -101,13 +101,14 @@
    * @return {string|null|undefined}
    */
       var markerLabel = function(feature, resolution) {
+        var locCode = /**@type (string)*/ (feature.get('polohKod'));
         var title;
           switch (locCode) {
             case 'BVB02N01015b':
-              title = 'Doktorské\nstudium';
+            title = 'Doktorské studium';
               break;
             case 'BVB02N01007':
-              title = 'Studijní\noddělení';
+            title = 'Studijní oddělení';
               break;
           }
         return title;      
@@ -163,5 +164,16 @@
         markerLabel: markerLabel
       });
     </script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-43867643-3', 'auto');
+      ga('send', 'pageview');
+    
+    </script>    
+    
   </body>
 </html>
