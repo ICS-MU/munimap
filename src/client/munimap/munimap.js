@@ -260,7 +260,7 @@ munimap.getMainFeatureAtPixel = function(map, pixel) {
  * @param {number} resolution
  */
 munimap.isFeatureClickable = function(map, feature, resolution) {
-  if(munimap.marker.custom.isCustom(feature)) {
+  if (munimap.marker.custom.isCustom(feature)) {
     return false;
   } else if (munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
     if (munimap.building.isBuilding(feature)) {

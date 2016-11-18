@@ -16,14 +16,14 @@ goog.require('munimap.room');
 munimap.assert.markers = function(markers) {
   if (markers !== undefined) {
     assert(goog.isArray(markers), 'Markers should be an array.');
-    
-    if(markers.every(goog.isString)) {
-      if(!markers.every(munimap.building.isCodeOrLikeExpr) &&
+
+    if (markers.every(goog.isString)) {
+      if (!markers.every(munimap.building.isCodeOrLikeExpr) &&
           !markers.every(munimap.room.isCodeOrLikeExpr)) {
         goog.asserts.fail('Markers should contain only building or only room' +
             ' location codes or corresponding LIKE expressions.');
       }
-    } else if(markers.every(goog.partial(jpad.func.instanceof, ol.Feature))) {
+    } else if (markers.every(goog.partial(jpad.func.instanceof, ol.Feature))) {
       var featureMarkers = /** @type {Array<ol.Feature>} */(markers);
       featureMarkers.forEach(munimap.marker.custom.assertSuitable);
     } else {

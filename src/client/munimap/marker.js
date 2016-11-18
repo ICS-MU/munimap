@@ -73,8 +73,6 @@ munimap.marker.isMarker = function(map, feature) {
 };
 
 
-
-
 /**
  * @type {munimap.type.SimpleOptions}
  * @const
@@ -120,7 +118,7 @@ munimap.marker.custom.getLabel = function(feature) {
 munimap.marker.custom.isSuitable = function(feature) {
   var geom = feature.getGeometry();
   var result = geom instanceof ol.geom.Point;
-  if(result) {
+  if (result) {
     var proj = ol.proj.get('EPSG:4326');
     var projExtent = proj.getExtent();
     result = ol.extent.containsCoordinate(projExtent, geom.getCoordinates());
