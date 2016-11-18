@@ -445,11 +445,11 @@ munimap.create.calculateView = function(options, markers, zoomTos) {
     var extent = munimap.extent.ofFeatures(zoomTos);
     if (options.zoom === undefined && options.center === undefined) {
       view.fit(extent, [target.offsetWidth, target.offsetHeight]);
-      if(munimap.marker.custom.isCustom(zoomTos[0])) {
-        if(view.getResolution() < munimap.floor.RESOLUTION.max) {
+      if (munimap.marker.custom.isCustom(zoomTos[0])) {
+        if (view.getResolution() < munimap.floor.RESOLUTION.max) {
           var res = view.constrainResolution(
               munimap.floor.RESOLUTION.max, undefined, 1
-          );
+              );
           view.setResolution(res);
         }
       }
@@ -469,14 +469,14 @@ munimap.create.calculateView = function(options, markers, zoomTos) {
  */
 munimap.create.loadOrDecorateMarkers = function(featuresLike) {
   var result;
-  if(goog.isArray(featuresLike) && featuresLike[0] instanceof ol.Feature) {
+  if (goog.isArray(featuresLike) && featuresLike[0] instanceof ol.Feature) {
     var features = /** @type {Array<ol.Feature>} */(featuresLike);
     features.forEach(function(feature) {
       munimap.marker.custom.decorate(feature);
     });
     result = /** @type {goog.Thenable<Array<ol.Feature>>} */(
         goog.Promise.resolve(features)
-    );
+        );
   } else {
     result = munimap.load.featuresFromParam(featuresLike);
   }
