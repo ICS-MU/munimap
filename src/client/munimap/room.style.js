@@ -1,6 +1,7 @@
 goog.provide('munimap.room.STYLE');
 goog.provide('munimap.room.style');
 
+goog.require('munimap.lang');
 goog.require('munimap.style');
 
 
@@ -248,7 +249,9 @@ munimap.room.style.labelFunction = function(options, feature, resolution) {
           return labelCache[uid];
         }
         var title;
-        var fTitle = feature.get('nazev') || feature.get('cislo');
+        var fTitle = feature.get(munimap.lang.getMsg(
+            munimap.lang.Translations.ROOM_TITLE_FIELD_NAME)) ||
+                feature.get('cislo');
         if (fTitle) {
           title = goog.asserts.assertString(fTitle);
           title = munimap.room.style.alignRoomTitleToRows(title);
