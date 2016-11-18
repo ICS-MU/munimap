@@ -2,6 +2,7 @@ goog.provide('munimap.room');
 
 goog.require('assert');
 goog.require('munimap.floor');
+goog.require('munimap.lang');
 goog.require('munimap.load');
 goog.require('munimap.load.floorBasedActive');
 goog.require('munimap.store');
@@ -217,7 +218,8 @@ munimap.room.getDefaultLabel = function(feature) {
  * @protected
  */
 munimap.room.getNamePart = function(feature) {
-  var title = feature.get('nazev') || feature.get('cislo');
+  var title = feature.get(munimap.lang.getMsg(
+      munimap.lang.Translations.ROOM_TITLE_FIELD_NAME)) || feature.get('cislo');
   if (goog.isDefAndNotNull(title)) {
     goog.asserts.assertString(title);
     title = munimap.room.style.alignRoomTitleToRows(title);

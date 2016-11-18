@@ -3,17 +3,10 @@ goog.provide('munimap.cluster.style');
 
 goog.require('goog.array');
 goog.require('goog.object');
+goog.require('munimap.lang');
 goog.require('munimap.marker.style');
 goog.require('munimap.range');
 goog.require('munimap.string');
-
-
-/**
- * @type {string}
- * @protected
- * @const
- */
-munimap.cluster.style.MU_LABEL = 'Masarykova univerzita';
 
 
 /**
@@ -471,7 +464,7 @@ munimap.cluster.style.getUnmarkedDefaultLabel = function(feature, resolution) {
   if (range === munimap.cluster.Resolutions.MARKERS_AND_FACULTIES) {
     units = munimap.unit.getFacultiesOfBuildings(clusteredBuildings);
     if (units.length >= 10) {
-      return munimap.cluster.style.MU_LABEL;
+      return munimap.lang.getMsg(munimap.lang.Translations.CLUSTER_MU_LABEL);
     }
   } else {
     units = munimap.unit.getUnitsOfBuildings(clusteredBuildings);
@@ -500,14 +493,14 @@ munimap.cluster.style.getMarkedDefaultLabel =
   });
 
   var titleParts = [];
-  
+
   var firstMarker = markers[0];
-  
+
   if (markers.length > 3) {
     var markerType;
-    if(munimap.building.isBuilding(firstMarker)) {
+    if (munimap.building.isBuilding(firstMarker)) {
       markerType = 'budova';
-    } else if(munimap.room.isRoom(firstMarker)) {
+    } else if (munimap.room.isRoom(firstMarker)) {
       markerType = 'místnost';
     } else {
       markerType = 'místo';
@@ -517,8 +510,8 @@ munimap.cluster.style.getMarkedDefaultLabel =
     if (goog.isDef(options.markerLabel)) {
       markers = markers.filter(function(marker) {
         var title = options.markerLabel(marker, resolution);
-        if(goog.isDefAndNotNull(title)) {
-          if(title) {
+        if (goog.isDefAndNotNull(title)) {
+          if (title) {
             titleParts.push(title);
           }
           return false;
@@ -528,8 +521,8 @@ munimap.cluster.style.getMarkedDefaultLabel =
       });
       firstMarker = markers[0];
     }
-    
-    if(markers.length) {
+
+    if (markers.length) {
       if (munimap.building.isBuilding(firstMarker)) {
         var range = munimap.cluster.getResolutionRange(resolution);
         var units = [];
@@ -553,8 +546,8 @@ munimap.cluster.style.getMarkedDefaultLabel =
           if (bUnits.length) {
             buildingTitle = munimap.unit.getTitleParts(bUnits);
           } else {
-            buildingTitle = 
-               munimap.building.getDefaultLabel(building, resolution);
+            buildingTitle =
+                munimap.building.getDefaultLabel(building, resolution);
           }
           titleParts.push(buildingTitle);
         });

@@ -1,6 +1,7 @@
 goog.provide('munimap.complex');
 goog.provide('munimap.complex.style');
 
+goog.require('munimap.lang');
 goog.require('munimap.load');
 goog.require('munimap.range');
 goog.require('munimap.store');
@@ -130,7 +131,8 @@ munimap.complex.style.function = function(options, feature, resolution) {
       return munimap.style.LABEL_CACHE[uid];
     }
 
-    title = /**@type {string}*/ (feature.get('nazevPrez'));
+    title = /**@type {string}*/ (feature.get(munimap.lang.getMsg(
+        munimap.lang.Translations.COMPLEX_TITLE_FIELD_NAME)));
     title = title.split(', ')[0];
     title = munimap.style.alignTextToRows(title.split(' '), ' ');
     var style = new ol.style.Style({

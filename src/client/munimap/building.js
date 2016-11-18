@@ -2,6 +2,7 @@ goog.provide('munimap.building');
 goog.provide('munimap.building.load');
 
 goog.require('assert');
+goog.require('munimap.lang');
 goog.require('munimap.load');
 goog.require('munimap.store');
 goog.require('munimap.type');
@@ -45,18 +46,6 @@ munimap.building.COMPLEX_ID_FIELD_NAME = 'arealId';
  * @type {string}
  */
 munimap.building.LOCATION_CODE_FIELD_NAME = 'polohKod';
-
-
-/**
- * @type {string}
- */
-munimap.building.TITLE_FIELD_NAME = 'nazev';
-
-
-/**
- * @type {string}
- */
-munimap.building.TYPE_FIELD_NAME = 'budovaTyp';
 
 
 /**
@@ -332,8 +321,8 @@ munimap.building.refreshActive = function(map) {
  */
 munimap.building.getTitleWithoutOrgUnit = function(building, opt_separator) {
   var result;
-  var title =
-      /**@type {string}*/ (building.get(munimap.building.TITLE_FIELD_NAME));
+  var title = /**@type {string}*/ (building.get(munimap.lang.getMsg(
+      munimap.lang.Translations.BUILDING_TITLE_FIELD_NAME)));
   result = title.split(', ');
   result.shift();
   result.reverse();
@@ -391,7 +380,8 @@ munimap.building.getAddressPart = function(feature, resolution) {
     var bldgAbbr = feature.get(munimap.building.ABBR_FIELD_NAME);
     if (goog.isDefAndNotNull(bldgAbbr)) {
       if (munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
-        var bldgType = feature.get(munimap.building.TYPE_FIELD_NAME);
+        var bldgType = feature.get(munimap.lang.getMsg(
+            munimap.lang.Translations.BUILDING_TYPE_FIELD_NAME));
         if (goog.isDefAndNotNull(bldgType)) {
           goog.asserts.assertString(bldgAbbr);
           goog.asserts.assertString(bldgType);

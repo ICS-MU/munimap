@@ -1,5 +1,6 @@
 goog.provide('munimap.unit');
 
+goog.require('munimap.lang');
 goog.require('munimap.load');
 goog.require('munimap.range');
 
@@ -8,21 +9,7 @@ goog.require('munimap.range');
  * @type {string}
  * @protected
  */
-munimap.unit.ABBR_FIELD_NAME = 'zkratka_cs';
-
-
-/**
- * @type {string}
- * @protected
- */
 munimap.unit.PRIORITY_FIELD_NAME = 'priorita';
-
-
-/**
- * @type {string}
- * @protected
- */
-munimap.unit.TITLE_CS_FIELD_NAME = 'nazevk_cs';
 
 
 /**
@@ -91,7 +78,8 @@ munimap.unit.loadByHeadquartersComplexIds = function(complexIds) {
  * @protected
  */
 munimap.unit.getAbbr = function(unit) {
-  var result = unit.get(munimap.unit.ABBR_FIELD_NAME);
+  var result = unit.get(munimap.lang.getMsg(
+      munimap.lang.Translations.UNIT_ABBR_FIELD_NAME));
   goog.asserts.assert(result === null || goog.isString(result));
   return result;
 };
@@ -103,7 +91,8 @@ munimap.unit.getAbbr = function(unit) {
  * @protected
  */
 munimap.unit.getTitle = function(unit) {
-  var result = unit.get(munimap.unit.TITLE_CS_FIELD_NAME);
+  var result = unit.get(munimap.lang.getMsg(
+      munimap.lang.Translations.UNIT_TITLE_FIELD_NAME));
   goog.asserts.assert(result === null || goog.isString(result));
   return result;
 };

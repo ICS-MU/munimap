@@ -4,6 +4,7 @@ goog.require('goog.style');
 goog.require('goog.ui.MenuItem');
 goog.require('munimap');
 goog.require('munimap.building');
+goog.require('munimap.lang');
 
 
 /**
@@ -133,15 +134,14 @@ munimap.info.setBuildingTitle = function(map, building) {
   var complexEl = goog.dom.getElementByClass('complex', element);
   var bel = goog.dom.getElementByClass('building', element);
   if (building) {
-    var title = /**@type {string}*/ (
-        building.get(munimap.building.TITLE_FIELD_NAME)
-        );
+    var title = /**@type {string}*/ (building.get(munimap.lang.getMsg(
+        munimap.lang.Translations.BUILDING_TITLE_FIELD_NAME)));
     var complex = munimap.building.getComplex(building);
     if (goog.isDefAndNotNull(complex)) {
-      var complexTitle = /**@type {string}*/ (complex.get('nazevPrez'));
-      var buildingType = /**@type {string}*/ (
-          building.get(munimap.building.TYPE_FIELD_NAME)
-          );
+      var complexTitle = /**@type {string}*/ (complex.get(munimap.lang.getMsg(
+          munimap.lang.Translations.COMPLEX_TITLE_FIELD_NAME)));
+      var buildingType = /**@type {string}*/ (building.get(munimap.lang.getMsg(
+          munimap.lang.Translations.BUILDING_TYPE_FIELD_NAME)));
       var buildingTitle = /**@type {string}*/ (
           building.get(munimap.building.ABBR_FIELD_NAME)
           );
