@@ -38,7 +38,7 @@ INSERT INTO dbo.PODLAZI(objectid, polohKod, vrstvaId)
   WHERE hasGeometry = 1 AND polohKod NOT LIKE '_____S%';
 
 DELETE FROM dbo.BUDOVY;
-INSERT INTO dbo.BUDOVY(objectid, Shape, polohKod, nazev, nazevEn, vychoziPodlazi, maVnitrniGeometrii, arealId, oznaceni, budovaTyp, inetId)
+INSERT INTO dbo.BUDOVY(objectid, Shape, polohKod, nazev, nazevEn, vychoziPodlazi, maVnitrniGeometrii, arealId, oznaceni, budovaTyp, budovaTypEn, inetId)
   SELECT
     ROW_NUMBER() OVER (ORDER BY polohKod) AS objectid,
     Shape,
@@ -89,6 +89,12 @@ INSERT INTO dbo.BUDOVY(objectid, Shape, polohKod, nazev, nazevEn, vychoziPodlazi
       WHEN budova_typ = 'P' THEN 'pavilon'
       WHEN budova_typ = 'V' THEN 'budova'
     END AS budovaTyp,
+    CASE
+      WHEN budova_typ = 'B' THEN 'block'
+      WHEN budova_typ = 'O' THEN 'object'
+      WHEN budova_typ = 'P' THEN 'pavilion'
+      WHEN budova_typ = 'V' THEN 'building'
+    END AS budovaTypEn,
     inetId
   FROM sde_publ.sde.BUDOVY b
     JOIN
