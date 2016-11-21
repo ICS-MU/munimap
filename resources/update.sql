@@ -142,14 +142,15 @@ INSERT INTO dbo.MISTNOSTI(objectid, Shape, polohKod, cislo, nazev, nazevEn, ucel
     mg.Shape,
     COALESCE(mg.POLOH_KOD, mi.POLOH_KOD) AS polohKod,
     CASE
-      WHEN (us.UCEL_SKUPINA_ID IN (1, 2, 3, 4, 5) OR mi.NAZEV_UCEL IN ('jídelna', 'buffet', 'výdej jídel'))
+      WHEN  ((mi.PROROZVRH LIKE 'A' AND mi.PROVYUKU LIKE 'A') OR
+          us.UCEL_SKUPINA_ID IN (1, 2, 3, 4, 5) OR mi.NAZEV_UCEL IN ('jídelna', 'buffet', 'výdej jídel'))
         THEN mi.cislo
         ELSE NULL
     END AS cislo,
     CASE
       WHEN (mi.PROROZVRH LIKE 'A' AND mi.PROVYUKU LIKE 'A')
-        THEN
-          CASE
+        THEN mi.nazev
+          /*CASE
             WHEN (mis.mistnost_oznaceni IS NOT NULL AND mis.mistnost_oznaceni!=mi.nazev)
               THEN 
                 CASE
@@ -163,13 +164,13 @@ INSERT INTO dbo.MISTNOSTI(objectid, Shape, polohKod, cislo, nazev, nazevEn, ucel
                       END
                 END
               ELSE mi.nazev
-          END
+          END*/
         ELSE NULL
     END AS nazev,
     CASE
       WHEN (mi.PROROZVRH LIKE 'A' AND mi.PROVYUKU LIKE 'A')
-        THEN
-          CASE
+        THEN ISNULL(mi.nazev_en, mi.nazev)
+          /*CASE
             WHEN (mis.mistnost_oznaceni IS NOT NULL AND mis.mistnost_oznaceni!=ISNULL(mi.nazev_en,''))
               THEN 
                 CASE
@@ -183,7 +184,7 @@ INSERT INTO dbo.MISTNOSTI(objectid, Shape, polohKod, cislo, nazev, nazevEn, ucel
                       END
                 END
               ELSE ISNULL(mi.nazev_en, mi.nazev)
-          END
+          END*/
         ELSE NULL
     END AS nazevEn,
     mi.nazev_ucel AS ucel_nazev,
