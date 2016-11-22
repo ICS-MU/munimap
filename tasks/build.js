@@ -7,6 +7,7 @@ var exec = require('child_process').exec;
 var cheerio = require("cheerio");
 var jpad =  require('./util/jpad.js');
 var cssImportUpd =  require('./util/cssimportlocalupd.js');
+var git = require('git-state');
 
 require('./../bower_components/closure-library/closure/goog/bootstrap/nodejs');
 goog.require('goog.array');
@@ -19,7 +20,27 @@ module.exports = function (gulp, plugins, jpadCfg) {
     cb();
   });
 
-  gulp.task('build:copy', ['build:clean'], function (cb) {
+  gulp.task('build:check-git', function (cb) {
+    var state = git.checkSync('.');
+    var msg;
+    if(state.branch !== 'master') {
+      msg = 'You are not on "master"branch';
+    } else if (isNaN(state.ahead)) {
+      msg = 'No "remote" set for local repository';
+    } else if (state.ahead > 0) {
+      msg = 'You are ahead of remote';
+    } else if (state.dirty > 0 || state.untracked > 0) {
+      msg = 'Some dirty or untracked files in your repo ' + 
+          '(untracked, modified, deleted, etc.)';
+    }
+    if(msg) {
+      console.log(state);
+      throw new Error(msg);
+    }
+    cb();
+  });
+
+  gulp.task('build:copy', ['build:clean', 'build:check-git'], function (cb) {
     goog.array.forEach(jpadCfg.libMappings, function(lm) {
       var src = lm.src;
       var dest = lm.dest;
