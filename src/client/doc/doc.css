@@ -86,3 +86,11 @@ div.hint p, div.experimental p , div.warning p {
   padding-left: 20px;
   text-align: left;
 }
+
+span.command {
+  font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+  font-size: 13px;
+}
+span.command span.value {
+  color: #080;
+}
