@@ -281,8 +281,16 @@ module.exports = function (gulp, plugins, jpadCfg) {
     ).replace(/\\/g, '/');
     mainJsFile = './build/client/'+mainJsFile;
     filesToBundle.push(mainJsFile);
+    
+    var messageToPrepend = [
+      '// Munimap. See https://maps.muni.cz/munimap/',
+      '// Version: '+jpadCfg.appVersion+'-'+git.commitSync('.'),
+      ''
+    ].join('\n') + '\n';
+    
     return gulp.src(filesToBundle)
       .pipe(plugins.concat(path.basename(mainJsFile)))
+      .pipe(plugins.insert.prepend(messageToPrepend))
       .pipe(gulp.dest(path.dirname(mainJsFile)));
   });
 
