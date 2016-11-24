@@ -218,11 +218,24 @@ munimap.room.getDefaultLabel = function(feature) {
  * @protected
  */
 munimap.room.getNamePart = function(feature) {
-  var title = feature.get(munimap.lang.getMsg(
-      munimap.lang.Translations.ROOM_TITLE_FIELD_NAME)) || feature.get('cislo');
-  if (goog.isDefAndNotNull(title)) {
-    goog.asserts.assertString(title);
-    title = munimap.room.style.alignRoomTitleToRows(title);
+  var title;
+  var fTitle = feature.get(munimap.lang.getMsg(
+      munimap.lang.Translations.ROOM_TITLE_FIELD_NAME));
+  var fNumber = feature.get('cislo');
+  if (fTitle || fNumber) {
+    if (fTitle) {
+      title = goog.asserts.assertString(fTitle);
+      title = munimap.room.style.alignRoomTitleToRows(title);
+      if (fNumber) {
+        var re =
+            new RegExp('(^| )' + fNumber.toLowerCase() + '( |$)', 'g');
+        if (!re.test(fTitle.toLowerCase())) {
+          title = fNumber + '\n' + title;
+        }
+      }
+    } else {
+      title = goog.asserts.assertString(fNumber);
+    }
   }
   return title || undefined;
 };
