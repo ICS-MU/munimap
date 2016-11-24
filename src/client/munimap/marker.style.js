@@ -153,17 +153,19 @@ munimap.marker.style.function = function(options, feature, resolution) {
         munimap.floor.getActiveFloors(options.map).some(function(floorCode) {
           return locCode.startsWith(floorCode);
         });
+    var hasPointGeom = feature.getGeometry() instanceof ol.geom.Point;
     if (munimap.range.contains(munimap.floor.RESOLUTION, resolution) &&
-        !inActiveFloor) {
+        !inActiveFloor && !(hasPointGeom)) {
       return null;
-    }
-
-    var markedRoomResolution = munimap.range.createResolution(
-        munimap.floor.RESOLUTION.max,
-        munimap.cluster.ROOM_RESOLUTION.min
-        );
-    if (munimap.range.contains(markedRoomResolution, resolution)) {
-      result.push(munimap.marker.style.ROOM);
+    } else {
+      var markedRoomResolution = munimap.range.createResolution(
+          munimap.floor.RESOLUTION.max,
+          munimap.cluster.ROOM_RESOLUTION.min
+          );
+      if (munimap.range.contains(markedRoomResolution, resolution) ||
+          hasPointGeom) {
+        result.push(munimap.marker.style.ROOM);
+      }
     }
   }
   if (!munimap.room.isRoom(feature) ||

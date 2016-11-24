@@ -274,17 +274,29 @@ munimap.load.featuresFromParam = function(paramValue) {
         });
         goog.array.removeDuplicates(buildingCodes);
         goog.array.removeDuplicates(buildingLikeExprs);
-        goog.Promise.all([
-          munimap.load.roomsByCode({
+        munimap.load.buildingsByCode({
+          codes: buildingCodes,
+          likeExprs: buildingLikeExprs
+        }).then(function(buildings) {
+          return munimap.load.roomsByCode({
             codes: codes,
             likeExprs: likeExprs
-          }),
-          munimap.load.buildingsByCode({
-            codes: buildingCodes,
-            likeExprs: buildingLikeExprs
-          })
-        ]).then(function(results) {
-          resolve(results[0]);
+          }).then(function(rooms) {
+            rooms.forEach(function(room) {
+              if (!goog.isDefAndNotNull(room.getGeometry())) {
+                var locCode = /**@type (string)*/ (room.get('polohKod'));
+                var building = munimap.building.getByCode(locCode);
+                var bldgGeom = building.getGeometry();
+                if (goog.isDef(bldgGeom)) {
+                  room.setGeometry(
+                      munimap.geom.getGeometryCenter(bldgGeom, true));
+                }
+              }
+            });
+            return rooms;
+          });
+        }).then(function(results) {
+          resolve(results);
         }, reject);
       }
     } else {

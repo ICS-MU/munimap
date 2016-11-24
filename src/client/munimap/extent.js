@@ -26,10 +26,17 @@ munimap.extent.ofFeature = function(feature) {
 munimap.extent.ofFeatures = function(features) {
   var extent = ol.extent.createEmpty();
   features.forEach(function(feature) {
+    var ext;
     if (feature instanceof ol.Feature) {
       var geom = feature.getGeometry();
       if (geom) {
-        var ext = geom.getExtent();
+        if (munimap.room.isRoom(feature) && geom instanceof ol.geom.Point) {
+          var locCode = /**@type (string)*/ (feature.get('polohKod'));
+          var building = munimap.building.getByCode(locCode);
+          ext = building.getGeometry().getExtent();
+        } else {
+          ext = geom.getExtent();
+        }
       }
     } else {
       ext = feature.getExtent();
