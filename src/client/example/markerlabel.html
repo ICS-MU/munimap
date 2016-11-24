@@ -87,11 +87,9 @@
     </div>
     <div class="content">
       <p>
-        U zvýrazněných objektů (budovy, místnosti) v mapě, které definujeme pomocí parametru <code><a href="../doc/#markers">markers</a></code>, můžeme zobrazit vlastní popisky. Na tomto příkladu se jedná 
-        o zobrazení studijních oddělení na PřF a přiřazení popisků, které rozliší jednotlivá oddělení. To provedeme pomocí parametru <code><a href="../doc/#markerLabel">markerLabel</a></code>, ve kterém definujeme funkci, 
-        která vrací popisek pro daný objekt. V příkladu zobrazujeme konkrétní studijní oddělení, kterému na základě polohového kódu dané místnosti přiřadíme popisky
-        "Studijné oddělení" a "Doktorské studium".
-       
+        U zvýrazněných objektů (budov, místností) v mapě, které definujeme pomocí parametru <code><a href="../doc/#markers">markers</a></code>, můžeme zobrazit vlastní popisky. V tomto příkladu se jedná 
+        o zobrazení místností studijních oddělení a přiřazení odpovídajících popisků. To provedeme pomocí parametru <code><a href="../doc/#markerLabel">markerLabel</a></code>. Parametr představuje funkci, která 
+        pro konkrétní místnost vrátí její popisek, tedy pro místnost s polohovým kódem 'BVB02N01015b' vrátí 'Doktorské studium' a pro místnost 'BVB02N01007' vrátí 'Studijní oddělení'.       
       </p>      
       <pre class="prettyprint">
 &lt;script type="text/javascript"&gt;
@@ -122,6 +120,23 @@
   });
 &lt;/script&gt;
       </pre>
+      <p>
+        V příkladu použité parametry funkce <code><a href="../doc/#create">munimap.create</a></code> jsou následující:
+      </p>
+      <ul>
+        <li><code><a href="../doc/#target">target</a></code> - určuje id elementu, do kterého se mapa vykreslí</li>
+        <li><code><a href="../doc/#zoom">zoom</a></code> - určuje úroveň přiblížení mapy po načtení stránky</li>
+        <li><code><a href="../doc/#markers">markers</a></code> - určuje, která místnost či místnosti se v mapě označí a mapa se na ně vycentruje</li>
+        <li><code><a href="../doc/#markerLabel">markerLabel</a></code> - definuje funkci pro zobrazení vlastních popisků budov a místností</li>
+      </ul>
+      <p>
+        Parametr <code>markers</code> akceptuje polohový kód místnosti (nebo jejich seznam oddělený čárkou).
+        Tyto polohové kódy můžete k jednotlivým místnostem dohledat například v aplikaci
+        <a href="https://maps.muni.cz/kompas" target="_blank">Kompas</a>.
+      </p>
+      <p>
+        Kompletní dokumentaci naleznete <a href="../doc">zde</a>.
+      </p>            
     </div>
     <div class="navigation">
       <div class="left">
