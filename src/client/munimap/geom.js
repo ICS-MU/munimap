@@ -53,7 +53,6 @@ munimap.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION = function(map, feature) {
  * @param {ol.geom.Geometry} geometry
  * @param {boolean=} opt_useOlInteriorPoint
  * @return {ol.geom.Point}
- * @protected
  */
 munimap.geom.getGeometryCenter = function(geometry, opt_useOlInteriorPoint) {
   var center;
