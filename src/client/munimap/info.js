@@ -143,13 +143,18 @@ munimap.info.setBuildingTitle = function(map, building) {
       var buildingType = /**@type {string}*/ (building.get(munimap.lang.getMsg(
           munimap.lang.Translations.BUILDING_TYPE_FIELD_NAME)));
       var buildingTitle = /**@type {string}*/ (
-          building.get(munimap.building.ABBR_FIELD_NAME)
+          building.get(munimap.lang.getMsg(
+              munimap.lang.Translations.BUILDING_ABBR_FIELD_NAME))
           );
       if (goog.isDefAndNotNull(buildingType) &&
               goog.isDefAndNotNull(buildingTitle)) {
         title = buildingType + ' ' + buildingTitle;
       } else {
-        title = munimap.building.getTitleWithoutOrgUnit(building);
+        if (munimap.complex.getBuildingCount(complex) === 1) {
+          title = munimap.building.getNamePart(building);
+        } else {
+          title = munimap.building.getTitleWithoutOrgUnit(building);
+        }
       }
       complexEl.innerHTML = complexTitle;
       bel.innerHTML = title;
