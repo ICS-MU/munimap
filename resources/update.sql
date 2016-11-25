@@ -382,3 +382,13 @@ SELECT
   END AS priorita
 FROM sde.sde.PRACOVISTE prac, sde_munimap.dbo.budovy bud
 WHERE prac.budova_sidelni_id = bud.inetId;
+
+DELETE FROM dbo.ZASTAVKY;
+INSERT INTO dbo.ZASTAVKY(OBJECTID, Shape, cislo, nazev, oznacnik)
+SELECT
+  OBJECTID, 
+  Shape,
+  cislo_zastavky AS cislo,
+  nazev_zastavky AS nazev,
+  oznacnik
+FROM sde_publ.sde.ZASTAVKY_3857;
