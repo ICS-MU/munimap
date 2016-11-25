@@ -25,12 +25,6 @@ munimap.building.LIKE_EXPR_REGEX = /^[A-Z_]{3}[0-9_]{2}$/gi;
 
 /**
  * @type {string}
- */
-munimap.building.ABBR_FIELD_NAME = 'oznaceni';
-
-
-/**
- * @type {string}
  * @protected
  */
 munimap.building.COMPLEX_FIELD_NAME = 'areal';
@@ -358,11 +352,10 @@ munimap.building.getDefaultLabel = function(feature, resolution) {
 
 /**
  * @param {ol.Feature} feature
- * @param {number} resolution
+ * @param {number=} opt_resolution
  * @return {string}
- * @protected
  */
-munimap.building.getNamePart = function(feature, resolution) {
+munimap.building.getNamePart = function(feature, opt_resolution) {
   var units = munimap.building.getUnits(feature);
   var titleParts = munimap.unit.getTitleParts(units);
   return titleParts.join('\n');
@@ -377,7 +370,8 @@ munimap.building.getNamePart = function(feature, resolution) {
 munimap.building.getAddressPart = function(feature, resolution) {
   var titleParts = [];
   if (goog.isDefAndNotNull(munimap.building.getComplex(feature))) {
-    var bldgAbbr = feature.get(munimap.building.ABBR_FIELD_NAME);
+    var bldgAbbr = feature.get(munimap.lang.getMsg(
+        munimap.lang.Translations.BUILDING_ABBR_FIELD_NAME));
     if (goog.isDefAndNotNull(bldgAbbr)) {
       if (munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
         var bldgType = feature.get(munimap.lang.getMsg(
