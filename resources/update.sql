@@ -38,7 +38,7 @@ INSERT INTO dbo.PODLAZI(objectid, polohKod, vrstvaId)
   WHERE hasGeometry = 1 AND polohKod NOT LIKE '_____S%';
 
 DELETE FROM dbo.BUDOVY;
-INSERT INTO dbo.BUDOVY(objectid, Shape, polohKod, nazev, nazevEn, vychoziPodlazi, maVnitrniGeometrii, arealId, oznaceni, budovaTyp, budovaTypEn, inetId)
+INSERT INTO dbo.BUDOVY(objectid, Shape, polohKod, nazev, nazevEn, vychoziPodlazi, maVnitrniGeometrii, arealId, oznaceni, oznaceniEn, budovaTyp, budovaTypEn, inetId)
   SELECT
     ROW_NUMBER() OVER (ORDER BY polohKod) AS objectid,
     Shape,
@@ -83,6 +83,10 @@ INSERT INTO dbo.BUDOVY(objectid, Shape, polohKod, nazev, nazevEn, vychoziPodlazi
     END AS maVnitrniGeometrii,
     bi.areal_id AS arealId,
     bi.oznaceni AS oznaceni,
+    CASE 
+      WHEN bi.oznaceni_en IS NULL THEN bi.oznaceni
+      ELSE bi.oznaceni_en
+    END AS oznaceniEn,
     CASE
       WHEN budova_typ = 'B' THEN 'blok'
       WHEN budova_typ = 'O' THEN 'objekt'
@@ -90,10 +94,10 @@ INSERT INTO dbo.BUDOVY(objectid, Shape, polohKod, nazev, nazevEn, vychoziPodlazi
       WHEN budova_typ = 'V' THEN 'budova'
     END AS budovaTyp,
     CASE
-      WHEN budova_typ = 'B' THEN 'block'
-      WHEN budova_typ = 'O' THEN 'object'
-      WHEN budova_typ = 'P' THEN 'pavilion'
-      WHEN budova_typ = 'V' THEN 'building'
+      WHEN budova_typ = 'B' THEN 'Block'
+      WHEN budova_typ = 'O' THEN 'Object'
+      WHEN budova_typ = 'P' THEN 'Pavilion'
+      WHEN budova_typ = 'V' THEN 'Building'
     END AS budovaTypEn,
     inetId
   FROM sde_publ.sde.BUDOVY b
