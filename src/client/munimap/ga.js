@@ -60,7 +60,8 @@ munimap.ga.init = function() {
   ga('create', 'UA-43867643-7', 'auto', {
     'name': munimap.ga.TRACKER_NAME,
     'cookieName': '_gaMunimap',
-    'alwaysSendReferrer': true
+    'alwaysSendReferrer': true,
+    'cookieDomain': 'none'
   });
   ga(munimap.ga.TRACKER_NAME+'.send', 'pageview');
   munimap.ga.sendEvent('library', 'loaded', document.URL);
