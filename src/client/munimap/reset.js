@@ -16,6 +16,13 @@ goog.require('munimap.move');
  * in server response
  */
 munimap.reset = function(map, options) {
+  var resetKeys = goog.object.getKeys(options);
+  resetKeys.sort();
+  munimap.ga.sendEvent(
+      'map',
+      'reset',
+      resetKeys.join(',')
+  );
 
   munimap.reset.assertOptions(options);
 
