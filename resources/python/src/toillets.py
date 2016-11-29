@@ -114,6 +114,11 @@ def create_toilet_poi(wc_layer, output_fc, keywords=[],
     :param name: name for group of toilets
     :param omit: if True features will be omitted
     """
+    if omit:
+        print "Ommiting WC " + name + "..."
+    else:
+        print "Processing WC " + name + "..."
+
     matched = []
     where = ''
     toilet_group_fc = None
@@ -188,6 +193,7 @@ groups['women'] = [u'dámské', u'dámy', u'HSPŽ', u'studentky', u'ž', u'žen'
 arcpy.env.workspace = '../../'
 
 try:
+    print "Processing toilets..."
     where = "ucel_nazev LIKE 'WC'"
     wc_fc_temp = arcpy.Select_analysis(room_fc, memory + '\\toilets', where)
 
@@ -208,6 +214,10 @@ try:
     create_toilet_poi(wc_layer, poi_fc, groups['men'], 'muži')
     create_toilet_poi(wc_layer, poi_fc)
     arcpy.Delete_management(wc_fc_temp)
+except:
+    print "Unexpected error."
+else:
+    print "Processing finished successfully."
 finally:
     arcpy.Delete_management(memory)
 
