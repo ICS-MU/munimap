@@ -87,6 +87,20 @@ div.hint p, div.experimental p , div.warning p {
   text-align: left;
 }
 
+p.ga {
+  color: #8a6d3b;
+  background-color: #fcf8e3;
+  border: 1px solid transparent;
+  border-color: #faebcc;
+  padding: 15px;
+  max-width: 1500px;
+}
+
+span.ga-alert {
+  color: brown;
+  text-transform: uppercase;
+}
+
 span.command {
   font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
   font-size: 13px;
