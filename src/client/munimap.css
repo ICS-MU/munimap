@@ -131,11 +131,12 @@ h3 > .munimap-logo > .map, h4 > .munimap-logo > .map {
 
 .separator {
   border-bottom: dotted 1px #ddd;
+  margin: 10px 0;
   width: 100%;
 }
 
 .content {
-  margin: 20px 0;
+  margin: 10px 0;
   overflow: hidden;
   padding: 0 20px;
 }

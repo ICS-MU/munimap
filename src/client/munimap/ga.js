@@ -80,7 +80,7 @@ munimap.ga.initInternal = function() {
         munimap.ga.objectName
     );
   }
-  
+
   munimap.ga.initialized = true;
 
   window[munimap.ga.objectName]('create', 'UA-43867643-7', {
@@ -89,9 +89,9 @@ munimap.ga.initInternal = function() {
     'alwaysSendReferrer': true,
     'cookieDomain': 'none'
   });
-  window[munimap.ga.objectName](munimap.ga.TRACKER_NAME+'.send', 'pageview');
+  window[munimap.ga.objectName](munimap.ga.TRACKER_NAME + '.send', 'pageview');
   munimap.ga.sendEventInternal('library', 'loaded', document.URL);
-  
+
   var queue = munimap.ga.BEFORE_INIT_QUEUE;
   queue.forEach(function(args) {
     munimap.ga.sendEventInternal.apply(undefined, args);
@@ -111,12 +111,13 @@ munimap.ga.initInternal = function() {
 munimap.ga.sendEvent =
     function(category, action, opt_labelOrObject, opt_value, opt_fieldsObject) {
   var queue = munimap.ga.BEFORE_INIT_QUEUE;
-  if(munimap.ga.initialized) {
+  if (munimap.ga.initialized) {
     munimap.ga.sendEventInternal.apply(undefined, arguments);
   } else {
     queue.push(arguments);
   }
 };
+
 
 /**
  * @param {string} category
@@ -137,12 +138,12 @@ munimap.ga.sendEventInternal =
     fieldsObject.eventAction = action;
 
     window[munimap.ga.objectName](
-        munimap.ga.TRACKER_NAME+'.send',
+        munimap.ga.TRACKER_NAME + '.send',
         fieldsObject);
   } else {
     var label = opt_labelOrObject;
     window[munimap.ga.objectName](
-        munimap.ga.TRACKER_NAME+'.send',
+        munimap.ga.TRACKER_NAME + '.send',
         'event',
         category,
         action,
