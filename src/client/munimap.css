@@ -198,3 +198,13 @@ h3 > .munimap-logo > .map, h4 > .munimap-logo > .map {
   width: 45px;
   height: 19px;
 }
+
+.not-latest-warning {
+  color: #8a6d3b;
+  background-color: #fcf8e3;
+  border: 1px solid transparent;
+  border-color: #faebcc;
+  padding: 15px;
+  max-width: 1500px;
+  display: none;
+}
