@@ -12,8 +12,7 @@
     
     <script src="../munimaplib.plovr.json" type="text/javascript"></script>
     <script src="../_lib/prettyprint/index.js" type="text/javascript"></script>
-    <script id="cookie1" type="text/javascript" src="https://cdn.muni.cz/mvcscripts/libs/cookiebar/1.0/cookie1.js"></script>
-    
+
     <title>munimap - zvýraznění libovolného bodu</title>
   </head>
 
@@ -80,7 +79,7 @@
     <h1><a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> - zvýraznění libovolného bodu</h1>
     <div class="navigation">
       <div class="left">
-        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; zvýraznění libovolného bodu
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>zvýraznění libovolného bodu</span>
       </div>
     </div>
     <div class="content">
@@ -88,19 +87,26 @@
     </div>
     <div class="content">
       <p>
-        Na konec stránky (před uzavírací značku <code>&lt;/body&gt;</code>) vložte následující kód,
-        ten ovládá nastavení mapy:
-      </p>
+        Knihovna munimap umožňuje vložit "špendlík" na libovolné místo v mapě. V tomto příkladu je v mapě vyznačena poloha brněnského hlavního nádraží a autobusového nádraží. "Špendlík" je definován jako objekt typu <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Feature.html" target="_blank">ol.Feature</a> s parametry:</p>
+      <ul class="">
+        <li><b>geometry</b> - pomocí objektu typu <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.geom.Point.html" target="_blank">ol.geom.Point</a> definuje polohu "špendlíku" v mapě</li>
+        <li><b>label</b> - textový popis, který se zobrazí u "špendlíku" v mapě</li>
+      </ul>
       <pre class="prettyprint">
 &lt;script type="text/javascript"&gt;
   munimap.create({
         target: 'map',
         markers: [
           new ol.Feature({
-            geometry: new ol.geom.Point([16.616667, 49.2]),
-            label: 'střed Brna'
+            geometry: new ol.geom.Point([16.612802, 49.190582]),
+            label: 'Brno hlavní nádraží'
+          }),
+          new ol.Feature({
+            geometry: new ol.geom.Point([16.616667, 49.185833]),
+            label: 'Autobusové nádraží Zvonařka'
           })
-        ]
+        ],
+        zoom: 15
   });
 &lt;/script&gt;
       </pre>
@@ -115,7 +121,7 @@
     </div>
     <div class="navigation">
       <div class="left">
-        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; zvýraznění libovolného bodu
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>zvýraznění libovolného bodu</span>
       </div>
     </div>
     <div class="footer">
@@ -132,10 +138,15 @@
         target: 'map',
         markers: [
           new ol.Feature({
-            geometry: new ol.geom.Point([16.616667, 49.2]),
-            label: 'střed Brna'
+            geometry: new ol.geom.Point([16.612802, 49.190582]),
+            label: 'Brno hlavní nádraží'
+          }),
+          new ol.Feature({
+            geometry: new ol.geom.Point([16.616667, 49.185833]),
+            label: 'Autobusové nádraží Zvonařka'
           })
-        ]
+        ],
+        zoom: 15
       });
     </script>
     <script>
@@ -144,7 +155,7 @@
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
     
-      ga('create', 'UA-43867643-3', 'maps.muni.cz');
+      ga('create', 'UA-43867643-3', 'auto');
       ga('send', 'pageview');
     
     </script>    
