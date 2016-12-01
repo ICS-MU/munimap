@@ -126,7 +126,8 @@ var fillTemplateInHtml = function(html) {
   var props = {
     appPath: jpadCfg.appPath,
     olVersion: jpadCfg.olVersion,
-    prodDomain: jpadCfg.prodDomain
+    prodDomain: jpadCfg.prodDomain,
+    appVersion: jpadCfg.appVersion
   };
   html = html.replace(/{jpad\.(\w+)}/gm, function(match, prop) {
     var propVal = props[prop];

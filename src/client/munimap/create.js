@@ -37,6 +37,13 @@ goog.require('munimap.style');
  * in server response
  */
 munimap.create = function(options) {
+  var createKeys = goog.object.getKeys(options);
+  createKeys.sort();
+  munimap.ga.sendEvent(
+      'map',
+      'create',
+      createKeys.join(',')
+  );
 
   munimap.create.assertOptions(options);
 

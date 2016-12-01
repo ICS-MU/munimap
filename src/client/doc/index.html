@@ -10,7 +10,9 @@
     
     <link href="../munimap.css" media="all" rel="stylesheet" type="text/css" />
     <link href="doc.css" media="all" rel="stylesheet" type="text/css" />
-
+    
+    <script id="cookie1" type="text/javascript" src="https://cdn.muni.cz/mvcscripts/libs/cookiebar/1.0/cookie1.js"></script>
+    
     <title>munimap - popis rozhraní</title>
 
   </head>
@@ -82,6 +84,9 @@
       </div>
     </div>
     <div class="content">
+      <p class="ga"><span class="ga-alert">Upozornění</span> Knihovna munimap využívá službu Google Analytics, poskytovanou společností Google. 
+        Pro použítí knihovny je třeba na Vašich stránkách přidat upozornění pro uživatele, že stránky využívají soubory cookies. Cookies upozornění můžete přidat pomocí skriptu,
+        který naleznete například <a href="https://webcentrum.muni.cz/functions/cookies">zde</a>.</p>
       <p>Pro formální popis rozhraní používáme <a href="https://github.com/google/closure-compiler/wiki/Annotating-JavaScript-for-the-Closure-Compiler#type-expressions">javascriptovou anotaci pro Closure Compiler</a>.</p>
       <ul>
         <li><a href="#create">funkce munimap.create</a></li>
@@ -315,7 +320,7 @@
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
     
-      ga('create', 'UA-43867643-3', 'auto');
+      ga('create', 'UA-43867643-3', 'maps.muni.cz');
       ga('send', 'pageview');
     
     </script>        

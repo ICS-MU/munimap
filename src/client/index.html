@@ -10,7 +10,8 @@
     <link href="munimap.css" media="all" rel="stylesheet" type="text/css" />
     
     <script src="munimaplib.plovr.json" type="text/javascript"></script>
-
+    <script id="cookie1" type="text/javascript" src="https://cdn.muni.cz/mvcscripts/libs/cookiebar/1.0/cookie1.js"></script>
+    
     <title>munimap</title>
 
   </head>
@@ -132,6 +133,18 @@
           </ul>
         </div>
       </div>
+      <div class="separator"></div>
+      <div class="columns">
+        <div class="left">
+          <h3>Co je nového v knihovně <span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span> (v{jpad.appVersion})?</h3>
+          <ul>
+            <li>přidán měřící kód Google Analytics</li>
+            <li>v anglické verzi přidány lokalizované popisy budov, organizačních jednotek a učeben</li>
+            <li>opravena chyba se zobrazováním místností, které nemají geometrii</li>
+            <li>opravena chyba se slučováním bodů s vlastními popisky</li>
+          </ul>
+        </div>        
+      </div>
     </div>
     <div class="footer">
       <div class="left">
@@ -154,7 +167,7 @@
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
     
-      ga('create', 'UA-43867643-3', 'auto');
+      ga('create', 'UA-43867643-3', 'maps.muni.cz');
       ga('send', 'pageview');
     
     </script>        
