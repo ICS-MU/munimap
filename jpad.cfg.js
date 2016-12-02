@@ -2,7 +2,7 @@
 
 var jpad = {
   appPath: '/munimap/',
-  appVersion: '1.0.0',
+  appVersion: '1.0.1',
   olVersion: 'v3.14.2',
   prodDomain: 'maps.muni.cz',
   plovrPattern: 'src/client/**/*.plovr.json',
@@ -54,7 +54,8 @@ var jpad = {
   },
   srcClientMappings: [
     '**/*.png',
-    '**/fontello.*'
+    '**/fontello.*',
+    '*.svg'
   ],
   generateSourceMaps: false,
   buildWithModulesOn: false
