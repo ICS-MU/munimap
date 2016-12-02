@@ -5,10 +5,10 @@ body {
   font-size: 16px;
 }
 h1 {
-  border-bottom: solid 1px #ddd;
+  /*border-bottom: solid 1px #ddd;*/
   font-size: 38px;
   line-height: 38px;
-  padding: 20px;
+  padding: 20px 20px 10px 20px;
   margin: 20px;
   margin-bottom: 0;
 }
@@ -17,6 +17,7 @@ h3, h4 {
 }
 p {
   padding: 0 5px;
+  margin: 10px 0;
 }
 a {
   color: #002776;
@@ -157,7 +158,7 @@ h3 > .munimap-logo > .map, h4 > .munimap-logo > .map {
   font-size: 24px;
   font-weight: bold;
   display: inline-block;
-  margin: 20px;
+  margin: 10px;
   width: 80%;
 }
 .munimap-links a, .munimap-links.inverse a:hover {
@@ -199,12 +200,31 @@ h3 > .munimap-logo > .map, h4 > .munimap-logo > .map {
   height: 19px;
 }
 
-.not-latest-warning {
+.munimap-warning {
   color: #8a6d3b;
   background-color: #fcf8e3;
   border: 1px solid transparent;
   border-color: #faebcc;
   padding: 15px;
   max-width: 1500px;
+}
+span.munimap-warning {
+  color: brown;
+  text-transform: uppercase;
+  border: none;
+  padding: 0;
+}
+.munimap-warning-wrapper {
+  padding: 0 20px;
+  display: none; /* hide warning about latest version */
+}
+.munimap-warning.latest {
   display: none;
+}
+body > .separator {
+  padding: 0 40px;
+}
+.separator-solid {
+  margin: 10px 0px;
+  border-top: solid 1px #ddd;
 }
