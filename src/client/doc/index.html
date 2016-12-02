@@ -195,11 +195,20 @@
         </tr>
         <tr>
           <td class="param-name">markers</td>
-          <td class="param-type">Array.&lt;string&gt; | undefined</td>
+          <td class="param-type">Array.&lt;string&gt; | Array.&lt;<a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Feature.html" target="_blank">ol.Feature</a>&gt; 
+            | undefined</td>
           <td class="param-desc">
             <ul>
               <li>pole polohových kódů budov, nebo polohových kódů místností, které mají být v mapě zvýrazněny</li>
-              <li>v polohových kódech je možné využít zástupného znaku '_'</li>
+              <ul>
+                <li>v polohových kódech je možné využít zástupného znaku '_'</li>
+              </ul>
+              <li>od verze 1.1 je možné umístit "špendlík" na libovolné místo v mapě, a to pomocí pole objektů typu ol.Feature s parametry:
+                <ul>
+                  <li>geometry definující geometrii pomocí objektu <a href="http://openlayers.org/en/v3.14.2/apidoc/ol.geom.Point.html" target="_blank">ol.geom.Point</a></li>
+                  <li>label pro textový popisek bodu</li>
+                </ul>
+              </li>
               <li>není-li parametr zadán, nic se v mapě nezvýrazní</li>
             </ul>
             <div class="hint">
