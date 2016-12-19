@@ -452,9 +452,12 @@ munimap.create.calculateView = function(options, markers, zoomTos) {
     var extent = munimap.extent.ofFeatures(zoomTos);
     if (options.zoom === undefined && options.center === undefined) {
       view.fit(extent, [target.offsetWidth, target.offsetHeight]);
+      var res = view.getResolution();
+      ol.extent.buffer(extent, res * 30, extent);
+      view.fit(extent, [target.offsetWidth, target.offsetHeight]);
       if (munimap.marker.custom.isCustom(zoomTos[0])) {
         if (view.getResolution() < munimap.floor.RESOLUTION.max) {
-          var res = view.constrainResolution(
+          res = view.constrainResolution(
               munimap.floor.RESOLUTION.max, undefined, 1
               );
           view.setResolution(res);
