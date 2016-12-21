@@ -398,7 +398,7 @@ munimap.handleClickOnPixel = function(map, pixel) {
  */
 munimap.handleClickOnCluster = function(map, cluster) {
   var zoomTo;
-  var clusteredFeatures = munimap.cluster.getFeatures(cluster);
+  var clusteredFeatures = munimap.cluster.getMainFeatures(map, cluster);
   var areMarkersRooms = munimap.room.isRoom(clusteredFeatures[0]);
   if (clusteredFeatures.length === 1) {
     if (munimap.building.isBuilding(clusteredFeatures[0])) {
