@@ -114,6 +114,22 @@ munimap.cluster.getFeatures = function(feature) {
 
 /**
  * @param {ol.Map} map
+ * @param {ol.Feature} feature
+ * @return {Array.<ol.Feature>}
+ */
+munimap.cluster.getMainFeatures = function(map, feature) {
+  var result = munimap.cluster.getFeatures(feature);
+  if (munimap.cluster.containsMarker(map, feature)) {
+    result = result.filter(
+        goog.partial(munimap.marker.isMarker, map)
+        );
+  }
+  return result;
+};
+
+
+/**
+ * @param {ol.Map} map
  * @return {ol.layer.Vector}
  */
 munimap.cluster.getLayer = function(map) {
@@ -285,17 +301,12 @@ munimap.cluster.style.MULTIPLE_MARKED = new ol.style.Style({
  */
 munimap.cluster.style.function = function(options, feature, resolution) {
   goog.asserts.assertInstanceof(feature, ol.Feature);
-  var features = munimap.cluster.getFeatures(feature);
   var result;
-  var markedFeatures = features.filter(
-      goog.partial(munimap.marker.isMarker, options.map)
-      );
+  var features = munimap.cluster.getMainFeatures(options.map, feature);
+  var marked = munimap.marker.isMarker(options.map, features[0]);
   if (features.length === 1) {
     result = munimap.cluster.style.pinFunction(
         options, feature, features[0], resolution);
-  } else if (markedFeatures.length === 1) {
-    result = munimap.cluster.style.pinFunction(
-        options, feature, markedFeatures[0], resolution);
   } else {
     result = [];
     var circleStyle;
@@ -304,9 +315,9 @@ munimap.cluster.style.function = function(options, feature, resolution) {
     if (goog.isDefAndNotNull(labelStyle)) {
       result.push(labelStyle);
     }
-    if (markedFeatures.length) {
+    if (marked) {
       circleStyle = new ol.style.Style({
-        geometry: munimap.geom.getGeometryCenterOfFeatures(markedFeatures),
+        geometry: munimap.geom.getGeometryCenterOfFeatures(features),
         image: new ol.style.Circle({
           radius: munimap.cluster.style.RADIUS,
           fill: munimap.marker.style.FILL,
@@ -393,14 +404,10 @@ munimap.cluster.style.multipleLabelFunction =
     function(options, feature, resolution) {
   goog.asserts.assertInstanceof(feature, ol.Feature);
   var map = options.map;
-  var containsMarker = munimap.cluster.containsMarker(map, feature);
-  var markers;
-  if (containsMarker) {
+  var features = munimap.cluster.getMainFeatures(map, feature);
+  var marked = munimap.marker.isMarker(map, features[0]);
+  if (marked) {
     var allMarkers = options.markerSource.getFeatures();
-    var clusteredFeatures = munimap.cluster.getFeatures(feature);
-    markers = clusteredFeatures.filter(function(feat) {
-      return goog.array.contains(allMarkers, feat);
-    });
   }
 
   var title;
@@ -408,7 +415,7 @@ munimap.cluster.style.multipleLabelFunction =
     title = options.markerLabel(feature, resolution);
   }
   if (!goog.isDefAndNotNull(title)) {
-    if (containsMarker) {
+    if (marked) {
       title = munimap.cluster.style.getMarkedDefaultLabel(options,
           allMarkers || [], feature, resolution);
     } else {
@@ -421,11 +428,11 @@ munimap.cluster.style.multipleLabelFunction =
     var fontSize = 13;
     var offsetY = munimap.style.getLabelHeight(title, fontSize) / 2 +
         munimap.cluster.style.RADIUS + 2;
-    var fill = containsMarker ?
+    var fill = marked ?
         munimap.marker.style.TEXT_FILL :
         munimap.style.TEXT_FILL;
-    var geometry = containsMarker ?
-        munimap.geom.getGeometryCenterOfFeatures(markers || []) :
+    var geometry = marked ?
+        munimap.geom.getGeometryCenterOfFeatures(features) :
         munimap.geom.CENTER_GEOMETRY_FUNCTION;
     var textStyle = new ol.style.Style({
       geometry: geometry,
@@ -436,7 +443,7 @@ munimap.cluster.style.multipleLabelFunction =
         stroke: munimap.style.TEXT_STROKE,
         text: title
       }),
-      zIndex: containsMarker ? 7 : 4
+      zIndex: marked ? 7 : 4
     });
     return textStyle;
   } else {
