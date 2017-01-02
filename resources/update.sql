@@ -293,6 +293,17 @@ WHERE polohKod IN (
   )
 
 
+DELETE FROM dbo.DVERE;
+INSERT INTO dbo.DVERE(objectid, Shape, polohKod, polohKodPodlazi, pk)
+SELECT
+  ROW_NUMBER() OVER (ORDER BY polohKod) AS OBJECTID, 
+  Shape,
+  polohKod,
+  polohKodPodlazi,
+  pk
+FROM sde_publ.sde.DVERE;
+
+
 DELETE FROM dbo.BODY_ZAJMU;
 INSERT INTO dbo.BODY_ZAJMU(objectid, Shape, typ, polohKodLokace, polohKodPodlazi, vychoziPodlazi)
   SELECT
@@ -350,18 +361,23 @@ INSERT INTO dbo.BODY_ZAJMU(objectid, Shape, typ, polohKodLokace, polohKodPodlazi
           dbo.MISTNOSTI mist ON vstup.mistnostPK = mist.polohKod
         LEFT JOIN
         dbo.DVERE dvere ON vstup.dverePK = dvere.polohKod
+    UNION ALL
+    SELECT 
+      dvere.SHAPE.STCentroid() AS SHAPE,
+      'vstup do budovy' AS typ,
+      DVERE_POLOH_KOD AS polohKodLokace,
+      SUBSTRING(DVERE_POLOH_KOD, 0, 9) AS polohKodPodlazi
+    FROM sde.sde.BudovaVchod_evw bvc
+      LEFT JOIN
+        dbo.DVERE dvere ON DVERE_POLOH_KOD = dvere.polohKod
+    WHERE bvc.VSTUP_HLAVNI LIKE 'A'
+      AND
+        DVERE_POLOH_KOD NOT IN (
+          SELECT dverePK
+          FROM dbo.VSTUPY
+          WHERE dverePK IS NOT NULL
+        )
     ) poi;
-
-
-DELETE FROM dbo.DVERE;
-INSERT INTO dbo.DVERE(objectid, Shape, polohKod, polohKodPodlazi, pk)
-SELECT
-  ROW_NUMBER() OVER (ORDER BY polohKod) AS OBJECTID, 
-  Shape,
-  polohKod,
-  polohKodPodlazi,
-  pk
-FROM sde_publ.sde.DVERE;
 
 DELETE FROM dbo.PRACOVISTE;
 INSERT INTO dbo.PRACOVISTE(objectid, nazevk_cs, nazevk_en, zkratka_cs, zkratka_en, budova_sidelni_id, areal_sidelni_id, priorita)
