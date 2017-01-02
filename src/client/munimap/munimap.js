@@ -340,15 +340,20 @@ munimap.handleClickOnPixel = function(map, pixel) {
       }
     }
     if (zoomTo) {
-      if ((munimap.building.isBuilding(zoomTo) &&
+      var floorResolution = view.constrainResolution(
+          munimap.floor.RESOLUTION.max);
+      if (munimap.marker.custom.isCustom(zoomTo)) {
+        view.setCenter(zoomTo.getGeometry().getCoordinates());
+        if (resolution > (floorResolution * 2)) {
+          view.setResolution(floorResolution * 2);
+        }
+      } else if ((munimap.building.isBuilding(zoomTo) &&
           munimap.building.hasInnerGeometry(zoomTo)) ||
           munimap.room.isRoom(zoomTo) || munimap.poi.isPoi(zoomTo)) {
         var wasInnerGeomShown =
             munimap.range.contains(munimap.floor.RESOLUTION, resolution);
         if (!wasInnerGeomShown) {
-          var newResolution = view.constrainResolution(
-              munimap.floor.RESOLUTION.max);
-          if (goog.isDef(newResolution)) {
+          if (goog.isDef(floorResolution)) {
             var center;
             if (munimap.cluster.isCluster(clickedFeature) ||
                 munimap.room.isRoom(zoomTo)) {
@@ -362,10 +367,10 @@ munimap.handleClickOnPixel = function(map, pixel) {
                   munimap.getClosestPointToPixel(map, clickedFeature, pixel);
             }
             var futureExtent = ol.extent.getForViewAndSize(center,
-                newResolution, view.getRotation(), size);
+                floorResolution, view.getRotation(), size);
             munimap.move.setAnimation(map, viewExtent, futureExtent);
             view.setCenter(center);
-            view.setResolution(newResolution);
+            view.setResolution(floorResolution);
           }
         }
         munimap.changeFloor(map, zoomTo);
