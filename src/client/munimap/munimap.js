@@ -394,20 +394,14 @@ munimap.handleClickOnPixel = function(map, pixel) {
  * @param {ol.Map} map
  * @param {ol.Feature} cluster
  * @return {ol.Feature|undefined}
- * @prototype
+ * @protected
  */
 munimap.handleClickOnCluster = function(map, cluster) {
   var zoomTo;
   var clusteredFeatures = munimap.cluster.getMainFeatures(map, cluster);
   var areMarkersRooms = munimap.room.isRoom(clusteredFeatures[0]);
   if (clusteredFeatures.length === 1) {
-    if (munimap.building.isBuilding(clusteredFeatures[0])) {
-      zoomTo = clusteredFeatures[0];
-    } else if (areMarkersRooms) {
-      var room = clusteredFeatures[0];
-      var locCode = /**@type {string}*/(room.get('polohKod'));
-      zoomTo = munimap.building.getByCode(locCode);
-    }
+    zoomTo = clusteredFeatures[0];
   } else {
     var showOneBuilding = false;
     if (areMarkersRooms) {
