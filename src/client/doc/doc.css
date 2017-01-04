@@ -31,7 +31,6 @@ td {
 th, td {
   max-width: 800px;
   padding: 8px;
-  
 }
 td.param-type, th.param-type {
   max-width: 350px;
@@ -43,6 +42,13 @@ td.param-desc, th.param-desc {
   max-width: 750px;
 }
 
+.content {
+  overflow: visible;
+}
+
+p.specification {
+  text-align: left;
+}
 .specification a {
   font-weight: bold;
 }

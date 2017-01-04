@@ -9,8 +9,7 @@ h1 {
   font-size: 38px;
   line-height: 38px;
   padding: 20px 20px 10px 20px;
-  margin: 20px;
-  margin-bottom: 0;
+  margin: 0 20px;
 }
 h3, h4 {
   margin: 0px;
@@ -38,6 +37,7 @@ li {
 }
 
 #map-example {
+  margin: 0 5px;
   min-height: 150px;
   position: relative;
 }
@@ -94,7 +94,7 @@ h3 > .munimap-logo > .map, h4 > .munimap-logo > .map {
 }
 
 .header {
-  padding-left: 100px;
+  padding-left: 20px;
 }
 
 .footer {
@@ -151,7 +151,6 @@ h3 > .munimap-logo > .map, h4 > .munimap-logo > .map {
 .columns > div {
   margin: 0 auto;
   padding: 0 2%;
-  width: 85%;
 }
 
 .munimap-links {
@@ -181,18 +180,6 @@ h3 > .munimap-logo > .map, h4 > .munimap-logo > .map {
 
 .center {
   text-align: center;
-}
-
-@media (min-width: 700px) {
-  body {
-    padding: 0 100px;
-  }
-  .header {
-    padding-left: 20px;
-  }
-  .columns > div {
-    width: 45%;
-  }
 }
 
 .logo-uvt {
@@ -227,4 +214,17 @@ body > .separator {
 .separator-solid {
   margin: 10px 0px;
   border-top: solid 1px #ddd;
+}
+
+/**styles for windows of a greater width**/
+@media (min-width: 1092px) {
+  body {
+    padding: 0 100px;
+  }
+}
+
+@media (min-width: 800px) {
+  .columns > div {
+    width: 45%;
+  }
 }
