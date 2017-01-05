@@ -9,7 +9,8 @@ goog.provide('munimap.poi.style');
 munimap.poi.style.Resolution = {
   INFORMATION: munimap.floor.RESOLUTION,
   STAIRS: munimap.range.createResolution(0, 0.15),
-  TOILET: munimap.range.createResolution(0, 0.13)
+  TOILET: munimap.range.createResolution(0, 0.13),
+  BUILDING_ENTRANCE: munimap.range.createResolution(0, 1.19)
 };
 
 
@@ -243,10 +244,18 @@ munimap.poi.style.function = function(options, feature, resolution) {
         var bldgCode = floor.substr(0, 5);
         return !floorCode.startsWith(bldgCode);
       });
-      var showEntrance =
-          !munimap.range.contains(munimap.floor.RESOLUTION, resolution) ||
-          (activeFloors.indexOf(floorCode) > -1 ||
-          (notInBldgWithActiveFloor && defaultFloor === 1));
+      var showEntrance;
+      var activeFloorCondition = activeFloors.indexOf(floorCode) > -1 ||
+              (notInBldgWithActiveFloor && defaultFloor === 1);
+      if (poiType === munimap.poi.Purpose.BUILDING_ENTRANCE) {
+        showEntrance = munimap.range.contains(
+            munimap.poi.style.Resolution.BUILDING_ENTRANCE, resolution) &&
+            activeFloorCondition;
+      } else {
+        showEntrance =
+            !munimap.range.contains(munimap.floor.RESOLUTION, resolution) ||
+            activeFloorCondition;
+      }
       result = showEntrance ? munimap.poi.style.ENTRANCE : null;
       break;
     case munimap.poi.Purpose.COMPLEX_ENTRANCE:
