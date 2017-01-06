@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link href="ics.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="../munimap.css" media="all" rel="stylesheet" type="text/css" />
+    
+    <link href="../plovr/plovr.css" media="all" rel="stylesheet" type="text/css" />
+    
+    <script src="../munimaplib.plovr.json" type="text/javascript"></script>
+    <script src="../_lib/prettyprint/index.js" type="text/javascript"></script>
+    <script id="cookie1" type="text/javascript" src="https://cdn.muni.cz/mvcscripts/libs/cookiebar/1.0/cookie1.js"></script>
+    
+    <title>munimap - přidání vrstvy nezávislé na podlaží</title>
+  </head>
+  <body>
+    <div class="header">
+      <img src="../muni/logo.svg" alt="Masarykova univerzita" title="Masarykova univerzita">
+    </div>
+    <h1><a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> - přidání vrstvy nezávislé na podlaží</h1>
+    <div class="munimap-warning-wrapper">
+      <div class="munimap-warning">
+        <span class="munimap-warning">Upozornění</span> Toto je starší verze ({jpad.appVersion}) munimapu. Doporučujeme použít <a href="/munimap/latest/example/faculties.html">nejnovější verzi</a>.
+      </div>
+    </div>
+    <div class="separator-solid">
+    </div>
+    <div class="navigation">
+      <div class="left">
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>přidání vrstvy nezávislé na podlaží</span>
+      </div>
+    </div>
+    <div class="content">
+      <div id="map" class="map"></div>
+    </div>
+    <div class="content">
+      <p>
+        Vlastní vrstvu nezávislou na zobrazeném podlaží můžeme do mapy vytvořené funkcí <code><a href="../doc/#create">munimap.create</a></code> přidat s využitím funkcí knihovny <a href="http://openlayers.org/" target="_blank">OpenLayers</a>.
+        V tomto příkladu do mapy se zvýrazněnými budovami Filozofické fakulty vložíme liniovou vrstvu cest mezi nimi.
+        Data pro vrstvu cest jsou uložena v souboru formátu GeoJSON (<a href="layer.geojson" target="_blank">layer.geojson</a>).
+      </p>
+      <p>
+        Nejprve definujeme vrstvu, kterou budeme chtít do mapy přidat, jako objekt typu 
+        <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.layer.Vector.html" target="_blank">ol.layer.Vector</a>. Objektu lze nastavit například:
+      </p>
+      <ul>
+        <li>zdroj dat pro vrstvu (<code>source</code>) - <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.source.Vector.html" target="_blank">ol.source.Vector</a></li>
+        <li>
+          styl vykreslení vrstvy (<code>style</code>)- <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.style.Style.html" target="_blank">ol.style.Style</a>
+        </li>
+        <li>
+          rozsah měřítek, v nichž má být vrstva vykreslena (<code>minResolution</code>, <code>maxResolution</code>).
+        </li>
+      </ul>
+      <pre class="prettyprint">
+  var layer = new ol.layer.Vector({
+    maxResolution: 2.39,
+    source: new ol.source.Vector({
+      format: new ol.format.GeoJSON(),
+      projection: 'EPSG:3857',
+      url: 'layer.geojson'
+    }),
+    style: new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: '#900',
+        lineCap: 'butt',
+        lineDash: [3, 5],
+        width: 3
+      })
+    })
+  });
+      </pre>
+      <p>  
+        Mapové okno vytvoříme voláním funkce <code><a href="../doc/#create">munimap.create</a></code> a pro zvýraznění vybraných budov zadáme  
+        do parametru <code>markers</code> jejich polohové kódy oddělené čárkou. Funkce <code><a href="../doc/#create">munimap.create</a></code>
+        vrací objekt typu <a href="https://google.github.io/closure-library/api/goog.Promise.html" target="_blank">goog.Promise</a>&lt;<a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Map.html" target="_blank">ol.Map</a>&gt;. Díky tomu je možné dále pracovat s mapou,
+        která je vytvořena touto funkcí. K tomu použijeme následné volání funkce <code>then</code>, v němž je definováno, co se provede po úspěšném
+      vytvoření mapy pomocí funkce s&nbsp;parametrem, kterým je právě vytvořená mapa. Uvnitř této funkce je možné s mapou dále pracovat,
+      a tak do ní můžeme přidat dříve nadefinovanou vrstvu pomocí metody <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Map.html#addLayer" target="_blank">addLayer</a>.
+      </p>
+      <pre class="prettyprint">
+  munimap.create({
+    target: 'map',
+    markers: ['BVA01', 'BVA02', 'BVA03', 'BVA04', 'BVA05', 'BVA06', 'BVA07', 'BVA08', 'BVA13', 'BVA14', 'BVA21', 'BMB05', 'BSC05', 'BVE01']
+  }).then(function(map) {
+    map.addLayer(layer);
+  });
+      </pre>
+      <p>
+        Celý kód tohoto příkladu pak vypadá následovně:
+      </p>
+      <pre class="prettyprint">
+&lt;script type="text/javascript"&gt;
+  var layer = new ol.layer.Vector({
+    maxResolution: 2.39,
+    source: new ol.source.Vector({
+      format: new ol.format.GeoJSON(),
+      projection: 'EPSG:3857',
+      url: 'layer.geojson'
+    }),
+    style: new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: '#900',
+        lineCap: 'butt',
+        lineDash: [3, 5],
+        width: 3
+      })
+    })
+  });
+
+  munimap.create({
+    target: 'map',
+    markers: ['BVA01', 'BVA02', 'BVA03', 'BVA04', 'BVA05', 'BVA06', 'BVA07', 'BVA08', 'BVA13', 'BVA14', 'BVA21', 'BMB05', 'BSC05', 'BVE01']
+  }).then(function(map) {
+    map.addLayer(layer);
+  });
+&lt;/script&gt;
+      </pre>
+      <p>
+        V příkladu použité parametry funkce <code><a href="../doc/#create">munimap.create</a></code> jsou následující:
+      </p>
+      <ul>
+        <li><code><a href="../doc/#target">target</a></code> - určuje id elementu, do kterého se mapa vykreslí</li>
+        <li><code><a href="../doc/#markers">markers</a></code> - určuje, která budova či budovy se v mapě označí a mapa se na ně vycentruje</li>
+      </ul>
+      <p>
+        Parametr <code>markers</code> akceptuje polohový kód budovy (nebo jejich seznam oddělený čárkou).
+        Tyto polohové kódy můžete k jednotlivým budovám dohledat například v aplikaci
+        <a href="https://maps.muni.cz/kompas" target="_blank">Kompas</a>.
+      </p>
+
+      <p>
+        Kompletní dokumentaci naleznete <a href="../doc">zde</a>.
+      </p>      
+    </div>
+    <div class="navigation">
+      <div class="left">
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>přidání vrstvy nezávislé na podlaží</span>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="left">
+        Kontakt: <a href="mailto:gishelp%40ics.muni.cz">gishelp&#064;ics.muni.cz</a>
+      </div>
+      <div class="right">
+        <a href="http://www.ics.muni.cz/" target="_blank"><img class="logo-uvt" src="../muni/ics/logo.svg" alt="Ústav výpočetní techniky MU" title="Ústav výpočetní techniky MU"></a>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var layer = new ol.layer.Vector({
+        maxResolution: 2.39,
+        source: new ol.source.Vector({
+          format: new ol.format.GeoJSON(),
+          projection: 'EPSG:3857',
+          url: 'layer.geojson'
+        }),
+        style: new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: '#900',
+            lineCap: 'butt',
+            lineDash: [3, 5],
+            width: 3
+          })
+        })
+      });
+      
+      munimap.create({
+        target: 'map',
+        markers: ['BVA01', 'BVA02', 'BVA03', 'BVA04', 'BVA05', 'BVA06', 'BVA07', 'BVA08', 'BVA13', 'BVA14', 'BVA21', 
+          'BMB05', 'BSC05', 'BVE01']
+      }).then(function(map) {
+        map.addLayer(layer);
+      });
+    </script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-43867643-3', 'maps.muni.cz');
+      ga('send', 'pageview');
+    
+    </script>    
+    
+  </body>
+</html>
