@@ -244,17 +244,13 @@ munimap.poi.style.function = function(options, feature, resolution) {
         var bldgCode = floor.substr(0, 5);
         return !floorCode.startsWith(bldgCode);
       });
-      var showEntrance;
-      var activeFloorCondition = activeFloors.indexOf(floorCode) > -1 ||
-              (notInBldgWithActiveFloor && defaultFloor === 1);
+      var showEntrance =
+          !munimap.range.contains(munimap.floor.RESOLUTION, resolution) ||
+          (activeFloors.indexOf(floorCode) > -1 ||
+          (notInBldgWithActiveFloor && defaultFloor === 1));
       if (poiType === munimap.poi.Purpose.BUILDING_ENTRANCE) {
-        showEntrance = munimap.range.contains(
-            munimap.poi.style.Resolution.BUILDING_ENTRANCE, resolution) &&
-            activeFloorCondition;
-      } else {
-        showEntrance =
-            !munimap.range.contains(munimap.floor.RESOLUTION, resolution) ||
-            activeFloorCondition;
+        showEntrance = showEntrance && munimap.range.contains(
+            munimap.poi.style.Resolution.BUILDING_ENTRANCE, resolution);
       }
       result = showEntrance ? munimap.poi.style.ENTRANCE : null;
       break;
