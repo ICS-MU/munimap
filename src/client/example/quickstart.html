@@ -34,65 +34,95 @@
         <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>jak začít</span>
       </div>
     </div>
-    <h2 class="center">Krok za krokem, jak vložit na stránku základní mapku</h2>
     <div class="content">
-      <h3 id="nahrani-knihovny">Krok 1 - nahrání knihovny</h3>
-      <p>
-        Pro vložení mapy s budovami a místnostmi Masarykovy univerzity na webovou stránku je nejprve potřeba nahrát knihovnu munimap.
-        To uděláte tak, že do hlavičky stránky (mezi značky <code>&lt;head&gt;</code> a <code>&lt;/head&gt;</code>) vložíte následující kód:
-      </p>
-      <pre class="prettyprint">
-  &lt;script src="//{jpad.prodDomain}{jpad.appPath}munimaplib.js" type="text/javascript"&gt;&lt;/script&gt;
-      </pre>
-      <h3>Krok 2 - umístění mapy</h3>
-      <p>
-        Pak na libovolné místo Vaší webové stránky (mezi značky <code>&lt;body&gt;</code> a <code>&lt;/body&gt;</code>) vložte
-        značku <code>&lt;div&gt;</code> s atributem <code>id</code> nastaveným například na hodnotu <code>map</code>,
-        na tomto místě se pak zobrazí mapa. Id elementu může být libovolné, stejné id ale musíte předat funkci
-        <code><a href="../doc/#create">munimap.create</a></code>. Velikost mapy ovlivníte nastavením
-        CSS stylu pro element <code>&lt;div&gt;</code> (vlastnosti <code>width</code> a <code>height</code>).
-      </p>
-      <pre class="prettyprint">
-  &lt;div id="map"&gt;
-  &lt;/div&gt;
-      </pre>
-      <h3>Krok 3 - vytvoření a nastavení mapy</h3>
-      <p>
-        Mapu vytvoříte zavoláním funkce <code><a href="../doc/#create">munimap.create</a></code>.
-        Na konec stránky (před uzavírací značku <code>&lt;/body&gt;</code>) vložte následující kód:
-      </p>
-      <pre class="prettyprint">
-  &lt;script type="text/javascript"&gt;
-    munimap.create({
-      target: 'map'
-    });
-  &lt;/script&gt;
-      </pre>
-      <p>
-        V příkladu použité parametry funkce <code><a href="../doc/#create">munimap.create</a></code> jsou následující:
-      </p>
-      <ul>
-        <li><code><a href="../doc/#target">target</a></code> - určuje id elementu, do kterého se mapa vykreslí</li>
-      </ul>
-      <p>
-        Pomocí parametrů funkce <code><a href="../doc/#create">munimap.create</a></code> můžete ovlivnit další nastavení mapy,
-        jako je zvýraznění budov, změna jazyka či podkladové mapy. Více se dozvíte v naší <a href="../doc">dokumentaci</a>
-        a <a href="../example">příkladech použití</a>.
-      </p>
-      <div class="munimap-links" style="display: block; margin: auto;">
-        <a href="doc">Popis rozhraní</a>
-        <a href="example/">Příklady použití</a>
+      <h2 class="page-title">Vložení základní mapky na stránku</h2>
+      <p>Ve třech jednoduchých krocích si ukážeme, jak pomocí knihovny munimap vložit základní mapku do vašich webových stránek.</p>
+      <div class="guide-step">
+        <div class="guide-step-title">
+          <span class="guide-step-number">Krok 1</span>
+          <span class="guide-step-name">Nahrání knihovny</span>
+        </div>
+        <p>
+          Pro vložení mapy s budovami a místnostmi Masarykovy univerzity na webovou stránku je nejprve potřeba nahrát knihovnu munimap.
+          To uděláte tak, že do hlavičky stránky (mezi značky <code>&lt;head&gt;</code> a <code>&lt;/head&gt;</code>) vložíte následující kód:
+        </p>
+        <pre class="prettyprint">
+    &lt;script src="//{jpad.prodDomain}{jpad.appPath}munimaplib.js" type="text/javascript"&gt;&lt;/script&gt;
+        </pre>
       </div>
-      <h3>Výsledek</h3>
+      <div class="guide-step">
+        <div class="guide-step-title">
+          <span class="guide-step-number">Krok 2</span>
+          <span class="guide-step-name">Vytvoření elementu pro umístění mapy</span>
+        </div>
+        <p>
+          Na vybrané místo vaší webové stránky (mezi značky <code>&lt;body&gt;</code> a <code>&lt;/body&gt;</code>) vložte
+          značku <code>&lt;div&gt;</code> s&nbsp;atributem <code>id</code> nastaveným například na hodnotu <code>'map'</code>.
+          Na tomto místě se pak zobrazí mapa.
+        </p>
+        <p>
+          Id elementu, do kterého se má vykreslit mapa, můžete zvolit libovolně,
+          stejné id ale musíte předat funkci <code><a href="../doc/#create">munimap.create</a></code>.
+          Velikost mapy ovlivníte nastavením CSS stylu daného elementu (vlastnosti <code>width</code> a <code>height</code>).
+        </p>
+        <pre class="prettyprint">
+    &lt;div id="map"&gt;
+    &lt;/div&gt;
+        </pre>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-title">
+          <span class="guide-step-number">Krok 3</span>
+          <span class="guide-step-name">Vytvoření a nastavení mapy</span>
+        </div>
+        <p>
+          Mapu vytvoříte zavoláním funkce <code><a href="../doc/#create">munimap.create</a></code>. Parametr
+          <code><a href="../doc/#target">target</a></code> je povinný, určuje id elementu, do kterého se mapa vykreslí.
+          Na konec stránky (před uzavírací značku <code>&lt;/body&gt;</code>) vložte následující kód, případně změňte hodnotu
+          atributu <code>target</code> na id elementu, do něhož chcete mapu vykreslit:
+        </p>
+        <pre class="prettyprint">
+    &lt;script type="text/javascript"&gt;
+      munimap.create({
+        target: 'map'
+      });
+    &lt;/script&gt;
+        </pre>
+      </div>
+      <div class="separator"></div>
+      <div class="columns">
+        <div class="left">
+          <h3>Výsledek</h3>
+          <p>
+            Jestliže jste postupovali podle předchozího návodu, uvidíte na své webové stránce
+            následující interaktivní mapu, jejíž velikost můžete ovlivnit pomocí CSS vlastností
+            elementu, kterého jste mapu vytvořili:
+          </p>
+          <div id="map" class="map"></div>
+        </div>
+        <div class="right">
+          <h3>... a jak dál?</h3>
+          <p>
+            Pomocí parametrů funkce <code><a href="../doc/#create">munimap.create</a></code> můžete ovlivnit další nastavení mapy,
+            jako je zvýraznění vybraných budov, volba jazyka mapy či varianta podkladové mapy. Kompletní přehled funkcí knihovny munimap a
+            jejich parametrů (včetně vysvětlení jejich významu) naleznete v&nbsp;<a href="../doc">popisu rozhraní</a>.
+            A pro větší názornost jsme pro vás připravili jednoduché i pokročilejší <a href="../example">příklady použití</a> knihovny.
+          </p>
+          <div class="munimap-links">
+            <a href="doc">Popis rozhraní</a>
+            <a href="example/">Příklady použití</a>
+          </div>
+        </div>
+      </div>
+      <div class="separator"></div>
+      <h3>Stále si nejste jistí jak na to?</h3>
       <p>
-        Jestliže jste postupovali podle předchozího návodu, uvidíte na své stránce
-        následující interaktivní mapu:
-      </p>
-      <div id="map" class="map"></div>
-      <h3>Vyzkoušejte si sami</h3>
-      <p>
-          Následující kód jednoduché HTML stránky si můžete zkopírovat a uložit
-          do souboru s příponou .html. Dostanete tak prázdnou stránku se základní mapou.
+          Následující kód jednoduché HTML stránky si můžete zkopírovat a v&nbsp;textovém editoru uložit
+          do souboru s příponou .html. Dostanete tak prázdnou stránku se základní mapou. A pak si můžete
+          sami zkoušet různá nastavení parametrů funkce <code><a href="../doc/#create">munimap.create</a></code>.
+          Kompletní přehled všech parametrů a vysvětlení jejich významu naleznete
+          v&nbsp;<a href="../doc">popisu rozhraní</a>. Pro inspiraci, jak použít a nastavit jednotlivé parametry,
+          vám mohou posloužit připravené <a href="../example">příklady použití</a>.
       </p>
       <pre class="prettyprint">
 &lt;html&gt;
