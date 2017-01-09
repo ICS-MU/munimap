@@ -56,7 +56,7 @@ var jpad = {
     '**/*.png',
     '**/fontello.*',
     '**/*.geojson',
-    '*.svg'
+    '**/*.svg'
   ],
   generateSourceMaps: false,
   buildWithModulesOn: false
