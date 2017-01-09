@@ -55,6 +55,7 @@ var jpad = {
   srcClientMappings: [
     '**/*.png',
     '**/fontello.*',
+    '**/*.geojson',
     '*.svg'
   ],
   generateSourceMaps: false,
