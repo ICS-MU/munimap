@@ -149,3 +149,22 @@ code {
   margin: 0px 20px 20px 20px;
   padding: 0;
 }
+
+/***quickstart example styles***/
+.page-title {
+  text-transform: uppercase;
+}
+
+.guide-step {
+  margin-top: 40px;
+}
+.guide-step-title {
+}
+.guide-step-name {
+  font-size: 20px; 
+  font-weight: bold; 
+}
+.guide-step-number {
+  margin-right: 5px;
+  text-transform: uppercase;
+}
