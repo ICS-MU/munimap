@@ -216,6 +216,16 @@ body > .separator {
   border-top: solid 1px #ddd;
 }
 
+/**styles for change log**/
+div.version-description {
+  border-left: solid 8px #002776;
+  margin: 0 10px 20px;
+  padding: 0 20px;
+}
+h2.version-number {
+  margin-bottom: 0;
+}
+
 /**styles for windows of a greater width**/
 @media (min-width: 1092px) {
   body {
