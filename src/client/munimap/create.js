@@ -363,7 +363,8 @@ munimap.create = function(options) {
         var view = map.getView();
         var resolution = view.getResolution();
         goog.asserts.assertNumber(resolution);
-        var feature = munimap.getMainFeatureAtPixel(map, pixel);
+        var featureCtx = munimap.getMainFeatureAtPixel(map, pixel);
+        var feature = featureCtx ? featureCtx.feature : null;
         if (feature &&
             munimap.isFeatureClickable(map, feature, resolution)) {
           map.getTarget().style.cursor = 'pointer';

@@ -224,11 +224,11 @@ munimap.getBufferValue = function(extent) {
  *
  * @param {ol.Map} map
  * @param {ol.Pixel} pixel
- * @return {ol.Feature}
+ * @return {munimap.FeatureContext}
  */
 munimap.getMainFeatureAtPixel = function(map, pixel) {
-  var mainFeature;
-  var features = [];
+  var mainFeatureCtx;
+  var featureCtxs = [];
   var rooms = munimap.room.getDefaultLayer(map);
   var doors = munimap.door.getActiveLayer(map);
   var markerClusterLayer = munimap.cluster.getLayer(map);
@@ -238,20 +238,38 @@ munimap.getMainFeatureAtPixel = function(map, pixel) {
       return false;
     }
     if (layer === markerLayer) {
-      mainFeature = feature;
+      mainFeatureCtx = {
+        feature: feature,
+        layer: layer
+      };
       return true;
     }
     if (layer === markerClusterLayer) {
-      mainFeature = feature;
+      mainFeatureCtx = {
+        feature: feature,
+        layer: layer
+      };
       return true;
     }
-    features.push(feature);
+    featureCtxs.push({
+      feature: feature,
+      layer: layer
+    });
   });
-  if (!mainFeature && features.length) {
-    mainFeature = features[0];
+  if (!mainFeatureCtx && featureCtxs.length) {
+    mainFeatureCtx = featureCtxs[0];
   }
-  return mainFeature;
+  return mainFeatureCtx;
 };
+
+
+/**
+ * @typedef {{
+ *   feature: (ol.Feature),
+ *   layer: (ol.layer.Vector)
+ * }}
+ */
+munimap.FeatureContext;
 
 
 /**
@@ -307,7 +325,8 @@ munimap.isFeatureClickable = function(map, feature, resolution) {
  * @param {ol.Pixel} pixel
  */
 munimap.handleClickOnPixel = function(map, pixel) {
-  var clickedFeature = munimap.getMainFeatureAtPixel(map, pixel);
+  var featureCtx = munimap.getMainFeatureAtPixel(map, pixel);
+  var clickedFeature = featureCtx ? featureCtx.feature : null;
   if (clickedFeature) {
     var view = map.getView();
     var resolution = view.getResolution();
