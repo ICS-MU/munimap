@@ -13,14 +13,14 @@ goog.require('munimap.move');
  *   currentResolution: (number)
  * }}
  */
-munimap.Vars;
+munimap.Props;
 
 
 /**
  * @type {string}
  * @const
  */
-munimap.VARS_NAME = 'munimapVars';
+munimap.PROPS_NAME = 'munimapProps';
 
 
 /**
@@ -42,12 +42,12 @@ munimap.LIST = [];
 
 /**
  * @param {ol.Map} map
- * @return {munimap.Vars|undefined}
+ * @return {munimap.Props|undefined}
  */
-munimap.getVars = function(map) {
-  var vars = map.get(munimap.VARS_NAME);
-  if (goog.isDef(vars)) {
-    return /**@type {munimap.Vars}*/(vars);
+munimap.getProps = function(map) {
+  var props = map.get(munimap.PROPS_NAME);
+  if (goog.isDef(props)) {
+    return /**@type {munimap.Props}*/(props);
   } else {
     return undefined;
   }
@@ -82,25 +82,25 @@ munimap.changeFloor = function(map, featureOrCode) {
     building = munimap.building.getByCode(floorCode);
   }
 
-  var mapVars = munimap.getVars(map);
+  var mapProps = munimap.getProps(map);
   if (building) {
     var locCode = munimap.building.getLocationCode(building);
-    if (mapVars.activeBuilding !== locCode) {
-      mapVars.activeBuilding = locCode;
+    if (mapProps.activeBuilding !== locCode) {
+      mapProps.activeBuilding = locCode;
       building.changed();
       munimap.info.setBuildingTitle(map, building);
     }
     munimap.info.refreshElementPosition(map);
   }
 
-  var activeFloor = mapVars.activeFloor;
+  var activeFloor = mapProps.activeFloor;
   if (floorCode) {
     if (!activeFloor || activeFloor.locationCode !== floorCode) {
       munimap.setActiveFloor(map, building, floorCode);
     }
   } else {
     if (goog.isDefAndNotNull(activeFloor)) {
-      mapVars.activeFloor = null;
+      mapProps.activeFloor = null;
       munimap.floor.refreshFloorBasedLayers(map);
     }
     if (building) {
@@ -110,9 +110,9 @@ munimap.changeFloor = function(map, featureOrCode) {
         munimap.info.refreshFloorSelect(map, floors);
       });
     } else {
-      if (mapVars.activeBuilding) {
-        building = munimap.building.getByCode(mapVars.activeBuilding);
-        mapVars.activeBuilding = null;
+      if (mapProps.activeBuilding) {
+        building = munimap.building.getByCode(mapProps.activeBuilding);
+        mapProps.activeBuilding = null;
         building.changed();
       }
       munimap.info.refreshFloorSelect(map, null);
@@ -181,14 +181,14 @@ munimap.setActiveFloor = function(map, building, floorCode) {
         munimap.floor.getActiveFloors(map).some(function(code) {
           return code === floorCode;
         });
-    var mapVars = munimap.getVars(map);
-    mapVars.activeFloor = munimap.floor.getFloorObject(newActiveFloor || null);
+    var mapProps = munimap.getProps(map);
+    mapProps.activeFloor = munimap.floor.getFloorObject(newActiveFloor || null);
     munimap.info.refreshFloorSelect(map, floors);
     if (atSameLayerAsActive) {
       return null;
     } else {
       return munimap.floor.loadFloors(
-          'vrstvaId = ' + mapVars.activeFloor.floorLayerId);
+          'vrstvaId = ' + mapProps.activeFloor.floorLayerId);
     }
   }).then(function(floors) {
     if (!!floors) {

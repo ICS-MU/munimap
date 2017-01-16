@@ -144,7 +144,7 @@ munimap.building.style.function =
   }
   var map = options.map;
   goog.asserts.assertInstanceof(map, ol.Map);
-  var activeBuilding = munimap.getVars(map).activeBuilding;
+  var activeBuilding = munimap.getProps(map).activeBuilding;
   var isActive = activeBuilding &&
       activeBuilding === munimap.building.getLocationCode(feature);
   if (isActive &&

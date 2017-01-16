@@ -46,7 +46,7 @@ munimap.floor.TYPE = {
  */
 munimap.floor.getActiveFloors = function(map) {
   var codes = [];
-  var activeFloor = munimap.getVars(map).activeFloor;
+  var activeFloor = munimap.getProps(map).activeFloor;
   if (activeFloor) {
     var floors = munimap.floor.STORE.getFeatures();
     var active = floors.filter(function(floor) {

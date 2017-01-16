@@ -148,7 +148,7 @@ munimap.marker.style.function = function(options, feature, resolution) {
   var result = [];
   if (munimap.room.isRoom(feature)) {
     var locCode = /**@type {string}*/ (feature.get('polohKod'));
-    var activeFloor = munimap.getVars(options.map).activeFloor;
+    var activeFloor = munimap.getProps(options.map).activeFloor;
     var inActiveFloor = activeFloor &&
         munimap.floor.getActiveFloors(options.map).some(function(floorCode) {
           return locCode.startsWith(floorCode);

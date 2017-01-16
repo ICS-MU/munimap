@@ -49,10 +49,10 @@ munimap.info.refreshVisibility = function(map) {
   var view = map.getView();
   var res = view.getResolution();
   goog.asserts.assertNumber(res);
-  var activeBuilding = munimap.getVars(map).activeBuilding;
+  var activeBuilding = munimap.getProps(map).activeBuilding;
   var isShown = !!activeBuilding &&
       munimap.range.contains(munimap.floor.RESOLUTION, res);
-  var element = munimap.getVars(map).info;
+  var element = munimap.getProps(map).info;
   goog.style.setElementShown(element, isShown);
 };
 
@@ -61,8 +61,8 @@ munimap.info.refreshVisibility = function(map) {
  * @param {ol.Map} map
  */
 munimap.info.refreshElementPosition = function(map) {
-  var element = munimap.getVars(map).info;
-  var activeBuilding = munimap.getVars(map).activeBuilding;
+  var element = munimap.getProps(map).info;
+  var activeBuilding = munimap.getProps(map).activeBuilding;
   if (goog.isDefAndNotNull(activeBuilding)) {
     var building = munimap.building.getByCode(activeBuilding);
 
@@ -130,7 +130,7 @@ munimap.info.refreshElementPosition = function(map) {
  * @param {ol.Feature} building
  */
 munimap.info.setBuildingTitle = function(map, building) {
-  var element = munimap.getVars(map).info;
+  var element = munimap.getProps(map).info;
   var complexEl = goog.dom.getElementByClass('complex', element);
   var bel = goog.dom.getElementByClass('building', element);
   if (building) {
@@ -178,7 +178,7 @@ munimap.info.setBuildingTitle = function(map, building) {
  */
 munimap.info.findActiveFloorItem = function(floorSelect, map) {
   var activeItem;
-  var activeFloor = munimap.getVars(map).activeFloor;
+  var activeFloor = munimap.getProps(map).activeFloor;
   if (activeFloor) {
     floorSelect.getMenu().forEachChild(function(item) {
       var floor = /**@type (ol.Feature)*/ (item.getModel());
@@ -198,7 +198,7 @@ munimap.info.findActiveFloorItem = function(floorSelect, map) {
  * @param {Array.<ol.Feature>} floors
  */
 munimap.info.refreshFloorSelect = function(map, floors) {
-  var floorSelect = munimap.getVars(map).floorSelect;
+  var floorSelect = munimap.getProps(map).floorSelect;
   while (floorSelect.getItemAt(0)) {
     floorSelect.removeItemAt(0);
   }

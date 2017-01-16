@@ -228,20 +228,20 @@ munimap.create = function(options) {
         var newFloor =
             /**@type (ol.Feature)*/ (floorSelect.getSelectedItem().getModel());
         var newLocCode = /**@type (string)*/ (newFloor.get('polohKod'));
-        var activeFloor = munimap.getVars(map).activeFloor;
+        var activeFloor = munimap.getProps(map).activeFloor;
         if (!activeFloor || activeFloor.locationCode !== newLocCode) {
           munimap.changeFloor(map, newLocCode);
         }
       });
 
-      var mapVars = {
+      var mapProps = {
         info: infoEl,
         floorSelect: floorSelect,
         activeBuilding: null,
         activeFloor: null,
         currentResolution: goog.asserts.assertNumber(view.getResolution())
       };
-      map.set(munimap.VARS_NAME, mapVars);
+      map.set(munimap.PROPS_NAME, mapProps);
 
       munimap.cluster.updateClusteredFeatures(map, view.getResolution());
 
