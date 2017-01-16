@@ -109,6 +109,20 @@ munimap.building.TYPE = {
 
 
 /**
+ * @type {string}
+ * @const
+ */
+munimap.building.LAYER_ID = 'building';
+
+
+/**
+ * @type {string}
+ * @const
+ */
+munimap.building.LABEL_LAYER_ID = 'building-label';
+
+
+/**
  * @param {string} code
  */
 munimap.building.assertCode = function(code) {

@@ -56,6 +56,13 @@ munimap.complex.TYPE = {
 
 
 /**
+ * @type {string}
+ * @const
+ */
+munimap.complex.LAYER_ID = 'complex';
+
+
+/**
  * @param {number} id
  * @param {Array.<ol.Feature>=} opt_features
  * @return {ol.Feature} building
