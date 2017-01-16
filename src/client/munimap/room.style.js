@@ -231,7 +231,7 @@ munimap.room.style.labelFunction = function(options, feature, resolution) {
   var result = [];
   var map = options.map;
   goog.asserts.assertInstanceof(map, ol.Map);
-  var activeFloor = munimap.getVars(map).activeFloor;
+  var activeFloor = munimap.getProps(map).activeFloor;
   if (activeFloor && locCode.startsWith(activeFloor.locationCode)) {
     var markerSource = options.markerSource;
     var markers = markerSource.getFeatures();

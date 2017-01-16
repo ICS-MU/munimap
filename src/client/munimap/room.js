@@ -249,7 +249,7 @@ munimap.room.getNamePart = function(feature) {
 munimap.room.isInActiveFloor = function(room, map) {
   goog.asserts.assert(munimap.room.isRoom(room));
   var locCode = /**@type {string}*/(room.get('polohKod'));
-  var activeFloor = munimap.getVars(map).activeFloor;
+  var activeFloor = munimap.getProps(map).activeFloor;
   return !!activeFloor && locCode.startsWith(activeFloor.locationCode);
 };
 

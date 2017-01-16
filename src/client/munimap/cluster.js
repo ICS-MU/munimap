@@ -201,10 +201,10 @@ munimap.cluster.containsMarker = function(map, cluster) {
  */
 munimap.cluster.handleMapPrecomposeEvt = function(evt) {
   var map = /**@type {ol.Map}*/(evt.target);
-  var mapVars = munimap.getVars(map);
+  var mapProps = munimap.getProps(map);
   var viewState = evt.frameState.viewState;
 
-  var oldRes = mapVars.currentResolution;
+  var oldRes = mapProps.currentResolution;
   var res = viewState.resolution;
 
   var oldRange = munimap.cluster.getResolutionRange(oldRes);
@@ -214,7 +214,7 @@ munimap.cluster.handleMapPrecomposeEvt = function(evt) {
     munimap.cluster.updateClusteredFeatures(map, res);
   }
 
-  mapVars.currentResolution = res;
+  mapProps.currentResolution = res;
 };
 
 
