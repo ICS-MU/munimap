@@ -68,19 +68,26 @@ munimap.floor.getActiveFloors = function(map) {
  * @param {ol.Map} map
  */
 munimap.floor.refreshFloorBasedLayers = function(map) {
-  var activeRoomLayer = munimap.room.getActiveLayer(map);
-  var activeRoomStore = activeRoomLayer.getSource();
-  activeRoomStore.clear();
+  var activeRoomStore = munimap.room.getActiveStore(map);
+  if (activeRoomStore) {
+    activeRoomStore.clear();
+  }
   var rooms = munimap.room.getDefaultLayer(map);
-  rooms.changed();
+  if (rooms) {
+    rooms.changed();
+  }
 
   var activeDoorLayer = munimap.door.getActiveLayer(map);
-  var activeDoorStore = activeDoorLayer.getSource();
-  activeDoorStore.clear();
+  if (activeDoorLayer) {
+    var activeDoorStore = activeDoorLayer.getSource();
+    activeDoorStore.clear();
+  }
 
   var activePoiLayer = munimap.poi.getActiveLayer(map);
-  var activePoiStore = activePoiLayer.getSource();
-  activePoiStore.clear();
+  if (activePoiLayer) {
+    var activePoiStore = activePoiLayer.getSource();
+    activePoiStore.clear();
+  }
 
   var markers = munimap.marker.getLayer(map);
   markers.changed();

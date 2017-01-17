@@ -74,12 +74,14 @@ munimap.poi.createActiveStore = function(map) {
 
 /**
  * @param {ol.Map} map
- * @return {ol.layer.Vector}
+ * @return {ol.layer.Vector|undefined}
  */
 munimap.poi.getActiveLayer = function(map) {
   var layers = map.getLayers().getArray();
   var result = layers.find(munimap.poi.isActiveLayer);
-  goog.asserts.assertInstanceof(result, ol.layer.Vector);
+  if (result) {
+    goog.asserts.assertInstanceof(result, ol.layer.Vector);
+  }
   return result;
 };
 

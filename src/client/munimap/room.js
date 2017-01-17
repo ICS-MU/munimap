@@ -92,12 +92,14 @@ munimap.room.ACTIVE_LAYER_ID = 'active-room';
 
 /**
  * @param {ol.Map} map
- * @return {ol.layer.Vector}
+ * @return {ol.layer.Vector|undefined}
  */
 munimap.room.getDefaultLayer = function(map) {
   var layers = map.getLayers().getArray();
   var result = layers.find(munimap.room.isDefaultLayer);
-  goog.asserts.assertInstanceof(result, ol.layer.Vector);
+  if (result) {
+    goog.asserts.assertInstanceof(result, ol.layer.Vector);
+  }
   return result;
 };
 
@@ -113,12 +115,30 @@ munimap.room.isDefaultLayer = function(layer) {
 
 /**
  * @param {ol.Map} map
- * @return {ol.layer.Vector}
+ * @return {ol.layer.Vector|undefined}
  */
 munimap.room.getActiveLayer = function(map) {
   var layers = map.getLayers().getArray();
   var result = layers.find(munimap.room.isActiveLayer);
-  goog.asserts.assertInstanceof(result, ol.layer.Vector);
+  if (result) {
+    goog.asserts.assertInstanceof(result, ol.layer.Vector);
+  }
+  return result;
+};
+
+
+/**
+ *
+ * @param {ol.Map} map
+ * @return {ol.source.Vector|undefined}
+ */
+munimap.room.getActiveStore = function(map) {
+  var layer = munimap.room.getActiveLayer(map) ||
+      munimap.room.label.getLayer(map);
+  var result;
+  if (layer) {
+    result = layer.getSource();
+  }
   return result;
 };
 
@@ -277,8 +297,8 @@ munimap.room.loadActive = function(options, extent, resolution, projection) {
     };
     munimap.load.featuresForMap(opts, extent, resolution, projection).then(
         function(rooms) {
-          var activeLayer = munimap.room.getActiveLayer(options.map);
-          var activeStore = activeLayer.getSource();
+          var activeStore = munimap.room.getActiveStore(options.map);
+          goog.asserts.assertInstanceof(activeStore, ol.source.Vector);
           //check if active floor has changed
           var roomsToAdd =
               munimap.store.getNotYetAddedFeatures(activeStore, rooms);
