@@ -12,6 +12,7 @@ munimapx.create;
  *   zoomTo: (Array.<string>|string|undefined),
  *   markers: (Array.<string>|Array.<ol.Feature>|undefined),
  *   markerLabel: (munimap.create.MarkerLabel|undefined),
+ *   layers: (Array.<ol.layer.Vector>|undefined),
  *   lang: (string|undefined),
  *   baseMap: (string|undefined)
  * }}

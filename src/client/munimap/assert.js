@@ -35,6 +35,22 @@ munimap.assert.markers = function(markers) {
 
 
 /**
+ * @param {Array.<ol.layer.Vector>|undefined} layers
+ */
+munimap.assert.layers = function(layers) {
+  if (layers !== undefined) {
+    assert(goog.isArray(layers),
+        'Layers should be an array of ol.layer.Vector objects.');
+
+    var onlyLayers = layers.every(function(layer) {
+      return layer instanceof ol.layer.Vector;
+    });
+    assert(onlyLayers, 'Layers should contain only ol.layer.Vector objects.');
+  }
+};
+
+
+/**
  * @param {string|Element} target
  */
 munimap.assert.target = function(target) {
