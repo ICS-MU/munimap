@@ -71,6 +71,7 @@ munimap.create = function(options) {
         markerLabel: options.markerLabel,
         target: target,
         lang: options.lang,
+        layers: options.layers,
         baseMap: options.baseMap || munimap.BaseMaps.OSM_BW
       };
     }).then(function(options) {
@@ -208,7 +209,7 @@ munimap.create = function(options) {
         updateWhileInteracting: true*/
       });
 
-      var layers = munimap.getDefaultLayers();
+      var layers = options.layers || munimap.getDefaultLayers();
       munimap.create.setDefaultLayersProps({
         layers: layers,
         markersAwareOptions: markerOptions,
@@ -313,6 +314,7 @@ munimap.create.assertOptions = function(options) {
   munimap.assert.zoom(options.zoom);
   munimap.assert.zoomTo(options.zoomTo);
   munimap.assert.markers(options.markers);
+  munimap.assert.layers(options.layers);
   munimap.assert.lang(options.lang);
   munimap.assert.baseMap(options.baseMap);
 };
