@@ -58,12 +58,14 @@ munimap.door.createActiveStore = function(map) {
 
 /**
  * @param {ol.Map} map
- * @return {ol.layer.Vector}
+ * @return {ol.layer.Vector|undefined}
  */
 munimap.door.getActiveLayer = function(map) {
   var layers = map.getLayers().getArray();
   var result = layers.find(munimap.door.isActiveLayer);
-  goog.asserts.assertInstanceof(result, ol.layer.Vector);
+  if (result) {
+    goog.asserts.assertInstanceof(result, ol.layer.Vector);
+  }
   return result;
 };
 

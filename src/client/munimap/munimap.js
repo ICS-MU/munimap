@@ -195,7 +195,9 @@ munimap.setActiveFloor = function(map, building, floorCode) {
       munimap.floor.refreshFloorBasedLayers(map);
     }
     var roomLabels = munimap.room.label.getLayer(map);
-    roomLabels.changed();
+    if (roomLabels) {
+      roomLabels.changed();
+    }
   });
 };
 
