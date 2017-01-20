@@ -81,6 +81,8 @@ munimap.getDefaultLayers = function() {
 
   var buildingLabels = new ol.layer.Vector({
     id: munimap.building.LABEL_LAYER_ID,
+    'isFeatureClickable': munimap.building.isClickable,
+    'featureClickHandler': munimap.building.featureClickHandler,
     source: munimap.building.STORE,
     updateWhileAnimating: true,
     updateWhileInteracting: false,
