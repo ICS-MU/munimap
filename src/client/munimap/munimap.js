@@ -361,7 +361,8 @@ munimap.handleClickOnPixel = function(map, pixel) {
     var view = map.getView();
     var resolution = view.getResolution();
     goog.asserts.assertNumber(resolution);
-    if (clickedFeature && layer.get('id') === munimap.building.LAYER_ID) {
+    if (clickedFeature && munimap.building.isBuilding(clickedFeature) &&
+        layer.get('id') !== munimap.marker.LAYER_ID) {
       var isClickable = layer.get('isFeatureClickable');
       if (isClickable) {
         goog.asserts.assertFunction(isClickable);
