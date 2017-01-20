@@ -14,6 +14,8 @@ goog.require('munimap.room.label');
 munimap.getDefaultLayers = function() {
   var buildings = new ol.layer.Vector({
     id: munimap.building.LAYER_ID,
+    'isFeatureClickable': munimap.building.isClickable,
+    'featureClickHandler': munimap.building.featureClickHandler,
     source: munimap.building.STORE,
     maxResolution: munimap.complex.RESOLUTION.max,
     updateWhileAnimating: true,

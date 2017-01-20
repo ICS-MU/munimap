@@ -55,6 +55,44 @@ munimap.getProps = function(map) {
 
 
 /**
+ * @typedef {{
+ *   feature: (ol.Feature),
+ *   layer: (ol.layer.Vector)
+ * }}
+ */
+munimap.FeatureContext;
+
+
+/**
+ *
+ * @typedef {
+ *  function(munimap.featureClickHandlerOptions)
+ * }
+ */
+munimap.featureClickHandlerFunction;
+
+
+/**
+ * @typedef {{
+ *   feature: ol.Feature,
+ *   layer: ol.layer.Vector,
+ *   map: ol.Map,
+ *   pixel: ol.Pixel,
+ *   resolution: number
+ * }}
+ */
+munimap.featureClickHandlerOptions;
+
+
+/**
+ * @typedef {
+ *    function(munimap.featureClickHandlerOptions): boolean
+ * }
+ */
+munimap.isFeatureClickableFunction;
+
+
+/**
  * @param {ol.Map} map
  * @param {ol.Feature|string|null} featureOrCode
  */
@@ -266,15 +304,6 @@ munimap.getMainFeatureAtPixel = function(map, pixel) {
 
 
 /**
- * @typedef {{
- *   feature: (ol.Feature),
- *   layer: (ol.layer.Vector)
- * }}
- */
-munimap.FeatureContext;
-
-
-/**
  * @param {ol.Map} map
  * @param {ol.Feature} feature
  * @param {number} resolution
@@ -310,12 +339,9 @@ munimap.isFeatureClickable = function(map, feature, resolution) {
     if (munimap.range.contains(munimap.range.createResolution(
         munimap.floor.RESOLUTION.max, munimap.complex.RESOLUTION.min),
         resolution)) {
-      return munimap.building.isBuilding(feature) &&
-          munimap.building.hasInnerGeometry(feature);
+      return buildingWithGeometry;
     } else if (munimap.range.contains(munimap.complex.RESOLUTION, resolution)) {
-      return munimap.complex.isComplex(feature) ||
-          (munimap.building.isBuilding(feature) &&
-          munimap.building.hasInnerGeometry(feature));
+      return munimap.complex.isComplex(feature) || buildingWithGeometry;
     }
   }
   return false;
@@ -328,89 +354,112 @@ munimap.isFeatureClickable = function(map, feature, resolution) {
  */
 munimap.handleClickOnPixel = function(map, pixel) {
   var featureCtx = munimap.getMainFeatureAtPixel(map, pixel);
-  var clickedFeature = featureCtx ? featureCtx.feature : null;
-  if (clickedFeature) {
+  if (featureCtx) {
+    var clickedFeature = featureCtx.feature;
+    var layer = featureCtx.layer;
+
     var view = map.getView();
     var resolution = view.getResolution();
     goog.asserts.assertNumber(resolution);
-    if (!munimap.isFeatureClickable(map, clickedFeature, resolution)) {
-      return;
-    }
-    var size = map.getSize() || null;
-    var viewExtent = view.calculateExtent(size);
-    goog.asserts.assertNumber(resolution);
-    if (munimap.range.contains(
-        munimap.cluster.BUILDING_RESOLUTION, resolution) &&
-        !munimap.cluster.isCluster(clickedFeature)) {
-      return;
-    }
-    var zoomTo;
-    if (munimap.cluster.isCluster(clickedFeature)) {
-      zoomTo = munimap.handleClickOnCluster(map, clickedFeature);
-    } else if (munimap.complex.isComplex(clickedFeature)) {
-      munimap.handleClickOnComplex(map, clickedFeature);
-    } else if ((munimap.building.isBuilding(clickedFeature) &&
-        munimap.building.hasInnerGeometry(clickedFeature)) ||
-        munimap.room.isRoom(clickedFeature)) {
-      zoomTo = clickedFeature;
-    } else if (munimap.poi.isPoi(clickedFeature)) {
-      var poiType = clickedFeature.get('typ');
-      if (poiType === munimap.poi.Purpose.BUILDING_ENTRANCE ||
-          poiType === munimap.poi.Purpose.BUILDING_COMPLEX_ENTRANCE) {
-        zoomTo = clickedFeature;
-      }
-    }
-    if (zoomTo) {
-      var floorResolution = view.constrainResolution(
-          munimap.floor.RESOLUTION.max);
-      if (munimap.marker.custom.isCustom(zoomTo)) {
-        view.setCenter(zoomTo.getGeometry().getCoordinates());
-        if (resolution > (floorResolution * 2)) {
-          view.setResolution(floorResolution * 2);
-        }
-      } else if ((munimap.building.isBuilding(zoomTo) &&
-          munimap.building.hasInnerGeometry(zoomTo)) ||
-          munimap.room.isRoom(zoomTo) || munimap.poi.isPoi(zoomTo)) {
-        var wasInnerGeomShown =
-            munimap.range.contains(munimap.floor.RESOLUTION, resolution);
-        if (!wasInnerGeomShown) {
-          if (goog.isDef(floorResolution)) {
-            var center;
-            if (munimap.cluster.isCluster(clickedFeature) ||
-                munimap.room.isRoom(zoomTo)) {
-              var extent = munimap.extent.ofFeature(zoomTo);
-              center = ol.extent.getCenter(extent);
-            } else if (munimap.poi.isPoi(zoomTo)) {
-              var point = /**@type {ol.geom.Point}*/ (zoomTo.getGeometry());
-              center = point.getCoordinates();
-            } else {
-              center =
-                  munimap.getClosestPointToPixel(map, clickedFeature, pixel);
-            }
-            var futureExtent = ol.extent.getForViewAndSize(center,
-                floorResolution, view.getRotation(), size);
-            munimap.move.setAnimation(map, viewExtent, futureExtent);
-            view.setCenter(center);
-            view.setResolution(floorResolution);
+    if (clickedFeature && layer.get('id') === munimap.building.LAYER_ID) {
+      var isClickable = layer.get('isFeatureClickable');
+      if (isClickable) {
+        goog.asserts.assertFunction(isClickable);
+        var handlerOpts = {
+          feature: clickedFeature,
+          layer: featureCtx.layer,
+          map: map,
+          pixel: pixel,
+          resolution: resolution
+        };
+        if (isClickable(handlerOpts)) {
+          var featureClickHandler = layer.get('featureClickHandler');
+          if (featureClickHandler) {
+            goog.asserts.assertFunction(featureClickHandler);
+            featureClickHandler(handlerOpts);
           }
         }
-        munimap.changeFloor(map, zoomTo);
-        if (wasInnerGeomShown) {
-          munimap.info.refreshVisibility(map);
-        }
-      } else {
-        var extent = munimap.extent.ofFeature(zoomTo);
-        munimap.move.setAnimation(map, viewExtent, extent);
-        view.fit(extent, size);
       }
-      map.renderSync();
-    } else if (!munimap.cluster.isCluster(clickedFeature) &&
-        !munimap.building.isBuilding(clickedFeature) &&
-        !munimap.complex.isComplex(clickedFeature) &&
-        (!munimap.poi.isPoi(clickedFeature) ||
-        munimap.range.contains(munimap.floor.RESOLUTION, resolution))) {
-      munimap.changeFloor(map, clickedFeature);
-      munimap.info.refreshVisibility(map);
+    } else if (clickedFeature) {
+      if (!munimap.isFeatureClickable(map, clickedFeature, resolution)) {
+        return;
+      }
+      var size = map.getSize() || null;
+      var viewExtent = view.calculateExtent(size);
+      goog.asserts.assertNumber(resolution);
+      if (munimap.range.contains(
+          munimap.cluster.BUILDING_RESOLUTION, resolution) &&
+          !munimap.cluster.isCluster(clickedFeature)) {
+        return;
+      }
+      var zoomTo;
+      if (munimap.cluster.isCluster(clickedFeature)) {
+        zoomTo = munimap.handleClickOnCluster(map, clickedFeature);
+      } else if (munimap.complex.isComplex(clickedFeature)) {
+        munimap.handleClickOnComplex(map, clickedFeature);
+      } else if ((munimap.building.isBuilding(clickedFeature) &&
+          munimap.building.hasInnerGeometry(clickedFeature)) ||
+          munimap.room.isRoom(clickedFeature)) {
+        zoomTo = clickedFeature;
+      } else if (munimap.poi.isPoi(clickedFeature)) {
+        var poiType = clickedFeature.get('typ');
+        if (poiType === munimap.poi.Purpose.BUILDING_ENTRANCE ||
+            poiType === munimap.poi.Purpose.BUILDING_COMPLEX_ENTRANCE) {
+          zoomTo = clickedFeature;
+        }
+      }
+      if (zoomTo) {
+        var floorResolution = view.constrainResolution(
+            munimap.floor.RESOLUTION.max);
+        if (munimap.marker.custom.isCustom(zoomTo)) {
+          view.setCenter(zoomTo.getGeometry().getCoordinates());
+          if (resolution > (floorResolution * 2)) {
+            view.setResolution(floorResolution * 2);
+          }
+        } else if ((munimap.building.isBuilding(zoomTo) &&
+            munimap.building.hasInnerGeometry(zoomTo)) ||
+            munimap.room.isRoom(zoomTo) || munimap.poi.isPoi(zoomTo)) {
+          var wasInnerGeomShown =
+              munimap.range.contains(munimap.floor.RESOLUTION, resolution);
+          if (!wasInnerGeomShown) {
+            if (goog.isDef(floorResolution)) {
+              var center;
+              if (munimap.cluster.isCluster(clickedFeature) ||
+                  munimap.room.isRoom(zoomTo)) {
+                var extent = munimap.extent.ofFeature(zoomTo);
+                center = ol.extent.getCenter(extent);
+              } else if (munimap.poi.isPoi(zoomTo)) {
+                var point = /**@type {ol.geom.Point}*/ (zoomTo.getGeometry());
+                center = point.getCoordinates();
+              } else {
+                center =
+                    munimap.getClosestPointToPixel(map, clickedFeature, pixel);
+              }
+              var futureExtent = ol.extent.getForViewAndSize(center,
+                  floorResolution, view.getRotation(), size);
+              munimap.move.setAnimation(map, viewExtent, futureExtent);
+              view.setCenter(center);
+              view.setResolution(floorResolution);
+            }
+          }
+          munimap.changeFloor(map, zoomTo);
+          if (wasInnerGeomShown) {
+            munimap.info.refreshVisibility(map);
+          }
+        } else {
+          var extent = munimap.extent.ofFeature(zoomTo);
+          munimap.move.setAnimation(map, viewExtent, extent);
+          view.fit(extent, size);
+        }
+        map.renderSync();
+      } else if (!munimap.cluster.isCluster(clickedFeature) &&
+          !munimap.building.isBuilding(clickedFeature) &&
+          !munimap.complex.isComplex(clickedFeature) &&
+          (!munimap.poi.isPoi(clickedFeature) ||
+          munimap.range.contains(munimap.floor.RESOLUTION, resolution))) {
+        munimap.changeFloor(map, clickedFeature);
+        munimap.info.refreshVisibility(map);
+      }
     }
   }
 };
@@ -509,7 +558,6 @@ munimap.handleClickOnComplex = function(map, complex) {
  * @param {ol.Feature} feature
  * @param {ol.Pixel} pixel
  * @return {ol.Coordinate}
- * @protected
  */
 munimap.getClosestPointToPixel = function(map, feature, pixel) {
   var coordinate = map.getCoordinateFromPixel(pixel);
