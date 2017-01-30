@@ -55,6 +55,8 @@ munimap.getDefaultLayers = function() {
 
   var poi = new ol.layer.Vector({
     id: munimap.poi.ACTIVE_LAYER_ID,
+    'isFeatureClickable': munimap.poi.isClickable,
+    'featureClickHandler': munimap.poi.featureClickHandler,
     maxResolution: munimap.poi.RESOLUTION.max,
     source: null,
     updateWhileAnimating: true,
