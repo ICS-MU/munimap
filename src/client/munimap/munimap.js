@@ -361,24 +361,22 @@ munimap.handleClickOnPixel = function(map, pixel) {
     var view = map.getView();
     var resolution = view.getResolution();
     goog.asserts.assertNumber(resolution);
-    if (clickedFeature && munimap.building.isBuilding(clickedFeature) &&
-        layer.get('id') !== munimap.marker.LAYER_ID) {
-      var isClickable = layer.get('isFeatureClickable');
-      if (isClickable) {
-        goog.asserts.assertFunction(isClickable);
-        var handlerOpts = {
-          feature: clickedFeature,
-          layer: featureCtx.layer,
-          map: map,
-          pixel: pixel,
-          resolution: resolution
-        };
-        if (isClickable(handlerOpts)) {
-          var featureClickHandler = layer.get('featureClickHandler');
-          if (featureClickHandler) {
-            goog.asserts.assertFunction(featureClickHandler);
-            featureClickHandler(handlerOpts);
-          }
+
+    var isClickable = layer.get('isFeatureClickable');
+    if (isClickable) {
+      goog.asserts.assertFunction(isClickable);
+      var handlerOpts = {
+        feature: clickedFeature,
+        layer: featureCtx.layer,
+        map: map,
+        pixel: pixel,
+        resolution: resolution
+      };
+      if (isClickable(handlerOpts)) {
+        var featureClickHandler = layer.get('featureClickHandler');
+        if (featureClickHandler) {
+          goog.asserts.assertFunction(featureClickHandler);
+          featureClickHandler(handlerOpts);
         }
       }
     } else if (clickedFeature) {
