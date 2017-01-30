@@ -106,6 +106,56 @@ munimap.poi.isPoi = function(feature) {
 
 
 /**
+ * @param {munimap.featureClickHandlerOptions} options
+ * @return {boolean}
+ */
+munimap.poi.isClickable = function(options) {
+  var feature = options.feature;
+  var resolution = options.resolution;
+
+  if (!munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
+    var poiType = feature.get('typ');
+    return poiType === munimap.poi.Purpose.BUILDING_ENTRANCE ||
+        poiType === munimap.poi.Purpose.BUILDING_COMPLEX_ENTRANCE;
+  }
+  return false;
+};
+
+
+/**
+ * @param {munimap.featureClickHandlerOptions} options
+ */
+munimap.poi.featureClickHandler = function(options) {
+  var feature = options.feature;
+  var map = options.map;
+  var resolution = options.resolution;
+
+  var view = map.getView();
+  var wasInnerGeomShown =
+      munimap.range.contains(munimap.floor.RESOLUTION, resolution);
+  var floorResolution = view.constrainResolution(
+      munimap.floor.RESOLUTION.max);
+  if (!wasInnerGeomShown) {
+    if (goog.isDef(floorResolution)) {
+      var point = /**@type {ol.geom.Point}*/ (feature.getGeometry());
+      var center = point.getCoordinates();
+      var size = map.getSize() || null;
+      var viewExtent = view.calculateExtent(size);
+      var futureExtent = ol.extent.getForViewAndSize(center,
+          floorResolution, view.getRotation(), size);
+      munimap.move.setAnimation(map, viewExtent, futureExtent);
+      view.setCenter(center);
+      view.setResolution(floorResolution);
+    }
+  }
+  munimap.changeFloor(map, feature);
+  if (wasInnerGeomShown) {
+    munimap.info.refreshVisibility(map);
+  }
+};
+
+
+/**
  * @param {munimap.load.floorBasedActive.Options} options
  * @param {ol.Extent} extent
  * @param {number} resolution
