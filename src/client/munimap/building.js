@@ -203,7 +203,6 @@ munimap.building.isClickable = function(options) {
 
 /**
  * @param {munimap.featureClickHandlerOptions} options
- * @return {undefined}
  */
 munimap.building.featureClickHandler = function(options) {
   var feature = options.feature;

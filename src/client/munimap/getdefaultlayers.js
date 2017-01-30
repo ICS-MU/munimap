@@ -35,6 +35,8 @@ munimap.getDefaultLayers = function() {
 
   var activeRooms = new ol.layer.Vector({
     id: munimap.room.ACTIVE_LAYER_ID,
+    'isFeatureClickable': munimap.room.isClickable,
+    'featureClickHandler': munimap.room.featureClickHandler,
     maxResolution: munimap.floor.RESOLUTION.max,
     source: null,
     updateWhileAnimating: true,

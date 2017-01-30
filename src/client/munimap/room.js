@@ -224,6 +224,30 @@ munimap.room.assertCodeOrLikeExpr = function(code) {
 
 
 /**
+ * @param {munimap.featureClickHandlerOptions} options
+ * @return {boolean}
+ */
+munimap.room.isClickable = function(options) {
+  var feature = options.feature;
+  var map = options.map;
+
+  return !munimap.room.isInActiveFloor(feature, map);
+};
+
+
+/**
+ * @param {munimap.featureClickHandlerOptions} options
+ */
+munimap.room.featureClickHandler = function(options) {
+  var feature = options.feature;
+  var map = options.map;
+
+  munimap.changeFloor(map, feature);
+  munimap.info.refreshVisibility(map);
+};
+
+
+/**
  * @param {ol.Feature} feature
  * @return {string|undefined}
  */
