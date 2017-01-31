@@ -197,6 +197,86 @@ munimap.cluster.containsMarker = function(map, cluster) {
 
 
 /**
+ * @param {munimap.featureClickHandlerOptions} options
+ * @return {boolean}
+ */
+munimap.cluster.isClickable = function(options) {
+  return true;
+};
+
+
+/**
+ * @param {munimap.featureClickHandlerOptions} options
+ */
+munimap.cluster.featureClickHandler = function(options) {
+  var feature = options.feature;
+  var map = options.map;
+  var resolution = options.resolution;
+
+  var view = map.getView();
+  var size = map.getSize() || null;
+  var viewExtent = view.calculateExtent(size);
+
+  var clusteredFeatures = munimap.cluster.getMainFeatures(map, feature);
+  if (clusteredFeatures.length === 1) {
+    var zoomTo = clusteredFeatures[0];
+    var floorResolution =
+        view.constrainResolution(munimap.floor.RESOLUTION.max);
+    var wasInnerGeomShown =
+        munimap.range.contains(munimap.floor.RESOLUTION, resolution);
+    if (!wasInnerGeomShown) {
+      if (goog.isDef(floorResolution)) {
+        var extent = munimap.extent.ofFeature(zoomTo);
+        var center = ol.extent.getCenter(extent);
+        var futureExtent = ol.extent.getForViewAndSize(center,
+            floorResolution, view.getRotation(), size);
+        munimap.move.setAnimation(map, viewExtent, futureExtent);
+        view.setCenter(center);
+        view.setResolution(floorResolution);
+      }
+    }
+    munimap.changeFloor(map, zoomTo);
+    if (wasInnerGeomShown) {
+      munimap.info.refreshVisibility(map);
+    }
+  } else {
+    var showOneBuilding = false;
+    if (munimap.room.isRoom(clusteredFeatures[0])) {
+      var locCode = /**@type {string}*/(clusteredFeatures[0].get('polohKod'));
+      var bldgCode = locCode.substr(0, 5);
+      var floorCode = locCode.substr(0, 8);
+      showOneBuilding = clusteredFeatures.every(function(room) {
+        var locCode = /**@type {string}*/(room.get('polohKod'));
+        return bldgCode === locCode.substr(0, 5);
+      }) && clusteredFeatures.some(function(room) {
+        var locCode = /**@type {string}*/(room.get('polohKod'));
+        return floorCode !== locCode.substr(0, 8);
+      });
+    }
+
+    if (showOneBuilding) {
+      var extent = munimap.extent.ofFeatures(clusteredFeatures);
+      goog.asserts.assertArray(size);
+      var bldgExtent = ol.extent.getForViewAndSize(
+          ol.extent.getCenter(extent), munimap.floor.RESOLUTION.max,
+          view.getRotation(), size);
+      if (ol.extent.containsExtent(bldgExtent, extent)) {
+        extent = bldgExtent;
+      }
+      munimap.move.setAnimation(map, viewExtent, extent);
+      view.fit(extent, size);
+    } else {
+      var extent = munimap.extent.ofFeatures(clusteredFeatures);
+      goog.asserts.assertArray(size);
+      munimap.move.setAnimation(map, viewExtent, extent);
+      view.fit(extent, size);
+    }
+    map.renderSync();
+  }
+};
+
+
+/**
  * @param {ol.render.Event} evt
  */
 munimap.cluster.handleMapPrecomposeEvt = function(evt) {

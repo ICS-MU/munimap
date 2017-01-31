@@ -200,6 +200,8 @@ munimap.create = function(options) {
       });
       var markerClusterLayer = new ol.layer.Vector({
         id: munimap.cluster.LAYER_ID,
+        'isFeatureClickable': munimap.cluster.isClickable,
+        'featureClickHandler': munimap.cluster.featureClickHandler,
         source: markerClusterSrc,
         style: goog.partial(
             munimap.cluster.style.function, markerOptions),
