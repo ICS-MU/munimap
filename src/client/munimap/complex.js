@@ -99,6 +99,54 @@ munimap.complex.getBuildingCount = function(complex) {
 
 
 /**
+ * @param {munimap.featureClickHandlerOptions} options
+ * @return {boolean}
+ */
+munimap.complex.isClickable = function(options) {
+  var resolution = options.resolution;
+
+  return munimap.range.contains(munimap.complex.RESOLUTION, resolution);
+};
+
+
+/**
+ * @param {munimap.featureClickHandlerOptions} options
+ */
+munimap.complex.featureClickHandler = function(options) {
+  var feature = options.feature;
+  var map = options.map;
+
+  var complexId = /**@type {number}*/ (
+      feature.get(munimap.complex.ID_FIELD_NAME)
+      );
+  var complexBldgs = munimap.building.STORE.getFeatures().filter(
+      function(bldg) {
+        var cId = bldg.get('arealId');
+        if (goog.isDefAndNotNull(cId)) {
+          goog.asserts.assertNumber(cId);
+          if (complexId === cId) {
+            return true;
+          }
+        }
+        return false;
+      });
+  var extent = munimap.extent.ofFeatures(complexBldgs);
+  var view = map.getView();
+  var size = map.getSize() || null;
+  var futureRes;
+  if (complexBldgs.length === 1) {
+    futureRes = munimap.floor.RESOLUTION.max / 2;
+  } else {
+    futureRes = munimap.complex.RESOLUTION.min / 2;
+  }
+  var futureExtent = ol.extent.getForViewAndSize(
+      ol.extent.getCenter(extent), futureRes, view.getRotation(), size);
+  munimap.move.setAnimation(map, view.calculateExtent(size), futureExtent);
+  view.fit(futureExtent, size);
+};
+
+
+/**
  * @param {munimap.style.MarkersAwareOptions} options
  * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
