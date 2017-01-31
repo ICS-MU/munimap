@@ -75,6 +75,8 @@ munimap.getDefaultLayers = function() {
 
   var complexes = new ol.layer.Vector({
     id: munimap.complex.LAYER_ID,
+    'isFeatureClickable': munimap.complex.isClickable,
+    'featureClickHandler': munimap.complex.featureClickHandler,
     source: munimap.complex.STORE,
     minResolution: munimap.complex.RESOLUTION.min,
     maxResolution: munimap.complex.RESOLUTION.max,
