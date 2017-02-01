@@ -222,22 +222,29 @@ munimap.cluster.featureClickHandler = function(options) {
     var zoomTo = clusteredFeatures[0];
     var floorResolution =
         view.constrainResolution(munimap.floor.RESOLUTION.max);
-    var wasInnerGeomShown =
-        munimap.range.contains(munimap.floor.RESOLUTION, resolution);
-    if (!wasInnerGeomShown) {
-      if (goog.isDef(floorResolution)) {
-        var extent = munimap.extent.ofFeature(zoomTo);
-        var center = ol.extent.getCenter(extent);
-        var futureExtent = ol.extent.getForViewAndSize(center,
-            floorResolution, view.getRotation(), size);
-        munimap.move.setAnimation(map, viewExtent, futureExtent);
-        view.setCenter(center);
-        view.setResolution(floorResolution);
+    if (munimap.marker.custom.isCustom(zoomTo)) {
+      view.setCenter(zoomTo.getGeometry().getCoordinates());
+      if (resolution > (floorResolution * 2)) {
+        view.setResolution(floorResolution * 2);
       }
-    }
-    munimap.changeFloor(map, zoomTo);
-    if (wasInnerGeomShown) {
-      munimap.info.refreshVisibility(map);
+    } else {
+      var wasInnerGeomShown =
+          munimap.range.contains(munimap.floor.RESOLUTION, resolution);
+      if (!wasInnerGeomShown) {
+        if (goog.isDef(floorResolution)) {
+          var extent = munimap.extent.ofFeature(zoomTo);
+          var center = ol.extent.getCenter(extent);
+          var futureExtent = ol.extent.getForViewAndSize(center,
+              floorResolution, view.getRotation(), size);
+          munimap.move.setAnimation(map, viewExtent, futureExtent);
+          view.setCenter(center);
+          view.setResolution(floorResolution);
+        }
+      }
+      munimap.changeFloor(map, zoomTo);
+      if (wasInnerGeomShown) {
+        munimap.info.refreshVisibility(map);
+      }
     }
   } else {
     var showOneBuilding = false;
