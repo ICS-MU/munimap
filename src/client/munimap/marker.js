@@ -74,6 +74,68 @@ munimap.marker.isMarker = function(map, feature) {
 
 
 /**
+ * @param {munimap.featureClickHandlerOptions} options
+ * @return {boolean}
+ */
+munimap.marker.isClickable = function(options) {
+  var feature = options.feature;
+  var map = options.map;
+  var resolution = options.resolution;
+
+  if (munimap.marker.custom.isCustom(feature)) {
+    return false;
+  } else if (munimap.building.isBuilding(feature)) {
+    return munimap.building.hasInnerGeometry(feature) &&
+        (!munimap.range.contains(munimap.floor.RESOLUTION, resolution) ||
+        !munimap.building.isActive(feature, map));
+  } else {
+    return munimap.room.isRoom(feature) &&
+        (!munimap.range.contains(munimap.floor.RESOLUTION, resolution) ||
+        !munimap.room.isInActiveFloor(feature, map));
+  }
+};
+
+
+/**
+ * @param {munimap.featureClickHandlerOptions} options
+ */
+munimap.marker.featureClickHandler = function(options) {
+  var feature = options.feature;
+  var map = options.map;
+  var pixel = options.pixel;
+  var resolution = options.resolution;
+
+  var view = map.getView();
+  var wasInnerGeomShown =
+      munimap.range.contains(munimap.floor.RESOLUTION, resolution);
+  var floorResolution = view.constrainResolution(
+      munimap.floor.RESOLUTION.max);
+  if (!wasInnerGeomShown) {
+    if (goog.isDef(floorResolution)) {
+      var center;
+      if (munimap.room.isRoom(feature)) {
+        var extent = munimap.extent.ofFeature(feature);
+        center = ol.extent.getCenter(extent);
+      } else {
+        center = munimap.getClosestPointToPixel(map, feature, pixel);
+      }
+      var size = map.getSize() || null;
+      var viewExtent = view.calculateExtent(size);
+      var futureExtent = ol.extent.getForViewAndSize(center,
+          floorResolution, view.getRotation(), size);
+      munimap.move.setAnimation(map, viewExtent, futureExtent);
+      view.setCenter(center);
+      view.setResolution(floorResolution);
+    }
+  }
+  munimap.changeFloor(map, feature);
+  if (wasInnerGeomShown) {
+    munimap.info.refreshVisibility(map);
+  }
+};
+
+
+/**
  * @type {munimap.type.SimpleOptions}
  * @const
  */
@@ -150,5 +212,3 @@ munimap.marker.custom.decorate = function(feature) {
   var transformFn = ol.proj.getTransform('EPSG:4326', 'EPSG:3857');
   geom.applyTransform(transformFn);
 };
-
-

@@ -177,6 +177,8 @@ munimap.create = function(options) {
 
       var markerLayer = new ol.layer.Vector({
         id: munimap.marker.LAYER_ID,
+        'isFeatureClickable': munimap.marker.isClickable,
+        'featureClickHandler': munimap.marker.featureClickHandler,
         source: markerSource,
         style: goog.partial(munimap.marker.style.function, markerOptions),
         maxResolution: munimap.marker.RESOLUTION.max,
