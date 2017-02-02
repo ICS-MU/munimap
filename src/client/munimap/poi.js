@@ -1,5 +1,6 @@
 goog.provide('munimap.poi');
 
+goog.require('munimap.feature');
 goog.require('munimap.load');
 goog.require('munimap.load.floorBasedActive');
 goog.require('munimap.store');
@@ -130,23 +131,12 @@ munimap.poi.featureClickHandler = function(options) {
   var map = options.map;
   var resolution = options.resolution;
 
-  var view = map.getView();
   var wasInnerGeomShown =
       munimap.range.contains(munimap.floor.RESOLUTION, resolution);
-  var floorResolution = view.constrainResolution(
-      munimap.floor.RESOLUTION.max);
   if (!wasInnerGeomShown) {
-    if (goog.isDef(floorResolution)) {
-      var point = /**@type {ol.geom.Point}*/ (feature.getGeometry());
-      var center = point.getCoordinates();
-      var size = map.getSize() || null;
-      var viewExtent = view.calculateExtent(size);
-      var futureExtent = ol.extent.getForViewAndSize(center,
-          floorResolution, view.getRotation(), size);
-      munimap.move.setAnimation(map, viewExtent, futureExtent);
-      view.setCenter(center);
-      view.setResolution(floorResolution);
-    }
+    var point = /**@type {ol.geom.Point}*/ (feature.getGeometry());
+    var center = point.getCoordinates();
+    munimap.feature.zoomToCenter(map, center);
   }
   munimap.changeFloor(map, feature);
   if (wasInnerGeomShown) {
