@@ -28,23 +28,3 @@ munimap.feature.getClosestPointToPixel = function(map, feature, pixel) {
     return closestPoint || null;
   }
 };
-
-
-/**
- *
- * @param {ol.Map} map
- * @param {ol.Coordinate} center
- */
-munimap.feature.zoomToCenter = function(map, center) {
-  var view = map.getView();
-  var size = map.getSize() || null;
-  var viewExtent = view.calculateExtent(size);
-  var floorResolution = view.constrainResolution(
-      munimap.floor.RESOLUTION.max);
-  goog.asserts.assertNumber(floorResolution);
-  var futureExtent = ol.extent.getForViewAndSize(center,
-      floorResolution, view.getRotation(), size);
-  munimap.move.setAnimation(map, viewExtent, futureExtent);
-  view.setCenter(center);
-  view.setResolution(floorResolution);
-};

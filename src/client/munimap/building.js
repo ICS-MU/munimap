@@ -5,6 +5,7 @@ goog.require('assert');
 goog.require('munimap.feature');
 goog.require('munimap.lang');
 goog.require('munimap.load');
+goog.require('munimap.map');
 goog.require('munimap.store');
 goog.require('munimap.type');
 goog.require('munimap.unit');
@@ -214,9 +215,8 @@ munimap.building.featureClickHandler = function(options) {
   var wasInnerGeomShown =
       munimap.range.contains(munimap.floor.RESOLUTION, resolution);
   if (!wasInnerGeomShown) {
-    var center =
-        munimap.feature.getClosestPointToPixel(map, feature, pixel);
-    munimap.feature.zoomToCenter(map, center);
+    var point = munimap.feature.getClosestPointToPixel(map, feature, pixel);
+    munimap.map.zoomToPoint(map, point);
   }
   munimap.changeFloor(map, feature);
   if (wasInnerGeomShown) {
