@@ -2,6 +2,7 @@ goog.provide('munimap.marker');
 goog.provide('munimap.marker.custom');
 
 goog.require('assert');
+goog.require('munimap.feature');
 goog.require('munimap.range');
 goog.require('munimap.style');
 
@@ -105,28 +106,17 @@ munimap.marker.featureClickHandler = function(options) {
   var pixel = options.pixel;
   var resolution = options.resolution;
 
-  var view = map.getView();
   var wasInnerGeomShown =
       munimap.range.contains(munimap.floor.RESOLUTION, resolution);
-  var floorResolution = view.constrainResolution(
-      munimap.floor.RESOLUTION.max);
   if (!wasInnerGeomShown) {
-    if (goog.isDef(floorResolution)) {
-      var center;
-      if (munimap.room.isRoom(feature)) {
-        var extent = munimap.extent.ofFeature(feature);
-        center = ol.extent.getCenter(extent);
-      } else {
-        center = munimap.getClosestPointToPixel(map, feature, pixel);
-      }
-      var size = map.getSize() || null;
-      var viewExtent = view.calculateExtent(size);
-      var futureExtent = ol.extent.getForViewAndSize(center,
-          floorResolution, view.getRotation(), size);
-      munimap.move.setAnimation(map, viewExtent, futureExtent);
-      view.setCenter(center);
-      view.setResolution(floorResolution);
+    var center;
+    if (munimap.room.isRoom(feature)) {
+      var extent = munimap.extent.ofFeature(feature);
+      center = ol.extent.getCenter(extent);
+    } else {
+      center = munimap.feature.getClosestPointToPixel(map, feature, pixel);
     }
+    munimap.feature.zoomToCenter(map, center);
   }
   munimap.changeFloor(map, feature);
   if (wasInnerGeomShown) {

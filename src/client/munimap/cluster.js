@@ -3,6 +3,7 @@ goog.provide('munimap.cluster.style');
 
 goog.require('goog.array');
 goog.require('goog.object');
+goog.require('munimap.feature');
 goog.require('munimap.lang');
 goog.require('munimap.marker.style');
 goog.require('munimap.range');
@@ -231,15 +232,9 @@ munimap.cluster.featureClickHandler = function(options) {
       var wasInnerGeomShown =
           munimap.range.contains(munimap.floor.RESOLUTION, resolution);
       if (!wasInnerGeomShown) {
-        if (goog.isDef(floorResolution)) {
-          var extent = munimap.extent.ofFeature(zoomTo);
-          var center = ol.extent.getCenter(extent);
-          var futureExtent = ol.extent.getForViewAndSize(center,
-              floorResolution, view.getRotation(), size);
-          munimap.move.setAnimation(map, viewExtent, futureExtent);
-          view.setCenter(center);
-          view.setResolution(floorResolution);
-        }
+        var extent = munimap.extent.ofFeature(zoomTo);
+        var center = ol.extent.getCenter(extent);
+        munimap.feature.zoomToCenter(map, center);
       }
       munimap.changeFloor(map, zoomTo);
       if (wasInnerGeomShown) {

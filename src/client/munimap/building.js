@@ -2,6 +2,7 @@ goog.provide('munimap.building');
 goog.provide('munimap.building.load');
 
 goog.require('assert');
+goog.require('munimap.feature');
 goog.require('munimap.lang');
 goog.require('munimap.load');
 goog.require('munimap.store');
@@ -210,21 +211,12 @@ munimap.building.featureClickHandler = function(options) {
   var pixel = options.pixel;
   var resolution = options.resolution;
 
-  var view = map.getView();
   var wasInnerGeomShown =
       munimap.range.contains(munimap.floor.RESOLUTION, resolution);
-  var floorResolution = view.constrainResolution(
-      munimap.floor.RESOLUTION.max);
-  if (!wasInnerGeomShown && goog.isDef(floorResolution)) {
+  if (!wasInnerGeomShown) {
     var center =
-        munimap.getClosestPointToPixel(map, feature, pixel);
-    var size = map.getSize() || null;
-    var viewExtent = view.calculateExtent(size);
-    var futureExtent = ol.extent.getForViewAndSize(center,
-        floorResolution, view.getRotation(), size);
-    munimap.move.setAnimation(map, viewExtent, futureExtent);
-    view.setCenter(center);
-    view.setResolution(floorResolution);
+        munimap.feature.getClosestPointToPixel(map, feature, pixel);
+    munimap.feature.zoomToCenter(map, center);
   }
   munimap.changeFloor(map, feature);
   if (wasInnerGeomShown) {
