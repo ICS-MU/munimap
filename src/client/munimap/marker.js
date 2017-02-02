@@ -3,6 +3,7 @@ goog.provide('munimap.marker.custom');
 
 goog.require('assert');
 goog.require('munimap.feature');
+goog.require('munimap.map');
 goog.require('munimap.range');
 goog.require('munimap.style');
 
@@ -109,14 +110,14 @@ munimap.marker.featureClickHandler = function(options) {
   var wasInnerGeomShown =
       munimap.range.contains(munimap.floor.RESOLUTION, resolution);
   if (!wasInnerGeomShown) {
-    var center;
+    var point;
     if (munimap.room.isRoom(feature)) {
       var extent = munimap.extent.ofFeature(feature);
-      center = ol.extent.getCenter(extent);
+      point = ol.extent.getCenter(extent);
     } else {
-      center = munimap.feature.getClosestPointToPixel(map, feature, pixel);
+      point = munimap.feature.getClosestPointToPixel(map, feature, pixel);
     }
-    munimap.feature.zoomToCenter(map, center);
+    munimap.map.zoomToPoint(map, point);
   }
   munimap.changeFloor(map, feature);
   if (wasInnerGeomShown) {

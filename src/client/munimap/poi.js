@@ -3,6 +3,7 @@ goog.provide('munimap.poi');
 goog.require('munimap.feature');
 goog.require('munimap.load');
 goog.require('munimap.load.floorBasedActive');
+goog.require('munimap.map');
 goog.require('munimap.store');
 goog.require('munimap.type');
 
@@ -135,8 +136,8 @@ munimap.poi.featureClickHandler = function(options) {
       munimap.range.contains(munimap.floor.RESOLUTION, resolution);
   if (!wasInnerGeomShown) {
     var point = /**@type {ol.geom.Point}*/ (feature.getGeometry());
-    var center = point.getCoordinates();
-    munimap.feature.zoomToCenter(map, center);
+    var coors = point.getCoordinates();
+    munimap.map.zoomToPoint(map, coors);
   }
   munimap.changeFloor(map, feature);
   if (wasInnerGeomShown) {

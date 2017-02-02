@@ -5,6 +5,7 @@ goog.require('goog.array');
 goog.require('goog.object');
 goog.require('munimap.feature');
 goog.require('munimap.lang');
+goog.require('munimap.map');
 goog.require('munimap.marker.style');
 goog.require('munimap.range');
 goog.require('munimap.string');
@@ -234,7 +235,7 @@ munimap.cluster.featureClickHandler = function(options) {
       if (!wasInnerGeomShown) {
         var extent = munimap.extent.ofFeature(zoomTo);
         var center = ol.extent.getCenter(extent);
-        munimap.feature.zoomToCenter(map, center);
+        munimap.map.zoomToPoint(map, center);
       }
       munimap.changeFloor(map, zoomTo);
       if (wasInnerGeomShown) {
