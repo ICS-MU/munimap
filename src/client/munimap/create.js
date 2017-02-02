@@ -255,14 +255,27 @@ munimap.create = function(options) {
           return;
         }
         var pixel = map.getEventPixel(evt.originalEvent);
-        var view = map.getView();
-        var resolution = view.getResolution();
-        goog.asserts.assertNumber(resolution);
         var featureCtx = munimap.getMainFeatureAtPixel(map, pixel);
-        var feature = featureCtx ? featureCtx.feature : null;
-        if (feature &&
-            munimap.isFeatureClickable(map, feature, resolution)) {
-          map.getTarget().style.cursor = 'pointer';
+        if (featureCtx) {
+          var layer = featureCtx.layer;
+          var isClickable = layer.get('isFeatureClickable');
+          if (isClickable) {
+            goog.asserts.assertFunction(isClickable);
+            var handlerOpts = {
+              feature: featureCtx.feature,
+              layer: layer,
+              map: map,
+              pixel: pixel,
+              resolution: map.getView().getResolution()
+            };
+            if (isClickable(handlerOpts)) {
+              map.getTarget().style.cursor = 'pointer';
+            } else {
+              map.getTarget().style.cursor = '';
+            }
+          } else {
+            map.getTarget().style.cursor = '';
+          }
         } else {
           map.getTarget().style.cursor = '';
         }
