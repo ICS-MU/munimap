@@ -10,6 +10,7 @@ munimapx.create;
  *   zoom: (number|undefined),
  *   center: (ol.Coordinate|undefined),
  *   zoomTo: (Array.<string>|string|undefined),
+ *   getMainFeatureAtPixel: (munimap.getMainFeatureAtPixelFunction|undefined),
  *   markers: (Array.<string>|Array.<ol.Feature>|undefined),
  *   markerLabel: (munimap.create.MarkerLabel|undefined),
  *   layers: (Array.<ol.layer.Vector>|undefined),

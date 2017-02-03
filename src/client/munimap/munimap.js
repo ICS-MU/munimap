@@ -10,7 +10,8 @@ goog.require('munimap.move');
  *   floorSelect: goog.ui.Select,
  *   activeBuilding:? (string),
  *   activeFloor:? (munimap.floor.Options),
- *   currentResolution: (number)
+ *   currentResolution: (number),
+ *   getMainFeatureAtPixel: (munimap.getMainFeatureAtPixelFunction)
  * }}
  */
 munimap.Props;
@@ -90,6 +91,14 @@ munimap.featureClickHandlerOptions;
  * }
  */
 munimap.isFeatureClickableFunction;
+
+
+/**
+ * @typedef {
+ *    function(ol.Map, ol.Pixel): munimap.FeatureContext
+ * }
+ */
+munimap.getMainFeatureAtPixelFunction;
 
 
 /**
@@ -308,7 +317,8 @@ munimap.getMainFeatureAtPixel = function(map, pixel) {
  * @param {ol.Pixel} pixel
  */
 munimap.handleClickOnPixel = function(map, pixel) {
-  var featureCtx = munimap.getMainFeatureAtPixel(map, pixel);
+  var getMainFeatureAtPixel = munimap.getProps(map).getMainFeatureAtPixel;
+  var featureCtx = getMainFeatureAtPixel(map, pixel);
   if (featureCtx) {
     var layer = featureCtx.layer;
     var isClickable = layer.get('isFeatureClickable');
