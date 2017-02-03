@@ -224,7 +224,7 @@ munimap.room.assertCodeOrLikeExpr = function(code) {
 
 
 /**
- * @param {munimap.featureClickHandlerOptions} options
+ * @param {munimap.feature.clickHandlerOptions} options
  * @return {boolean}
  */
 munimap.room.isClickable = function(options) {
@@ -236,7 +236,7 @@ munimap.room.isClickable = function(options) {
 
 
 /**
- * @param {munimap.featureClickHandlerOptions} options
+ * @param {munimap.feature.clickHandlerOptions} options
  */
 munimap.room.featureClickHandler = function(options) {
   var feature = options.feature;

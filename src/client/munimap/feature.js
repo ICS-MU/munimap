@@ -2,6 +2,35 @@ goog.provide('munimap.feature');
 
 
 /**
+ *
+ * @typedef {
+ *  function(munimap.feature.clickHandlerOptions)
+ * }
+ */
+munimap.feature.clickHandlerFunction;
+
+
+/**
+ * @typedef {{
+ *   feature: ol.Feature,
+ *   layer: ol.layer.Vector,
+ *   map: ol.Map,
+ *   pixel: ol.Pixel,
+ *   resolution: number
+ * }}
+ */
+munimap.feature.clickHandlerOptions;
+
+
+/**
+ * @typedef {
+ *    function(munimap.feature.clickHandlerOptions): boolean
+ * }
+ */
+munimap.feature.isClickableFunction;
+
+
+/**
  * @param {ol.Map} map
  * @param {ol.Feature} feature
  * @param {ol.Pixel} pixel
