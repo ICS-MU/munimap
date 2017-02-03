@@ -70,6 +70,7 @@ munimap.create = function(options) {
         markers: markers,
         markerLabel: options.markerLabel,
         target: target,
+        getMainFeatureAtPixel: options.getMainFeatureAtPixel,
         lang: options.lang,
         layers: options.layers,
         baseMap: options.baseMap || munimap.BaseMaps.OSM_BW
@@ -244,7 +245,9 @@ munimap.create = function(options) {
         floorSelect: floorSelect,
         activeBuilding: null,
         activeFloor: null,
-        currentResolution: goog.asserts.assertNumber(view.getResolution())
+        currentResolution: goog.asserts.assertNumber(view.getResolution()),
+        getMainFeatureAtPixel: options.getMainFeatureAtPixel ||
+            munimap.getMainFeatureAtPixel
       };
       map.set(munimap.PROPS_NAME, mapProps);
 
@@ -255,7 +258,8 @@ munimap.create = function(options) {
           return;
         }
         var pixel = map.getEventPixel(evt.originalEvent);
-        var featureCtx = munimap.getMainFeatureAtPixel(map, pixel);
+        var getMainFeatureAtPixel = munimap.getProps(map).getMainFeatureAtPixel;
+        var featureCtx = getMainFeatureAtPixel(map, pixel);
         if (featureCtx) {
           var layer = featureCtx.layer;
           var isClickable = layer.get('isFeatureClickable');
@@ -330,6 +334,7 @@ munimap.create.assertOptions = function(options) {
       'Center and zoomTo options can\'t be defined together.');
   munimap.assert.zoom(options.zoom);
   munimap.assert.zoomTo(options.zoomTo);
+  munimap.assert.getMainFeatureAtPixel(options.getMainFeatureAtPixel);
   munimap.assert.markers(options.markers);
   munimap.assert.layers(options.layers);
   munimap.assert.lang(options.lang);

@@ -35,6 +35,17 @@ munimap.assert.markers = function(markers) {
 
 
 /**
+ * @param {munimap.getMainFeatureAtPixelFunction|undefined} fce
+ */
+munimap.assert.getMainFeatureAtPixel = function(fce) {
+  if (goog.isDef(fce)) {
+    goog.asserts.assertFunction(fce, 'Parameter getMainFeatureAtPixel ' +
+        'should be a function of type munimap.getMainFeatureAtPixelFunction.');
+  }
+};
+
+
+/**
  * @param {Array.<ol.layer.Vector>|undefined} layers
  */
 munimap.assert.layers = function(layers) {
