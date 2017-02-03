@@ -65,35 +65,6 @@ munimap.FeatureContext;
 
 
 /**
- *
- * @typedef {
- *  function(munimap.featureClickHandlerOptions)
- * }
- */
-munimap.featureClickHandlerFunction;
-
-
-/**
- * @typedef {{
- *   feature: ol.Feature,
- *   layer: ol.layer.Vector,
- *   map: ol.Map,
- *   pixel: ol.Pixel,
- *   resolution: number
- * }}
- */
-munimap.featureClickHandlerOptions;
-
-
-/**
- * @typedef {
- *    function(munimap.featureClickHandlerOptions): boolean
- * }
- */
-munimap.isFeatureClickableFunction;
-
-
-/**
  * @typedef {
  *    function(ol.Map, ol.Pixel): munimap.FeatureContext
  * }

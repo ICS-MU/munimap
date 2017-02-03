@@ -76,7 +76,7 @@ munimap.marker.isMarker = function(map, feature) {
 
 
 /**
- * @param {munimap.featureClickHandlerOptions} options
+ * @param {munimap.feature.clickHandlerOptions} options
  * @return {boolean}
  */
 munimap.marker.isClickable = function(options) {
@@ -99,7 +99,7 @@ munimap.marker.isClickable = function(options) {
 
 
 /**
- * @param {munimap.featureClickHandlerOptions} options
+ * @param {munimap.feature.clickHandlerOptions} options
  */
 munimap.marker.featureClickHandler = function(options) {
   var feature = options.feature;

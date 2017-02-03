@@ -199,7 +199,7 @@ munimap.cluster.containsMarker = function(map, cluster) {
 
 
 /**
- * @param {munimap.featureClickHandlerOptions} options
+ * @param {munimap.feature.clickHandlerOptions} options
  * @return {boolean}
  */
 munimap.cluster.isClickable = function(options) {
@@ -208,7 +208,7 @@ munimap.cluster.isClickable = function(options) {
 
 
 /**
- * @param {munimap.featureClickHandlerOptions} options
+ * @param {munimap.feature.clickHandlerOptions} options
  */
 munimap.cluster.featureClickHandler = function(options) {
   var feature = options.feature;

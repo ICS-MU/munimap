@@ -183,7 +183,7 @@ munimap.building.assertCodeOrLikeExpr = function(code) {
 
 
 /**
- * @param {munimap.featureClickHandlerOptions} options
+ * @param {munimap.feature.clickHandlerOptions} options
  * @return {boolean}
  */
 munimap.building.isClickable = function(options) {
@@ -204,7 +204,7 @@ munimap.building.isClickable = function(options) {
 
 
 /**
- * @param {munimap.featureClickHandlerOptions} options
+ * @param {munimap.feature.clickHandlerOptions} options
  */
 munimap.building.featureClickHandler = function(options) {
   var feature = options.feature;

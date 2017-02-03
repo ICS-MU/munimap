@@ -108,7 +108,7 @@ munimap.poi.isPoi = function(feature) {
 
 
 /**
- * @param {munimap.featureClickHandlerOptions} options
+ * @param {munimap.feature.clickHandlerOptions} options
  * @return {boolean}
  */
 munimap.poi.isClickable = function(options) {
@@ -125,7 +125,7 @@ munimap.poi.isClickable = function(options) {
 
 
 /**
- * @param {munimap.featureClickHandlerOptions} options
+ * @param {munimap.feature.clickHandlerOptions} options
  */
 munimap.poi.featureClickHandler = function(options) {
   var feature = options.feature;

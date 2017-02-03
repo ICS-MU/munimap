@@ -99,7 +99,7 @@ munimap.complex.getBuildingCount = function(complex) {
 
 
 /**
- * @param {munimap.featureClickHandlerOptions} options
+ * @param {munimap.feature.clickHandlerOptions} options
  * @return {boolean}
  */
 munimap.complex.isClickable = function(options) {
@@ -110,7 +110,7 @@ munimap.complex.isClickable = function(options) {
 
 
 /**
- * @param {munimap.featureClickHandlerOptions} options
+ * @param {munimap.feature.clickHandlerOptions} options
  */
 munimap.complex.featureClickHandler = function(options) {
   var feature = options.feature;
