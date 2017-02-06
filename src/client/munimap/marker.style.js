@@ -260,7 +260,7 @@ munimap.marker.style.labelFunction = function(options, feature, resolution) {
  * @typedef {{
  *   map: ol.Map,
  *   markerSource: ol.source.Vector,
- *   markerLabel: (munimap.create.MarkerLabel|undefined)
+ *   markerLabel: (munimap.marker.LabelFunction|undefined)
  * }}
  */
 munimap.marker.style.labelFunction.Options;

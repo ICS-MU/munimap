@@ -9,6 +9,15 @@ goog.require('munimap.style');
 
 
 /**
+ *
+ * @typedef {
+ *    function((ol.Feature|ol.render.Feature), number): (string|null|undefined)
+ * }
+ */
+munimap.marker.LabelFunction;
+
+
+/**
  * @type {munimap.Range}
  * @const
  */
