@@ -66,7 +66,7 @@ munimap.style.PIN = new ol.style.Style({
  * The same options are munimap.marker.style.labelFunction.Options
  * @typedef {{
  *   markerSource: ol.source.Vector,
- *   markerLabel: (munimap.create.MarkerLabel|undefined),
+ *   markerLabel: (munimap.marker.LabelFunction|undefined),
  *   map: (ol.Map|undefined)
  * }}
  */

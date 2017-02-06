@@ -315,15 +315,6 @@ munimap.create = function(options) {
 
 
 /**
- *
- * @typedef {
- *    function((ol.Feature|ol.render.Feature), number): (string|null|undefined)
- * }
- */
-munimap.create.MarkerLabel;
-
-
-/**
  * @param {munimapx.create.Options} options
  */
 munimap.create.assertOptions = function(options) {
