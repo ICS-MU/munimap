@@ -289,15 +289,15 @@ munimap.getMainFeatureAtPixel = function(map, pixel) {
  */
 munimap.handleClickOnPixel = function(map, pixel) {
   var getMainFeatureAtPixel = munimap.getProps(map).getMainFeatureAtPixel;
-  var featureCtx = getMainFeatureAtPixel(map, pixel);
-  if (featureCtx) {
-    var layer = featureCtx.layer;
+  var layeredFeature = getMainFeatureAtPixel(map, pixel);
+  if (layeredFeature) {
+    var layer = layeredFeature.layer;
     var isClickable = layer.get('isFeatureClickable');
     if (isClickable) {
       goog.asserts.assertFunction(isClickable);
 
       var handlerOpts = {
-        feature: featureCtx.feature,
+        feature: layeredFeature.feature,
         layer: layer,
         map: map,
         pixel: pixel,
