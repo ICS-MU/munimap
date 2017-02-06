@@ -61,12 +61,12 @@ munimap.getProps = function(map) {
  *   layer: (ol.layer.Vector)
  * }}
  */
-munimap.FeatureContext;
+munimap.LayeredFeature;
 
 
 /**
  * @typedef {
- *    function(ol.Map, ol.Pixel): munimap.FeatureContext
+ *    function(ol.Map, ol.Pixel): munimap.LayeredFeature
  * }
  */
 munimap.getMainFeatureAtPixelFunction;
@@ -244,7 +244,7 @@ munimap.getBufferValue = function(extent) {
  *
  * @param {ol.Map} map
  * @param {ol.Pixel} pixel
- * @return {munimap.FeatureContext}
+ * @return {munimap.LayeredFeature}
  */
 munimap.getMainFeatureAtPixel = function(map, pixel) {
   var mainFeatureCtx;
