@@ -16,6 +16,7 @@ munimap.getDefaultLayers = function() {
     id: munimap.building.LAYER_ID,
     'isFeatureClickable': munimap.building.isClickable,
     'featureClickHandler': munimap.building.featureClickHandler,
+    'type': munimap.building.TYPE,
     source: munimap.building.STORE,
     maxResolution: munimap.complex.RESOLUTION.max,
     updateWhileAnimating: true,
@@ -25,6 +26,8 @@ munimap.getDefaultLayers = function() {
 
   var rooms = new ol.layer.Vector({
     id: munimap.room.DEFAULT_LAYER_ID,
+    'redrawOnFloorChange': true,
+    'type': munimap.room.TYPE,
     maxResolution: munimap.floor.RESOLUTION.max,
     opacity: 0.4,
     source: munimap.room.DEFAULT_STORE,
@@ -37,6 +40,8 @@ munimap.getDefaultLayers = function() {
     id: munimap.room.ACTIVE_LAYER_ID,
     'isFeatureClickable': munimap.room.isClickable,
     'featureClickHandler': munimap.room.featureClickHandler,
+    'type': munimap.room.TYPE,
+    'clearSourceOnFloorChange': true,
     maxResolution: munimap.floor.RESOLUTION.max,
     source: null,
     updateWhileAnimating: true,
@@ -46,6 +51,8 @@ munimap.getDefaultLayers = function() {
 
   var doors = new ol.layer.Vector({
     id: munimap.door.ACTIVE_LAYER_ID,
+    'clearSourceOnFloorChange': true,
+    'type': munimap.door.TYPE,
     maxResolution: munimap.door.RESOLUTION.max,
     source: null,
     updateWhileAnimating: true,
@@ -57,6 +64,8 @@ munimap.getDefaultLayers = function() {
     id: munimap.poi.ACTIVE_LAYER_ID,
     'isFeatureClickable': munimap.poi.isClickable,
     'featureClickHandler': munimap.poi.featureClickHandler,
+    'clearSourceOnFloorChange': true,
+    'type': munimap.poi.TYPE,
     maxResolution: munimap.poi.RESOLUTION.max,
     source: null,
     updateWhileAnimating: true,
@@ -66,6 +75,8 @@ munimap.getDefaultLayers = function() {
 
   var roomLabels = new ol.layer.Vector({
     id: munimap.room.label.LAYER_ID,
+    'clearSourceOnFloorChange': true,
+    'type': munimap.room.TYPE,
     maxResolution: munimap.floor.RESOLUTION.max,
     source: null,
     updateWhileAnimating: true,
@@ -77,6 +88,7 @@ munimap.getDefaultLayers = function() {
     id: munimap.complex.LAYER_ID,
     'isFeatureClickable': munimap.complex.isClickable,
     'featureClickHandler': munimap.complex.featureClickHandler,
+    'type': munimap.complex.TYPE,
     source: munimap.complex.STORE,
     minResolution: munimap.complex.RESOLUTION.min,
     maxResolution: munimap.complex.RESOLUTION.max,
@@ -89,6 +101,7 @@ munimap.getDefaultLayers = function() {
     id: munimap.building.LABEL_LAYER_ID,
     'isFeatureClickable': munimap.building.isClickable,
     'featureClickHandler': munimap.building.featureClickHandler,
+    'type': munimap.building.TYPE,
     source: munimap.building.STORE,
     updateWhileAnimating: true,
     updateWhileInteracting: false,
