@@ -144,10 +144,7 @@ munimap.building.style.function =
   }
   var map = options.map;
   goog.asserts.assertInstanceof(map, ol.Map);
-  var activeBuilding = munimap.getProps(map).activeBuilding;
-  var isActive = activeBuilding &&
-      activeBuilding === munimap.building.getLocationCode(feature);
-  if (isActive &&
+  if (munimap.building.isActive(feature, map) &&
       munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
     var selectedFill = new ol.style.Fill({
       color: result.getFill().getColor()

@@ -244,7 +244,7 @@ munimap.create = function(options) {
       var mapProps = {
         info: infoEl,
         floorSelect: floorSelect,
-        activeBuilding: null,
+        selectedBuilding: null,
         activeFloor: null,
         currentResolution: goog.asserts.assertNumber(view.getResolution()),
         getMainFeatureAtPixel: options.getMainFeatureAtPixel ||
