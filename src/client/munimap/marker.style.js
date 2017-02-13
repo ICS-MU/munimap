@@ -148,11 +148,11 @@ munimap.marker.style.function = function(options, feature, resolution) {
   var result = [];
   if (munimap.room.isRoom(feature)) {
     var locCode = /**@type {string}*/ (feature.get('polohKod'));
-    var activeFloor = munimap.getProps(options.map).activeFloor;
-    var inActiveFloor = activeFloor &&
-        munimap.floor.getActiveFloors(options.map).some(function(floorCode) {
+    var inActiveFloor = munimap.floor.getActiveFloors(options.map).some(
+        function(floorCode) {
           return locCode.startsWith(floorCode);
-        });
+        }
+        );
     var hasPointGeom = feature.getGeometry() instanceof ol.geom.Point;
     if (munimap.range.contains(munimap.floor.RESOLUTION, resolution) &&
         !inActiveFloor && !(hasPointGeom)) {
