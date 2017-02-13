@@ -85,7 +85,7 @@ munimap.changeFloor = function(map, featureOrCode) {
     if (munimap.building.isBuilding(feature)) {
       if (munimap.building.hasInnerGeometry(feature)) {
         building = feature;
-        floorCode = munimap.getActiveFloorCodeForBuilding(map, building);
+        floorCode = munimap.getSelectedFloorCodeForBuilding(map, building);
       }
     } else if (munimap.room.isRoom(feature)) {
       var locCode = /**@type (string)*/ (feature.get('polohKod'));
@@ -114,7 +114,7 @@ munimap.changeFloor = function(map, featureOrCode) {
   var selectedFloor = mapProps.selectedFloor;
   if (floorCode) {
     if (!selectedFloor || selectedFloor.locationCode !== floorCode) {
-      munimap.setActiveFloor(map, building, floorCode);
+      munimap.setSelectedFloor(map, building, floorCode);
     }
   } else {
     if (goog.isDefAndNotNull(selectedFloor)) {
@@ -146,7 +146,7 @@ munimap.changeFloor = function(map, featureOrCode) {
  * @return {string}
  * @protected
  */
-munimap.getActiveFloorCodeForBuilding = function(map, building) {
+munimap.getSelectedFloorCodeForBuilding = function(map, building) {
   var activeFloors = munimap.floor.getActiveFloors(map);
   var floorCode = activeFloors.find(function(code) {
     return code.substr(0, 5) === munimap.building.getLocationCode(building);
@@ -187,11 +187,11 @@ munimap.getActiveFloorCodeForBuilding = function(map, building) {
  * @param {string} floorCode
  * @protected
  */
-munimap.setActiveFloor = function(map, building, floorCode) {
+munimap.setSelectedFloor = function(map, building, floorCode) {
   var buildingCode = munimap.building.getLocationCode(building);
   var where = 'polohKod LIKE \'' + buildingCode + '%\'';
   munimap.floor.loadFloors(where).then(function(floors) {
-    var newActiveFloor = floors.find(function(floor) {
+    var newSelectedFloor = floors.find(function(floor) {
       return floorCode ===
           /**@type {string}*/ (floor.get('polohKod'));
     });
@@ -200,7 +200,8 @@ munimap.setActiveFloor = function(map, building, floorCode) {
           return code === floorCode;
         });
     var mapProps = munimap.getProps(map);
-    mapProps.selectedFloor = munimap.floor.getFloorObject(newActiveFloor || null);
+    mapProps.selectedFloor =
+        munimap.floor.getFloorObject(newSelectedFloor || null);
     munimap.info.refreshFloorSelect(map, floors);
     if (atSameLayerAsActive) {
       return null;

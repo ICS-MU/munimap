@@ -102,7 +102,7 @@ munimap.marker.isClickable = function(options) {
   } else {
     return munimap.room.isRoom(feature) &&
         (!munimap.range.contains(munimap.floor.RESOLUTION, resolution) ||
-        !munimap.room.isInActiveFloor(feature, map));
+        !munimap.room.isInSelectedFloor(feature, map));
   }
 };
 
