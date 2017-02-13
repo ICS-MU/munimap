@@ -49,8 +49,8 @@ munimap.info.refreshVisibility = function(map) {
   var view = map.getView();
   var res = view.getResolution();
   goog.asserts.assertNumber(res);
-  var activeBuilding = munimap.getProps(map).activeBuilding;
-  var isShown = !!activeBuilding &&
+  var selectedBuilding = munimap.getProps(map).selectedBuilding;
+  var isShown = !!selectedBuilding &&
       munimap.range.contains(munimap.floor.RESOLUTION, res);
   var element = munimap.getProps(map).info;
   goog.style.setElementShown(element, isShown);
@@ -62,9 +62,9 @@ munimap.info.refreshVisibility = function(map) {
  */
 munimap.info.refreshElementPosition = function(map) {
   var element = munimap.getProps(map).info;
-  var activeBuilding = munimap.getProps(map).activeBuilding;
-  if (goog.isDefAndNotNull(activeBuilding)) {
-    var building = munimap.building.getByCode(activeBuilding);
+  var selectedBuilding = munimap.getProps(map).selectedBuilding;
+  if (goog.isDefAndNotNull(selectedBuilding)) {
+    var building = munimap.building.getByCode(selectedBuilding);
 
     var view = map.getView();
     var viewExtent = view.calculateExtent(map.getSize() || null);

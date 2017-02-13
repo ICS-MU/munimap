@@ -302,8 +302,8 @@ munimap.building.filterFacultyHeadquaters = function(buildings) {
 munimap.building.isActive = function(building, map) {
   goog.asserts.assert(munimap.building.isBuilding(building));
   var locCode = munimap.building.getLocationCode(building);
-  var activeBuilding = munimap.getProps(map).activeBuilding;
-  return locCode === activeBuilding;
+  var selectedBuilding = munimap.getProps(map).selectedBuilding;
+  return locCode === selectedBuilding;
 };
 
 
@@ -313,9 +313,9 @@ munimap.building.isActive = function(building, map) {
  * @return {boolean}
  */
 munimap.building.isActiveInExtent = function(extent, map) {
-  var activeBuilding = munimap.getProps(map).activeBuilding;
-  if (goog.isDefAndNotNull(activeBuilding)) {
-    var building = munimap.building.getByCode(activeBuilding);
+  var selectedBuilding = munimap.getProps(map).selectedBuilding;
+  if (goog.isDefAndNotNull(selectedBuilding)) {
+    var building = munimap.building.getByCode(selectedBuilding);
     var geom = building.getGeometry();
     return geom.intersectsExtent(extent);
   }
@@ -334,8 +334,8 @@ munimap.building.refreshActive = function(map) {
     var viewExt = map.getView().calculateExtent(size);
     var refExt =
         ol.extent.buffer(viewExt, munimap.getBufferValue(viewExt));
-    var activeBuilding = munimap.getProps(map).activeBuilding;
-    if (!activeBuilding || !munimap.building.isActiveInExtent(refExt, map)) {
+    var selectedBuilding = munimap.getProps(map).selectedBuilding;
+    if (!selectedBuilding || !munimap.building.isActiveInExtent(refExt, map)) {
       if (munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
         var selectFeature;
         var maxArea;

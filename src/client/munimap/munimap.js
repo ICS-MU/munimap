@@ -8,7 +8,7 @@ goog.require('munimap.move');
  * @typedef {{
  *   info: Element,
  *   floorSelect: goog.ui.Select,
- *   activeBuilding:? (string),
+ *   selectedBuilding:? (string),
  *   activeFloor:? (munimap.floor.Options),
  *   currentResolution: (number),
  *   getMainFeatureAtPixel: (munimap.getMainFeatureAtPixelFunction)
@@ -103,8 +103,8 @@ munimap.changeFloor = function(map, featureOrCode) {
   var mapProps = munimap.getProps(map);
   if (building) {
     var locCode = munimap.building.getLocationCode(building);
-    if (mapProps.activeBuilding !== locCode) {
-      mapProps.activeBuilding = locCode;
+    if (mapProps.selectedBuilding !== locCode) {
+      mapProps.selectedBuilding = locCode;
       building.changed();
       munimap.info.setBuildingTitle(map, building);
     }
@@ -128,9 +128,9 @@ munimap.changeFloor = function(map, featureOrCode) {
         munimap.info.refreshFloorSelect(map, floors);
       });
     } else {
-      if (mapProps.activeBuilding) {
-        building = munimap.building.getByCode(mapProps.activeBuilding);
-        mapProps.activeBuilding = null;
+      if (mapProps.selectedBuilding) {
+        building = munimap.building.getByCode(mapProps.selectedBuilding);
+        mapProps.selectedBuilding = null;
         building.changed();
       }
       munimap.info.refreshFloorSelect(map, null);
