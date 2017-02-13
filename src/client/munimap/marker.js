@@ -98,7 +98,7 @@ munimap.marker.isClickable = function(options) {
   } else if (munimap.building.isBuilding(feature)) {
     return munimap.building.hasInnerGeometry(feature) &&
         (!munimap.range.contains(munimap.floor.RESOLUTION, resolution) ||
-        !munimap.building.isActive(feature, map));
+        !munimap.building.isSelected(feature, map));
   } else {
     return munimap.room.isRoom(feature) &&
         (!munimap.range.contains(munimap.floor.RESOLUTION, resolution) ||
