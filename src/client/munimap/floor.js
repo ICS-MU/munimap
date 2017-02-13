@@ -46,12 +46,12 @@ munimap.floor.TYPE = {
  */
 munimap.floor.getActiveFloors = function(map) {
   var codes = [];
-  var activeFloor = munimap.getProps(map).activeFloor;
-  if (activeFloor) {
+  var selectedFloor = munimap.getProps(map).selectedFloor;
+  if (selectedFloor) {
     var floors = munimap.floor.STORE.getFeatures();
     var active = floors.filter(function(floor) {
       var layerId = /**@type {number}*/ (floor.get('vrstvaId'));
-      if (layerId === activeFloor.floorLayerId) {
+      if (layerId === selectedFloor.floorLayerId) {
         return true;
       }
       return false;

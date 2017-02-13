@@ -235,8 +235,8 @@ munimap.create = function(options) {
         var newFloor =
             /**@type (ol.Feature)*/ (floorSelect.getSelectedItem().getModel());
         var newLocCode = /**@type (string)*/ (newFloor.get('polohKod'));
-        var activeFloor = munimap.getProps(map).activeFloor;
-        if (!activeFloor || activeFloor.locationCode !== newLocCode) {
+        var selectedFloor = munimap.getProps(map).selectedFloor;
+        if (!selectedFloor || selectedFloor.locationCode !== newLocCode) {
           munimap.changeFloor(map, newLocCode);
         }
       });
@@ -245,7 +245,7 @@ munimap.create = function(options) {
         info: infoEl,
         floorSelect: floorSelect,
         selectedBuilding: null,
-        activeFloor: null,
+        selectedFloor: null,
         currentResolution: goog.asserts.assertNumber(view.getResolution()),
         getMainFeatureAtPixel: options.getMainFeatureAtPixel ||
             munimap.getMainFeatureAtPixel

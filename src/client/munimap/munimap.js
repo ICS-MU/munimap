@@ -9,7 +9,7 @@ goog.require('munimap.move');
  *   info: Element,
  *   floorSelect: goog.ui.Select,
  *   selectedBuilding:? (string),
- *   activeFloor:? (munimap.floor.Options),
+ *   selectedFloor:? (munimap.floor.Options),
  *   currentResolution: (number),
  *   getMainFeatureAtPixel: (munimap.getMainFeatureAtPixelFunction)
  * }}
@@ -111,14 +111,14 @@ munimap.changeFloor = function(map, featureOrCode) {
     munimap.info.refreshElementPosition(map);
   }
 
-  var activeFloor = mapProps.activeFloor;
+  var selectedFloor = mapProps.selectedFloor;
   if (floorCode) {
-    if (!activeFloor || activeFloor.locationCode !== floorCode) {
+    if (!selectedFloor || selectedFloor.locationCode !== floorCode) {
       munimap.setActiveFloor(map, building, floorCode);
     }
   } else {
-    if (goog.isDefAndNotNull(activeFloor)) {
-      mapProps.activeFloor = null;
+    if (goog.isDefAndNotNull(selectedFloor)) {
+      mapProps.selectedFloor = null;
       munimap.floor.refreshFloorBasedLayers(map);
     }
     if (building) {
@@ -200,13 +200,13 @@ munimap.setActiveFloor = function(map, building, floorCode) {
           return code === floorCode;
         });
     var mapProps = munimap.getProps(map);
-    mapProps.activeFloor = munimap.floor.getFloorObject(newActiveFloor || null);
+    mapProps.selectedFloor = munimap.floor.getFloorObject(newActiveFloor || null);
     munimap.info.refreshFloorSelect(map, floors);
     if (atSameLayerAsActive) {
       return null;
     } else {
       return munimap.floor.loadFloors(
-          'vrstvaId = ' + mapProps.activeFloor.floorLayerId);
+          'vrstvaId = ' + mapProps.selectedFloor.floorLayerId);
     }
   }).then(function(floors) {
     if (!!floors) {

@@ -178,12 +178,12 @@ munimap.info.setBuildingTitle = function(map, building) {
  */
 munimap.info.findActiveFloorItem = function(floorSelect, map) {
   var activeItem;
-  var activeFloor = munimap.getProps(map).activeFloor;
-  if (activeFloor) {
+  var selectedFloor = munimap.getProps(map).selectedFloor;
+  if (selectedFloor) {
     floorSelect.getMenu().forEachChild(function(item) {
       var floor = /**@type (ol.Feature)*/ (item.getModel());
       var floorCode = /**@type (string)*/ (floor.get('polohKod'));
-      if (floorCode === activeFloor.locationCode) {
+      if (floorCode === selectedFloor.locationCode) {
         activeItem = item;
         return;
       }
