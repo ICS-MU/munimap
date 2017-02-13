@@ -144,8 +144,8 @@ munimap.room.style.function = function(options, feature, resolution) {
   var marked = markers.indexOf(feature) >= 0;
 
   var locCode = /**@type {string}*/ (feature.get('polohKod'));
-  var activeFlooors = munimap.floor.getActiveFloors(options.map);
-  var inActiveBuilding = activeFlooors.some(function(floor) {
+  var activeFloors = munimap.floor.getActiveFloors(options.map);
+  var inActiveBuilding = activeFloors.some(function(floor) {
     return locCode.startsWith(floor.substr(0, 5));
   });
   var result;

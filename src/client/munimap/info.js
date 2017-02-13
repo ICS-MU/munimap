@@ -176,20 +176,20 @@ munimap.info.setBuildingTitle = function(map, building) {
  * @return {goog.ui.MenuItem}
  * @protected
  */
-munimap.info.findActiveFloorItem = function(floorSelect, map) {
-  var activeItem;
+munimap.info.findSelectedFloorItem = function(floorSelect, map) {
+  var selectedItem;
   var selectedFloor = munimap.getProps(map).selectedFloor;
   if (selectedFloor) {
     floorSelect.getMenu().forEachChild(function(item) {
       var floor = /**@type (ol.Feature)*/ (item.getModel());
       var floorCode = /**@type (string)*/ (floor.get('polohKod'));
       if (floorCode === selectedFloor.locationCode) {
-        activeItem = item;
+        selectedItem = item;
         return;
       }
     });
   }
-  return activeItem;
+  return selectedItem;
 };
 
 
@@ -215,9 +215,10 @@ munimap.info.refreshFloorSelect = function(map, floors) {
       goog.dom.setProperties(itemElement,
           {title: munimap.info.getLabel(floorCode)});
     });
-    var activeFloorItem = munimap.info.findActiveFloorItem(floorSelect, map);
-    if (activeFloorItem) {
-      floorSelect.setSelectedItem(activeFloorItem);
+    var selectedFloorItem =
+        munimap.info.findSelectedFloorItem(floorSelect, map);
+    if (selectedFloorItem) {
+      floorSelect.setSelectedItem(selectedFloorItem);
     } else {
       var text = munimap.lang.getMsg(munimap.lang.Translations.INFOBOX_CHOOSE);
       floorSelect.setDefaultCaption(goog.dom.createTextNode(text));
