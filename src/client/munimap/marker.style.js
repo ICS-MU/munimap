@@ -141,7 +141,7 @@ munimap.marker.style.function = function(options, feature, resolution) {
   goog.asserts.assertInstanceof(feature, ol.Feature);
   if (munimap.range.contains(munimap.floor.RESOLUTION, resolution) &&
       munimap.building.isBuilding(feature) &&
-      munimap.building.isActive(feature, options.map)) {
+      munimap.building.isSelected(feature, options.map)) {
     return null;
   }
 

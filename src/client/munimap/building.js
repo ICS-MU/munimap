@@ -192,7 +192,7 @@ munimap.building.isClickable = function(options) {
   var resolution = options.resolution;
 
   if (munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
-    return !munimap.building.isActive(feature, map) &&
+    return !munimap.building.isSelected(feature, map) &&
         munimap.building.hasInnerGeometry(feature);
   } else if (munimap.building.hasInnerGeometry(feature)) {
     var markers = munimap.marker.getStore(map).getFeatures();
@@ -299,7 +299,7 @@ munimap.building.filterFacultyHeadquaters = function(buildings) {
  * @param {ol.Map} map
  * @return {boolean}
  */
-munimap.building.isActive = function(building, map) {
+munimap.building.isSelected = function(building, map) {
   goog.asserts.assert(munimap.building.isBuilding(building));
   var locCode = munimap.building.getLocationCode(building);
   var selectedBuilding = munimap.getProps(map).selectedBuilding;
@@ -312,7 +312,7 @@ munimap.building.isActive = function(building, map) {
  * @param {ol.Map} map
  * @return {boolean}
  */
-munimap.building.isActiveInExtent = function(extent, map) {
+munimap.building.isSelectedInExtent = function(extent, map) {
   var selectedBuilding = munimap.getProps(map).selectedBuilding;
   if (goog.isDefAndNotNull(selectedBuilding)) {
     var building = munimap.building.getByCode(selectedBuilding);
@@ -326,7 +326,7 @@ munimap.building.isActiveInExtent = function(extent, map) {
 /**
  * @param {ol.Map} map
  */
-munimap.building.refreshActive = function(map) {
+munimap.building.refreshSelected = function(map) {
   var resolution = map.getView().getResolution();
   goog.asserts.assertNumber(resolution);
   var size = map.getSize();
@@ -335,7 +335,8 @@ munimap.building.refreshActive = function(map) {
     var refExt =
         ol.extent.buffer(viewExt, munimap.getBufferValue(viewExt));
     var selectedBuilding = munimap.getProps(map).selectedBuilding;
-    if (!selectedBuilding || !munimap.building.isActiveInExtent(refExt, map)) {
+    if (!selectedBuilding ||
+        !munimap.building.isSelectedInExtent(refExt, map)) {
       if (munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
         var selectFeature;
         var maxArea;

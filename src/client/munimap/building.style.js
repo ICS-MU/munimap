@@ -144,7 +144,7 @@ munimap.building.style.function =
   }
   var map = options.map;
   goog.asserts.assertInstanceof(map, ol.Map);
-  if (munimap.building.isActive(feature, map) &&
+  if (munimap.building.isSelected(feature, map) &&
       munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
     var selectedFill = new ol.style.Fill({
       color: result.getFill().getColor()
@@ -174,11 +174,11 @@ munimap.building.style.labelFunction =
   var markerSource = options.markerSource;
   var markers = markerSource.getFeatures();
   var marked = markers.indexOf(feature) >= 0;
-  var isActive = munimap.building.isActive(feature, options.map);
+  var isSelected = munimap.building.isSelected(feature, options.map);
 
   var result = null;
   if (!marked && resolution < munimap.complex.RESOLUTION.max &&
-      (!isActive || (isActive &&
+      (!isSelected || (isSelected &&
           !munimap.range.contains(munimap.floor.RESOLUTION, resolution)))) {
     var geometryFunction = goog.partial(
         munimap.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, options.map);

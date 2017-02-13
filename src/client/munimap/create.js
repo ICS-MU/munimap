@@ -291,7 +291,7 @@ munimap.create = function(options) {
       });
 
       map.on('moveend', function(evt) {
-        munimap.building.refreshActive(map);
+        munimap.building.refreshSelected(map);
         munimap.info.refreshVisibility(map);
       });
 
