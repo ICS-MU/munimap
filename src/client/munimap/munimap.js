@@ -212,10 +212,11 @@ munimap.setSelectedFloor = function(map, building, floorCode) {
   }).then(function(floors) {
     if (!!floors) {
       munimap.floor.refreshFloorBasedLayers(map);
-    }
-    var roomLabels = munimap.room.label.getLayer(map);
-    if (roomLabels) {
-      roomLabels.changed();
+    } else {
+      var layers = map.getLayers();
+      layers.forEach(function(layer) {
+        munimap.style.refreshFromFragments(map, layer);
+      });
     }
   });
 };

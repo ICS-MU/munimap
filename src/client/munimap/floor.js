@@ -80,6 +80,7 @@ munimap.floor.refreshFloorBasedLayers = function(map) {
         layer.changed();
       }
     }
+    munimap.style.refreshFromFragments(map, layer);
   });
 };
 
