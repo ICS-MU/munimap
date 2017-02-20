@@ -133,84 +133,100 @@ munimap.room.style.setCorridorStyle = function(event) {
 
 
 /**
- * @param {munimap.room.style.function.Options} options
+ * @param {ol.Feature} feature
+ * @param {?string} selectedFloorCode
+ * @param {Array.<string>} activeFloorCodes
+ * @return {boolean}
+ */
+munimap.room.style.selectedFloorFilter =
+    function(feature, selectedFloorCode, activeFloorCodes) {
+  if (goog.isDefAndNotNull(selectedFloorCode)) {
+    var locCode = /**@type {string}*/ (feature.get('polohKod'));
+    return locCode.startsWith(selectedFloorCode);
+  }
+  return false;
+};
+
+
+/**
+ * @param {ol.Feature} feature
+ * @param {?string} selectedFloorCode
+ * @param {Array.<string>} activeFloorCodes
+ * @return {boolean}
+ */
+munimap.room.style.activeFloorFilter =
+    function(feature, selectedFloorCode, activeFloorCodes) {
+  var locCode = /**@type {string}*/ (feature.get('polohKod'));
+  return activeFloorCodes.some(function(floor) {
+    return locCode.startsWith(floor);
+  });
+};
+
+
+/**
+ * @param {ol.Feature} feature
+ * @param {?string} selectedFloorCode
+ * @param {Array.<string>} activeFloorCodes
+ * @return {boolean}
+ */
+munimap.room.style.defaultFloorFilter =
+    function(feature, selectedFloorCode, activeFloorCodes) {
+  var locCode = /**@type {string}*/ (feature.get('polohKod'));
+  return !activeFloorCodes.some(function(floor) {
+    return locCode.startsWith(floor.substr(0, 5));
+  });
+};
+
+
+/**
+ * @param {munimap.style.Function.Options} options
  * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
 munimap.room.style.function = function(options, feature, resolution) {
-  var markerSource = options.markerSource;
-  var markers = markerSource.getFeatures();
+  var markers = options.markers;
   var marked = markers.indexOf(feature) >= 0;
 
-  var locCode = /**@type {string}*/ (feature.get('polohKod'));
-  var activeFloors = munimap.floor.getActiveFloors(options.map);
-  var inActiveBuilding = activeFloors.some(function(floor) {
-    return locCode.startsWith(floor.substr(0, 5));
-  });
   var result;
   if (marked) {
-    if (options.isActive || !inActiveBuilding) {
-      result = munimap.marker.style.ROOM;
-    } else {
-      result = null;
-    }
+    result = munimap.marker.style.ROOM;
   } else {
     result = munimap.room.STYLE;
-    if (options.isActive || !inActiveBuilding) {
-      var purposeGroup = feature.get('ucel_skupina_nazev');
-      var purpose = feature.get('ucel_nazev');
-      var purpose_gis = feature.get('ucel_gis');
-      var purposesToOmit = [
-        'angl.dvorek',
-        'balkon',
-        'manipulační prostory',
-        'nevyužívané prostory', //also gateaway which are not used for drive in,
-        //but can be used as corridor
-        'plocha pod schodištěm',
-        'předsíň', //also some corridors
-        'příjem', //receptions
-        'rampa', //somewhere is maybe an entrance
-        'světlík',
-        'šachta',
-        'vrátnice',
-        'výtah' //shown due to ucel_gis
-      ];
-      switch (purposeGroup) {
-        case 'komunikace obecně':
-          if (purposesToOmit.indexOf(purpose) === -1) {
-            if (purpose === 'schodiště') {
-              if (options.isActive && munimap.range.contains(
-                  munimap.poi.style.Resolution.STAIRS, resolution)) {
-                result = goog.array.concat(munimap.room.style.staircase,
-                    munimap.room.style.STAIRCASE_STYLE_ICON);
-              } else {
-                result = munimap.room.style.staircase;
-              }
-            } else {
-              result = munimap.room.style.corridor;
-            }
-          } else if (purpose_gis === 'výtah') {
+    var purposeGroup = feature.get('ucel_skupina_nazev');
+    var purpose = feature.get('ucel_nazev');
+    var purpose_gis = feature.get('ucel_gis');
+    var purposesToOmit = [
+      'angl.dvorek',
+      'balkon',
+      'manipulační prostory',
+      'nevyužívané prostory', //also gateaway which are not used for drive in,
+      //but can be used as corridor
+      'plocha pod schodištěm',
+      'předsíň', //also some corridors
+      'příjem', //receptions
+      'rampa', //somewhere is maybe an entrance
+      'světlík',
+      'šachta',
+      'vrátnice',
+      'výtah' //shown due to ucel_gis
+    ];
+    switch (purposeGroup) {
+      case 'komunikace obecně':
+        if (purposesToOmit.indexOf(purpose) === -1) {
+          if (purpose === 'schodiště') {
+            result = munimap.room.style.staircase;
+          } else {
             result = munimap.room.style.corridor;
           }
-          break;
-      }
-    } else {
-      result = null;
+        } else if (purpose_gis === 'výtah') {
+          result = munimap.room.style.corridor;
+        }
+        break;
     }
   }
   return result;
 };
-
-
-/**
- * @typedef {{
- *   markerSource: ol.source.Vector,
- *   isActive: (boolean),
- *   map: ol.Map
- * }}
- */
-munimap.room.style.function.Options;
 
 
 /**
@@ -221,77 +237,73 @@ munimap.room.style.LABEL_CACHE = {};
 
 
 /**
- * @param {munimap.style.MarkersAwareOptions} options
+ * @param {munimap.style.Function.Options} options
  * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
 munimap.room.style.labelFunction = function(options, feature, resolution) {
-  var locCode = /**@type {string}*/(feature.get('polohKod'));
   var result = [];
-  var map = options.map;
-  goog.asserts.assertInstanceof(map, ol.Map);
-  var selectedFloor = munimap.getProps(map).selectedFloor;
-  if (selectedFloor && locCode.startsWith(selectedFloor.locationCode)) {
-    var markerSource = options.markerSource;
-    var markers = markerSource.getFeatures();
-    var labelCache;
-    if (munimap.range.contains(munimap.room.label.big.RESOLUTION, resolution)) {
-      labelCache = munimap.room.style.LABEL_CACHE;
-    } else {
-      labelCache = munimap.style.LABEL_CACHE;
-    }
-    if (markers.indexOf(feature) === -1) {
-      var uid = munimap.store.getUid(feature);
-      if (uid) {
-        goog.asserts.assertString(uid);
-        if (labelCache[uid]) {
-          return labelCache[uid];
-        }
-        goog.asserts.assertInstanceof(feature, ol.Feature);
-        var title = munimap.room.getDefaultLabel(feature);
-        if (title) {
-          var purpose = feature.get('ucel_gis');
-          var fontSize;
-          if (munimap.range.contains(
-              munimap.room.label.big.RESOLUTION, resolution)) {
-            fontSize = 11;
-          } else {
-            fontSize = 9;
-          }
-          var textFont = 'bold ' + fontSize + 'px arial';
-          var offset;
-          if (goog.isDefAndNotNull(purpose) &&
-              purpose === munimap.poi.Purpose.CLASSROOM) {
-            var labelHeight = munimap.style.getLabelHeight(title, fontSize);
-            var overallHeight = labelHeight + munimap.poi.style.ICON_HEIGHT + 2;
-            var iconOffset =
-                - (overallHeight - munimap.poi.style.ICON_HEIGHT) / 2;
-            offset = (overallHeight - labelHeight) / 2;
-            goog.array.extend(
-                result, munimap.room.style.getClassroomIcon(iconOffset));
-          }
-          var textStyle = new ol.style.Style({
-            geometry: munimap.geom.CENTER_GEOMETRY_FUNCTION,
-            text: new ol.style.Text({
-              font: textFont,
-              offsetY: offset,
-              fill: munimap.style.TEXT_FILL,
-              stroke: munimap.style.TEXT_STROKE,
-              text: title
-            }),
-            zIndex: 4
-          });
-          goog.array.extend(result, textStyle);
-        }
-      }
+  var markers = options.markers;
 
-      if (uid) {
-        goog.asserts.assertString(uid);
-        labelCache[uid] = result;
+  var labelCache;
+  if (munimap.range.contains(munimap.room.label.big.RESOLUTION, resolution)) {
+    labelCache = munimap.room.style.LABEL_CACHE;
+  } else {
+    labelCache = munimap.style.LABEL_CACHE;
+  }
+
+  if (markers.indexOf(feature) === -1) {
+    var uid = munimap.store.getUid(feature);
+    if (uid) {
+      goog.asserts.assertString(uid);
+      if (labelCache[uid]) {
+        return labelCache[uid];
       }
+      goog.asserts.assertInstanceof(feature, ol.Feature);
+      var title = munimap.room.getDefaultLabel(feature);
+      if (title) {
+        var purpose = feature.get('ucel_gis');
+        var fontSize;
+        if (munimap.range.contains(
+            munimap.room.label.big.RESOLUTION, resolution)) {
+          fontSize = 11;
+        } else {
+          fontSize = 9;
+        }
+        var textFont = 'bold ' + fontSize + 'px arial';
+        var offset;
+        if (goog.isDefAndNotNull(purpose) &&
+            purpose === munimap.poi.Purpose.CLASSROOM) {
+          var labelHeight = munimap.style.getLabelHeight(title, fontSize);
+          var overallHeight = labelHeight + munimap.poi.style.ICON_HEIGHT + 2;
+          var iconOffset =
+              - (overallHeight - munimap.poi.style.ICON_HEIGHT) / 2;
+          offset = (overallHeight - labelHeight) / 2;
+          goog.array.extend(
+              result, munimap.room.style.getClassroomIcon(iconOffset));
+        }
+        var textStyle = new ol.style.Style({
+          geometry: munimap.geom.CENTER_GEOMETRY_FUNCTION,
+          text: new ol.style.Text({
+            font: textFont,
+            offsetY: offset,
+            fill: munimap.style.TEXT_FILL,
+            stroke: munimap.style.TEXT_STROKE,
+            text: title
+          }),
+          zIndex: 4
+        });
+        goog.array.extend(result, textStyle);
+      }
+    }
+
+    if (uid) {
+      goog.asserts.assertString(uid);
+      labelCache[uid] = result;
     }
   }
+
   return result.length ? result : null;
 };
 

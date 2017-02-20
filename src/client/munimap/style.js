@@ -1,6 +1,33 @@
 goog.provide('munimap.style');
 
 goog.require('munimap.geom');
+goog.require('munimap.style.fragment');
+
+
+/**
+ *
+ * @typedef {
+ *    function(ol.Feature, ?string, Array.<string>): boolean
+ * }
+ */
+munimap.style.FilterFunction;
+
+
+/**
+ * @typedef {
+ *    function(munimap.style.Function.Options, ol.Feature, number):
+ *      (ol.style.Style|Array.<ol.style.Style>)
+ * }
+ */
+munimap.style.Function;
+
+
+/**
+ * @typedef {{
+ *   markers:? Array.<ol.Feature>
+ * }}
+ */
+munimap.style.Function.Options;
 
 
 /**
@@ -141,6 +168,70 @@ munimap.style.alignTextToRows = function(parts, separator) {
     }
   });
   return text;
+};
+
+
+/**
+ * @param {ol.Map} map
+ * @param {munimap.style.fragment.LayerOptions} fragments
+ * @return {ol.style.StyleFunction}
+ */
+munimap.style.createFromFragments = function(map, fragments) {
+  var selectedFloorOpts = munimap.getProps(map).selectedFloor;
+  var selectedFloor = selectedFloorOpts ? selectedFloorOpts.locationCode : null;
+  var activeFloors = munimap.floor.getActiveFloors(map);
+
+  /**
+   * @param {ol.Feature} feature
+   * @param {number} resolution
+   * @return {ol.style.Style|Array.<ol.style.Style>}
+   */
+  var styleFce = function(feature, resolution) {
+    /**
+     * @param {munimap.style.fragment.Options} fragment
+     * @return {boolean|undefined}
+     */
+    var testFragment = function(fragment) {
+      if (fragment) {
+        return fragment.filter(feature, selectedFloor, activeFloors);
+      }
+      return undefined;
+    };
+
+    var style;
+    munimap.style.fragment.ORDER.find(function(frag) {
+      var fragment = fragments[frag];
+      if (testFragment(fragment)) {
+        style = fragment.style;
+        return true;
+      }
+      return false;
+    });
+    if (style && goog.isFunction(style)) {
+      var opts = {
+        markers: munimap.marker.getStore(map).getFeatures()
+      };
+      return style(opts, feature, resolution);
+    }
+    return style;
+  };
+
+  return styleFce;
+};
+
+
+/**
+ * @param {ol.Map} map
+ * @param {ol.layer.Vector} layer
+ */
+munimap.style.refreshFromFragments = function(map, layer) {
+  var refreshStyle = layer.get('refreshStyleOnFloorChange');
+  if (goog.isDef(refreshStyle) && refreshStyle) {
+    var fragments = /**@type {munimap.style.fragment.LayerOptions}*/
+        (layer.get('styleFragments'));
+    var style = munimap.style.createFromFragments(map, fragments);
+    layer.setStyle(style);
+  }
 };
 
 
