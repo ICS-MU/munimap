@@ -75,7 +75,7 @@ munimap.room.style.STAIRCASE_BACKGROUND_ICON = new ol.style.Style({
  * @protected
  * @const
  */
-munimap.room.style.STAIRCASE_STYLE_ICON = [
+munimap.room.style.STAIRCASE_ICON = [
   munimap.room.style.STAIRCASE_BACKGROUND_ICON,
   new ol.style.Style({
     geometry: munimap.geom.CENTER_GEOMETRY_FUNCTION,
@@ -216,6 +216,11 @@ munimap.room.style.function = function(options, feature, resolution) {
         if (purposesToOmit.indexOf(purpose) === -1) {
           if (purpose === 'schodiště') {
             result = munimap.room.style.staircase;
+            if (munimap.range.contains(
+                munimap.poi.style.Resolution.STAIRS, resolution)) {
+              result = goog.array.concat(
+                  result, munimap.room.style.STAIRCASE_ICON);
+            }
           } else {
             result = munimap.room.style.corridor;
           }

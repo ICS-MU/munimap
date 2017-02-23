@@ -35,12 +35,8 @@ munimap.room.layer.create = function() {
  */
 munimap.room.layer.createActive = function() {
   var styleFragments = {
-    'selectedFloorFeature': {
-      filter: munimap.room.style.selectedFloorFilter,
-      style: munimap.room.style.function
-    },
     'activeFloorFeature': {
-      filter: munimap.room.style.activeFloorFilter,
+      filter: goog.functions.TRUE,
       style: munimap.room.style.function
     }
   };
