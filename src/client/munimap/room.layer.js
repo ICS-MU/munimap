@@ -37,7 +37,7 @@ munimap.room.layer.createActive = function() {
   var styleFragments = {
     'activeFloorFeature': {
       filter: goog.functions.TRUE,
-      style: munimap.room.style.function
+      style: munimap.room.style.activeFunction
     }
   };
 
