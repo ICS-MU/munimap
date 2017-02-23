@@ -184,6 +184,24 @@ munimap.room.style.defaultFloorFilter =
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
+munimap.room.style.activeFunction = function(options, feature, resolution) {
+  var result = munimap.room.style.function(options, feature, resolution);
+  if (munimap.range.contains(
+      munimap.poi.style.Resolution.STAIRS, resolution) &&
+      result === munimap.room.style.staircase) {
+    result = goog.array.concat(
+        result, munimap.room.style.STAIRCASE_ICON);
+  }
+  return result;
+};
+
+
+/**
+ * @param {munimap.style.Function.Options} options
+ * @param {ol.Feature|ol.render.Feature} feature
+ * @param {number} resolution
+ * @return {ol.style.Style|Array.<ol.style.Style>}
+ */
 munimap.room.style.function = function(options, feature, resolution) {
   var markers = options.markers;
   var marked = markers.indexOf(feature) >= 0;
@@ -216,11 +234,6 @@ munimap.room.style.function = function(options, feature, resolution) {
         if (purposesToOmit.indexOf(purpose) === -1) {
           if (purpose === 'schodiště') {
             result = munimap.room.style.staircase;
-            if (munimap.range.contains(
-                munimap.poi.style.Resolution.STAIRS, resolution)) {
-              result = goog.array.concat(
-                  result, munimap.room.style.STAIRCASE_ICON);
-            }
           } else {
             result = munimap.room.style.corridor;
           }
