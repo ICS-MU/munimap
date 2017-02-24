@@ -445,7 +445,6 @@ munimap.create.setDefaultLayersProps = function(options) {
         layer.setSource(doorsStore);
         break;
       case munimap.poi.ACTIVE_LAYER_ID:
-        layer.setStyle(goog.partial(munimap.poi.style.function, {map: map}));
         var poiStore = munimap.poi.createActiveStore(map);
         poiStore.setAttributions(attributions);
         layer.setSource(poiStore);

@@ -213,14 +213,65 @@ munimap.poi.style.TOILET_W = [
 
 
 /**
- * @param {munimap.load.floorBasedActive.Options} options
+ * @param {ol.Feature} feature
+ * @param {?string} selectedFloorCode
+ * @param {Array.<string>} activeFloorCodes
+ * @return {boolean}
+ */
+munimap.poi.style.activeFloorFilter =
+    function(feature, selectedFloorCode, activeFloorCodes) {
+  var locCode = /**@type {string}*/ (feature.get('polohKodPodlazi'));
+  if (locCode) {
+    return activeFloorCodes.some(function(floor) {
+      return locCode === floor;
+    });
+  }
+  return false;
+};
+
+
+/**
+ * @param {ol.Feature} feature
+ * @param {?string} selectedFloorCode
+ * @param {Array.<string>} activeFloorCodes
+ * @return {boolean}
+ */
+munimap.poi.style.outdoorFilter =
+    function(feature, selectedFloorCode, activeFloorCodes) {
+  var locCode = /**@type {string}*/ (feature.get('polohKodPodlazi'));
+  return !goog.isDefAndNotNull(locCode) ||
+      !activeFloorCodes.some(function(floor) {
+        return locCode.startsWith(floor.substr(0, 5));
+      });
+};
+
+
+/**
+ * @param {ol.Feature} feature
+ * @param {?string} selectedFloorCode
+ * @param {Array.<string>} activeFloorCodes
+ * @return {boolean}
+ */
+munimap.poi.style.defaultFloorFilter =
+    function(feature, selectedFloorCode, activeFloorCodes) {
+  var locCode = /**@type {string}*/ (feature.get('polohKodPodlazi'));
+  return !activeFloorCodes.some(function(floor) {
+    return locCode === floor;
+  });
+};
+
+
+/**
+ * @param {munimap.style.Function.Options} options
  * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
-munimap.poi.style.function = function(options, feature, resolution) {
+munimap.poi.style.activeFloorFunction = function(options, feature, resolution) {
   var result = munimap.poi.STYLE;
   var poiType = feature.get('typ');
+  var showEntrance = munimap.range.contains(
+      munimap.poi.style.Resolution.BUILDING_ENTRANCE, resolution);
   var showInfo = munimap.range.contains(
       munimap.poi.style.Resolution.INFORMATION, resolution);
   var showToilets =
@@ -235,26 +286,9 @@ munimap.poi.style.function = function(options, feature, resolution) {
       result = showStairs ? munimap.poi.style.ELEVATOR : null;
       break;
     case munimap.poi.Purpose.BUILDING_ENTRANCE:
-    case munimap.poi.Purpose.BUILDING_COMPLEX_ENTRANCE:
-      var floorCode = feature.get('polohKodPodlazi');
-      var defaultFloor =
-          goog.asserts.assertNumber(feature.get('vychoziPodlazi'));
-      var activeFloors = munimap.floor.getActiveFloors(options.map);
-      var notInBldgWithActiveFloor = activeFloors.every(function(floor) {
-        var bldgCode = floor.substr(0, 5);
-        return !floorCode.startsWith(bldgCode);
-      });
-      var showEntrance =
-          !munimap.range.contains(munimap.floor.RESOLUTION, resolution) ||
-          (activeFloors.indexOf(floorCode) > -1 ||
-          (notInBldgWithActiveFloor && defaultFloor === 1));
-      if (poiType === munimap.poi.Purpose.BUILDING_ENTRANCE) {
-        showEntrance = showEntrance && munimap.range.contains(
-            munimap.poi.style.Resolution.BUILDING_ENTRANCE, resolution);
-      }
       result = showEntrance ? munimap.poi.style.ENTRANCE : null;
       break;
-    case munimap.poi.Purpose.COMPLEX_ENTRANCE:
+    case munimap.poi.Purpose.BUILDING_COMPLEX_ENTRANCE:
       result = munimap.poi.style.ENTRANCE;
       break;
     case munimap.poi.Purpose.TOILET_IMMOBILE:
@@ -272,6 +306,66 @@ munimap.poi.style.function = function(options, feature, resolution) {
     case munimap.poi.Purpose.CLASSROOM:
       result = null;
       break;
+  }
+  return result;
+};
+
+
+/**
+ * @param {munimap.style.Function.Options} options
+ * @param {ol.Feature|ol.render.Feature} feature
+ * @param {number} resolution
+ * @return {ol.style.Style|Array.<ol.style.Style>}
+ */
+munimap.poi.style.outdoorFunction = function(options, feature, resolution) {
+  var poiType = feature.get('typ');
+  var result;
+  switch (poiType) {
+    case munimap.poi.Purpose.BUILDING_ENTRANCE:
+    case munimap.poi.Purpose.BUILDING_COMPLEX_ENTRANCE:
+      var defaultFloor =
+          goog.asserts.assertNumber(feature.get('vychoziPodlazi'));
+      var showBuildingEntrance =
+          (!munimap.range.contains(munimap.floor.RESOLUTION, resolution) ||
+          defaultFloor === 1);
+      if (poiType === munimap.poi.Purpose.BUILDING_ENTRANCE) {
+        showBuildingEntrance = showBuildingEntrance && munimap.range.contains(
+            munimap.poi.style.Resolution.BUILDING_ENTRANCE, resolution);
+      }
+      result = showBuildingEntrance ? munimap.poi.style.ENTRANCE : null;
+      break;
+    case munimap.poi.Purpose.COMPLEX_ENTRANCE:
+      result = munimap.poi.style.ENTRANCE;
+      break;
+    default:
+      result = null;
+  }
+  return result;
+};
+
+
+/**
+ * @param {munimap.style.Function.Options} options
+ * @param {ol.Feature|ol.render.Feature} feature
+ * @param {number} resolution
+ * @return {ol.style.Style|Array.<ol.style.Style>}
+ */
+munimap.poi.style.defaultFunction = function(options, feature, resolution) {
+  var result;
+  var poiType = feature.get('typ');
+  switch (poiType) {
+    case munimap.poi.Purpose.BUILDING_ENTRANCE:
+    case munimap.poi.Purpose.BUILDING_COMPLEX_ENTRANCE:
+      var showEntrance =
+          !munimap.range.contains(munimap.floor.RESOLUTION, resolution);
+      if (poiType === munimap.poi.Purpose.BUILDING_ENTRANCE) {
+        showEntrance = showEntrance && munimap.range.contains(
+            munimap.poi.style.Resolution.BUILDING_ENTRANCE, resolution);
+      }
+      result = showEntrance ? munimap.poi.style.ENTRANCE : null;
+      break;
+    default:
+      result = null;
   }
   return result;
 };
