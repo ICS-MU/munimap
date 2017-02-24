@@ -58,7 +58,9 @@ munimap.reset = function(map, options) {
       var clusterLayer = munimap.cluster.getLayer(map);
       var oldMinRes = clusterLayer.getMinResolution();
       var clusterResolution = munimap.cluster.BUILDING_RESOLUTION;
-      if (markers.length && munimap.room.isRoom(markers[0])) {
+      var firstMarker = markers[0];
+      if (markers.length && (munimap.room.isRoom(firstMarker) ||
+          munimap.door.isDoor(firstMarker))) {
         clusterResolution = munimap.cluster.ROOM_RESOLUTION;
       }
       if (oldMinRes !== clusterResolution.min) {

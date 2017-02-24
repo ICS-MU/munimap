@@ -45,8 +45,9 @@ munimap.load.format = new ol.format.EsriJSON();
  */
 munimap.load.featuresByCode = function(options) {
   goog.asserts.assert(options.type === munimap.building.TYPE ||
-      options.type === munimap.room.TYPE, 'Feature type should be' +
-      'building or room type.');
+      options.type === munimap.room.TYPE ||
+      options.type === munimap.door.TYPE, 'Feature type should be' +
+      ' building, room or door type.');
 
   var codes = options.codes || [];
   var likeExprs = options.likeExprs || [];
@@ -132,6 +133,29 @@ munimap.load.roomsByCode = function(options) {
  * }}
  */
 munimap.load.roomsByCode.Options;
+
+
+/**
+ * @param {munimap.load.doorsByCode.Options} options
+ * @return {goog.Thenable<Array<ol.Feature>>} promise of features contained
+ * in server response
+ */
+munimap.load.doorsByCode = function(options) {
+  return munimap.load.featuresByCode({
+    codes: options.codes,
+    likeExprs: options.likeExprs,
+    type: munimap.door.TYPE
+  });
+};
+
+
+/**
+ * @typedef {{
+ *   codes: (Array<string>),
+ *   likeExprs: (Array<string>)
+ * }}
+ */
+munimap.load.doorsByCode.Options;
 
 
 /**
@@ -250,16 +274,24 @@ munimap.load.featuresFromParam = function(paramValue) {
   paramValue = goog.isString(paramValue) ? [paramValue] : paramValue;
   return new goog.Promise(function(resolve, reject) {
     if (paramValue && paramValue.length) {
-      if (munimap.building.isCodeOrLikeExpr(paramValue[0])) {
+      var firstParamValue = paramValue[0];
+      if (munimap.building.isCodeOrLikeExpr(firstParamValue)) {
         var codes = paramValue.filter(munimap.building.isCode);
         var likeExprs = paramValue.filter(munimap.building.isLikeExpr);
         munimap.load.buildingsByCode({
           codes: codes,
           likeExprs: likeExprs
         }).then(resolve, reject);
-      } else if (munimap.room.isCodeOrLikeExpr(paramValue[0])) {
-        var codes = paramValue.filter(munimap.room.isCode);
-        var likeExprs = paramValue.filter(munimap.room.isLikeExpr);
+      } else if (munimap.room.isCodeOrLikeExpr(firstParamValue) ||
+          munimap.door.isCodeOrLikeExpr(firstParamValue)) {
+        var codeFilterFunction =
+            (munimap.room.isCodeOrLikeExpr(firstParamValue)) ?
+                munimap.room.isCode : munimap.door.isCode;
+        var likeExprFilterFunction =
+            (munimap.room.isCodeOrLikeExpr(firstParamValue)) ?
+                munimap.room.isLikeExpr : munimap.door.isLikeExpr;
+        var codes = paramValue.filter(codeFilterFunction);
+        var likeExprs = paramValue.filter(likeExprFilterFunction);
         var buildingCodes = codes.map(function(code) {
           return code.substr(0, 5);
         });
@@ -278,22 +310,24 @@ munimap.load.featuresFromParam = function(paramValue) {
           codes: buildingCodes,
           likeExprs: buildingLikeExprs
         }).then(function(buildings) {
-          return munimap.load.roomsByCode({
+          var loadFunction = (munimap.room.isCodeOrLikeExpr(firstParamValue)) ?
+              munimap.load.roomsByCode : munimap.load.doorsByCode;
+          return loadFunction({
             codes: codes,
             likeExprs: likeExprs
-          }).then(function(rooms) {
-            rooms.forEach(function(room) {
-              if (!goog.isDefAndNotNull(room.getGeometry())) {
-                var locCode = /**@type (string)*/ (room.get('polohKod'));
+          }).then(function(features) {
+            features.forEach(function(feature) {
+              if (!goog.isDefAndNotNull(feature.getGeometry())) {
+                var locCode = /**@type (string)*/ (feature.get('polohKod'));
                 var building = munimap.building.getByCode(locCode);
                 var bldgGeom = building.getGeometry();
                 if (goog.isDef(bldgGeom)) {
-                  room.setGeometry(
+                  feature.setGeometry(
                       munimap.geom.getGeometryCenter(bldgGeom, true));
                 }
               }
             });
-            return rooms;
+            return features;
           });
         }).then(function(results) {
           resolve(results);

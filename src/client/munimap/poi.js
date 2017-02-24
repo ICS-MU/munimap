@@ -132,15 +132,15 @@ munimap.poi.featureClickHandler = function(options) {
   var map = options.map;
   var resolution = options.resolution;
 
-  var wasInnerGeomShown =
+  var isVisible =
       munimap.range.contains(munimap.floor.RESOLUTION, resolution);
-  if (!wasInnerGeomShown) {
+  if (!isVisible) {
     var point = /**@type {ol.geom.Point}*/ (feature.getGeometry());
     var coors = point.getCoordinates();
-    munimap.map.zoomToPoint(map, coors);
+    munimap.map.zoomToPoint(map, coors, munimap.floor.RESOLUTION.max);
   }
   munimap.changeFloor(map, feature);
-  if (wasInnerGeomShown) {
+  if (isVisible) {
     munimap.info.refreshVisibility(map);
   }
 };

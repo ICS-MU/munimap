@@ -220,39 +220,45 @@ munimap.cluster.featureClickHandler = function(options) {
   var viewExtent = view.calculateExtent(size);
 
   var clusteredFeatures = munimap.cluster.getMainFeatures(map, feature);
+
+  var firstFeature = clusteredFeatures[0];
+  goog.asserts.assertInstanceof(firstFeature, ol.Feature);
+  var resolutionRange = (munimap.door.isDoor(firstFeature)) ?
+          munimap.door.RESOLUTION : munimap.floor.RESOLUTION;
+
   if (clusteredFeatures.length === 1) {
-    var zoomTo = clusteredFeatures[0];
-    var floorResolution =
-        view.constrainResolution(munimap.floor.RESOLUTION.max);
-    if (munimap.marker.custom.isCustom(zoomTo)) {
-      view.setCenter(zoomTo.getGeometry().getCoordinates());
-      if (resolution > (floorResolution * 2)) {
-        view.setResolution(floorResolution * 2);
+    if (munimap.marker.custom.isCustom(firstFeature)) {
+      var constrainedResolution =
+          view.constrainResolution(resolutionRange.max, 1, 1);
+      goog.asserts.assertNumber(constrainedResolution);
+      view.setCenter(firstFeature.getGeometry().getCoordinates());
+      if (resolution > (constrainedResolution * 2)) {
+        view.setResolution(constrainedResolution * 2);
       }
     } else {
-      var wasInnerGeomShown =
-          munimap.range.contains(munimap.floor.RESOLUTION, resolution);
-      if (!wasInnerGeomShown) {
-        var extent = munimap.extent.ofFeature(zoomTo);
+      var isVisible = munimap.range.contains(resolutionRange, resolution);
+      if (!isVisible) {
+        var extent = munimap.extent.ofFeature(firstFeature);
         var center = ol.extent.getCenter(extent);
-        munimap.map.zoomToPoint(map, center);
+        munimap.map.zoomToPoint(map, center, resolutionRange.max);
       }
-      munimap.changeFloor(map, zoomTo);
-      if (wasInnerGeomShown) {
+      munimap.changeFloor(map, firstFeature);
+      if (isVisible) {
         munimap.info.refreshVisibility(map);
       }
     }
   } else {
     var showOneBuilding = false;
-    if (munimap.room.isRoom(clusteredFeatures[0])) {
-      var locCode = /**@type {string}*/(clusteredFeatures[0].get('polohKod'));
+    if (munimap.room.isRoom(firstFeature) ||
+        munimap.door.isDoor(firstFeature)) {
+      var locCode = /**@type {string}*/(firstFeature.get('polohKod'));
       var bldgCode = locCode.substr(0, 5);
       var floorCode = locCode.substr(0, 8);
-      showOneBuilding = clusteredFeatures.every(function(room) {
-        var locCode = /**@type {string}*/(room.get('polohKod'));
+      showOneBuilding = clusteredFeatures.every(function(feature) {
+        var locCode = /**@type {string}*/(feature.get('polohKod'));
         return bldgCode === locCode.substr(0, 5);
-      }) && clusteredFeatures.some(function(room) {
-        var locCode = /**@type {string}*/(room.get('polohKod'));
+      }) && clusteredFeatures.some(function(feature) {
+        var locCode = /**@type {string}*/(feature.get('polohKod'));
         return floorCode !== locCode.substr(0, 8);
       });
     }
@@ -261,7 +267,7 @@ munimap.cluster.featureClickHandler = function(options) {
       var extent = munimap.extent.ofFeatures(clusteredFeatures);
       goog.asserts.assertArray(size);
       var bldgExtent = ol.extent.getForViewAndSize(
-          ol.extent.getCenter(extent), munimap.floor.RESOLUTION.max,
+          ol.extent.getCenter(extent), resolutionRange.max,
           view.getRotation(), size);
       if (ol.extent.containsExtent(bldgExtent, extent)) {
         extent = bldgExtent;
@@ -386,10 +392,11 @@ munimap.cluster.style.function = function(options, feature, resolution) {
   goog.asserts.assertInstanceof(feature, ol.Feature);
   var result;
   var features = munimap.cluster.getMainFeatures(options.map, feature);
-  var marked = munimap.marker.isMarker(options.map, features[0]);
+  var firstFeature = features[0];
+  var marked = munimap.marker.isMarker(options.map, firstFeature);
   if (features.length === 1) {
     result = munimap.cluster.style.pinFunction(
-        options, feature, features[0], resolution);
+        options, feature, firstFeature, resolution);
   } else {
     result = [];
     var circleStyle;

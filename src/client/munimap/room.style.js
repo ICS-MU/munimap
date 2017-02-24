@@ -6,6 +6,18 @@ goog.require('munimap.style');
 
 
 /**
+ * @type {number}
+ */
+munimap.room.style.SMALL_FONT_SIZE = 9;
+
+
+/**
+ * @type {number}
+ */
+munimap.room.style.FONT_SIZE = 11;
+
+
+/**
  * @type {ol.style.Fill}
  * @const
  */
@@ -255,9 +267,9 @@ munimap.room.style.labelFunction = function(options, feature, resolution) {
           var fontSize;
           if (munimap.range.contains(
               munimap.room.label.big.RESOLUTION, resolution)) {
-            fontSize = 11;
+            fontSize = munimap.room.style.FONT_SIZE;
           } else {
-            fontSize = 9;
+            fontSize = munimap.room.style.SMALL_FONT_SIZE;
           }
           var textFont = 'bold ' + fontSize + 'px arial';
           var offset;

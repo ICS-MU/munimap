@@ -13,7 +13,7 @@ goog.require('munimap.type');
  * @type {RegExp}
  * @protected
  */
-munimap.room.CODE_REGEX = /^[A-Z]{3}[0-9]{2}[N,M,P,S,Z]{1}[0-9]{5}[a-z]?$/gi;
+munimap.room.CODE_REGEX = /^[A-Z]{3}[0-9]{2}[NMPSZ]{1}[0-9]{5}[a-z]?$/gi;
 
 
 /**

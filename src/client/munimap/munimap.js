@@ -87,7 +87,7 @@ munimap.changeFloor = function(map, featureOrCode) {
         building = feature;
         floorCode = munimap.getActiveFloorCodeForBuilding(map, building);
       }
-    } else if (munimap.room.isRoom(feature)) {
+    } else if (munimap.room.isRoom(feature) || munimap.door.isDoor(feature)) {
       var locCode = /**@type (string)*/ (feature.get('polohKod'));
       building = munimap.building.getByCode(locCode);
       floorCode = locCode.substr(0, 8);
@@ -156,11 +156,11 @@ munimap.getActiveFloorCodeForBuilding = function(map, building) {
     var markedFeatures = markerSource.getFeatures();
     if (markedFeatures.length > 0) {
       var firstMarked = markedFeatures.find(function(marked) {
-        if (munimap.room.isRoom(marked)) {
+        if (munimap.room.isRoom(marked) || munimap.door.isDoor(marked)) {
           var buildingLocCode = munimap.building.getLocationCode(building);
-          var roomLocCode =
+          var locationCode =
               /**@type {string}*/ (marked.get('polohKod'));
-          return roomLocCode.substr(0, 5) === buildingLocCode;
+          return locationCode.substr(0, 5) === buildingLocCode;
         } else {
           return false;
         }
