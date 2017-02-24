@@ -439,7 +439,6 @@ munimap.create.setDefaultLayersProps = function(options) {
         layer.setSource(activeRoomsStore);
         break;
       case munimap.door.ACTIVE_LAYER_ID:
-        layer.setStyle(munimap.door.STYLE);
         var doorsStore = munimap.door.createActiveStore(map);
         doorsStore.setAttributions(attributions);
         layer.setSource(doorsStore);
