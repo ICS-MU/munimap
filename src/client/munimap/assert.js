@@ -19,9 +19,10 @@ munimap.assert.markers = function(markers) {
 
     if (markers.every(goog.isString)) {
       if (!markers.every(munimap.building.isCodeOrLikeExpr) &&
-          !markers.every(munimap.room.isCodeOrLikeExpr)) {
-        goog.asserts.fail('Markers should contain only building or only room' +
-            ' location codes or corresponding LIKE expressions.');
+          !markers.every(munimap.room.isCodeOrLikeExpr) &&
+          !markers.every(munimap.door.isCodeOrLikeExpr)) {
+        goog.asserts.fail('Markers should contain only building, room or' +
+            ' door location codes or corresponding LIKE expressions.');
       }
     } else if (markers.every(goog.partial(jpad.func.instanceof, ol.Feature))) {
       var featureMarkers = /** @type {Array<ol.Feature>} */(markers);

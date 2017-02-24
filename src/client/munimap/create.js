@@ -190,7 +190,9 @@ munimap.create = function(options) {
       });
 
       var clusterResolution = munimap.cluster.BUILDING_RESOLUTION;
-      if (markers.length && munimap.room.isRoom(markers[0])) {
+      var firstMarker = markers[0];
+      if (markers.length && (munimap.room.isRoom(firstMarker) ||
+          munimap.door.isDoor(firstMarker))) {
         clusterResolution = munimap.cluster.ROOM_RESOLUTION;
       }
       var clusterFeatures = markers.concat();

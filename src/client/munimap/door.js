@@ -9,6 +9,22 @@ goog.require('munimap.type');
 
 
 /**
+ * @type {RegExp}
+ * @protected
+ */
+munimap.door.CODE_REGEX =
+    /^[A-Z]{3}[0-9]{2}[NMPSZ]{1}[0-9]{2}[D]{1}[0-9]{3}?$/gi;
+
+
+/**
+ * @type {RegExp}
+ * @protected
+ */
+munimap.door.LIKE_EXPR_REGEX =
+    /^[A-Z_]{3}[0-9_]{2}[NMPSZ_]{1}[0-9_]{2}[D_]{1}[0-9_]{3}?$/gi;
+
+
+/**
  * @type {munimap.Range}
  * @const
  */
@@ -76,6 +92,45 @@ munimap.door.getActiveLayer = function(map) {
  */
 munimap.door.isActiveLayer = function(layer) {
   return layer.get('id') === munimap.door.ACTIVE_LAYER_ID;
+};
+
+
+/**
+ * @param {ol.Feature} feature
+ * @return {boolean}
+ */
+munimap.door.isDoor = function(feature) {
+  var code = feature.get('polohKod');
+  return goog.isString(code) && munimap.door.isCode(code);
+};
+
+
+/**
+ * @param {string} maybeCode
+ * @return {boolean}
+ */
+munimap.door.isCode = function(maybeCode) {
+  return !!maybeCode.match(munimap.door.CODE_REGEX);
+};
+
+
+/**
+ * @param {string} maybeLikeExpr
+ * @return {boolean}
+ */
+munimap.door.isLikeExpr = function(maybeLikeExpr) {
+  return !!maybeLikeExpr.match(munimap.door.LIKE_EXPR_REGEX) &&
+      maybeLikeExpr.indexOf('_') >= 0;
+};
+
+
+/**
+ * @param {string} maybeCodeOrLikeExpr
+ * @return {boolean}
+ */
+munimap.door.isCodeOrLikeExpr = function(maybeCodeOrLikeExpr) {
+  return munimap.door.isCode(maybeCodeOrLikeExpr) ||
+      munimap.door.isLikeExpr(maybeCodeOrLikeExpr);
 };
 
 

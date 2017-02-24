@@ -212,14 +212,14 @@ munimap.building.featureClickHandler = function(options) {
   var pixel = options.pixel;
   var resolution = options.resolution;
 
-  var wasInnerGeomShown =
+  var isVisible =
       munimap.range.contains(munimap.floor.RESOLUTION, resolution);
-  if (!wasInnerGeomShown) {
+  if (!isVisible) {
     var point = munimap.feature.getClosestPointToPixel(map, feature, pixel);
-    munimap.map.zoomToPoint(map, point);
+    munimap.map.zoomToPoint(map, point, munimap.floor.RESOLUTION.max);
   }
   munimap.changeFloor(map, feature);
-  if (wasInnerGeomShown) {
+  if (isVisible) {
     munimap.info.refreshVisibility(map);
   }
 };
