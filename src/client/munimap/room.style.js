@@ -133,10 +133,7 @@ munimap.room.style.setCorridorStyle = function(event) {
 
 
 /**
- * @param {ol.Feature} feature
- * @param {?string} selectedFloorCode
- * @param {Array.<string>} activeFloorCodes
- * @return {boolean}
+ * @type {munimap.style.FilterFunction}
  */
 munimap.room.style.selectedFloorFilter =
     function(feature, selectedFloorCode, activeFloorCodes) {
@@ -149,10 +146,7 @@ munimap.room.style.selectedFloorFilter =
 
 
 /**
- * @param {ol.Feature} feature
- * @param {?string} selectedFloorCode
- * @param {Array.<string>} activeFloorCodes
- * @return {boolean}
+ * @type {munimap.style.FilterFunction}
  */
 munimap.room.style.activeFloorFilter =
     function(feature, selectedFloorCode, activeFloorCodes) {
@@ -164,10 +158,7 @@ munimap.room.style.activeFloorFilter =
 
 
 /**
- * @param {ol.Feature} feature
- * @param {?string} selectedFloorCode
- * @param {Array.<string>} activeFloorCodes
- * @return {boolean}
+ * @type {munimap.style.FilterFunction}
  */
 munimap.room.style.defaultFloorFilter =
     function(feature, selectedFloorCode, activeFloorCodes) {
