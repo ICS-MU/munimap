@@ -213,10 +213,7 @@ munimap.poi.style.TOILET_W = [
 
 
 /**
- * @param {ol.Feature} feature
- * @param {?string} selectedFloorCode
- * @param {Array.<string>} activeFloorCodes
- * @return {boolean}
+ * @tyoe {munimap.style.FilterFunction}
  */
 munimap.poi.style.activeFloorFilter =
     function(feature, selectedFloorCode, activeFloorCodes) {
@@ -231,10 +228,7 @@ munimap.poi.style.activeFloorFilter =
 
 
 /**
- * @param {ol.Feature} feature
- * @param {?string} selectedFloorCode
- * @param {Array.<string>} activeFloorCodes
- * @return {boolean}
+ * @type {munimap.style.FilterFunction}
  */
 munimap.poi.style.outdoorFilter =
     function(feature, selectedFloorCode, activeFloorCodes) {
@@ -247,10 +241,7 @@ munimap.poi.style.outdoorFilter =
 
 
 /**
- * @param {ol.Feature} feature
- * @param {?string} selectedFloorCode
- * @param {Array.<string>} activeFloorCodes
- * @return {boolean}
+ * @type {munimap.style.FilterFunction}
  */
 munimap.poi.style.defaultFloorFilter =
     function(feature, selectedFloorCode, activeFloorCodes) {
