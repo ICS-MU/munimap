@@ -8,15 +8,15 @@ goog.require('munimap.poi');
  */
 munimap.poi.layer.create = function() {
   var styleFragments = {
-    'activeFloorFeature': {
+    activeFloorFeature: {
       filter: munimap.poi.style.activeFloorFilter,
       style: munimap.poi.style.activeFloorFunction
     },
-    'outdoorFeature': {
+    outdoorFeature: {
       filter: munimap.poi.style.outdoorFilter,
       style: munimap.poi.style.outdoorFunction
     },
-    'defaultFloorFeature': {
+    defaultFloorFeature: {
       filter: munimap.poi.style.defaultFloorFilter,
       style: munimap.poi.style.defaultFunction
     }

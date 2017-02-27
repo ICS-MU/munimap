@@ -8,7 +8,7 @@ goog.require('munimap.room');
  */
 munimap.room.layer.create = function() {
   var styleFragments = {
-    'defaultFloorFeature': {
+    defaultFloorFeature: {
       filter: munimap.room.style.defaultFloorFilter,
       style: munimap.room.style.function
     }
@@ -35,7 +35,7 @@ munimap.room.layer.create = function() {
  */
 munimap.room.layer.createActive = function() {
   var styleFragments = {
-    'activeFloorFeature': {
+    activeFloorFeature: {
       filter: goog.functions.TRUE,
       style: munimap.room.style.activeFunction
     }
@@ -63,7 +63,7 @@ munimap.room.layer.createActive = function() {
  */
 munimap.room.layer.createLabel = function() {
   var styleFragments = {
-    'selectedFloorFeature': {
+    selectedFloorFeature: {
       filter: munimap.room.style.selectedFloorFilter,
       style: munimap.room.style.labelFunction
     }
