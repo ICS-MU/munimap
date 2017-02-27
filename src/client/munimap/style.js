@@ -173,7 +173,7 @@ munimap.style.alignTextToRows = function(parts, separator) {
 
 /**
  * @param {ol.Map} map
- * @param {munimap.style.fragment.LayerOptions} fragments
+ * @param {munimapx.style.fragment.LayerOptions} fragments
  * @return {ol.style.StyleFunction}
  */
 munimap.style.createFromFragments = function(map, fragments) {
@@ -227,7 +227,7 @@ munimap.style.createFromFragments = function(map, fragments) {
 munimap.style.refreshFromFragments = function(map, layer) {
   var refreshStyle = layer.get('refreshStyleOnFloorChange');
   if (goog.isDef(refreshStyle) && refreshStyle) {
-    var fragments = /**@type {munimap.style.fragment.LayerOptions}*/
+    var fragments = /**@type {munimapx.style.fragment.LayerOptions}*/
         (layer.get('styleFragments'));
     var style = munimap.style.createFromFragments(map, fragments);
     layer.setStyle(style);

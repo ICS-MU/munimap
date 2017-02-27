@@ -8,7 +8,7 @@ goog.require('munimap.door');
  */
 munimap.door.layer.create = function() {
   var styleFragments = {
-    'activeFloorFeature': {
+    activeFloorFeature: {
       filter: goog.functions.TRUE,
       style: munimap.door.STYLE
     }
