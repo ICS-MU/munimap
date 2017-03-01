@@ -18,6 +18,6 @@ munimap.style.fragment.Options;
 munimap.style.fragment.ORDER = [
   'selectedFloorFeature',
   'activeFloorFeature',
-  'outdoorFeature',
-  'defaultFloorFeature'
+  'defaultFloorFeature',
+  'outdoorFeature'
 ];
