@@ -213,10 +213,7 @@ munimap.setSelectedFloor = function(map, building, floorCode) {
     if (!!floors) {
       munimap.floor.refreshFloorBasedLayers(map);
     } else {
-      var layers = map.getLayers();
-      layers.forEach(function(layer) {
-        munimap.style.refreshFromFragments(map, layer);
-      });
+      munimap.style.refreshAllFromFragments(map);
     }
   });
 };

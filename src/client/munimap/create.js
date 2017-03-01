@@ -306,6 +306,10 @@ munimap.create = function(options) {
         if (munimap.range.contains(munimap.floor.RESOLUTION, oldRes) &&
             !munimap.range.contains(munimap.floor.RESOLUTION, res)) {
           munimap.info.refreshVisibility(map);
+          munimap.style.refreshAllFromFragments(map);
+        } else if (!munimap.range.contains(munimap.floor.RESOLUTION, oldRes) &&
+            munimap.range.contains(munimap.floor.RESOLUTION, res)) {
+          munimap.style.refreshAllFromFragments(map);
         }
       });
 

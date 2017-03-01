@@ -1,6 +1,7 @@
 goog.provide('munimap.poi.layer');
 
 goog.require('munimap.poi');
+goog.require('munimap.poi.style');
 
 
 /**
@@ -12,13 +13,13 @@ munimap.poi.layer.create = function() {
       filter: munimap.poi.style.activeFloorFilter,
       style: munimap.poi.style.activeFloorFunction
     },
+    defaultFloorFeature: {
+      filter: munimap.poi.style.defaultFloorFilter,
+      style: munimap.poi.style.ENTRANCE
+    },
     outdoorFeature: {
       filter: munimap.poi.style.outdoorFilter,
       style: munimap.poi.style.outdoorFunction
-    },
-    defaultFloorFeature: {
-      filter: munimap.poi.style.defaultFloorFilter,
-      style: munimap.poi.style.defaultFunction
     }
   };
 

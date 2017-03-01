@@ -177,9 +177,20 @@ munimap.style.alignTextToRows = function(parts, separator) {
  * @return {ol.style.StyleFunction}
  */
 munimap.style.createFromFragments = function(map, fragments) {
-  var selectedFloorOpts = munimap.getProps(map).selectedFloor;
-  var selectedFloor = selectedFloorOpts ? selectedFloorOpts.locationCode : null;
-  var activeFloors = munimap.floor.getActiveFloors(map);
+  var resolution = map.getView().getResolution();
+  var showIndoor = goog.isDef(resolution) &&
+      munimap.range.contains(munimap.floor.RESOLUTION, resolution);
+
+  var selectedFloor;
+  var activeFloors;
+  if (showIndoor) {
+    var selectedFloorOpts = munimap.getProps(map).selectedFloor;
+    selectedFloor = selectedFloorOpts ? selectedFloorOpts.locationCode : null;
+    activeFloors = munimap.floor.getActiveFloors(map);
+  } else {
+    selectedFloor = null;
+    activeFloors = [];
+  }
 
   /**
    * @param {ol.Feature} feature
@@ -199,14 +210,21 @@ munimap.style.createFromFragments = function(map, fragments) {
     };
 
     var style;
-    munimap.style.fragment.ORDER.find(function(frag) {
-      var fragment = fragments[frag];
+    if (showIndoor) {
+      munimap.style.fragment.ORDER.find(function(frag) {
+        var fragment = fragments[frag];
+        if (testFragment(fragment)) {
+          style = fragment.style;
+          return true;
+        }
+        return false;
+      });
+    } else {
+      var fragment = fragments['outdoorFeature'];
       if (testFragment(fragment)) {
         style = fragment.style;
-        return true;
       }
-      return false;
-    });
+    }
     if (style && goog.isFunction(style)) {
       var opts = {
         markers: munimap.marker.getStore(map).getFeatures()
@@ -232,6 +250,17 @@ munimap.style.refreshFromFragments = function(map, layer) {
     var style = munimap.style.createFromFragments(map, fragments);
     layer.setStyle(style);
   }
+};
+
+
+/**
+ * @param {ol.Map} map
+ */
+munimap.style.refreshAllFromFragments = function(map) {
+  var layers = map.getLayers();
+  layers.forEach(function(layer) {
+    munimap.style.refreshFromFragments(map, layer);
+  });
 };
 
 
