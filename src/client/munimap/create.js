@@ -408,20 +408,7 @@ munimap.create.setDefaultLayersProps = function(options) {
         layer.getSource().setAttributions(attributions);
         break;
       case munimap.building.LAYER_ID:
-        layer.setStyle(goog.partial(munimap.building.style.function, {
-          map: map,
-          markerSource: markerSource
-        })
-        );
         layer.getSource().setAttributions(attributions);
-        break;
-      case munimap.building.LABEL_LAYER_ID:
-        layer.setStyle(
-            goog.partial(munimap.building.style.labelFunction, {
-              map: map,
-              markerSource: markerSource
-            })
-        );
         break;
       case munimap.room.DEFAULT_LAYER_ID:
         layer.getSource().setAttributions(attributions);
