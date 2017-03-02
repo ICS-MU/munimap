@@ -133,7 +133,12 @@ munimap.room.style.setCorridorStyle = function(event) {
 
 
 /**
- * @type {munimap.style.FilterFunction}
+ * Filter function of a style fragment (type munimap.style.FilterFunction).
+ *
+ * @param {ol.Feature} feature
+ * @param {?string} selectedFloorCode
+ * @param {Array.<string>} activeFloorCodes
+ * @return {boolean}
  */
 munimap.room.style.selectedFloorFilter =
     function(feature, selectedFloorCode, activeFloorCodes) {
@@ -146,7 +151,12 @@ munimap.room.style.selectedFloorFilter =
 
 
 /**
- * @type {munimap.style.FilterFunction}
+ * Filter function of a style fragment (type munimap.style.FilterFunction).
+ *
+ * @param {ol.Feature} feature
+ * @param {?string} selectedFloorCode
+ * @param {Array.<string>} activeFloorCodes
+ * @return {boolean}
  */
 munimap.room.style.activeFloorFilter =
     function(feature, selectedFloorCode, activeFloorCodes) {
@@ -158,7 +168,12 @@ munimap.room.style.activeFloorFilter =
 
 
 /**
- * @type {munimap.style.FilterFunction}
+ * Filter function of a style fragment (type munimap.style.FilterFunction).
+ *
+ * @param {ol.Feature} feature
+ * @param {?string} selectedFloorCode
+ * @param {Array.<string>} activeFloorCodes
+ * @return {boolean}
  */
 munimap.room.style.defaultFloorFilter =
     function(feature, selectedFloorCode, activeFloorCodes) {
@@ -170,6 +185,8 @@ munimap.room.style.defaultFloorFilter =
 
 
 /**
+ * Style function of a style fragment (type munimap.style.Function).
+ *
  * @param {munimap.style.Function.Options} options
  * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
@@ -188,6 +205,9 @@ munimap.room.style.activeFunction = function(options, feature, resolution) {
 
 
 /**
+ * Style function of a style fragment (type munimap.style.Function).
+ *
+ *
  * @param {munimap.style.Function.Options} options
  * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
@@ -246,6 +266,9 @@ munimap.room.style.LABEL_CACHE = {};
 
 
 /**
+ * Style function of a style fragment (type munimap.style.Function).
+ *
+ *
  * @param {munimap.style.Function.Options} options
  * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution

@@ -212,7 +212,12 @@ munimap.poi.style.TOILET_W = [
 
 
 /**
- * @type {munimap.style.FilterFunction}
+ * Filter function of a style fragment (type munimap.style.FilterFunction).
+ *
+ * @param {ol.Feature} feature
+ * @param {?string} selectedFloorCode
+ * @param {Array.<string>} activeFloorCodes
+ * @return {boolean}
  */
 munimap.poi.style.activeFloorFilter =
     function(feature, selectedFloorCode, activeFloorCodes) {
@@ -227,7 +232,12 @@ munimap.poi.style.activeFloorFilter =
 
 
 /**
- * @type {munimap.style.FilterFunction}
+ * Filter function of a style fragment (type munimap.style.FilterFunction).
+ *
+ * @param {ol.Feature} feature
+ * @param {?string} selectedFloorCode
+ * @param {Array.<string>} activeFloorCodes
+ * @return {boolean}
  */
 munimap.poi.style.defaultFloorFilter =
     function(feature, selectedFloorCode, activeFloorCodes) {
@@ -249,7 +259,12 @@ munimap.poi.style.defaultFloorFilter =
 
 
 /**
- * @type {munimap.style.FilterFunction}
+ * Filter function of a style fragment (type munimap.style.FilterFunction).
+ *
+ * @param {ol.Feature} feature
+ * @param {?string} selectedFloorCode
+ * @param {Array.<string>} activeFloorCodes
+ * @return {boolean}
  */
 munimap.poi.style.outdoorFilter =
     function(feature, selectedFloorCode, activeFloorCodes) {
@@ -264,6 +279,8 @@ munimap.poi.style.outdoorFilter =
 
 
 /**
+ * Style function of a style fragment (type munimap.style.Function).
+ *
  * @param {munimap.style.Function.Options} options
  * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
@@ -310,6 +327,8 @@ munimap.poi.style.activeFloorFunction = function(options, feature, resolution) {
 
 
 /**
+ * Style function of a style fragment (type munimap.style.Function).
+ *
  * @param {munimap.style.Function.Options} options
  * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution

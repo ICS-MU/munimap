@@ -24,6 +24,7 @@ munimap.style.Function;
 
 /**
  * @typedef {{
+ *   map:? ol.Map,
  *   markers:? Array.<ol.Feature>
  * }}
  */
@@ -227,6 +228,7 @@ munimap.style.createFromFragments = function(map, fragments) {
     }
     if (style && goog.isFunction(style)) {
       var opts = {
+        map: map,
         markers: munimap.marker.getStore(map).getFeatures()
       };
       return style(opts, feature, resolution);
