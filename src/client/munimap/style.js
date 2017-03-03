@@ -245,10 +245,10 @@ munimap.style.createFromFragments = function(map, fragments) {
  * @param {ol.layer.Vector} layer
  */
 munimap.style.refreshFromFragments = function(map, layer) {
-  var refreshStyle = layer.get('refreshStyleOnFloorChange');
+  var refreshStyle = layer.get(munimap.layer.propName.REFRESH_STYLE);
   if (goog.isDef(refreshStyle) && refreshStyle) {
     var fragments = /**@type {munimapx.style.fragment.LayerOptions}*/
-        (layer.get('styleFragments'));
+        (layer.get(munimap.layer.propName.STYLE_FRAGMENTS));
     var style = munimap.style.createFromFragments(map, fragments);
     layer.setStyle(style);
   }

@@ -21,6 +21,7 @@ goog.require('munimap.floor');
 goog.require('munimap.getDefaultLayers');
 goog.require('munimap.info');
 goog.require('munimap.lang');
+goog.require('munimap.layer.propName');
 goog.require('munimap.marker');
 goog.require('munimap.poi');
 goog.require('munimap.poi.style');
@@ -178,9 +179,9 @@ munimap.create = function(options) {
 
       var markerLayer = new ol.layer.Vector({
         id: munimap.marker.LAYER_ID,
-        'isFeatureClickable': munimap.marker.isClickable,
-        'featureClickHandler': munimap.marker.featureClickHandler,
-        'redrawOnFloorChange': true,
+        isFeatureClickable: munimap.marker.isClickable,
+        featureClickHandler: munimap.marker.featureClickHandler,
+        redrawOnFloorChange: true,
         source: markerSource,
         style: goog.partial(munimap.marker.style.function, markerOptions),
         maxResolution: munimap.marker.RESOLUTION.max,
@@ -204,8 +205,8 @@ munimap.create = function(options) {
       });
       var markerClusterLayer = new ol.layer.Vector({
         id: munimap.cluster.LAYER_ID,
-        'isFeatureClickable': munimap.cluster.isClickable,
-        'featureClickHandler': munimap.cluster.featureClickHandler,
+        isFeatureClickable: munimap.cluster.isClickable,
+        featureClickHandler: munimap.cluster.featureClickHandler,
         source: markerClusterSrc,
         style: goog.partial(
             munimap.cluster.style.function, markerOptions),
@@ -263,7 +264,8 @@ munimap.create = function(options) {
         var layeredFeature = getMainFeatureAtPixel(map, pixel);
         if (layeredFeature) {
           var layer = layeredFeature.layer;
-          var isClickable = layer.get('isFeatureClickable');
+          var isClickable =
+              layer.get(munimap.layer.propName.IS_CLICKABLE);
           if (isClickable) {
             goog.asserts.assertFunction(isClickable);
             var handlerOpts = {
