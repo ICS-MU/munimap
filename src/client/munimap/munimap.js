@@ -1,5 +1,6 @@
 goog.provide('munimap');
 
+goog.require('munimap.layer.propName');
 goog.require('munimap.marker');
 goog.require('munimap.move');
 
@@ -291,7 +292,7 @@ munimap.handleClickOnPixel = function(map, pixel) {
   var layeredFeature = getMainFeatureAtPixel(map, pixel);
   if (layeredFeature) {
     var layer = layeredFeature.layer;
-    var isClickable = layer.get('isFeatureClickable');
+    var isClickable = layer.get(munimap.layer.propName.IS_CLICKABLE);
     if (isClickable) {
       goog.asserts.assertFunction(isClickable);
 
@@ -303,7 +304,8 @@ munimap.handleClickOnPixel = function(map, pixel) {
         resolution: map.getView().getResolution()
       };
       if (isClickable(handlerOpts)) {
-        var featureClickHandler = layer.get('featureClickHandler');
+        var featureClickHandler =
+            layer.get(munimap.layer.propName.CLICK_HANDLER);
         if (featureClickHandler) {
           goog.asserts.assertFunction(featureClickHandler);
           featureClickHandler(handlerOpts);

@@ -25,12 +25,12 @@ munimap.poi.layer.create = function() {
 
   return new ol.layer.Vector({
     id: munimap.poi.ACTIVE_LAYER_ID,
-    'isFeatureClickable': munimap.poi.isClickable,
-    'featureClickHandler': munimap.poi.featureClickHandler,
-    'clearSourceOnFloorChange': true,
-    'type': munimap.poi.TYPE,
-    'refreshStyleOnFloorChange': true,
-    'styleFragments': styleFragments,
+    isFeatureClickable: munimap.poi.isClickable,
+    featureClickHandler: munimap.poi.featureClickHandler,
+    clearSourceOnFloorChange: true,
+    type: munimap.poi.TYPE,
+    refreshStyleOnFloorChange: true,
+    styleFragments: styleFragments,
     maxResolution: munimap.poi.RESOLUTION.max,
     source: null,
     updateWhileAnimating: true,

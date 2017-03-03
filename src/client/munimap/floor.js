@@ -70,12 +70,12 @@ munimap.floor.getActiveFloors = function(map) {
 munimap.floor.refreshFloorBasedLayers = function(map) {
   var layers = map.getLayers();
   layers.forEach(function(layer) {
-    var clearSource = layer.get('clearSourceOnFloorChange');
+    var clearSource = layer.get(munimap.layer.propName.CLEAR_SOURCE);
     if (goog.isDef(clearSource) && clearSource) {
       var source = layer.getSource();
       source.clear();
     } else {
-      var redraw = layer.get('redrawOnFloorChange');
+      var redraw = layer.get(munimap.layer.propName.REDRAW);
       if (goog.isDef(redraw) && redraw) {
         layer.changed();
       }
