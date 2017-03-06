@@ -83,22 +83,64 @@ munimap.building.style.BIG_FONT_SIZE = 15;
 
 
 /**
- * @param {munimap.style.MarkersAwareOptions} options
- * @param {ol.Feature|ol.render.Feature} feature
+ * Filter function of a style fragment (type munimap.style.FilterFunction).
+ *
+ * @param {ol.Feature} feature
+ * @param {?string} selectedFloorCode
+ * @param {Array.<string>} activeFloorCodes
+ * @return {boolean}
+ */
+munimap.building.style.selectedFloorFilter =
+    function(feature, selectedFloorCode, activeFloorCodes) {
+  if (goog.isDefAndNotNull(selectedFloorCode)) {
+    var locCode = /**@type {string}*/ (feature.get('polohKod'));
+    return selectedFloorCode.startsWith(locCode);
+  }
+  return false;
+};
+
+
+/**
+ * Style function of a style fragment (type munimap.style.Function).
+ *
+ * @param {munimap.style.Function.Options} options
+ * @param {ol.Feature} feature
+ * @param {number} resolution
+ * @return {ol.style.Style|Array.<ol.style.Style>}
+ */
+munimap.building.style.selectedFloorFunction =
+    function(options, feature, resolution) {
+  var style = munimap.building.style.function(options, feature, resolution);
+  var selectedFill = new ol.style.Fill({
+    color: style.getFill().getColor()
+  });
+  var selectedStroke = new ol.style.Stroke({
+    color: style.getStroke().getColor(),
+    width: 2 * style.getStroke().getWidth()
+  });
+  return new ol.style.Style({
+    fill: selectedFill,
+    stroke: selectedStroke
+  });
+};
+
+
+/**
+ * Style function of a style fragment (type munimap.style.Function).
+ *
+ * @param {munimap.style.Function.Options} options
+ * @param {ol.Feature} feature
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
 munimap.building.style.function =
     function(options, feature, resolution) {
-  goog.asserts.assertInstanceof(feature, ol.Feature);
   var resColor = munimap.style.RESOLUTION_COLOR.find(
       function(obj, i, arr) {
         return resolution > obj.resolution || i === (arr.length - 1);
       });
 
-  var markerSource = options.markerSource;
-  var markers = markerSource.getFeatures();
-  var marked = markers.indexOf(feature) >= 0;
+  var marked = options.markers.indexOf(feature) >= 0;
   if (marked) {
     if (!munimap.range.contains(
         munimap.cluster.BUILDING_RESOLUTION, resolution)) {
@@ -142,107 +184,126 @@ munimap.building.style.function =
       result = munimap.building.style.NO_GEOMETRY;
     }
   }
-  var map = options.map;
-  goog.asserts.assertInstanceof(map, ol.Map);
-  var activeBuilding = munimap.getProps(map).activeBuilding;
-  var isActive = activeBuilding &&
-      activeBuilding === munimap.building.getLocationCode(feature);
-  if (isActive &&
-      munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
-    var selectedFill = new ol.style.Fill({
-      color: result.getFill().getColor()
-    });
-    var selectedStroke = new ol.style.Stroke({
-      color: result.getStroke().getColor(),
-      width: 2 * result.getStroke().getWidth()
-    });
-    result = new ol.style.Style({
-      fill: selectedFill,
-      stroke: selectedStroke
-    });
+  return result;
+};
+
+
+/**
+ * Style function of a style fragment (type munimap.style.Function).
+ *
+ * @param {munimap.style.Function.Options} options
+ * @param {ol.Feature} feature
+ * @param {number} resolution
+ * @return {ol.style.Style|Array.<ol.style.Style>}
+ */
+munimap.building.style.labelFunction =
+    function(options, feature, resolution) {
+  var result = null;
+  var marked = options.markers.indexOf(feature) >= 0;
+  if (!marked && resolution < munimap.complex.RESOLUTION.max) {
+    if (!munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
+      result = munimap.building.style.smallScaleLabelFunction(
+          options.map, feature, resolution);
+    } else {
+      result = munimap.building.style.largeScaleLabelFunction(
+          options.map, feature, resolution);
+    }
   }
   return result;
 };
 
 
 /**
- * @param {munimap.marker.style.labelFunction.Options} options
- * @param {ol.Feature|ol.render.Feature} feature
+ * @param {ol.Map} map
+ * @param {ol.Feature} feature
  * @param {number} resolution
- * @return {ol.style.Style|Array.<ol.style.Style>}
+ * @return {Array.<ol.style.Style>|ol.style.Style}
+ * @protected
  */
-munimap.building.style.labelFunction =
-    function(options, feature, resolution) {
-  goog.asserts.assertInstanceof(feature, ol.Feature);
-  var markerSource = options.markerSource;
-  var markers = markerSource.getFeatures();
-  var marked = markers.indexOf(feature) >= 0;
-  var isActive = munimap.building.isActive(feature, options.map);
-
+munimap.building.style.smallScaleLabelFunction =
+    function(map, feature, resolution) {
   var result = null;
-  if (!marked && resolution < munimap.complex.RESOLUTION.max &&
-      (!isActive || (isActive &&
-          !munimap.range.contains(munimap.floor.RESOLUTION, resolution)))) {
-    var geometryFunction = goog.partial(
-        munimap.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, options.map);
-    var units = munimap.building.getUnits(feature);
-    var opts = {
-      fill: munimap.style.TEXT_FILL,
-      fontSize: munimap.building.style.FONT_SIZE,
-      geometry: geometryFunction
-    };
-    if (!munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
-      if (units.length > 0) {
-        if (resolution < munimap.cluster.BUILDING_RESOLUTION.min) {
-          var title;
-          var complex = munimap.building.getComplex(feature);
-          if (munimap.range.contains(munimap.complex.RESOLUTION, resolution) &&
-              goog.isDefAndNotNull(complex) &&
-              munimap.complex.getBuildingCount(complex) > 1) {
-            title = munimap.unit.getTitleParts(units).join('\n');
-          } else {
-            title = munimap.building.getDefaultLabel(feature, resolution);
-          }
-          if (goog.isDef(title)) {
-            opts.title = title;
-            result = munimap.style.getLabelWithPin(opts);
-          }
-        }
-      } else if (resolution < munimap.complex.RESOLUTION.min) {
-        result = munimap.building.style.defaultLabelFunction(
-            options.map, feature, resolution);
+  var units = munimap.building.getUnits(feature);
+  if (units.length > 0) {
+    if (resolution < munimap.cluster.BUILDING_RESOLUTION.min) {
+      var title;
+      var complex = munimap.building.getComplex(feature);
+      if (munimap.range.contains(munimap.complex.RESOLUTION, resolution) &&
+          goog.isDefAndNotNull(complex) &&
+          munimap.complex.getBuildingCount(complex) > 1) {
+        title = munimap.unit.getTitleParts(units).join('\n');
+      } else {
+        title = munimap.building.getDefaultLabel(feature, resolution);
       }
-    } else {
-      var uid = munimap.store.getUid(feature);
-      if (uid) {
-        goog.asserts.assertString(uid);
-        if (munimap.building.style.LABEL_CACHE[uid]) {
-          return munimap.building.style.LABEL_CACHE[uid];
-        }
-      }
-      var title = munimap.building.getDefaultLabel(feature, resolution);
       if (goog.isDef(title)) {
-        if (units.length > 0) {
-          opts.title = title;
-          result = munimap.style.getLabelWithPin(opts);
-        } else {
-          result = new ol.style.Style({
-            geometry: geometryFunction,
-            text: new ol.style.Text({
-              font: 'bold ' + munimap.building.style.BIG_FONT_SIZE + 'px arial',
-              fill: munimap.style.TEXT_FILL,
-              stroke: munimap.style.TEXT_STROKE,
-              text: title
-            }),
-            zIndex: 4
-          });
-        }
-      }
-      if (uid) {
-        goog.asserts.assertString(uid);
-        munimap.building.style.LABEL_CACHE[uid] = result;
+        var geometryFunction = goog.partial(
+            munimap.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, map);
+        var options = {
+          fill: munimap.style.TEXT_FILL,
+          fontSize: munimap.building.style.FONT_SIZE,
+          geometry: geometryFunction,
+          title: title
+        };
+        result = munimap.style.getLabelWithPin(options);
       }
     }
+  } else if (resolution < munimap.complex.RESOLUTION.min) {
+    result =
+        munimap.building.style.defaultLabelFunction(map, feature, resolution);
+  }
+  return result;
+};
+
+
+/**
+ * @param {ol.Map} map
+ * @param {ol.Feature} feature
+ * @param {number} resolution
+ * @return {Array.<ol.style.Style>|ol.style.Style}
+ * @protected
+ */
+munimap.building.style.largeScaleLabelFunction =
+    function(map, feature, resolution) {
+  var uid = munimap.store.getUid(feature);
+  if (uid) {
+    goog.asserts.assertString(uid);
+    if (munimap.building.style.LABEL_CACHE[uid]) {
+      return munimap.building.style.LABEL_CACHE[uid];
+    }
+  }
+
+  var result;
+  var title = munimap.building.getDefaultLabel(feature, resolution);
+  if (goog.isDef(title)) {
+    var units = munimap.building.getUnits(feature);
+    if (units.length > 0) {
+      var geometryFunction = goog.partial(
+          munimap.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, map);
+      var options = {
+        fill: munimap.style.TEXT_FILL,
+        fontSize: munimap.building.style.FONT_SIZE,
+        geometry: geometryFunction,
+        title: title
+      };
+      result = munimap.style.getLabelWithPin(options);
+    } else {
+      result = new ol.style.Style({
+        geometry: geometryFunction,
+        text: new ol.style.Text({
+          font: 'bold ' + munimap.building.style.BIG_FONT_SIZE + 'px arial',
+          fill: munimap.style.TEXT_FILL,
+          stroke: munimap.style.TEXT_STROKE,
+          text: title
+        }),
+        zIndex: 4
+      });
+    }
+  } else {
+    result = null;
+  }
+  if (uid) {
+    goog.asserts.assertString(uid);
+    munimap.building.style.LABEL_CACHE[uid] = result;
   }
   return result;
 };

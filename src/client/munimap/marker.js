@@ -98,10 +98,10 @@ munimap.marker.isClickable = function(options) {
   } else if (munimap.building.isBuilding(feature)) {
     return munimap.building.hasInnerGeometry(feature) &&
         (!munimap.range.contains(munimap.floor.RESOLUTION, resolution) ||
-        !munimap.building.isActive(feature, map));
+        !munimap.building.isSelected(feature, map));
   } else if (munimap.room.isRoom(feature)) {
-    return !munimap.range.contains(munimap.floor.RESOLUTION, resolution) ||
-        !munimap.room.isInActiveFloor(feature, map);
+    return (!munimap.range.contains(munimap.floor.RESOLUTION, resolution) ||
+        !munimap.room.isInSelectedFloor(feature, map));
   } else if (munimap.door.isDoor(feature)) {
     return !munimap.range.contains(munimap.door.RESOLUTION, resolution);
   }

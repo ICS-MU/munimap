@@ -177,7 +177,6 @@ munimap.poi.loadActive = function(options, extent, resolution, projection) {
       function(pois) {
         var activeLayer = munimap.poi.getActiveLayer(options.map);
         var activeStore = activeLayer.getSource();
-        //check if active floor has changed
         var poisToAdd =
             munimap.store.getNotYetAddedFeatures(activeStore, pois);
         activeStore.addFeatures(poisToAdd);

@@ -1,6 +1,34 @@
 goog.provide('munimap.style');
 
 goog.require('munimap.geom');
+goog.require('munimap.style.fragment');
+
+
+/**
+ *
+ * @typedef {
+ *    function(ol.Feature, ?string, Array.<string>): boolean
+ * }
+ */
+munimap.style.FilterFunction;
+
+
+/**
+ * @typedef {
+ *    function(munimap.style.Function.Options, ol.Feature, number):
+ *      (ol.style.Style|Array.<ol.style.Style>)
+ * }
+ */
+munimap.style.Function;
+
+
+/**
+ * @typedef {{
+ *   map:? ol.Map,
+ *   markers:? Array.<ol.Feature>
+ * }}
+ */
+munimap.style.Function.Options;
 
 
 /**
@@ -141,6 +169,100 @@ munimap.style.alignTextToRows = function(parts, separator) {
     }
   });
   return text;
+};
+
+
+/**
+ * @param {ol.Map} map
+ * @param {munimapx.style.fragment.LayerOptions} fragments
+ * @return {ol.style.StyleFunction}
+ */
+munimap.style.createFromFragments = function(map, fragments) {
+  var resolution = map.getView().getResolution();
+  var showIndoor = goog.isDef(resolution) &&
+      munimap.range.contains(munimap.floor.RESOLUTION, resolution);
+
+  var selectedFloor;
+  var activeFloors;
+  if (showIndoor) {
+    var selectedFloorOpts = munimap.getProps(map).selectedFloor;
+    selectedFloor = selectedFloorOpts ? selectedFloorOpts.locationCode : null;
+    activeFloors = munimap.floor.getActiveFloors(map);
+  } else {
+    selectedFloor = null;
+    activeFloors = [];
+  }
+
+  /**
+   * @param {ol.Feature} feature
+   * @param {number} resolution
+   * @return {ol.style.Style|Array.<ol.style.Style>}
+   */
+  var styleFce = function(feature, resolution) {
+    /**
+     * @param {munimap.style.fragment.Options} fragment
+     * @return {boolean|undefined}
+     */
+    var testFragment = function(fragment) {
+      if (fragment) {
+        return fragment.filter(feature, selectedFloor, activeFloors);
+      }
+      return undefined;
+    };
+
+    var style;
+    if (showIndoor) {
+      munimap.style.fragment.ORDER.find(function(frag) {
+        var fragment = fragments[frag];
+        if (testFragment(fragment)) {
+          style = fragment.style;
+          return true;
+        }
+        return false;
+      });
+    } else {
+      var fragment = fragments['outdoorFeature'];
+      if (testFragment(fragment)) {
+        style = fragment.style;
+      }
+    }
+    if (style && goog.isFunction(style)) {
+      var opts = {
+        map: map,
+        markers: munimap.marker.getStore(map).getFeatures()
+      };
+      return style(opts, feature, resolution);
+    }
+    return style;
+  };
+
+  return styleFce;
+};
+
+
+/**
+ * @param {ol.Map} map
+ * @param {ol.layer.Vector} layer
+ */
+munimap.style.refreshFromFragments = function(map, layer) {
+  var refreshStyle = layer.get(munimap.layer.propName.REFRESH_STYLE);
+  if (goog.isDef(refreshStyle) && refreshStyle) {
+    var fragments = /**@type {munimapx.style.fragment.LayerOptions}*/
+        (layer.get(munimap.layer.propName.STYLE_FRAGMENTS));
+    var style = munimap.style.createFromFragments(map, fragments);
+    layer.setStyle(style);
+  }
+};
+
+
+/**
+ * @param {ol.Map} map
+ */
+munimap.style.refreshAllFromFragments = function(map) {
+  var layers = map.getLayers();
+  layers.forEach(function(layer) {
+    munimap.style.refreshFromFragments(map, layer);
+  });
 };
 
 
