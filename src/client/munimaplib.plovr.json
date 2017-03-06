@@ -64,7 +64,9 @@
     "webfontloader/webfontloader.externs.js",
     "munimap/munimap.externs.js",
     "munimap/create.externs.js",
-    "munimap/reset.externs.js"
+    "munimap/layer.externs.js",
+    "munimap/reset.externs.js",
+    "munimap/style.fragment.externs.js"
   ],
 
   "inputs": [

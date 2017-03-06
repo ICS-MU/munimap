@@ -1,5 +1,6 @@
 goog.provide('munimap');
 
+goog.require('munimap.layer.propName');
 goog.require('munimap.marker');
 goog.require('munimap.move');
 
@@ -8,8 +9,8 @@ goog.require('munimap.move');
  * @typedef {{
  *   info: Element,
  *   floorSelect: goog.ui.Select,
- *   activeBuilding:? (string),
- *   activeFloor:? (munimap.floor.Options),
+ *   selectedBuilding:? (string),
+ *   selectedFloor:? (munimap.floor.Options),
  *   currentResolution: (number),
  *   getMainFeatureAtPixel: (munimap.getMainFeatureAtPixelFunction)
  * }}
@@ -85,7 +86,7 @@ munimap.changeFloor = function(map, featureOrCode) {
     if (munimap.building.isBuilding(feature)) {
       if (munimap.building.hasInnerGeometry(feature)) {
         building = feature;
-        floorCode = munimap.getActiveFloorCodeForBuilding(map, building);
+        floorCode = munimap.getSelectedFloorCodeForBuilding(map, building);
       }
     } else if (munimap.room.isRoom(feature) || munimap.door.isDoor(feature)) {
       var locCode = /**@type (string)*/ (feature.get('polohKod'));
@@ -103,22 +104,22 @@ munimap.changeFloor = function(map, featureOrCode) {
   var mapProps = munimap.getProps(map);
   if (building) {
     var locCode = munimap.building.getLocationCode(building);
-    if (mapProps.activeBuilding !== locCode) {
-      mapProps.activeBuilding = locCode;
+    if (mapProps.selectedBuilding !== locCode) {
+      mapProps.selectedBuilding = locCode;
       building.changed();
       munimap.info.setBuildingTitle(map, building);
     }
     munimap.info.refreshElementPosition(map);
   }
 
-  var activeFloor = mapProps.activeFloor;
+  var selectedFloor = mapProps.selectedFloor;
   if (floorCode) {
-    if (!activeFloor || activeFloor.locationCode !== floorCode) {
-      munimap.setActiveFloor(map, building, floorCode);
+    if (!selectedFloor || selectedFloor.locationCode !== floorCode) {
+      munimap.setSelectedFloor(map, building, floorCode);
     }
   } else {
-    if (goog.isDefAndNotNull(activeFloor)) {
-      mapProps.activeFloor = null;
+    if (goog.isDefAndNotNull(selectedFloor)) {
+      mapProps.selectedFloor = null;
       munimap.floor.refreshFloorBasedLayers(map);
     }
     if (building) {
@@ -128,9 +129,9 @@ munimap.changeFloor = function(map, featureOrCode) {
         munimap.info.refreshFloorSelect(map, floors);
       });
     } else {
-      if (mapProps.activeBuilding) {
-        building = munimap.building.getByCode(mapProps.activeBuilding);
-        mapProps.activeBuilding = null;
+      if (mapProps.selectedBuilding) {
+        building = munimap.building.getByCode(mapProps.selectedBuilding);
+        mapProps.selectedBuilding = null;
         building.changed();
       }
       munimap.info.refreshFloorSelect(map, null);
@@ -146,7 +147,7 @@ munimap.changeFloor = function(map, featureOrCode) {
  * @return {string}
  * @protected
  */
-munimap.getActiveFloorCodeForBuilding = function(map, building) {
+munimap.getSelectedFloorCodeForBuilding = function(map, building) {
   var activeFloors = munimap.floor.getActiveFloors(map);
   var floorCode = activeFloors.find(function(code) {
     return code.substr(0, 5) === munimap.building.getLocationCode(building);
@@ -187,11 +188,11 @@ munimap.getActiveFloorCodeForBuilding = function(map, building) {
  * @param {string} floorCode
  * @protected
  */
-munimap.setActiveFloor = function(map, building, floorCode) {
+munimap.setSelectedFloor = function(map, building, floorCode) {
   var buildingCode = munimap.building.getLocationCode(building);
   var where = 'polohKod LIKE \'' + buildingCode + '%\'';
   munimap.floor.loadFloors(where).then(function(floors) {
-    var newActiveFloor = floors.find(function(floor) {
+    var newSelectedFloor = floors.find(function(floor) {
       return floorCode ===
           /**@type {string}*/ (floor.get('polohKod'));
     });
@@ -200,21 +201,20 @@ munimap.setActiveFloor = function(map, building, floorCode) {
           return code === floorCode;
         });
     var mapProps = munimap.getProps(map);
-    mapProps.activeFloor = munimap.floor.getFloorObject(newActiveFloor || null);
+    mapProps.selectedFloor =
+        munimap.floor.getFloorObject(newSelectedFloor || null);
     munimap.info.refreshFloorSelect(map, floors);
     if (atSameLayerAsActive) {
       return null;
     } else {
       return munimap.floor.loadFloors(
-          'vrstvaId = ' + mapProps.activeFloor.floorLayerId);
+          'vrstvaId = ' + mapProps.selectedFloor.floorLayerId);
     }
   }).then(function(floors) {
     if (!!floors) {
       munimap.floor.refreshFloorBasedLayers(map);
-    }
-    var roomLabels = munimap.room.label.getLayer(map);
-    if (roomLabels) {
-      roomLabels.changed();
+    } else {
+      munimap.style.refreshAllFromFragments(map);
     }
   });
 };
@@ -292,7 +292,7 @@ munimap.handleClickOnPixel = function(map, pixel) {
   var layeredFeature = getMainFeatureAtPixel(map, pixel);
   if (layeredFeature) {
     var layer = layeredFeature.layer;
-    var isClickable = layer.get('isFeatureClickable');
+    var isClickable = layer.get(munimap.layer.propName.IS_CLICKABLE);
     if (isClickable) {
       goog.asserts.assertFunction(isClickable);
 
@@ -304,7 +304,8 @@ munimap.handleClickOnPixel = function(map, pixel) {
         resolution: map.getView().getResolution()
       };
       if (isClickable(handlerOpts)) {
-        var featureClickHandler = layer.get('featureClickHandler');
+        var featureClickHandler =
+            layer.get(munimap.layer.propName.CLICK_HANDLER);
         if (featureClickHandler) {
           goog.asserts.assertFunction(featureClickHandler);
           featureClickHandler(handlerOpts);

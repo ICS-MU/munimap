@@ -46,12 +46,12 @@ munimap.floor.TYPE = {
  */
 munimap.floor.getActiveFloors = function(map) {
   var codes = [];
-  var activeFloor = munimap.getProps(map).activeFloor;
-  if (activeFloor) {
+  var selectedFloor = munimap.getProps(map).selectedFloor;
+  if (selectedFloor) {
     var floors = munimap.floor.STORE.getFeatures();
     var active = floors.filter(function(floor) {
       var layerId = /**@type {number}*/ (floor.get('vrstvaId'));
-      if (layerId === activeFloor.floorLayerId) {
+      if (layerId === selectedFloor.floorLayerId) {
         return true;
       }
       return false;
@@ -70,16 +70,17 @@ munimap.floor.getActiveFloors = function(map) {
 munimap.floor.refreshFloorBasedLayers = function(map) {
   var layers = map.getLayers();
   layers.forEach(function(layer) {
-    var clearSource = layer.get('clearSourceOnFloorChange');
+    var clearSource = layer.get(munimap.layer.propName.CLEAR_SOURCE);
     if (goog.isDef(clearSource) && clearSource) {
       var source = layer.getSource();
       source.clear();
     } else {
-      var redraw = layer.get('redrawOnFloorChange');
+      var redraw = layer.get(munimap.layer.propName.REDRAW);
       if (goog.isDef(redraw) && redraw) {
         layer.changed();
       }
     }
+    munimap.style.refreshFromFragments(map, layer);
   });
 };
 

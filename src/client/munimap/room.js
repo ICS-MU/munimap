@@ -231,7 +231,7 @@ munimap.room.isClickable = function(options) {
   var feature = options.feature;
   var map = options.map;
 
-  return !munimap.room.isInActiveFloor(feature, map);
+  return !munimap.room.isInSelectedFloor(feature, map);
 };
 
 
@@ -290,11 +290,11 @@ munimap.room.getNamePart = function(feature) {
  * @param {ol.Map} map
  * @return {boolean}
  */
-munimap.room.isInActiveFloor = function(room, map) {
+munimap.room.isInSelectedFloor = function(room, map) {
   goog.asserts.assert(munimap.room.isRoom(room));
   var locCode = /**@type {string}*/(room.get('polohKod'));
-  var activeFloor = munimap.getProps(map).activeFloor;
-  return !!activeFloor && locCode.startsWith(activeFloor.locationCode);
+  var selectedFloor = munimap.getProps(map).selectedFloor;
+  return !!selectedFloor && locCode.startsWith(selectedFloor.locationCode);
 };
 
 
@@ -323,7 +323,6 @@ munimap.room.loadActive = function(options, extent, resolution, projection) {
         function(rooms) {
           var activeStore = munimap.room.getActiveStore(options.map);
           goog.asserts.assertInstanceof(activeStore, ol.source.Vector);
-          //check if active floor has changed
           var roomsToAdd =
               munimap.store.getNotYetAddedFeatures(activeStore, rooms);
           activeStore.addFeatures(roomsToAdd);

@@ -159,7 +159,6 @@ munimap.door.loadActive = function(options, extent, resolution, projection) {
         function(doors) {
           var activeLayer = munimap.door.getActiveLayer(options.map);
           var activeStore = activeLayer.getSource();
-          //check if active floor has changed
           var doorsToAdd =
               munimap.store.getNotYetAddedFeatures(activeStore, doors);
           activeStore.addFeatures(doorsToAdd);
