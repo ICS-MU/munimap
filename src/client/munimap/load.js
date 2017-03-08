@@ -237,13 +237,17 @@ munimap.load.features = function(options) {
     'where': options.where || '1=1'
   };
   var qdata = goog.Uri.QueryData.createFromMap(params);
-  url += qdata.toString();
+  var isPost = options.method === 'POST';
+  if (!isPost) {
+    url += qdata.toString();
+  }
 
   return munimap.load.featuresFromUrl({
     source: options.source,
     type: type,
     url: url,
     method: options.method,
+    postContent: isPost ? qdata.toString() : undefined,
     processor: options.processor,
     newProcessedFeatures:
         munimap.load.ProcessorCache.getNewProcessedFeatures(type)
