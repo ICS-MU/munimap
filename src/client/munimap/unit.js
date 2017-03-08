@@ -43,6 +43,7 @@ munimap.unit.load = function(where) {
   return munimap.load.features({
     source: munimap.unit.STORE,
     type: munimap.unit.TYPE,
+    method: 'POST',
     returnGeometry: false,
     where: where
   });
