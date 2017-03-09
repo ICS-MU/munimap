@@ -153,26 +153,26 @@ munimap.getSelectedFloorCodeForBuilding = function(map, building) {
     return code.substr(0, 5) === munimap.building.getLocationCode(building);
   });
   if (!floorCode) {
-    var markerSource = munimap.marker.getStore(map);
-    var markedFeatures = markerSource.getFeatures();
-    if (markedFeatures.length > 0) {
-      var firstMarked = markedFeatures.find(function(marked) {
-        if (munimap.room.isRoom(marked) || munimap.door.isDoor(marked)) {
+  var markerSource = munimap.marker.getStore(map);
+  var markedFeatures = markerSource.getFeatures();
+  if (markedFeatures.length > 0) {
+    var firstMarked = markedFeatures.find(function(marked) {
+      if (munimap.room.isRoom(marked) || munimap.door.isDoor(marked)) {
           var buildingLocCode = munimap.building.getLocationCode(building);
-          var locationCode =
-              /**@type {string}*/ (marked.get('polohKod'));
+        var locationCode =
+            /**@type {string}*/ (marked.get('polohKod'));
           return locationCode.substr(0, 5) === buildingLocCode;
-        } else {
-          return false;
-        }
-      });
-
-      if (firstMarked) {
-        var firstMarkedCode = /**@type {string}*/
-            (firstMarked.get('polohKod'));
-        floorCode = firstMarkedCode.substr(0, 8);
+      } else {
+        return false;
       }
+    });
+
+    if (firstMarked) {
+      var firstMarkedCode = /**@type {string}*/
+          (firstMarked.get('polohKod'));
+      floorCode = firstMarkedCode.substr(0, 8);
     }
+  }
     if (!floorCode) {
       floorCode =
           /**@type (string)*/ (building.get('vychoziPodlazi'));
@@ -196,25 +196,24 @@ munimap.setSelectedFloor = function(map, building, floorCode) {
       return floorCode ===
           /**@type {string}*/ (floor.get('polohKod'));
     });
-    var atSameLayerAsActive =
+    goog.asserts.assertInstanceof(newSelectedFloor, ol.Feature);
+    var newSelectedWasActive =
         munimap.floor.getActiveFloors(map).some(function(code) {
           return code === floorCode;
         });
     var mapProps = munimap.getProps(map);
     mapProps.selectedFloor =
-        munimap.floor.getFloorObject(newSelectedFloor || null);
+        munimap.floor.getFloorObject(newSelectedFloor);
     munimap.info.refreshFloorSelect(map, floors);
-    if (atSameLayerAsActive) {
-      return null;
-    } else {
-      return munimap.floor.loadFloors(
-          'vrstvaId = ' + mapProps.selectedFloor.floorLayerId);
-    }
-  }).then(function(floors) {
-    if (!!floors) {
-      munimap.floor.refreshFloorBasedLayers(map);
-    } else {
+    if (newSelectedWasActive) {
       munimap.style.refreshAllFromFragments(map);
+    } else {
+      var where = 'vrstvaId = ' + mapProps.selectedFloor.floorLayerId;
+      munimap.floor.loadFloors(where).then(function(floors) {
+        if (!!floors) {
+          munimap.floor.refreshFloorBasedLayers(map);
+        }
+      });
     }
   });
 };
