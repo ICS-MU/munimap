@@ -27,7 +27,7 @@ munimap.unit.TYPE = {
   primaryKey: 'OBJECTID',
   serviceUrl: munimap.load.MUNIMAP_URL,
   store: munimap.unit.STORE,
-  layerId: 6,
+  layerId: 7,
   name: 'unit'
 };
 
