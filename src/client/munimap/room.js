@@ -323,8 +323,11 @@ munimap.room.loadActive = function(options, extent, resolution, projection) {
         function(rooms) {
           var activeStore = munimap.room.getActiveStore(options.map);
           goog.asserts.assertInstanceof(activeStore, ol.source.Vector);
-          var roomsToAdd =
-              munimap.store.getNotYetAddedFeatures(activeStore, rooms);
+          var roomsFromSelectedFloor = goog.array.filter(rooms, function(room) {
+            return munimap.room.isInSelectedFloor(room, options.map);
+          });
+          var roomsToAdd = munimap.store.getNotYetAddedFeatures(
+              activeStore, roomsFromSelectedFloor);
           activeStore.addFeatures(roomsToAdd);
         });
   }
