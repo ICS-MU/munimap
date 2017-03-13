@@ -153,26 +153,26 @@ munimap.getSelectedFloorCodeForBuilding = function(map, building) {
     return code.substr(0, 5) === munimap.building.getLocationCode(building);
   });
   if (!floorCode) {
-  var markerSource = munimap.marker.getStore(map);
-  var markedFeatures = markerSource.getFeatures();
-  if (markedFeatures.length > 0) {
-    var firstMarked = markedFeatures.find(function(marked) {
-      if (munimap.room.isRoom(marked) || munimap.door.isDoor(marked)) {
+    var markerSource = munimap.marker.getStore(map);
+    var markedFeatures = markerSource.getFeatures();
+    if (markedFeatures.length > 0) {
+      var firstMarked = markedFeatures.find(function(marked) {
+        if (munimap.room.isRoom(marked) || munimap.door.isDoor(marked)) {
           var buildingLocCode = munimap.building.getLocationCode(building);
-        var locationCode =
-            /**@type {string}*/ (marked.get('polohKod'));
+          var locationCode =
+              /**@type {string}*/ (marked.get('polohKod'));
           return locationCode.substr(0, 5) === buildingLocCode;
-      } else {
-        return false;
-      }
-    });
+        } else {
+          return false;
+        }
+      });
 
-    if (firstMarked) {
-      var firstMarkedCode = /**@type {string}*/
-          (firstMarked.get('polohKod'));
-      floorCode = firstMarkedCode.substr(0, 8);
+      if (firstMarked) {
+        var firstMarkedCode = /**@type {string}*/
+            (firstMarked.get('polohKod'));
+        floorCode = firstMarkedCode.substr(0, 8);
+      }
     }
-  }
     if (!floorCode) {
       floorCode =
           /**@type (string)*/ (building.get('vychoziPodlazi'));
