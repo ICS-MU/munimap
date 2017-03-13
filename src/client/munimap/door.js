@@ -65,9 +65,10 @@ munimap.door.ACTIVE_LAYER_ID = 'active-door';
 munimap.door.createActiveStore = function(map) {
   return new ol.source.Vector({
     loader: goog.partial(munimap.door.loadActive, {map: map}),
-    strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+    strategy: /** @type {ol.LoadingStrategy} */(
+        ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
       tileSize: 512
-    }))
+    })))
   });
 };
 

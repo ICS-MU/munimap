@@ -203,6 +203,16 @@ munimap.create = function(options) {
           features: clusterFeatures
         }),
         compareFn: goog.partial(munimap.source.Cluster.compareFn, map),
+        geometryFunction: function(feature) {
+          var result = null;
+          var geom = feature.getGeometry();
+          if(geom instanceof ol.geom.Point) {
+            result = geom;
+          } else if(geom) {
+            result = new ol.geom.Point(ol.extent.getCenter(geom.getExtent()));
+          }
+          return result;
+        },
         distance: 80
       });
       var markerClusterLayer = new ol.layer.Vector({

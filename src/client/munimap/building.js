@@ -64,9 +64,10 @@ munimap.building.STORE = new ol.source.Vector({
         processor: munimap.building.load.processor
       }
   ),
-  strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-    tileSize: 512
-  }))
+  strategy: /** @type {ol.LoadingStrategy} */(
+      ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+        tileSize: 512
+      })))
 });
 
 

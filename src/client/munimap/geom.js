@@ -148,7 +148,7 @@ munimap.geom.getHorizontalIntersections = function(polygon, y) {
  */
 munimap.geom.getBetterInteriorPoint = function(polygon) {
   var centerCoordinate = ol.extent.getCenter(polygon.getExtent());
-  if (polygon.containsCoordinate(centerCoordinate)) {
+  if (polygon.intersectsCoordinate(centerCoordinate)) {
     var interiorPoint = centerCoordinate;
   } else {
     var resultY = centerCoordinate[1];

@@ -4,6 +4,7 @@ goog.require('munimap.create');
 goog.require('munimap.ga');
 goog.require('munimap.reset');
 goog.require('polyfill.es6');
+goog.require('oltypedefs');
 
 
 munimap.ga.init();
