@@ -85,6 +85,12 @@
       "search": [
         "schody_final"
       ]
+    },
+    {
+      "uid": "5b17c7263caa553039655f2fef81ecaf",
+      "css": "bus",
+      "code": 61959,
+      "src": "fontawesome"
     }
   ]
 }

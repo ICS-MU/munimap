@@ -1,0 +1,132 @@
+goog.provide('munimap.pubtran.stop');
+goog.provide('munimap.pubtran.stop.layer');
+
+goog.require('munimap.info');
+goog.require('munimap.load');
+goog.require('munimap.map');
+goog.require('munimap.poi.style');
+goog.require('munimap.range');
+
+
+/**
+ * @type {munimap.Range}
+ * @const
+ */
+munimap.pubtran.stop.RESOLUTION = munimap.range.createResolution(0, 2.39);
+
+
+/**
+ * @type {ol.source.Vector}
+ * @const
+ */
+munimap.pubtran.stop.STORE = new ol.source.Vector({
+  loader: goog.partial(
+      munimap.pubtran.stop.featuresForMap,
+      {
+        type: function() {
+          return munimap.pubtran.stop.TYPE;
+        }
+      }
+  ),
+  strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+    tileSize: 512
+  }))
+});
+
+
+/**
+ * @type {munimap.type.Options}
+ * @const
+ */
+munimap.pubtran.stop.TYPE = {
+  primaryKey: 'OBJECTID',
+  serviceUrl: munimap.load.MUNIMAP_URL,
+  store: munimap.pubtran.stop.STORE,
+  layerId: 5,
+  name: 'publictransport'
+};
+
+
+/**
+ * @type {string}
+ * @const
+ */
+munimap.pubtran.stop.LAYER_ID = 'publictransport';
+
+
+/**
+ * @type {Array<ol.style.Style>}
+ * @protected
+ * @const
+ */
+munimap.pubtran.stop.STYLE = [
+  munimap.poi.style.BACKGROUND_SQUARE,
+  new ol.style.Style({
+    text: new ol.style.Text({
+      text: '\uf207',
+      font: 'normal 16px MunimapFont',
+      fill: new ol.style.Fill({
+        color: 'white'
+      })
+    })
+  })
+];
+
+
+/**
+ * @return {ol.layer.Vector}
+ */
+munimap.pubtran.stop.layer.create = function() {
+  return new ol.layer.Vector({
+    id: munimap.pubtran.stop.LAYER_ID,
+    isFeatureClickable: munimap.pubtran.stop.isClickable,
+    featureClickHandler: munimap.pubtran.stop.featureClickHandler,
+    type: munimap.pubtran.stop.TYPE,
+    maxResolution: munimap.pubtran.stop.RESOLUTION.max,
+    source: munimap.pubtran.stop.STORE,
+    style: munimap.pubtran.stop.STYLE,
+    updateWhileAnimating: true,
+    updateWhileInteracting: true,
+    refreshStyleOnFloorChange: false,
+    clearSourceOnFloorChange: false,
+    redrawOnFloorChange: false,
+    renderOrder: null
+  });
+};
+
+
+/**
+ * @param {munimap.feature.clickHandlerOptions} options
+ * @return {boolean}
+ */
+munimap.pubtran.stop.isClickable = goog.functions.TRUE;
+
+
+/**
+ * @param {munimap.feature.clickHandlerOptions} options
+ */
+munimap.pubtran.stop.featureClickHandler = function(options) {
+  var feature = options.feature;
+  var map = options.map;
+  var resolution = options.resolution;
+
+  console.log('click on public transport', feature.get('nazev'));
+};
+
+
+/**
+ * @param {munimap.load.featuresForMap.Options} options
+ * @param {ol.Extent} extent
+ * @param {number} resolution
+ * @param {ol.proj.Projection} projection
+ * @return {goog.Thenable<Array<ol.Feature>>} promise of features contained
+ * in server response
+ * @this {ol.source.Vector}
+ */
+munimap.pubtran.stop.featuresForMap =
+    function(options, extent, resolution, projection) {
+  return munimap.load.featuresForMap(options, extent, resolution, projection).
+      then(function(stops) {
+        return goog.Promise.resolve(stops);
+      });
+};

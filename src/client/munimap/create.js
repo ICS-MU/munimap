@@ -25,6 +25,7 @@ goog.require('munimap.layer.propName');
 goog.require('munimap.marker');
 goog.require('munimap.poi');
 goog.require('munimap.poi.style');
+goog.require('munimap.pubtran.stop.layer');
 goog.require('munimap.room');
 goog.require('munimap.room.label');
 goog.require('munimap.room.style');
@@ -262,8 +263,11 @@ munimap.create = function(options) {
         map.addLayer(layer);
       });
 
+      var pubTranStopLayer = munimap.pubtran.stop.layer.create();
+
       map.addLayer(markerClusterLayer);
       map.addLayer(markerLayer);
+      map.addLayer(pubTranStopLayer);
 
       munimap.cluster.updateClusteredFeatures(map, view.getResolution());
 
