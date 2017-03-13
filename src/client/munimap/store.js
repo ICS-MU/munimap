@@ -1,7 +1,7 @@
 goog.provide('munimap.store');
 
-goog.require('goog.net.XhrManager');
-goog.require('munimap.load');
+goog.require('goog.asserts');
+goog.require('munimap.type');
 
 
 /**
