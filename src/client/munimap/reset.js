@@ -19,7 +19,7 @@ munimap.reset = function(map, options) {
 
   munimap.getProps(map).selectedFloor = null;
   munimap.getProps(map).selectedBuilding = null;
-  
+
   var resetKeys = goog.object.getKeys(options);
   resetKeys.sort();
   munimap.ga.sendEvent(
