@@ -135,6 +135,20 @@ munimap.door.isCodeOrLikeExpr = function(maybeCodeOrLikeExpr) {
 
 
 /**
+ * @param {ol.Feature} door
+ * @param {ol.Map} map
+ * @return {boolean}
+ */
+munimap.door.isInSelectedFloor = function(door, map) {
+  goog.asserts.assert(munimap.door.isDoor(door));
+  var locCode =
+      /**@type {string}*/(door.get('polohKod') || door.get('polohKodPodlazi'));
+  var selectedFloor = munimap.getProps(map).selectedFloor;
+  return !!selectedFloor && locCode.startsWith(selectedFloor.locationCode);
+};
+
+
+/**
  * @param {munimap.load.floorBasedActive.Options} options
  * @param {ol.Extent} extent
  * @param {number} resolution
@@ -159,8 +173,11 @@ munimap.door.loadActive = function(options, extent, resolution, projection) {
         function(doors) {
           var activeLayer = munimap.door.getActiveLayer(options.map);
           var activeStore = activeLayer.getSource();
-          var doorsToAdd =
-              munimap.store.getNotYetAddedFeatures(activeStore, doors);
+          var doorsFromSelectedFloor = goog.array.filter(doors, function(door) {
+            return munimap.door.isInSelectedFloor(door, options.map);
+          });
+          var doorsToAdd = munimap.store.getNotYetAddedFeatures(
+              activeStore, doorsFromSelectedFloor);
           activeStore.addFeatures(doorsToAdd);
         });
   }
