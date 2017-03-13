@@ -51,7 +51,7 @@
 
   "externs": [
     "../../bower_components/ol3/munimap/build/ol.externs.js",
-    "../../bower_components/ol3/munimap/externs/missing.js",
+    "../../bower_components/ol3/munimap/externs/missing.enum.js",
     "../../bower_components/ol3/externs/bingmaps.js",
     "../../bower_components/ol3/externs/closure-compiler.js",
     "../../bower_components/ol3/externs/esrijson.js",
@@ -85,6 +85,7 @@
   "output-wrapper": "(function(){%output%})();",
 
   "paths": [
+    "../../bower_components/ol3/src/ol/typedefs.js",
     "../client/"
   ],
   

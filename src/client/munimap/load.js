@@ -461,7 +461,7 @@ munimap.load.waitForNewProcessedFeatures = function(options) {
   return new goog.Promise(function(resolve, reject) {
     var source = options.source;
     /**
-     * @param {ol.source.VectorEvent} evt
+     * @param {ol.source.Vector.Event} evt
      */
     var addFeatureHandler = function(evt) {
       var feature = evt.feature;

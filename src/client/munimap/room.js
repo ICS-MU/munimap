@@ -51,9 +51,10 @@ munimap.room.TYPE = {
 munimap.room.createActiveStore = function(map) {
   return new ol.source.Vector({
     loader: goog.partial(munimap.room.loadActive, {map: map}),
-    strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-      tileSize: 512
-    }))
+    strategy: /** @type {ol.LoadingStrategy} */(
+        ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+          tileSize: 512
+        })))
   });
 };
 
@@ -70,9 +71,10 @@ munimap.room.DEFAULT_STORE = new ol.source.Vector({
         where: 'vychoziPodlazi = 1'
       }
   ),
-  strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-    tileSize: 512
-  }))
+  strategy: /** @type {ol.LoadingStrategy} */(
+      ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+        tileSize: 512
+      })))
 });
 
 

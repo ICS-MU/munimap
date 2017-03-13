@@ -67,9 +67,10 @@ munimap.poi.ACTIVE_LAYER_ID = 'active-poi';
 munimap.poi.createActiveStore = function(map) {
   return new ol.source.Vector({
     loader: goog.partial(munimap.poi.loadActive, {map: map}),
-    strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-      tileSize: 512
-    }))
+    strategy: /** @type {ol.LoadingStrategy} */(
+        ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+          tileSize: 512
+        })))
   });
 };
 

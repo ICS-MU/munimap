@@ -3,7 +3,7 @@
 var jpad = {
   appPath: '/munimap/',
   appVersion: '1.1.1',
-  olVersion: 'v3.14.2',
+  olVersion: 'v3.19.1',
   prodDomain: 'maps.muni.cz',
   plovrPattern: 'src/client/**/*.plovr.json',
   plovrHtmlPattern: 'src/client/**/*.html',
@@ -24,8 +24,8 @@ var jpad = {
       dest: '_lib/ol3/examples/popup.css'
     },
     {
-      src: 'bower_components/ol3/munimap/build/ol.js',
-      dest: '_lib/ol/ol.js'
+      src: 'bower_components/ol3/munimap/build/',
+      dest: '_lib/ol/'
     },
     {
       src: 'bower_components/closure-library/closure/goog/css/',

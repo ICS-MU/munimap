@@ -140,7 +140,7 @@ munimap.marker.style.PIN_TEXT = new ol.style.Text({
 
 
 /**
- * @param {ol.geom.Geometry|ol.style.GeometryFunction} geometry
+ * @param {ol.geom.Geometry|ol.StyleGeometryFunction} geometry
  * @return {ol.style.Style}
  */
 munimap.marker.style.createPinFromGeometry = function(geometry) {

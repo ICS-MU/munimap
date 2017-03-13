@@ -175,7 +175,7 @@ munimap.style.alignTextToRows = function(parts, separator) {
 /**
  * @param {ol.Map} map
  * @param {munimapx.style.fragment.LayerOptions} fragments
- * @return {ol.style.StyleFunction}
+ * @return {ol.StyleFunction}
  */
 munimap.style.createFromFragments = function(map, fragments) {
   var resolution = map.getView().getResolution();
@@ -194,16 +194,19 @@ munimap.style.createFromFragments = function(map, fragments) {
   }
 
   /**
-   * @param {ol.Feature} feature
+   * @param {ol.Feature|ol.render.Feature} feature
    * @param {number} resolution
    * @return {ol.style.Style|Array.<ol.style.Style>}
    */
   var styleFce = function(feature, resolution) {
+    goog.asserts.assertInstanceof(feature, ol.Feature);
+    
     /**
      * @param {munimap.style.fragment.Options} fragment
      * @return {boolean|undefined}
      */
     var testFragment = function(fragment) {
+      goog.asserts.assertInstanceof(feature, ol.Feature);
       if (fragment) {
         return fragment.filter(feature, selectedFloor, activeFloors);
       }
