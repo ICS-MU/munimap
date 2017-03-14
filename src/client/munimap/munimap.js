@@ -8,6 +8,7 @@ goog.require('munimap.move');
 /**
  * @typedef {{
  *   info: Element,
+ *   popupInfo: Element,
  *   floorSelect: goog.ui.Select,
  *   selectedBuilding:? (string),
  *   selectedFloor:? (munimap.floor.Options),

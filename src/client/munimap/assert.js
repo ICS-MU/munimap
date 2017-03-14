@@ -147,3 +147,14 @@ munimap.assert.baseMap = function(baseMap) {
     }
   }
 };
+
+
+/**
+ * @param {boolean|undefined} pubTran
+ */
+munimap.assert.pubTran = function(pubTran) {
+  if (pubTran !== undefined) {
+      goog.asserts.assertBoolean(pubTran,
+        'Parameter pubTran should be boolean (true or false).');
+  }
+};

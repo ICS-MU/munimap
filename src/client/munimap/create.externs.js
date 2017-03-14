@@ -15,7 +15,8 @@ munimapx.create;
  *   markerLabel: (munimap.marker.LabelFunction|undefined),
  *   layers: (Array.<ol.layer.Vector>|undefined),
  *   lang: (string|undefined),
- *   baseMap: (string|undefined)
+ *   baseMap: (string|undefined),
+ *   pubTran: (boolean|undefined)
  * }}
  */
 munimapx.create.Options;

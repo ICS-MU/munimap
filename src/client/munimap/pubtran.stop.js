@@ -1,10 +1,10 @@
 goog.provide('munimap.pubtran.stop');
 goog.provide('munimap.pubtran.stop.layer');
 
-goog.require('munimap.info');
 goog.require('munimap.load');
 goog.require('munimap.map');
 goog.require('munimap.poi.style');
+goog.require('munimap.pubtran.stop.info');
 goog.require('munimap.range');
 
 
@@ -108,9 +108,8 @@ munimap.pubtran.stop.isClickable = goog.functions.TRUE;
 munimap.pubtran.stop.featureClickHandler = function(options) {
   var feature = options.feature;
   var map = options.map;
-  var resolution = options.resolution;
 
-  console.log('click on public transport', feature.get('nazev'));
+  munimap.pubtran.stop.info.show(feature, map);
 };
 
 

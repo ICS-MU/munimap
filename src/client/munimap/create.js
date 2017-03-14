@@ -75,7 +75,8 @@ munimap.create = function(options) {
         getMainFeatureAtPixel: options.getMainFeatureAtPixel,
         lang: options.lang,
         layers: options.layers,
-        baseMap: options.baseMap || munimap.BaseMaps.OSM_BW
+        baseMap: options.baseMap || munimap.BaseMaps.OSM_BW,
+        pubTran: options.pubTran
       };
     }).then(function(options) {
       var target = options.target;
@@ -138,6 +139,12 @@ munimap.create = function(options) {
       var complexEl = goog.dom.createDom('div', 'complex');
       var bldgEl = goog.dom.createDom('div', 'building');
       var floorEl = goog.dom.createDom('div', 'floor');
+
+      if (options.pubTran) {
+        var popupInfoEl = goog.dom.createDom('div', 'ol-popup info');
+        goog.dom.appendChild(munimapEl, popupInfoEl);
+      }
+      
       goog.dom.appendChild(infoEl, complexEl);
       goog.dom.appendChild(infoEl, bldgEl);
       goog.dom.appendChild(infoEl, floorEl);
@@ -243,6 +250,7 @@ munimap.create = function(options) {
 
       var mapProps = {
         info: infoEl,
+        popupInfo: popupInfoEl,
         floorSelect: floorSelect,
         selectedBuilding: null,
         selectedFloor: null,
@@ -263,11 +271,13 @@ munimap.create = function(options) {
         map.addLayer(layer);
       });
 
-      var pubTranStopLayer = munimap.pubtran.stop.layer.create();
+      if (options.pubTran) {
+        var pubTranStopLayer = munimap.pubtran.stop.layer.create();
+        map.addLayer(pubTranStopLayer);
+      }
 
       map.addLayer(markerClusterLayer);
       map.addLayer(markerLayer);
-      map.addLayer(pubTranStopLayer);
 
       munimap.cluster.updateClusteredFeatures(map, view.getResolution());
 
@@ -353,6 +363,7 @@ munimap.create.assertOptions = function(options) {
   munimap.assert.layers(options.layers);
   munimap.assert.lang(options.lang);
   munimap.assert.baseMap(options.baseMap);
+  munimap.assert.pubTran(options.pubTran);
 };
 
 

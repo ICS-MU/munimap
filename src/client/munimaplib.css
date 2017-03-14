@@ -31,6 +31,24 @@
   display: none;
 }
 
+.info .content {
+  margin: 4px;
+  padding: 4px;
+  font-size: small;
+}
+.info .close-button {
+  text-decoration: none;
+  position: absolute;
+  top: 2px;
+  right: 8px;
+}
+.info .close-button:after {
+  content: "✖";
+}
+.info .close-button:hover {
+  cursor: pointer;
+}
+
 .info {
   background-color: white;
   font-family: Arial, Helvetica, sans-serif;
