@@ -144,7 +144,7 @@ munimap.create = function(options) {
         var popupInfoEl = goog.dom.createDom('div', 'ol-popup info');
         goog.dom.appendChild(munimapEl, popupInfoEl);
       }
-      
+
       goog.dom.appendChild(infoEl, complexEl);
       goog.dom.appendChild(infoEl, bldgEl);
       goog.dom.appendChild(infoEl, floorEl);

@@ -30,7 +30,9 @@
 .ol-popup.hide-tale:after {
   display: none;
 }
-
+.info .content > .title {
+  font-weight: bold;
+}
 .info .content {
   margin: 4px;
   padding: 4px;

@@ -154,7 +154,7 @@ munimap.assert.baseMap = function(baseMap) {
  */
 munimap.assert.pubTran = function(pubTran) {
   if (pubTran !== undefined) {
-      goog.asserts.assertBoolean(pubTran,
+    goog.asserts.assertBoolean(pubTran,
         'Parameter pubTran should be boolean (true or false).');
   }
 };
