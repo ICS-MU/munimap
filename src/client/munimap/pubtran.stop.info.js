@@ -73,12 +73,13 @@ munimap.pubtran.stop.info.appendContentToEl = function(title, contentEl) {
     target: '_blank'
   };
   var linkToEl = goog.dom.createDom('a', linkToAttributes,
-      goog.dom.createTextNode('sem'));
+      goog.dom.createTextNode(
+          munimap.lang.getMsg(munimap.lang.Translations.CONNECTION_TO)));
   var linkFromEl = goog.dom.createDom('a', linkFromAttributes,
-      goog.dom.createTextNode('odtud'));
-
-  var linkEl = goog.dom.createDom('div', null,
-      goog.dom.createTextNode('Hledat spojení: '));
+      goog.dom.createTextNode(
+          munimap.lang.getMsg(munimap.lang.Translations.CONNECTION_FROM)));
+  var linkEl = goog.dom.createDom('div', null, goog.dom.createTextNode(
+      munimap.lang.getMsg(munimap.lang.Translations.FIND_CONNECTION) + ': '));
   goog.dom.appendChild(linkEl, linkToEl);
   goog.dom.appendChild(linkEl, goog.dom.createTextNode(' / '));
   goog.dom.appendChild(linkEl, linkFromEl);

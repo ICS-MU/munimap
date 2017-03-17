@@ -38,7 +38,10 @@ munimap.lang.Translations = {
   ROOM_TITLE_FIELD_NAME: 'ROOM_TITLE_FIELD_NAME',
   UNIT_TITLE_FIELD_NAME: 'UNIT_TITLE_FIELD_NAME',
   UNIT_ABBR_FIELD_NAME: 'UNIT_ABBR_FIELD_NAME',
-  CLUSTER_MU_LABEL: 'CLUSTER_MU_LABEL'
+  CLUSTER_MU_LABEL: 'CLUSTER_MU_LABEL',
+  FIND_CONNECTION: 'FIND_CONNECTION',
+  CONNECTION_FROM: 'CONNECTION_FROM',
+  CONNECTION_TO: 'CONNECTION_TO'
 };
 
 
@@ -76,7 +79,10 @@ munimap.lang.CS_TRANSLATIONS = {
   'ROOM_TITLE_FIELD_NAME': 'nazev',
   'UNIT_TITLE_FIELD_NAME': 'nazevk_cs',
   'UNIT_ABBR_FIELD_NAME': 'zkratka_cs',
-  'CLUSTER_MU_LABEL': 'Masarykova univerzita'
+  'CLUSTER_MU_LABEL': 'Masarykova univerzita',
+  'FIND_CONNECTION': 'Hledat spojení',
+  'CONNECTION_FROM': 'odtud',
+  'CONNECTION_TO': 'sem'
 };
 
 
@@ -114,7 +120,10 @@ munimap.lang.EN_TRANSLATIONS = {
   'ROOM_TITLE_FIELD_NAME': 'nazevEn',
   'UNIT_TITLE_FIELD_NAME': 'nazevk_en',
   'UNIT_ABBR_FIELD_NAME': 'zkratka_en',
-  'CLUSTER_MU_LABEL': 'Masaryk university'
+  'CLUSTER_MU_LABEL': 'Masaryk university',
+  'FIND_CONNECTION': 'Find connection',
+  'CONNECTION_FROM': 'from',
+  'CONNECTION_TO': 'to'
 };
 
 
