@@ -1,12 +1,4 @@
-# jpad
-
-JS devstack oriented to [Google Closure](https://developers.google.com/closure/) 
-* includes Google Closure [Compiler](https://github.com/google/closure-compiler), [Library](https://github.com/google/closure-library), and [Linter](https://developers.google.com/closure/utilities/docs/linter_howto)
-* ready for [advanced optimizations](https://developers.google.com/closure/compiler/docs/compilation_levels) using [plovr](https://github.com/bolinfest/plovr)
-* [OpenLayers 3](http://openlayers.org/) included, see [example](https://github.com/jirik/jpad/tree/master/src/client/example/ol3)
-* able to compile your code into multiple modules or to a single file, see [example](https://github.com/jirik/jpad/tree/master/src/client/example/module)
-* both Linux and Windows friendly
-* dev, build, lint, or fix in a single command
+# munimap
 
 Current versions:
 * OpenLayers [v3.13.1](https://github.com/openlayers/ol3/releases)
@@ -30,8 +22,8 @@ This repository is not officially supported by Google, ol3, or individual module
 
 ## Installation
 ```
-git clone https://github.com/jirik/jpad.git
-cd jpad
+git clone https://projekty2.ics.muni.cz/git/gis munimap
+cd munimap
 npm install
 bower install
 (sudo) gulp install
