@@ -1,7 +1,14 @@
 # munimap
+[munimap](https://maps.muni.cz/munimap/) is a JavaScript map library primarily used
+for purposes of the Masaryk University (MUNI). It allows web administrators to insert
+an interactive map showing indoor data of MUNI into their web pages.
+
+The library provides an easy way how to show buildings and their indoor spaces on any web pages.
+It also enables web administrators to mark objects of interest (such as classrooms, conference rooms
+or headquaters) in the map and set their own labels. The map can be created in czech or english version.
 
 Current versions:
-* OpenLayers [v3.13.1](https://github.com/openlayers/ol3/releases)
+* OpenLayers [v3.19.1](https://github.com/openlayers/ol3/releases)
 * Closure Library [2016-01-05](https://github.com/google/closure-library/commits/fe66ad635ad3ff2bc8ee85933e4bf86bfa7523fb)
 * Closure Compiler [v20151216](https://github.com/google/closure-compiler/releases)
 * Closure Linter [2015-12-10](https://github.com/google/closure-linter/commits/5c27529075bb88bdc45e73008f496dec8438d658)
