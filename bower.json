@@ -1,6 +1,6 @@
 {
-  "name": "kompas",
-  "version": "0.0.1",
+  "name": "munimap",
+  "version": "1.1.1",
   "private": true,
   "dependencies": {
     "closure-compiler-src": "git://github.com/google/closure-compiler.git#v20151216",
@@ -12,7 +12,6 @@
     "proj4js": "http://download.osgeo.org/proj4js/proj4js-1.1.0.zip",
     "turf": "https://raw.githubusercontent.com/Turfjs/turf/v2.0.2/turf.min.js",
     "prettyprint": "https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js",
-    "font-awesome": "git://github.com/FortAwesome/Font-Awesome.git",
     "webfontloader": "git://github.com/typekit/webfontloader.git"
   }
 }
