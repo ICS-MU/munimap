@@ -206,9 +206,9 @@ munimap.create = function(options) {
         geometryFunction: function(feature) {
           var result = null;
           var geom = feature.getGeometry();
-          if(geom instanceof ol.geom.Point) {
+          if (geom instanceof ol.geom.Point) {
             result = geom;
-          } else if(geom) {
+          } else if (geom) {
             result = new ol.geom.Point(ol.extent.getCenter(geom.getExtent()));
           }
           return result;

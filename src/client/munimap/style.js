@@ -200,7 +200,7 @@ munimap.style.createFromFragments = function(map, fragments) {
    */
   var styleFce = function(feature, resolution) {
     goog.asserts.assertInstanceof(feature, ol.Feature);
-    
+
     /**
      * @param {munimap.style.fragment.Options} fragment
      * @return {boolean|undefined}

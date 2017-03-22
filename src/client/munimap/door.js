@@ -67,8 +67,8 @@ munimap.door.createActiveStore = function(map) {
     loader: goog.partial(munimap.door.loadActive, {map: map}),
     strategy: /** @type {ol.LoadingStrategy} */(
         ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-      tileSize: 512
-    })))
+          tileSize: 512
+        })))
   });
 };
 
