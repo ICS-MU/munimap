@@ -1,10 +1,10 @@
 {
-  "name": "jpad",
+  "name": "munimap",
   "license": "Apache-2.0",
-  "version": "0.0.1",
+  "version": "1.1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jirik/jpad.git"
+    "url": "https://github.com/ICS-MU/munimap.git"
   },
   "engines": {
     "node": ">= 0.6.0"
