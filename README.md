@@ -29,7 +29,7 @@ This repository is not officially supported by Google, ol3, or individual module
 
 ## Installation
 ```
-git clone https://projekty2.ics.muni.cz/git/gis munimap
+git clone https://github.com/ICS-MU/munimap
 cd munimap
 npm install
 bower install
