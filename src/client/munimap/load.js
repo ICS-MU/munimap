@@ -18,8 +18,7 @@ munimap.load.xhrCounter = 0;
 /**
  * @type {string}
  */
-munimap.load.MUNIMAP_URL = (jpad.DEV) ?
-    'http://kleopatra.ics.muni.cz/arcgis/rest/services/munimap/MapServer/' :
+munimap.load.MUNIMAP_URL =
     '//maps.muni.cz/arcgis/rest/services/munimap/MapServer/';
 
 
