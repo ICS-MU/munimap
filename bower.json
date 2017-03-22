@@ -3,7 +3,6 @@
   "version": "1.1.1",
   "private": true,
   "dependencies": {
-    "closure-compiler-src": "git://github.com/google/closure-compiler.git#v20151216",
     "closure-externs": "git://github.com/jirik/closure-externs#890dbf165f617582d1111555ac9b8ef51554ec6e",
     "closure-library": "git://github.com/google/closure-library#fe66ad635ad3ff2bc8ee85933e4bf86bfa7523fb",
     "closure-linter": "git://github.com/google/closure-linter#5c27529075bb88bdc45e73008f496dec8438d658",
