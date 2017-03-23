@@ -140,11 +140,6 @@ munimap.create = function(options) {
       var bldgEl = goog.dom.createDom('div', 'building');
       var floorEl = goog.dom.createDom('div', 'floor');
 
-      if (options.pubTran) {
-        var popupInfoEl = goog.dom.createDom('div', 'ol-popup info');
-        goog.dom.appendChild(munimapEl, popupInfoEl);
-      }
-
       goog.dom.appendChild(infoEl, complexEl);
       goog.dom.appendChild(infoEl, bldgEl);
       goog.dom.appendChild(infoEl, floorEl);
@@ -250,7 +245,6 @@ munimap.create = function(options) {
 
       var mapProps = {
         info: infoEl,
-        popupInfo: popupInfoEl,
         floorSelect: floorSelect,
         selectedBuilding: null,
         selectedFloor: null,

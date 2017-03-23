@@ -7,15 +7,17 @@ goog.provide('munimap.pubtran.stop.info');
  * @return {ol.Overlay}
  */
 munimap.pubtran.stop.info.create = function(map) {
-  var element = munimap.getProps(map).popupInfo;
+  var munimapEl = map.getTargetElement();
+  var popupEl = goog.dom.createDom('div', 'ol-popup info');
   var contentEl = goog.dom.createDom('div', 'content');
   var closeButtonEl = goog.dom.createDom('div', 'close-button');
-  goog.dom.appendChild(element, closeButtonEl);
-  goog.dom.appendChild(element, contentEl);
+  goog.dom.appendChild(popupEl, closeButtonEl);
+  goog.dom.appendChild(popupEl, contentEl);
+  goog.dom.appendChild(munimapEl, popupEl);
 
   var popup = new ol.Overlay({
     id: 'pubTranPopup',
-    element: element,
+    element: popupEl,
     autoPan: true,
     offset: [40, -70]
   });
