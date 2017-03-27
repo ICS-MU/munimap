@@ -40,9 +40,9 @@ munimap.pubtran.stop.STORE = new ol.source.Vector({
  */
 munimap.pubtran.stop.TYPE = {
   primaryKey: 'OBJECTID',
-  serviceUrl: munimap.load.MUNIMAP_URL,
+  serviceUrl: munimap.load.MUNIMAP_PUBTRAN_URL,
   store: munimap.pubtran.stop.STORE,
-  layerId: 5,
+  layerId: 0,
   name: 'publictransport'
 };
 

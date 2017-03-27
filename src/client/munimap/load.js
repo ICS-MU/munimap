@@ -24,6 +24,14 @@ munimap.load.MUNIMAP_URL = (jpad.DEV) ?
 
 
 /**
+ * @type {string}
+ */
+munimap.load.MUNIMAP_PUBTRAN_URL = (jpad.DEV) ?
+    'http://kleopatra.ics.muni.cz/arcgis/rest/services/munimap_mhd/MapServer/' :
+    '//maps.muni.cz/arcgis/rest/services/munimap_mhd/MapServer/';
+
+
+/**
  * @type {goog.net.XhrManager}
  * @protected
  */
