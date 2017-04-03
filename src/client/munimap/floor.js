@@ -35,7 +35,7 @@ munimap.floor.TYPE = {
   primaryKey: 'polohKod',
   serviceUrl: munimap.load.MUNIMAP_URL,
   store: munimap.floor.STORE,
-  layerId: 6,
+  layerId: 5,
   name: 'floor'
 };
 
