@@ -8,7 +8,7 @@ goog.provide('munimap.pubtran.stop.info');
  */
 munimap.pubtran.stop.info.create = function(map) {
   var munimapEl = map.getTargetElement();
-  var popupEl = goog.dom.createDom('div', 'ol-popup info');
+  var popupEl = goog.dom.createDom('div', 'ol-popup info info-bubble');
   var contentEl = goog.dom.createDom('div', 'content');
   var closeButtonEl = goog.dom.createDom('div', 'close-button');
   goog.dom.appendChild(popupEl, closeButtonEl);
@@ -18,8 +18,7 @@ munimap.pubtran.stop.info.create = function(map) {
   var popup = new ol.Overlay({
     id: 'pubTranPopup',
     element: popupEl,
-    autoPan: true,
-    offset: [40, -70]
+    autoPan: true
   });
 
   closeButtonEl.onclick = function() {
@@ -53,6 +52,11 @@ munimap.pubtran.stop.info.show = function(feature, map) {
     var point = /**@type {ol.geom.Point}*/ (feature.getGeometry());
     var coordinates = point.getCoordinates();
     popup.setPosition(coordinates);
+
+    var popupSize = goog.style.getSize(popupEl);
+    var x = -munimap.info.POPUP_TALE_INDENT;
+    var y = -(popupSize.height + munimap.info.POPUP_TALE_HEIGHT);
+    popup.setOffset([x, y]);
   }
 };
 

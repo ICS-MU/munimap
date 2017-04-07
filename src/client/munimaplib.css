@@ -7,6 +7,12 @@
 @import url("_lib/closure-library/closure/goog/css/menuitem.css");
 @import url("munimap/font/font.css");
 
+.info-bubble {
+  left: auto;
+  right: auto;
+  top: auto;
+  bottom: auto;
+}
 .ol-popup {
   border-radius: 6px;
   bottom: auto;
