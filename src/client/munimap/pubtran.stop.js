@@ -3,7 +3,6 @@ goog.provide('munimap.pubtran.stop.layer');
 
 goog.require('munimap.load');
 goog.require('munimap.map');
-goog.require('munimap.poi.style');
 goog.require('munimap.pubtran.stop.info');
 goog.require('munimap.range');
 
@@ -13,6 +12,14 @@ goog.require('munimap.range');
  * @const
  */
 munimap.pubtran.stop.RESOLUTION = munimap.range.createResolution(0, 2.39);
+
+
+/**
+ * @type {munimap.Range}
+ * @const
+ */
+munimap.pubtran.stop.CLUSTER_RESOLUTION = 
+    munimap.range.createResolution(0.6, 2.39);
 
 
 /**
@@ -55,22 +62,59 @@ munimap.pubtran.stop.LAYER_ID = 'publictransport';
 
 
 /**
+ * @type {ol.style.Style}
+ * @const
+ */
+munimap.pubtran.stop.BACKGROUND_SQUARE = new ol.style.Style({
+  text: new ol.style.Text({
+    text: '\uf0c8',
+    font: 'normal 18px MunimapFont',
+    fill: new ol.style.Fill({
+      color: '#666'
+    })
+  })
+});
+
+
+/**
  * @type {Array<ol.style.Style>}
  * @protected
  * @const
  */
 munimap.pubtran.stop.STYLE = [
-  munimap.poi.style.BACKGROUND_SQUARE,
+  munimap.pubtran.stop.BACKGROUND_SQUARE,
   new ol.style.Style({
     text: new ol.style.Text({
       text: '\uf207',
-      font: 'normal 16px MunimapFont',
+      font: 'normal 10px MunimapFont',
       fill: new ol.style.Fill({
         color: 'white'
       })
     })
   })
 ];
+
+
+/**
+ * @param {ol.Feature|ol.render.Feature} feature
+ * @param {number} resolution
+ * 
+ * @return {ol.style.Style|Array<ol.style.Style>}
+ */
+munimap.pubtran.stop.styleFunction = function(feature, resolution) {
+  var inClusterRes = munimap.range.contains(
+      munimap.pubtran.stop.CLUSTER_RESOLUTION, resolution);
+  if (inClusterRes) {
+    var oznacnik = feature.get('oznacnik');
+    if (oznacnik === '01') {
+      return munimap.pubtran.stop.STYLE;
+    } else {
+      return null;
+    }
+  } else {
+    return munimap.pubtran.stop.STYLE;
+  }
+};
 
 
 /**
@@ -84,7 +128,7 @@ munimap.pubtran.stop.layer.create = function() {
     type: munimap.pubtran.stop.TYPE,
     maxResolution: munimap.pubtran.stop.RESOLUTION.max,
     source: munimap.pubtran.stop.STORE,
-    style: munimap.pubtran.stop.STYLE,
+    style: munimap.pubtran.stop.styleFunction,
     updateWhileAnimating: true,
     updateWhileInteracting: true,
     refreshStyleOnFloorChange: false,
