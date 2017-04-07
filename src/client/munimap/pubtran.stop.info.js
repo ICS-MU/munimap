@@ -21,10 +21,24 @@ munimap.pubtran.stop.info.create = function(map) {
     autoPan: true
   });
 
-  closeButtonEl.onclick = function() {
+  var closePopup = function() {
     popup.setPosition(undefined);
     return false;
   };
+
+  closeButtonEl.onclick = closePopup;
+
+  var view = map.getView();
+  view.on('change:resolution', function(evt) {
+    var resolution = view.getResolution();
+    if (resolution) {
+      var isVisible = munimap.range.contains(
+          munimap.pubtran.stop.RESOLUTION, resolution);
+      if (!isVisible) {
+        closePopup();
+      }
+    }
+  });
 
   map.addOverlay(popup);
   return popup;
