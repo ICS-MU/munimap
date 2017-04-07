@@ -194,7 +194,7 @@
           <th class="param-type">Typ</th>
           <th>Popis</th>
         </tr>
-        <tr>
+        <tr  id="reset-markers">
           <td class="param-name">markers</td>
           <td class="param-type">Array.&lt;string&gt; | Array.&lt;<a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Feature.html" target="_blank">ol.Feature</a>&gt; 
             | undefined</td>
@@ -234,7 +234,7 @@
             </div>
           </td>
         </tr>
-        <tr>
+        <tr id="reset-zoomTo">
           <td class="param-name">zoomTo</td>
           <td class="param-type">Array.&lt;string&gt; | string | undefined</td>
           <td class="param-desc">
@@ -242,6 +242,7 @@
               <li>pole polohových kódů budov, nebo polohových kódů místností, na které se má mapa zazoomovat</li>
               <li>v polohových kódech je možné využít zástupného znaku '_'</li>
               <li>není-li parametr zadán a současně je zadán parametr markers, převezme hodnotu tohoto parametru</li>
+              <li>není povoleno použítí parametru zároveň s parametrem <code><a href="../doc/#reset-center">center</a></code></li>                            
             </ul>
             <div class="hint">
               <p>pro zjištění polohových kódů budov či místností lze použít aplikaci <a href='https://kompas.muni.cz/'>Kompas</a></p>
@@ -255,16 +256,18 @@
             <ul>
               <li>výchozí zoom mapy</li>
               <li>není-li zadán, je dopočítán podle zoomTo, případně se zobrazí celé Brno</li>
+              <li>je akceptováno celé kladné číslo v rozsahu 0 až 23, kdy 0 je pohled na celý svět a 23 je největší povolený zoom</li>
             </ul>
           </td>
         </tr>
-        <tr>
+        <tr id="reset-center">
           <td class="param-name">center</td>
           <td class="param-type"><a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.html#.Coordinate" target="_blank">ol.Coordinate</a> | undefined</td>
           <td class="param-desc">
             <ul>
               <li>výchozí střed mapy v zeměpisné šířce a délce (<a href="http://spatialreference.org/ref/epsg/wgs-84/" target="_blank">EPSG:4326</a>)</li>
               <li>není-li zadán, je dopočítán podle zoomTo, případně se zobrazí celé Brno</li>
+              <li>není povoleno použítí parametru zároveň s parametrem <code><a href="../doc/#reset-zoomTo">zoomTo</a></code></li>                            
             </ul>
           </td>
         </tr>
