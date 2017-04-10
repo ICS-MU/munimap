@@ -266,8 +266,14 @@ munimap.create = function(options) {
       });
 
       if (options.pubTran) {
-        var pubTranStopLayer = munimap.pubtran.stop.layer.create();
-        map.addLayer(pubTranStopLayer);
+        var pubTranAttribution = new ol.Attribution({
+          html: munimap.lang.getMsg(
+              munimap.lang.Translations.PUBTRAN_ATTRIBUTION_HTML)
+        });
+        var pubTranLayer = munimap.pubtran.stop.layer.create();
+        var pubTranSource = pubTranLayer.getSource();
+        pubTranSource.setAttributions([pubTranAttribution]);
+        map.addLayer(pubTranLayer);
       }
 
       map.addLayer(markerClusterLayer);

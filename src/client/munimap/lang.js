@@ -19,6 +19,7 @@ munimap.lang.Translations = {
   MU_ATTRIBUTION_HTML: 'MU_ATTRIBUTION_HTML',
   OSM_ATTRIBUTION_HTML: 'OSM_ATTRIBUTION_HTML',
   MUNIMAP_ATTRIBUTION_HTML: 'MUNIMAP_ATTRIBUTION_HTML',
+  PUBTRAN_ATTRIBUTION_HTML: 'PUBTRAN_ATTRIBUTION_HTML',
   ZOOM_IN: 'ZOOM_IN',
   ZOOM_OUT: 'ZOOM_OUT',
   INFOBOX_CHOOSE: 'INFOBOX_CHOOSE',
@@ -60,6 +61,9 @@ munimap.lang.CS_TRANSLATIONS = {
       ' target="_blank">OpenStreetMap</a>',
   'MUNIMAP_ATTRIBUTION_HTML': '<a href="//' + jpad.PROD_DOMAIN + jpad.APP_PATH +
       '" target="_blank" title="Mapová knihovna munimap">munimap</a>',
+  'PUBTRAN_ATTRIBUTION_HTML': '© <a href="http://www.idsjmk.cz/"' +
+      ' target="_blank" title="Informace o umístění zastávek MHD poskytuje' +
+      ' firma KORDIS JMK, a.s.">KORDIS JMK, a.s.</a>',
   'ZOOM_IN': 'Přiblížit',
   'ZOOM_OUT': 'Oddálit',
   'INFOBOX_CHOOSE': 'Vyberte',
@@ -101,6 +105,10 @@ munimap.lang.EN_TRANSLATIONS = {
       ' target="_blank">OpenStreetMap</a> contributors',
   'MUNIMAP_ATTRIBUTION_HTML': '<a href="//' + jpad.PROD_DOMAIN + jpad.APP_PATH +
       '" target="_blank" title="munimap mapping library">munimap</a>',
+  'PUBTRAN_ATTRIBUTION_HTML':
+      '© <a href="http://www.idsjmk.cz/EN/default.aspx"' +
+      ' target="_blank" title="Public transport data is provided by' +
+      ' KORDIS JMK, a.s. company">KORDIS JMK, a.s.</a>',
   'ZOOM_IN': 'Zoom in',
   'ZOOM_OUT': 'Zoom out',
   'INFOBOX_CHOOSE': 'Choose',
