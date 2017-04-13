@@ -42,7 +42,11 @@ munimap.lang.Translations = {
   CLUSTER_MU_LABEL: 'CLUSTER_MU_LABEL',
   FIND_CONNECTION: 'FIND_CONNECTION',
   CONNECTION_FROM: 'CONNECTION_FROM',
-  CONNECTION_TO: 'CONNECTION_TO'
+  CONNECTION_TO: 'CONNECTION_TO',
+  BUILDING: 'BUILDING',
+  ROOM: 'ROOM',
+  DOOR: 'DOOR',
+  LOCATION: 'LOCATION'
 };
 
 
@@ -86,7 +90,11 @@ munimap.lang.CS_TRANSLATIONS = {
   'CLUSTER_MU_LABEL': 'Masarykova univerzita',
   'FIND_CONNECTION': 'Hledat spojení',
   'CONNECTION_FROM': 'odtud',
-  'CONNECTION_TO': 'sem'
+  'CONNECTION_TO': 'sem',
+  'BUILDING': 'budova',
+  'ROOM': 'místnost',
+  'DOOR': 'dveře',
+  'LOCATION': 'místo'
 };
 
 
@@ -131,7 +139,11 @@ munimap.lang.EN_TRANSLATIONS = {
   'CLUSTER_MU_LABEL': 'Masaryk university',
   'FIND_CONNECTION': 'Find connection',
   'CONNECTION_FROM': 'from',
-  'CONNECTION_TO': 'to'
+  'CONNECTION_TO': 'to',
+  'BUILDING': 'building',
+  'ROOM': 'room',
+  'DOOR': 'door',
+  'LOCATION': 'location'
 };
 
 

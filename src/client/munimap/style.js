@@ -285,7 +285,7 @@ munimap.style.getDefaultLabel = function(feature, resolution) {
     goog.asserts.assertString(title);
   } else if (munimap.marker.custom.isCustom(feature)) {
     return munimap.marker.custom.getLabel(feature);
-  } else {
+  } else if (munimap.room.isRoom(feature)) {
     title = munimap.room.getDefaultLabel(feature);
   }
   return title;
