@@ -18,7 +18,7 @@ munimap.pubtran.stop.RESOLUTION = munimap.range.createResolution(0, 2.39);
  * @type {munimap.Range}
  * @const
  */
-munimap.pubtran.stop.CLUSTER_RESOLUTION = 
+munimap.pubtran.stop.CLUSTER_RESOLUTION =
     munimap.range.createResolution(0.6, 2.39);
 
 
@@ -100,7 +100,7 @@ munimap.pubtran.stop.STYLE = [
 /**
  * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
- * 
+ *
  * @return {ol.style.Style|Array<ol.style.Style>}
  */
 munimap.pubtran.stop.styleFunction = function(feature, resolution) {
