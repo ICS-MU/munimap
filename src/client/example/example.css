@@ -155,19 +155,22 @@ code {
 .example-wrap {
   box-sizing: border-box;
   min-height: 1px;
-  padding: 5px 10px;
+  padding: 0;
   position: relative;
 }
-.example {
-  background-color: rgba(0, 39, 118, 0.9); 
+a.example {
+  background-color: rgba(0, 39, 118, 0.9);
+  border: solid 1px rgba(0, 39, 118, 0.9);
+  color: #fff;
   display: block;
   height: 125px;
   margin: 10px;
   overflow: auto;
   padding: 15px;
 }
-.example > a {
-  color: #fff;
+a.example:hover {
+  background-color: #fff; 
+  color: #002776;
 }
 .example-name {
   font-size: 20px;
