@@ -85,11 +85,11 @@ munimap.pubtran.stop.info.appendContentToEl = function(title, contentEl) {
       goog.dom.createDom('div', 'title', goog.dom.createTextNode(title));
   var link = 'http://jizdnirady.idnes.cz/idsjmk/spojeni/?';
   var linkToAttributes = {
-    href: link + 't=' + title,
+    href: encodeURI(link + 't=' + title),
     target: '_blank'
   };
   var linkFromAttributes = {
-    href: link + 'f=' + title,
+    href: encodeURI(link + 'f=' + title),
     target: '_blank'
   };
   var linkToEl = goog.dom.createDom('a', linkToAttributes,
