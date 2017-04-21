@@ -136,16 +136,16 @@ munimap.door.isCodeOrLikeExpr = function(maybeCodeOrLikeExpr) {
 
 
 /**
- * @param {ol.Feature} door
  * @param {ol.Map} map
+ * @param {ol.Feature} door
  * @return {boolean}
+ * @protected
  */
-munimap.door.isInSelectedFloor = function(door, map) {
+munimap.door.isInActiveFloor = function(map, door) {
   goog.asserts.assert(munimap.door.isDoor(door));
-  var locCode =
-      /**@type {string}*/(door.get('polohKod') || door.get('polohKodPodlazi'));
-  var selectedFloor = munimap.getProps(map).selectedFloor;
-  return !!selectedFloor && locCode.startsWith(selectedFloor.locationCode);
+  var floorCode = /**@type {string}*/(door.get('polohKodPodlazi'));
+  var activeFloors = munimap.floor.getActiveFloors(map);
+  return goog.array.contains(activeFloors, floorCode);
 };
 
 
@@ -174,11 +174,10 @@ munimap.door.loadActive = function(options, extent, resolution, projection) {
         function(doors) {
           var activeLayer = munimap.door.getActiveLayer(options.map);
           var activeStore = activeLayer.getSource();
-          var doorsFromSelectedFloor = goog.array.filter(doors, function(door) {
-            return munimap.door.isInSelectedFloor(door, options.map);
-          });
+          var doorsFromActiveFloor = goog.array.filter(doors,
+              goog.partial(munimap.door.isInActiveFloor, options.map));
           var doorsToAdd = munimap.store.getNotYetAddedFeatures(
-              activeStore, doorsFromSelectedFloor);
+              activeStore, doorsFromActiveFloor);
           activeStore.addFeatures(doorsToAdd);
         });
   }

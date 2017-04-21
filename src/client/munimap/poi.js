@@ -126,6 +126,20 @@ munimap.poi.isClickable = function(options) {
 
 
 /**
+ * @param {ol.Map} map
+ * @param {ol.Feature} poi
+ * @return {boolean}
+ * @protected
+ */
+munimap.poi.isInActiveFloor = function(map, poi) {
+  goog.asserts.assert(munimap.poi.isPoi(poi));
+  var floorCode = /**@type {string}*/(poi.get('polohKodPodlazi'));
+  var activeFloors = munimap.floor.getActiveFloors(map);
+  return goog.array.contains(activeFloors, floorCode);
+};
+
+
+/**
  * @param {munimap.feature.clickHandlerOptions} options
  */
 munimap.poi.featureClickHandler = function(options) {
@@ -178,8 +192,10 @@ munimap.poi.loadActive = function(options, extent, resolution, projection) {
       function(pois) {
         var activeLayer = munimap.poi.getActiveLayer(options.map);
         var activeStore = activeLayer.getSource();
-        var poisToAdd =
-            munimap.store.getNotYetAddedFeatures(activeStore, pois);
+        var poisFromActiveFloor = goog.array.filter(pois,
+            goog.partial(munimap.poi.isInActiveFloor, options.map));
+        var poisToAdd = munimap.store.getNotYetAddedFeatures(activeStore,
+            poisFromActiveFloor);
         activeStore.addFeatures(poisToAdd);
       });
 };
