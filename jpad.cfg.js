@@ -2,7 +2,7 @@
 
 var jpad = {
   appPath: '/munimap/',
-  appVersion: '1.2.1',
+  appVersion: '1.2.2',
   olVersion: 'v3.19.1',
   prodDomain: 'maps.muni.cz',
   plovrPattern: 'src/client/**/*.plovr.json',
