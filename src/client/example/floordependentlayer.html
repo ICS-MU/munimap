@@ -57,14 +57,14 @@
         Další parametry jsou již standardní parametry vrstvy typu <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.layer.Vector.html" target="_blank">ol.layer.Vector</a>:
       </p>
       <ul>
-        <li><code>source</code> - zdroj dat (<a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.source.Vector.html" target="_blank">ol.source.Vector</a>)</li>
+        <li><code>source</code> - zdroj dat, prozatím prázdný objekt (<a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.source.Vector.html" target="_blank">ol.source.Vector</a>)</li>
         <li><code>minResolution</code>, <code>maxResolution</code> - rozsah měřítek, v nichž má být vrstva vykreslena (number)</li>
         <li><code>updateWhileAnimating</code> - indikátor zda vykreslovat mapu při animaci (boolean)</li>
         <li><code>updateWhileInteracting</code> - indikátor zda vykreslovat mapu při pohybu s mapou (boolean)</li>
         <li><code>renderOrder</code> - pořadí vykreslování, může být null</li>
       </ul>
       <p>
-        Dále je nutné definovat parametry pro zdroj dat:
+        Dále je nutné definovat zdroj dat pro tuto vrstvu s následujícími parametry:
       </p>
       <ul>
         <li>
@@ -74,6 +74,8 @@
         <li><code>strategy</code> - strategie pro načítání dat (<a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.html#.LoadingStrategy" target="_blank">ol.LoadingStrategy</a>)</li>
       </ul>
       <p>
+        Potom již stačí jen nastavit vrstvě nově definovaný zdroj dat (<code>layer.setSource(source);</code>)
+        a přidat vrstvu do mapy pomocí <code>map.addLayer(layer);</code>.
         Výsledný kód pro přidání vlastní vrstvy závislé na podlaží vypadá takto:
       </p>
       <br />
