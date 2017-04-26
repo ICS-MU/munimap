@@ -404,10 +404,10 @@ INSERT INTO dbo.ZASTAVKY(OBJECTID, Shape, cislo, nazev, oznacnik)
 SELECT
   OBJECTID, 
   Shape,
-  cislo_zastavky AS cislo,
-  nazev_zastavky AS nazev,
+  cislo,
+  nazev,
   oznacnik
-FROM sde_publ.sde.ZASTAVKY_3857;
+FROM sde_publ.sde.ZASTAVKY2017_3857;
 
 DELETE FROM dbo.OTEVIRANI_DVERI;
 INSERT INTO dbo.OTEVIRANI_DVERI(OBJECTID, polohKodPodlazi, Shape)
