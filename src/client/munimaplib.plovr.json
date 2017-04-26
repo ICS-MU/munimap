@@ -65,8 +65,10 @@
     "munimap/munimap.externs.js",
     "munimap/create.externs.js",
     "munimap/layer.externs.js",
+    "munimap/load.externs.js",
     "munimap/reset.externs.js",
-    "munimap/style.fragment.externs.js"
+    "munimap/style.fragment.externs.js",
+    "munimap/type.externs.js"
   ],
 
   "inputs": [

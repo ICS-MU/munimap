@@ -408,3 +408,11 @@ SELECT
   nazev_zastavky AS nazev,
   oznacnik
 FROM sde_publ.sde.ZASTAVKY_3857;
+
+DELETE FROM dbo.OTEVIRANI_DVERI;
+INSERT INTO dbo.OTEVIRANI_DVERI(OBJECTID, polohKodPodlazi, Shape)
+SELECT
+  ROW_NUMBER() OVER (ORDER BY OBJECTID) AS OBJECTID,
+  polohKodPodlazi,
+  Shape
+FROM sde_publ.SDE.dvere_ote_pudorys
