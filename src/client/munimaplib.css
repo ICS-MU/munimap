@@ -65,7 +65,6 @@
   position: absolute;
   transition: left 0.5s, top 0.5s;
   white-space: nowrap;
-  z-index: 5;
 }
 .info > div {
   float: left;

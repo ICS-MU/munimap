@@ -143,7 +143,6 @@ munimap.create = function(options) {
       goog.dom.appendChild(infoEl, complexEl);
       goog.dom.appendChild(infoEl, bldgEl);
       goog.dom.appendChild(infoEl, floorEl);
-      goog.dom.appendChild(munimapEl, infoEl);
       goog.dom.appendChild(target, munimapEl);
 
       var map = new ol.Map({
@@ -340,6 +339,8 @@ munimap.create = function(options) {
           munimap.style.refreshAllFromFragments(map);
         }
       });
+
+      goog.dom.appendChild(munimapEl, infoEl);
 
       return map;
     }).then(resolve);
