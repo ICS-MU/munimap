@@ -55,13 +55,13 @@ munimap.room.STYLE = [
 /**
  * @type {Array<ol.style.Style>}
  */
-munimap.room.style.corridor;
+munimap.room.style.corridor = [];
 
 
 /**
  * @type {Array<ol.style.Style>}
  */
-munimap.room.style.staircase;
+munimap.room.style.staircase = [];
 
 
 /**
@@ -107,7 +107,7 @@ munimap.room.style.STAIRCASE_ICON = [
  * @param {ol.render.Event} event
  */
 munimap.room.style.setCorridorStyle = function(event) {
-  if (!goog.isDefAndNotNull(munimap.room.style.corridor)) {
+  if (munimap.room.style.corridor.length === 0) {
     var context = event.context;
     var image = new Image();
     var imgsrc = './room.style.coridors.bg.png';
