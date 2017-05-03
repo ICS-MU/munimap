@@ -8,15 +8,17 @@ goog.require('munimap.room.layer');
 
 
 /**
+ * @param {ol.Map} map
+ *
  * @return {Array.<ol.layer.Layer>}
  */
-munimap.getDefaultLayers = function() {
+munimap.getDefaultLayers = function(map) {
   var buildings = munimap.building.layer.create();
   var rooms = munimap.room.layer.create();
   var activeRooms = munimap.room.layer.createActive();
   var doors = munimap.door.layer.create();
   var poi = munimap.poi.layer.create();
-  var roomLabels = munimap.room.layer.createLabel();
+  var roomLabels = munimap.room.layer.createLabel(map);
   var complexes = munimap.complex.layer.create();
   var buildingLabels = munimap.building.layer.createLabel();
 

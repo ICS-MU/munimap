@@ -147,3 +147,28 @@ munimap.assert.baseMap = function(baseMap) {
     }
   }
 };
+<<<<<<< HEAD
+=======
+
+
+/**
+ * @param {boolean|undefined} pubTran
+ */
+munimap.assert.pubTran = function(pubTran) {
+  if (pubTran !== undefined) {
+    goog.asserts.assertBoolean(pubTran,
+        'Parameter pubTran should be boolean (true or false).');
+  }
+};
+
+
+/**
+ * @param {boolean|undefined} locationCodes
+ */
+munimap.assert.locationCodes = function(locationCodes) {
+  if (locationCodes !== undefined) {
+    goog.asserts.assertBoolean(locationCodes,
+        'Parameter locationCodes should be boolean (true or false).');
+  }
+};
+>>>>>>> bd66799... add switch to munimap.create for showing location codes instead of room numbers

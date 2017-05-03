@@ -242,7 +242,10 @@ munimap.marker.style.labelFunction = function(options, feature, resolution) {
     }
   }
   if (!goog.isDefAndNotNull(title) && !isDoor) {
-    title = munimap.style.getDefaultLabel(feature, resolution);
+    var showLocationCodes = munimap.getProps(options.map).locationCodes;
+    title = (showLocationCodes) ?
+        /**@type {string}*/ (feature.get('polohKod')) :
+            munimap.style.getDefaultLabel(feature, resolution);
   }
 
   var markers = options.markerSource.getFeatures();

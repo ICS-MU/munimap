@@ -442,6 +442,10 @@ munimap.cluster.style.pinFunction =
   if (goog.isDef(options.markerLabel)) {
     title = options.markerLabel(clusterFeature, resolution);
   }
+  var showLocationCodes = munimap.getProps(options.map).locationCodes;
+  if (showLocationCodes) {
+    title = /**@type {string}*/ (feature.get('polohKod'));
+  }
   var isMarked = munimap.marker.isMarker(options.map, feature);
   if (!goog.isDefAndNotNull(title)) {
     if (isMarked) {
@@ -658,7 +662,10 @@ munimap.cluster.style.getMarkedDefaultLabel =
         titleParts.sort(munimap.string.localeCompare);
       } else {
         markers.forEach(function(room) {
-          var roomTitle = munimap.style.getDefaultLabel(room, resolution);
+          var showLocationCodes = munimap.getProps(options.map).locationCodes;
+          var roomTitle = (showLocationCodes) ?
+              /**@type {string}*/ (room.get('polohKod')) :
+                  munimap.style.getDefaultLabel(room, resolution);
           if (goog.isDefAndNotNull(roomTitle)) {
             titleParts.push(roomTitle);
           }

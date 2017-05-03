@@ -15,7 +15,13 @@ munimapx.create;
  *   markerLabel: (munimap.marker.LabelFunction|undefined),
  *   layers: (Array.<ol.layer.Vector>|undefined),
  *   lang: (string|undefined),
+<<<<<<< HEAD
  *   baseMap: (string|undefined)
+=======
+ *   baseMap: (string|undefined),
+ *   pubTran: (boolean|undefined),
+ *   locationCodes: (boolean|undefined)
+>>>>>>> bd66799... add switch to munimap.create for showing location codes instead of room numbers
  * }}
  */
 munimapx.create.Options;

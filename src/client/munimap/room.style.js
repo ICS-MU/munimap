@@ -305,28 +305,46 @@ munimap.room.style.labelFunction = function(options, feature, resolution) {
         return labelCache[uid];
       }
       goog.asserts.assertInstanceof(feature, ol.Feature);
-      var title = munimap.room.getDefaultLabel(feature);
-      if (title) {
-        var purpose = feature.get('ucel_gis');
-        var fontSize;
-        if (munimap.range.contains(
-            munimap.room.label.big.RESOLUTION, resolution)) {
-          fontSize = munimap.room.style.FONT_SIZE;
-        } else {
-          fontSize = munimap.room.style.SMALL_FONT_SIZE;
+      var title;
+      var offset;
+      var purposeGis = /**@type {string}*/ (feature.get('ucel_gis'));
+      var showLocationCodes = munimap.getProps(options.map).locationCodes;
+      var fontSize;
+      if (munimap.range.contains(
+          munimap.room.label.big.RESOLUTION, resolution)) {
+        fontSize = munimap.room.style.FONT_SIZE;
+      } else {
+        fontSize = munimap.room.style.SMALL_FONT_SIZE;
+      }
+      var textFont = 'bold ' + fontSize + 'px arial';
+
+      if (showLocationCodes) {
+        title = /**@type {string}*/ (feature.get('polohKod'));
+        var purposeTitle = /**@type {string}*/ (feature.get('ucel_nazev'));
+        if (goog.isDefAndNotNull(purposeGis) &&
+            (purposeGis === munimap.poi.Purpose.ELEVATOR ||
+             purposeGis === munimap.poi.Purpose.INFORMATION_POINT)) {
+          offset = munimap.poi.style.ICON_HEIGHT - 6;
+        } else if (goog.isDefAndNotNull(purposeTitle) &&
+            (purposeTitle === 'WC' || purposeTitle === 'schodiště')) {
+          offset = munimap.poi.style.ICON_HEIGHT - 6;
         }
-        var textFont = 'bold ' + fontSize + 'px arial';
-        var offset;
-        if (goog.isDefAndNotNull(purpose) &&
-            purpose === munimap.poi.Purpose.CLASSROOM) {
+      } else {
+        title = munimap.room.getDefaultLabel(feature);
+      }
+      if (title) {
+        if (goog.isDefAndNotNull(purposeGis) &&
+            purposeGis === munimap.poi.Purpose.CLASSROOM) {
           var labelHeight = munimap.style.getLabelHeight(title, fontSize);
-          var overallHeight = labelHeight + munimap.poi.style.ICON_HEIGHT + 2;
+          var overallHeight =
+              labelHeight + munimap.poi.style.ICON_HEIGHT + 2;
           var iconOffset =
               - (overallHeight - munimap.poi.style.ICON_HEIGHT) / 2;
           offset = (overallHeight - labelHeight) / 2;
           goog.array.extend(
-              result, munimap.room.style.getClassroomIcon(iconOffset));
+                  result, munimap.room.style.getClassroomIcon(iconOffset));
         }
+
         var textStyle = new ol.style.Style({
           geometry: munimap.geom.CENTER_GEOMETRY_FUNCTION,
           text: new ol.style.Text({

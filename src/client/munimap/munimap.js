@@ -12,7 +12,8 @@ goog.require('munimap.move');
  *   selectedBuilding:? (string),
  *   selectedFloor:? (munimap.floor.Options),
  *   currentResolution: (number),
- *   getMainFeatureAtPixel: (munimap.getMainFeatureAtPixelFunction)
+ *   getMainFeatureAtPixel: (munimap.getMainFeatureAtPixelFunction),
+ *   locationCodes:? (boolean)
  * }}
  */
 munimap.Props;
