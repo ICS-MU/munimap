@@ -16,7 +16,8 @@ munimapx.create;
  *   layers: (Array.<ol.layer.Vector>|undefined),
  *   lang: (string|undefined),
  *   baseMap: (string|undefined),
- *   pubTran: (boolean|undefined)
+ *   pubTran: (boolean|undefined),
+ *   locationCodes: (boolean|undefined)
  * }}
  */
 munimapx.create.Options;

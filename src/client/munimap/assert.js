@@ -158,3 +158,14 @@ munimap.assert.pubTran = function(pubTran) {
         'Parameter pubTran should be boolean (true or false).');
   }
 };
+
+
+/**
+ * @param {boolean|undefined} locationCodes
+ */
+munimap.assert.locationCodes = function(locationCodes) {
+  if (locationCodes !== undefined) {
+    goog.asserts.assertBoolean(locationCodes,
+        'Parameter locationCodes should be boolean (true or false).');
+  }
+};

@@ -58,9 +58,11 @@ munimap.room.layer.createActive = function() {
 
 
 /**
+ * @param {ol.Map} map
+ *
  * @return {ol.layer.Vector}
  */
-munimap.room.layer.createLabel = function() {
+munimap.room.layer.createLabel = function(map) {
   var styleFragments = {
     selectedFloorFeature: {
       filter: munimap.room.style.selectedFloorFilter,
@@ -68,13 +70,16 @@ munimap.room.layer.createLabel = function() {
     }
   };
 
+  var showLocationCodes = munimap.getProps(map).locationCodes;
+  var maxResolution = (showLocationCodes) ? 0.13 : munimap.floor.RESOLUTION.max;
+
   return new ol.layer.Vector({
     id: munimap.room.label.LAYER_ID,
     clearSourceOnFloorChange: true,
     type: munimap.room.TYPE,
     refreshStyleOnFloorChange: true,
     styleFragments: styleFragments,
-    maxResolution: munimap.floor.RESOLUTION.max,
+    maxResolution: maxResolution,
     source: null,
     updateWhileAnimating: true,
     updateWhileInteracting: true,

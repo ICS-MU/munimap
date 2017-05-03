@@ -76,7 +76,8 @@ munimap.create = function(options) {
         lang: options.lang,
         layers: options.layers,
         baseMap: options.baseMap || munimap.BaseMaps.OSM_BW,
-        pubTran: options.pubTran
+        pubTran: options.pubTran,
+        locationCodes: options.locationCodes
       };
     }).then(function(options) {
       var target = options.target;
@@ -249,11 +250,12 @@ munimap.create = function(options) {
         selectedFloor: null,
         currentResolution: goog.asserts.assertNumber(view.getResolution()),
         getMainFeatureAtPixel: options.getMainFeatureAtPixel ||
-            munimap.getMainFeatureAtPixel
+            munimap.getMainFeatureAtPixel,
+        locationCodes: options.locationCodes
       };
       map.set(munimap.PROPS_NAME, mapProps);
 
-      var layers = options.layers || munimap.getDefaultLayers();
+      var layers = options.layers || munimap.getDefaultLayers(map);
       munimap.create.setDefaultLayersProps({
         layers: layers,
         markersAwareOptions: markerOptions,
@@ -365,6 +367,7 @@ munimap.create.assertOptions = function(options) {
   munimap.assert.lang(options.lang);
   munimap.assert.baseMap(options.baseMap);
   munimap.assert.pubTran(options.pubTran);
+  munimap.assert.locationCodes(options.locationCodes);
 };
 
 
