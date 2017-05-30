@@ -42,6 +42,10 @@ var jpad = {
     {
       src: 'bower_components/webfontloader/webfontloader.js',
       dest: '_lib/webfontloader/webfontloader.js'
+    },
+    {
+      src: 'src/client/munimapext.js',
+      dest: 'munimapext.js'
     }
   ],
   bundle: {
