@@ -1,6 +1,6 @@
 {
   "name": "munimap",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "private": true,
   "dependencies": {
     "closure-compiler-src": "git://github.com/google/closure-compiler.git#v20151216",
