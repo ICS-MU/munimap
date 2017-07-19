@@ -183,7 +183,7 @@ munimap.poi.loadActive = function(options, extent, resolution, projection) {
     });
     where += ' OR ' + conditions.join(' OR ');
   }
-  where = '('+where+') AND volitelny<>1';
+  where = '('+where+') AND (volitelny=0 OR volitelny is NULL)';
   var opts = {
     type: munimap.poi.TYPE,
     where: where,
