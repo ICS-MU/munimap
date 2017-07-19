@@ -305,7 +305,7 @@
 
 
 	DELETE FROM dbo.BODY_ZAJMU;
-	INSERT INTO dbo.BODY_ZAJMU(objectid, Shape, typ, polohKodLokace, polohKodPodlazi, vychoziPodlazi, priorita)
+	INSERT INTO dbo.BODY_ZAJMU(objectid, Shape, typ, polohKodLokace, polohKodPodlazi, vychoziPodlazi, volitelny)
 	  SELECT
 		ROW_NUMBER() OVER (ORDER BY typ, polohKodLokace) AS OBJECTID,
 		poi.*,
@@ -323,7 +323,7 @@
 				ELSE 0
 			  END
 		END AS vychoziPodlazi,
-		0 AS priorita
+		0 AS volitelny
 	  FROM 
 		(SELECT
 		  mist.SHAPE.STCentroid() AS Shape,
@@ -380,7 +380,7 @@
 			)
 		) poi;
 
-	INSERT INTO dbo.BODY_ZAJMU(objectid, typ, polohKodLokace, polohKodPodlazi, vychoziPodlazi, nazev_cs, nazev_en, priorita, provozniDoba_cs, provozniDoba_en, x, y)
+	INSERT INTO dbo.BODY_ZAJMU(objectid, typ, polohKodLokace, polohKodPodlazi, vychoziPodlazi, nazev_cs, nazev_en, volitelny, provozniDoba_cs, provozniDoba_en, x, y)
 	SELECT
 		ROW_NUMBER() OVER (ORDER BY bz.BOD_ZAJMU_ID) + (SELECT MAX(OBJECTID) FROM sde_munimap.dbo.BODY_ZAJMU) AS OBJECTID,
 		bzt.NAZEV_CS AS typ,
@@ -397,7 +397,7 @@
 		END AS vychoziPodlazi,
 		bz.NAZEV_CS AS nazev_cs,
 		bz.NAZEV_EN AS nazev_en,
-		1 AS priorita,
+		1 AS volitelny,
 		bz.PROVOZ_DOBA_CS AS provozniDoba_cs,
 		bz.PROVOZ_DOBA_EN AS provozniDoba_en,
 		CAST(GEOSOUR_X AS float) AS x,
