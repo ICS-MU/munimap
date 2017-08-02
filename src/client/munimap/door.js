@@ -142,7 +142,6 @@ munimap.door.isCodeOrLikeExpr = function(maybeCodeOrLikeExpr) {
  * @protected
  */
 munimap.door.isInActiveFloor = function(map, door) {
-  goog.asserts.assert(munimap.door.isDoor(door));
   var floorCode = /**@type {string}*/(door.get('polohKodPodlazi'));
   var activeFloors = munimap.floor.getActiveFloors(map);
   return goog.array.contains(activeFloors, floorCode);
