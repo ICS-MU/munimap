@@ -342,7 +342,7 @@ munimap.room.style.labelFunction = function(options, feature, resolution) {
               - (overallHeight - munimap.poi.style.ICON_HEIGHT) / 2;
           offset = (overallHeight - labelHeight) / 2;
           goog.array.extend(
-                  result, munimap.room.style.getClassroomIcon(iconOffset));
+              result, munimap.room.style.getClassroomIcon(iconOffset));
         }
 
         var textStyle = new ol.style.Style({
