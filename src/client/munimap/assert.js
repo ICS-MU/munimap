@@ -7,6 +7,7 @@ goog.require('jpad.func');
 goog.require('munimap');
 goog.require('munimap.building');
 goog.require('munimap.lang');
+goog.require('munimap.optpoi');
 goog.require('munimap.room');
 
 
@@ -20,9 +21,11 @@ munimap.assert.markers = function(markers) {
     if (markers.every(goog.isString)) {
       if (!markers.every(munimap.building.isCodeOrLikeExpr) &&
           !markers.every(munimap.room.isCodeOrLikeExpr) &&
-          !markers.every(munimap.door.isCodeOrLikeExpr)) {
-        goog.asserts.fail('Markers should contain only building, room or' +
-            ' door location codes or corresponding LIKE expressions.');
+          !markers.every(munimap.door.isCodeOrLikeExpr) &&
+          !markers.every(munimap.optpoi.isCtgUid)) {
+        goog.asserts.fail('Markers should contain 1. building, room or ' +
+            'door location codes, or 2. corresponding LIKE expressions, or ' +
+            '3. POI categories.');
       }
     } else if (markers.every(goog.partial(jpad.func.instanceof, ol.Feature))) {
       var featureMarkers = /** @type {Array<ol.Feature>} */(markers);

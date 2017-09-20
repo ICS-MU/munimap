@@ -23,6 +23,7 @@ goog.require('munimap.info');
 goog.require('munimap.lang');
 goog.require('munimap.layer.propName');
 goog.require('munimap.marker');
+goog.require('munimap.optpoi');
 goog.require('munimap.poi');
 goog.require('munimap.poi.style');
 goog.require('munimap.room');
@@ -486,12 +487,12 @@ munimap.create.setDefaultLayersPropsOptions;
 
 /**
  * Load features by location codes or decorate custom markers.
- * @param {Array.<string>|Array.<ol.Feature>|string|undefined} featuresLike
+ * @param {Array.<string>|Array.<ol.Feature>|undefined} featuresLike
  * @return {goog.Thenable<Array<ol.Feature>>} promise of features
  */
 munimap.create.loadOrDecorateMarkers = function(featuresLike) {
   var result;
-  if (goog.isArray(featuresLike) && featuresLike[0] instanceof ol.Feature) {
+  if (featuresLike.every(goog.partial(jpad.func.instanceof, ol.Feature))) {
     var features = /** @type {Array<ol.Feature>} */(featuresLike);
     features.forEach(function(feature) {
       munimap.marker.custom.decorate(feature);
@@ -499,6 +500,23 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike) {
     result = /** @type {goog.Thenable<Array<ol.Feature>>} */(
         goog.Promise.resolve(features)
         );
+  } else if (featuresLike.every(munimap.optpoi.isCtgUid)) {
+    var ctgIds = featuresLike.map(function(ctguid) {
+      return ctguid.split(':')[1];
+    });
+    result = munimap.optpoi.load({
+      ids: ctgIds
+    }).then(function(features) {
+      var rooms = features.filter(function(f) {
+        var lc = f.get('polohKodLokace');
+        goog.asserts.assertString(lc);
+        return munimap.room.isCode(lc);
+      });
+      var roomCodes = rooms.map(function(f) {
+        return f.get('polohKodLokace');
+      });
+      return munimap.load.featuresFromParam(roomCodes);
+    });
   } else {
     result = munimap.load.featuresFromParam(featuresLike);
   }
