@@ -66,12 +66,12 @@ var munimap_ext = {
         munimap.load.featuresForMap(opts, extent, resolution, projection)
             .then(function(doorOpenings) {
               var activeStore = layer.getSource();
-              var doorOpeningsFromActiveFloors = 
+              var doorOpeningsFromActiveFloors =
                   doorOpenings.filter(function(doorOpening) {
-                var floorCode = 
-                    /**@type {string}*/(doorOpening.get('polohKodPodlazi'));
-                return floors.indexOf(floorCode) >= 0;
-              });
+                    var floorCode =
+                     /**@type {string}*/(doorOpening.get('polohKodPodlazi'));
+                    return floors.indexOf(floorCode) >= 0;
+                  });
               var doorOpeningsToAdd = munimap.store.getNotYetAddedFeatures(
                   activeStore, doorOpeningsFromActiveFloors);
               activeStore.addFeatures(doorOpeningsToAdd);
