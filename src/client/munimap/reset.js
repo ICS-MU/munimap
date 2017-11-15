@@ -33,7 +33,7 @@ munimap.reset = function(map, options) {
   return new goog.Promise(function(resolve, reject) {
     goog.Promise.all([
       options,
-      munimap.create.loadOrDecorateMarkers(options.markers),
+      munimap.create.loadOrDecorateMarkers(options.markers, options),
       munimap.load.featuresFromParam(options.zoomTo)
     ]).then(function(results) {
       var options = results[0];

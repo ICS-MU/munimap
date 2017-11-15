@@ -46,7 +46,10 @@ munimap.lang.Translations = {
   BUILDING: 'BUILDING',
   ROOM: 'ROOM',
   DOOR: 'DOOR',
-  LOCATION: 'LOCATION'
+  LOCATION: 'LOCATION',
+  PRINT_CENTER: 'print-center',
+  CREDIT_TOP_UP_MACHINE: 'credit-top-up-machine',
+  RETAIL_LOCATION: 'retail-location'
 };
 
 
@@ -94,7 +97,10 @@ munimap.lang.CS_TRANSLATIONS = {
   'BUILDING': 'budova',
   'ROOM': 'místnost',
   'DOOR': 'dveře',
-  'LOCATION': 'místo'
+  'LOCATION': 'místo',
+  'print-center': 'tiskové centrum',
+  'credit-top-up-machine': 'bankovník',
+  'retail-location': 'prodejní místo'
 };
 
 
@@ -143,7 +149,10 @@ munimap.lang.EN_TRANSLATIONS = {
   'BUILDING': 'building',
   'ROOM': 'room',
   'DOOR': 'door',
-  'LOCATION': 'location'
+  'LOCATION': 'location',
+  'print-center': 'print center',
+  'credit-top-up-machine': 'credit top up machine',
+  'retail-location': 'retail location'
 };
 
 
