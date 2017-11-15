@@ -73,11 +73,21 @@
             | undefined</td>
           <td class="param-desc">
             <ul>
-              <li>pole polohových kódů budov, nebo polohových kódů místností, nebo polohových kódů dveří, které mají být v mapě zvýrazněny</li>
+              <li>pole textových řetězců může být
               <ul>
-                <li>v polohových kódech je možné využít zástupného znaku '_'</li>
+                <li>pole polohových kódů budov,</li>
+                <li>pole polohových kódů místností,</li>
+                <li>pole polohových kódů dveří nebo</li>
+                <li>pole kategorií bodů zájmu (od verze 1.4)</li>
               </ul>
-              <li>od verze 1.1 je možné umístit "špendlík" na libovolné místo v mapě, a to pomocí pole objektů typu ol.Feature s parametry:
+              <li>v případě polohových kódů je možné využít zástupného znaku '_'</li>
+              <li>kategorie bodů zájmu mohou být</li>
+              <ul>
+                <li><code>poi.ctg:print-center</code> (tisková centra)</li>
+                <li><code>poi.ctg:credit-top-up-machine</code> (bankovníky)</li>
+                <li><code>poi.ctg:retail-location</code> (prodejní místa)</li>
+              </ul>
+              <li>od verze 1.1 je možné umístit "špendlík" na libovolné místo v mapě, a to pomocí pole objektů typu <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Feature.html" target="_blank">ol.Feature</a> s parametry:
                 <ul>
                   <li>geometry definující geometrii pomocí objektu <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.geom.Point.html" target="_blank">ol.geom.Point</a></li>
                   <li>label pro textový popisek bodu</li>
