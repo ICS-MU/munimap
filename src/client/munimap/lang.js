@@ -38,7 +38,21 @@ munimap.lang.Translations = {
   ROOM_TITLE_FIELD_NAME: 'ROOM_TITLE_FIELD_NAME',
   UNIT_TITLE_FIELD_NAME: 'UNIT_TITLE_FIELD_NAME',
   UNIT_ABBR_FIELD_NAME: 'UNIT_ABBR_FIELD_NAME',
+<<<<<<< HEAD
   CLUSTER_MU_LABEL: 'CLUSTER_MU_LABEL'
+=======
+  CLUSTER_MU_LABEL: 'CLUSTER_MU_LABEL',
+  FIND_CONNECTION: 'FIND_CONNECTION',
+  CONNECTION_FROM: 'CONNECTION_FROM',
+  CONNECTION_TO: 'CONNECTION_TO',
+  BUILDING: 'BUILDING',
+  ROOM: 'ROOM',
+  DOOR: 'DOOR',
+  LOCATION: 'LOCATION',
+  PRINT_CENTER: 'print-center',
+  CREDIT_TOP_UP_MACHINE: 'credit-top-up-machine',
+  RETAIL_LOCATION: 'retail-location'
+>>>>>>> 52f4ba7... Improve labels of optional POIs, add multilinguality
 };
 
 
@@ -76,7 +90,21 @@ munimap.lang.CS_TRANSLATIONS = {
   'ROOM_TITLE_FIELD_NAME': 'nazev',
   'UNIT_TITLE_FIELD_NAME': 'nazevk_cs',
   'UNIT_ABBR_FIELD_NAME': 'zkratka_cs',
+<<<<<<< HEAD
   'CLUSTER_MU_LABEL': 'Masarykova univerzita'
+=======
+  'CLUSTER_MU_LABEL': 'Masarykova univerzita',
+  'FIND_CONNECTION': 'Hledat spojení',
+  'CONNECTION_FROM': 'odtud',
+  'CONNECTION_TO': 'sem',
+  'BUILDING': 'budova',
+  'ROOM': 'místnost',
+  'DOOR': 'dveře',
+  'LOCATION': 'místo',
+  'print-center': 'tiskové centrum',
+  'credit-top-up-machine': 'bankovník',
+  'retail-location': 'prodejní místo'
+>>>>>>> 52f4ba7... Improve labels of optional POIs, add multilinguality
 };
 
 
@@ -114,7 +142,21 @@ munimap.lang.EN_TRANSLATIONS = {
   'ROOM_TITLE_FIELD_NAME': 'nazevEn',
   'UNIT_TITLE_FIELD_NAME': 'nazevk_en',
   'UNIT_ABBR_FIELD_NAME': 'zkratka_en',
+<<<<<<< HEAD
   'CLUSTER_MU_LABEL': 'Masaryk university'
+=======
+  'CLUSTER_MU_LABEL': 'Masaryk university',
+  'FIND_CONNECTION': 'Find connection',
+  'CONNECTION_FROM': 'from',
+  'CONNECTION_TO': 'to',
+  'BUILDING': 'building',
+  'ROOM': 'room',
+  'DOOR': 'door',
+  'LOCATION': 'location',
+  'print-center': 'print center',
+  'credit-top-up-machine': 'credit top up machine',
+  'retail-location': 'retail location'
+>>>>>>> 52f4ba7... Improve labels of optional POIs, add multilinguality
 };
 
 
