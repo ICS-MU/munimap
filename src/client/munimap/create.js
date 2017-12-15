@@ -136,10 +136,10 @@ munimap.create = function (options) {
       }
 
       var munimapEl = goog.dom.createDom('div', 'munimap');
-      var infoEl = goog.dom.createDom('div', 'ol-popup info');
-      var complexEl = goog.dom.createDom('div', 'complex');
-      var bldgEl = goog.dom.createDom('div', 'building');
-      var floorEl = goog.dom.createDom('div', 'floor');
+      var infoEl = goog.dom.createDom('div', 'ol-popup munimap-info');
+      var complexEl = goog.dom.createDom('div', 'munimap-complex');
+      var bldgEl = goog.dom.createDom('div', 'munimap-building');
+      var floorEl = goog.dom.createDom('div', 'munimap-floor');
 
       goog.dom.appendChild(infoEl, complexEl);
       goog.dom.appendChild(infoEl, bldgEl);

@@ -8,9 +8,9 @@ goog.provide('munimap.pubtran.stop.info');
  */
 munimap.pubtran.stop.info.create = function(map) {
   var munimapEl = map.getTargetElement();
-  var popupEl = goog.dom.createDom('div', 'ol-popup info info-bubble');
-  var contentEl = goog.dom.createDom('div', 'content');
-  var closeButtonEl = goog.dom.createDom('div', 'close-button');
+  var popupEl = goog.dom.createDom('div', 'ol-popup munimap-info munimap-info-bubble');
+  var contentEl = goog.dom.createDom('div', 'munimap-content');
+  var closeButtonEl = goog.dom.createDom('div', 'munimap-close-button');
   goog.dom.appendChild(popupEl, closeButtonEl);
   goog.dom.appendChild(popupEl, contentEl);
   goog.dom.appendChild(munimapEl, popupEl);
@@ -58,7 +58,7 @@ munimap.pubtran.stop.info.show = function(feature, map) {
   var popupEl = popup.getElement();
   if (popupEl) {
     var title = /**@type {string}*/ (feature.get('nazev'));
-    var contentEl = goog.dom.getElementByClass('content', popupEl);
+    var contentEl = goog.dom.getElementByClass('munimap-content', popupEl);
     goog.dom.removeChildren(contentEl);
 
     munimap.pubtran.stop.info.appendContentToEl(title, contentEl);
@@ -82,7 +82,7 @@ munimap.pubtran.stop.info.show = function(feature, map) {
  */
 munimap.pubtran.stop.info.appendContentToEl = function(title, contentEl) {
   var titleEl =
-      goog.dom.createDom('div', 'title', goog.dom.createTextNode(title));
+      goog.dom.createDom('div', 'munimap-title', goog.dom.createTextNode(title));
   var link = 'http://jizdnirady.idnes.cz/idsjmk/spojeni/?';
   var linkToAttributes = {
     href: encodeURI(link + 't=' + title),
