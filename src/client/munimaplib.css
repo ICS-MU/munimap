@@ -152,15 +152,15 @@
   content: none !important;
 }
 
-.ol-attribution a:after {
+.ol-attribution li a:after {
   content: none !important;
 }
-.ol-attribution a {
+.ol-attribution li a {
   padding-right: 0px !important;
   color: #002776;
   font-weight: bold;
   background-image: none !important;
 }
-.ol-attribution a:hover {
+.ol-attribution li a:hover {
   color: red;
 }
