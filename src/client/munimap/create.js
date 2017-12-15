@@ -100,7 +100,7 @@ munimap.create = function (options) {
           munimap.lang.Translations.MUNIMAP_ATTRIBUTION_HTML)
       });
       var muAttributions = [munimapAttribution, muAttribution];
-
+      
       var raster;
 
       switch (options.baseMap) {
@@ -155,7 +155,6 @@ munimap.create = function (options) {
       goog.dom.appendChild(infoEl, bldgEl);
       goog.dom.appendChild(infoEl, floorEl);
       goog.dom.appendChild(target, munimapEl);
-
       var map = new ol.Map({
         controls: ol.control.defaults({
           attributionOptions: {
@@ -449,7 +448,7 @@ munimap.create.setDefaultLayersProps = function (options) {
   var map = markersAwareOpts.map || null;
   var markerSource = markersAwareOpts.markerSource;
   var attributions = options.attributions;
-
+  
   var activeRoomsStore;
 
   layers.forEach(function (layer) {
