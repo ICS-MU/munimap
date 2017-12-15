@@ -95,7 +95,7 @@ munimap.info.refreshElementPosition = function(map) {
         infoBoxPosition = map.getPixelFromCoordinate(
             [closestPoint[0], closestPoint[1] + extHeight]);
         infoBoxPosition[0] -= munimap.info.POPUP_TALE_INDENT;
-        goog.dom.classlist.enable(element, 'hide-tale', false);
+        goog.dom.classlist.enable(element, 'munimap-hide-tale', false);
       } else {
         intersect = munimap.geom.featureExtentIntersect(
             building, viewExtent, format);
@@ -111,14 +111,14 @@ munimap.info.refreshElementPosition = function(map) {
           infoBoxPosition = map.getPixelFromCoordinate(
               [topRight[0] - extWidth, bbox[3] + extHeight]);
         }
-        goog.dom.classlist.enable(element, 'hide-tale', true);
+        goog.dom.classlist.enable(element, 'munimap-hide-tale', true);
       }
     }
     if (!goog.isDef(infoBoxPosition)) {
       var parentEl = goog.dom.getParentElement(element);
       var parentElSize = goog.style.getSize(parentEl);
       infoBoxPosition = [parentElSize.width - elSize.width, 0];
-      goog.dom.classlist.enable(element, 'hide-tale', true);
+      goog.dom.classlist.enable(element, 'munimap-hide-tale', true);
     }
     goog.style.setPosition(element, infoBoxPosition[0], infoBoxPosition[1]);
   }
@@ -131,8 +131,8 @@ munimap.info.refreshElementPosition = function(map) {
  */
 munimap.info.setBuildingTitle = function(map, building) {
   var element = munimap.getProps(map).info;
-  var complexEl = goog.dom.getElementByClass('complex', element);
-  var bel = goog.dom.getElementByClass('building', element);
+  var complexEl = goog.dom.getElementByClass('munimap-complex', element);
+  var bel = goog.dom.getElementByClass('munimap-building', element);
   if (building) {
     var title = /**@type {string}*/ (building.get(munimap.lang.getMsg(
         munimap.lang.Translations.BUILDING_TITLE_FIELD_NAME)));
@@ -210,7 +210,7 @@ munimap.info.refreshFloorSelect = function(map, floors) {
       var floorLabel = munimap.info.getLabelAbbr(floorCode);
       var item = new goog.ui.MenuItem(floorLabel, floor);
       floorSelect.addItem(item);
-      item.enableClassName('floor-select-item', true);
+      item.enableClassName('munimap-floor-select-item', true);
       var itemElement = item.getElement();
       goog.dom.setProperties(itemElement,
           {title: munimap.info.getLabel(floorCode)});
