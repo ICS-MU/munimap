@@ -15,7 +15,7 @@ goog.require('munimap.move');
  * @return {goog.Thenable<ol.Map>} promise of features contained
  * in server response
  */
-munimap.reset = function(map, options) {
+munimap.reset = function (map, options) {
 
   munimap.getProps(map).selectedFloor = null;
   munimap.getProps(map).selectedBuilding = null;
@@ -23,19 +23,19 @@ munimap.reset = function(map, options) {
   var resetKeys = goog.object.getKeys(options);
   resetKeys.sort();
   munimap.ga.sendEvent(
-      'map',
-      'reset',
-      resetKeys.join(',')
+    'map',
+    'reset',
+    resetKeys.join(',')
   );
 
   munimap.reset.assertOptions(options);
 
-  return new goog.Promise(function(resolve, reject) {
+  return new goog.Promise(function (resolve, reject) {
     goog.Promise.all([
       options,
       munimap.create.loadOrDecorateMarkers(options.markers, options),
       munimap.load.featuresFromParam(options.zoomTo)
-    ]).then(function(results) {
+    ]).then(function (results) {
       var options = results[0];
       var markers = results[1];
       var zoomTos = results[2];
@@ -48,7 +48,7 @@ munimap.reset = function(map, options) {
         markers: markers,
         markerLabel: options.markerLabel
       };
-    }).then(function(options) {
+    }).then(function (options) {
       var markers = options.markers;
       var view = options.view;
 
@@ -62,9 +62,17 @@ munimap.reset = function(map, options) {
       var clusterLayer = munimap.cluster.getLayer(map);
       var oldMinRes = clusterLayer.getMinResolution();
       var clusterResolution = munimap.cluster.BUILDING_RESOLUTION;
-      var firstMarker = markers[0];
-      if (markers.length && (munimap.room.isRoom(firstMarker) ||
-          munimap.door.isDoor(firstMarker))) {
+      // var firstMarker = markers[0];
+      // if (markers.length && (munimap.room.isRoom(firstMarker) ||
+      //   munimap.door.isDoor(firstMarker))) {
+      //   clusterResolution = munimap.cluster.ROOM_RESOLUTION;
+      // }
+      if (markers.length && (markers.some(function (el) {
+        return munimap.room.isRoom(el);
+      }) || markers.some(function (el) {
+        return munimap.door.isDoor(el);
+      })
+      )) {
         clusterResolution = munimap.cluster.ROOM_RESOLUTION;
       }
       if (oldMinRes !== clusterResolution.min) {
@@ -91,11 +99,11 @@ munimap.reset = function(map, options) {
 /**
  * @param {munimapx.reset.Options} options
  */
-munimap.reset.assertOptions = function(options) {
+munimap.reset.assertOptions = function (options) {
   assert(options.zoom === undefined || options.zoomTo === undefined,
-      'Zoom and zoomTo options can\'t be defined together.');
+    'Zoom and zoomTo options can\'t be defined together.');
   assert(options.center === undefined || options.zoomTo === undefined,
-      'Center and zoomTo options can\'t be defined together.');
+    'Center and zoomTo options can\'t be defined together.');
   munimap.assert.zoom(options.zoom);
   munimap.assert.zoomTo(options.zoomTo);
   munimap.assert.markers(options.markers);

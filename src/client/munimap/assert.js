@@ -14,25 +14,40 @@ goog.require('munimap.room');
 /**
  * @param {Array.<string>|undefined} markers
  */
-munimap.assert.markers = function(markers) {
+munimap.assert.markers = function (markers) {
   if (markers !== undefined) {
     assert(goog.isArray(markers), 'Markers should be an array.');
-
-    if (markers.every(goog.isString)) {
-      if (!markers.every(munimap.building.isCodeOrLikeExpr) &&
-          !markers.every(munimap.room.isCodeOrLikeExpr) &&
-          !markers.every(munimap.door.isCodeOrLikeExpr) &&
-          !markers.every(munimap.optpoi.isCtgUid)) {
-        goog.asserts.fail('Markers should contain 1. building, room or ' +
+    var featureMarkers = [];
+    
+    markers.forEach(function (el) {
+      if (goog.isString(el)) {
+        if (!(munimap.building.isCodeOrLikeExpr(el)) &&
+          !(munimap.room.isCodeOrLikeExpr(el)) &&
+          !(munimap.door.isCodeOrLikeExpr(el)) &&
+          !(munimap.optpoi.isCtgUid(el))) {
+            goog.asserts.fail('Markers should contain 1. building, room or ' +
             'door location codes, or 2. corresponding LIKE expressions, or ' +
             '3. POI categories.');
-      }
-    } else if (markers.every(goog.partial(jpad.func.instanceof, ol.Feature))) {
-      var featureMarkers = /** @type {Array<ol.Feature>} */(markers);
-      featureMarkers.forEach(munimap.marker.custom.assertSuitable);
-    } else {
-      goog.asserts.fail('Markers should contain only strings or ' +
+        }
+      } else if (jpad.func.instanceof(ol.Feature, el)) {
+        goog.asserts.assertInstanceof(el, ol.Feature);
+        featureMarkers.push(el);
+        munimap.marker.custom.assertSuitable(el);
+       } else {
+        goog.asserts.fail('Markers should contain only strings or ' +
           'only instances of ol.Feature');
+      }
+    });
+    if(markers.some(function(el) {
+       return munimap.optpoi.isCtgUid(el)
+    })) {
+      if(!(markers.every(function(el) {
+        return munimap.optpoi.isCtgUid(el)
+      }))) {
+        goog.asserts.fail('Markers should contain 1. building, room or ' +
+        'door location codes, or 2. corresponding LIKE expressions, or ' +
+        '3. POI categories.');
+      }
     }
   }
 };
