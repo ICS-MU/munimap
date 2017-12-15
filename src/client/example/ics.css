@@ -136,7 +136,8 @@ code {
   color: black;
   font-family: monospace;
 }
-.content > .map {
+.content .map {
+  width: 100%;
   height: 400px;
   background: url(../_lib/ol3/examples/resources/map-background.jpg) repeat;
   margin: 20px;

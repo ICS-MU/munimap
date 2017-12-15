@@ -59,6 +59,7 @@ munimap.optpoi.ctg.UID_PREFIX = 'poi.ctg';
  * @return {boolean}
  */
 munimap.optpoi.isCtgUid = function(maybeCtgUid) {
+  maybeCtgUid = maybeCtgUid.toString();
   var parts = maybeCtgUid.split(':');
   return parts.length === 2 &&
       parts[0] === munimap.optpoi.ctg.UID_PREFIX &&
