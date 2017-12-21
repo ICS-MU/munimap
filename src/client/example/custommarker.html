@@ -42,6 +42,7 @@
       <ul class="">
         <li><b>geometry</b> - pomocí objektu typu <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.geom.Point.html" target="_blank">ol.geom.Point</a> definuje polohu "špendlíku" v mapě</li>
         <li><b>label</b> - textový popis, který se zobrazí u "špendlíku" v mapě</li>
+        <li><b>detail</b> - textový / html popis, který se zobrazí po kliknutí na "špendlík" - nepovinný parametr</li>
       </ul>
       <p>"Špendlíky" je možné kombinovat s polohovými kódy - v tomto případě rektorát 'BMA01'.</p>
       <pre class="prettyprint">
@@ -51,7 +52,9 @@
         markers: [
           new ol.Feature({
             geometry: new ol.geom.Point([16.612802, 49.190582]),
-            label: 'Brno hlavní nádraží'
+            label: 'Brno hlavní nádraží',
+            detail: 'mal&yacute; text &lt;a href=&quot;https://www.muni.cz/&quot; target=&quot;_blank&quot;&gt;Odkaz&lt;/a&gt;
+                    &lt;h2&gt;velk&yacute; text&lt;/h2&gt;'
           }),
           new ol.Feature({
             geometry: new ol.geom.Point([16.616667, 49.185833]),
@@ -92,7 +95,8 @@
         markers: [
           new ol.Feature({
             geometry: new ol.geom.Point([16.612802, 49.190582]),
-            label: 'Brno hlavní nádraží'
+            label: 'Brno hlavní nádraží',
+            detail: 'malý text <a href="https://www.muni.cz/" target="_blank">Odkaz</a> <h2>velký text</h2>'
           }),
           new ol.Feature({
             geometry: new ol.geom.Point([16.616667, 49.185833]),
@@ -100,6 +104,7 @@
           }),
           'BMA01'
         ],
+        pubTran: true,
         zoom: 14
       });
     </script>

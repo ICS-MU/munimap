@@ -136,7 +136,7 @@ code {
   color: black;
   font-family: monospace;
 }
-.content .map {
+.content > .map {
   width: 100%;
   height: 400px;
   background: url(../_lib/ol3/examples/resources/map-background.jpg) repeat;
@@ -144,13 +144,54 @@ code {
   padding: 0;
 }
 .content > .multi-map {
-  width: 46%;
+  width: calc(50% - 43px);
   height: 400px;
   background: url(../_lib/ol3/examples/resources/map-background.jpg) repeat;
   margin: 0px 20px 20px 20px;
   padding: 0;
 }
 
+<<<<<<< HEAD:src/client/example/ics.css
+=======
+@media screen and (max-width: 850px) {
+  .content > .multi-map {
+      margin: 15px 0 0 0;
+      width: 100%;
+  }
+}
+
+
+
+
+/**examples**/
+.example-wrap {
+  box-sizing: border-box;
+  min-height: 1px;
+  padding: 0;
+  position: relative;
+}
+a.example {
+  background-color: rgba(0, 39, 118, 0.9);
+  border: solid 1px rgba(0, 39, 118, 0.9);
+  color: #fff;
+  display: block;
+  height: 125px;
+  margin: 10px;
+  overflow: auto;
+  padding: 15px;
+}
+a.example:hover {
+  background-color: #fff; 
+  color: #002776;
+}
+.example-name {
+  font-size: 20px;
+  font-weight: bold;
+  display: block;
+  padding: 20px 0;
+}
+
+>>>>>>> 451c7e9... added info bubble for custom markers & POI, fixed tutorials,:src/client/example/example.css
 /***quickstart example styles***/
 .page-title {
   text-transform: uppercase;
