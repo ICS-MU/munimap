@@ -50,6 +50,7 @@ munimap.create = function (options) {
   );
 
   munimap.create.assertOptions(options);
+  munimap.lang.active = options.lang || munimap.lang.Abbr.CZECH;
 
   return new goog.Promise(function (resolve, reject) {
     goog.Promise.all([
@@ -73,7 +74,6 @@ munimap.create = function (options) {
         markerLabel: options.markerLabel,
         target: target,
         getMainFeatureAtPixel: options.getMainFeatureAtPixel,
-        lang: options.lang,
         layers: options.layers,
         baseMap: options.baseMap || munimap.BaseMaps.OSM_BW,
         pubTran: options.pubTran,
@@ -83,7 +83,6 @@ munimap.create = function (options) {
       var target = options.target;
       var markers = options.markers;
       var view = options.view;
-      munimap.lang.active = options.lang || munimap.lang.Abbr.CZECH;
 
       var osmAttribution = new ol.Attribution({
         html:
@@ -97,7 +96,7 @@ munimap.create = function (options) {
           munimap.lang.Translations.MUNIMAP_ATTRIBUTION_HTML)
       });
       var muAttributions = [munimapAttribution, muAttribution];
-      
+
       var raster;
 
       switch (options.baseMap) {
@@ -193,11 +192,6 @@ munimap.create = function (options) {
       });
 
       var clusterResolution = munimap.cluster.BUILDING_RESOLUTION;
-      // var firstMarker = markers[0];
-      // if (markers.length && (munimap.room.isRoom(firstMarker) ||
-      //   munimap.door.isDoor(firstMarker))) {
-      //   clusterResolution = munimap.cluster.ROOM_RESOLUTION;
-      // }
       if (markers.length && (markers.some(function (el) {
         return munimap.room.isRoom(el);
       }) || markers.some(function (el) {
@@ -432,7 +426,7 @@ munimap.create.setDefaultLayersProps = function (options) {
   var map = markersAwareOpts.map || null;
   var markerSource = markersAwareOpts.markerSource;
   var attributions = options.attributions;
-  
+
   var activeRoomsStore;
 
   layers.forEach(function (layer) {
@@ -504,7 +498,7 @@ munimap.create.setDefaultLayersPropsOptions;
  */
 munimap.create.loadOrDecorateMarkers = function (featuresLike, options) {
   var result;
-  var arr = []; // array of promises
+  var arrPromises = []; // array of promises of features
   var features = /** @type {goog.Thenable<Array<ol.Feature>>} */ ([]);
   if (!goog.isArray(featuresLike)) {
     result = /** @type {goog.Thenable<Array<ol.Feature>>} */(
@@ -514,7 +508,7 @@ munimap.create.loadOrDecorateMarkers = function (featuresLike, options) {
   } else {
     featuresLike.forEach(function (el) {
       if (!munimap.optpoi.isCtgUid(el)) {
-        arr.push(new Promise(function (resolve, reject) {
+        arrPromises.push(new Promise(function (resolve, reject) {
           if (el instanceof ol.Feature) {
             munimap.marker.custom.decorate(el);
             resolve(el);
@@ -530,7 +524,7 @@ munimap.create.loadOrDecorateMarkers = function (featuresLike, options) {
         var ctgIds = arrPoi.map(function (ctguid) {
           return ctguid.split(':')[1];
         });
-        arr.push(munimap.optpoi.load({
+        arrPromises.push(munimap.optpoi.load({
           ids: ctgIds
         }).then(function (features) {
           var rooms = features.filter(function (f) {
@@ -560,12 +554,17 @@ munimap.create.loadOrDecorateMarkers = function (featuresLike, options) {
               return result;
             }
           }
-          return munimap.load.featuresFromParam(roomCodes);
+
+          return new goog.Promise(function (resolve, reject) {
+            munimap.load.featuresFromParam(roomCodes).then(function (values) {
+              resolve(munimap.create.addPoiDetail(values, features))
+            })
+          })
         }));
       }
     })
     return new goog.Promise(function (resolve, reject) {
-      Promise.all(arr).then(function (values) {
+      Promise.all(arrPromises).then(function (values) {
         // reduce array of arrays to 1 array
         values = values.reduce(function (a, b) {
           return a.concat(b);
@@ -579,64 +578,45 @@ munimap.create.loadOrDecorateMarkers = function (featuresLike, options) {
   }
 };
 
-// munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
-//   var result;
-//   if(!goog.isArray(featuresLike)) {
-//     result = /** @type {goog.Thenable<Array<ol.Feature>>} */(
-//         goog.Promise.resolve([])
-//         );
-//   } else {
-//     if (featuresLike.every(goog.partial(jpad.func.instanceof, ol.Feature))) {
-//       var features = /** @type {Array<ol.Feature>} */(featuresLike);
-//       features.forEach(function(feature) {
-//         munimap.marker.custom.decorate(feature);
-//       });
-//       result = /** @type {goog.Thenable<Array<ol.Feature>>} */(
-//           goog.Promise.resolve(features)
-//           );
-//     } else if (featuresLike.every(munimap.optpoi.isCtgUid)) {
-//       var ctgIds = featuresLike.map(function(ctguid) {
-//         return ctguid.split(':')[1];
-//       });
-//       result = munimap.optpoi.load({
-//         ids: ctgIds
-//       }).then(function(features) {
-//         var rooms = features.filter(function(f) {
-//           var lc = f.get('polohKodLokace');
-//           goog.asserts.assertString(lc);
-//           return munimap.room.isCode(lc);
-//         });
-//         var roomCodes = rooms.map(function(f) {
-//           return f.get('polohKodLokace');
-//         });
-//         if(ctgIds.length===1 && !options.markerLabel) {
-//           options.markerLabel = function(f, r) {
-//             var clustered = munimap.cluster.getFeatures(f);
-//             if(!clustered.length) {
-//               clustered = [f];
-//             }
-//             clustered = clustered.filter(function(f) {
-//               return goog.array.contains(roomCodes, f.get('polohKod'));
-//             });
+/**
+ * Add detail for POI.
+ * @param {Array.<ol.Feature>} features
+ * @param {Array.<ol.Feature>} details
+ * @return {Array.<ol.Feature>} features wit added properties
+ */
 
-//             var ctgLabel = munimap.lang.getMsg(ctgIds[0]);
-//             var result;
-//             if(clustered.length === 1) {
-//               result = ctgLabel;
-//             } else if(clustered.length>1) {
-//               result = clustered.length + 'x ' + ctgLabel;
-//             }
-//             return result;
-//           }
-//         }
-//         return munimap.load.featuresFromParam(roomCodes);
-//       });
-//     } else {
-//       result = munimap.load.featuresFromParam(featuresLike);
-//     }
-//   }
-//   return result;
-// };
+munimap.create.addPoiDetail = function (features, details) {
+  var result = [];
+  features.forEach(function (feature) {
+    details.forEach(function (detail) {
+      if (feature.get('polohKod') === detail.get('polohKodLokace')) {
+        var name, open;
+        if (munimap.lang.active === 'cs') {
+          name = detail.get('nazev_cs');
+          open = goog.isDefAndNotNull(detail.get(
+            'provozniDoba_cs')) ? detail.get(
+              'provozniDoba_cs') : "";
+        }
+        else if (munimap.lang.active === 'en') {
+          name = goog.isDefAndNotNull(detail.get(
+            'nazev_en')) ? detail.get(
+              'nazev_en') : detail.get(
+                'nazev_cs');
+          open = goog.isDefAndNotNull(detail.get(
+            'provozniDoba_en')) ? detail.get(
+              'provozniDoba_en') : "";
+          
+        }
+        open = open.replace(',','<br>');
+        name = "<div class='munimap-bubble-title'>" + name + "</div>";
+        open = "<div class='munimap-bubble-text'>" + open + "</div>";
+        feature.set('detail', name + open);
+        result.push(feature);
+      }
+    });
+  });
+  return result;
+};
 
 
 /**

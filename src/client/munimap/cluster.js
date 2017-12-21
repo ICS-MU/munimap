@@ -214,7 +214,6 @@ munimap.cluster.featureClickHandler = function (options) {
   var feature = options.feature;
   var map = options.map;
   var resolution = options.resolution;
-
   var view = map.getView();
   var size = map.getSize() || null;
   var viewExtent = view.calculateExtent(size);
@@ -227,14 +226,13 @@ munimap.cluster.featureClickHandler = function (options) {
     munimap.door.RESOLUTION : munimap.floor.RESOLUTION;
 
   if (clusteredFeatures.length === 1) {
+    if (firstFeature.get('detail')) {
+      munimap.bubble.show(firstFeature, map, String(firstFeature.get('detail')))
+    }
     if (munimap.marker.custom.isCustom(firstFeature)) {
-      var constrainedResolution =
-        view.constrainResolution(resolutionRange.max, 1, 1);
-      goog.asserts.assertNumber(constrainedResolution);
-      view.setCenter(firstFeature.getGeometry().getCoordinates());
-      if (resolution > (constrainedResolution * 2)) {
-        view.setResolution(constrainedResolution * 2);
-      }
+      var extent = munimap.extent.ofFeature(firstFeature);
+      var center = ol.extent.getCenter(extent);
+      munimap.map.zoomToPoint(map, center, resolutionRange.max);
     } else {
       var isVisible = munimap.range.contains(resolutionRange, resolution);
       if (!isVisible) {
@@ -249,20 +247,6 @@ munimap.cluster.featureClickHandler = function (options) {
     }
   } else {
     var showOneBuilding = false;
-    // if (munimap.room.isRoom(firstFeature) ||
-    //   munimap.door.isDoor(firstFeature)) {
-    //   var locCode = /**@type {string}*/(firstFeature.get('polohKod'));
-    //   var bldgCode = locCode.substr(0, 5);
-    //   var floorCode = locCode.substr(0, 8);
-    //   showOneBuilding = clusteredFeatures.every(function (feature) {
-    //     var locCode = /**@type {string}*/(feature.get('polohKod'));
-    //     return bldgCode === locCode.substr(0, 5);
-    //   }) && clusteredFeatures.some(function (feature) {
-    //     var locCode = /**@type {string}*/(feature.get('polohKod'));
-    //     return floorCode !== locCode.substr(0, 8);
-    //   });
-    // }
-
     if (showOneBuilding) {
       var extent = munimap.extent.ofFeatures(clusteredFeatures);
       goog.asserts.assertArray(size);
@@ -495,103 +479,53 @@ munimap.cluster.style.pinFunction =
  * @protected
  */
 munimap.cluster.style.multipleLabelFunction =
-function (options, feature, resolution) {
-  goog.asserts.assertInstanceof(feature, ol.Feature);
-  var map = options.map;
-  var features = munimap.cluster.getMainFeatures(map, feature);
-  var marked = munimap.marker.isMarker(map, features[0]);
-  if (marked) {
-    var allMarkers = options.markerSource.getFeatures();
-  }
-  var title;
-  if (goog.isDef(options.markerLabel)) {
-    title = options.markerLabel(feature, resolution);
-  }
-  if (!goog.isDefAndNotNull(title)) {
+  function (options, feature, resolution) {
+    goog.asserts.assertInstanceof(feature, ol.Feature);
+    var map = options.map;
+    var features = munimap.cluster.getMainFeatures(map, feature);
+    var marked = munimap.marker.isMarker(map, features[0]);
     if (marked) {
-      title = munimap.cluster.style.getMarkedDefaultLabel(options,
-        allMarkers || [], feature, resolution);
-    } else {
-      title =
-        munimap.cluster.style.getUnmarkedDefaultLabel(feature, resolution);
+      var allMarkers = options.markerSource.getFeatures();
     }
-  }
-  if (title) {
-    var fontSize = 13;
-    var offsetY = munimap.style.getLabelHeight(title, fontSize) / 2 +
-      munimap.cluster.style.RADIUS + 2;
-    var fill = marked ?
-      munimap.marker.style.TEXT_FILL :
-      munimap.style.TEXT_FILL;
-    var geometry = marked ?
-      munimap.geom.getGeometryCenterOfFeatures(features) :
-      munimap.geom.CENTER_GEOMETRY_FUNCTION;
-    var textStyle = new ol.style.Style({
-      geometry: geometry,
-      text: new ol.style.Text({
-        font: 'bold ' + fontSize + 'px arial',
-        fill: fill,
-        offsetY: offsetY,
-        stroke: munimap.style.TEXT_STROKE,
-        text: title
-      }),
-      zIndex: marked ? 7 : 4
-    });
-    return textStyle;
-  } else {
-    return null;
-  }
-};
-
-// munimap.cluster.style.multipleLabelFunction =
-//   function (options, feature, resolution) {
-//     goog.asserts.assertInstanceof(feature, ol.Feature);
-//     var map = options.map;
-//     var features = munimap.cluster.getMainFeatures(map, feature);
-//     var marked = munimap.marker.isMarker(map, features[0]);
-//     if (marked) {
-//       var allMarkers = options.markerSource.getFeatures();
-//     }
-//     var title;
-//     if (goog.isDef(options.markerLabel)) {
-//       title = options.markerLabel(feature, resolution);
-//     }
-//     if (!goog.isDefAndNotNull(title)) {
-//       if (marked) {
-//         title = munimap.cluster.style.getMarkedDefaultLabel(options,
-//           allMarkers || [], feature, resolution);
-//       } else {
-//         title =
-//           munimap.cluster.style.getUnmarkedDefaultLabel(feature, resolution);
-//       }
-//     }
-//     if (title) {
-//       var fontSize = 13;
-//       var offsetY = munimap.style.getLabelHeight(title, fontSize) / 2 +
-//         munimap.cluster.style.RADIUS + 2;
-//       var fill = marked ?
-//         munimap.marker.style.TEXT_FILL :
-//         munimap.style.TEXT_FILL;
-//       var geometry = marked ?
-//         munimap.geom.getGeometryCenterOfFeatures(features) :
-//         munimap.geom.CENTER_GEOMETRY_FUNCTION;
-//       var textStyle = new ol.style.Style({
-//         geometry: geometry,
-//         text: new ol.style.Text({
-//           font: 'bold ' + fontSize + 'px arial',
-//           fill: fill,
-//           offsetY: offsetY,
-//           stroke: munimap.style.TEXT_STROKE,
-//           text: title
-//         }),
-//         zIndex: marked ? 7 : 4
-//       });
-//       return textStyle;
-//     } else {
-//       return null;
-//     }
-//   };
-
+    var title;
+    if (goog.isDef(options.markerLabel)) {
+      title = options.markerLabel(feature, resolution);
+    }
+    if (!goog.isDefAndNotNull(title)) {
+      if (marked) {
+        title = munimap.cluster.style.getMarkedDefaultLabel(options,
+          allMarkers || [], feature, resolution);
+      } else {
+        title =
+          munimap.cluster.style.getUnmarkedDefaultLabel(feature, resolution);
+      }
+    }
+    if (title) {
+      var fontSize = 13;
+      var offsetY = munimap.style.getLabelHeight(title, fontSize) / 2 +
+        munimap.cluster.style.RADIUS + 2;
+      var fill = marked ?
+        munimap.marker.style.TEXT_FILL :
+        munimap.style.TEXT_FILL;
+      var geometry = marked ?
+        munimap.geom.getGeometryCenterOfFeatures(features) :
+        munimap.geom.CENTER_GEOMETRY_FUNCTION;
+      var textStyle = new ol.style.Style({
+        geometry: geometry,
+        text: new ol.style.Text({
+          font: 'bold ' + fontSize + 'px arial',
+          fill: fill,
+          offsetY: offsetY,
+          stroke: munimap.style.TEXT_STROKE,
+          text: title
+        }),
+        zIndex: marked ? 7 : 4
+      });
+      return textStyle;
+    } else {
+      return null;
+    }
+  };
 
 /**
  * Clustered features are buildings only.

@@ -147,7 +147,7 @@ munimap.poi.featureClickHandler = function(options) {
   var feature = options.feature;
   var map = options.map;
   var resolution = options.resolution;
-
+  
   var isVisible =
       munimap.range.contains(munimap.floor.RESOLUTION, resolution);
   if (!isVisible) {
