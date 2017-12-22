@@ -62,8 +62,8 @@ munimap.optpoi.isCtgUid = function(maybeCtgUid) {
   maybeCtgUid = maybeCtgUid.toString();
   var parts = maybeCtgUid.split(':');
   return parts.length === 2 &&
-      parts[0] === munimap.optpoi.ctg.UID_PREFIX &&
-      goog.object.containsValue(munimap.optpoi.ctg.Id, parts[1]);
+    parts[0] === munimap.optpoi.ctg.UID_PREFIX &&
+    goog.object.containsValue(munimap.optpoi.ctg.Id, parts[1]);
 };
 
 

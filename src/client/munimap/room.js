@@ -21,7 +21,7 @@ munimap.room.CODE_REGEX = /^[A-Z]{3}[0-9]{2}[NMPSZ]{1}[0-9]{5}[a-z]?$/gi;
  * @protected
  */
 munimap.room.LIKE_EXPR_REGEX =
-    /^[A-Z_]{3}[0-9_]{2}[NMPSZ_]{1}[0-9_]{5}[a-z_]?$/gi;
+  /^[A-Z_]{3}[0-9_]{2}[NMPSZ_]{1}[0-9_]{5}[a-z_]?$/gi;
 
 
 /**
@@ -50,11 +50,11 @@ munimap.room.TYPE = {
  */
 munimap.room.createActiveStore = function(map) {
   return new ol.source.Vector({
-    loader: goog.partial(munimap.room.loadActive, {map: map}),
+    loader: goog.partial(munimap.room.loadActive, { map: map }),
     strategy: /** @type {ol.LoadingStrategy} */(
-        ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-          tileSize: 512
-        })))
+      ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+        tileSize: 512
+      })))
   });
 };
 
@@ -65,16 +65,16 @@ munimap.room.createActiveStore = function(map) {
  */
 munimap.room.DEFAULT_STORE = new ol.source.Vector({
   loader: goog.partial(
-      munimap.room.loadDefault,
-      {
-        type: munimap.room.TYPE,
-        where: 'vychoziPodlazi = 1'
-      }
+    munimap.room.loadDefault,
+    {
+      type: munimap.room.TYPE,
+      where: 'vychoziPodlazi = 1'
+    }
   ),
   strategy: /** @type {ol.LoadingStrategy} */(
-      ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-        tileSize: 512
-      })))
+    ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+      tileSize: 512
+    })))
 });
 
 
@@ -136,7 +136,7 @@ munimap.room.getActiveLayer = function(map) {
  */
 munimap.room.getActiveStore = function(map) {
   var layer = munimap.room.getActiveLayer(map) ||
-      munimap.room.label.getLayer(map);
+    munimap.room.label.getLayer(map);
   var result;
   if (layer) {
     result = layer.getSource();
@@ -159,9 +159,9 @@ munimap.room.isActiveLayer = function(layer) {
  */
 munimap.room.assertCode = function(code) {
   assert(!!munimap.room.isCode(code),
-      'Location code of room should consist of 3 letters and 2 digits, ' +
-      'one of the letters \'N\', \'M\', \'P\', \'S\' or \'Z\' ' +
-      'followed by 5 digits, and optionally 1 letter.');
+    'Location code of room should consist of 3 letters and 2 digits, ' +
+    'one of the letters \'N\', \'M\', \'P\', \'S\' or \'Z\' ' +
+    'followed by 5 digits, and optionally 1 letter.');
 };
 
 
@@ -170,7 +170,7 @@ munimap.room.assertCode = function(code) {
  */
 munimap.room.assertRoom = function(feature) {
   goog.asserts.assert(!!munimap.room.isRoom(feature),
-      'Feature does not have value of room\'s primary key.');
+    'Feature does not have value of room\'s primary key.');
 };
 
 
@@ -199,7 +199,7 @@ munimap.room.isCode = function(maybeCode) {
  */
 munimap.room.isLikeExpr = function(maybeLikeExpr) {
   return !!maybeLikeExpr.match(munimap.room.LIKE_EXPR_REGEX) &&
-      maybeLikeExpr.indexOf('_') >= 0;
+    maybeLikeExpr.indexOf('_') >= 0;
 };
 
 
@@ -209,7 +209,7 @@ munimap.room.isLikeExpr = function(maybeLikeExpr) {
  */
 munimap.room.isCodeOrLikeExpr = function(maybeCodeOrLikeExpr) {
   return munimap.room.isCode(maybeCodeOrLikeExpr) ||
-      munimap.room.isLikeExpr(maybeCodeOrLikeExpr);
+    munimap.room.isLikeExpr(maybeCodeOrLikeExpr);
 };
 
 
@@ -218,10 +218,10 @@ munimap.room.isCodeOrLikeExpr = function(maybeCodeOrLikeExpr) {
  */
 munimap.room.assertCodeOrLikeExpr = function(code) {
   assert(!!code.match(munimap.room.LIKE_EXPR_REGEX),
-      'Location code of building should consist of 3 letters and 2 digits, ' +
-      'one of the letters \'N\', \'M\', \'P\', \'S\' or \'Z\' ' +
-      'followed by 5 digits, and optionally 1 letter. ' +
-      'Any of these characters might be replaced with _ wildcard.');
+    'Location code of building should consist of 3 letters and 2 digits, ' +
+    'one of the letters \'N\', \'M\', \'P\', \'S\' or \'Z\' ' +
+    'followed by 5 digits, and optionally 1 letter. ' +
+    'Any of these characters might be replaced with _ wildcard.');
 };
 
 
@@ -266,7 +266,7 @@ munimap.room.getDefaultLabel = function(feature) {
 munimap.room.getNamePart = function(feature) {
   var title;
   var fTitle = feature.get(munimap.lang.getMsg(
-      munimap.lang.Translations.ROOM_TITLE_FIELD_NAME));
+    munimap.lang.Translations.ROOM_TITLE_FIELD_NAME));
   var fNumber = feature.get('cislo');
   if (fTitle || fNumber) {
     if (fTitle) {
@@ -274,7 +274,7 @@ munimap.room.getNamePart = function(feature) {
       title = munimap.room.style.alignRoomTitleToRows(title);
       if (fNumber) {
         var re =
-            new RegExp('(^| )' + fNumber.toLowerCase() + '( |$)', 'g');
+          new RegExp('(^| )' + fNumber.toLowerCase() + '( |$)', 'g');
         if (!re.test(fTitle.toLowerCase())) {
           title = fNumber + '\n' + title;
         }
@@ -335,15 +335,15 @@ munimap.room.loadActive = function(options, extent, resolution, projection) {
       method: 'POST'
     };
     munimap.load.featuresForMap(opts, extent, resolution, projection).then(
-        function(rooms) {
-          var activeStore = munimap.room.getActiveStore(options.map);
-          goog.asserts.assertInstanceof(activeStore, ol.source.Vector);
-          var roomsFromActiveFloor = goog.array.filter(rooms,
-              goog.partial(munimap.room.isInActiveFloor, options.map));
-          var roomsToAdd = munimap.store.getNotYetAddedFeatures(
-              activeStore, roomsFromActiveFloor);
-          activeStore.addFeatures(roomsToAdd);
-        });
+      function(rooms) {
+        var activeStore = munimap.room.getActiveStore(options.map);
+        goog.asserts.assertInstanceof(activeStore, ol.source.Vector);
+        var roomsFromActiveFloor = goog.array.filter(rooms,
+          goog.partial(munimap.room.isInActiveFloor, options.map));
+        var roomsToAdd = munimap.store.getNotYetAddedFeatures(
+          activeStore, roomsFromActiveFloor);
+        activeStore.addFeatures(roomsToAdd);
+      });
   }
 };
 
@@ -357,9 +357,9 @@ munimap.room.loadActive = function(options, extent, resolution, projection) {
  */
 munimap.room.loadDefault = function(options, extent, resolution, projection) {
   munimap.load.featuresForMap(options, extent, resolution, projection).then(
-      function(rooms) {
-        var roomsToAdd = munimap.store.getNotYetAddedFeatures(
-            munimap.room.DEFAULT_STORE, rooms);
-        munimap.room.DEFAULT_STORE.addFeatures(roomsToAdd);
-      });
+    function(rooms) {
+      var roomsToAdd = munimap.store.getNotYetAddedFeatures(
+        munimap.room.DEFAULT_STORE, rooms);
+      munimap.room.DEFAULT_STORE.addFeatures(roomsToAdd);
+    });
 };

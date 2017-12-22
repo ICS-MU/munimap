@@ -20,7 +20,7 @@ munimap.Range;
  */
 munimap.range.contains = function(range, number) {
   return (range.min < number || (range.includesMin && number == range.min)) &&
-      (number < range.max || (range.includesMax && number == range.max));
+    (number < range.max || (range.includesMax && number == range.max));
 };
 
 

@@ -170,7 +170,7 @@ munimap.getSelectedFloorCodeForBuilding = function(map, building) {
 
       if (firstMarked) {
         var firstMarkedCode = /**@type {string}*/
-            (firstMarked.get('polohKod'));
+          (firstMarked.get('polohKod'));
         floorCode = firstMarkedCode.substr(0, 8);
       }
     }
@@ -199,12 +199,12 @@ munimap.setSelectedFloor = function(map, building, floorCode) {
     });
     goog.asserts.assertInstanceof(newSelectedFloor, ol.Feature);
     var newSelectedWasActive =
-        munimap.floor.getActiveFloors(map).some(function(code) {
-          return code === floorCode;
-        });
+      munimap.floor.getActiveFloors(map).some(function(code) {
+        return code === floorCode;
+      });
     var mapProps = munimap.getProps(map);
     mapProps.selectedFloor =
-        munimap.floor.getFloorObject(newSelectedFloor);
+      munimap.floor.getFloorObject(newSelectedFloor);
     munimap.info.refreshFloorSelect(map, floors);
     if (newSelectedWasActive) {
       munimap.style.refreshAllFromFragments(map);
@@ -305,7 +305,7 @@ munimap.handleClickOnPixel = function(map, pixel) {
       };
       if (isClickable(handlerOpts)) {
         var featureClickHandler =
-            layer.get(munimap.layer.propName.CLICK_HANDLER);
+          layer.get(munimap.layer.propName.CLICK_HANDLER);
         if (featureClickHandler) {
           goog.asserts.assertFunction(featureClickHandler);
           featureClickHandler(handlerOpts);

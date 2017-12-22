@@ -17,7 +17,8 @@ munimapx.create;
  *   lang: (string|undefined),
  *   baseMap: (string|undefined),
  *   pubTran: (boolean|undefined),
- *   locationCodes: (boolean|undefined)
+ *   locationCodes: (boolean|undefined),
+ *   mapLinks: (boolean|undefined)
  * }}
  */
 munimapx.create.Options;

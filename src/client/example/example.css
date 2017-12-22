@@ -140,7 +140,7 @@ code {
   width: 100%;
   height: 400px;
   background: url(../_lib/ol3/examples/resources/map-background.jpg) repeat;
-  margin: 20px;
+  margin: 0;
   padding: 0;
 }
 .content > .multi-map {

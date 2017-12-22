@@ -137,11 +137,17 @@ h3 > .munimap-logo > .map, h4 > .munimap-logo > .map {
   width: 100%;
 }
 
-.content {
+/* .content {
   margin: 10px 0;
   overflow: hidden;
   padding: 0 20px;
+} */
+
+.content {
+  margin: 10px 20px;
+  overflow: hidden;
 }
+
 .content p {
   text-align: justify; 
 }

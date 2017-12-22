@@ -35,7 +35,7 @@ munimap.marker.LAYER_ID = 'marker';
  * @param {ol.Map} map
  * @return {ol.layer.Vector}
  */
-munimap.marker.getLayer = function (map) {
+munimap.marker.getLayer = function(map) {
   var layers = map.getLayers().getArray();
   var result = layers.find(munimap.marker.isLayer);
   goog.asserts.assertInstanceof(result, ol.layer.Vector);
@@ -47,7 +47,7 @@ munimap.marker.getLayer = function (map) {
  * @param {ol.layer.Base} layer
  * @return {boolean}
  */
-munimap.marker.isLayer = function (layer) {
+munimap.marker.isLayer = function(layer) {
   return layer.get('id') === munimap.marker.LAYER_ID;
 };
 
@@ -56,7 +56,7 @@ munimap.marker.isLayer = function (layer) {
  * @param {ol.Map} map
  * @return {ol.source.Vector}
  */
-munimap.marker.getStore = function (map) {
+munimap.marker.getStore = function(map) {
   var layer = munimap.marker.getLayer(map);
   var result = layer.getSource();
   return result;
@@ -67,7 +67,7 @@ munimap.marker.getStore = function (map) {
  * @param {ol.Map} map
  * @return {Array.<ol.Feature>}
  */
-munimap.marker.getFeatures = function (map) {
+munimap.marker.getFeatures = function(map) {
   var store = munimap.marker.getStore(map);
   return store.getFeatures();
 };
@@ -78,7 +78,7 @@ munimap.marker.getFeatures = function (map) {
  * @param {ol.Feature} feature
  * @return {boolean}
  */
-munimap.marker.isMarker = function (map, feature) {
+munimap.marker.isMarker = function(map, feature) {
   var result = munimap.marker.getFeatures(map).indexOf(feature) >= 0;
   return result;
 };
@@ -88,7 +88,7 @@ munimap.marker.isMarker = function (map, feature) {
  * @param {munimap.feature.clickHandlerOptions} options
  * @return {boolean}
  */
-munimap.marker.isClickable = function (options) {
+munimap.marker.isClickable = function(options) {
   var feature = options.feature;
   var map = options.map;
   var resolution = options.resolution;
@@ -113,7 +113,7 @@ munimap.marker.isClickable = function (options) {
 /**
  * @param {munimap.feature.clickHandlerOptions} options
  */
-munimap.marker.featureClickHandler = function (options) {
+munimap.marker.featureClickHandler = function(options) {
   var feature = options.feature;
   var map = options.map;
   var pixel = options.pixel;
@@ -166,7 +166,7 @@ munimap.marker.custom.LABEL_FIELD_NAME = 'label';
  * @param {ol.Feature} feature
  * @return {boolean}
  */
-munimap.marker.custom.isCustom = function (feature) {
+munimap.marker.custom.isCustom = function(feature) {
   var fType = feature.get(munimap.type.NAME);
   return fType === munimap.marker.custom.TYPE;
 };
@@ -176,7 +176,7 @@ munimap.marker.custom.isCustom = function (feature) {
  * @param {ol.Feature} feature
  * @return {string|undefined}
  */
-munimap.marker.custom.getLabel = function (feature) {
+munimap.marker.custom.getLabel = function(feature) {
   var label = feature.get(munimap.marker.custom.LABEL_FIELD_NAME);
   goog.asserts.assert(label === undefined || goog.isString(label));
   return label;
@@ -188,7 +188,7 @@ munimap.marker.custom.getLabel = function (feature) {
  * @param {ol.Feature} feature
  * @return {boolean}
  */
-munimap.marker.custom.isSuitable = function (feature) {
+munimap.marker.custom.isSuitable = function(feature) {
   var geom = feature.getGeometry();
   var result = geom instanceof ol.geom.Point;
   if (result) {
@@ -205,7 +205,7 @@ munimap.marker.custom.isSuitable = function (feature) {
  * @param {ol.Feature} feature
  * @return {boolean}
  */
-munimap.marker.custom.assertSuitable = function (feature) {
+munimap.marker.custom.assertSuitable = function(feature) {
   return assert(munimap.marker.custom.isSuitable(feature),
     'Custom marker represented by ol.Feature must have ol.Point geometry ' +
     'with appropriate longitude (-180;180) and latitude (-90, 90).');
@@ -217,7 +217,7 @@ munimap.marker.custom.assertSuitable = function (feature) {
  * munimap.marker.custom.isSuitable returned true.
  * @param {ol.Feature} feature
  */
-munimap.marker.custom.decorate = function (feature) {
+munimap.marker.custom.decorate = function(feature) {
   feature.set(munimap.type.NAME, munimap.marker.custom.TYPE);
   var geom = feature.getGeometry();
   var transformFn = ol.proj.getTransform('EPSG:4326', 'EPSG:3857');

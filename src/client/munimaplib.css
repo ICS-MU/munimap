@@ -7,20 +7,6 @@
 @import url("_lib/closure-library/closure/goog/css/menuitem.css");
 @import url("munimap/font/font.css");
 
-.munimap-info-bubble {
-  left: auto;
-  right: auto;
-  top: auto;
-  bottom: auto;
-  z-index: 2;
-}
-
-.munimap-bubble-title {
-  font-weight: 600;
-  text-align: center;
-  margin: 5px 0;
-}
-
 .ol-popup {
   border-radius: 6px;
   bottom: auto;
@@ -139,8 +125,43 @@
   position: relative;
   width: 100%;
 }
+
+.munimap-info-bubble {
+  left: auto;
+  right: auto;
+  top: auto;
+  bottom: auto;
+  z-index: 2;
+}
+
+.munimap-bubble-title {
+  font-weight: 600;
+  text-align: center;
+  margin: 5px 0;
+}
+
+.munimap-link {
+  position: absolute;
+  left: .5em;
+  bottom: .5em;
+  background: transparent;
+  margin: 0 2px;
+}
+
+.munimap-link .munimap-link-item {
+  width: 25px;
+  height: 25px;
+  background-position: center;
+  background-size: cover;
+  cursor: pointer;
+  margin-top: 10px;
+  filter: grayscale(0%);
+}
+
+
 .ol-control button {
   background-color: #002776;
+  line-height: 0;
 }
 .ol-control button:hover,
 .ol-control button:focus {

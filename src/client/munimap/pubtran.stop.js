@@ -19,7 +19,7 @@ munimap.pubtran.stop.RESOLUTION = munimap.range.createResolution(0, 2.39);
  * @const
  */
 munimap.pubtran.stop.CLUSTER_RESOLUTION =
-    munimap.range.createResolution(0.6, 2.39);
+  munimap.range.createResolution(0.6, 2.39);
 
 
 /**
@@ -28,17 +28,17 @@ munimap.pubtran.stop.CLUSTER_RESOLUTION =
  */
 munimap.pubtran.stop.STORE = new ol.source.Vector({
   loader: goog.partial(
-      munimap.pubtran.stop.featuresForMap,
-      {
-        type: function() {
-          return munimap.pubtran.stop.TYPE;
-        }
+    munimap.pubtran.stop.featuresForMap,
+    {
+      type: function() {
+        return munimap.pubtran.stop.TYPE;
       }
+    }
   ),
   strategy: /** @type {ol.LoadingStrategy} */(
-      ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-        tileSize: 512
-      }))
+    ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+      tileSize: 512
+    }))
   )
 });
 
@@ -105,7 +105,7 @@ munimap.pubtran.stop.STYLE = [
  */
 munimap.pubtran.stop.styleFunction = function(feature, resolution) {
   var inClusterRes = munimap.range.contains(
-      munimap.pubtran.stop.CLUSTER_RESOLUTION, resolution);
+    munimap.pubtran.stop.CLUSTER_RESOLUTION, resolution);
   if (inClusterRes) {
     var oznacnik = feature.get('oznacnik');
     if (oznacnik === '01') {
@@ -169,9 +169,9 @@ munimap.pubtran.stop.featureClickHandler = function(options) {
  * @this {ol.source.Vector}
  */
 munimap.pubtran.stop.featuresForMap =
-    function(options, extent, resolution, projection) {
-  return munimap.load.featuresForMap(options, extent, resolution, projection).
+  function(options, extent, resolution, projection) {
+    return munimap.load.featuresForMap(options, extent, resolution, projection).
       then(function(stops) {
         return goog.Promise.resolve(stops);
       });
-};
+  };

@@ -117,19 +117,19 @@ munimap.complex.featureClickHandler = function(options) {
   var map = options.map;
 
   var complexId = /**@type {number}*/ (
-      feature.get(munimap.complex.ID_FIELD_NAME)
-      );
+    feature.get(munimap.complex.ID_FIELD_NAME)
+  );
   var complexBldgs = munimap.building.STORE.getFeatures().filter(
-      function(bldg) {
-        var cId = bldg.get('arealId');
-        if (goog.isDefAndNotNull(cId)) {
-          goog.asserts.assertNumber(cId);
-          if (complexId === cId) {
-            return true;
-          }
+    function(bldg) {
+      var cId = bldg.get('arealId');
+      if (goog.isDefAndNotNull(cId)) {
+        goog.asserts.assertNumber(cId);
+        if (complexId === cId) {
+          return true;
         }
-        return false;
-      });
+      }
+      return false;
+    });
   var extent = munimap.extent.ofFeatures(complexBldgs);
   var view = map.getView();
   var size = map.getSize() || null;
@@ -140,7 +140,7 @@ munimap.complex.featureClickHandler = function(options) {
     futureRes = munimap.complex.RESOLUTION.min / 2;
   }
   var futureExtent = ol.extent.getForViewAndSize(
-      ol.extent.getCenter(extent), futureRes, view.getRotation(), size);
+    ol.extent.getCenter(extent), futureRes, view.getRotation(), size);
   munimap.move.setAnimation(map, view.calculateExtent(size), futureExtent);
   view.fit(futureExtent, size);
 };
@@ -187,7 +187,7 @@ munimap.complex.style.function = function(options, feature, resolution) {
     }
 
     title = /**@type {string}*/ (feature.get(munimap.lang.getMsg(
-        munimap.lang.Translations.COMPLEX_TITLE_FIELD_NAME)));
+      munimap.lang.Translations.COMPLEX_TITLE_FIELD_NAME)));
     title = title.split(', ')[0];
     title = munimap.style.alignTextToRows(title.split(' '), ' ');
     var style = new ol.style.Style({
