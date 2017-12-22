@@ -5,7 +5,7 @@ goog.provide('munimap.bubble');
  *
  * @return {ol.Overlay}
  */
-munimap.bubble.create = function (map) {
+munimap.bubble.create = function(map) {
   var munimapEl = map.getTargetElement();
   var popupEl = goog.dom.createDom('div', 'ol-popup munimap-info' +
     ' munimap-info-bubble');
@@ -21,24 +21,30 @@ munimap.bubble.create = function (map) {
     autoPan: false
   });
 
-  var closePopup = function () {
-    popup.setPosition(undefined);
+  // check if marker is visible after the zoom ends
+  var ghostZoom = map.getView().getZoom();
+  var checkResolution = function() {
+    if (ghostZoom != map.getView().getZoom()) {
+      ghostZoom = map.getView().getZoom();
+      var resolution = map.getView().getResolution();
+      if (resolution) {
+        var isVisible = munimap.range.contains(
+          munimap.marker.RESOLUTION, resolution);
+        if (!isVisible) {
+          closePopup();
+        }
+      }
+    }
+  }
+
+  var closePopup = function() {
+    map.un('moveend', checkResolution);
+    map.removeOverlay(popup);
     return false;
   };
 
   closeButtonEl.onclick = closePopup;
-
-  var view = map.getView();
-  view.on('change:resolution', function (evt) {
-    var resolution = view.getResolution();
-    if (resolution) {
-      var isVisible = munimap.range.contains(
-        munimap.pubtran.stop.RESOLUTION, resolution);
-      if (!isVisible) {
-        closePopup();
-      }
-    }
-  });
+  map.on('moveend', checkResolution);
   map.addOverlay(popup);
   return popup;
 };
@@ -49,34 +55,25 @@ munimap.bubble.create = function (map) {
  * @param {ol.Map} map
  * * @param {string} detail
  */
-munimap.bubble.show = function (feature, map, detail) {
+munimap.bubble.show = function(feature, map, detail) {
   var popup = map.getOverlayById('genericPopup');
   if (!popup) {
     popup = munimap.bubble.create(map);
   }
   var popupEl = popup.getElement();
   if (popupEl) {
-    var title = detail
     var contentEl = goog.dom.getElementByClass('munimap-content', popupEl);
 
     goog.dom.removeChildren(contentEl);
-    munimap.bubble.appendContentToEl(title, contentEl);
+    contentEl.innerHTML = detail;
     popup.setPosition(ol.extent.getCenter(feature.getGeometry().getExtent()));
 
     var popupSize = goog.style.getSize(popupEl);
     var x = -munimap.info.POPUP_TALE_INDENT;
-    var y = -(popupSize.height + munimap.info.POPUP_TALE_HEIGHT);
-
+    var y = -(popupSize.height + munimap.info.POPUP_TALE_HEIGHT + 20);
     popup.setOffset([x, y]);
   }
 };
 
 
-/**
- * @param {string} title
- * @param {Element} contentEl
- * @protected
- */
-munimap.bubble.appendContentToEl = function (title, contentEl) {
-  contentEl.innerHTML = title
-};
+

@@ -49,7 +49,7 @@ munimap.feature.getClosestPointToPixel = function(map, feature, pixel) {
   } else {
     var viewExtent = map.getView().calculateExtent(map.getSize() || null);
     var intersect =
-        munimap.geom.featureExtentIntersect(feature, viewExtent, format);
+      munimap.geom.featureExtentIntersect(feature, viewExtent, format);
     var closestPoint;
     if (goog.isDefAndNotNull(intersect)) {
       closestPoint = intersect.getGeometry().getClosestPoint(coordinate);

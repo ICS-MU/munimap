@@ -32,14 +32,14 @@ goog.require('munimap.room.style');
 goog.require('munimap.source.Cluster');
 goog.require('munimap.store');
 goog.require('munimap.style');
-
+goog.require('munimap.mapLinks');
 
 /**
  * @param {munimapx.create.Options} options
  * @return {goog.Thenable<ol.Map>} promise of features contained
  * in server response
  */
-munimap.create = function (options) {
+munimap.create = function(options) {
   var createKeys = goog.object.getKeys(options);
   createKeys.sort();
   munimap.ga.sendEvent(
@@ -51,18 +51,18 @@ munimap.create = function (options) {
   munimap.create.assertOptions(options);
   munimap.lang.active = options.lang || munimap.lang.Abbr.CZECH;
 
-  return new goog.Promise(function (resolve, reject) {
+  return new goog.Promise(function(resolve, reject) {
     goog.Promise.all([
       options,
       munimap.create.loadOrDecorateMarkers(options.markers, options),
       munimap.load.featuresFromParam(options.zoomTo),
       munimap.create.loadFonts()
-    ]).then(function (results) {
+    ]).then(function(results) {
       var options = results[0];
       var markers = results[1];
       var zoomTos = results[2];
       var view = munimap.create.calculateView(options, markers, zoomTos);
-      view.on('propertychange', function (evt) {
+      view.on('propertychange', function(evt) {
         //console.log(evt.key, view.get(evt.key));
       });
 
@@ -79,10 +79,15 @@ munimap.create = function (options) {
 =======
         baseMap: options.baseMap || munimap.BaseMaps.OSM_BW,
         pubTran: options.pubTran,
+<<<<<<< HEAD
         locationCodes: options.locationCodes
 >>>>>>> bd66799... add switch to munimap.create for showing location codes instead of room numbers
+=======
+        locationCodes: options.locationCodes,
+        mapLinks: options.mapLinks
+>>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
       };
-    }).then(function (options) {
+    }).then(function(options) {
       var target = options.target;
       var markers = options.markers;
       var view = options.view;
@@ -114,7 +119,7 @@ munimap.create = function (options) {
           });
       }
 
-      raster.on('precompose', function (evt) {
+      raster.on('precompose', function(evt) {
         var ctx = evt.context;
         ctx.fillStyle = '#dddddd';
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -122,13 +127,13 @@ munimap.create = function (options) {
         //set opacity of the layer according to current resolution
         var resolution = evt.frameState.viewState.resolution;
         var resColor = munimap.style.RESOLUTION_COLOR.find(
-          function (obj, i, arr) {
+          function(obj, i, arr) {
             return resolution > obj.resolution || i === (arr.length - 1);
           });
         raster.setOpacity(resColor.opacity);
       });
       if (options.baseMap === munimap.BaseMaps.OSM_BW && !goog.userAgent.IE) {
-        raster.on('postcompose', function (evt) {
+        raster.on('postcompose', function(evt) {
           var ctx = evt.context;
           evt.context.globalCompositeOperation = 'color';
           ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -176,7 +181,6 @@ munimap.create = function (options) {
       });
       munimap.LIST.push(map);
 
-
       var markerSource = new ol.source.Vector({
         attributions: muAttributions,
         features: markers
@@ -202,9 +206,9 @@ munimap.create = function (options) {
       });
 
       var clusterResolution = munimap.cluster.BUILDING_RESOLUTION;
-      if (markers.length && (markers.some(function (el) {
+      if (markers.length && (markers.some(function(el) {
         return munimap.room.isRoom(el);
-      }) || markers.some(function (el) {
+      }) || markers.some(function(el) {
         return munimap.door.isDoor(el);
       })
       )) {
@@ -217,7 +221,7 @@ munimap.create = function (options) {
           features: clusterFeatures
         }),
         compareFn: goog.partial(munimap.source.Cluster.compareFn, map),
-        geometryFunction: function (feature) {
+        geometryFunction: function(feature) {
           var result = null;
           var geom = feature.getGeometry();
           if (geom instanceof ol.geom.Point) {
@@ -244,7 +248,7 @@ munimap.create = function (options) {
 
       var floorSelect = new goog.ui.Select();
       floorSelect.render(floorEl);
-      goog.events.listen(floorSelect, 'action', function () {
+      goog.events.listen(floorSelect, 'action', function() {
         var newFloor =
             /**@type (ol.Feature)*/ (floorSelect.getSelectedItem().getModel());
         var newLocCode = /**@type (string)*/ (newFloor.get('polohKod'));
@@ -273,7 +277,7 @@ munimap.create = function (options) {
         attributions: muAttributions
       });
 
-      layers.forEach(function (layer) {
+      layers.forEach(function(layer) {
         map.addLayer(layer);
       });
 
@@ -289,6 +293,9 @@ munimap.create = function (options) {
         pubTranSource.setAttributions([pubTranAttribution]);
         map.addLayer(pubTranLayer);
       }
+      if (options.mapLinks) {
+        map.addControl(munimap.mapLinks.create(map))
+      }
 
 >>>>>>> 57b81cb... Allow custom markers and
       map.addLayer(markerClusterLayer);
@@ -296,7 +303,7 @@ munimap.create = function (options) {
 
       munimap.cluster.updateClusteredFeatures(map, view.getResolution());
 
-      map.on('pointermove', function (evt) {
+      map.on('pointermove', function(evt) {
         if (evt.dragging) {
           return;
         }
@@ -329,18 +336,18 @@ munimap.create = function (options) {
         }
       });
 
-      map.on('click', function (evt) {
+      map.on('click', function(evt) {
         munimap.handleClickOnPixel(map, evt.pixel);
       });
 
-      map.on('moveend', function (evt) {
+      map.on('moveend', function(evt) {
         munimap.building.refreshSelected(map);
         munimap.info.refreshVisibility(map);
       });
 
       map.on('precompose', munimap.cluster.handleMapPrecomposeEvt);
 
-      view.on('change:resolution', function (evt) {
+      view.on('change:resolution', function(evt) {
 
         var res = view.getResolution();
         goog.asserts.assertNumber(res);
@@ -367,7 +374,7 @@ munimap.create = function (options) {
 /**
  * @param {munimapx.create.Options} options
  */
-munimap.create.assertOptions = function (options) {
+munimap.create.assertOptions = function(options) {
   munimap.assert.target(options.target);
   assert(options.zoom === undefined || options.zoomTo === undefined,
     'Zoom and zoomTo options can\'t be defined together.');
@@ -384,7 +391,11 @@ munimap.create.assertOptions = function (options) {
 =======
   munimap.assert.pubTran(options.pubTran);
   munimap.assert.locationCodes(options.locationCodes);
+<<<<<<< HEAD
 >>>>>>> bd66799... add switch to munimap.create for showing location codes instead of room numbers
+=======
+  munimap.assert.mapLinks(options.mapLinks);
+>>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
 };
 
 
@@ -394,7 +405,7 @@ munimap.create.assertOptions = function (options) {
  * @param {Array<ol.Feature>} zoomTos
  * @return {ol.View}
  */
-munimap.create.calculateView = function (options, markers, zoomTos) {
+munimap.create.calculateView = function(options, markers, zoomTos) {
   var target = goog.dom.getElement(options.target);
   var center = ol.proj.transform(
     options.center || [16.605390495656977, 49.1986567194723],
@@ -436,7 +447,7 @@ munimap.create.calculateView = function (options, markers, zoomTos) {
  * @param {munimap.create.setDefaultLayersPropsOptions} options
  * @protected
  */
-munimap.create.setDefaultLayersProps = function (options) {
+munimap.create.setDefaultLayersProps = function(options) {
   var layers = options.layers;
   var markersAwareOpts = options.markersAwareOptions;
   var map = markersAwareOpts.map || null;
@@ -445,7 +456,7 @@ munimap.create.setDefaultLayersProps = function (options) {
 
   var activeRoomsStore;
 
-  layers.forEach(function (layer) {
+  layers.forEach(function(layer) {
     var layerId = layer.get('id');
 
     switch (layerId) {
@@ -512,7 +523,7 @@ munimap.create.setDefaultLayersPropsOptions;
  * @param {(munimapx.create.Options|munimapx.reset.Options)} options
  * @return {goog.Thenable<Array<ol.Feature>>} promise of features
  */
-munimap.create.loadOrDecorateMarkers = function (featuresLike, options) {
+munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
   var result;
   var arrPromises = []; // array of promises of features
   var features = /** @type {goog.Thenable<Array<ol.Feature>>} */ ([]);
@@ -520,16 +531,16 @@ munimap.create.loadOrDecorateMarkers = function (featuresLike, options) {
     result = /** @type {goog.Thenable<Array<ol.Feature>>} */(
       goog.Promise.resolve([])
     );
-    return result
+    return result;
   } else {
-    featuresLike.forEach(function (el) {
+    featuresLike.forEach(function(el) {
       if (!munimap.optpoi.isCtgUid(el)) {
-        arrPromises.push(new Promise(function (resolve, reject) {
+        arrPromises.push(new Promise(function(resolve, reject) {
           if (el instanceof ol.Feature) {
             munimap.marker.custom.decorate(el);
             resolve(el);
           } else if (goog.isString(el)) {
-            munimap.load.featuresFromParam(el).then(function (results) {
+            munimap.load.featuresFromParam(el).then(function(results) {
               resolve(results[0]);
             })
           }
@@ -537,27 +548,27 @@ munimap.create.loadOrDecorateMarkers = function (featuresLike, options) {
       }
       else {
         var arrPoi = [el];
-        var ctgIds = arrPoi.map(function (ctguid) {
+        var ctgIds = arrPoi.map(function(ctguid) {
           return ctguid.split(':')[1];
         });
         arrPromises.push(munimap.optpoi.load({
           ids: ctgIds
-        }).then(function (features) {
-          var rooms = features.filter(function (f) {
+        }).then(function(features) {
+          var rooms = features.filter(function(f) {
             var lc = f.get('polohKodLokace');
             goog.asserts.assertString(lc);
             return munimap.room.isCode(lc);
           });
-          var roomCodes = rooms.map(function (f) {
+          var roomCodes = rooms.map(function(f) {
             return f.get('polohKodLokace');
           });
           if (ctgIds.length === 1 && !options.markerLabel) {
-            options.markerLabel = function (f, r) {
+            options.markerLabel = function(f, r) {
               var clustered = munimap.cluster.getFeatures(f);
               if (!clustered.length) {
                 clustered = [f];
               }
-              clustered = clustered.filter(function (f) {
+              clustered = clustered.filter(function(f) {
                 return goog.array.contains(roomCodes, f.get('polohKod'));
               });
               var ctgLabel = munimap.lang.getMsg(ctgIds[0]);
@@ -571,18 +582,18 @@ munimap.create.loadOrDecorateMarkers = function (featuresLike, options) {
             }
           }
 
-          return new goog.Promise(function (resolve, reject) {
-            munimap.load.featuresFromParam(roomCodes).then(function (values) {
+          return new goog.Promise(function(resolve, reject) {
+            munimap.load.featuresFromParam(roomCodes).then(function(values) {
               resolve(munimap.create.addPoiDetail(values, features))
             })
           })
         }));
       }
     })
-    return new goog.Promise(function (resolve, reject) {
-      Promise.all(arrPromises).then(function (values) {
+    return new goog.Promise(function(resolve, reject) {
+      Promise.all(arrPromises).then(function(values) {
         // reduce array of arrays to 1 array
-        values = values.reduce(function (a, b) {
+        values = values.reduce(function(a, b) {
           return a.concat(b);
         }, []);
         result = /** @type {goog.Thenable<Array<ol.Feature>>} */(
@@ -595,16 +606,16 @@ munimap.create.loadOrDecorateMarkers = function (featuresLike, options) {
 };
 
 /**
- * Add detail for POI.
+ * Add text detail for POI.
  * @param {Array.<ol.Feature>} features
  * @param {Array.<ol.Feature>} details
- * @return {Array.<ol.Feature>} features wit added properties
+ * @return {Array.<ol.Feature>} features with added properties
  */
 
-munimap.create.addPoiDetail = function (features, details) {
+munimap.create.addPoiDetail = function(features, details) {
   var result = [];
-  features.forEach(function (feature) {
-    details.forEach(function (detail) {
+  features.forEach(function(feature) {
+    details.forEach(function(detail) {
       if (feature.get('polohKod') === detail.get('polohKodLokace')) {
         var name, open;
         if (munimap.lang.active === 'cs') {
@@ -621,9 +632,9 @@ munimap.create.addPoiDetail = function (features, details) {
           open = goog.isDefAndNotNull(detail.get(
             'provozniDoba_en')) ? detail.get(
               'provozniDoba_en') : "";
-          
+
         }
-        open = open.replace(',','<br>');
+        open = open.replace(',', '<br>');
         name = "<div class='munimap-bubble-title'>" + name + "</div>";
         open = "<div class='munimap-bubble-text'>" + open + "</div>";
         feature.set('detail', name + open);
@@ -638,8 +649,8 @@ munimap.create.addPoiDetail = function (features, details) {
 /**
  * @return {goog.Thenable<string>}
  */
-munimap.create.loadFonts = function () {
-  return new goog.Promise(function (resolve, reject) {
+munimap.create.loadFonts = function() {
+  return new goog.Promise(function(resolve, reject) {
     var cssurl = jpad.APP_PATH + 'munimaplib.css';
     if (!jpad.DEV) {
       cssurl = '//' + jpad.PROD_DOMAIN + cssurl;
@@ -655,10 +666,10 @@ munimap.create.loadFonts = function () {
         ]
       },
       'timeout': 2000,
-      'fontactive': function (font) {
+      'fontactive': function(font) {
         resolve('font ' + font + ' loaded');
       },
-      'fontinactive': function (font) {
+      'fontinactive': function(font) {
         reject('font ' + font + ' failed to load');
       }
     });

@@ -14,18 +14,18 @@ goog.require('munimap.room');
 /**
  * @param {Array.<string>|undefined} markers
  */
-munimap.assert.markers = function (markers) {
+munimap.assert.markers = function(markers) {
   if (markers !== undefined) {
     assert(goog.isArray(markers), 'Markers should be an array.');
     var featureMarkers = [];
-    
-    markers.forEach(function (el) {
+
+    markers.forEach(function(el) {
       if (goog.isString(el)) {
         if (!(munimap.building.isCodeOrLikeExpr(el)) &&
           !(munimap.room.isCodeOrLikeExpr(el)) &&
           !(munimap.door.isCodeOrLikeExpr(el)) &&
           !(munimap.optpoi.isCtgUid(el))) {
-            goog.asserts.fail('Markers should contain 1. building, room or ' +
+          goog.asserts.fail('Markers should contain 1. building, room or ' +
             'door location codes, or 2. corresponding LIKE expressions, or ' +
             '3. POI categories.');
         }
@@ -33,20 +33,20 @@ munimap.assert.markers = function (markers) {
         goog.asserts.assertInstanceof(el, ol.Feature);
         featureMarkers.push(el);
         munimap.marker.custom.assertSuitable(el);
-       } else {
+      } else {
         goog.asserts.fail('Markers should contain only strings or ' +
           'only instances of ol.Feature');
       }
     });
-    if(markers.some(function(el) {
-       return munimap.optpoi.isCtgUid(el)
+    if (markers.some(function(el) {
+      return munimap.optpoi.isCtgUid(el)
     })) {
-      if(!(markers.every(function(el) {
+      if (!(markers.every(function(el) {
         return munimap.optpoi.isCtgUid(el)
       }))) {
         goog.asserts.fail('Markers should contain 1. building, room or ' +
-        'door location codes, or 2. corresponding LIKE expressions, or ' +
-        '3. POI categories.');
+          'door location codes, or 2. corresponding LIKE expressions, or ' +
+          '3. POI categories.');
       }
     }
   }
@@ -59,7 +59,7 @@ munimap.assert.markers = function (markers) {
 munimap.assert.getMainFeatureAtPixel = function(fce) {
   if (goog.isDef(fce)) {
     goog.asserts.assertFunction(fce, 'Parameter getMainFeatureAtPixel ' +
-        'should be a function of type munimap.getMainFeatureAtPixelFunction.');
+      'should be a function of type munimap.getMainFeatureAtPixelFunction.');
   }
 };
 
@@ -70,7 +70,7 @@ munimap.assert.getMainFeatureAtPixel = function(fce) {
 munimap.assert.layers = function(layers) {
   if (layers !== undefined) {
     assert(goog.isArray(layers),
-        'Layers should be an array of ol.layer.Vector objects.');
+      'Layers should be an array of ol.layer.Vector objects.');
 
     var onlyLayers = layers.every(function(layer) {
       return layer instanceof ol.layer.Vector;
@@ -86,10 +86,10 @@ munimap.assert.layers = function(layers) {
 munimap.assert.target = function(target) {
   if (goog.isString(target)) {
     assert.element(goog.dom.getElement(target),
-        'Target element "' + target + '" not found in document.');
+      'Target element "' + target + '" not found in document.');
   } else {
     assert(document.body.contains(target),
-        'Target element is not in document.');
+      'Target element is not in document.');
   }
 };
 
@@ -99,7 +99,7 @@ munimap.assert.target = function(target) {
  */
 munimap.assert.zoom = function(zoom) {
   assert(zoom === undefined || (zoom >= 0 && zoom <= 30),
-      'Zoom should be in range <0,30>.');
+    'Zoom should be in range <0,30>.');
 };
 
 
@@ -109,14 +109,14 @@ munimap.assert.zoom = function(zoom) {
 munimap.assert.zoomTo = function(zoomTo) {
   if (zoomTo !== undefined) {
     assert(goog.isArray(zoomTo) || goog.isString(zoomTo),
-        'ZoomTo should be string or array of strings.');
+      'ZoomTo should be string or array of strings.');
     zoomTo = goog.isString(zoomTo) ? [zoomTo] : zoomTo;
     var onlyBuildings = zoomTo.every(munimap.building.isCodeOrLikeExpr);
     if (!onlyBuildings) {
       var onlyRooms = zoomTo.every(munimap.room.isCodeOrLikeExpr);
       if (!onlyRooms) {
         goog.asserts.fail('ZoomTo should contain only building or only room' +
-            ' location codes or corresponding LIKE expressions.');
+          ' location codes or corresponding LIKE expressions.');
       }
     }
   }
@@ -139,7 +139,7 @@ munimap.assert.lang = function(lang) {
             values.push(munimap.lang.Abbr[langCode]);
           }
           goog.asserts.fail('Parameter lang contains unknown value. ' +
-              'List of possible values: ' + values.join(', ') + '.');
+            'List of possible values: ' + values.join(', ') + '.');
           break;
       }
     } else {
@@ -158,7 +158,7 @@ munimap.assert.baseMap = function(baseMap) {
       var baseMaps = goog.object.getValues(munimap.BaseMaps);
       if (!goog.array.contains(baseMaps, baseMap)) {
         goog.asserts.fail('Parameter baseMap contains unknown value. ' +
-            'List of possible values: ' + baseMaps.join(', ') + '.');
+          'List of possible values: ' + baseMaps.join(', ') + '.');
       }
     } else {
       goog.asserts.fail('Parameter baseMap should be string.');
@@ -175,7 +175,18 @@ munimap.assert.baseMap = function(baseMap) {
 munimap.assert.pubTran = function(pubTran) {
   if (pubTran !== undefined) {
     goog.asserts.assertBoolean(pubTran,
-        'Parameter pubTran should be boolean (true or false).');
+      'Parameter pubTran should be boolean (true or false).');
+  }
+};
+
+
+/**
+ * @param {boolean|undefined} mapLinks
+ */
+munimap.assert.mapLinks = function(mapLinks) {
+  if (mapLinks !== undefined) {
+    goog.asserts.assertBoolean(mapLinks,
+      'Parameter mapLinks should be boolean (true or false).');
   }
 };
 
@@ -186,7 +197,7 @@ munimap.assert.pubTran = function(pubTran) {
 munimap.assert.locationCodes = function(locationCodes) {
   if (locationCodes !== undefined) {
     goog.asserts.assertBoolean(locationCodes,
-        'Parameter locationCodes should be boolean (true or false).');
+      'Parameter locationCodes should be boolean (true or false).');
   }
 };
 >>>>>>> bd66799... add switch to munimap.create for showing location codes instead of room numbers

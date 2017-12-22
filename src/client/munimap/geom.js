@@ -15,7 +15,7 @@ munimap.geom.CENTER_GEOMETRY_FUNCTION = function(feature) {
     geom = munimap.geom.getLargestPolygon(geom);
   }
   center = munimap.geom.getGeometryCenter(
-      geom, munimap.building.isBuilding(feature));
+    geom, munimap.building.isBuilding(feature));
   return center;
 };
 
@@ -30,21 +30,21 @@ munimap.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION = function(map, feature) {
   var center;
   var viewExt = map.getView().calculateExtent(map.getSize() || null);
   var refExt =
-      ol.extent.buffer(viewExt, munimap.getBufferValue(viewExt));
+    ol.extent.buffer(viewExt, munimap.getBufferValue(viewExt));
   goog.asserts.assertInstanceof(feature, ol.Feature);
   var geom = feature.getGeometry() || null;
   var featCenter = munimap.geom.CENTER_GEOMETRY_FUNCTION(feature);
   if (geom.intersectsExtent(refExt) && !featCenter.intersectsExtent(refExt)) {
     var format = new ol.format.GeoJSON();
     var intersect =
-        munimap.geom.featureExtentIntersect(feature, viewExt, format);
+      munimap.geom.featureExtentIntersect(feature, viewExt, format);
     geom = intersect.getGeometry() || null;
   }
   if (geom instanceof ol.geom.MultiPolygon) {
     geom = munimap.geom.getLargestPolygon(geom);
   }
   center = munimap.geom.getGeometryCenter(
-      geom, munimap.building.isBuilding(feature));
+    geom, munimap.building.isBuilding(feature));
   return center;
 };
 
@@ -114,9 +114,9 @@ munimap.geom.getLinearRingHorizontalIntersections = function(ring, y) {
     var vertex1 = coordinates[i];
     var vertex2 = coordinates[i - 1];
     if ((vertex1[1] >= y && vertex2[1] <= y) ||
-        (vertex1[1] <= y && vertex2[1] >= y)) {
+      (vertex1[1] <= y && vertex2[1] >= y)) {
       var x = (y - vertex1[1]) / (vertex2[1] - vertex1[1]) *
-          (vertex2[0] - vertex1[0]) + vertex1[0];
+        (vertex2[0] - vertex1[0]) + vertex1[0];
       intersections.push(x);
     }
   }
@@ -134,7 +134,7 @@ munimap.geom.getHorizontalIntersections = function(polygon, y) {
   var intersections = [];
   goog.array.forEach(polygon.getLinearRings(), function(ring) {
     var ringIntersections =
-        munimap.geom.getLinearRingHorizontalIntersections(ring, y);
+      munimap.geom.getLinearRingHorizontalIntersections(ring, y);
     goog.array.extend(intersections, ringIntersections);
   });
   return intersections;
@@ -154,7 +154,7 @@ munimap.geom.getBetterInteriorPoint = function(polygon) {
     var resultY = centerCoordinate[1];
 
     var intersections =
-        munimap.geom.getHorizontalIntersections(polygon, resultY);
+      munimap.geom.getHorizontalIntersections(polygon, resultY);
     intersections.sort();
 
     // Find the longest segment of the horizontal bounding box center line that

@@ -8,6 +8,7 @@
 @import url("munimap/font/font.css");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 .munimap-info-bubble {
   left: auto;
@@ -27,6 +28,8 @@
 }
 
 >>>>>>> 451c7e9... added info bubble for custom markers & POI, fixed tutorials,
+=======
+>>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
 .ol-popup {
   border-radius: 6px;
   bottom: auto;
@@ -148,8 +151,43 @@
   position: relative;
   width: 100%;
 }
+
+.munimap-info-bubble {
+  left: auto;
+  right: auto;
+  top: auto;
+  bottom: auto;
+  z-index: 2;
+}
+
+.munimap-bubble-title {
+  font-weight: 600;
+  text-align: center;
+  margin: 5px 0;
+}
+
+.munimap-link {
+  position: absolute;
+  left: .5em;
+  bottom: .5em;
+  background: transparent;
+  margin: 0 2px;
+}
+
+.munimap-link .munimap-link-item {
+  width: 25px;
+  height: 25px;
+  background-position: center;
+  background-size: cover;
+  cursor: pointer;
+  margin-top: 10px;
+  filter: grayscale(0%);
+}
+
+
 .ol-control button {
   background-color: #002776;
+  line-height: 0;
 }
 .ol-control button:hover,
 .ol-control button:focus {

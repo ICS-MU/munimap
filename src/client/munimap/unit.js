@@ -80,7 +80,7 @@ munimap.unit.loadByHeadquartersComplexIds = function(complexIds) {
  */
 munimap.unit.getAbbr = function(unit) {
   var result = unit.get(munimap.lang.getMsg(
-      munimap.lang.Translations.UNIT_ABBR_FIELD_NAME));
+    munimap.lang.Translations.UNIT_ABBR_FIELD_NAME));
   goog.asserts.assert(result === null || goog.isString(result));
   return result;
 };
@@ -93,7 +93,7 @@ munimap.unit.getAbbr = function(unit) {
  */
 munimap.unit.getTitle = function(unit) {
   var result = unit.get(munimap.lang.getMsg(
-      munimap.lang.Translations.UNIT_TITLE_FIELD_NAME));
+    munimap.lang.Translations.UNIT_TITLE_FIELD_NAME));
   goog.asserts.assert(result === null || goog.isString(result));
   return result;
 };

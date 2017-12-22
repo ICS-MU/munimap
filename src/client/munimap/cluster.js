@@ -53,7 +53,7 @@ munimap.cluster.Resolutions = {
  * @return {Array<ol.Feature>}
  * @protected
  */
-munimap.cluster.getClusteredFeatures = function (map, resolution) {
+munimap.cluster.getClusteredFeatures = function(map, resolution) {
   var range = goog.isNumber(resolution) ?
     munimap.cluster.getResolutionRange(resolution) : resolution;
   var ranges = munimap.cluster.Resolutions;
@@ -84,8 +84,8 @@ munimap.cluster.getClusteredFeatures = function (map, resolution) {
  * @return {munimap.Range}
  * @protected
  */
-munimap.cluster.getResolutionRange = function (resolution) {
-  return goog.object.findValue(munimap.cluster.Resolutions, function (range) {
+munimap.cluster.getResolutionRange = function(resolution) {
+  return goog.object.findValue(munimap.cluster.Resolutions, function(range) {
     return munimap.range.contains(range, resolution);
   });
 };
@@ -95,10 +95,10 @@ munimap.cluster.getResolutionRange = function (resolution) {
  * @param {ol.Feature} feature
  * @return {boolean}
  */
-munimap.cluster.isCluster = function (feature) {
+munimap.cluster.isCluster = function(feature) {
   var clusteredFeatures = feature.get('features');
   return goog.isArray(clusteredFeatures) &&
-    clusteredFeatures.every(function (f) {
+    clusteredFeatures.every(function(f) {
       return f instanceof ol.Feature;
     });
 };
@@ -108,7 +108,7 @@ munimap.cluster.isCluster = function (feature) {
  * @param {ol.Feature} feature
  * @return {Array.<ol.Feature>}
  */
-munimap.cluster.getFeatures = function (feature) {
+munimap.cluster.getFeatures = function(feature) {
   return munimap.cluster.isCluster(feature) ?
       /** @type {Array.<ol.Feature>} */(feature.get('features')) : [];
 };
@@ -119,7 +119,7 @@ munimap.cluster.getFeatures = function (feature) {
  * @param {ol.Feature} feature
  * @return {Array.<ol.Feature>}
  */
-munimap.cluster.getMainFeatures = function (map, feature) {
+munimap.cluster.getMainFeatures = function(map, feature) {
   var result = munimap.cluster.getFeatures(feature);
   if (munimap.cluster.containsMarker(map, feature)) {
     result = result.filter(
@@ -134,7 +134,7 @@ munimap.cluster.getMainFeatures = function (map, feature) {
  * @param {ol.Map} map
  * @return {ol.layer.Vector}
  */
-munimap.cluster.getLayer = function (map) {
+munimap.cluster.getLayer = function(map) {
   var layers = map.getLayers().getArray();
   var result = layers.find(munimap.cluster.isLayer);
   goog.asserts.assertInstanceof(result, ol.layer.Vector);
@@ -146,7 +146,7 @@ munimap.cluster.getLayer = function (map) {
  * @param {ol.layer.Base} layer
  * @return {boolean}
  */
-munimap.cluster.isLayer = function (layer) {
+munimap.cluster.isLayer = function(layer) {
   return layer.get('id') === munimap.cluster.LAYER_ID;
 };
 
@@ -155,7 +155,7 @@ munimap.cluster.isLayer = function (layer) {
  * @param {ol.Map} map
  * @return {ol.source.Vector}
  */
-munimap.cluster.getStore = function (map) {
+munimap.cluster.getStore = function(map) {
   var layer = munimap.cluster.getLayer(map);
   var result = layer.getSource();
   return result;
@@ -166,7 +166,7 @@ munimap.cluster.getStore = function (map) {
  * @param {ol.Map} map
  * @return {ol.source.Vector}
  */
-munimap.cluster.getSource = function (map) {
+munimap.cluster.getSource = function(map) {
   var clusterStore = munimap.cluster.getStore(map);
   goog.asserts.assertInstanceof(clusterStore, ol.source.Cluster);
   return clusterStore.getSource();
@@ -178,7 +178,7 @@ munimap.cluster.getSource = function (map) {
  * @return {Array.<ol.Feature>}
  * @protected
  */
-munimap.cluster.getSourceFeatures = function (map) {
+munimap.cluster.getSourceFeatures = function(map) {
   var source = munimap.cluster.getSource(map);
   return source.getFeatures();
 };
@@ -189,10 +189,10 @@ munimap.cluster.getSourceFeatures = function (map) {
  * @param {ol.Feature} cluster
  * @return {boolean}
  */
-munimap.cluster.containsMarker = function (map, cluster) {
+munimap.cluster.containsMarker = function(map, cluster) {
   var markers = munimap.marker.getFeatures(map);
   var clusteredFeatures = cluster.get('features');
-  return clusteredFeatures.some(function (feat) {
+  return clusteredFeatures.some(function(feat) {
     return goog.array.contains(markers, feat);
   });
 };
@@ -202,7 +202,7 @@ munimap.cluster.containsMarker = function (map, cluster) {
  * @param {munimap.feature.clickHandlerOptions} options
  * @return {boolean}
  */
-munimap.cluster.isClickable = function (options) {
+munimap.cluster.isClickable = function(options) {
   return true;
 };
 
@@ -210,7 +210,7 @@ munimap.cluster.isClickable = function (options) {
 /**
  * @param {munimap.feature.clickHandlerOptions} options
  */
-munimap.cluster.featureClickHandler = function (options) {
+munimap.cluster.featureClickHandler = function(options) {
   var feature = options.feature;
   var map = options.map;
   var resolution = options.resolution;
@@ -226,8 +226,9 @@ munimap.cluster.featureClickHandler = function (options) {
     munimap.door.RESOLUTION : munimap.floor.RESOLUTION;
 
   if (clusteredFeatures.length === 1) {
-    if (firstFeature.get('detail')) {
-      munimap.bubble.show(firstFeature, map, String(firstFeature.get('detail')))
+    var detail = /** @type {string} */(firstFeature.get('detail'));
+    if (detail) {
+      munimap.bubble.show(firstFeature, map, detail);
     }
     if (munimap.marker.custom.isCustom(firstFeature)) {
       var extent = munimap.extent.ofFeature(firstFeature);
@@ -272,7 +273,7 @@ munimap.cluster.featureClickHandler = function (options) {
 /**
  * @param {ol.render.Event} evt
  */
-munimap.cluster.handleMapPrecomposeEvt = function (evt) {
+munimap.cluster.handleMapPrecomposeEvt = function(evt) {
   var map = /**@type {ol.Map}*/(evt.target);
   var mapProps = munimap.getProps(map);
   var viewState = evt.frameState.viewState;
@@ -295,13 +296,13 @@ munimap.cluster.handleMapPrecomposeEvt = function (evt) {
  * @param {ol.Map} map
  * @param {number} resolution
  */
-munimap.cluster.updateClusteredFeatures = function (map, resolution) {
+munimap.cluster.updateClusteredFeatures = function(map, resolution) {
   var oldFeatures = munimap.cluster.getSourceFeatures(map);
   var features = munimap.cluster.getClusteredFeatures(map, resolution);
   var allFeatures = oldFeatures.concat(features);
   goog.array.removeDuplicates(allFeatures);
 
-  var bucket = goog.array.bucket(allFeatures, function (feature) {
+  var bucket = goog.array.bucket(allFeatures, function(feature) {
     if (oldFeatures.indexOf(feature) >= 0 &&
       features.indexOf(feature) < 0) {
       return 'remove';
@@ -317,7 +318,7 @@ munimap.cluster.updateClusteredFeatures = function (map, resolution) {
   var featuresToAdd = bucket['add'] || [];
 
   var source = munimap.cluster.getSource(map);
-  featuresToRemove.forEach(function (feature) {
+  featuresToRemove.forEach(function(feature) {
     source.removeFeature(feature);
   });
   source.addFeatures(featuresToAdd);
@@ -372,7 +373,7 @@ munimap.cluster.style.MULTIPLE_MARKED = new ol.style.Style({
  * @param {number} resolution
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
-munimap.cluster.style.function = function (options, feature, resolution) {
+munimap.cluster.style.function = function(options, feature, resolution) {
   goog.asserts.assertInstanceof(feature, ol.Feature);
   var result;
   var features = munimap.cluster.getMainFeatures(options.map, feature);
@@ -420,7 +421,7 @@ munimap.cluster.style.function = function (options, feature, resolution) {
  * @protected
  */
 munimap.cluster.style.pinFunction =
-  function (options, clusterFeature, feature, resolution) {
+  function(options, clusterFeature, feature, resolution) {
     var styleArray = [];
     var title;
     if (goog.isDef(options.markerLabel)) {
@@ -479,7 +480,7 @@ munimap.cluster.style.pinFunction =
  * @protected
  */
 munimap.cluster.style.multipleLabelFunction =
-  function (options, feature, resolution) {
+  function(options, feature, resolution) {
     goog.asserts.assertInstanceof(feature, ol.Feature);
     var map = options.map;
     var features = munimap.cluster.getMainFeatures(map, feature);
@@ -534,7 +535,7 @@ munimap.cluster.style.multipleLabelFunction =
  * @return {string}
  * @protected
  */
-munimap.cluster.style.getUnmarkedDefaultLabel = function (feature, resolution) {
+munimap.cluster.style.getUnmarkedDefaultLabel = function(feature, resolution) {
   goog.asserts.assertInstanceof(feature, ol.Feature);
   var title;
 
@@ -568,9 +569,9 @@ munimap.cluster.style.getUnmarkedDefaultLabel = function (feature, resolution) {
  * @protected
  */
 munimap.cluster.style.getMarkedDefaultLabel =
-  function (options, allMarkers, feature, resolution) {
+  function(options, allMarkers, feature, resolution) {
     var clusteredFeatures = munimap.cluster.getFeatures(feature);
-    var markers = clusteredFeatures.filter(function (feat) {
+    var markers = clusteredFeatures.filter(function(feat) {
       return goog.array.contains(allMarkers, feat);
     });
 
@@ -597,15 +598,15 @@ munimap.cluster.style.getMarkedDefaultLabel =
 
     if (markers.length > 3) {
       var markerType;
-      if (markers.every(function (el) {
+      if (markers.every(function(el) {
         return munimap.building.isBuilding(el);
       })) {
         markerType = munimap.lang.getMsg(munimap.lang.Translations.BUILDING);
-      } else if (markers.every(function (el) {
+      } else if (markers.every(function(el) {
         return munimap.room.isRoom(el);
       })) {
         markerType = munimap.lang.getMsg(munimap.lang.Translations.ROOM);
-      } else if (markers.every(function (el) {
+      } else if (markers.every(function(el) {
         return munimap.door.isDoor(el);
       })) {
         markerType = munimap.lang.getMsg(munimap.lang.Translations.DOOR);
@@ -615,7 +616,7 @@ munimap.cluster.style.getMarkedDefaultLabel =
       titleParts.push(markers.length + 'x ' + markerType);
     } else {
       if (goog.isDef(options.markerLabel)) {
-        markers = markers.filter(function (marker) {
+        markers = markers.filter(function(marker) {
           var title = options.markerLabel(marker, resolution);
           if (goog.isDefAndNotNull(title)) {
             if (title) {
@@ -630,7 +631,7 @@ munimap.cluster.style.getMarkedDefaultLabel =
       }
 
       if (markers.length) {
-        markers.forEach(function (marker) {
+        markers.forEach(function(marker) {
           if (munimap.building.isBuilding(marker)) {
             var range = munimap.cluster.getResolutionRange(resolution);
             var units = [];
@@ -648,7 +649,7 @@ munimap.cluster.style.getMarkedDefaultLabel =
             if (munimap.unit.getTitleParts(units).length > 0) {
               titleParts.push(munimap.unit.getTitleParts(units)[0]);
             }
-            buildingsWithoutUnits.forEach(function (building) {
+            buildingsWithoutUnits.forEach(function(building) {
               var buildingTitle;
               var bUnits = munimap.building.getUnits(building);
               if (bUnits.length) {

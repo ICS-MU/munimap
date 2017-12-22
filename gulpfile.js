@@ -9,10 +9,10 @@ var argv = require('yargs')
     .command('build', 'Compile and refactor files for publishing.')
     .command('dev', 'Run dev server and open app.')
     .command('devlint', 'Run watcher for linting and fixing ' +
-        'source code style in Closure way immediately during editing.')
+    'source code style in Closure way immediately during editing.')
     .command('fix', 'Fix source code style in Closure way.')
     .command('fixlint', 'Fix and lint source code style ' +
-        'in Closure and jpad way.')
+    'in Closure and jpad way.')
     .command('install', 'Install Closure Linter and ol3 externs.')
     .command('lint', 'Lint source code style in Closure and jpad way.')
     .option('s', {
@@ -41,17 +41,17 @@ var argv = require('yargs')
     .alias('H', 'Help')
     .argv;
 
-if(argv.d === 'none') {
-  var dir = '';
+if (argv.d === 'none') {
+    var dir = '';
 } else if (argv.d === 'v2n') {
-  dir = jpadCfg.appVersion.split('.').slice(0, 2).join('.');
+    dir = jpadCfg.appVersion.split('.').slice(0, 2).join('.');
 } else if (argv.d === 'v3n') {
-  dir = jpadCfg.appVersion.split('.').slice(0, 3).join('.');
+    dir = jpadCfg.appVersion.split('.').slice(0, 3).join('.');
 } else {
-  dir = argv.d;
+    dir = argv.d;
 }
-if(dir) {
-  jpadCfg.appPath += dir + '/';
+if (dir) {
+    jpadCfg.appPath += dir + '/';
 }
 console.log('Application path set to', jpadCfg.appPath);
 
@@ -69,7 +69,7 @@ loadTask('install');
 loadTask('lint');
 
 gulp.task('fixlint', function(cb) {
-  runSequence('fix', 'lint', cb);
+    runSequence('fix', 'lint', cb);
 });
 
 gulp.task('default', ['dev']);
