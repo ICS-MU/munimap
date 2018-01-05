@@ -45,7 +45,7 @@ munimap.ga.objectName = 'ga';
  */
 munimap.ga.init = function() {
   var delay = new goog.async.Delay(munimap.ga.initInternal,
-    munimap.ga.INIT_DELAY);
+      munimap.ga.INIT_DELAY);
   delay.start();
 };
 
@@ -73,12 +73,12 @@ munimap.ga.initInternal = function() {
       a.src = g;
       m.parentNode.insertBefore(a, m);
     })(
-      window,
-      document,
-      'script',
-      'https://www.google-analytics.com/analytics.js',
-      munimap.ga.objectName
-      );
+       window,
+       document,
+       'script',
+       'https://www.google-analytics.com/analytics.js',
+       munimap.ga.objectName
+    );
   }
 
   munimap.ga.initialized = true;
@@ -109,14 +109,14 @@ munimap.ga.initInternal = function() {
  * @param {Object=} opt_fieldsObject fields object
  */
 munimap.ga.sendEvent =
-  function(category, action, opt_labelOrObject, opt_value, opt_fieldsObject) {
-    var queue = munimap.ga.BEFORE_INIT_QUEUE;
-    if (munimap.ga.initialized) {
-      munimap.ga.sendEventInternal.apply(undefined, arguments);
-    } else {
-      queue.push(arguments);
-    }
-  };
+    function(category, action, opt_labelOrObject, opt_value, opt_fieldsObject) {
+  var queue = munimap.ga.BEFORE_INIT_QUEUE;
+  if (munimap.ga.initialized) {
+    munimap.ga.sendEventInternal.apply(undefined, arguments);
+  } else {
+    queue.push(arguments);
+  }
+};
 
 
 /**
@@ -129,25 +129,25 @@ munimap.ga.sendEvent =
  * @protected
  */
 munimap.ga.sendEventInternal =
-  function(category, action, opt_labelOrObject, opt_value, opt_fieldsObject) {
+    function(category, action, opt_labelOrObject, opt_value, opt_fieldsObject) {
 
-    if (opt_labelOrObject instanceof Object) {
-      var fieldsObject = opt_labelOrObject;
-      fieldsObject.hitType = 'event';
-      fieldsObject.eventCategory = category;
-      fieldsObject.eventAction = action;
+  if (opt_labelOrObject instanceof Object) {
+    var fieldsObject = opt_labelOrObject;
+    fieldsObject.hitType = 'event';
+    fieldsObject.eventCategory = category;
+    fieldsObject.eventAction = action;
 
-      window[munimap.ga.objectName](
+    window[munimap.ga.objectName](
         munimap.ga.TRACKER_NAME + '.send',
         fieldsObject);
-    } else {
-      var label = opt_labelOrObject;
-      window[munimap.ga.objectName](
+  } else {
+    var label = opt_labelOrObject;
+    window[munimap.ga.objectName](
         munimap.ga.TRACKER_NAME + '.send',
         'event',
         category,
         action,
         label,
         opt_value, opt_fieldsObject);
-    }
-  };
+  }
+};

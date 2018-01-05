@@ -23,9 +23,9 @@ munimap.reset = function(map, options) {
   var resetKeys = goog.object.getKeys(options);
   resetKeys.sort();
   munimap.ga.sendEvent(
-    'map',
-    'reset',
-    resetKeys.join(',')
+      'map',
+      'reset',
+      resetKeys.join(',')
   );
 
   munimap.reset.assertOptions(options);
@@ -96,9 +96,9 @@ munimap.reset = function(map, options) {
  */
 munimap.reset.assertOptions = function(options) {
   assert(options.zoom === undefined || options.zoomTo === undefined,
-    'Zoom and zoomTo options can\'t be defined together.');
+      'Zoom and zoomTo options can\'t be defined together.');
   assert(options.center === undefined || options.zoomTo === undefined,
-    'Center and zoomTo options can\'t be defined together.');
+      'Center and zoomTo options can\'t be defined together.');
   munimap.assert.zoom(options.zoom);
   munimap.assert.zoomTo(options.zoomTo);
   munimap.assert.markers(options.markers);

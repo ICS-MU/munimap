@@ -9,7 +9,7 @@ goog.provide('munimap.bubble');
 munimap.bubble.create = function(map) {
   var munimapEl = map.getTargetElement();
   var popupEl = goog.dom.createDom('div', 'ol-popup munimap-info' +
-    ' munimap-info-bubble');
+      ' munimap-info-bubble');
   var contentEl = goog.dom.createDom('div', 'munimap-content');
   var closeButtonEl = goog.dom.createDom('div', 'munimap-close-button');
   goog.dom.appendChild(popupEl, closeButtonEl);
@@ -30,7 +30,7 @@ munimap.bubble.create = function(map) {
       var resolution = map.getView().getResolution();
       if (resolution) {
         var isVisible = munimap.range.contains(
-          munimap.marker.RESOLUTION, resolution);
+            munimap.marker.RESOLUTION, resolution);
         if (!isVisible) {
           closePopup();
         }
