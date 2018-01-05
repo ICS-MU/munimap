@@ -528,6 +528,7 @@ munimap.cluster.style.multipleLabelFunction =
     }
   };
 
+
 /**
  * Clustered features are buildings only.
  * @param {ol.Feature} feature
@@ -655,8 +656,7 @@ munimap.cluster.style.getMarkedDefaultLabel =
               titleParts.push(roomTitle);
             }
           }
-
-        })
+        });
       }
     }
     var title = titleParts.join('\n');

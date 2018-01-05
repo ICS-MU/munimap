@@ -1,5 +1,6 @@
 goog.provide('munimap.bubble');
 
+
 /**
  * @param {ol.Map} map
  *
@@ -35,7 +36,7 @@ munimap.bubble.create = function(map) {
         }
       }
     }
-  }
+  };
 
   var closePopup = function() {
     map.un('moveend', checkResolution);

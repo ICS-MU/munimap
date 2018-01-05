@@ -22,6 +22,7 @@ goog.require('munimap.getDefaultLayers');
 goog.require('munimap.info');
 goog.require('munimap.lang');
 goog.require('munimap.layer.propName');
+goog.require('munimap.mapLinks');
 goog.require('munimap.marker');
 goog.require('munimap.optpoi');
 goog.require('munimap.poi');
@@ -33,7 +34,7 @@ goog.require('munimap.room.style');
 goog.require('munimap.source.Cluster');
 goog.require('munimap.store');
 goog.require('munimap.style');
-goog.require('munimap.mapLinks');
+
 
 /**
  * @param {munimapx.create.Options} options
@@ -278,7 +279,7 @@ munimap.create = function(options) {
         map.addLayer(pubTranLayer);
       }
       if (options.mapLinks) {
-        map.addControl(munimap.mapLinks.create(map))
+        map.addControl(munimap.mapLinks.create(map));
       }
 
       map.addLayer(markerClusterLayer);
@@ -519,9 +520,9 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
           } else if (goog.isString(el)) {
             munimap.load.featuresFromParam(el).then(function(results) {
               resolve(results[0]);
-            })
+            });
           }
-        }))
+        }));
       }
       else {
         var arrPoi = [el];
@@ -556,17 +557,17 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
                 result = clustered.length + 'x ' + ctgLabel;
               }
               return result;
-            }
+            };
           }
 
           return new goog.Promise(function(resolve, reject) {
             munimap.load.featuresFromParam(roomCodes).then(function(values) {
-              resolve(munimap.create.addPoiDetail(values, features))
-            })
-          })
+              resolve(munimap.create.addPoiDetail(values, features));
+            });
+          });
         }));
       }
-    })
+    });
     return new goog.Promise(function(resolve, reject) {
       Promise.all(arrPromises).then(function(values) {
         // reduce array of arrays to 1 array
@@ -577,8 +578,8 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
           goog.Promise.resolve(values)
         );
         resolve(result);
-      })
-    })
+      });
+    });
   }
 };
 
@@ -599,7 +600,7 @@ munimap.create.addPoiDetail = function(features, details) {
           name = detail.get('nazev_cs');
           open = goog.isDefAndNotNull(detail.get(
             'provozniDoba_cs')) ? detail.get(
-              'provozniDoba_cs') : "";
+              'provozniDoba_cs') : '';
         }
         else if (munimap.lang.active === 'en') {
           name = goog.isDefAndNotNull(detail.get(
@@ -608,12 +609,12 @@ munimap.create.addPoiDetail = function(features, details) {
                 'nazev_cs');
           open = goog.isDefAndNotNull(detail.get(
             'provozniDoba_en')) ? detail.get(
-              'provozniDoba_en') : "";
+              'provozniDoba_en') : '';
 
         }
         open = open.replace(',', '<br>');
-        name = "<div class='munimap-bubble-title'>" + name + "</div>";
-        open = "<div class='munimap-bubble-text'>" + open + "</div>";
+        name = '<div class="munimap-bubble-title">' + name + '</div>';
+        open = '<div class="munimap-bubble-text">' + open + '</div>';
         feature.set('detail', name + open);
         result.push(feature);
       }

@@ -39,10 +39,10 @@ munimap.assert.markers = function(markers) {
       }
     });
     if (markers.some(function(el) {
-      return munimap.optpoi.isCtgUid(el)
+      return munimap.optpoi.isCtgUid(el);
     })) {
       if (!(markers.every(function(el) {
-        return munimap.optpoi.isCtgUid(el)
+        return munimap.optpoi.isCtgUid(el);
       }))) {
         goog.asserts.fail('Markers should contain 1. building, room or ' +
           'door location codes, or 2. corresponding LIKE expressions, or ' +
