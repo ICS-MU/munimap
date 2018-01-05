@@ -672,8 +672,8 @@ munimap.cluster.style.getMarkedDefaultLabel =
           var units = [];
           var unitsFunc =
               range === munimap.cluster.Resolutions.MARKERS_AND_FACULTIES ?
-                munimap.building.getFaculties :
-                munimap.building.getUnits;
+              munimap.building.getFaculties :
+              munimap.building.getUnits;
           var buildingsWithoutUnits = [];
           var uns = unitsFunc(marker);
           if (uns.length) {

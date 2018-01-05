@@ -567,7 +567,7 @@ munimap.building.load.complexUnitsProcessor = function(options) {
           newComplexes.forEach(function(complex) {
             var complexUnits = units.filter(function(unit) {
               return unit.get('areal_sidelni_id') ===
-                complex.get(munimap.complex.ID_FIELD_NAME);
+                 complex.get(munimap.complex.ID_FIELD_NAME);
             });
             complex.set(munimap.complex.UNITS_FIELD_NAME, complexUnits);
           });
