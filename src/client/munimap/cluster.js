@@ -528,6 +528,7 @@ munimap.cluster.style.multipleLabelFunction =
     }
   };
 
+
 /**
  * Clustered features are buildings only.
  * @param {ol.Feature} feature
@@ -676,6 +677,7 @@ munimap.cluster.style.getMarkedDefaultLabel =
             }
           }
 <<<<<<< HEAD
+<<<<<<< HEAD
         });
         titleParts = munimap.unit.getTitleParts(units);
         buildingsWithoutUnits.forEach(function(building) {
@@ -711,6 +713,9 @@ munimap.cluster.style.getMarkedDefaultLabel =
 
         })
 >>>>>>> 57b81cb... Allow custom markers and
+=======
+        });
+>>>>>>> 5500a60... fixed code style
       }
     }
     var title = titleParts.join('\n');
