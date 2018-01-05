@@ -147,7 +147,7 @@ munimap.style.alignTextToRows = function(parts, separator) {
     }
   });
   var charsPerRow = Math.ceil(Math.sqrt(
-    munimap.style.CHAR_HEIGHT_WIDTH_RATIO * charCount));
+      munimap.style.CHAR_HEIGHT_WIDTH_RATIO * charCount));
   if (maxLength > charsPerRow) {
     charsPerRow = maxLength;
   }
@@ -159,8 +159,8 @@ munimap.style.alignTextToRows = function(parts, separator) {
     } else {
       var charsInLastRow = text.substr(text.lastIndexOf('\n') + 1).length;
       if ((charsInLastRow < charsPerRow &&
-        (part.length < 3 || charsInLastRow < charsPerRow / 2)) ||
-        charsInLastRow + part.length <= charsPerRow) {
+          (part.length < 3 || charsInLastRow < charsPerRow / 2)) ||
+          charsInLastRow + part.length <= charsPerRow) {
         text += separator + part;
       } else {
         text += '\n' + part;
@@ -180,7 +180,7 @@ munimap.style.alignTextToRows = function(parts, separator) {
 munimap.style.createFromFragments = function(map, fragments) {
   var resolution = map.getView().getResolution();
   var showIndoor = goog.isDef(resolution) &&
-    munimap.range.contains(munimap.floor.RESOLUTION, resolution);
+      munimap.range.contains(munimap.floor.RESOLUTION, resolution);
 
   var selectedFloor;
   var activeFloors;
@@ -251,7 +251,7 @@ munimap.style.refreshFromFragments = function(map, layer) {
   var refreshStyle = layer.get(munimap.layer.propName.REFRESH_STYLE);
   if (goog.isDef(refreshStyle) && refreshStyle) {
     var fragments = /**@type {munimapx.style.fragment.LayerOptions}*/
-      (layer.get(munimap.layer.propName.STYLE_FRAGMENTS));
+        (layer.get(munimap.layer.propName.STYLE_FRAGMENTS));
     var style = munimap.style.createFromFragments(map, fragments);
     layer.setStyle(style);
   }
@@ -335,31 +335,31 @@ munimap.style.getTextStyleWithOffsetY = function(options) {
  * @return {Array.<ol.style.Style>}
  */
 munimap.style.getLabelWithPin =
-  function(options) {
-    var fill = options.fill;
-    var geometry = options.geometry;
-    var zIndex = options.zIndex;
+    function(options) {
+  var fill = options.fill;
+  var geometry = options.geometry;
+  var zIndex = options.zIndex;
 
-    var result = [];
-    var pin = new ol.style.Style({
-      geometry: geometry,
-      text: new ol.style.Text({
-        text: '\uf041',
-        font: 'normal ' + munimap.style.PIN_SIZE + 'px MunimapFont',
-        fill: fill,
-        offsetY: - munimap.style.PIN_SIZE / 2,
-        stroke: munimap.style.TEXT_STROKE
-      }),
-      zIndex: zIndex || 5
-    });
-    result.push(pin);
+  var result = [];
+  var pin = new ol.style.Style({
+    geometry: geometry,
+    text: new ol.style.Text({
+      text: '\uf041',
+      font: 'normal ' + munimap.style.PIN_SIZE + 'px MunimapFont',
+      fill: fill,
+      offsetY: - munimap.style.PIN_SIZE / 2,
+      stroke: munimap.style.TEXT_STROKE
+    }),
+    zIndex: zIndex || 5
+  });
+  result.push(pin);
 
-    if (goog.isDefAndNotNull(options.title)) {
-      var textStyle = munimap.style.getTextStyleWithOffsetY(options);
-      result.push(textStyle);
-    }
-    return result;
-  };
+  if (goog.isDefAndNotNull(options.title)) {
+    var textStyle = munimap.style.getTextStyleWithOffsetY(options);
+    result.push(textStyle);
+  }
+  return result;
+};
 
 
 /**

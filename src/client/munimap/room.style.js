@@ -136,9 +136,9 @@ munimap.room.style.setCorridorStyle = function(event) {
         zIndex: 1
       });
       munimap.room.style.corridor =
-        [corridorBackground, corridorStyle, munimap.room.style.STROKE];
+          [corridorBackground, corridorStyle, munimap.room.style.STROKE];
       munimap.room.style.staircase =
-        [staircaseBackground, corridorStyle, munimap.room.style.STROKE];
+          [staircaseBackground, corridorStyle, munimap.room.style.STROKE];
     };
   }
 };
@@ -153,13 +153,13 @@ munimap.room.style.setCorridorStyle = function(event) {
  * @return {boolean}
  */
 munimap.room.style.selectedFloorFilter =
-  function(feature, selectedFloorCode, activeFloorCodes) {
-    if (goog.isDefAndNotNull(selectedFloorCode)) {
-      var locCode = /**@type {string}*/ (feature.get('polohKod'));
-      return locCode.startsWith(selectedFloorCode);
-    }
-    return false;
-  };
+    function(feature, selectedFloorCode, activeFloorCodes) {
+  if (goog.isDefAndNotNull(selectedFloorCode)) {
+    var locCode = /**@type {string}*/ (feature.get('polohKod'));
+    return locCode.startsWith(selectedFloorCode);
+  }
+  return false;
+};
 
 
 /**
@@ -171,12 +171,12 @@ munimap.room.style.selectedFloorFilter =
  * @return {boolean}
  */
 munimap.room.style.activeFloorFilter =
-  function(feature, selectedFloorCode, activeFloorCodes) {
-    var locCode = /**@type {string}*/ (feature.get('polohKod'));
-    return activeFloorCodes.some(function(floor) {
-      return locCode.startsWith(floor);
-    });
-  };
+    function(feature, selectedFloorCode, activeFloorCodes) {
+  var locCode = /**@type {string}*/ (feature.get('polohKod'));
+  return activeFloorCodes.some(function(floor) {
+    return locCode.startsWith(floor);
+  });
+};
 
 
 /**
@@ -188,12 +188,12 @@ munimap.room.style.activeFloorFilter =
  * @return {boolean}
  */
 munimap.room.style.defaultFloorFilter =
-  function(feature, selectedFloorCode, activeFloorCodes) {
-    var locCode = /**@type {string}*/ (feature.get('polohKod'));
-    return !activeFloorCodes.some(function(floor) {
-      return locCode.startsWith(floor.substr(0, 5));
-    });
-  };
+    function(feature, selectedFloorCode, activeFloorCodes) {
+  var locCode = /**@type {string}*/ (feature.get('polohKod'));
+  return !activeFloorCodes.some(function(floor) {
+    return locCode.startsWith(floor.substr(0, 5));
+  });
+};
 
 
 /**
@@ -207,10 +207,10 @@ munimap.room.style.defaultFloorFilter =
 munimap.room.style.activeFunction = function(options, feature, resolution) {
   var result = munimap.room.style.function(options, feature, resolution);
   if (munimap.range.contains(
-    munimap.poi.style.Resolution.STAIRS, resolution) &&
-    result === munimap.room.style.staircase) {
+      munimap.poi.style.Resolution.STAIRS, resolution) &&
+      result === munimap.room.style.staircase) {
     result = goog.array.concat(
-      result, munimap.room.style.STAIRCASE_ICON);
+        result, munimap.room.style.STAIRCASE_ICON);
   }
   return result;
 };
@@ -311,7 +311,7 @@ munimap.room.style.labelFunction = function(options, feature, resolution) {
       var showLocationCodes = munimap.getProps(options.map).locationCodes;
       var fontSize;
       if (munimap.range.contains(
-        munimap.room.label.big.RESOLUTION, resolution)) {
+          munimap.room.label.big.RESOLUTION, resolution)) {
         fontSize = munimap.room.style.FONT_SIZE;
       } else {
         fontSize = munimap.room.style.SMALL_FONT_SIZE;
@@ -322,11 +322,11 @@ munimap.room.style.labelFunction = function(options, feature, resolution) {
         title = /**@type {string}*/ (feature.get('polohKod'));
         var purposeTitle = /**@type {string}*/ (feature.get('ucel_nazev'));
         if (goog.isDefAndNotNull(purposeGis) &&
-          (purposeGis === munimap.poi.Purpose.ELEVATOR ||
+            (purposeGis === munimap.poi.Purpose.ELEVATOR ||
             purposeGis === munimap.poi.Purpose.INFORMATION_POINT)) {
           offset = munimap.poi.style.ICON_HEIGHT - 6;
         } else if (goog.isDefAndNotNull(purposeTitle) &&
-          (purposeTitle === 'WC' || purposeTitle === 'schodiště')) {
+            (purposeTitle === 'WC' || purposeTitle === 'schodiště')) {
           offset = munimap.poi.style.ICON_HEIGHT - 6;
         }
       } else {
@@ -334,15 +334,15 @@ munimap.room.style.labelFunction = function(options, feature, resolution) {
       }
       if (title) {
         if (goog.isDefAndNotNull(purposeGis) &&
-          purposeGis === munimap.poi.Purpose.CLASSROOM) {
+            purposeGis === munimap.poi.Purpose.CLASSROOM) {
           var labelHeight = munimap.style.getLabelHeight(title, fontSize);
           var overallHeight =
-            labelHeight + munimap.poi.style.ICON_HEIGHT + 2;
+              labelHeight + munimap.poi.style.ICON_HEIGHT + 2;
           var iconOffset =
-            - (overallHeight - munimap.poi.style.ICON_HEIGHT) / 2;
+              - (overallHeight - munimap.poi.style.ICON_HEIGHT) / 2;
           offset = (overallHeight - labelHeight) / 2;
           goog.array.extend(
-            result, munimap.room.style.getClassroomIcon(iconOffset));
+              result, munimap.room.style.getClassroomIcon(iconOffset));
         }
 
         var textStyle = new ol.style.Style({

@@ -16,10 +16,17 @@ munimap.lang.active;
  */
 munimap.lang.Translations = {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5450bff... fix code style
   ATTRIBUTIONS: 'ATTRIBUTIONS',
   MU_ATTRIBUTION_HTML: 'MU_ATTRIBUTION_HTML',
   OSM_ATTRIBUTION_HTML: 'OSM_ATTRIBUTION_HTML',
   MUNIMAP_ATTRIBUTION_HTML: 'MUNIMAP_ATTRIBUTION_HTML',
+<<<<<<< HEAD
+=======
+  PUBTRAN_ATTRIBUTION_HTML: 'PUBTRAN_ATTRIBUTION_HTML',
+>>>>>>> 5450bff... fix code style
   ZOOM_IN: 'ZOOM_IN',
   ZOOM_OUT: 'ZOOM_OUT',
   INFOBOX_CHOOSE: 'INFOBOX_CHOOSE',
@@ -40,8 +47,11 @@ munimap.lang.Translations = {
   UNIT_TITLE_FIELD_NAME: 'UNIT_TITLE_FIELD_NAME',
   UNIT_ABBR_FIELD_NAME: 'UNIT_ABBR_FIELD_NAME',
 <<<<<<< HEAD
+<<<<<<< HEAD
   CLUSTER_MU_LABEL: 'CLUSTER_MU_LABEL'
 =======
+=======
+>>>>>>> 5450bff... fix code style
   CLUSTER_MU_LABEL: 'CLUSTER_MU_LABEL',
   FIND_CONNECTION: 'FIND_CONNECTION',
   CONNECTION_FROM: 'CONNECTION_FROM',
@@ -52,6 +62,7 @@ munimap.lang.Translations = {
   LOCATION: 'LOCATION',
   PRINT_CENTER: 'print-center',
   CREDIT_TOP_UP_MACHINE: 'credit-top-up-machine',
+<<<<<<< HEAD
   RETAIL_LOCATION: 'retail-location'
 >>>>>>> 52f4ba7... Improve labels of optional POIs, add multilinguality
 =======
@@ -93,6 +104,11 @@ munimap.lang.Translations = {
     SEZNAM_MAP: 'SEZNAM_MAP',
     GOOGLE_MAP: 'GOOGLE_MAP'
 >>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
+=======
+  RETAIL_LOCATION: 'retail-location',
+  SEZNAM_MAP: 'SEZNAM_MAP',
+  GOOGLE_MAP: 'GOOGLE_MAP'
+>>>>>>> 5450bff... fix code style
 };
 
 
@@ -104,6 +120,9 @@ munimap.lang.Translations = {
  */
 munimap.lang.CS_TRANSLATIONS = {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5450bff... fix code style
   'ATTRIBUTIONS': 'Zdroje dat',
   'MU_ATTRIBUTION_HTML': '© <a href="http://www.muni.cz/?lang=cs"' +
       ' target="_blank">Masarykova univerzita</a>',
@@ -112,6 +131,12 @@ munimap.lang.CS_TRANSLATIONS = {
       ' target="_blank">OpenStreetMap</a>',
   'MUNIMAP_ATTRIBUTION_HTML': '<a href="//' + jpad.PROD_DOMAIN + jpad.APP_PATH +
       '" target="_blank" title="Mapová knihovna munimap">munimap</a>',
+<<<<<<< HEAD
+=======
+  'PUBTRAN_ATTRIBUTION_HTML': '© <a href="http://www.idsjmk.cz/"' +
+      ' target="_blank" title="Informace o umístění zastávek MHD poskytuje' +
+      ' firma KORDIS JMK, a.s.">KORDIS JMK, a.s.</a>',
+>>>>>>> 5450bff... fix code style
   'ZOOM_IN': 'Přiblížit',
   'ZOOM_OUT': 'Oddálit',
   'INFOBOX_CHOOSE': 'Vyberte',
@@ -132,8 +157,11 @@ munimap.lang.CS_TRANSLATIONS = {
   'UNIT_TITLE_FIELD_NAME': 'nazevk_cs',
   'UNIT_ABBR_FIELD_NAME': 'zkratka_cs',
 <<<<<<< HEAD
+<<<<<<< HEAD
   'CLUSTER_MU_LABEL': 'Masarykova univerzita'
 =======
+=======
+>>>>>>> 5450bff... fix code style
   'CLUSTER_MU_LABEL': 'Masarykova univerzita',
   'FIND_CONNECTION': 'Hledat spojení',
   'CONNECTION_FROM': 'odtud',
@@ -144,6 +172,7 @@ munimap.lang.CS_TRANSLATIONS = {
   'LOCATION': 'místo',
   'print-center': 'tiskové centrum',
   'credit-top-up-machine': 'bankovník',
+<<<<<<< HEAD
   'retail-location': 'prodejní místo'
 >>>>>>> 52f4ba7... Improve labels of optional POIs, add multilinguality
 =======
@@ -191,6 +220,11 @@ munimap.lang.CS_TRANSLATIONS = {
     'SEZNAM_MAP': 'Otevřít v Mapy.cz',
     'GOOGLE_MAP': 'Otevřít v Mapy Google'
 >>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
+=======
+  'retail-location': 'prodejní místo',
+  'SEZNAM_MAP': 'Otevřít v Mapy.cz',
+  'GOOGLE_MAP': 'Otevřít v Mapy Google'
+>>>>>>> 5450bff... fix code style
 };
 
 
@@ -202,6 +236,9 @@ munimap.lang.CS_TRANSLATIONS = {
  */
 munimap.lang.EN_TRANSLATIONS = {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5450bff... fix code style
   'ATTRIBUTIONS': 'Attributions',
   'MU_ATTRIBUTION_HTML': '© <a href="http://www.muni.cz/?lang=en"' +
       ' target="_blank">Masaryk University</a>',
@@ -210,6 +247,13 @@ munimap.lang.EN_TRANSLATIONS = {
       ' target="_blank">OpenStreetMap</a> contributors',
   'MUNIMAP_ATTRIBUTION_HTML': '<a href="//' + jpad.PROD_DOMAIN + jpad.APP_PATH +
       '" target="_blank" title="munimap mapping library">munimap</a>',
+<<<<<<< HEAD
+=======
+  'PUBTRAN_ATTRIBUTION_HTML':
+      '© <a href="http://www.idsjmk.cz/EN/default.aspx"' +
+      ' target="_blank" title="Public transport data is provided by' +
+      ' KORDIS JMK, a.s. company">KORDIS JMK, a.s.</a>',
+>>>>>>> 5450bff... fix code style
   'ZOOM_IN': 'Zoom in',
   'ZOOM_OUT': 'Zoom out',
   'INFOBOX_CHOOSE': 'Choose',
@@ -230,8 +274,11 @@ munimap.lang.EN_TRANSLATIONS = {
   'UNIT_TITLE_FIELD_NAME': 'nazevk_en',
   'UNIT_ABBR_FIELD_NAME': 'zkratka_en',
 <<<<<<< HEAD
+<<<<<<< HEAD
   'CLUSTER_MU_LABEL': 'Masaryk university'
 =======
+=======
+>>>>>>> 5450bff... fix code style
   'CLUSTER_MU_LABEL': 'Masaryk university',
   'FIND_CONNECTION': 'Find connection',
   'CONNECTION_FROM': 'from',
@@ -242,6 +289,7 @@ munimap.lang.EN_TRANSLATIONS = {
   'LOCATION': 'location',
   'print-center': 'print center',
   'credit-top-up-machine': 'credit top up machine',
+<<<<<<< HEAD
   'retail-location': 'retail location'
 >>>>>>> 52f4ba7... Improve labels of optional POIs, add multilinguality
 =======
@@ -290,6 +338,11 @@ munimap.lang.EN_TRANSLATIONS = {
     'SEZNAM_MAP': 'Open in Mapy.cz',
     'GOOGLE_MAP': 'Open in Google map'
 >>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
+=======
+  'retail-location': 'retail location',
+  'SEZNAM_MAP': 'Open in Mapy.cz',
+  'GOOGLE_MAP': 'Open in Google map'
+>>>>>>> 5450bff... fix code style
 };
 
 
@@ -298,8 +351,8 @@ munimap.lang.EN_TRANSLATIONS = {
  * @enum {string}
  */
 munimap.lang.Abbr = {
-    CZECH: 'cs',
-    ENGLISH: 'en'
+  CZECH: 'cs',
+  ENGLISH: 'en'
 };
 
 
@@ -309,15 +362,15 @@ munimap.lang.Abbr = {
  * @return {string} stranslated string
  */
 munimap.lang.getMsg = function(str) {
-    var translation;
-    switch (munimap.lang.active) {
-        case munimap.lang.Abbr.CZECH:
-            translation = munimap.lang.CS_TRANSLATIONS[str];
-            break;
-        case munimap.lang.Abbr.ENGLISH:
-            translation = munimap.lang.EN_TRANSLATIONS[str];
-            break;
-    }
-    translation = translation || str;
-    return translation;
+  var translation;
+  switch (munimap.lang.active) {
+    case munimap.lang.Abbr.CZECH:
+      translation = munimap.lang.CS_TRANSLATIONS[str];
+      break;
+    case munimap.lang.Abbr.ENGLISH:
+      translation = munimap.lang.EN_TRANSLATIONS[str];
+      break;
+  }
+  translation = translation || str;
+  return translation;
 };

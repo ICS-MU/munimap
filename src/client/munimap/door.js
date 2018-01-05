@@ -13,7 +13,7 @@ goog.require('munimap.type');
  * @protected
  */
 munimap.door.CODE_REGEX =
-  /^[A-Z]{3}[0-9]{2}[NMPSZ]{1}[0-9]{2}[D]{1}[0-9]{3}?$/gi;
+    /^[A-Z]{3}[0-9]{2}[NMPSZ]{1}[0-9]{2}[D]{1}[0-9]{3}?$/gi;
 
 
 /**
@@ -21,7 +21,7 @@ munimap.door.CODE_REGEX =
  * @protected
  */
 munimap.door.LIKE_EXPR_REGEX =
-  /^[A-Z_]{3}[0-9_]{2}[NMPSZ_]{1}[0-9_]{2}[D_]{1}[0-9_]{3}?$/gi;
+    /^[A-Z_]{3}[0-9_]{2}[NMPSZ_]{1}[0-9_]{2}[D_]{1}[0-9_]{3}?$/gi;
 
 
 /**
@@ -66,9 +66,9 @@ munimap.door.createActiveStore = function(map) {
   return new ol.source.Vector({
     loader: goog.partial(munimap.door.loadActive, { map: map }),
     strategy: /** @type {ol.LoadingStrategy} */(
-      ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-        tileSize: 512
-      })))
+        ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+          tileSize: 512
+        })))
   });
 };
 
@@ -121,7 +121,7 @@ munimap.door.isCode = function(maybeCode) {
  */
 munimap.door.isLikeExpr = function(maybeLikeExpr) {
   return !!maybeLikeExpr.match(munimap.door.LIKE_EXPR_REGEX) &&
-    maybeLikeExpr.indexOf('_') >= 0;
+      maybeLikeExpr.indexOf('_') >= 0;
 };
 
 
@@ -131,7 +131,7 @@ munimap.door.isLikeExpr = function(maybeLikeExpr) {
  */
 munimap.door.isCodeOrLikeExpr = function(maybeCodeOrLikeExpr) {
   return munimap.door.isCode(maybeCodeOrLikeExpr) ||
-    munimap.door.isLikeExpr(maybeCodeOrLikeExpr);
+      munimap.door.isLikeExpr(maybeCodeOrLikeExpr);
 };
 
 
@@ -170,15 +170,15 @@ munimap.door.loadActive = function(options, extent, resolution, projection) {
       method: 'POST'
     };
     munimap.load.featuresForMap(opts, extent, resolution, projection).then(
-      function(doors) {
-        var activeLayer = munimap.door.getActiveLayer(options.map);
-        var activeStore = activeLayer.getSource();
-        var doorsFromActiveFloor = goog.array.filter(doors,
-          goog.partial(munimap.door.isInActiveFloor, options.map));
-        var doorsToAdd = munimap.store.getNotYetAddedFeatures(
-          activeStore, doorsFromActiveFloor);
-        activeStore.addFeatures(doorsToAdd);
-      });
+        function(doors) {
+          var activeLayer = munimap.door.getActiveLayer(options.map);
+          var activeStore = activeLayer.getSource();
+          var doorsFromActiveFloor = goog.array.filter(doors,
+              goog.partial(munimap.door.isInActiveFloor, options.map));
+          var doorsToAdd = munimap.store.getNotYetAddedFeatures(
+              activeStore, doorsFromActiveFloor);
+          activeStore.addFeatures(doorsToAdd);
+        });
   }
 };
 

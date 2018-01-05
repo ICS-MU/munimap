@@ -2,11 +2,12 @@ goog.provide('munimap.marker');
 goog.provide('munimap.marker.custom');
 
 goog.require('assert');
+goog.require('munimap.bubble');
 goog.require('munimap.feature');
 goog.require('munimap.map');
 goog.require('munimap.range');
 goog.require('munimap.style');
-goog.require('munimap.bubble');
+
 
 /**
  *
@@ -98,11 +99,11 @@ munimap.marker.isClickable = function(options) {
     return true;
   } else if (munimap.building.isBuilding(feature)) {
     return munimap.building.hasInnerGeometry(feature) &&
-      (!munimap.range.contains(munimap.floor.RESOLUTION, resolution) ||
+        (!munimap.range.contains(munimap.floor.RESOLUTION, resolution) ||
         !munimap.building.isSelected(feature, map));
   } else if (munimap.room.isRoom(feature)) {
     return (!munimap.range.contains(munimap.floor.RESOLUTION, resolution) ||
-      !munimap.room.isInSelectedFloor(feature, map));
+        !munimap.room.isInSelectedFloor(feature, map));
   } else if (munimap.door.isDoor(feature)) {
     return !munimap.range.contains(munimap.door.RESOLUTION, resolution);
   }
@@ -119,7 +120,7 @@ munimap.marker.featureClickHandler = function(options) {
   var pixel = options.pixel;
   var resolution = options.resolution;
   var resolutionRange = (munimap.door.isDoor(feature)) ?
-    munimap.door.RESOLUTION : munimap.floor.RESOLUTION;
+      munimap.door.RESOLUTION : munimap.floor.RESOLUTION;
   var isVisible = munimap.range.contains(resolutionRange, resolution);
 
   if (!isVisible) {
@@ -207,8 +208,8 @@ munimap.marker.custom.isSuitable = function(feature) {
  */
 munimap.marker.custom.assertSuitable = function(feature) {
   return assert(munimap.marker.custom.isSuitable(feature),
-    'Custom marker represented by ol.Feature must have ol.Point geometry ' +
-    'with appropriate longitude (-180;180) and latitude (-90, 90).');
+      'Custom marker represented by ol.Feature must have ol.Point geometry ' +
+      'with appropriate longitude (-180;180) and latitude (-90, 90).');
 };
 
 
