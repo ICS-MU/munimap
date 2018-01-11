@@ -3,7 +3,6 @@ goog.provide('munimap.pubtran.stop.layer');
 
 goog.require('munimap.load');
 goog.require('munimap.map');
-goog.require('munimap.pubtran.stop.info');
 goog.require('munimap.range');
 
 
@@ -154,8 +153,38 @@ munimap.pubtran.stop.isClickable = goog.functions.TRUE;
 munimap.pubtran.stop.featureClickHandler = function(options) {
   var feature = options.feature;
   var map = options.map;
+  var title = /**@type {string}*/ (feature.get('nazev'));
+  
+  var link = 'http://jizdnirady.idnes.cz/idsjmk/spojeni/?';
+  var linkToAttributes = {
+    href: encodeURI(link + 't=' + title),
+    target: '_blank'
+  };
+  var linkFromAttributes = {
+    href: encodeURI(link + 'f=' + title),
+    target: '_blank'
+  };
+  
+  var main = goog.dom.createDom('div', 'munimap-title', 
+              goog.dom.createTextNode(title));
+  var linkToEl = goog.dom.createDom('a', linkToAttributes,
+      goog.dom.createTextNode(
+      munimap.lang.getMsg(munimap.lang.Translations.CONNECTION_TO)));
+  var linkFromEl = goog.dom.createDom('a', linkFromAttributes,
+      goog.dom.createTextNode(
+      munimap.lang.getMsg(munimap.lang.Translations.CONNECTION_FROM)));
+  var linkEl = goog.dom.createDom('div', null, goog.dom.createTextNode(
+      munimap.lang.getMsg(munimap.lang.Translations.FIND_CONNECTION) + ': '));
+  
+  var mainText = goog.dom.getOuterHtml(main);
+  var linkToElText = goog.dom.getOuterHtml(linkToEl);
+  var linkFromElText = goog.dom.getOuterHtml(linkFromEl);
+  var linkElText = linkEl.innerHTML;
 
-  munimap.pubtran.stop.info.show(feature, map);
+  var detail =  mainText + '<div>' + linkElText + linkToElText + ' / ' + 
+                linkFromElText + '</div>';
+
+  munimap.bubble.show(feature, map, detail, 0, munimap.pubtran.stop.RESOLUTION);
 };
 
 

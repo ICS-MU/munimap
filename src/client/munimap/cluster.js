@@ -228,7 +228,8 @@ munimap.cluster.featureClickHandler = function(options) {
   if (clusteredFeatures.length === 1) {
     var detail = /** @type {string} */(firstFeature.get('detail'));
     if (detail) {
-      munimap.bubble.show(firstFeature, map, detail);
+      munimap.bubble.show(firstFeature, map, detail, 20, 
+        munimap.marker.RESOLUTION);
     }
     if (munimap.marker.custom.isCustom(firstFeature)) {
       var extent = munimap.extent.ofFeature(firstFeature);
