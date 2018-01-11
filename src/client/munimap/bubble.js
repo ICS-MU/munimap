@@ -3,10 +3,11 @@ goog.provide('munimap.bubble');
 
 /**
  * @param {ol.Map} map
+ * @param {munimap.Range} hideResolution
  *
  * @return {ol.Overlay}
  */
-munimap.bubble.create = function(map) {
+munimap.bubble.create = function(map, hideResolution) {
   var munimapEl = map.getTargetElement();
   var popupEl = goog.dom.createDom('div', 'ol-popup munimap-info' +
       ' munimap-info-bubble');
@@ -30,7 +31,7 @@ munimap.bubble.create = function(map) {
       var resolution = map.getView().getResolution();
       if (resolution) {
         var isVisible = munimap.range.contains(
-            munimap.marker.RESOLUTION, resolution);
+          hideResolution, resolution);
         if (!isVisible) {
           closePopup();
         }
@@ -54,12 +55,14 @@ munimap.bubble.create = function(map) {
 /**
  * @param {ol.Feature} feature
  * @param {ol.Map} map
- * * @param {string} detail
+ * @param {string} detail
+ * @param {number} offset
+ * @param {munimap.Range} hideResolution
  */
-munimap.bubble.show = function(feature, map, detail) {
+munimap.bubble.show = function(feature, map, detail, offset, hideResolution) {
   var popup = map.getOverlayById('genericPopup');
   if (!popup) {
-    popup = munimap.bubble.create(map);
+    popup = munimap.bubble.create(map, hideResolution);
   }
   var popupEl = popup.getElement();
   if (popupEl) {
@@ -71,7 +74,7 @@ munimap.bubble.show = function(feature, map, detail) {
 
     var popupSize = goog.style.getSize(popupEl);
     var x = -munimap.info.POPUP_TALE_INDENT;
-    var y = -(popupSize.height + munimap.info.POPUP_TALE_HEIGHT + 20);
+    var y = -(popupSize.height + munimap.info.POPUP_TALE_HEIGHT + offset);
     popup.setOffset([x, y]);
   }
 };
