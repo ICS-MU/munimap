@@ -4,24 +4,44 @@ goog.provide('munimap.bubble');
 /**
  * @param {ol.Map} map
  * @param {munimap.Range} hideResolution
- *
+ * @param {string} detail
+ * @param {number} offsetX
+ * @param {number} offsetY
+ * @param {Array<number>} center
+ * @param {boolean} autoPan
+ * 
  * @return {ol.Overlay}
  */
-munimap.bubble.create = function(map, hideResolution) {
+munimap.bubble.create = function(map, hideResolution, detail, offsetX, offsetY,
+  center, autoPan) {
   var munimapEl = map.getTargetElement();
   var popupEl = goog.dom.createDom('div', 'ol-popup munimap-info' +
-      ' munimap-info-bubble');
+    ' munimap-info-bubble');
   var contentEl = goog.dom.createDom('div', 'munimap-content');
   var closeButtonEl = goog.dom.createDom('div', 'munimap-close-button');
   goog.dom.appendChild(popupEl, closeButtonEl);
   goog.dom.appendChild(popupEl, contentEl);
   goog.dom.appendChild(munimapEl, popupEl);
+  contentEl.innerHTML = detail;
+
+  var popupSize = goog.style.getSize(popupEl);
+  var x = -munimap.info.POPUP_TALE_INDENT + offsetX;
+  var y = -(popupSize.height + munimap.info.POPUP_TALE_HEIGHT + offsetY);
 
   var popup = new ol.Overlay({
     id: 'genericPopup',
-    element: popupEl,
-    autoPan: false
+    element: popupEl
   });
+
+  popup.setPosition(center);
+  popup.setOffset([x, y]);
+
+  if (autoPan) {
+    var currentRes = map.getView().getResolution() || 1;
+    var constrainedResolution = map.getView().constrainResolution(currentRes, 
+      -2, -1) || 1;
+    munimap.map.zoomToPoint(map, center, constrainedResolution);
+  }
 
   // check if marker is visible after the zoom ends
   var ghostZoom = map.getView().getZoom();
@@ -56,27 +76,25 @@ munimap.bubble.create = function(map, hideResolution) {
  * @param {ol.Feature} feature
  * @param {ol.Map} map
  * @param {string} detail
- * @param {number} offset
- * @param {munimap.Range} hideResolution
+ * @param {number=} opt_offsetX
+ * @param {number=} opt_offsetY
+ * @param {munimap.Range=} opt_hideResolution
+ * @param {boolean=} opt_autoPan
  */
-munimap.bubble.show = function(feature, map, detail, offset, hideResolution) {
+munimap.bubble.show = function(feature, map, detail, opt_offsetX, opt_offsetY,
+  opt_hideResolution, opt_autoPan) {
+  var offsetX = opt_offsetX || 0;
+  var offsetY = opt_offsetY || 0;
+  var hideResolution = opt_hideResolution || munimap.marker.RESOLUTION;
+  var autoPan = opt_autoPan || false;
+
   var popup = map.getOverlayById('genericPopup');
-  if (!popup) {
-    popup = munimap.bubble.create(map, hideResolution);
+  var center = ol.extent.getCenter(feature.getGeometry().getExtent());
+  if (popup) {
+    map.removeOverlay(popup);
   }
-  var popupEl = popup.getElement();
-  if (popupEl) {
-    var contentEl = goog.dom.getElementByClass('munimap-content', popupEl);
-
-    goog.dom.removeChildren(contentEl);
-    contentEl.innerHTML = detail;
-    popup.setPosition(ol.extent.getCenter(feature.getGeometry().getExtent()));
-
-    var popupSize = goog.style.getSize(popupEl);
-    var x = -munimap.info.POPUP_TALE_INDENT;
-    var y = -(popupSize.height + munimap.info.POPUP_TALE_HEIGHT + offset);
-    popup.setOffset([x, y]);
-  }
+  popup = munimap.bubble.create(map, hideResolution, detail, offsetX, offsetY,
+    center, autoPan);
 };
 
 

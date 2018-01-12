@@ -164,7 +164,7 @@ munimap.pubtran.stop.featureClickHandler = function(options) {
     href: encodeURI(link + 'f=' + title),
     target: '_blank'
   };
-  
+
   var main = goog.dom.createDom('div', 'munimap-title', 
               goog.dom.createTextNode(title));
   var linkToEl = goog.dom.createDom('a', linkToAttributes,
@@ -183,8 +183,8 @@ munimap.pubtran.stop.featureClickHandler = function(options) {
 
   var detail =  mainText + '<div>' + linkElText + linkToElText + ' / ' + 
                 linkFromElText + '</div>';
-
-  munimap.bubble.show(feature, map, detail, 0, munimap.pubtran.stop.RESOLUTION);
+  munimap.bubble.show(feature, map, detail, 0, 0, 
+    munimap.pubtran.stop.RESOLUTION, true);
 };
 
 
