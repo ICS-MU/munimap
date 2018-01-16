@@ -1,12 +1,18 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg">
+<<<<<<< HEAD
 <metadata>Copyright (C) 2016 by original authors @ fontello.com</metadata>
+=======
+<metadata>Copyright (C) 2018 by original authors @ fontello.com</metadata>
+>>>>>>> e7b8f4c... geolocation icon added
 <defs>
 <font id="fontello" horiz-adv-x="1000" >
 <font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
 <missing-glyph horiz-adv-x="1000" />
 <glyph glyph-name="staircase" unicode="&#xe800;" d="M584 663l0-248-281 0 0-248-251 0 0-132 383 0 0 248 281 0 0 247 232 0 0 133-364 0z" horiz-adv-x="1000" />
+
+<glyph glyph-name="crosshairs" unicode="&#xe802;" d="M977 413h-60c-27 183-171 327-354 354v60c0 13-11 23-24 23h-78c-13 0-23-10-23-23v-60c-183-27-328-171-355-354h-60c-12 0-23-11-23-24v-78c0-13 11-23 23-23h60c27-183 172-328 355-355v-60c0-13 10-23 23-23h78c13 0 24 10 24 23v60c183 27 327 172 354 355h60c13 0 23 10 23 23v78c0 13-10 24-23 24z m-414-353v79c0 13-11 24-24 24h-78c-13 0-23-11-23-24v-79c-114 24-204 114-228 228h79c13 0 24 10 24 23v78c0 13-11 24-24 24h-79c24 113 114 203 228 227v-79c0-13 10-23 23-23h78c13 0 24 10 24 23v79c113-24 203-114 227-227h-79c-13 0-23-11-23-24v-78c0-13 10-23 23-23h79c-24-114-114-204-227-228z m0 290c0-34-28-62-63-62s-62 28-62 62c0 35 28 63 62 63s63-28 63-63z" horiz-adv-x="1000" />
 
 <glyph glyph-name="location" unicode="&#xf041;" d="M429 493q0 59-42 101t-101 42-101-42-42-101 42-101 101-42 101 42 42 101z m142 0q0-61-18-100l-203-432q-9-18-27-29t-37-11-38 11-26 29l-204 432q-18 39-18 100 0 118 84 202t202 84 202-84 83-202z" horiz-adv-x="571.4" />
 
