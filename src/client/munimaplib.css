@@ -158,6 +158,10 @@
   filter: grayscale(0%);
 }
 
+.ol-touch .munimap-link-item {
+  width: 30px;
+  height: 30px;
+}
 
 .ol-control button {
   background-color: #002776;
