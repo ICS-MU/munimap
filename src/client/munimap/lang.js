@@ -51,7 +51,8 @@ munimap.lang.Translations = {
   CREDIT_TOP_UP_MACHINE: 'credit-top-up-machine',
   RETAIL_LOCATION: 'retail-location',
   SEZNAM_MAP: 'SEZNAM_MAP',
-  GOOGLE_MAP: 'GOOGLE_MAP'
+  GOOGLE_MAP: 'GOOGLE_MAP',
+  FIND_ME: 'FIND_ME'
 };
 
 
@@ -104,7 +105,8 @@ munimap.lang.CS_TRANSLATIONS = {
   'credit-top-up-machine': 'bankovník',
   'retail-location': 'prodejní místo',
   'SEZNAM_MAP': 'Otevřít v Mapy.cz',
-  'GOOGLE_MAP': 'Otevřít v Mapy Google'
+  'GOOGLE_MAP': 'Otevřít v Mapy Google',
+  'FIND_ME': 'Moje poloha'
 };
 
 
@@ -158,7 +160,8 @@ munimap.lang.EN_TRANSLATIONS = {
   'credit-top-up-machine': 'credit top up machine',
   'retail-location': 'retail location',
   'SEZNAM_MAP': 'Open in Mapy.cz',
-  'GOOGLE_MAP': 'Open in Google map'
+  'GOOGLE_MAP': 'Open in Google map',
+  'FIND_ME': 'My location'
 };
 
 

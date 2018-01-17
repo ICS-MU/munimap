@@ -163,6 +163,32 @@
   height: 30px;
 }
 
+.munimap-geolocate {
+  position: absolute;
+  bottom: 45px;
+  right: calc(.5em + 1px);
+  margin-right: 2px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+.munimap-crosshairs {
+  font-family: 'MunimapFont';
+  font-size: 25px;
+  font-style: normal;
+  color: #002776;
+}
+
+.ol-touch .munimap-geolocate {
+  bottom: 55px;
+  right: calc(.5em + 2px);
+}
+
+.ol-touch .munimap-crosshairs {
+  font-size: 30px;
+}
+
 .ol-control button {
   background-color: #002776;
   line-height: 0;
