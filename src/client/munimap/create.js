@@ -516,7 +516,7 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
   } else {
     featuresLike.forEach(function(el) {
       if (!munimap.optpoi.isCtgUid(el)) {
-        arrPromises.push(new Promise(function(resolve, reject) {
+        arrPromises.push(new goog.Promise(function(resolve, reject) {
           if (el instanceof ol.Feature) {
             munimap.marker.custom.decorate(el);
             resolve(el);
@@ -572,7 +572,7 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
       }
     });
     return new goog.Promise(function(resolve, reject) {
-      Promise.all(arrPromises).then(function(values) {
+       goog.Promise.all(arrPromises).then(function(values) {
         // reduce array of arrays to 1 array
         values = values.reduce(function(a, b) {
           return a.concat(b);
