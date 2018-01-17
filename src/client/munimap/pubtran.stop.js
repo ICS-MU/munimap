@@ -154,7 +154,7 @@ munimap.pubtran.stop.featureClickHandler = function(options) {
   var feature = options.feature;
   var map = options.map;
   var title = /**@type {string}*/ (feature.get('nazev'));
-  
+
   var link = 'http://jizdnirady.idnes.cz/idsjmk/spojeni/?';
   var linkToAttributes = {
     href: encodeURI(link + 't=' + title),
@@ -165,8 +165,8 @@ munimap.pubtran.stop.featureClickHandler = function(options) {
     target: '_blank'
   };
 
-  var main = goog.dom.createDom('div', 'munimap-title', 
-              goog.dom.createTextNode(title));
+  var main = goog.dom.createDom('div', 'munimap-title',
+      goog.dom.createTextNode(title));
   var linkToEl = goog.dom.createDom('a', linkToAttributes,
       goog.dom.createTextNode(
       munimap.lang.getMsg(munimap.lang.Translations.CONNECTION_TO)));
@@ -175,16 +175,16 @@ munimap.pubtran.stop.featureClickHandler = function(options) {
       munimap.lang.getMsg(munimap.lang.Translations.CONNECTION_FROM)));
   var linkEl = goog.dom.createDom('div', null, goog.dom.createTextNode(
       munimap.lang.getMsg(munimap.lang.Translations.FIND_CONNECTION) + ': '));
-  
+
   var mainText = goog.dom.getOuterHtml(main);
   var linkToElText = goog.dom.getOuterHtml(linkToEl);
   var linkFromElText = goog.dom.getOuterHtml(linkFromEl);
   var linkElText = linkEl.innerHTML;
 
-  var detail =  mainText + '<div>' + linkElText + linkToElText + ' / ' + 
-                linkFromElText + '</div>';
-  munimap.bubble.show(feature, map, detail, 0, 0, 
-    munimap.pubtran.stop.RESOLUTION, true);
+  var detail = mainText + '<div>' + linkElText + linkToElText + ' / ' +
+      linkFromElText + '</div>';
+  munimap.bubble.show(feature, map, detail, 0, 0,
+      munimap.pubtran.stop.RESOLUTION, true);
 };
 
 
