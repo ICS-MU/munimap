@@ -107,8 +107,13 @@ munimap.lang.Translations = {
 =======
   RETAIL_LOCATION: 'retail-location',
   SEZNAM_MAP: 'SEZNAM_MAP',
+<<<<<<< HEAD
   GOOGLE_MAP: 'GOOGLE_MAP'
 >>>>>>> 5450bff... fix code style
+=======
+  GOOGLE_MAP: 'GOOGLE_MAP',
+  FIND_ME: 'FIND_ME'
+>>>>>>> f9478df... added geolocation control to the map
 };
 
 
@@ -223,8 +228,13 @@ munimap.lang.CS_TRANSLATIONS = {
 =======
   'retail-location': 'prodejní místo',
   'SEZNAM_MAP': 'Otevřít v Mapy.cz',
+<<<<<<< HEAD
   'GOOGLE_MAP': 'Otevřít v Mapy Google'
 >>>>>>> 5450bff... fix code style
+=======
+  'GOOGLE_MAP': 'Otevřít v Mapy Google',
+  'FIND_ME': 'Moje poloha'
+>>>>>>> f9478df... added geolocation control to the map
 };
 
 
@@ -341,8 +351,13 @@ munimap.lang.EN_TRANSLATIONS = {
 =======
   'retail-location': 'retail location',
   'SEZNAM_MAP': 'Open in Mapy.cz',
+<<<<<<< HEAD
   'GOOGLE_MAP': 'Open in Google map'
 >>>>>>> 5450bff... fix code style
+=======
+  'GOOGLE_MAP': 'Open in Google map',
+  'FIND_ME': 'My location'
+>>>>>>> f9478df... added geolocation control to the map
 };
 
 
