@@ -83,9 +83,16 @@ munimap.create = function(options) {
       var target = options.target;
       var markers = options.markers;
       var view = options.view;
-      munimap.matomo.sendEvent('mapLinks', String(options.mapLinks));
-      munimap.matomo.sendEvent('pubTran', String(options.pubTran));
-      munimap.matomo.sendEvent('baseMap', String(options.baseMap));
+      if (String(options.mapLinks) !== 'undefined') {
+        munimap.matomo.sendEvent('mapLinks', String(options.mapLinks));
+      }
+      if (String(options.pubTran) !== 'undefined') {
+        munimap.matomo.sendEvent('pubTran', String(options.pubTran));
+      }
+      if (String(options.baseMap) !== 'osm-bw') {
+        munimap.matomo.sendEvent('baseMap', String(options.baseMap));
+      }
+
       munimap.matomo.checkCustomMarker(options.markers);
       var osmAttribution = new ol.Attribution({
         html:
