@@ -1,13 +1,13 @@
 goog.provide('munimaplib');
 
 goog.require('munimap.create');
-goog.require('munimap.ga');
+goog.require('munimap.matomo');
 goog.require('munimap.reset');
 goog.require('oltypedefs');
 goog.require('polyfill.es6');
 
 
-munimap.ga.init();
+munimap.matomo.init();
 
 
 goog.exportSymbol('munimap.create', munimap.create);
