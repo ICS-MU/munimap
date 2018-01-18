@@ -44,7 +44,4 @@ munimap.matomo.checkCustomMarker = function(markers) {
   }))) {
     munimap.matomo.sendEvent('customMarker','true');
   }
-  else {
-    munimap.matomo.sendEvent('customMarker','false');
-  }
 };
