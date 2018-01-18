@@ -18,7 +18,6 @@ goog.require('munimap.complex.style');
 goog.require('munimap.door');
 goog.require('munimap.extent');
 goog.require('munimap.floor');
-goog.require('munimap.ga');
 goog.require('munimap.geolocate');
 goog.require('munimap.getDefaultLayers');
 goog.require('munimap.info');
@@ -26,6 +25,7 @@ goog.require('munimap.lang');
 goog.require('munimap.layer.propName');
 goog.require('munimap.mapLinks');
 goog.require('munimap.marker');
+goog.require('munimap.matomo');
 goog.require('munimap.optpoi');
 goog.require('munimap.poi');
 goog.require('munimap.poi.style');
@@ -45,11 +45,7 @@ goog.require('munimap.style');
 munimap.create = function(options) {
   var createKeys = goog.object.getKeys(options);
   createKeys.sort();
-  munimap.ga.sendEvent(
-      'map',
-      'create',
-      createKeys.join(',')
-  );
+  munimap.matomo.sendEvent('map', 'create');
 
   munimap.create.assertOptions(options);
   munimap.lang.active = options.lang || munimap.lang.Abbr.CZECH;
@@ -94,17 +90,20 @@ munimap.create = function(options) {
       var target = options.target;
       var markers = options.markers;
       var view = options.view;
-
+      munimap.matomo.sendEvent('mapLinks', String(options.mapLinks));
+      munimap.matomo.sendEvent('pubTran', String(options.pubTran));
+      munimap.matomo.sendEvent('baseMap', String(options.baseMap));
+      munimap.matomo.checkCustomMarker(options.markers);
       var osmAttribution = new ol.Attribution({
         html:
-            munimap.lang.getMsg(munimap.lang.Translations.OSM_ATTRIBUTION_HTML)
+          munimap.lang.getMsg(munimap.lang.Translations.OSM_ATTRIBUTION_HTML)
       });
       var muAttribution = new ol.Attribution({
         html: munimap.lang.getMsg(munimap.lang.Translations.MU_ATTRIBUTION_HTML)
       });
       var munimapAttribution = new ol.Attribution({
         html: munimap.lang.getMsg(
-            munimap.lang.Translations.MUNIMAP_ATTRIBUTION_HTML)
+          munimap.lang.Translations.MUNIMAP_ATTRIBUTION_HTML)
       });
       var muAttributions = [munimapAttribution, muAttribution];
 
@@ -130,9 +129,9 @@ munimap.create = function(options) {
         //set opacity of the layer according to current resolution
         var resolution = evt.frameState.viewState.resolution;
         var resColor = munimap.style.RESOLUTION_COLOR.find(
-            function(obj, i, arr) {
-              return resolution > obj.resolution || i === (arr.length - 1);
-            });
+          function(obj, i, arr) {
+            return resolution > obj.resolution || i === (arr.length - 1);
+          });
         raster.setOpacity(resColor.opacity);
       });
       if (options.baseMap === munimap.BaseMaps.OSM_BW && !goog.userAgent.IE) {
@@ -166,14 +165,14 @@ munimap.create = function(options) {
         controls: ol.control.defaults({
           attributionOptions: {
             tipLabel:
-                munimap.lang.getMsg(munimap.lang.Translations.ATTRIBUTIONS)
+              munimap.lang.getMsg(munimap.lang.Translations.ATTRIBUTIONS)
           },
           rotate: false,
           zoomOptions: {
             zoomInTipLabel:
-                munimap.lang.getMsg(munimap.lang.Translations.ZOOM_IN),
+              munimap.lang.getMsg(munimap.lang.Translations.ZOOM_IN),
             zoomOutTipLabel:
-                munimap.lang.getMsg(munimap.lang.Translations.ZOOM_OUT)
+              munimap.lang.getMsg(munimap.lang.Translations.ZOOM_OUT)
           }
         }),
         layers: [
@@ -195,19 +194,7 @@ munimap.create = function(options) {
         markerLabel: options.markerLabel
       };
 
-      var markerLayer = new ol.layer.Vector({
-        id: munimap.marker.LAYER_ID,
-        isFeatureClickable: munimap.marker.isClickable,
-        featureClickHandler: munimap.marker.featureClickHandler,
-        redrawOnFloorChange: true,
-        source: markerSource,
-        style: goog.partial(munimap.marker.style.function, markerOptions),
-        maxResolution: munimap.marker.RESOLUTION.max,
-        updateWhileAnimating: true,
-        updateWhileInteracting: false,
-        renderOrder: null
-      });
-
+      var markerLayerResolution = munimap.marker.RESOLUTION.max
       var clusterResolution = munimap.cluster.BUILDING_RESOLUTION;
       if (markers.length && (markers.some(function(el) {
         return munimap.room.isRoom(el);
@@ -217,6 +204,20 @@ munimap.create = function(options) {
       )) {
         clusterResolution = munimap.cluster.ROOM_RESOLUTION;
       }
+
+      var markerLayer = new ol.layer.Vector({
+        id: munimap.marker.LAYER_ID,
+        isFeatureClickable: munimap.marker.isClickable,
+        featureClickHandler: munimap.marker.featureClickHandler,
+        redrawOnFloorChange: true,
+        source: markerSource,
+        style: goog.partial(munimap.marker.style.function, markerOptions),
+        maxResolution: clusterResolution.min,
+        updateWhileAnimating: true,
+        updateWhileInteracting: false,
+        renderOrder: null
+      });
+
       var clusterFeatures = markers.concat();
       var markerClusterSrc = new ol.source.Cluster({
         attributions: muAttributions,
@@ -242,13 +243,12 @@ munimap.create = function(options) {
         featureClickHandler: munimap.cluster.featureClickHandler,
         source: markerClusterSrc,
         style: goog.partial(
-            munimap.cluster.style.function, markerOptions),
+          munimap.cluster.style.function, markerOptions),
         minResolution: clusterResolution.min,
         renderOrder: null/*,
         updateWhileAnimating: true,
         updateWhileInteracting: true*/
       });
-
       var floorSelect = new goog.ui.Select();
       floorSelect.render(floorEl);
       goog.events.listen(floorSelect, 'action', function() {
@@ -268,7 +268,7 @@ munimap.create = function(options) {
         selectedFloor: null,
         currentResolution: goog.asserts.assertNumber(view.getResolution()),
         getMainFeatureAtPixel: options.getMainFeatureAtPixel ||
-            munimap.getMainFeatureAtPixel,
+          munimap.getMainFeatureAtPixel,
         locationCodes: options.locationCodes
       };
       map.set(munimap.PROPS_NAME, mapProps);
@@ -289,7 +289,7 @@ munimap.create = function(options) {
       if (options.pubTran) {
         var pubTranAttribution = new ol.Attribution({
           html: munimap.lang.getMsg(
-              munimap.lang.Translations.PUBTRAN_ATTRIBUTION_HTML)
+            munimap.lang.Translations.PUBTRAN_ATTRIBUTION_HTML)
         });
         var pubTranLayer = munimap.pubtran.stop.layer.create();
         var pubTranSource = pubTranLayer.getSource();
@@ -299,9 +299,18 @@ munimap.create = function(options) {
       if (options.mapLinks) {
         map.addControl(munimap.mapLinks.create(map));
       }
+<<<<<<< HEAD
       map.addControl(munimap.geolocate.create(map));
 
 >>>>>>> 57b81cb... Allow custom markers and
+=======
+      if (window.location.protocol === 'https:' || jpad.DEV) {
+        map.addControl(munimap.geolocate.create(map));
+      }
+      else {
+        munimap.matomo.sendEvent('geolocation', 'http_hidden');
+      }
+>>>>>>> e23660e... added matomo
       map.addLayer(markerClusterLayer);
       map.addLayer(markerLayer);
 
@@ -317,7 +326,7 @@ munimap.create = function(options) {
         if (layeredFeature) {
           var layer = layeredFeature.layer;
           var isClickable =
-              layer.get(munimap.layer.propName.IS_CLICKABLE);
+            layer.get(munimap.layer.propName.IS_CLICKABLE);
           if (isClickable) {
             goog.asserts.assertFunction(isClickable);
             var handlerOpts = {
@@ -358,11 +367,11 @@ munimap.create = function(options) {
 
         var oldRes = /**@type {number}*/(evt.oldValue);
         if (munimap.range.contains(munimap.floor.RESOLUTION, oldRes) &&
-            !munimap.range.contains(munimap.floor.RESOLUTION, res)) {
+          !munimap.range.contains(munimap.floor.RESOLUTION, res)) {
           munimap.info.refreshVisibility(map);
           munimap.style.refreshAllFromFragments(map);
         } else if (!munimap.range.contains(munimap.floor.RESOLUTION, oldRes) &&
-            munimap.range.contains(munimap.floor.RESOLUTION, res)) {
+          munimap.range.contains(munimap.floor.RESOLUTION, res)) {
           munimap.style.refreshAllFromFragments(map);
         }
       });
@@ -381,9 +390,9 @@ munimap.create = function(options) {
 munimap.create.assertOptions = function(options) {
   munimap.assert.target(options.target);
   assert(options.zoom === undefined || options.zoomTo === undefined,
-      'Zoom and zoomTo options can\'t be defined together.');
+    'Zoom and zoomTo options can\'t be defined together.');
   assert(options.center === undefined || options.zoomTo === undefined,
-      'Center and zoomTo options can\'t be defined together.');
+    'Center and zoomTo options can\'t be defined together.');
   munimap.assert.zoom(options.zoom);
   munimap.assert.zoomTo(options.zoomTo);
   munimap.assert.getMainFeatureAtPixel(options.getMainFeatureAtPixel);
@@ -412,10 +421,10 @@ munimap.create.assertOptions = function(options) {
 munimap.create.calculateView = function(options, markers, zoomTos) {
   var target = goog.dom.getElement(options.target);
   var center = ol.proj.transform(
-      options.center || [16.605390495656977, 49.1986567194723],
-      ol.proj.get('EPSG:4326'),
-      ol.proj.get('EPSG:3857')
-      );
+    options.center || [16.605390495656977, 49.1986567194723],
+    ol.proj.get('EPSG:4326'),
+    ol.proj.get('EPSG:3857')
+  );
   var zoom = options.zoom === undefined ? 13 : options.zoom;
   var view = new ol.View({
     center: center,
@@ -434,8 +443,8 @@ munimap.create.calculateView = function(options, markers, zoomTos) {
       if (munimap.marker.custom.isCustom(zoomTos[0])) {
         if (view.getResolution() < munimap.floor.RESOLUTION.max) {
           res = view.constrainResolution(
-              munimap.floor.RESOLUTION.max, undefined, 1
-              );
+            munimap.floor.RESOLUTION.max, undefined, 1
+          );
           view.setResolution(res);
         }
       }
@@ -533,8 +542,8 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
   var features = /** @type {goog.Thenable<Array<ol.Feature>>} */ ([]);
   if (!goog.isArray(featuresLike)) {
     result = /** @type {goog.Thenable<Array<ol.Feature>>} */(
-        goog.Promise.resolve([])
-        );
+      goog.Promise.resolve([])
+    );
     return result;
   } else {
     featuresLike.forEach(function(el) {
@@ -601,8 +610,8 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
           return a.concat(b);
         }, []);
         result = /** @type {goog.Thenable<Array<ol.Feature>>} */(
-            goog.Promise.resolve(values)
-            );
+          goog.Promise.resolve(values)
+        );
         resolve(result);
       });
     });
@@ -625,16 +634,16 @@ munimap.create.addPoiDetail = function(features, details) {
         if (munimap.lang.active === 'cs') {
           name = detail.get('nazev_cs');
           open = goog.isDefAndNotNull(detail.get(
-              'provozniDoba_cs')) ? detail.get(
+            'provozniDoba_cs')) ? detail.get(
               'provozniDoba_cs') : '';
         }
         else if (munimap.lang.active === 'en') {
           name = goog.isDefAndNotNull(detail.get(
-              'nazev_en')) ? detail.get(
+            'nazev_en')) ? detail.get(
               'nazev_en') : detail.get(
-              'nazev_cs');
+                'nazev_cs');
           open = goog.isDefAndNotNull(detail.get(
-              'provozniDoba_en')) ? detail.get(
+            'provozniDoba_en')) ? detail.get(
               'provozniDoba_en') : '';
 
         }

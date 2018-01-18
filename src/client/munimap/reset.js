@@ -22,11 +22,7 @@ munimap.reset = function(map, options) {
 
   var resetKeys = goog.object.getKeys(options);
   resetKeys.sort();
-  munimap.ga.sendEvent(
-      'map',
-      'reset',
-      resetKeys.join(',')
-  );
+  munimap.matomo.sendEvent('map', 'reset');
 
   munimap.reset.assertOptions(options);
 
