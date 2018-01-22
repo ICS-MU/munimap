@@ -50,10 +50,10 @@ munimap.mapLinks.part = function(part, map) {
 munimap.mapLinks.click = function(part, map) {
   var z = map.getView().getZoom().toString();
   var center = ol.proj.transform(
-    map.getView().getCenter() || null,
-    ol.proj.get('EPSG:3857'),
-    ol.proj.get('EPSG:4326')
-  );
+      map.getView().getCenter() || null,
+      ol.proj.get('EPSG:3857'),
+      ol.proj.get('EPSG:4326')
+      );
   var x = center[1].toString();
   var y = center[0].toString();
   if (part === './seznam.png') {
@@ -63,7 +63,7 @@ munimap.mapLinks.click = function(part, map) {
   else {
     munimap.matomo.sendEvent('mapLinks', 'maps.google.com');
     window.open('http://www.google.com/maps/@' + x + ',' + y + ',' +
-      z + 'z');
+        z + 'z');
   }
 };
 
