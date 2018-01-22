@@ -201,7 +201,6 @@ munimap.create = function(options) {
         markerLabel: options.markerLabel
       };
 
-      var markerLayerResolution = munimap.marker.RESOLUTION.max
       var clusterResolution = munimap.cluster.BUILDING_RESOLUTION;
       if (markers.length && (markers.some(function(el) {
         return munimap.room.isRoom(el);
