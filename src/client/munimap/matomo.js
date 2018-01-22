@@ -4,17 +4,16 @@ goog.require('goog.net.XhrIo');
 goog.require('munimap.marker');
 
 
-
 /**
  * @public
  */
 munimap.matomo.init = function() {
-  var matomo = 'https://analytics.dis.ics.muni.cz/piwik/piwik.php?idsite=4' + 
-  '&rec=1&action_name=library / loaded&url=' + window.location.href +
-  '&rand=' + String(Math.random()).slice(2, 8) + '&urlref=' + 
-  window.document.referrer + '&res=' + 
-  String(window.screen.width) + 'x' + String(window.screen.height) + 
-  '&send_image=0';
+  var matomo = 'https://analytics.dis.ics.muni.cz/piwik/piwik.php?idsite=4' +
+      '&rec=1&action_name=library / loaded&url=' + window.location.href +
+      '&rand=' + String(Math.random()).slice(2, 8) + '&urlref=' +
+      window.document.referrer + '&res=' +
+      String(window.screen.width) + 'x' + String(window.screen.height) +
+      '&send_image=0';
   goog.net.XhrIo.send(encodeURI(matomo));
 };
 
@@ -24,13 +23,13 @@ munimap.matomo.init = function() {
  * @param {string} action
  */
 munimap.matomo.sendEvent = function(category, action) {
-  var matomo = 'https://analytics.dis.ics.muni.cz/piwik/piwik.php?idsite=4' + 
-  '&rec=1&action_name=' + category + ' / ' + action + '&url=' + 
-  window.location.href +
-  '&rand=' + String(Math.random()).slice(2, 8) + '&urlref=' + 
-  window.document.referrer + '&res=' + 
-  String(window.screen.width) + 'x' + String(window.screen.height) + 
-  '&e_c=' + category + '&e_a=' + action + '&send_image=0';
+  var matomo = 'https://analytics.dis.ics.muni.cz/piwik/piwik.php?idsite=4' +
+      '&rec=1&action_name=' + category + ' / ' + action + '&url=' +
+      window.location.href +
+      '&rand=' + String(Math.random()).slice(2, 8) + '&urlref=' +
+      window.document.referrer + '&res=' +
+      String(window.screen.width) + 'x' + String(window.screen.height) +
+      '&e_c=' + category + '&e_a=' + action + '&send_image=0';
   goog.net.XhrIo.send(encodeURI(matomo));
 };
 
@@ -40,8 +39,8 @@ munimap.matomo.sendEvent = function(category, action) {
  */
 munimap.matomo.checkCustomMarker = function(markers) {
   if (markers.length && (markers.some(function(el) {
-    return munimap.marker.custom.isCustom(el)
+    return munimap.marker.custom.isCustom(el);
   }))) {
-    munimap.matomo.sendEvent('customMarker','true');
+    munimap.matomo.sendEvent('customMarker', 'true');
   }
 };
