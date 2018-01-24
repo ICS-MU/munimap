@@ -25,34 +25,34 @@ munimap.geolocate.create = function(map) {
   main.addEventListener('click', function() {
     munimap.matomo.sendEvent('geolocation', 'click');
     if (!geolocation.getTracking()) {
-            geolocation.setTracking(true);
-            geolocation.once('change', function() {
+      geolocation.setTracking(true);
+      geolocation.once('change', function() {
         munimap.geolocate.animation(map, geolocation);
-            });
+      });
     }
     else {
-            munimap.geolocate.animation(map, geolocation);
+      munimap.geolocate.animation(map, geolocation);
     }
   });
 
   var positionFeature = new ol.Feature();
   positionFeature.setStyle(new ol.style.Style({
     image: new ol.style.Circle({
-            radius: 6,
-            fill: new ol.style.Fill({
+      radius: 6,
+      fill: new ol.style.Fill({
         color: '#002776'
-            }),
-            stroke: new ol.style.Stroke({
+      }),
+      stroke: new ol.style.Stroke({
         color: 'rgba(0,39,118,0.25)',
         width: 30
-            })
+      })
     })
   }));
 
   geolocation.on('change:position', function() {
     var coordinates = geolocation.getPosition();
     positionFeature.setGeometry(coordinates ?
-            new ol.geom.Point(coordinates) : null);
+      new ol.geom.Point(coordinates) : null);
   });
 
   var source = new ol.source.Vector({
@@ -73,9 +73,21 @@ munimap.geolocate.create = function(map) {
  */
 munimap.geolocate.animation = function(map, geolocation) {
   var center = geolocation.getPosition() || null;
-  var currentRes = map.getView().getResolution() || 1;
-  // without constrainedResolution zoomToPoint zoom by 1
-  var constrainedResolution = map.getView()
-      .constrainResolution(currentRes, -2, -1) || 1;
-  munimap.map.zoomToPoint(map, center, constrainedResolution);
+  var duration = 2000;
+  //var duration = munimap.move.getAnimationDuration(ext1, ext2);
+  var start = +new Date();
+  var pan = ol.animation.pan({
+    duration: duration,
+    source: /** @type {ol.Coordinate} */ (map.getView().getCenter()),
+    start: start,
+    easing: null
+  });
+  var bounce = ol.animation.bounce({
+    duration: duration,
+    resolution: 3 * map.getView().getResolution(),
+    start: start,
+    easing: null
+  });
+  map.beforeRender(pan, bounce);
+  map.getView().setCenter(center);
 }
