@@ -1,6 +1,5 @@
 var through = require('through2');
-var gutil = require('gulp-util');
-var PluginError = gutil.PluginError;
+var PluginError = require('plugin-error');
 var StringDecoder = require('string_decoder').StringDecoder;
 var jpad = require('./jpad.js');
 var path = require("path");
