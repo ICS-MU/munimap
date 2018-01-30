@@ -74,7 +74,6 @@ munimap.geolocate.create = function(map) {
 munimap.geolocate.animation = function(map, geolocation) {
   var center = geolocation.getPosition() || null;
   var duration = 2000;
-  //var duration = munimap.move.getAnimationDuration(ext1, ext2);
   var start = +new Date();
   var pan = ol.animation.pan({
     duration: duration,
