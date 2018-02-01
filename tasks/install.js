@@ -48,22 +48,7 @@ module.exports = function (gulp, plugins) {
 
   });
 
-  gulp.task('install:create-ol-ext', function (cb) {
-    
-    var exec = require('child_process').exec;
- 
-    var cmd = 'node bower_components/ol3/tasks/build-ext.js';
-    
-    exec(cmd, function (err, stdout, stderr) {
-      //console.log(stdout);
-      //console.log(stderr);
-      cb(err);
-    });
-
-  });
-
-
-  gulp.task('install', ['install:linter', 'install:create-ol-ext']);
+  gulp.task('install', ['install:linter']);
 
 };
 

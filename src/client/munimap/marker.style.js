@@ -135,7 +135,8 @@ munimap.marker.style.PIN_TEXT = new ol.style.Text({
   font: 'normal ' + munimap.style.PIN_SIZE + 'px MunimapFont',
   fill: munimap.marker.style.TEXT_FILL,
   offsetY: - munimap.style.PIN_SIZE / 2,
-  stroke: munimap.style.TEXT_STROKE
+  stroke: munimap.style.TEXT_STROKE,
+  overflow: true
 });
 
 

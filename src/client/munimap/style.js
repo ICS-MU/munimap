@@ -321,7 +321,8 @@ munimap.style.getTextStyleWithOffsetY = function(options) {
         fill: options.fill,
         offsetY: munimap.style.getLabelHeight(title, fontSize) / 2 + 2,
         stroke: munimap.style.TEXT_STROKE,
-        text: title
+        text: title,
+        overflow: true
       }),
       zIndex: options.zIndex || 4
     });

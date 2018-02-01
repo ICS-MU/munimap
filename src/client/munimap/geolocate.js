@@ -73,21 +73,53 @@ munimap.geolocate.create = function(map) {
  */
 munimap.geolocate.animation = function(map, geolocation) {
   var center = geolocation.getPosition() || null;
-  var duration = 2000;
-  //var duration = munimap.move.getAnimationDuration(ext1, ext2);
-  var start = +new Date();
-  var pan = ol.animation.pan({
-    duration: duration,
-    source: /** @type {ol.Coordinate} */ (map.getView().getCenter()),
-    start: start,
-    easing: null
-  });
-  var bounce = ol.animation.bounce({
-    duration: duration,
-    resolution: 3 * map.getView().getResolution(),
-    start: start,
-    easing: null
-  });
-  map.beforeRender(pan, bounce);
-  map.getView().setCenter(center);
+  var view = map.getView();
+  var currExt = view.calculateExtent(map.getSize());
+  var res = view.getResolution();
+  var buffExt = ol.extent.buffer(currExt, res * 100, currExt);
+  var extent = ol.extent.boundingExtent([center, view.getCenter()]);
+  var targetExtent = ol.extent.boundingExtent([center]);
+  var duration = munimap.move.getAnimationDuration(currExt, targetExtent);
+  var resolution = view.getResolutionForExtent(extent);
+  var zoom = view.getZoomForResolution(resolution);
+    if(ol.extent.intersects(buffExt, targetExtent)) {
+      view.animate({
+        center: center,
+        duration: duration,
+        zoom: 18
+      });
+    }
+    else {
+      if(zoom >= 18) {
+        zoom = 17.5
+      }
+      view.animate({
+        center: center,
+        duration: duration
+      });
+      view.animate({
+        zoom: zoom,
+        duration: duration / 2
+      }, {
+        zoom: 18,
+        duration: duration / 2
+      });
+    }
+}
+
+/**
+ * @param {Array.<number>} firstPoint
+ * @param {Array.<number>} secondPoint
+ * @return {number} distance in meters
+ */
+munimap.geolocate.getDistance = function (firstPoint, secondPoint) {
+  var projection = 'EPSG:4326';
+  var length = 0;
+  var sourceProj = 'EPSG:3857';
+  var c1 = ol.proj.transform(firstPoint, sourceProj, projection);
+  var c2 = ol.proj.transform(secondPoint, sourceProj, projection);
+
+  var wgs84Sphere = new ol.Sphere(6378137);
+  length += wgs84Sphere.haversineDistance(c1, c2);
+  return length;
 }
