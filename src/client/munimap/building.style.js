@@ -293,7 +293,8 @@ munimap.building.style.largeScaleLabelFunction =
           font: 'bold ' + munimap.building.style.BIG_FONT_SIZE + 'px arial',
           fill: munimap.style.TEXT_FILL,
           stroke: munimap.style.TEXT_STROKE,
-          text: title
+          text: title,
+          overflow: true
         }),
         zIndex: 4
       });
@@ -334,7 +335,8 @@ munimap.building.style.defaultLabelFunction =
       font: 'bold ' + munimap.building.style.FONT_SIZE + 'px arial',
       fill: munimap.style.TEXT_FILL,
       stroke: munimap.style.TEXT_STROKE,
-      text: title
+      text: title,
+      overflow: true
     }),
     zIndex: 4
   });

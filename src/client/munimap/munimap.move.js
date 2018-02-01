@@ -1,33 +1,9 @@
 goog.provide('munimap.move');
 
-
-/**
- * @param {ol.Map} map
- * @param {ol.Extent} ext1
- * @param {ol.Extent} ext2
- */
-munimap.move.setAnimation = function(map, ext1, ext2) {
-  var view = map.getView();
-  var duration = munimap.move.getAnimationDuration(ext1, ext2);
-  var pan = ol.animation.pan({
-    duration: duration,
-    source: /** @type {ol.Coordinate} */ (view.getCenter()),
-    easing: null
-  });
-  var zoom = ol.animation.zoom({
-    duration: duration,
-    resolution: /** @type {number} */ (view.getResolution()),
-    easing: null
-  });
-  map.beforeRender(pan, zoom);
-};
-
-
 /**
  * @param {ol.Extent} ext1
  * @param {ol.Extent} ext2
  * @return {number}
- * @protected
  */
 munimap.move.getAnimationDuration = function(ext1, ext2) {
   var area1 = ol.extent.getArea(ext1);

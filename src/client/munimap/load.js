@@ -415,7 +415,8 @@ munimap.load.featuresFromUrl = function(options) {
             });
           });
           var newLoadedFeatures = format.readFeatures(json, {
-            featureProjection: projection
+            featureProjection: projection,
+            extent: null
           });
           newLoadedFeatures.forEach(function(feature) {
             feature.set(munimap.type.NAME, options.type);

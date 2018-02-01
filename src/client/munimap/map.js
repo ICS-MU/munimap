@@ -14,8 +14,11 @@ munimap.map.zoomToPoint = function(map, point, resolution) {
   var constrainedResolution = view.constrainResolution(resolution, 1, 1);
   goog.asserts.assertNumber(constrainedResolution);
   var futureExtent = ol.extent.getForViewAndSize(point,
-      constrainedResolution, view.getRotation(), size);
-  munimap.move.setAnimation(map, viewExtent, futureExtent);
-  view.setCenter(point);
-  view.setResolution(constrainedResolution);
+    constrainedResolution, view.getRotation(), size);
+  var duration = munimap.move.getAnimationDuration(viewExtent, futureExtent);
+  view.animate({
+    center: point,
+    duration: duration,
+    resolution: constrainedResolution
+  });
 };

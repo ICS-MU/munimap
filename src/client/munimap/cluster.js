@@ -257,13 +257,17 @@ munimap.cluster.featureClickHandler = function(options) {
       if (ol.extent.containsExtent(bldgExtent, extent)) {
         extent = bldgExtent;
       }
-      munimap.move.setAnimation(map, viewExtent, extent);
-      view.fit(extent, size);
+      var duration = munimap.move.getAnimationDuration(viewExtent, extent);
+      view.fit(extent, {
+        duration: duration
+      });
     } else {
       var extent = munimap.extent.ofFeatures(clusteredFeatures);
       goog.asserts.assertArray(size);
-      munimap.move.setAnimation(map, viewExtent, extent);
-      view.fit(extent, size);
+      var duration = munimap.move.getAnimationDuration(viewExtent, extent);
+      view.fit(extent, {
+        duration: duration
+      });
     }
     map.renderSync();
   }
@@ -516,7 +520,8 @@ munimap.cluster.style.multipleLabelFunction =
         fill: fill,
         offsetY: offsetY,
         stroke: munimap.style.TEXT_STROKE,
-        text: title
+        text: title,
+        overflow: true
       }),
       zIndex: marked ? 7 : 4
     });
