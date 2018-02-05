@@ -120,7 +120,7 @@ munimap.marker.featureClickHandler = function(options) {
   var pixel = options.pixel;
   var resolution = options.resolution;
   var resolutionRange = (munimap.door.isDoor(feature)) ?
-      munimap.door.RESOLUTION : munimap.floor.RESOLUTION;
+    munimap.door.RESOLUTION : munimap.floor.RESOLUTION;
   var isVisible = munimap.range.contains(resolutionRange, resolution);
 
   if (!isVisible) {
@@ -207,7 +207,7 @@ munimap.marker.custom.isSuitable = function(feature) {
  */
 munimap.marker.custom.assertSuitable = function(feature) {
   return assert(munimap.marker.custom.isSuitable(feature),
-      'Custom marker represented by ol.Feature must have ol.Point geometry ' +
+    'Custom marker represented by ol.Feature must have ol.Point geometry ' +
       'with appropriate longitude (-180;180) and latitude (-90, 90).');
 };
 

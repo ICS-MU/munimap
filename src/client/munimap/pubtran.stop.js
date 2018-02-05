@@ -27,17 +27,17 @@ munimap.pubtran.stop.CLUSTER_RESOLUTION =
  */
 munimap.pubtran.stop.STORE = new ol.source.Vector({
   loader: goog.partial(
-      munimap.pubtran.stop.featuresForMap,
-      {
-        type: function() {
-          return munimap.pubtran.stop.TYPE;
-        }
+    munimap.pubtran.stop.featuresForMap,
+    {
+      type: function() {
+        return munimap.pubtran.stop.TYPE;
       }
+    }
   ),
   strategy: /** @type {ol.LoadingStrategy} */(
-      ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-        tileSize: 512
-      }))
+    ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+      tileSize: 512
+    }))
   )
 });
 
@@ -104,7 +104,7 @@ munimap.pubtran.stop.STYLE = [
  */
 munimap.pubtran.stop.styleFunction = function(feature, resolution) {
   var inClusterRes = munimap.range.contains(
-      munimap.pubtran.stop.CLUSTER_RESOLUTION, resolution);
+    munimap.pubtran.stop.CLUSTER_RESOLUTION, resolution);
   if (inClusterRes) {
     var oznacnik = feature.get('oznacnik');
     if (oznacnik === '01') {
@@ -166,15 +166,15 @@ munimap.pubtran.stop.featureClickHandler = function(options) {
   };
 
   var main = goog.dom.createDom('div', 'munimap-title',
-      goog.dom.createTextNode(title));
+    goog.dom.createTextNode(title));
   var linkToEl = goog.dom.createDom('a', linkToAttributes,
-      goog.dom.createTextNode(
+    goog.dom.createTextNode(
       munimap.lang.getMsg(munimap.lang.Translations.CONNECTION_TO)));
   var linkFromEl = goog.dom.createDom('a', linkFromAttributes,
-      goog.dom.createTextNode(
+    goog.dom.createTextNode(
       munimap.lang.getMsg(munimap.lang.Translations.CONNECTION_FROM)));
   var linkEl = goog.dom.createDom('div', null, goog.dom.createTextNode(
-      munimap.lang.getMsg(munimap.lang.Translations.FIND_CONNECTION) + ': '));
+    munimap.lang.getMsg(munimap.lang.Translations.FIND_CONNECTION) + ': '));
 
   var mainText = goog.dom.getOuterHtml(main);
   var linkToElText = goog.dom.getOuterHtml(linkToEl);
@@ -184,7 +184,7 @@ munimap.pubtran.stop.featureClickHandler = function(options) {
   var detail = mainText + '<div>' + linkElText + linkToElText + ' / ' +
       linkFromElText + '</div>';
   munimap.bubble.show(feature, map, detail, 0, 0,
-      munimap.pubtran.stop.RESOLUTION, true);
+    munimap.pubtran.stop.RESOLUTION, true);
 };
 
 
@@ -199,8 +199,8 @@ munimap.pubtran.stop.featureClickHandler = function(options) {
  */
 munimap.pubtran.stop.featuresForMap =
     function(options, extent, resolution, projection) {
-  return munimap.load.featuresForMap(options, extent, resolution, projection).
-      then(function(stops) {
-        return goog.Promise.resolve(stops);
-      });
-};
+      return munimap.load.featuresForMap(options, extent, resolution, projection).
+        then(function(stops) {
+          return goog.Promise.resolve(stops);
+        });
+    };

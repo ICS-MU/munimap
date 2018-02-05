@@ -56,18 +56,18 @@ munimap.building.UNITS_FIELD_NAME = 'pracoviste';
  */
 munimap.building.STORE = new ol.source.Vector({
   loader: goog.partial(
-      munimap.building.featuresForMap,
-      {
-        type: function() {
-          return munimap.building.TYPE;
-        },
-        processor: munimap.building.load.processor
-      }
+    munimap.building.featuresForMap,
+    {
+      type: function() {
+        return munimap.building.TYPE;
+      },
+      processor: munimap.building.load.processor
+    }
   ),
   strategy: /** @type {ol.LoadingStrategy} */(
-      ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-        tileSize: 512
-      })))
+    ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+      tileSize: 512
+    })))
 });
 
 
@@ -82,20 +82,20 @@ munimap.building.STORE = new ol.source.Vector({
  */
 munimap.building.featuresForMap =
     function(options, extent, resolution, projection) {
-  return munimap.load.featuresForMap(options, extent, resolution, projection).
-      then(function(buildings) {
-        if (buildings.length) {
-          munimap.LIST.forEach(function(map) {
-            var view = map.getView();
-            var res = view ? view.getResolution() : null;
-            if (res) {
-              munimap.cluster.updateClusteredFeatures(map, res);
-            }
-          });
-        }
-        return goog.Promise.resolve(buildings);
-      });
-};
+      return munimap.load.featuresForMap(options, extent, resolution, projection).
+        then(function(buildings) {
+          if (buildings.length) {
+            munimap.LIST.forEach(function(map) {
+              var view = map.getView();
+              var res = view ? view.getResolution() : null;
+              if (res) {
+                munimap.cluster.updateClusteredFeatures(map, res);
+              }
+            });
+          }
+          return goog.Promise.resolve(buildings);
+        });
+    };
 
 
 /**
@@ -130,7 +130,7 @@ munimap.building.LABEL_LAYER_ID = 'building-label';
  */
 munimap.building.assertCode = function(code) {
   assert(!!munimap.building.isCode(code),
-      'Location code of building should consist of 3 letters and 2 digits.');
+    'Location code of building should consist of 3 letters and 2 digits.');
 };
 
 
@@ -178,7 +178,7 @@ munimap.building.isCodeOrLikeExpr = function(maybeCodeOrLikeExpr) {
  */
 munimap.building.assertCodeOrLikeExpr = function(code) {
   assert(!!code.match(munimap.building.LIKE_EXPR_REGEX),
-      'Location code of building should consist of 3 letters and 2 digits. ' +
+    'Location code of building should consist of 3 letters and 2 digits. ' +
       'Any of these characters might be replaced with _ wildcard.');
 };
 
@@ -343,21 +343,21 @@ munimap.building.refreshSelected = function(map) {
         var maxArea;
         var format = new ol.format.GeoJSON();
         munimap.building.STORE.forEachFeatureIntersectingExtent(refExt,
-            function(building) {
-              if (munimap.building.hasInnerGeometry(building)) {
-                var intersect = munimap.geom.featureExtentIntersect(
+          function(building) {
+            if (munimap.building.hasInnerGeometry(building)) {
+              var intersect = munimap.geom.featureExtentIntersect(
                 building, refExt, format);
-                var geom = intersect.getGeometry();
-                if (geom instanceof ol.geom.Polygon ||
+              var geom = intersect.getGeometry();
+              if (geom instanceof ol.geom.Polygon ||
                 geom instanceof ol.geom.MultiPolygon) {
-                  var area = geom.getArea();
-                  if (!goog.isDef(maxArea) || area > maxArea) {
-                    maxArea = area;
-                    selectFeature = building;
-                  }
+                var area = geom.getArea();
+                if (!goog.isDef(maxArea) || area > maxArea) {
+                  maxArea = area;
+                  selectFeature = building;
                 }
               }
-            });
+            }
+          });
         munimap.changeFloor(map, selectFeature || null);
       } else {
         munimap.changeFloor(map, null);
@@ -377,7 +377,7 @@ munimap.building.refreshSelected = function(map) {
 munimap.building.getTitleWithoutOrgUnit = function(building, opt_separator) {
   var result;
   var title = /**@type {string}*/ (building.get(munimap.lang.getMsg(
-      munimap.lang.Translations.BUILDING_TITLE_FIELD_NAME)));
+    munimap.lang.Translations.BUILDING_TITLE_FIELD_NAME)));
   result = title.split(', ');
   result.shift();
   result.reverse();
@@ -432,11 +432,11 @@ munimap.building.getAddressPart = function(feature, resolution) {
   var titleParts = [];
   if (goog.isDefAndNotNull(munimap.building.getComplex(feature))) {
     var bldgAbbr = feature.get(munimap.lang.getMsg(
-        munimap.lang.Translations.BUILDING_ABBR_FIELD_NAME));
+      munimap.lang.Translations.BUILDING_ABBR_FIELD_NAME));
     if (goog.isDefAndNotNull(bldgAbbr)) {
       if (munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
         var bldgType = feature.get(munimap.lang.getMsg(
-            munimap.lang.Translations.BUILDING_TYPE_FIELD_NAME));
+          munimap.lang.Translations.BUILDING_TYPE_FIELD_NAME));
         if (goog.isDefAndNotNull(bldgType)) {
           goog.asserts.assertString(bldgAbbr);
           goog.asserts.assertString(bldgType);
@@ -563,16 +563,16 @@ munimap.building.load.complexUnitsProcessor = function(options) {
 
   if (complexIdsToLoad.length) {
     return munimap.unit.loadByHeadquartersComplexIds(complexIdsToLoad)
-        .then(function(units) {
-          newComplexes.forEach(function(complex) {
-            var complexUnits = units.filter(function(unit) {
-              return unit.get('areal_sidelni_id') ===
+      .then(function(units) {
+        newComplexes.forEach(function(complex) {
+          var complexUnits = units.filter(function(unit) {
+            return unit.get('areal_sidelni_id') ===
                  complex.get(munimap.complex.ID_FIELD_NAME);
-            });
-            complex.set(munimap.complex.UNITS_FIELD_NAME, complexUnits);
           });
-          return goog.Promise.resolve(options);
+          complex.set(munimap.complex.UNITS_FIELD_NAME, complexUnits);
         });
+        return goog.Promise.resolve(options);
+      });
   } else {
     return goog.Promise.resolve(options);
   }
@@ -592,16 +592,16 @@ munimap.building.load.unitsProcessor = function(options) {
 
   if (buildingIdsToLoad.length) {
     return munimap.unit.loadByHeadquartersIds(buildingIdsToLoad)
-        .then(function(units) {
-          //console.log('loaded units', units);
-          newBuildings.forEach(function(building) {
-            var buildingUnits = units.filter(function(unit) {
-              return unit.get('budova_sidelni_id') === building.get('inetId');
-            });
-            building.set(munimap.building.UNITS_FIELD_NAME, buildingUnits);
+      .then(function(units) {
+        //console.log('loaded units', units);
+        newBuildings.forEach(function(building) {
+          var buildingUnits = units.filter(function(unit) {
+            return unit.get('budova_sidelni_id') === building.get('inetId');
           });
-          return goog.Promise.resolve(options);
+          building.set(munimap.building.UNITS_FIELD_NAME, buildingUnits);
         });
+        return goog.Promise.resolve(options);
+      });
   } else {
     //    console.log('all complexIds already loaded');
     return goog.Promise.resolve(options);

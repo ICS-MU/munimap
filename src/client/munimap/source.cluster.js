@@ -16,10 +16,10 @@ munimap.source.Cluster.compareFn = function(map, f1, f2) {
   var result = m2 - m1;
   if (!result) {
     var n1 = f1.get(munimap.lang.getMsg(
-        munimap.lang.Translations.BUILDING_TITLE_FIELD_NAME)) ||
+      munimap.lang.Translations.BUILDING_TITLE_FIELD_NAME)) ||
         f1.get('polohKod') || f1.get('label') || '';
     var n2 = f2.get(munimap.lang.getMsg(
-        munimap.lang.Translations.BUILDING_TITLE_FIELD_NAME)) ||
+      munimap.lang.Translations.BUILDING_TITLE_FIELD_NAME)) ||
         f2.get('polohKod') || f2.get('label') || '';
     result = n1.localeCompare(n2);
   }

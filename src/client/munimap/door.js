@@ -64,11 +64,11 @@ munimap.door.ACTIVE_LAYER_ID = 'active-door';
  */
 munimap.door.createActiveStore = function(map) {
   return new ol.source.Vector({
-    loader: goog.partial(munimap.door.loadActive, { map: map }),
+    loader: goog.partial(munimap.door.loadActive, {map: map}),
     strategy: /** @type {ol.LoadingStrategy} */(
-        ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-          tileSize: 512
-        })))
+      ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+        tileSize: 512
+      })))
   });
 };
 
@@ -170,15 +170,15 @@ munimap.door.loadActive = function(options, extent, resolution, projection) {
       method: 'POST'
     };
     munimap.load.featuresForMap(opts, extent, resolution, projection).then(
-        function(doors) {
-          var activeLayer = munimap.door.getActiveLayer(options.map);
-          var activeStore = activeLayer.getSource();
-          var doorsFromActiveFloor = goog.array.filter(doors,
-              goog.partial(munimap.door.isInActiveFloor, options.map));
-          var doorsToAdd = munimap.store.getNotYetAddedFeatures(
-              activeStore, doorsFromActiveFloor);
-          activeStore.addFeatures(doorsToAdd);
-        });
+      function(doors) {
+        var activeLayer = munimap.door.getActiveLayer(options.map);
+        var activeStore = activeLayer.getSource();
+        var doorsFromActiveFloor = goog.array.filter(doors,
+          goog.partial(munimap.door.isInActiveFloor, options.map));
+        var doorsToAdd = munimap.store.getNotYetAddedFeatures(
+          activeStore, doorsFromActiveFloor);
+        activeStore.addFeatures(doorsToAdd);
+      });
   }
 };
 

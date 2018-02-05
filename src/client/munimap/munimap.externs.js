@@ -2,4 +2,3 @@
  * @type {Object}
  */
 var munimapx;
-

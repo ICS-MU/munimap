@@ -221,14 +221,14 @@ munimap.poi.style.TOILET_W = [
  */
 munimap.poi.style.activeFloorFilter =
     function(feature, selectedFloorCode, activeFloorCodes) {
-  var locCode = /**@type {string}*/ (feature.get('polohKodPodlazi'));
-  if (locCode) {
-    return activeFloorCodes.some(function(floor) {
-      return locCode === floor;
-    });
-  }
-  return false;
-};
+      var locCode = /**@type {string}*/ (feature.get('polohKodPodlazi'));
+      if (locCode) {
+        return activeFloorCodes.some(function(floor) {
+          return locCode === floor;
+        });
+      }
+      return false;
+    };
 
 
 /**
@@ -241,21 +241,21 @@ munimap.poi.style.activeFloorFilter =
  */
 munimap.poi.style.defaultFloorFilter =
     function(feature, selectedFloorCode, activeFloorCodes) {
-  var poiType = feature.get('typ');
-  var entranceTypes = [
-    munimap.poi.Purpose.BUILDING_ENTRANCE,
-    munimap.poi.Purpose.BUILDING_COMPLEX_ENTRANCE
-  ];
-  if (goog.array.contains(entranceTypes, poiType)) {
-    var defaultFloor =
+      var poiType = feature.get('typ');
+      var entranceTypes = [
+        munimap.poi.Purpose.BUILDING_ENTRANCE,
+        munimap.poi.Purpose.BUILDING_COMPLEX_ENTRANCE
+      ];
+      if (goog.array.contains(entranceTypes, poiType)) {
+        var defaultFloor =
         goog.asserts.assertNumber(feature.get('vychoziPodlazi'));
-    var locCode = /**@type {string}*/ (feature.get('polohKodPodlazi'));
-    return defaultFloor === 1 && activeFloorCodes.every(function(floor) {
-      return !locCode.startsWith(floor.substr(0, 5));
-    });
-  }
-  return false;
-};
+        var locCode = /**@type {string}*/ (feature.get('polohKodPodlazi'));
+        return defaultFloor === 1 && activeFloorCodes.every(function(floor) {
+          return !locCode.startsWith(floor.substr(0, 5));
+        });
+      }
+      return false;
+    };
 
 
 /**
@@ -268,14 +268,14 @@ munimap.poi.style.defaultFloorFilter =
  */
 munimap.poi.style.outdoorFilter =
     function(feature, selectedFloorCode, activeFloorCodes) {
-  var entranceTypes = [
-    munimap.poi.Purpose.BUILDING_ENTRANCE,
-    munimap.poi.Purpose.BUILDING_COMPLEX_ENTRANCE,
-    munimap.poi.Purpose.COMPLEX_ENTRANCE
-  ];
-  var poiType = feature.get('typ');
-  return goog.array.contains(entranceTypes, poiType);
-};
+      var entranceTypes = [
+        munimap.poi.Purpose.BUILDING_ENTRANCE,
+        munimap.poi.Purpose.BUILDING_COMPLEX_ENTRANCE,
+        munimap.poi.Purpose.COMPLEX_ENTRANCE
+      ];
+      var poiType = feature.get('typ');
+      return goog.array.contains(entranceTypes, poiType);
+    };
 
 
 /**
@@ -290,7 +290,7 @@ munimap.poi.style.activeFloorFunction = function(options, feature, resolution) {
   var result = munimap.poi.STYLE;
   var poiType = feature.get('typ');
   var showInfo = munimap.range.contains(
-      munimap.poi.style.Resolution.INFORMATION, resolution);
+    munimap.poi.style.Resolution.INFORMATION, resolution);
   var showToilets =
       munimap.range.contains(munimap.poi.style.Resolution.TOILET, resolution);
   var showStairs =
@@ -344,7 +344,7 @@ munimap.poi.style.outdoorFunction = function(options, feature, resolution) {
         !munimap.range.contains(munimap.floor.RESOLUTION, resolution);
     if (poiType === munimap.poi.Purpose.BUILDING_ENTRANCE) {
       showBuildingEntrance = showBuildingEntrance && munimap.range.contains(
-          munimap.poi.style.Resolution.BUILDING_ENTRANCE, resolution);
+        munimap.poi.style.Resolution.BUILDING_ENTRANCE, resolution);
     }
     result = showBuildingEntrance ? munimap.poi.style.ENTRANCE : null;
   }

@@ -38,8 +38,7 @@ munimap.extent.ofFeatures = function(features) {
           ext = geom.getExtent();
         }
       }
-    }
-    else {
+    } else {
       ext = feature.getExtent();
     }
     if (ext) {
