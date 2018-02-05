@@ -9,6 +9,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 .munimap-info-bubble {
   left: auto;
@@ -30,6 +31,12 @@
 >>>>>>> 451c7e9... added info bubble for custom markers & POI, fixed tutorials,
 =======
 >>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
+=======
+
+.ol-viewport {
+  font-size: 16px;
+}
+>>>>>>> eadf31d... removed webfont loader changes
 .ol-popup {
   border-radius: 6px;
   bottom: auto;
@@ -223,6 +230,10 @@
 .ol-control button:focus {
   background-color: #003190;
   cursor: pointer;
+}
+
+.ol-attribution {
+  z-index: 5;
 }
 .ol-attribution li {
   display: inline-block;
