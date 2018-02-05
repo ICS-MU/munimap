@@ -26,16 +26,16 @@ munimap.load.MUNIMAP_URL =
 /**
 =======
 munimap.load.MUNIMAP_URL = (jpad.DEV) ?
-    'http://kleopatra.ics.muni.cz/arcgis/rest/services/munimap/MapServer/' :
-    '//maps.muni.cz/arcgis/rest/services/munimap/MapServer/';
+  'http://kleopatra.ics.muni.cz/arcgis/rest/services/munimap/MapServer/' :
+  '//maps.muni.cz/arcgis/rest/services/munimap/MapServer/';
 
 
 /**
  * @type {string}
  */
 munimap.load.MUNIMAP_PUBTRAN_URL = (jpad.DEV) ?
-    'http://kleopatra.ics.muni.cz/arcgis/rest/services/munimap_mhd/MapServer/' :
-    '//maps.muni.cz/arcgis/rest/services/munimap_mhd/MapServer/';
+  'http://kleopatra.ics.muni.cz/arcgis/rest/services/munimap_mhd/MapServer/' :
+  '//maps.muni.cz/arcgis/rest/services/munimap_mhd/MapServer/';
 
 
 /**
@@ -79,8 +79,9 @@ munimap.load.featuresByCode = function(options) {
         '\'';
     parts.push(likePart);
   }
+  var where;
   if (parts.length) {
-    var where = parts.join(' OR ');
+    where = parts.join(' OR ');
   } else {
     where = '1=1';
   }
@@ -185,40 +186,40 @@ munimap.load.doorsByCode.Options;
  */
 munimap.load.featuresForMap =
     function(options, extent, resolution, projection) {
-  var type = goog.isFunction(options.type) ? options.type() : options.type;
-  var url = type.serviceUrl + type.layerId + '/query?';
-  var params = {
-    'f': 'json',
-    'returnGeometry': 'true',
-    'spatialRel': 'esriSpatialRelIntersects',
-    'geometry': '{"xmin":' + extent[0] + ',"ymin":' +
+      var type = goog.isFunction(options.type) ? options.type() : options.type;
+      var url = type.serviceUrl + type.layerId + '/query?';
+      var params = {
+        'f': 'json',
+        'returnGeometry': 'true',
+        'spatialRel': 'esriSpatialRelIntersects',
+        'geometry': '{"xmin":' + extent[0] + ',"ymin":' +
         extent[1] + ',"xmax":' + extent[2] + ',"ymax":' + extent[3] +
         ',"spatialReference":{"wkid":3857}}',
-    'geometryType': 'esriGeometryEnvelope',
-    'inSR': '3857',
-    'outFields': '*',
-    'outSR': '3857',
-    //'geometryPrecision': 2,
-    'where': options.where || '1=1'
-  };
-  var qdata = goog.Uri.QueryData.createFromMap(params);
-  var isPost = options.method === 'POST';
-  if (!isPost) {
-    url += qdata.toString();
-  }
+        'geometryType': 'esriGeometryEnvelope',
+        'inSR': '3857',
+        'outFields': '*',
+        'outSR': '3857',
+        //'geometryPrecision': 2,
+        'where': options.where || '1=1'
+      };
+      var qdata = goog.Uri.QueryData.createFromMap(params);
+      var isPost = options.method === 'POST';
+      if (!isPost) {
+        url += qdata.toString();
+      }
 
-  return munimap.load.featuresFromUrl({
-    source: type.store,
-    type: type,
-    url: url,
-    projection: projection,
-    method: options.method,
-    postContent: isPost ? qdata.toString() : undefined,
-    processor: options.processor,
-    newProcessedFeatures:
+      return munimap.load.featuresFromUrl({
+        source: type.store,
+        type: type,
+        url: url,
+        projection: projection,
+        method: options.method,
+        postContent: isPost ? qdata.toString() : undefined,
+        processor: options.processor,
+        newProcessedFeatures:
         munimap.load.ProcessorCache.getNewProcessedFeatures(type)
-  });
-};
+      });
+    };
 
 
 /**
@@ -241,9 +242,9 @@ munimap.load.features = function(options) {
   var type = options.type;
   var url = type.serviceUrl + type.layerId + '/query?';
   goog.asserts.assert(!options.where || options.where.indexOf('"') < 0,
-      'Use single quotes instead of double quotes.');
+    'Use single quotes instead of double quotes.');
   var returnGeom = goog.isDef(options.returnGeometry) ?
-      options.returnGeometry : true;
+    options.returnGeometry : true;
   var params = {
     'f': 'json',
     'returnGeometry': returnGeom.toString(),
@@ -295,9 +296,11 @@ munimap.load.featuresFromParam = function(paramValue) {
   return new goog.Promise(function(resolve, reject) {
     if (paramValue && paramValue.length) {
       var firstParamValue = paramValue[0];
+      var codes;
+      var likeExprs;
       if (munimap.building.isCodeOrLikeExpr(firstParamValue)) {
-        var codes = paramValue.filter(munimap.building.isCode);
-        var likeExprs = paramValue.filter(munimap.building.isLikeExpr);
+        codes = paramValue.filter(munimap.building.isCode);
+        likeExprs = paramValue.filter(munimap.building.isLikeExpr);
         munimap.load.buildingsByCode({
           codes: codes,
           likeExprs: likeExprs
@@ -306,12 +309,12 @@ munimap.load.featuresFromParam = function(paramValue) {
           munimap.door.isCodeOrLikeExpr(firstParamValue)) {
         var codeFilterFunction =
             (munimap.room.isCodeOrLikeExpr(firstParamValue)) ?
-            munimap.room.isCode : munimap.door.isCode;
+              munimap.room.isCode : munimap.door.isCode;
         var likeExprFilterFunction =
             (munimap.room.isCodeOrLikeExpr(firstParamValue)) ?
-            munimap.room.isLikeExpr : munimap.door.isLikeExpr;
-        var codes = paramValue.filter(codeFilterFunction);
-        var likeExprs = paramValue.filter(likeExprFilterFunction);
+              munimap.room.isLikeExpr : munimap.door.isLikeExpr;
+        codes = paramValue.filter(codeFilterFunction);
+        likeExprs = paramValue.filter(likeExprFilterFunction);
         var buildingCodes = codes.map(function(code) {
           return code.substr(0, 5);
         });
@@ -331,7 +334,7 @@ munimap.load.featuresFromParam = function(paramValue) {
           likeExprs: buildingLikeExprs
         }).then(function(buildings) {
           var loadFunction = (munimap.room.isCodeOrLikeExpr(firstParamValue)) ?
-              munimap.load.roomsByCode : munimap.load.doorsByCode;
+            munimap.load.roomsByCode : munimap.load.doorsByCode;
           return loadFunction({
             codes: codes,
             likeExprs: likeExprs
@@ -343,7 +346,7 @@ munimap.load.featuresFromParam = function(paramValue) {
                 var bldgGeom = building.getGeometry();
                 if (goog.isDef(bldgGeom)) {
                   feature.setGeometry(
-                      munimap.geom.getGeometryCenter(bldgGeom, true));
+                    munimap.geom.getGeometryCenter(bldgGeom, true));
                 }
               }
             });
@@ -380,71 +383,71 @@ munimap.load.featuresFromUrl = function(options) {
 
   return new goog.Promise(function(resolve, reject) {
     xhrMgr.send('load_features' + ' ' + munimap.load.xhrCounter, url, method,
-        options.postContent, undefined, undefined,
-        function(evt) {
-          goog.asserts.assertInstanceof(evt, goog.events.Event);
-          goog.asserts.assert(evt.type === 'complete');
-          var xhrio = evt.target;
-          goog.asserts.assertInstanceof(xhrio, goog.net.XhrIo);
-          var json = xhrio.getResponseJson();
-          goog.asserts.assert(!!json);
-          //console.log(json);
-          // dataProjection will be read from document
-          var allStoredFeatures = source.getFeatures();
-          var loadedStoredFeatures = [];
-          json.features = json.features.filter(function(fObject) {
-            var pkValue = fObject.attributes[primaryKey];
-            return !allStoredFeatures.find(function(feature) {
-              var equals = feature.get(primaryKey) === pkValue;
-              if (equals) {
-                loadedStoredFeatures.push(feature);
-              }
-              return equals;
-            });
-          });
-          var allNewProcessedFeatures = options.newProcessedFeatures || [];
-          var loadedNewProcessedFeatures = [];
-          json.features = json.features.filter(function(fObject) {
-            var pkValue = fObject.attributes[primaryKey];
-            return !allNewProcessedFeatures.find(function(feature) {
-              var equals = feature.get(primaryKey) === pkValue;
-              if (equals) {
-                loadedNewProcessedFeatures.push(feature);
-              }
-              return equals;
-            });
-          });
-          var newLoadedFeatures = format.readFeatures(json, {
-            featureProjection: projection,
-            extent: null
-          });
-          newLoadedFeatures.forEach(function(feature) {
-            feature.set(munimap.type.NAME, options.type);
-          });
-          goog.array.extend(allNewProcessedFeatures, newLoadedFeatures);
-          munimap.load.waitForNewProcessedFeatures({
-            source: source,
-            loadedNewProcessedFeatures: loadedNewProcessedFeatures
-          }).then(function() {
-            var allLoadedFeatures =
-            newLoadedFeatures.concat(loadedStoredFeatures,
-            loadedNewProcessedFeatures);
-            var processor = options.processor ||
-            munimap.load.defaultProcessor;
-            var procOpts = {
-              all: allLoadedFeatures,
-              new: newLoadedFeatures,
-              existing: loadedStoredFeatures.concat(loadedNewProcessedFeatures)
-            };
-            return processor(procOpts);
-          }).then(function(procOptions) {
-            goog.array.removeAllIf(allNewProcessedFeatures, function(f) {
-              return goog.array.contains(newLoadedFeatures, f);
-            });
-            source.addFeatures(procOptions.new);
-            resolve(procOptions.all);
+      options.postContent, undefined, undefined,
+      function(evt) {
+        goog.asserts.assertInstanceof(evt, goog.events.Event);
+        goog.asserts.assert(evt.type === 'complete');
+        var xhrio = evt.target;
+        goog.asserts.assertInstanceof(xhrio, goog.net.XhrIo);
+        var json = xhrio.getResponseJson();
+        goog.asserts.assert(!!json);
+        //console.log(json);
+        // dataProjection will be read from document
+        var allStoredFeatures = source.getFeatures();
+        var loadedStoredFeatures = [];
+        json.features = json.features.filter(function(fObject) {
+          var pkValue = fObject.attributes[primaryKey];
+          return !allStoredFeatures.find(function(feature) {
+            var equals = feature.get(primaryKey) === pkValue;
+            if (equals) {
+              loadedStoredFeatures.push(feature);
+            }
+            return equals;
           });
         });
+        var allNewProcessedFeatures = options.newProcessedFeatures || [];
+        var loadedNewProcessedFeatures = [];
+        json.features = json.features.filter(function(fObject) {
+          var pkValue = fObject.attributes[primaryKey];
+          return !allNewProcessedFeatures.find(function(feature) {
+            var equals = feature.get(primaryKey) === pkValue;
+            if (equals) {
+              loadedNewProcessedFeatures.push(feature);
+            }
+            return equals;
+          });
+        });
+        var newLoadedFeatures = format.readFeatures(json, {
+          featureProjection: projection,
+          extent: null
+        });
+        newLoadedFeatures.forEach(function(feature) {
+          feature.set(munimap.type.NAME, options.type);
+        });
+        goog.array.extend(allNewProcessedFeatures, newLoadedFeatures);
+        munimap.load.waitForNewProcessedFeatures({
+          source: source,
+          loadedNewProcessedFeatures: loadedNewProcessedFeatures
+        }).then(function() {
+          var allLoadedFeatures =
+            newLoadedFeatures.concat(loadedStoredFeatures,
+              loadedNewProcessedFeatures);
+          var processor = options.processor ||
+            munimap.load.defaultProcessor;
+          var procOpts = {
+            all: allLoadedFeatures,
+            new: newLoadedFeatures,
+            existing: loadedStoredFeatures.concat(loadedNewProcessedFeatures)
+          };
+          return processor(procOpts);
+        }).then(function(procOptions) {
+          goog.array.removeAllIf(allNewProcessedFeatures, function(f) {
+            return goog.array.contains(newLoadedFeatures, f);
+          });
+          source.addFeatures(procOptions.new);
+          resolve(procOptions.all);
+        });
+      });
   });
 
 };

@@ -13,7 +13,7 @@ goog.provide('munimap.bubble');
  * @return {ol.Overlay}
  */
 munimap.bubble.create = function(map, hideResolution, detail, offsetX, offsetY,
-    center, autoPan) {
+  center, autoPan) {
   var munimapEl = map.getTargetElement();
   var popupEl = goog.dom.createDom('div', 'ol-popup munimap-info' +
       ' munimap-info-bubble');
@@ -39,9 +39,15 @@ munimap.bubble.create = function(map, hideResolution, detail, offsetX, offsetY,
   if (autoPan) {
     var currentRes = map.getView().getResolution() || 1;
     var constrainedResolution = map.getView().constrainResolution(currentRes,
-        -2, -1) || 1;
+      -2, -1) || 1;
     munimap.map.zoomToPoint(map, center, constrainedResolution);
   }
+
+  var closePopup = function() {
+    map.un('moveend', checkResolution);
+    map.removeOverlay(popup);
+    return false;
+  };
 
   // check if marker is visible after the zoom ends
   var ghostZoom = map.getView().getZoom();
@@ -51,18 +57,12 @@ munimap.bubble.create = function(map, hideResolution, detail, offsetX, offsetY,
       var resolution = map.getView().getResolution();
       if (resolution) {
         var isVisible = munimap.range.contains(
-            hideResolution, resolution);
+          hideResolution, resolution);
         if (!isVisible) {
           closePopup();
         }
       }
     }
-  };
-
-  var closePopup = function() {
-    map.un('moveend', checkResolution);
-    map.removeOverlay(popup);
-    return false;
   };
 
   closeButtonEl.onclick = closePopup;
@@ -82,7 +82,7 @@ munimap.bubble.create = function(map, hideResolution, detail, offsetX, offsetY,
  * @param {boolean=} opt_autoPan
  */
 munimap.bubble.show = function(feature, map, detail, opt_offsetX, opt_offsetY,
-    opt_hideResolution, opt_autoPan) {
+  opt_hideResolution, opt_autoPan) {
   var offsetX = opt_offsetX || 0;
   var offsetY = opt_offsetY || 0;
   var hideResolution = opt_hideResolution || munimap.marker.RESOLUTION;
@@ -94,7 +94,7 @@ munimap.bubble.show = function(feature, map, detail, opt_offsetX, opt_offsetY,
     map.removeOverlay(popup);
   }
   popup = munimap.bubble.create(map, hideResolution, detail, offsetX, offsetY,
-      center, autoPan);
+    center, autoPan);
 };
 
 

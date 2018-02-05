@@ -134,7 +134,7 @@ munimap.marker.style.PIN_TEXT = new ol.style.Text({
   text: '\uf041',
   font: 'normal ' + munimap.style.PIN_SIZE + 'px MunimapFont',
   fill: munimap.marker.style.TEXT_FILL,
-  offsetY: - munimap.style.PIN_SIZE / 2,
+  offsetY: -munimap.style.PIN_SIZE / 2,
   stroke: munimap.style.TEXT_STROKE,
   overflow: true
 });
@@ -158,8 +158,8 @@ munimap.marker.style.createPinFromGeometry = function(geometry) {
  * @const
  */
 munimap.marker.style.PIN = munimap.marker.style.createPinFromGeometry(
-    munimap.geom.CENTER_GEOMETRY_FUNCTION
-    );
+  munimap.geom.CENTER_GEOMETRY_FUNCTION
+);
 
 
 /**
@@ -183,19 +183,19 @@ munimap.marker.style.function = function(options, feature, resolution) {
   if (isRoom || isDoor) {
     var locCode = /**@type {string}*/ (feature.get('polohKod'));
     var inActiveFloor = munimap.floor.getActiveFloors(options.map).some(
-        function(floorCode) {
-          return locCode.startsWith(floorCode);
-        }
-        );
+      function(floorCode) {
+        return locCode.startsWith(floorCode);
+      }
+    );
     var hasPointGeom = feature.getGeometry() instanceof ol.geom.Point;
     if (munimap.range.contains(munimap.floor.RESOLUTION, resolution) &&
         !inActiveFloor && !(hasPointGeom)) {
       return null;
     } else if (isRoom) {
       var markedRoomResolution = munimap.range.createResolution(
-          munimap.floor.RESOLUTION.max,
-          munimap.cluster.ROOM_RESOLUTION.min
-          );
+        munimap.floor.RESOLUTION.max,
+        munimap.cluster.ROOM_RESOLUTION.min
+      );
       if (munimap.range.contains(markedRoomResolution, resolution) ||
           hasPointGeom) {
         result.push(munimap.marker.style.ROOM);
@@ -205,7 +205,7 @@ munimap.marker.style.function = function(options, feature, resolution) {
     }
   }
   if (!(isRoom || isDoor) || !munimap.range.contains(
-      munimap.cluster.ROOM_RESOLUTION, resolution)) {
+    munimap.cluster.ROOM_RESOLUTION, resolution)) {
     var textStyle =
         munimap.marker.style.labelFunction(options, feature, resolution);
     if (goog.isDefAndNotNull(textStyle)) {
@@ -245,16 +245,16 @@ munimap.marker.style.labelFunction = function(options, feature, resolution) {
   if (!goog.isDefAndNotNull(title) && !isDoor) {
     var showLocationCodes = munimap.getProps(options.map).locationCodes;
     title = (showLocationCodes) ?
-        /**@type {string}*/ (feature.get('polohKod')) :
-        munimap.style.getDefaultLabel(feature, resolution);
+      /**@type {string}*/ (feature.get('polohKod')) :
+      munimap.style.getDefaultLabel(feature, resolution);
   }
 
   var markers = options.markerSource.getFeatures();
   var isMarked = goog.array.contains(markers, feature);
 
   var fill = isMarked ?
-      munimap.marker.style.TEXT_FILL :
-      munimap.style.TEXT_FILL;
+    munimap.marker.style.TEXT_FILL :
+    munimap.style.TEXT_FILL;
 
   var fontSize;
   if (isRoom || isDoor) {
@@ -267,10 +267,10 @@ munimap.marker.style.labelFunction = function(options, feature, resolution) {
   }
 
   var intersectFunction = goog.partial(
-      munimap.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, options.map);
+    munimap.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, options.map);
   var geometry = isBuilding ?
-      intersectFunction :
-      munimap.geom.CENTER_GEOMETRY_FUNCTION;
+    intersectFunction :
+    munimap.geom.CENTER_GEOMETRY_FUNCTION;
 
   var opts = {
     fill: fill,
@@ -287,8 +287,8 @@ munimap.marker.style.labelFunction = function(options, feature, resolution) {
       styleArray.push(textStyle);
     }
     var pin = isMarked ?
-        munimap.marker.style.PIN :
-        munimap.style.PIN;
+      munimap.marker.style.PIN :
+      munimap.style.PIN;
     styleArray.push(pin);
   }
   return styleArray;

@@ -70,7 +70,7 @@ munimap.assert.getMainFeatureAtPixel = function(fce) {
 munimap.assert.layers = function(layers) {
   if (layers !== undefined) {
     assert(goog.isArray(layers),
-        'Layers should be an array of ol.layer.Vector objects.');
+      'Layers should be an array of ol.layer.Vector objects.');
 
     var onlyLayers = layers.every(function(layer) {
       return layer instanceof ol.layer.Vector;
@@ -86,10 +86,10 @@ munimap.assert.layers = function(layers) {
 munimap.assert.target = function(target) {
   if (goog.isString(target)) {
     assert.element(goog.dom.getElement(target),
-        'Target element "' + target + '" not found in document.');
+      'Target element "' + target + '" not found in document.');
   } else {
     assert(document.body.contains(target),
-        'Target element is not in document.');
+      'Target element is not in document.');
   }
 };
 
@@ -99,7 +99,7 @@ munimap.assert.target = function(target) {
  */
 munimap.assert.zoom = function(zoom) {
   assert(zoom === undefined || (zoom >= 0 && zoom <= 30),
-      'Zoom should be in range <0,30>.');
+    'Zoom should be in range <0,30>.');
 };
 
 
@@ -109,7 +109,7 @@ munimap.assert.zoom = function(zoom) {
 munimap.assert.zoomTo = function(zoomTo) {
   if (zoomTo !== undefined) {
     assert(goog.isArray(zoomTo) || goog.isString(zoomTo),
-        'ZoomTo should be string or array of strings.');
+      'ZoomTo should be string or array of strings.');
     zoomTo = goog.isString(zoomTo) ? [zoomTo] : zoomTo;
     var onlyBuildings = zoomTo.every(munimap.building.isCodeOrLikeExpr);
     if (!onlyBuildings) {
@@ -175,7 +175,7 @@ munimap.assert.baseMap = function(baseMap) {
 munimap.assert.pubTran = function(pubTran) {
   if (pubTran !== undefined) {
     goog.asserts.assertBoolean(pubTran,
-        'Parameter pubTran should be boolean (true or false).');
+      'Parameter pubTran should be boolean (true or false).');
   }
 };
 
@@ -186,7 +186,7 @@ munimap.assert.pubTran = function(pubTran) {
 munimap.assert.mapLinks = function(mapLinks) {
   if (mapLinks !== undefined) {
     goog.asserts.assertBoolean(mapLinks,
-        'Parameter mapLinks should be boolean (true or false).');
+      'Parameter mapLinks should be boolean (true or false).');
   }
 };
 
@@ -197,7 +197,7 @@ munimap.assert.mapLinks = function(mapLinks) {
 munimap.assert.locationCodes = function(locationCodes) {
   if (locationCodes !== undefined) {
     goog.asserts.assertBoolean(locationCodes,
-        'Parameter locationCodes should be boolean (true or false).');
+      'Parameter locationCodes should be boolean (true or false).');
   }
 };
 >>>>>>> bd66799... add switch to munimap.create for showing location codes instead of room numbers

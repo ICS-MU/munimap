@@ -2,24 +2,43 @@
 
 module.exports = function (gulp, plugins) {
   
-  gulp.task('fix', function (cb) {
+  function isFixed(file) {
+    // Has ESLint fixed the file contents?
+    return file.eslint != null && file.eslint.fixed;
+  }
 
-    var exec = require('child_process').exec;
- 
-    var cmd = ['fixjsstyle', 
-          '--jslint_error=all',
-          //'--custom_jsdoc_tags=event,fires,api,observable',
-          '--strict',
-          '-r',
-          'src/client'
-        ].join(' ');
-    
-    exec(cmd, function (err, stdout, stderr) {
-//      console.log(stdout);
-//      console.log(stderr);
-      cb(err);
-    });
+  gulp.task('fix:eslint', function(cb) {
+    return gulp.src(['src/client/munimap/*.js'])
+      // eslint() attaches the lint output to the "eslint" property
+      // of the file object so it can be used by other modules.
+      .pipe(plugins.eslint({
+        configFile: '.eslintsrc.js',
+        fix: true
+      }))
+      // eslint.format() outputs the lint results to the console.
+      // Alternatively use eslint.formatEach() (see Docs).
+      .pipe(plugins.eslint.format())
+      // if fixed, write the file to dest
+      .pipe(plugins.if(isFixed, gulp.dest('src/client/munimap')))
+
+    cb();
   });
+
+  gulp.task('fix:mocha', function(cb) {
+    var src = [
+      'tasks/mocha/lint.file.name.js',
+      'tasks/mocha/lint.goog.provide.js',
+      'tasks/mocha/lint.html.js',
+      'tasks/mocha/lint.plovr.cfg.js'
+    ];
+    return gulp.src(src, { read: false })
+      // gulp-mocha needs filepaths so you can't have any plugins before it 
+      .pipe(plugins.mocha({ reporter: 'dot' }));
+    cb();
+
+  });
+
+  gulp.task('fix', ['fix:eslint', 'fix:mocha']);
 };
 
 

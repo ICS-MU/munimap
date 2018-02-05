@@ -67,11 +67,11 @@ munimap.poi.ACTIVE_LAYER_ID = 'active-poi';
  */
 munimap.poi.createActiveStore = function(map) {
   return new ol.source.Vector({
-    loader: goog.partial(munimap.poi.loadActive, { map: map }),
+    loader: goog.partial(munimap.poi.loadActive, {map: map}),
     strategy: /** @type {ol.LoadingStrategy} */(
-        ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-          tileSize: 512
-        })))
+      ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+        tileSize: 512
+      })))
   });
 };
 
@@ -191,13 +191,13 @@ munimap.poi.loadActive = function(options, extent, resolution, projection) {
     method: 'POST'
   };
   munimap.load.featuresForMap(opts, extent, resolution, projection).then(
-      function(pois) {
-        var activeLayer = munimap.poi.getActiveLayer(options.map);
-        var activeStore = activeLayer.getSource();
-        var poisFromActiveFloor = goog.array.filter(pois,
-            goog.partial(munimap.poi.isInActiveFloor, options.map));
-        var poisToAdd = munimap.store.getNotYetAddedFeatures(activeStore,
-            poisFromActiveFloor);
-        activeStore.addFeatures(poisToAdd);
-      });
+    function(pois) {
+      var activeLayer = munimap.poi.getActiveLayer(options.map);
+      var activeStore = activeLayer.getSource();
+      var poisFromActiveFloor = goog.array.filter(pois,
+        goog.partial(munimap.poi.isInActiveFloor, options.map));
+      var poisToAdd = munimap.store.getNotYetAddedFeatures(activeStore,
+        poisFromActiveFloor);
+      activeStore.addFeatures(poisToAdd);
+    });
 };

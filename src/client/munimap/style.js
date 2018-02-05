@@ -83,7 +83,7 @@ munimap.style.PIN = new ol.style.Style({
     text: '\uf041',
     font: 'normal ' + munimap.style.PIN_SIZE + 'px MunimapFont',
     fill: munimap.style.TEXT_FILL,
-    offsetY: - munimap.style.PIN_SIZE / 2,
+    offsetY: -munimap.style.PIN_SIZE / 2,
     stroke: munimap.style.TEXT_STROKE
   }),
   zIndex: 6
@@ -116,11 +116,11 @@ munimap.style.ResolutionColorObject;
  * @const
  */
 munimap.style.RESOLUTION_COLOR = [
-  { resolution: 0.59, color: '#fff', opacity: 1 },
-  { resolution: 0.48, color: '#fdfdfd', opacity: 0.8 },
-  { resolution: 0.38, color: '#fbfbfb', opacity: 0.4 },
-  { resolution: 0.32, color: '#efefef', opacity: 0.2 },
-  { resolution: 0.29, color: '#ededed', opacity: 0.2 }
+  {resolution: 0.59, color: '#fff', opacity: 1},
+  {resolution: 0.48, color: '#fdfdfd', opacity: 0.8},
+  {resolution: 0.38, color: '#fbfbfb', opacity: 0.4},
+  {resolution: 0.32, color: '#efefef', opacity: 0.2},
+  {resolution: 0.29, color: '#ededed', opacity: 0.2}
 ];
 
 
@@ -147,11 +147,10 @@ munimap.style.alignTextToRows = function(parts, separator) {
     }
   });
   var charsPerRow = Math.ceil(Math.sqrt(
-      munimap.style.CHAR_HEIGHT_WIDTH_RATIO * charCount));
+    munimap.style.CHAR_HEIGHT_WIDTH_RATIO * charCount));
   if (maxLength > charsPerRow) {
     charsPerRow = maxLength;
   }
-  var rowNumber = 0;
   var text;
   parts.forEach(function(part, i) {
     if (i === 0) {
@@ -164,7 +163,6 @@ munimap.style.alignTextToRows = function(parts, separator) {
         text += separator + part;
       } else {
         text += '\n' + part;
-        rowNumber++;
       }
     }
   });
@@ -337,30 +335,30 @@ munimap.style.getTextStyleWithOffsetY = function(options) {
  */
 munimap.style.getLabelWithPin =
     function(options) {
-  var fill = options.fill;
-  var geometry = options.geometry;
-  var zIndex = options.zIndex;
+      var fill = options.fill;
+      var geometry = options.geometry;
+      var zIndex = options.zIndex;
 
-  var result = [];
-  var pin = new ol.style.Style({
-    geometry: geometry,
-    text: new ol.style.Text({
-      text: '\uf041',
-      font: 'normal ' + munimap.style.PIN_SIZE + 'px MunimapFont',
-      fill: fill,
-      offsetY: - munimap.style.PIN_SIZE / 2,
-      stroke: munimap.style.TEXT_STROKE
-    }),
-    zIndex: zIndex || 5
-  });
-  result.push(pin);
+      var result = [];
+      var pin = new ol.style.Style({
+        geometry: geometry,
+        text: new ol.style.Text({
+          text: '\uf041',
+          font: 'normal ' + munimap.style.PIN_SIZE + 'px MunimapFont',
+          fill: fill,
+          offsetY: -munimap.style.PIN_SIZE / 2,
+          stroke: munimap.style.TEXT_STROKE
+        }),
+        zIndex: zIndex || 5
+      });
+      result.push(pin);
 
-  if (goog.isDefAndNotNull(options.title)) {
-    var textStyle = munimap.style.getTextStyleWithOffsetY(options);
-    result.push(textStyle);
-  }
-  return result;
-};
+      if (goog.isDefAndNotNull(options.title)) {
+        var textStyle = munimap.style.getTextStyleWithOffsetY(options);
+        result.push(textStyle);
+      }
+      return result;
+    };
 
 
 /**

@@ -81,6 +81,7 @@ munimap.getMainFeatureAtPixelFunction;
 munimap.changeFloor = function(map, featureOrCode) {
   var feature;
   var floorCode;
+  var locCode;
   var building = null;
   if (featureOrCode instanceof ol.Feature) {
     feature = featureOrCode;
@@ -90,7 +91,7 @@ munimap.changeFloor = function(map, featureOrCode) {
         floorCode = munimap.getSelectedFloorCodeForBuilding(map, building);
       }
     } else if (munimap.room.isRoom(feature) || munimap.door.isDoor(feature)) {
-      var locCode = /**@type (string)*/ (feature.get('polohKod'));
+      locCode = /**@type (string)*/ (feature.get('polohKod'));
       building = munimap.building.getByCode(locCode);
       floorCode = locCode.substr(0, 8);
     } else {
@@ -104,7 +105,7 @@ munimap.changeFloor = function(map, featureOrCode) {
 
   var mapProps = munimap.getProps(map);
   if (building) {
-    var locCode = munimap.building.getLocationCode(building);
+    locCode = munimap.building.getLocationCode(building);
     if (mapProps.selectedBuilding !== locCode) {
       mapProps.selectedBuilding = locCode;
       building.changed();
@@ -176,7 +177,7 @@ munimap.getSelectedFloorCodeForBuilding = function(map, building) {
     }
     if (!floorCode) {
       floorCode =
-          /**@type (string)*/ (building.get('vychoziPodlazi'));
+        /**@type (string)*/ (building.get('vychoziPodlazi'));
     }
   }
   return floorCode;
@@ -195,7 +196,7 @@ munimap.setSelectedFloor = function(map, building, floorCode) {
   munimap.floor.loadFloors(where).then(function(floors) {
     var newSelectedFloor = floors.find(function(floor) {
       return floorCode ===
-          /**@type {string}*/ (floor.get('polohKod'));
+      /**@type {string}*/ (floor.get('polohKod'));
     });
     goog.asserts.assertInstanceof(newSelectedFloor, ol.Feature);
     var newSelectedWasActive =
@@ -236,7 +237,7 @@ munimap.getBufferValue = function(extent) {
   var width = ol.extent.getWidth(extent);
   var height = ol.extent.getHeight(extent);
   var shorterSide = width <= height ? width : height;
-  return - ((1 - munimap.EXTENT_RATIO) * shorterSide);
+  return -((1 - munimap.EXTENT_RATIO) * shorterSide);
 };
 
 

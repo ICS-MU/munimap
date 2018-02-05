@@ -15,7 +15,7 @@ munimap.geom.CENTER_GEOMETRY_FUNCTION = function(feature) {
     geom = munimap.geom.getLargestPolygon(geom);
   }
   center = munimap.geom.getGeometryCenter(
-      geom, munimap.building.isBuilding(feature));
+    geom, munimap.building.isBuilding(feature));
   return center;
 };
 
@@ -44,7 +44,7 @@ munimap.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION = function(map, feature) {
     geom = munimap.geom.getLargestPolygon(geom);
   }
   center = munimap.geom.getGeometryCenter(
-      geom, munimap.building.isBuilding(feature));
+    geom, munimap.building.isBuilding(feature));
   return center;
 };
 
@@ -148,8 +148,9 @@ munimap.geom.getHorizontalIntersections = function(polygon, y) {
  */
 munimap.geom.getBetterInteriorPoint = function(polygon) {
   var centerCoordinate = ol.extent.getCenter(polygon.getExtent());
+  var interiorPoint;
   if (polygon.intersectsCoordinate(centerCoordinate)) {
-    var interiorPoint = centerCoordinate;
+    interiorPoint = centerCoordinate;
   } else {
     var resultY = centerCoordinate[1];
 

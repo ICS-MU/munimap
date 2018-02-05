@@ -46,7 +46,6 @@ munimap.reset = function(map, options) {
       };
     }).then(function(options) {
       var markers = options.markers;
-      var view = options.view;
 
       var markerSource = munimap.marker.getStore(map);
       markerSource.clear();
@@ -61,20 +60,20 @@ munimap.reset = function(map, options) {
       if (markers.length && (markers.some(function(el) {
         return munimap.room.isRoom(el);
       }) || markers.some(function(el) {
-        return munimap.door.isDoor(el);
-      })
+          return munimap.door.isDoor(el);
+        })
       )) {
         clusterResolution = munimap.cluster.ROOM_RESOLUTION;
       }
       if (oldMinRes !== clusterResolution.min) {
         clusterLayer.setMinResolution(clusterResolution.min);
       }
-      var markersExtent = munimap.extent.ofFeatures(markerSource.getFeatures())
+      var markersExtent = munimap.extent.ofFeatures(markerSource.getFeatures());
       var size = map.getSize();
       goog.asserts.assert(goog.isDefAndNotNull(size));
       var oldExtent = map.getView().calculateExtent(size);
       var duration = 0;
-      if(ol.extent.intersects(oldExtent, markersExtent)) {
+      if (ol.extent.intersects(oldExtent, markersExtent)) {
         duration = munimap.move.getAnimationDuration(oldExtent, markersExtent);
       }
       map.getView().fit(markersExtent, {
@@ -92,9 +91,9 @@ munimap.reset = function(map, options) {
  */
 munimap.reset.assertOptions = function(options) {
   assert(options.zoom === undefined || options.zoomTo === undefined,
-      'Zoom and zoomTo options can\'t be defined together.');
+    'Zoom and zoomTo options can\'t be defined together.');
   assert(options.center === undefined || options.zoomTo === undefined,
-      'Center and zoomTo options can\'t be defined together.');
+    'Center and zoomTo options can\'t be defined together.');
   munimap.assert.zoom(options.zoom);
   munimap.assert.zoomTo(options.zoomTo);
   munimap.assert.markers(options.markers);

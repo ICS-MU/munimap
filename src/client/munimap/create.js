@@ -205,8 +205,8 @@ munimap.create = function(options) {
       if (markers.length && (markers.some(function(el) {
         return munimap.room.isRoom(el);
       }) || markers.some(function(el) {
-        return munimap.door.isDoor(el);
-      })
+          return munimap.door.isDoor(el);
+        })
       )) {
         clusterResolution = munimap.cluster.ROOM_RESOLUTION;
       }
@@ -312,8 +312,7 @@ munimap.create = function(options) {
 =======
       if (window.location.protocol === 'https:' || jpad.DEV) {
         map.addControl(munimap.geolocate.create(map));
-      }
-      else {
+      } else {
         munimap.matomo.sendEvent('geolocation', 'http_hidden');
       }
 >>>>>>> e23660e... added matomo
@@ -549,7 +548,6 @@ munimap.create.setDefaultLayersPropsOptions;
 munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
   var result;
   var arrPromises = []; // array of promises of features
-  var features = /** @type {goog.Thenable<Array<ol.Feature>>} */ ([]);
   if (!goog.isArray(featuresLike)) {
     result = /** @type {goog.Thenable<Array<ol.Feature>>} */(
       goog.Promise.resolve([])
@@ -568,8 +566,7 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
             });
           }
         }));
-      }
-      else {
+      } else {
         var arrPoi = [el];
         var ctgIds = arrPoi.map(function(ctguid) {
           return ctguid.split(':')[1];
@@ -646,12 +643,11 @@ munimap.create.addPoiDetail = function(features, details) {
           open = goog.isDefAndNotNull(detail.get(
             'provozniDoba_cs')) ? detail.get(
               'provozniDoba_cs') : '';
-        }
-        else if (munimap.lang.active === 'en') {
+        } else if (munimap.lang.active === 'en') {
           name = goog.isDefAndNotNull(detail.get(
             'nazev_en')) ? detail.get(
               'nazev_en') : detail.get(
-                'nazev_cs');
+              'nazev_cs');
           open = goog.isDefAndNotNull(detail.get(
             'provozniDoba_en')) ? detail.get(
               'provozniDoba_en') : '';
@@ -678,22 +674,22 @@ munimap.create.loadFonts = function() {
     if (!jpad.DEV) {
       cssurl = '//' + jpad.PROD_DOMAIN + cssurl;
     }
-      WebFont.load({
-        'classes': false,
-        'custom': {
-          'families': ['MunimapFont'],
-          'testStrings': { 'MunimapFont': '\uf129' },
-          'urls': [
-            cssurl
-          ]
-        },
-        'timeout': 3000,
-        'fontactive': function(font) {
-          resolve('font ' + font + ' loaded');
-        },
-        'fontinactive': function(font) {
-          reject('font ' + font + ' failed to load');
-        }
-      })
+    WebFont.load({
+      'classes': false,
+      'custom': {
+        'families': ['MunimapFont'],
+        'testStrings': {'MunimapFont': '\uf129'},
+        'urls': [
+          cssurl
+        ]
+      },
+      'timeout': 3000,
+      'fontactive': function(font) {
+        resolve('font ' + font + ' loaded');
+      },
+      'fontinactive': function(font) {
+        reject('font ' + font + ' failed to load');
+      }
+    });
   });
 };
