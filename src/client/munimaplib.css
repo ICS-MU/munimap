@@ -7,6 +7,10 @@
 @import url("_lib/closure-library/closure/goog/css/menuitem.css");
 @import url("munimap/font/font.css");
 
+
+.ol-viewport {
+  font-size: 16px;
+}
 .ol-popup {
   border-radius: 6px;
   bottom: auto;
@@ -197,6 +201,10 @@
 .ol-control button:focus {
   background-color: #003190;
   cursor: pointer;
+}
+
+.ol-attribution {
+  z-index: 5;
 }
 .ol-attribution li {
   display: inline-block;

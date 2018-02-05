@@ -56,8 +56,7 @@ munimap.create = function(options) {
       options,
       munimap.create.loadOrDecorateMarkers(options.markers, options),
       munimap.load.featuresFromParam(options.zoomTo),
-      munimap.create.loadFonts(),
-      munimap.create.fontLoaded()
+      munimap.create.loadFonts()
     ]).then(function(results) {
       var options = results[0];
       var markers = results[1];
@@ -651,8 +650,6 @@ munimap.create.loadFonts = function() {
     if (!jpad.DEV) {
       cssurl = '//' + jpad.PROD_DOMAIN + cssurl;
     }
-    if (!window.munimapFontLoading) {
-      window.munimapFontLoading = true;
       WebFont.load({
         'classes': false,
         'custom': {
@@ -662,36 +659,13 @@ munimap.create.loadFonts = function() {
             cssurl
           ]
         },
-        'timeout': 2000,
+        'timeout': 3000,
         'fontactive': function(font) {
-          window.munimapFontLoaded = true;
           resolve('font ' + font + ' loaded');
         },
         'fontinactive': function(font) {
-          window.munimapFontFailed = true;
           reject('font ' + font + ' failed to load');
         }
-      });
-    }
-    else {
-      resolve('font is already loading');
-    }
+      })
   });
-};
-
-
-/**
- * @return {goog.Thenable<string>}
- */
-munimap.create.fontLoaded = function() {
-  return new goog.Promise(function(resolve, reject) {
-    setInterval(function() {
-      if(window.munimapFontFailed) {
-        return reject('munimap font failed to load')
-      }
-      else if(window.munimapFontLoaded) {
-        return resolve('font loaded')
-      }
-    }, 50);
-  })
 };
