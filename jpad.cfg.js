@@ -7,6 +7,7 @@ var jpad = {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   appVersion: '1.1.1',
 =======
   appVersion: '1.3.0',
@@ -24,6 +25,10 @@ var jpad = {
   appVersion: '1.6.1',
 >>>>>>> 68bc625... version 1.6.1
   olVersion: 'v3.19.1',
+=======
+  appVersion: '1.6.2',
+  olVersion: 'v4.6.4',
+>>>>>>> 4c8a284... version 1.6.2
   prodDomain: 'maps.muni.cz',
   plovrPattern: 'src/client/**/*.plovr.json',
   plovrHtmlPattern: 'src/client/**/*.html',
