@@ -241,10 +241,10 @@ munimap.info.highlightFloors = function(map, floorSelect, floors) {
   var buildingCode = floors[0].get('polohKod').substr(0, 5);
   markers.forEach(function(feature) {
     var locCode = /**@type {string}*/ (feature.get('polohKod'));
-    if (locCode) {
+    if (locCode && locCode.length > 5) {
       var markerCode = locCode.substr(0, 5);
       var floorCode = locCode.substr(5, 3);
-      if (floorCode !== '' && markerCode === buildingCode) {
+      if (markerCode === buildingCode) {
         var floorLabel = munimap.info.getLabelAbbr(floorCode);
         floorSelect.getMenu().forEachChild(function(item) {
           if (floorLabel === item.getContent()) {
