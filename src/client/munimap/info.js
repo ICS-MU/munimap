@@ -31,13 +31,13 @@ munimap.info.POPUP_TALE_INDENT = 8;
  * @protected
  */
 munimap.info.isExtentSuitable =
-    function(extent, viewExtent, building) {
-      if (ol.extent.containsExtent(viewExtent, extent)) {
-        var geom = building.getGeometry();
-        return !geom.intersectsExtent(extent);
-      }
-      return false;
-    };
+  function(extent, viewExtent, building) {
+    if (ol.extent.containsExtent(viewExtent, extent)) {
+      var geom = building.getGeometry();
+      return !geom.intersectsExtent(extent);
+    }
+    return false;
+  };
 
 
 /**
@@ -49,7 +49,7 @@ munimap.info.refreshVisibility = function(map) {
   goog.asserts.assertNumber(res);
   var selectedBuilding = munimap.getProps(map).selectedBuilding;
   var isShown = !!selectedBuilding &&
-      munimap.range.contains(munimap.floor.RESOLUTION, res);
+    munimap.range.contains(munimap.floor.RESOLUTION, res);
   var element = munimap.getProps(map).info;
   goog.style.setElementShown(element, isShown);
 };
@@ -72,7 +72,7 @@ munimap.info.refreshElementPosition = function(map) {
     var elSize = goog.style.getSize(element);
     var extWidth = resolution * elSize.width;
     var extHeight = resolution *
-        (elSize.height + munimap.info.POPUP_TALE_HEIGHT);
+      (elSize.height + munimap.info.POPUP_TALE_HEIGHT);
 
     var elExtent = [
       topRight[0] - extWidth, topRight[1] - extHeight, topRight[0], topRight[1]
@@ -145,7 +145,7 @@ munimap.info.setBuildingTitle = function(map, building) {
           munimap.lang.Translations.BUILDING_ABBR_FIELD_NAME))
       );
       if (goog.isDefAndNotNull(buildingType) &&
-          goog.isDefAndNotNull(buildingTitle)) {
+        goog.isDefAndNotNull(buildingTitle)) {
         title = buildingType + ' ' + buildingTitle;
       } else {
         if (munimap.complex.getBuildingCount(complex) === 1) {
@@ -197,6 +197,7 @@ munimap.info.findSelectedFloorItem = function(floorSelect, map) {
  */
 munimap.info.refreshFloorSelect = function(map, floors) {
   var floorSelect = munimap.getProps(map).floorSelect;
+  var item;
   while (floorSelect.getItemAt(0)) {
     floorSelect.removeItemAt(0);
   }
@@ -206,7 +207,7 @@ munimap.info.refreshFloorSelect = function(map, floors) {
       var locCode = /**@type {string}*/ (floor.get('polohKod'));
       var floorCode = locCode.substr(5, 8);
       var floorLabel = munimap.info.getLabelAbbr(floorCode);
-      var item = new goog.ui.MenuItem(floorLabel, floor);
+      item = new goog.ui.MenuItem(floorLabel, floor);
       floorSelect.addItem(item);
       item.enableClassName('munimap-floor-select-item', true);
       var itemElement = item.getElement();
@@ -214,16 +215,50 @@ munimap.info.refreshFloorSelect = function(map, floors) {
         {title: munimap.info.getLabel(floorCode)});
     });
     var selectedFloorItem =
-        munimap.info.findSelectedFloorItem(floorSelect, map);
+      munimap.info.findSelectedFloorItem(floorSelect, map);
     if (selectedFloorItem) {
       floorSelect.setSelectedItem(selectedFloorItem);
     } else {
       var text = munimap.lang.getMsg(munimap.lang.Translations.INFOBOX_CHOOSE);
       floorSelect.setDefaultCaption(goog.dom.createTextNode(text));
     }
+    munimap.info.highlightFloors(map, floorSelect, floors);
   }
+
 };
 
+
+/**
+ * Highlight floors with marker in info bubble
+ * @param {ol.Map} map
+ * @param {goog.ui.Select} floorSelect
+ * @param {Array} floors
+ */
+munimap.info.highlightFloors = function(map, floorSelect, floors) {
+  var markers = munimap.marker.getLayer(map).getSource().getFeatures();
+  var buildingCode = floors[0].get('polohKod').substr(0, 5);
+  markers.forEach(function(feature) {
+    var locCode = /**@type {string}*/ (feature.get('polohKod'));
+    if (locCode) {
+      var markerCode = locCode.substr(0, 5);
+      var floorCode = locCode.substr(5, 3);
+      if (floorCode !== '' && markerCode === buildingCode) {
+        var floorLabel = munimap.info.getLabelAbbr(floorCode);
+        floorSelect.getMenu().forEachChild(function(item) {
+          if (floorLabel === item.getContent()) {
+            item.addClassName('munimap-marker-floor');
+            var itemElement = item.getElement();
+            var title = itemElement.getAttribute('title');
+            var addTitle =
+            munimap.lang.getMsg(munimap.lang.Translations.INFOBOX_MARKED);
+            goog.dom.setProperties(itemElement,
+              {title: title + '\n' + addTitle});
+          }
+        });
+      }
+    }
+  });
+};
 
 /**
  * Floor types.
@@ -266,22 +301,22 @@ munimap.info.getLabel = function(floorCode) {
   switch (letter) {
     case types.UNDERGROUND:
       floorTypeString =
-          munimap.lang.getMsg(munimap.lang.Translations.FLOOR_UNDER);
+        munimap.lang.getMsg(munimap.lang.Translations.FLOOR_UNDER);
       label = numLabel + floorTypeString;
       break;
     case types.UNDERGROUND_MEZZANINE:
       floorTypeString =
-          munimap.lang.getMsg(munimap.lang.Translations.FLOOR_MEZZANINE_UNDER);
+        munimap.lang.getMsg(munimap.lang.Translations.FLOOR_MEZZANINE_UNDER);
       label = floorTypeString;
       break;
     case types.MEZZANINE:
       floorTypeString =
-          munimap.lang.getMsg(munimap.lang.Translations.FLOOR_MEZZANINE);
+        munimap.lang.getMsg(munimap.lang.Translations.FLOOR_MEZZANINE);
       label = floorTypeString;
       break;
     case types.ABOVEGROUND:
       floorTypeString =
-          munimap.lang.getMsg(munimap.lang.Translations.FLOOR_ABOVE);
+        munimap.lang.getMsg(munimap.lang.Translations.FLOOR_ABOVE);
       label = numLabel + floorTypeString;
       break;
     default:
@@ -315,7 +350,7 @@ munimap.info.getLabelAbbr = function(floorCode) {
   switch (letter) {
     case types.UNDERGROUND:
       floorTypeString =
-          munimap.lang.getMsg(munimap.lang.Translations.FLOOR_UNDER_ABBR);
+        munimap.lang.getMsg(munimap.lang.Translations.FLOOR_UNDER_ABBR);
       label = (munimap.lang.active === munimap.lang.Abbr.ENGLISH) ?
         floorTypeString + numLabel : numLabel + '. ' + floorTypeString;
       break;
@@ -328,14 +363,14 @@ munimap.info.getLabelAbbr = function(floorCode) {
       break;
     case types.MEZZANINE:
       floorTypeString =
-          munimap.lang.getMsg(munimap.lang.Translations.FLOOR_MEZZANINE_ABBR);
+        munimap.lang.getMsg(munimap.lang.Translations.FLOOR_MEZZANINE_ABBR);
       label = (munimap.lang.active === munimap.lang.Abbr.ENGLISH) ?
         floorTypeString + numLabel + mezzanineNumLabel :
         numLabel + mezzanineNumLabel + '. ' + floorTypeString;
       break;
     case types.ABOVEGROUND:
       floorTypeString =
-          munimap.lang.getMsg(munimap.lang.Translations.FLOOR_ABOVE_ABBR);
+        munimap.lang.getMsg(munimap.lang.Translations.FLOOR_ABOVE_ABBR);
       label = (munimap.lang.active === munimap.lang.Abbr.ENGLISH) ?
         floorTypeString + numLabel : numLabel + '. ' + floorTypeString;
       break;

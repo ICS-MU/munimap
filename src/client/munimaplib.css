@@ -122,6 +122,10 @@
 .munimap-floor-select-item.goog-menuitem-highlight {
   border: none;
 }
+
+.munimap-marker-floor .goog-menuitem-content {
+  color: #e51c23;
+}
   
 .munimap {
   box-sizing: content-box;
