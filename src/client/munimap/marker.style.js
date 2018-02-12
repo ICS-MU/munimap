@@ -127,6 +127,40 @@ munimap.marker.style.DOOR = new ol.style.Style({
 
 
 /**
+ * @type {Array<ol.style.Style>}
+ */
+munimap.marker.style.corridor = [];
+
+
+munimap.marker.style.getPattern = function(event) {
+  var context = event.context;
+  var image = new Image();
+  var imgsrc = './marker.style.coridors.bg.png';
+  if (!jpad.DEV) {
+    imgsrc = '//' + jpad.PROD_DOMAIN + imgsrc;
+  }
+  image.src = imgsrc;
+  image.onload = function() {
+    var pattern = context.createPattern(image, 'repeat');
+    var fill = new ol.style.Fill({
+      color: pattern
+    });
+    var corridorStyle = new ol.style.Style({
+      fill: fill,
+      zIndex: 99999
+    });
+    var corridorBackground = new ol.style.Style({
+      fill: new ol.style.Fill({
+        color: '#ffffff'
+      }),
+      stroke: munimap.marker.style.BUILDING_STROKE
+    });
+    munimap.marker.style.corridor =
+      [corridorStyle, corridorBackground];
+  };
+};
+
+/**
  * @type {ol.style.Text}
  * @const
  */
@@ -171,8 +205,8 @@ munimap.marker.style.PIN = munimap.marker.style.createPinFromGeometry(
 munimap.marker.style.function = function(options, feature, resolution) {
   goog.asserts.assertInstanceof(feature, ol.Feature);
   if (munimap.range.contains(munimap.floor.RESOLUTION, resolution) &&
-      munimap.building.isBuilding(feature) &&
-      munimap.building.isSelected(feature, options.map)) {
+    munimap.building.isBuilding(feature) &&
+    munimap.building.isSelected(feature, options.map)) {
     return null;
   }
 
@@ -189,7 +223,7 @@ munimap.marker.style.function = function(options, feature, resolution) {
     );
     var hasPointGeom = feature.getGeometry() instanceof ol.geom.Point;
     if (munimap.range.contains(munimap.floor.RESOLUTION, resolution) &&
-        !inActiveFloor && !(hasPointGeom)) {
+      !inActiveFloor && !(hasPointGeom)) {
       return null;
     } else if (isRoom) {
       var markedRoomResolution = munimap.range.createResolution(
@@ -197,7 +231,7 @@ munimap.marker.style.function = function(options, feature, resolution) {
         munimap.cluster.ROOM_RESOLUTION.min
       );
       if (munimap.range.contains(markedRoomResolution, resolution) ||
-          hasPointGeom) {
+        hasPointGeom) {
         result.push(munimap.marker.style.ROOM);
       }
     } else if (munimap.range.contains(munimap.door.RESOLUTION, resolution)) {
@@ -207,7 +241,7 @@ munimap.marker.style.function = function(options, feature, resolution) {
   if (!(isRoom || isDoor) || !munimap.range.contains(
     munimap.cluster.ROOM_RESOLUTION, resolution)) {
     var textStyle =
-        munimap.marker.style.labelFunction(options, feature, resolution);
+      munimap.marker.style.labelFunction(options, feature, resolution);
     if (goog.isDefAndNotNull(textStyle)) {
       goog.array.extend(result, textStyle);
     }
@@ -260,7 +294,7 @@ munimap.marker.style.labelFunction = function(options, feature, resolution) {
   if (isRoom || isDoor) {
     fontSize = munimap.room.style.FONT_SIZE;
   } else if (isBuilding &&
-      munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
+    munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
     fontSize = munimap.building.style.BIG_FONT_SIZE;
   } else {
     fontSize = munimap.building.style.FONT_SIZE;

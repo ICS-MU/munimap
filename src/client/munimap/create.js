@@ -318,7 +318,7 @@ munimap.create = function(options) {
 >>>>>>> e23660e... added matomo
       map.addLayer(markerClusterLayer);
       map.addLayer(markerLayer);
-
+      markerLayer.once('precompose', munimap.marker.style.getPattern);
       munimap.cluster.updateClusteredFeatures(map, view.getResolution());
 
       map.on('pointermove', function(evt) {
