@@ -136,9 +136,9 @@ munimap.room.style.setCorridorStyle = function(event) {
         zIndex: 1
       });
       munimap.room.style.corridor =
-          [corridorBackground, corridorStyle, munimap.room.style.STROKE];
+        [corridorBackground, corridorStyle, munimap.room.style.STROKE];
       munimap.room.style.staircase =
-          [staircaseBackground, corridorStyle, munimap.room.style.STROKE];
+        [staircaseBackground, corridorStyle, munimap.room.style.STROKE];
     };
   }
 };
@@ -153,13 +153,13 @@ munimap.room.style.setCorridorStyle = function(event) {
  * @return {boolean}
  */
 munimap.room.style.selectedFloorFilter =
-    function(feature, selectedFloorCode, activeFloorCodes) {
-      if (goog.isDefAndNotNull(selectedFloorCode)) {
-        var locCode = /**@type {string}*/ (feature.get('polohKod'));
-        return locCode.startsWith(selectedFloorCode);
-      }
-      return false;
-    };
+  function(feature, selectedFloorCode, activeFloorCodes) {
+    if (goog.isDefAndNotNull(selectedFloorCode)) {
+      var locCode = /**@type {string}*/ (feature.get('polohKod'));
+      return locCode.startsWith(selectedFloorCode);
+    }
+    return false;
+  };
 
 
 /**
@@ -171,12 +171,12 @@ munimap.room.style.selectedFloorFilter =
  * @return {boolean}
  */
 munimap.room.style.activeFloorFilter =
-    function(feature, selectedFloorCode, activeFloorCodes) {
-      var locCode = /**@type {string}*/ (feature.get('polohKod'));
-      return activeFloorCodes.some(function(floor) {
-        return locCode.startsWith(floor);
-      });
-    };
+  function(feature, selectedFloorCode, activeFloorCodes) {
+    var locCode = /**@type {string}*/ (feature.get('polohKod'));
+    return activeFloorCodes.some(function(floor) {
+      return locCode.startsWith(floor);
+    });
+  };
 
 
 /**
@@ -188,12 +188,12 @@ munimap.room.style.activeFloorFilter =
  * @return {boolean}
  */
 munimap.room.style.defaultFloorFilter =
-    function(feature, selectedFloorCode, activeFloorCodes) {
-      var locCode = /**@type {string}*/ (feature.get('polohKod'));
-      return !activeFloorCodes.some(function(floor) {
-        return locCode.startsWith(floor.substr(0, 5));
-      });
-    };
+  function(feature, selectedFloorCode, activeFloorCodes) {
+    var locCode = /**@type {string}*/ (feature.get('polohKod'));
+    return !activeFloorCodes.some(function(floor) {
+      return locCode.startsWith(floor.substr(0, 5));
+    });
+  };
 
 
 /**
@@ -208,7 +208,7 @@ munimap.room.style.activeFunction = function(options, feature, resolution) {
   var result = munimap.room.style.function(options, feature, resolution);
   if (munimap.range.contains(
     munimap.poi.style.Resolution.STAIRS, resolution) &&
-      result === munimap.room.style.staircase) {
+    result === munimap.room.style.staircase) {
     result = goog.array.concat(
       result, munimap.room.style.STAIRCASE_ICON);
   }
@@ -231,43 +231,64 @@ munimap.room.style.function = function(options, feature, resolution) {
 
   var result;
   if (marked) {
-    result = munimap.marker.style.ROOM;
+    result = munimap.room.style.getStyle(feature, munimap.marker.style, marked);
   } else {
-    result = munimap.room.STYLE;
-    var purposeGroup = feature.get('ucel_skupina_nazev');
-    var purpose = feature.get('ucel_nazev');
-    var purpose_gis = feature.get('ucel_gis');
-    var purposesToOmit = [
-      'angl.dvorek',
-      'balkon',
-      'manipulační prostory',
-      'nevyužívané prostory', //also gateaway which are not used for drive in,
-      //but can be used as corridor
-      'plocha pod schodištěm',
-      'předsíň', //also some corridors
-      'příjem', //receptions
-      'rampa', //somewhere is maybe an entrance
-      'světlík',
-      'šachta',
-      'vrátnice',
-      'výtah' //shown due to ucel_gis
-    ];
-    switch (purposeGroup) {
-      case 'komunikace obecně':
-        if (purposesToOmit.indexOf(purpose) === -1) {
-          if (purpose === 'schodiště') {
-            result = munimap.room.style.staircase;
-          } else {
-            result = munimap.room.style.corridor;
-          }
-        } else if (purpose_gis === 'výtah') {
-          result = munimap.room.style.corridor;
-        }
-        break;
-    }
+    result = munimap.room.style.getStyle(feature, munimap.room.style, marked);
   }
   return result;
 };
+
+/**
+ * @param {ol.Feature|ol.render.Feature} feature
+ * @param {Object} style
+ * @param {boolean} marked
+ * @return {ol.style.Style|Array.<ol.style.Style>}
+ */
+munimap.room.style.getStyle = function(feature, style, marked) {
+  var purposeGroup = feature.get('ucel_skupina_nazev');
+  var purpose = feature.get('ucel_nazev');
+  var purpose_gis = feature.get('ucel_gis');
+  var result = marked ? style.ROOM : munimap.room.STYLE;
+  switch (purposeGroup) {
+    case 'komunikace obecně':
+      if (munimap.room.style.PURPOSES_TO_OMIT.indexOf(purpose) === -1) {
+        if (purpose === 'schodiště') {
+          if (marked) {
+            result = style.ROOM;
+          } else {
+            result = style.staircase;
+          }
+        } else {
+          result = style.corridor;
+        }
+      } else if (purpose_gis === 'výtah') {
+        result = style.corridor;
+      }
+      break;
+  }
+  return result;
+};
+
+
+/**
+ * @type {Array.<string>}
+ * @const
+ */
+munimap.room.style.PURPOSES_TO_OMIT = [
+  'angl.dvorek',
+  'balkon',
+  'manipulační prostory',
+  'nevyužívané prostory', //also gateaway which are not used for drive in,
+  //but can be used as corridor
+  'plocha pod schodištěm',
+  'předsíň', //also some corridors
+  'příjem', //receptions
+  'rampa', //somewhere is maybe an entrance
+  'světlík',
+  'šachta',
+  'vrátnice',
+  'výtah' //shown due to ucel_gis
+];
 
 
 /**
@@ -322,11 +343,11 @@ munimap.room.style.labelFunction = function(options, feature, resolution) {
         title = /**@type {string}*/ (feature.get('polohKod'));
         var purposeTitle = /**@type {string}*/ (feature.get('ucel_nazev'));
         if (goog.isDefAndNotNull(purposeGis) &&
-            (purposeGis === munimap.poi.Purpose.ELEVATOR ||
+          (purposeGis === munimap.poi.Purpose.ELEVATOR ||
             purposeGis === munimap.poi.Purpose.INFORMATION_POINT)) {
           offset = munimap.poi.style.ICON_HEIGHT - 6;
         } else if (goog.isDefAndNotNull(purposeTitle) &&
-            (purposeTitle === 'WC' || purposeTitle === 'schodiště')) {
+          (purposeTitle === 'WC' || purposeTitle === 'schodiště')) {
           offset = munimap.poi.style.ICON_HEIGHT - 6;
         }
       } else {
@@ -334,12 +355,12 @@ munimap.room.style.labelFunction = function(options, feature, resolution) {
       }
       if (title) {
         if (goog.isDefAndNotNull(purposeGis) &&
-            purposeGis === munimap.poi.Purpose.CLASSROOM) {
+          purposeGis === munimap.poi.Purpose.CLASSROOM) {
           var labelHeight = munimap.style.getLabelHeight(title, fontSize);
           var overallHeight =
-              labelHeight + munimap.poi.style.ICON_HEIGHT + 2;
+            labelHeight + munimap.poi.style.ICON_HEIGHT + 2;
           var iconOffset =
-              -(overallHeight - munimap.poi.style.ICON_HEIGHT) / 2;
+            -(overallHeight - munimap.poi.style.ICON_HEIGHT) / 2;
           offset = (overallHeight - labelHeight) / 2;
           goog.array.extend(
             result, munimap.room.style.getClassroomIcon(iconOffset));

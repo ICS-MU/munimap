@@ -68,18 +68,20 @@ munimap.reset = function(map, options) {
       if (oldMinRes !== clusterResolution.min) {
         clusterLayer.setMinResolution(clusterResolution.min);
       }
-      var markersExtent = munimap.extent.ofFeatures(markerSource.getFeatures());
-      var size = map.getSize();
-      goog.asserts.assert(goog.isDefAndNotNull(size));
-      var oldExtent = map.getView().calculateExtent(size);
-      var duration = 0;
-      if (ol.extent.intersects(oldExtent, markersExtent)) {
-        duration = munimap.move.getAnimationDuration(oldExtent, markersExtent);
+      var features = markerSource.getFeatures();
+      if (features.length > 0) {
+        var markersExtent = munimap.extent.ofFeatures(features);
+        var size = map.getSize();
+        goog.asserts.assert(goog.isDefAndNotNull(size));
+        var oldExtent = map.getView().calculateExtent(size);
+        var duration = 0;
+        if (ol.extent.intersects(oldExtent, markersExtent)) {
+          duration = munimap.move.getAnimationDuration(oldExtent, markersExtent);
+        }
+        map.getView().fit(markersExtent, {
+          duration: duration
+        });
       }
-      map.getView().fit(markersExtent, {
-        duration: duration
-      });
-
       return map;
     }).then(resolve);
   });
