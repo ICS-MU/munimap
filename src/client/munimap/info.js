@@ -251,8 +251,10 @@ munimap.info.highlightFloors = function(map, floorSelect, floors) {
             var title = itemElement.getAttribute('title');
             var addTitle =
             munimap.lang.getMsg(munimap.lang.Translations.INFOBOX_MARKED);
-            goog.dom.setProperties(itemElement,
-              {title: title + '\n' + addTitle});
+            if (itemElement.getAttribute('title').indexOf(addTitle) === -1) {
+              goog.dom.setProperties(itemElement,
+                {title: title + '\n' + addTitle});
+            }
           }
         });
       }
