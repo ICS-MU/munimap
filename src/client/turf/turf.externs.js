@@ -27,7 +27,7 @@ turf.buffer = function(feature, radius, units) {};
  * @param {GeoJSONFeature} polygon
  * @return {boolean}
  */
-turf.inside = function(point, polygon) {};
+turf.booleanPointInPolygon = function(point, polygon) {};
 
 
 /**
