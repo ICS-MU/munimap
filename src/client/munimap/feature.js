@@ -44,7 +44,7 @@ munimap.feature.getClosestPointToPixel = function(map, feature, pixel) {
       /**@type {GeoJSONFeature}*/(format.writeFeatureObject(point));
   var turfFeature =
       /**@type {GeoJSONFeature}*/(format.writeFeatureObject(feature));
-  if (turf.booleanPointInPolygon(turfPoint, turfFeature)) {
+  if (turf.inside(turfPoint, turfFeature)) {
     return coordinate;
   } else {
     var viewExtent = map.getView().calculateExtent(map.getSize() || null);
