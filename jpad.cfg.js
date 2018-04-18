@@ -11,6 +11,7 @@ var jpad = {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   appVersion: '1.1.1',
 =======
   appVersion: '1.3.0',
@@ -39,6 +40,9 @@ var jpad = {
 =======
   appVersion: '1.6.3',
 >>>>>>> 6166ee4... Revert "version 1.6.4"
+=======
+  appVersion: '1.6.4',
+>>>>>>> 3bc63dc... version 1.6.4
   olVersion: 'v4.6.4',
 >>>>>>> 4c8a284... version 1.6.2
   prodDomain: 'maps.muni.cz',

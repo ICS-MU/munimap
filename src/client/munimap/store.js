@@ -15,7 +15,7 @@ munimap.store.getUid = function(feature) {
     uid = goog.asserts.assertString(code);
   } else {
     var type =
-        /**@type {munimap.type.Options}*/ (feature.get(munimap.type.NAME));
+    /**@type {munimap.type.Options}*/ (feature.get(munimap.type.NAME));
     if (type) {
       var pk = feature.get(type.primaryKey);
       uid = type.name + ':' + pk;

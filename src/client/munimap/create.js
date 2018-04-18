@@ -205,8 +205,8 @@ munimap.create = function(options) {
       if (markers.length && (markers.some(function(el) {
         return munimap.room.isRoom(el);
       }) || markers.some(function(el) {
-          return munimap.door.isDoor(el);
-        })
+        return munimap.door.isDoor(el);
+      })
       )) {
         clusterResolution = munimap.cluster.ROOM_RESOLUTION;
       }
@@ -259,7 +259,7 @@ munimap.create = function(options) {
       floorSelect.render(floorEl);
       goog.events.listen(floorSelect, 'action', function() {
         var newFloor =
-            /**@type (ol.Feature)*/ (floorSelect.getSelectedItem().getModel());
+        /**@type (ol.Feature)*/ (floorSelect.getSelectedItem().getModel());
         var newLocCode = /**@type (string)*/ (newFloor.get('polohKod'));
         var selectedFloor = munimap.getProps(map).selectedFloor;
         if (!selectedFloor || selectedFloor.locationCode !== newLocCode) {
@@ -582,6 +582,7 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
           var roomCodes = rooms.map(function(f) {
             return f.get('polohKodLokace');
           });
+
           if (ctgIds.length === 1 && !options.markerLabel) {
             options.markerLabel = function(f, r) {
               var clustered = munimap.cluster.getFeatures(f);
@@ -652,6 +653,10 @@ munimap.create.addPoiDetail = function(features, details) {
             'provozniDoba_en')) ? detail.get(
               'provozniDoba_en') : '';
 
+        }
+        var url = detail.get('url');
+        if (url) {
+          name = '<a href="' + url + '" target="_blank">' + name + '</a>';
         }
         open = open.replace(',', '<br>');
         name = '<div class="munimap-bubble-title">' + name + '</div>';

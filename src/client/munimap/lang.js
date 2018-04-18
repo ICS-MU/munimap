@@ -107,6 +107,9 @@ munimap.lang.Translations = {
 >>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
 =======
   RETAIL_LOCATION: 'retail-location',
+  LIBRARY: 'library',
+  STUDY_ROOM: 'study-room',
+  VIRTUAL_TOUR: 'virtual-tour',
   SEZNAM_MAP: 'SEZNAM_MAP',
 <<<<<<< HEAD
   GOOGLE_MAP: 'GOOGLE_MAP'
@@ -229,6 +232,9 @@ munimap.lang.CS_TRANSLATIONS = {
 >>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
 =======
   'retail-location': 'prodejní místo',
+  'library': 'knihovna',
+  'study-room': 'studovna',
+  'virtual-tour': 'virtuální prohlídka',
   'SEZNAM_MAP': 'Otevřít v Mapy.cz',
 <<<<<<< HEAD
   'GOOGLE_MAP': 'Otevřít v Mapy Google'
@@ -353,6 +359,9 @@ munimap.lang.EN_TRANSLATIONS = {
 >>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
 =======
   'retail-location': 'retail location',
+  'library': 'library',
+  'study-room': 'study room',
+  'virtual-tour': 'virtual tour',
   'SEZNAM_MAP': 'Open in Mapy.cz',
 <<<<<<< HEAD
   'GOOGLE_MAP': 'Open in Google map'

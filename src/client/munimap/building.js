@@ -232,7 +232,7 @@ munimap.building.featureClickHandler = function(options) {
  */
 munimap.building.hasInnerGeometry = function(building) {
   var hasInnerGeometry =
-      /**@type {number}*/ (building.get('maVnitrniGeometrii'));
+  /**@type {number}*/ (building.get('maVnitrniGeometrii'));
   var result;
   switch (hasInnerGeometry) {
     case 1:

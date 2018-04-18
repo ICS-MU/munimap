@@ -162,7 +162,7 @@ munimap.getSelectedFloorCodeForBuilding = function(map, building) {
         if (munimap.room.isRoom(marked) || munimap.door.isDoor(marked)) {
           var buildingLocCode = munimap.building.getLocationCode(building);
           var locationCode =
-              /**@type {string}*/ (marked.get('polohKod'));
+          /**@type {string}*/ (marked.get('polohKod'));
           return locationCode.substr(0, 5) === buildingLocCode;
         } else {
           return false;
