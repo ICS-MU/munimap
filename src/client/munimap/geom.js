@@ -93,7 +93,7 @@ munimap.geom.getGeometryCenterOfFeatures = function(features) {
  */
 munimap.geom.featureExtentIntersect = function(feature, extent, format) {
   var turfFeature =
-      /**@type {GeoJSONFeature}*/(format.writeFeatureObject(feature));
+  /**@type {GeoJSONFeature}*/(format.writeFeatureObject(feature));
   var turfBBox = turf.bboxPolygon(extent);
   var turfIntersect = turf.intersect(turfFeature, turfBBox);
   return goog.isDef(turfIntersect) ? format.readFeature(turfIntersect) : null;

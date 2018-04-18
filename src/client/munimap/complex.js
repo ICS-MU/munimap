@@ -167,7 +167,7 @@ munimap.complex.style.function = function(options, feature, resolution) {
       var markers = markerSource.getFeatures();
       if (markers.length && munimap.building.isBuilding(markers[0])) {
         var complexId =
-            /**@type {number}*/(feature.get(munimap.complex.ID_FIELD_NAME));
+        /**@type {number}*/(feature.get(munimap.complex.ID_FIELD_NAME));
         var isMarked = markers.some(function(marker) {
           var markerComplexId = marker.get('arealId');
           if (goog.isDefAndNotNull(markerComplexId)) {

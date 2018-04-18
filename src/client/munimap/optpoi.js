@@ -32,7 +32,10 @@ munimap.optpoi.TYPE = {
 munimap.optpoi.ctg.Label = {
   PRINT_CENTER: 'Tiskové centrum',
   CREDIT_TOP_UP_MACHINE: 'Bankovník',
-  RETAIL_LOCATION: 'Prodejní místo'
+  RETAIL_LOCATION: 'Prodejní místo',
+  LIBRARY: 'Knihovna',
+  STUDY_ROOM: 'Studovna',
+  VIRTUAL_TOUR: 'Virtuální prohlídka'
 };
 
 
@@ -43,7 +46,10 @@ munimap.optpoi.ctg.Label = {
 munimap.optpoi.ctg.Id = {
   PRINT_CENTER: 'print-center',
   CREDIT_TOP_UP_MACHINE: 'credit-top-up-machine',
-  RETAIL_LOCATION: 'retail-location'
+  RETAIL_LOCATION: 'retail-location',
+  LIBRARY: 'library',
+  STUDY_ROOM: 'study-room',
+  VIRTUAL_TOUR: 'virtual-tour'
 };
 
 

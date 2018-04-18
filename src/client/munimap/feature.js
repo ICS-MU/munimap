@@ -41,9 +41,9 @@ munimap.feature.getClosestPointToPixel = function(map, feature, pixel) {
   var point = new ol.Feature(new ol.geom.Point(coordinate));
   var format = new ol.format.GeoJSON();
   var turfPoint =
-      /**@type {GeoJSONFeature}*/(format.writeFeatureObject(point));
+  /**@type {GeoJSONFeature}*/(format.writeFeatureObject(point));
   var turfFeature =
-      /**@type {GeoJSONFeature}*/(format.writeFeatureObject(feature));
+  /**@type {GeoJSONFeature}*/(format.writeFeatureObject(feature));
   if (turf.inside(turfPoint, turfFeature)) {
     return coordinate;
   } else {

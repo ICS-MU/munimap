@@ -51,6 +51,9 @@ munimap.lang.Translations = {
   PRINT_CENTER: 'print-center',
   CREDIT_TOP_UP_MACHINE: 'credit-top-up-machine',
   RETAIL_LOCATION: 'retail-location',
+  LIBRARY: 'library',
+  STUDY_ROOM: 'study-room',
+  VIRTUAL_TOUR: 'virtual-tour',
   SEZNAM_MAP: 'SEZNAM_MAP',
   GOOGLE_MAP: 'GOOGLE_MAP',
   FIND_ME: 'FIND_ME'
@@ -106,6 +109,9 @@ munimap.lang.CS_TRANSLATIONS = {
   'print-center': 'tiskové centrum',
   'credit-top-up-machine': 'bankovník',
   'retail-location': 'prodejní místo',
+  'library': 'knihovna',
+  'study-room': 'studovna',
+  'virtual-tour': 'virtuální prohlídka',
   'SEZNAM_MAP': 'Otevřít v Mapy.cz',
   'GOOGLE_MAP': 'Otevřít v Mapy Google',
   'FIND_ME': 'Moje poloha'
@@ -162,6 +168,9 @@ munimap.lang.EN_TRANSLATIONS = {
   'print-center': 'print center',
   'credit-top-up-machine': 'credit top up machine',
   'retail-location': 'retail location',
+  'library': 'library',
+  'study-room': 'study room',
+  'virtual-tour': 'virtual tour',
   'SEZNAM_MAP': 'Open in Mapy.cz',
   'GOOGLE_MAP': 'Open in Google map',
   'FIND_ME': 'My location'

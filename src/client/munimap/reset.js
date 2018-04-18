@@ -60,8 +60,8 @@ munimap.reset = function(map, options) {
       if (markers.length && (markers.some(function(el) {
         return munimap.room.isRoom(el);
       }) || markers.some(function(el) {
-          return munimap.door.isDoor(el);
-        })
+        return munimap.door.isDoor(el);
+      })
       )) {
         clusterResolution = munimap.cluster.ROOM_RESOLUTION;
       }

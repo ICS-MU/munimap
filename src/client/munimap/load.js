@@ -250,7 +250,6 @@ munimap.load.features = function(options) {
   if (!isPost) {
     url += qdata.toString();
   }
-
   return munimap.load.featuresFromUrl({
     source: options.source,
     type: type,
@@ -331,7 +330,8 @@ munimap.load.featuresFromParam = function(paramValue) {
             codes: codes,
             likeExprs: likeExprs
           }).then(function(features) {
-            features.forEach(function(feature) {
+            features.forEach(function(feature, index) {
+              feature.setId(index);
               if (!goog.isDefAndNotNull(feature.getGeometry())) {
                 var locCode = /**@type (string)*/ (feature.get('polohKod'));
                 var building = munimap.building.getByCode(locCode);
@@ -372,7 +372,6 @@ munimap.load.featuresFromUrl = function(options) {
   var method = options.method || 'GET';
 
   munimap.load.xhrCounter++;
-
   return new goog.Promise(function(resolve, reject) {
     xhrMgr.send('load_features' + ' ' + munimap.load.xhrCounter, url, method,
       options.postContent, undefined, undefined,
