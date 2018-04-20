@@ -76,7 +76,8 @@ munimap.reset = function(map, options) {
         var oldExtent = map.getView().calculateExtent(size);
         var duration = 0;
         if (ol.extent.intersects(oldExtent, markersExtent)) {
-          duration = munimap.move.getAnimationDuration(oldExtent, markersExtent);
+          duration = munimap.move.getAnimationDuration(oldExtent,
+            markersExtent);
         }
         map.getView().fit(markersExtent, {
           duration: duration

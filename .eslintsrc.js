@@ -27,6 +27,7 @@ module.exports = {
     'indent': ['error', 2, {VariableDeclarator: 2, SwitchCase: 1}],
     'key-spacing': 'error',
     'keyword-spacing': 'error',
+    'max-len': ["error", { "code": 80 }],
     'no-cond-assign': 'error',
     'no-console': 'error',
     'no-const-assign': 'error',

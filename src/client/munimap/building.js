@@ -81,21 +81,22 @@ munimap.building.STORE = new ol.source.Vector({
  * @this {ol.source.Vector}
  */
 munimap.building.featuresForMap =
-    function(options, extent, resolution, projection) {
-      return munimap.load.featuresForMap(options, extent, resolution, projection).
-        then(function(buildings) {
-          if (buildings.length) {
-            munimap.LIST.forEach(function(map) {
-              var view = map.getView();
-              var res = view ? view.getResolution() : null;
-              if (res) {
-                munimap.cluster.updateClusteredFeatures(map, res);
-              }
-            });
-          }
-          return goog.Promise.resolve(buildings);
-        });
-    };
+  function(options, extent, resolution, projection) {
+    return munimap.load.featuresForMap(options, extent, resolution,
+      projection).
+      then(function(buildings) {
+        if (buildings.length) {
+          munimap.LIST.forEach(function(map) {
+            var view = map.getView();
+            var res = view ? view.getResolution() : null;
+            if (res) {
+              munimap.cluster.updateClusteredFeatures(map, res);
+            }
+          });
+        }
+        return goog.Promise.resolve(buildings);
+      });
+  };
 
 
 /**
@@ -159,7 +160,7 @@ munimap.building.isCode = function(maybeCode) {
  */
 munimap.building.isLikeExpr = function(maybeLikeExpr) {
   return !!maybeLikeExpr.match(munimap.building.LIKE_EXPR_REGEX) &&
-      maybeLikeExpr.indexOf('_') >= 0;
+    maybeLikeExpr.indexOf('_') >= 0;
 };
 
 
@@ -169,7 +170,7 @@ munimap.building.isLikeExpr = function(maybeLikeExpr) {
  */
 munimap.building.isCodeOrLikeExpr = function(maybeCodeOrLikeExpr) {
   return munimap.building.isCode(maybeCodeOrLikeExpr) ||
-      munimap.building.isLikeExpr(maybeCodeOrLikeExpr);
+    munimap.building.isLikeExpr(maybeCodeOrLikeExpr);
 };
 
 
@@ -179,7 +180,7 @@ munimap.building.isCodeOrLikeExpr = function(maybeCodeOrLikeExpr) {
 munimap.building.assertCodeOrLikeExpr = function(code) {
   assert(!!code.match(munimap.building.LIKE_EXPR_REGEX),
     'Location code of building should consist of 3 letters and 2 digits. ' +
-      'Any of these characters might be replaced with _ wildcard.');
+    'Any of these characters might be replaced with _ wildcard.');
 };
 
 
@@ -194,11 +195,11 @@ munimap.building.isClickable = function(options) {
 
   if (munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
     return !munimap.building.isSelected(feature, map) &&
-        munimap.building.hasInnerGeometry(feature);
+      munimap.building.hasInnerGeometry(feature);
   } else if (munimap.building.hasInnerGeometry(feature)) {
     var markers = munimap.marker.getStore(map).getFeatures();
     return markers.indexOf(feature) >= 0 ||
-        resolution < munimap.complex.RESOLUTION.max;
+      resolution < munimap.complex.RESOLUTION.max;
   }
   return false;
 };
@@ -214,7 +215,7 @@ munimap.building.featureClickHandler = function(options) {
   var resolution = options.resolution;
 
   var isVisible =
-      munimap.range.contains(munimap.floor.RESOLUTION, resolution);
+    munimap.range.contains(munimap.floor.RESOLUTION, resolution);
   if (!isVisible) {
     var point = munimap.feature.getClosestPointToPixel(map, feature, pixel);
     munimap.map.zoomToPoint(map, point, munimap.floor.RESOLUTION.max);
@@ -334,10 +335,10 @@ munimap.building.refreshSelected = function(map) {
   if (goog.isDef(size)) {
     var viewExt = map.getView().calculateExtent(size);
     var refExt =
-        ol.extent.buffer(viewExt, munimap.getBufferValue(viewExt));
+      ol.extent.buffer(viewExt, munimap.getBufferValue(viewExt));
     var selectedBuilding = munimap.getProps(map).selectedBuilding;
     if (!selectedBuilding ||
-        !munimap.building.isSelectedInExtent(refExt, map)) {
+      !munimap.building.isSelectedInExtent(refExt, map)) {
       if (munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
         var selectFeature;
         var maxArea;
@@ -400,8 +401,8 @@ munimap.building.getDefaultLabel = function(feature, resolution) {
 
   var complex = munimap.building.getComplex(feature);
   if (!namePart ||
-      !complex || munimap.complex.getBuildingCount(complex) === 1 ||
-      resolution < munimap.complex.RESOLUTION.min) {
+    !complex || munimap.complex.getBuildingCount(complex) === 1 ||
+    resolution < munimap.complex.RESOLUTION.min) {
     var addressPart = munimap.building.getAddressPart(feature, resolution);
     if (addressPart) {
       result.push(addressPart);
@@ -567,7 +568,7 @@ munimap.building.load.complexUnitsProcessor = function(options) {
         newComplexes.forEach(function(complex) {
           var complexUnits = units.filter(function(unit) {
             return unit.get('areal_sidelni_id') ===
-                 complex.get(munimap.complex.ID_FIELD_NAME);
+              complex.get(munimap.complex.ID_FIELD_NAME);
           });
           complex.set(munimap.complex.UNITS_FIELD_NAME, complexUnits);
         });

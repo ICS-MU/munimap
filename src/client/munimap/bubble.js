@@ -35,7 +35,7 @@ munimap.bubble.create = function(map, hideResolution, detail, offsetX, offsetY,
 
   popup.setPosition(center);
   popup.setOffset([x, y]);
-  
+
   if (autoPan) {
     var currentRes = map.getView().getResolution() || 1;
     var constrainedResolution = map.getView().constrainResolution(currentRes,
