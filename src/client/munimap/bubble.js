@@ -16,7 +16,7 @@ munimap.bubble.create = function(map, hideResolution, detail, offsetX, offsetY,
   center, autoPan) {
   var munimapEl = map.getTargetElement();
   var popupEl = goog.dom.createDom('div', 'ol-popup munimap-info' +
-      ' munimap-info-bubble');
+    ' munimap-info-bubble');
   var contentEl = goog.dom.createDom('div', 'munimap-content');
   var closeButtonEl = goog.dom.createDom('div', 'munimap-close-button');
   goog.dom.appendChild(popupEl, closeButtonEl);
@@ -88,8 +88,14 @@ munimap.bubble.show = function(feature, map, detail, opt_offsetX, opt_offsetY,
   var hideResolution = opt_hideResolution || munimap.marker.RESOLUTION;
   var autoPan = opt_autoPan || false;
 
+  var geometry = feature.getGeometry()
   var popup = map.getOverlayById('genericPopup');
-  var center = ol.extent.getCenter(feature.getGeometry().getExtent());
+  var center = ol.extent.getCenter(geometry.getExtent());
+  if(!geometry.intersectsCoordinate(center) && geometry 
+  instanceof ol.geom.MultiPolygon || geometry instanceof ol.geom.Polygon) {
+    center = munimap.geom.getBetterInteriorPoint(geometry)
+    center = center.getCoordinates()
+  }
   if (popup) {
     map.removeOverlay(popup);
   }

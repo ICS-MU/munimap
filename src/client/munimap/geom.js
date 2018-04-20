@@ -144,7 +144,6 @@ munimap.geom.getHorizontalIntersections = function(polygon, y) {
 /**
  * @param {ol.geom.Polygon|ol.geom.MultiPolygon} polygon
  * @return {ol.geom.Point}
- * @protected
  */
 munimap.geom.getBetterInteriorPoint = function(polygon) {
   var centerCoordinate = ol.extent.getCenter(polygon.getExtent());
