@@ -35,7 +35,7 @@ munimap.bubble.create = function(map, hideResolution, detail, offsetX, offsetY,
 
   popup.setPosition(center);
   popup.setOffset([x, y]);
-
+  
   if (autoPan) {
     var currentRes = map.getView().getResolution() || 1;
     var constrainedResolution = map.getView().constrainResolution(currentRes,
@@ -88,13 +88,13 @@ munimap.bubble.show = function(feature, map, detail, opt_offsetX, opt_offsetY,
   var hideResolution = opt_hideResolution || munimap.marker.RESOLUTION;
   var autoPan = opt_autoPan || false;
 
-  var geometry = feature.getGeometry()
+  var geometry = feature.getGeometry();
   var popup = map.getOverlayById('genericPopup');
   var center = ol.extent.getCenter(geometry.getExtent());
-  if(!geometry.intersectsCoordinate(center) && geometry 
-  instanceof ol.geom.MultiPolygon || geometry instanceof ol.geom.Polygon) {
-    center = munimap.geom.getBetterInteriorPoint(geometry)
-    center = center.getCoordinates()
+  if (!geometry.intersectsCoordinate(center) && geometry
+    instanceof ol.geom.MultiPolygon || geometry instanceof ol.geom.Polygon) {
+    center = munimap.geom.getBetterInteriorPoint(geometry);
+    center = center.getCoordinates();
   }
   if (popup) {
     map.removeOverlay(popup);
