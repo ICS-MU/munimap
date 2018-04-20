@@ -125,7 +125,8 @@ munimap.marker.featureClickHandler = function(options) {
 
   if (!isVisible) {
     var point;
-    if (munimap.room.isRoom(feature) || munimap.door.isDoor(feature) || munimap.marker.custom.isCustom(feature)) {
+    if (munimap.room.isRoom(feature) || munimap.door.isDoor(feature) ||
+    munimap.marker.custom.isCustom(feature)) {
       var extent = munimap.extent.ofFeature(feature);
       point = ol.extent.getCenter(extent);
     } else {
@@ -134,7 +135,7 @@ munimap.marker.featureClickHandler = function(options) {
     munimap.map.zoomToPoint(map, point, resolutionRange.max);
   }
   if (feature.get('detail')) {
-    munimap.bubble.show(feature, map, String(feature.get('detail')), 0, 20);
+    munimap.bubble.show(feature, map, String(feature.get('detail')), 0, 20, undefined, true);
   }
   if (!munimap.marker.custom.isCustom(feature)) {
     munimap.changeFloor(map, feature);
