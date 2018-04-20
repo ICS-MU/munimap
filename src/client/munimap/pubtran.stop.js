@@ -199,7 +199,8 @@ munimap.pubtran.stop.featureClickHandler = function(options) {
  */
 munimap.pubtran.stop.featuresForMap =
     function(options, extent, resolution, projection) {
-      return munimap.load.featuresForMap(options, extent, resolution, projection).
+      return munimap.load.featuresForMap(options, extent, resolution,
+        projection).
         then(function(stops) {
           return goog.Promise.resolve(stops);
         });

@@ -135,7 +135,8 @@ munimap.marker.featureClickHandler = function(options) {
     munimap.map.zoomToPoint(map, point, resolutionRange.max);
   }
   if (feature.get('detail')) {
-    munimap.bubble.show(feature, map, String(feature.get('detail')), 0, 20, undefined, true);
+    munimap.bubble.show(feature, map, String(feature.get('detail')), 0, 20,
+      undefined, true);
   }
   if (!munimap.marker.custom.isCustom(feature)) {
     munimap.changeFloor(map, feature);
