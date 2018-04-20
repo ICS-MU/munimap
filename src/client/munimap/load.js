@@ -254,6 +254,9 @@ munimap.load.features = function(options) {
     'where': options.where || '1=1'
   };
   var qdata = goog.Uri.QueryData.createFromMap(params);
+  if (!options.method) {
+    options.method = 'POST';
+  }
   var isPost = options.method === 'POST';
   if (!isPost) {
     url += qdata.toString();
@@ -378,7 +381,6 @@ munimap.load.featuresFromUrl = function(options) {
   var url = options.url;
   var projection = options.projection || ol.proj.get('EPSG:3857');
   var method = options.method || 'GET';
-
   munimap.load.xhrCounter++;
   return new goog.Promise(function(resolve, reject) {
     xhrMgr.send('load_features' + ' ' + munimap.load.xhrCounter, url, method,
