@@ -89,7 +89,6 @@ munimap.optpoi.load = function(options) {
   });
   goog.array.extend(labels, idLabels);
   goog.array.removeDuplicates(labels);
-
   var where = 'typ IN (\'' + labels.join('\', \'') + '\')';
   where += ' AND volitelny=1';
   var opts = {
