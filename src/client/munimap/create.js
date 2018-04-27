@@ -175,12 +175,13 @@ munimap.create = function(options) {
         view: view
       });
       munimap.LIST.push(map);
-
+      markers.forEach(function(marker, ix) {
+        marker.setId(ix);
+      });
       var markerSource = new ol.source.Vector({
         attributions: muAttributions,
         features: markers
       });
-
       var markerOptions = {
         map: map,
         markerSource: markerSource,
@@ -298,7 +299,6 @@ munimap.create = function(options) {
       map.addLayer(markerLayer);
       markerLayer.once('precompose', munimap.marker.style.getPattern);
       munimap.cluster.updateClusteredFeatures(map, view.getResolution());
-
       map.on('pointermove', function(evt) {
         if (evt.dragging) {
           return;
