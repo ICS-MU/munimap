@@ -384,6 +384,10 @@ munimap.cluster.style.function = function(options, feature, resolution) {
   var firstFeature = features[0];
   var marked = munimap.marker.isMarker(options.map, firstFeature);
   if (features.length === 1) {
+    /*console.log('jen jeden');
+    console.log('options', options);
+    console.log('feature', feature);
+    console.log('cluster feature', firstFeature);*/
     result = munimap.cluster.style.pinFunction(
       options, feature, firstFeature, resolution);
   } else {
@@ -448,9 +452,17 @@ munimap.cluster.style.pinFunction =
       }
     }
 
-    var fill = isMarked ?
-      munimap.marker.style.TEXT_FILL :
-      munimap.style.TEXT_FILL;
+    var fill;
+    var color = /**@type {string}*/ (feature.get('color'));
+    if (color) {
+      fill = new ol.style.Fill({
+        color: color
+      });
+    } else if (isMarked) {
+      fill = munimap.marker.style.TEXT_FILL;
+    } else {
+      fill = munimap.style.TEXT_FILL;
+    }
 
     var fontSize = munimap.building.style.FONT_SIZE;
 
@@ -464,14 +476,18 @@ munimap.cluster.style.pinFunction =
       title: title,
       zIndex: 6
     };
-    if (title) {
-      var textStyle = munimap.style.getTextStyleWithOffsetY(opts);
-      styleArray.push(textStyle);
+    if (color) {
+      styleArray = munimap.style.getLabelWithPin(opts);
+    } else {
+      if (title) {
+        var textStyle = munimap.style.getTextStyleWithOffsetY(opts);
+        styleArray.push(textStyle);
+      }
+      var pin = isMarked ?
+        munimap.marker.style.createPinFromGeometry(geometry) :
+        munimap.style.PIN;
+      styleArray.push(pin);
     }
-    var pin = isMarked ?
-      munimap.marker.style.createPinFromGeometry(geometry) :
-      munimap.style.PIN;
-    styleArray.push(pin);
     return styleArray;
   };
 
