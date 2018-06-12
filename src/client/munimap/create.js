@@ -36,7 +36,7 @@ goog.require('munimap.room.style');
 goog.require('munimap.source.Cluster');
 goog.require('munimap.store');
 goog.require('munimap.style');
-
+goog.require('munimap.workplaces');
 
 /**
  * @param {munimapx.create.Options} options
@@ -77,7 +77,8 @@ munimap.create = function(options) {
         baseMap: options.baseMap || munimap.BaseMaps.OSM_BW,
         pubTran: options.pubTran,
         locationCodes: options.locationCodes,
-        mapLinks: options.mapLinks
+        mapLinks: options.mapLinks,
+        markerFilter: options.markerFilter
       };
     }).then(function(options) {
       var target = options.target;
@@ -511,6 +512,13 @@ munimap.create.setDefaultLayersProps = function(options) {
 munimap.create.setDefaultLayersPropsOptions;
 
 
+
+/**
+ * @type {Array.<string>}
+ */
+munimap.create.roomCodes = [];
+
+
 /**
  * Load features by location codes or decorate custom markers.
  * @param {Array.<string>|Array.<ol.Feature>|undefined} featuresLike
@@ -518,6 +526,12 @@ munimap.create.setDefaultLayersPropsOptions;
  * @return {goog.Thenable<Array<ol.Feature>>} promise of features
  */
 munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
+  var workplaces = []
+  if (options.markerFilter !== undefined) {
+    options.markerFilter.forEach(function(el) {
+      workplaces.push(munimap.workplaces.ids[el])
+    })
+  }
   var result;
   var arrPromises = []; // array of promises of features
   if (!goog.isArray(featuresLike)) {
@@ -544,39 +558,41 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
           return ctguid.split(':')[1];
         });
         arrPromises.push(munimap.optpoi.load({
-          ids: ctgIds
+          ids: ctgIds,
+          workplaces: workplaces
         }).then(function(features) {
           var rooms = features.filter(function(f) {
             var lc = f.get('polohKodLokace');
             goog.asserts.assertString(lc);
             return munimap.room.isCode(lc);
           });
-          var roomCodes = rooms.map(function(f) {
+          munimap.create.roomCodes = rooms.map(function(f) {
             return f.get('polohKodLokace');
           });
-
           if (ctgIds.length === 1 && !options.markerLabel) {
             options.markerLabel = function(f, r) {
+
               var clustered = munimap.cluster.getFeatures(f);
               if (!clustered.length) {
                 clustered = [f];
               }
               clustered = clustered.filter(function(f) {
-                return goog.array.contains(roomCodes, f.get('polohKod'));
+                return goog.array.contains(munimap.create.roomCodes, f.get('polohKod'));
               });
+
               var ctgLabel = munimap.lang.getMsg(ctgIds[0]);
-              var result;
+              var label;
               if (clustered.length === 1) {
-                result = ctgLabel;
+                label = ctgLabel;
               } else if (clustered.length > 1) {
-                result = clustered.length + 'x ' + ctgLabel;
+                label = clustered.length + 'x ' + ctgLabel;
               }
-              return result;
+              return label;
             };
           }
 
           return new goog.Promise(function(resolve, reject) {
-            munimap.load.featuresFromParam(roomCodes).then(function(values) {
+            munimap.load.featuresFromParam(munimap.create.roomCodes).then(function(values) {
               resolve(munimap.create.addPoiDetail(values, features));
             });
           });
@@ -589,9 +605,19 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
         values = values.reduce(function(a, b) {
           return a.concat(b);
         }, []);
+        // if (workplaces.length > 0) {
+        //   values = values.filter(function(el) {
+        //     if (workplaces.indexOf(Number(el.get('pracoviste'))) !== -1) {
+        //       return true
+        //     }
+        //     return false
+        //   })
+        // }
+
         result = /** @type {goog.Thenable<Array<ol.Feature>>} */(
           goog.Promise.resolve(values)
         );
+
         resolve(result);
       });
     });
@@ -610,6 +636,7 @@ munimap.create.addPoiDetail = function(features, details) {
   features.forEach(function(feature) {
     details.forEach(function(detail) {
       if (feature.get('polohKod') === detail.get('polohKodLokace')) {
+        feature.set('pracoviste', detail.get('pracoviste'));
         var name, open;
         if (munimap.lang.active === 'cs') {
           name = detail.get('nazev_cs');
@@ -620,7 +647,7 @@ munimap.create.addPoiDetail = function(features, details) {
           name = goog.isDefAndNotNull(detail.get(
             'nazev_en')) ? detail.get(
               'nazev_en') : detail.get(
-              'nazev_cs');
+                'nazev_cs');
           open = goog.isDefAndNotNull(detail.get(
             'provozniDoba_en')) ? detail.get(
               'provozniDoba_en') : '';
@@ -655,7 +682,7 @@ munimap.create.loadFonts = function() {
       'classes': false,
       'custom': {
         'families': ['MunimapFont'],
-        'testStrings': {'MunimapFont': '\uf129'},
+        'testStrings': { 'MunimapFont': '\uf129' },
         'urls': [
           cssurl
         ]

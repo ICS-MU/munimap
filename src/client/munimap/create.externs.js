@@ -18,7 +18,8 @@ munimapx.create;
  *   baseMap: (string|undefined),
  *   pubTran: (boolean|undefined),
  *   locationCodes: (boolean|undefined),
- *   mapLinks: (boolean|undefined)
+ *   mapLinks: (boolean|undefined),
+ *   markerFilter: (Array.<string>|undefined),
  * }}
  */
 munimapx.create.Options;
