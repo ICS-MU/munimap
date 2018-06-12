@@ -80,6 +80,7 @@ munimap.optpoi.isCtgUid = function(maybeCtgUid) {
  */
 munimap.optpoi.load = function(options) {
   var labels = options.labels || [];
+  var workplaces = options.workplaces || [];
   var ids = options.ids || [];
   var idLabels = ids.map(function(id) {
     var key = goog.object.findKey(munimap.optpoi.ctg.Id, function(v) {
@@ -91,6 +92,9 @@ munimap.optpoi.load = function(options) {
   goog.array.removeDuplicates(labels);
   var where = 'typ IN (\'' + labels.join('\', \'') + '\')';
   where += ' AND volitelny=1';
+  if(workplaces.length > 0) {
+    where += ' AND pracoviste IN (\'' + workplaces.join('\', \'') + '\')';
+  }
   var opts = {
     source: munimap.optpoi.TYPE.store,
     type: munimap.optpoi.TYPE,
@@ -105,7 +109,8 @@ munimap.optpoi.load = function(options) {
 /**
  * @typedef {{
  *   ids: (Array<string>|undefined),
- *   labels: (Array<string>|undefined)
+ *   labels: (Array<string>|undefined),
+ *   workplaces: (Array<number>|undefined)
  * }}
  */
 munimap.optpoi.load.Options;

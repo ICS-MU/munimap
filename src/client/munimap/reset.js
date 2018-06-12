@@ -51,7 +51,8 @@ munimap.reset = function(map, options) {
       markerSource.clear();
       markerSource.addFeatures(markers);
 
-      var clusterSource = munimap.cluster.getSource(map);
+      // var clusterSource = munimap.cluster.getSource(map);
+      var clusterSource = munimap.cluster.getStore(map);
       clusterSource.clear();
       clusterSource.addFeatures(markers);
       var clusterLayer = munimap.cluster.getLayer(map);

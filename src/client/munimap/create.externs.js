@@ -25,8 +25,13 @@ munimapx.create;
 >>>>>>> bd66799... add switch to munimap.create for showing location codes instead of room numbers
 =======
  *   locationCodes: (boolean|undefined),
+<<<<<<< HEAD
  *   mapLinks: (boolean|undefined)
 >>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
+=======
+ *   mapLinks: (boolean|undefined),
+ *   markerFilter: (Array.<string>|undefined),
+>>>>>>> 2c1dbb3... marker filter init
  * }}
  */
 munimapx.create.Options;
