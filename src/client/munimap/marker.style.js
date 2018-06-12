@@ -286,9 +286,17 @@ munimap.marker.style.labelFunction = function(options, feature, resolution) {
   var markers = options.markerSource.getFeatures();
   var isMarked = goog.array.contains(markers, feature);
 
-  var fill = isMarked ?
-    munimap.marker.style.TEXT_FILL :
-    munimap.style.TEXT_FILL;
+  var fill;
+  var color = /**@type {string}*/ (feature.get('color'));
+  if (color) {
+    fill = new ol.style.Fill({
+      color: color
+    });
+  } else if (isMarked) {
+    fill = munimap.marker.style.TEXT_FILL;
+  } else {
+    fill = munimap.style.TEXT_FILL;
+  }
 
   var fontSize;
   if (isRoom || isDoor) {
