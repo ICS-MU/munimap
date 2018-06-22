@@ -380,11 +380,14 @@
 			)
 		) poi;
 
-	INSERT INTO dbo.BODY_ZAJMU(objectid, typ, polohKodLokace, polohKodPodlazi, vychoziPodlazi, nazev_cs, nazev_en, volitelny, provozniDoba_cs, provozniDoba_en, x, y)
+	INSERT INTO dbo.BODY_ZAJMU(objectid, typ, polohKodLokace, polohKodPodlazi, vychoziPodlazi, nazev_cs, nazev_en, popis_cs, popis_en, volitelny, provozniDoba_cs, provozniDoba_en, url, x, y, pracoviste)
 	SELECT
 		ROW_NUMBER() OVER (ORDER BY bz.BOD_ZAJMU_ID) + (SELECT MAX(OBJECTID) FROM sde_munimap.dbo.BODY_ZAJMU) AS OBJECTID,
 		bzt.NAZEV_CS AS typ,
-		(SELECT POLOH_KOD FROM sde.sde.FM_MISTNOST WHERE MISTNOST_ID = bz.MISTNOST_ID) AS polohKodLokace,
+		CASE
+			WHEN bz.POLOH_KOD IS NOT NULL THEN bz.POLOH_KOD
+			ELSE (SELECT POLOH_KOD FROM sde.sde.FM_MISTNOST WHERE MISTNOST_ID = bz.MISTNOST_ID)
+		END AS polohKodLokace,
 		SUBSTRING((SELECT POLOH_KOD FROM sde.sde.FM_MISTNOST WHERE MISTNOST_ID = bz.MISTNOST_ID), 0, 9) AS polohKodPodlazi,
 		CASE
 			WHEN SUBSTRING((SELECT POLOH_KOD FROM sde.sde.FM_MISTNOST WHERE MISTNOST_ID = bz.MISTNOST_ID), 0, 9) IN (
@@ -397,11 +400,15 @@
 		END AS vychoziPodlazi,
 		bz.NAZEV_CS AS nazev_cs,
 		bz.NAZEV_EN AS nazev_en,
+		bz.POPIS_CS AS popis_cs,
+		bz.POPIS_EN AS popis_en,
 		1 AS volitelny,
 		bz.PROVOZ_DOBA_CS AS provozniDoba_cs,
 		bz.PROVOZ_DOBA_EN AS provozniDoba_en,
-		CAST(GEOSOUR_X AS float) AS x,
-		CAST(GEOSOUR_Y AS float) AS y
+		bz.URL AS url,
+		CAST(REPLACE(GEOSOUR_X, ',', '.') AS float) AS x,
+		CAST(REPLACE(GEOSOUR_Y, ',', '.') AS float) AS y,
+		(SELECT ZKRATKA_CS FROM sde.sde.ISBAPS_PRACOVISTE WHERE VAZPR = (SELECT SOU_VAZPR FROM sde.sde.ISBAPS_PRACOVISTE p WHERE p.VAZPR = bz.VAZPR)) AS pracoviste
 	FROM sde.sde.FM_BOD_ZAJMU bz LEFT JOIN sde.sde.FM_BOD_ZAJMU_TYP bzt ON bz.BOD_ZAJMU_TYP_ID = bzt.BOD_ZAJMU_TYP_ID;
 
 	DELETE FROM dbo.PRACOVISTE;
@@ -433,11 +440,11 @@
 	  nazev AS nazev,
 	  oznacnik
 	FROM sde_publ.sde.ZASTAVKY2017_3857;
- 
-DELETE FROM dbo.OTEVIRANI_DVERI;
-INSERT INTO dbo.OTEVIRANI_DVERI(OBJECTID, polohKodPodlazi, Shape)
-SELECT
-  ROW_NUMBER() OVER (ORDER BY OBJECTID) AS OBJECTID,
-  polohKodPodlazi,
-  Shape
-FROM sde_publ.SDE.dvere_ote_pudorys
+
+	DELETE FROM dbo.OTEVIRANI_DVERI;
+	INSERT INTO dbo.OTEVIRANI_DVERI(OBJECTID, polohKodPodlazi, Shape)
+	SELECT
+	  ROW_NUMBER() OVER (ORDER BY OBJECTID) AS OBJECTID,
+	  polohKodPodlazi,
+	  Shape
+	FROM sde_publ.SDE.dvere_ote_pudorys
