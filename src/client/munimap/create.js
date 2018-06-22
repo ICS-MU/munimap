@@ -36,7 +36,6 @@ goog.require('munimap.room.style');
 goog.require('munimap.source.Cluster');
 goog.require('munimap.store');
 goog.require('munimap.style');
-goog.require('munimap.workplaces');
 
 /**
  * @param {munimapx.create.Options} options
@@ -526,11 +525,11 @@ munimap.create.roomCodes = [];
  * @return {goog.Thenable<Array<ol.Feature>>} promise of features
  */
 munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
-  var workplaces = []
+  var workplaces = [];
   if (options.markerFilter !== undefined) {
     options.markerFilter.forEach(function(el) {
-      workplaces.push(munimap.workplaces.ids[el])
-    })
+      workplaces.push(el);
+    });
   }
   var result;
   var arrPromises = []; // array of promises of features
@@ -577,7 +576,8 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
                 clustered = [f];
               }
               clustered = clustered.filter(function(f) {
-                return goog.array.contains(munimap.create.roomCodes, f.get('polohKod'));
+                return goog.array.contains(munimap.create.roomCodes,
+                  f.get('polohKod'));
               });
 
               var ctgLabel = munimap.lang.getMsg(ctgIds[0]);
@@ -592,9 +592,10 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
           }
 
           return new goog.Promise(function(resolve, reject) {
-            munimap.load.featuresFromParam(munimap.create.roomCodes).then(function(values) {
-              resolve(munimap.create.addPoiDetail(values, features));
-            });
+            munimap.load.featuresFromParam(munimap.create.roomCodes)
+              .then(function(values) {
+                resolve(munimap.create.addPoiDetail(values, features));
+              });
           });
         }));
       }
@@ -647,7 +648,7 @@ munimap.create.addPoiDetail = function(features, details) {
           name = goog.isDefAndNotNull(detail.get(
             'nazev_en')) ? detail.get(
               'nazev_en') : detail.get(
-                'nazev_cs');
+              'nazev_cs');
           open = goog.isDefAndNotNull(detail.get(
             'provozniDoba_en')) ? detail.get(
               'provozniDoba_en') : '';
@@ -657,7 +658,7 @@ munimap.create.addPoiDetail = function(features, details) {
         if (url) {
           name = '<a href="' + url + '" target="_blank">' + name + '</a>';
         }
-        open = open.replace(',', '<br>');
+        open = open.replace(/,/g, '<br>');
         name = '<div class="munimap-bubble-title">' + name + '</div>';
         open = '<div class="munimap-bubble-text">' + open + '</div>';
         feature.set('detail', name + open);
@@ -682,7 +683,7 @@ munimap.create.loadFonts = function() {
       'classes': false,
       'custom': {
         'families': ['MunimapFont'],
-        'testStrings': { 'MunimapFont': '\uf129' },
+        'testStrings': {'MunimapFont': '\uf129'},
         'urls': [
           cssurl
         ]
