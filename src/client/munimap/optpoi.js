@@ -92,7 +92,7 @@ munimap.optpoi.load = function(options) {
   goog.array.removeDuplicates(labels);
   var where = 'typ IN (\'' + labels.join('\', \'') + '\')';
   where += ' AND volitelny=1';
-  if(workplaces.length > 0) {
+  if (workplaces.length > 0) {
     where += ' AND pracoviste IN (\'' + workplaces.join('\', \'') + '\')';
   }
   var opts = {

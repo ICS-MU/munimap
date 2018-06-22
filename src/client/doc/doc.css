@@ -100,3 +100,16 @@ span.command {
 span.command span.value {
   color: #080;
 }
+
+.inner-table {
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+.inner-table th {
+  border: 1px solid #000;
+}
+
+.inner-table td {
+  padding: 5px;
+}
