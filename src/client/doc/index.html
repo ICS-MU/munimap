@@ -113,11 +113,13 @@
           <td class="param-type">Array.&lt;string&gt; | undefined</td>
           <td class="param-desc">
             <ul>
-              <li>funkce pro filtrování bodů zájmu</li>
-              <li>parametr je pole zkratek součástí MU</li>
+              <li>pole zkratek součástí MU (pro možné hodnoty viz tabulku níže)</li>
+              <li>používá se pouze v kombinaci s parametrem markers nastaveným na jednu z kategorií bodů zájmu</li>
+              <li>filtruje body zájmu na základě příslušnosti k součástem MU</li>
+              <li>není-li parametr zadán, zobrazí se všechny body zájmu</li>
               <table class="inner-table">
                 <tr>
-                  <th>Název</th>
+                  <th>Název součásti MU</th>
                   <th>Zkratka</th>
                 </tr>
                 <tr>
