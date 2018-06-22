@@ -98,11 +98,17 @@
     <ul class="">
       <li>
         <b>geometry</b> - pomocí objektu typu
-        <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.geom.Point.html" target="_blank">ol.geom.Point</a> definuje polohu "špendlíku" v mapě</li>
+        <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.geom.Point.html" target="_blank">ol.geom.Point</a> definuje polohu "špendlíku" v mapě
+      </li>
       <li>
-        <b>label</b> - textový popis, který se zobrazí u "špendlíku" v mapě</li>
+        <b>label</b> - textový popis, který se zobrazí u "špendlíku" v mapě
+      </li>
       <li>
-        <b>detail</b> - textový / HTML popis, který se zobrazí po kliknutí na "špendlík" - nepovinný parametr</li>
+        <b>detail</b> - textový / HTML popis, který se zobrazí po kliknutí na "špendlík" - nepovinný parametr
+      </li>
+      <li>
+        <b>color</b> - nastaví vlastní barvu (hexadecimální zápis #RRGGBB) špendlíku a popisku - nepovinný parametr
+      </li>
     </ul>
     <p>"Špendlíky" je možné kombinovat s polohovými kódy - v tomto případě rektorát 'BMA01'. Polohové kódy můžete dohledat např. na <a href="https://maps.muni.cz/kompas" target="_blank">Kompasu</a>.</p>
     <pre class="prettyprint">
@@ -113,7 +119,8 @@
           new ol.Feature({
             geometry: new ol.geom.Point([16.612802, 49.190582]),
             label: 'Brno hlavní nádraží',
-            detail: '&lt;h4&gt;Hlavní nádraží&lt;/h4&gt;&lt;a href="https://www.cd.cz" target="_blank">www.cd.cz&lt;/a&gt;'
+            detail: '&lt;h4&gt;Hlavní nádraží&lt;/h4&gt;&lt;a href="https://www.cd.cz" target="_blank">www.cd.cz&lt;/a&gt;',
+            color: '#009900'
           }),
           new ol.Feature({
             geometry: new ol.geom.Point([16.616667, 49.185833]),
@@ -136,6 +143,9 @@
         šířka.
       </li>
     </ul>
+    <p>
+      Více se dozvíte v naší <a href="../doc">dokumentaci</a>.
+    </p>      
   </div>
   <div class="navigation">
     <div class="left">
@@ -178,7 +188,8 @@
         new ol.Feature({
           geometry: new ol.geom.Point([16.612802, 49.190582]),
           label: 'Brno hlavní nádraží',
-          detail: '<h4>Hlavní nádraží</h4><a href="https://www.cd.cz" target="_blank">www.cd.cz</a>'
+          detail: '<h4>Hlavní nádraží</h4><a href="https://www.cd.cz" target="_blank">www.cd.cz</a>',
+          color: '#009900'
         }),
         new ol.Feature({
           geometry: new ol.geom.Point([16.616667, 49.185833]),
