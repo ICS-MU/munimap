@@ -634,6 +634,7 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
 
 munimap.create.addPoiDetail = function(features, details) {
   var result = [];
+  var text = '';
   features.forEach(function(feature) {
     details.forEach(function(detail) {
       if (feature.get('polohKod') === detail.get('polohKodLokace')) {
@@ -660,8 +661,11 @@ munimap.create.addPoiDetail = function(features, details) {
         }
         open = open.replace(/,/g, '<br>');
         name = '<div class="munimap-bubble-title">' + name + '</div>';
-        open = '<div class="munimap-bubble-text">' + open + '</div>';
-        feature.set('detail', name + open);
+        open = (open === '') ? '' :
+          '<div class="munimap-bubble-text">' + open + '</div>';
+        text = (feature.get('detail') === undefined) ? name + open :
+          feature.get('detail') + name + open;
+        feature.set('detail', text);
         result.push(feature);
       }
     });

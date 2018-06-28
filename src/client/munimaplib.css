@@ -148,6 +148,10 @@
   margin: 5px 0;
 }
 
+.munimap-bubble-title:last-child {
+  margin-bottom: 0;
+}
+
 .munimap-link {
   position: absolute;
   left: .5em;
