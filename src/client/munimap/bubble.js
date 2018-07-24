@@ -2,6 +2,14 @@ goog.provide('munimap.bubble');
 
 
 /**
+ * @type {ol.Overlay}
+ */
+munimap.bubble.OVERLAY = new ol.Overlay({
+  id: 'genericPopup',
+});
+
+
+/**
  * @param {ol.Map} map
  * @param {munimap.Range} hideResolution
  * @param {string} detail
@@ -12,7 +20,7 @@ goog.provide('munimap.bubble');
  *
  * @return {ol.Overlay}
  */
-munimap.bubble.create = function(map, hideResolution, detail, offsetX, offsetY,
+munimap.bubble.create = function (map, hideResolution, detail, offsetX, offsetY,
   center, autoPan) {
   var munimapEl = map.getTargetElement();
   var popupEl = goog.dom.createDom('div', 'ol-popup munimap-info' +
@@ -32,7 +40,10 @@ munimap.bubble.create = function(map, hideResolution, detail, offsetX, offsetY,
     id: 'genericPopup',
     element: popupEl
   });
-
+  var mapProps = munimap.getProps(map);
+  var selectedFloor = mapProps.selectedFloor;
+  popup.selectedFloor = selectedFloor;
+  munimap.bubble.OVERLAY = popup;
   popup.setPosition(center);
   popup.setOffset([x, y]);
 
@@ -43,7 +54,7 @@ munimap.bubble.create = function(map, hideResolution, detail, offsetX, offsetY,
     munimap.map.zoomToPoint(map, center, constrainedResolution);
   }
 
-  var closePopup = function() {
+  var closePopup = function () {
     map.un('moveend', checkResolution);
     map.removeOverlay(popup);
     return false;
@@ -51,7 +62,7 @@ munimap.bubble.create = function(map, hideResolution, detail, offsetX, offsetY,
 
   // check if marker is visible after the zoom ends
   var ghostZoom = map.getView().getZoom();
-  var checkResolution = function() {
+  var checkResolution = function () {
     if (ghostZoom != map.getView().getZoom()) {
       ghostZoom = map.getView().getZoom();
       var resolution = map.getView().getResolution();
@@ -81,7 +92,7 @@ munimap.bubble.create = function(map, hideResolution, detail, offsetX, offsetY,
  * @param {munimap.Range=} opt_hideResolution
  * @param {boolean=} opt_autoPan
  */
-munimap.bubble.show = function(feature, map, detail, opt_offsetX, opt_offsetY,
+munimap.bubble.show = function (feature, map, detail, opt_offsetX, opt_offsetY,
   opt_hideResolution, opt_autoPan) {
   var offsetX = opt_offsetX || 0;
   var offsetY = opt_offsetY || 0;

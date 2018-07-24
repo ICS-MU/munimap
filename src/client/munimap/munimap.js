@@ -1,5 +1,6 @@
 goog.provide('munimap');
 
+goog.require('munimap.bubble');
 goog.require('munimap.layer.propName');
 goog.require('munimap.marker');
 goog.require('munimap.move');
@@ -139,6 +140,10 @@ munimap.changeFloor = function(map, featureOrCode) {
       munimap.info.refreshFloorSelect(map, null);
       munimap.info.setBuildingTitle(map, null);
     }
+  }
+  if(munimap.bubble.OVERLAY.selectedFloor && 
+    selectedFloor !== munimap.bubble.OVERLAY.selectedFloor) {
+    map.removeOverlay(munimap.bubble.OVERLAY);
   }
 };
 
