@@ -384,10 +384,6 @@ munimap.cluster.style.function = function(options, feature, resolution) {
   var firstFeature = features[0];
   var marked = munimap.marker.isMarker(options.map, firstFeature);
   if (features.length === 1) {
-    /*console.log('jen jeden');
-    console.log('options', options);
-    console.log('feature', feature);
-    console.log('cluster feature', firstFeature);*/
     result = munimap.cluster.style.pinFunction(
       options, feature, firstFeature, resolution);
   } else {
@@ -512,6 +508,7 @@ munimap.cluster.style.multipleLabelFunction =
     var title;
     if (goog.isDef(options.markerLabel)) {
       title = options.markerLabel(feature, resolution);
+
     }
     if (!goog.isDefAndNotNull(title)) {
       if (marked) {
@@ -522,6 +519,7 @@ munimap.cluster.style.multipleLabelFunction =
           munimap.cluster.style.getUnmarkedDefaultLabel(feature, resolution);
       }
     }
+
     if (title) {
       var fontSize = 13;
       var offsetY = munimap.style.getLabelHeight(title, fontSize) / 2 +
@@ -735,7 +733,6 @@ munimap.cluster.style.getMarkedDefaultLabel =
           }
         });
       }
-
       if (markers.length) {
         markers.forEach(function(marker) {
           if (munimap.building.isBuilding(marker)) {

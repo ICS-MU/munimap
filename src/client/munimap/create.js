@@ -611,13 +611,29 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
                 return goog.array.contains(munimap.create.roomCodes,
                   f.get('polohKod'));
               });
-
               var ctgLabel = munimap.lang.getMsg(ctgIds[0]);
               var label;
+              var clusteredNumber;
               if (clustered.length === 1) {
-                label = ctgLabel;
+                clusteredNumber = clustered[0].get('numberOfDetails');
+                if (clusteredNumber > 1)  {
+                  label = clusteredNumber + 'x ' + ctgLabel;
+                } else {
+                  label = ctgLabel;
+                }
               } else if (clustered.length > 1) {
-                label = clustered.length + 'x ' + ctgLabel;
+                var sameValueArray = [];
+                clustered.forEach(function(el) {
+                  sameValueArray.push(el.get('nazev_cs'));
+                });
+                goog.array.removeDuplicates(sameValueArray);
+                clustered.forEach(function(el) {
+                  for (var i = 1; i < el.get('numberOfDetails'); i++) {
+                    sameValueArray.push('anotherDetailInsideOneFeature');
+                  }
+                });
+                clusteredNumber = sameValueArray.length;
+                label = clusteredNumber + 'x ' + ctgLabel;
               }
               return label;
             };
@@ -638,14 +654,6 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
         values = values.reduce(function(a, b) {
           return a.concat(b);
         }, []);
-        // if (workplaces.length > 0) {
-        //   values = values.filter(function(el) {
-        //     if (workplaces.indexOf(Number(el.get('pracoviste'))) !== -1) {
-        //       return true
-        //     }
-        //     return false
-        //   })
-        // }
 
         result = /** @type {goog.Thenable<Array<ol.Feature>>} */(
           goog.Promise.resolve(values)
@@ -668,9 +676,12 @@ munimap.create.addPoiDetail = function(features, details) {
   var result = [];
   var text = '';
   features.forEach(function(feature) {
+    feature.set('numberOfDetails', 0);
     details.forEach(function(detail) {
       if (feature.get('polohKod') === detail.get('polohKodLokace')) {
+        feature.set('numberOfDetails', feature.get('numberOfDetails') + 1);
         feature.set('pracoviste', detail.get('pracoviste'));
+        feature.set('nazev_cs', detail.get('nazev_cs'));
         var name, open;
         if (munimap.lang.active === 'cs') {
           name = detail.get('nazev_cs');

@@ -141,10 +141,6 @@ munimap.changeFloor = function(map, featureOrCode) {
       munimap.info.setBuildingTitle(map, null);
     }
   }
-  if(munimap.bubble.OVERLAY.selectedFloor && 
-    selectedFloor !== munimap.bubble.OVERLAY.selectedFloor) {
-    map.removeOverlay(munimap.bubble.OVERLAY);
-  }
 };
 
 
@@ -176,7 +172,7 @@ munimap.getSelectedFloorCodeForBuilding = function(map, building) {
 
       if (firstMarked) {
         var firstMarkedCode = /**@type {string}*/
-            (firstMarked.get('polohKod'));
+          (firstMarked.get('polohKod'));
         floorCode = firstMarkedCode.substr(0, 8);
       }
     }
@@ -193,24 +189,26 @@ munimap.getSelectedFloorCodeForBuilding = function(map, building) {
  * @param {ol.Map} map
  * @param {ol.Feature} building
  * @param {string} floorCode
+ *
  * @protected
  */
 munimap.setSelectedFloor = function(map, building, floorCode) {
   var buildingCode = munimap.building.getLocationCode(building);
   var where = 'polohKod LIKE \'' + buildingCode + '%\'';
+  var newSelectedFloor;
   munimap.floor.loadFloors(where).then(function(floors) {
-    var newSelectedFloor = floors.find(function(floor) {
+    newSelectedFloor = floors.find(function(floor) {
       return floorCode ===
       /**@type {string}*/ (floor.get('polohKod'));
     });
     goog.asserts.assertInstanceof(newSelectedFloor, ol.Feature);
     var newSelectedWasActive =
-        munimap.floor.getActiveFloors(map).some(function(code) {
-          return code === floorCode;
-        });
+      munimap.floor.getActiveFloors(map).some(function(code) {
+        return code === floorCode;
+      });
     var mapProps = munimap.getProps(map);
     mapProps.selectedFloor =
-        munimap.floor.getFloorObject(newSelectedFloor);
+      munimap.floor.getFloorObject(newSelectedFloor);
     munimap.info.refreshFloorSelect(map, floors);
     if (newSelectedWasActive) {
       munimap.style.refreshAllFromFragments(map);
@@ -311,7 +309,7 @@ munimap.handleClickOnPixel = function(map, pixel) {
       };
       if (isClickable(handlerOpts)) {
         var featureClickHandler =
-            layer.get(munimap.layer.propName.CLICK_HANDLER);
+          layer.get(munimap.layer.propName.CLICK_HANDLER);
         if (featureClickHandler) {
           goog.asserts.assertFunction(featureClickHandler);
           featureClickHandler(handlerOpts);

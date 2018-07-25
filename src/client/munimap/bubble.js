@@ -6,6 +6,7 @@ goog.provide('munimap.bubble');
  */
 munimap.bubble.OVERLAY = new ol.Overlay({
   id: 'genericPopup',
+  floor: 'none'
 });
 
 
@@ -17,11 +18,12 @@ munimap.bubble.OVERLAY = new ol.Overlay({
  * @param {number} offsetY
  * @param {Array<number>} center
  * @param {boolean} autoPan
+ * @param {string} floor
  *
  * @return {ol.Overlay}
  */
-munimap.bubble.create = function (map, hideResolution, detail, offsetX, offsetY,
-  center, autoPan) {
+munimap.bubble.create = function(map, hideResolution, detail, offsetX, offsetY,
+  center, autoPan, floor) {
   var munimapEl = map.getTargetElement();
   var popupEl = goog.dom.createDom('div', 'ol-popup munimap-info' +
     ' munimap-info-bubble');
@@ -40,12 +42,10 @@ munimap.bubble.create = function (map, hideResolution, detail, offsetX, offsetY,
     id: 'genericPopup',
     element: popupEl
   });
-  var mapProps = munimap.getProps(map);
-  var selectedFloor = mapProps.selectedFloor;
-  popup.selectedFloor = selectedFloor;
   munimap.bubble.OVERLAY = popup;
-  popup.setPosition(center);
-  popup.setOffset([x, y]);
+  munimap.bubble.OVERLAY.floor = floor;
+  munimap.bubble.OVERLAY.setPosition(center);
+  munimap.bubble.OVERLAY.setOffset([x, y]);
 
   if (autoPan) {
     var currentRes = map.getView().getResolution() || 1;
@@ -54,15 +54,15 @@ munimap.bubble.create = function (map, hideResolution, detail, offsetX, offsetY,
     munimap.map.zoomToPoint(map, center, constrainedResolution);
   }
 
-  var closePopup = function () {
+  var closePopup = function() {
     map.un('moveend', checkResolution);
-    map.removeOverlay(popup);
+    map.removeOverlay(munimap.bubble.OVERLAY);
     return false;
   };
 
   // check if marker is visible after the zoom ends
   var ghostZoom = map.getView().getZoom();
-  var checkResolution = function () {
+  var checkResolution = function() {
     if (ghostZoom != map.getView().getZoom()) {
       ghostZoom = map.getView().getZoom();
       var resolution = map.getView().getResolution();
@@ -78,8 +78,8 @@ munimap.bubble.create = function (map, hideResolution, detail, offsetX, offsetY,
 
   closeButtonEl.onclick = closePopup;
   map.on('moveend', checkResolution);
-  map.addOverlay(popup);
-  return popup;
+  map.addOverlay(munimap.bubble.OVERLAY);
+  return munimap.bubble.OVERLAY;
 };
 
 
@@ -92,7 +92,7 @@ munimap.bubble.create = function (map, hideResolution, detail, offsetX, offsetY,
  * @param {munimap.Range=} opt_hideResolution
  * @param {boolean=} opt_autoPan
  */
-munimap.bubble.show = function (feature, map, detail, opt_offsetX, opt_offsetY,
+munimap.bubble.show = function(feature, map, detail, opt_offsetX, opt_offsetY,
   opt_hideResolution, opt_autoPan) {
   var offsetX = opt_offsetX || 0;
   var offsetY = opt_offsetY || 0;
@@ -100,18 +100,17 @@ munimap.bubble.show = function (feature, map, detail, opt_offsetX, opt_offsetY,
   var autoPan = opt_autoPan || false;
 
   var geometry = feature.getGeometry();
-  var popup = map.getOverlayById('genericPopup');
+  var floor = feature.get('polohKod') ? feature.get('polohKod').slice(0, 8) :
+    'noChange';
   var center = ol.extent.getCenter(geometry.getExtent());
   if (!geometry.intersectsCoordinate(center) && geometry
     instanceof ol.geom.MultiPolygon || geometry instanceof ol.geom.Polygon) {
     center = munimap.geom.getBetterInteriorPoint(geometry);
     center = center.getCoordinates();
   }
-  if (popup) {
-    map.removeOverlay(popup);
-  }
-  popup = munimap.bubble.create(map, hideResolution, detail, offsetX, offsetY,
-    center, autoPan);
+  map.removeOverlay(munimap.bubble.OVERLAY);
+  munimap.bubble.create(map, hideResolution, detail, offsetX, offsetY,
+    center, autoPan, floor);
 };
 
 

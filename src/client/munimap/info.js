@@ -189,6 +189,10 @@ munimap.info.findSelectedFloorItem = function(floorSelect, map) {
       }
     });
   }
+  if (selectedFloor.locationCode !== munimap.bubble.OVERLAY.floor &&
+    munimap.bubble.OVERLAY.floor !== 'noChange') {
+    map.removeOverlay(munimap.bubble.OVERLAY);
+  }
   return selectedItem;
 };
 
@@ -252,7 +256,7 @@ munimap.info.highlightFloors = function(map, floorSelect, floors) {
             var itemElement = item.getElement();
             var title = itemElement.getAttribute('title');
             var addTitle =
-            munimap.lang.getMsg(munimap.lang.Translations.INFOBOX_MARKED);
+              munimap.lang.getMsg(munimap.lang.Translations.INFOBOX_MARKED);
             if (itemElement.getAttribute('title').indexOf(addTitle) === -1) {
               goog.dom.setProperties(itemElement,
                 {title: title + '\n' + addTitle});
