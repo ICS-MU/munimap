@@ -584,7 +584,7 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
               var clusteredNumber;
               if (clustered.length === 1) {
                 clusteredNumber = clustered[0].get('numberOfDetails');
-                if (clusteredNumber > 1)  {
+                if (clusteredNumber > 1) {
                   label = clusteredNumber + 'x ' + ctgLabel;
                 } else {
                   label = ctgLabel;
@@ -592,9 +592,18 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
               } else if (clustered.length > 1) {
                 var sameValueArray = [];
                 clustered.forEach(function(el) {
-                  sameValueArray.push(el.get('nazev_cs'));
+                  sameValueArray.push({
+                    name: el.get('nazev_cs'),
+                    building: el.get('polohKod').substr(0, 5)
+                  });
                 });
-                goog.array.removeDuplicates(sameValueArray);
+                sameValueArray = sameValueArray.filter(function(thing, index,
+                  self) {
+                  return index === goog.array.findIndex(self, function(t) {
+                    return t.building === thing.building &&
+                      t.name === thing.name;
+                  });
+                });
                 clustered.forEach(function(el) {
                   for (var i = 1; i < el.get('numberOfDetails'); i++) {
                     sameValueArray.push('anotherDetailInsideOneFeature');
