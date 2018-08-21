@@ -31,7 +31,11 @@ munimapx.create;
 =======
  *   mapLinks: (boolean|undefined),
  *   markerFilter: (Array.<string>|undefined),
+<<<<<<< HEAD
 >>>>>>> 2c1dbb3... marker filter init
+=======
+ *   labels: (boolean|undefined),
+>>>>>>> b2619a8... basemap arcgis, labels param
  * }}
  */
 munimapx.create.Options;

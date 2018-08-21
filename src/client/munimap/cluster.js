@@ -303,6 +303,10 @@ munimap.cluster.handleMapPrecomposeEvt = function(evt) {
  * @param {number} resolution
  */
 munimap.cluster.updateClusteredFeatures = function(map, resolution) {
+  if (goog.isDefAndNotNull(munimap.getProps(map).options.labels) &&
+    !munimap.getProps(map).options.labels) {
+    return;
+  }
   var oldFeatures = munimap.cluster.getSourceFeatures(map);
   var features = munimap.cluster.getClusteredFeatures(map, resolution);
   var allFeatures = oldFeatures.concat(features);

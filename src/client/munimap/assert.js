@@ -200,4 +200,18 @@ munimap.assert.locationCodes = function(locationCodes) {
       'Parameter locationCodes should be boolean (true or false).');
   }
 };
+<<<<<<< HEAD
 >>>>>>> bd66799... add switch to munimap.create for showing location codes instead of room numbers
+=======
+
+
+/**
+ * @param {boolean|undefined} labels
+ */
+munimap.assert.labels = function(labels) {
+  if (labels !== undefined) {
+    goog.asserts.assertBoolean(labels,
+      'Parameter labels should be boolean (true or false).');
+  }
+};
+>>>>>>> b2619a8... basemap arcgis, labels param

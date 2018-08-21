@@ -73,9 +73,13 @@ munimap.create = function(options) {
         getMainFeatureAtPixel: options.getMainFeatureAtPixel,
         layers: options.layers,
 <<<<<<< HEAD
+<<<<<<< HEAD
         baseMap: options.baseMap || munimap.BaseMaps.OSM_BW
 =======
         baseMap: options.baseMap || munimap.BaseMaps.OSM_BW,
+=======
+        baseMap: options.baseMap || munimap.BaseMaps.ARCGIS_BW,
+>>>>>>> b2619a8... basemap arcgis, labels param
         pubTran: options.pubTran,
 <<<<<<< HEAD
         locationCodes: options.locationCodes
@@ -87,8 +91,13 @@ munimap.create = function(options) {
 >>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
 =======
         mapLinks: options.mapLinks,
+<<<<<<< HEAD
         markerFilter: options.markerFilter
 >>>>>>> 2c1dbb3... marker filter init
+=======
+        markerFilter: options.markerFilter,
+        labels: options.labels
+>>>>>>> b2619a8... basemap arcgis, labels param
       };
     }).then(function(options) {
       var target = options.target;
@@ -105,6 +114,10 @@ munimap.create = function(options) {
       }
 
       munimap.matomo.checkCustomMarker(options.markers);
+      var esriAttribution = '<a href="http://help.arcgis.com/' +
+        'en/communitymaps/pdf/WorldTopographicMap_Contributors.pdf"' +
+        ' target="_blank">© Esri</a>';
+
       var osmAttribution = new ol.Attribution({
         html:
           munimap.lang.getMsg(munimap.lang.Translations.OSM_ATTRIBUTION_HTML)
@@ -121,6 +134,17 @@ munimap.create = function(options) {
       var raster;
 
       switch (options.baseMap) {
+        case munimap.BaseMaps.ARCGIS:
+        case munimap.BaseMaps.ARCGIS_BW:
+          raster = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+              url: 'https://server.arcgisonline.com/ArcGIS/rest/services/' +
+                'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+              attributions: esriAttribution,
+              crossOrigin: null
+            })
+          });
+          break;
         case munimap.BaseMaps.OSM:
         case munimap.BaseMaps.OSM_BW:
         default:
@@ -145,7 +169,8 @@ munimap.create = function(options) {
           });
         raster.setOpacity(resColor.opacity);
       });
-      if (options.baseMap === munimap.BaseMaps.OSM_BW && !goog.userAgent.IE) {
+      if ((options.baseMap === munimap.BaseMaps.OSM_BW ||
+        options.baseMap === munimap.BaseMaps.ARCGIS_BW) && !goog.userAgent.IE) {
         raster.on('postcompose', function(evt) {
           var ctx = evt.context;
           evt.context.globalCompositeOperation = 'color';
@@ -260,6 +285,7 @@ munimap.create = function(options) {
         updateWhileAnimating: true,
         updateWhileInteracting: true*/
       });
+
       var floorSelect = new goog.ui.Select();
       floorSelect.render(floorEl);
       goog.events.listen(floorSelect, 'action', function() {
@@ -280,7 +306,8 @@ munimap.create = function(options) {
         currentResolution: goog.asserts.assertNumber(view.getResolution()),
         getMainFeatureAtPixel: options.getMainFeatureAtPixel ||
           munimap.getMainFeatureAtPixel,
-        locationCodes: options.locationCodes
+        locationCodes: options.locationCodes,
+        options: options
       };
       map.set(munimap.PROPS_NAME, mapProps);
 
@@ -386,7 +413,6 @@ munimap.create = function(options) {
       });
 
       goog.dom.appendChild(munimapEl, infoEl);
-
       return map;
     }).then(resolve);
   });
@@ -417,7 +443,11 @@ munimap.create.assertOptions = function(options) {
 >>>>>>> bd66799... add switch to munimap.create for showing location codes instead of room numbers
 =======
   munimap.assert.mapLinks(options.mapLinks);
+<<<<<<< HEAD
 >>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
+=======
+  munimap.assert.labels(options.labels);
+>>>>>>> b2619a8... basemap arcgis, labels param
 };
 
 
