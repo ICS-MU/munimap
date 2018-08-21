@@ -73,11 +73,12 @@ munimap.create = function(options) {
         target: target,
         getMainFeatureAtPixel: options.getMainFeatureAtPixel,
         layers: options.layers,
-        baseMap: options.baseMap || munimap.BaseMaps.OSM_BW,
+        baseMap: options.baseMap || munimap.BaseMaps.ARCGIS_BW,
         pubTran: options.pubTran,
         locationCodes: options.locationCodes,
         mapLinks: options.mapLinks,
-        markerFilter: options.markerFilter
+        markerFilter: options.markerFilter,
+        labels: options.labels
       };
     }).then(function(options) {
       var target = options.target;
@@ -94,6 +95,10 @@ munimap.create = function(options) {
       }
 
       munimap.matomo.checkCustomMarker(options.markers);
+      var esriAttribution = '<a href="http://help.arcgis.com/' +
+        'en/communitymaps/pdf/WorldTopographicMap_Contributors.pdf"' +
+        ' target="_blank">© Esri</a>';
+
       var osmAttribution = new ol.Attribution({
         html:
           munimap.lang.getMsg(munimap.lang.Translations.OSM_ATTRIBUTION_HTML)
@@ -110,6 +115,17 @@ munimap.create = function(options) {
       var raster;
 
       switch (options.baseMap) {
+        case munimap.BaseMaps.ARCGIS:
+        case munimap.BaseMaps.ARCGIS_BW:
+          raster = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+              url: 'https://server.arcgisonline.com/ArcGIS/rest/services/' +
+                'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+              attributions: esriAttribution,
+              crossOrigin: null
+            })
+          });
+          break;
         case munimap.BaseMaps.OSM:
         case munimap.BaseMaps.OSM_BW:
         default:
@@ -134,7 +150,8 @@ munimap.create = function(options) {
           });
         raster.setOpacity(resColor.opacity);
       });
-      if (options.baseMap === munimap.BaseMaps.OSM_BW && !goog.userAgent.IE) {
+      if ((options.baseMap === munimap.BaseMaps.OSM_BW ||
+        options.baseMap === munimap.BaseMaps.ARCGIS_BW) && !goog.userAgent.IE) {
         raster.on('postcompose', function(evt) {
           var ctx = evt.context;
           evt.context.globalCompositeOperation = 'color';
@@ -242,6 +259,7 @@ munimap.create = function(options) {
         updateWhileAnimating: true,
         updateWhileInteracting: true*/
       });
+
       var floorSelect = new goog.ui.Select();
       floorSelect.render(floorEl);
       goog.events.listen(floorSelect, 'action', function() {
@@ -262,7 +280,8 @@ munimap.create = function(options) {
         currentResolution: goog.asserts.assertNumber(view.getResolution()),
         getMainFeatureAtPixel: options.getMainFeatureAtPixel ||
           munimap.getMainFeatureAtPixel,
-        locationCodes: options.locationCodes
+        locationCodes: options.locationCodes,
+        options: options
       };
       map.set(munimap.PROPS_NAME, mapProps);
 
@@ -360,7 +379,6 @@ munimap.create = function(options) {
       });
 
       goog.dom.appendChild(munimapEl, infoEl);
-
       return map;
     }).then(resolve);
   });
@@ -386,6 +404,7 @@ munimap.create.assertOptions = function(options) {
   munimap.assert.pubTran(options.pubTran);
   munimap.assert.locationCodes(options.locationCodes);
   munimap.assert.mapLinks(options.mapLinks);
+  munimap.assert.labels(options.labels);
 };
 
 

@@ -33,7 +33,9 @@ munimap.PROPS_NAME = 'munimapProps';
  */
 munimap.BaseMaps = {
   OSM: 'osm',
-  OSM_BW: 'osm-bw'
+  OSM_BW: 'osm-bw',
+  ARCGIS: 'arcgis',
+  ARCGIS_BW: 'arcgis-bw'
 };
 
 

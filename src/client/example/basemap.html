@@ -43,8 +43,9 @@
         Podkladovou mapu si vyberete pomocí parametru <code><a href="../doc/#baseMap">baseMap</a></code> funkce
         <code><a href="../doc/#create">munimap.create</a></code>. Pro barevnou OpenStreetMapu použijte
         jako hodnotu tohoto parametru řetězec <code>osm</code> a pro její černobílou variantu pak <code>osm-bw</code>.
-        Výchozí hodnota je <code>osm-bw</code>, pokud tedy parametr <code><a href="../doc/#baseMap">baseMap</a></code> vynecháte,
-        zobrazí se černobílá mapa.
+        Pro barevnou ArcGIS Online mapu použijte <code>arcgis</code> a pro její černobílou variantu pak <code>arcgis-bw</code>.
+        Výchozí hodnota je <code>arcgis-bw</code>, pokud tedy parametr <code><a href="../doc/#baseMap">baseMap</a></code> vynecháte,
+        zobrazí se černobílá ArcGIS Online mapa.
       </p>
       <p>
         V prohlížečích Internet Explorer je podkladová mapa zobrazena vždy barevně nezávisle na hodnotě parametru baseMap.
@@ -53,7 +54,7 @@
 &lt;script type="text/javascript"&gt;
   munimap.create({
     target: 'map',
-    baseMap: 'osm'
+    baseMap: 'arcgis'
   });
 &lt;/script&gt;
       </pre>
@@ -85,7 +86,7 @@
     <script type="text/javascript">
       munimap.create({
         target: 'map',
-        baseMap: 'osm'
+        baseMap: 'arcgis'
       });
     </script>
     <script>

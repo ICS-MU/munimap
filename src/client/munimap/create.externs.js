@@ -20,6 +20,7 @@ munimapx.create;
  *   locationCodes: (boolean|undefined),
  *   mapLinks: (boolean|undefined),
  *   markerFilter: (Array.<string>|undefined),
+ *   labels: (boolean|undefined),
  * }}
  */
 munimapx.create.Options;

@@ -1,6 +1,7 @@
 goog.provide('munimap.building.STYLE');
 goog.provide('munimap.building.style');
 
+goog.require('munimap');
 goog.require('munimap.cluster.style');
 goog.require('munimap.complex');
 goog.require('munimap.floor');
@@ -91,13 +92,13 @@ munimap.building.style.BIG_FONT_SIZE = 15;
  * @return {boolean}
  */
 munimap.building.style.selectedFloorFilter =
-    function(feature, selectedFloorCode, activeFloorCodes) {
-      if (goog.isDefAndNotNull(selectedFloorCode)) {
-        var locCode = /**@type {string}*/ (feature.get('polohKod'));
-        return selectedFloorCode.startsWith(locCode);
-      }
-      return false;
-    };
+  function(feature, selectedFloorCode, activeFloorCodes) {
+    if (goog.isDefAndNotNull(selectedFloorCode)) {
+      var locCode = /**@type {string}*/ (feature.get('polohKod'));
+      return selectedFloorCode.startsWith(locCode);
+    }
+    return false;
+  };
 
 
 /**
@@ -109,20 +110,20 @@ munimap.building.style.selectedFloorFilter =
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
 munimap.building.style.selectedFloorFunction =
-    function(options, feature, resolution) {
-      var style = munimap.building.style.function(options, feature, resolution);
-      var selectedFill = new ol.style.Fill({
-        color: style.getFill().getColor()
-      });
-      var selectedStroke = new ol.style.Stroke({
-        color: style.getStroke().getColor(),
-        width: 2 * style.getStroke().getWidth()
-      });
-      return new ol.style.Style({
-        fill: selectedFill,
-        stroke: selectedStroke
-      });
-    };
+  function(options, feature, resolution) {
+    var style = munimap.building.style.function(options, feature, resolution);
+    var selectedFill = new ol.style.Fill({
+      color: style.getFill().getColor()
+    });
+    var selectedStroke = new ol.style.Stroke({
+      color: style.getStroke().getColor(),
+      width: 2 * style.getStroke().getWidth()
+    });
+    return new ol.style.Style({
+      fill: selectedFill,
+      stroke: selectedStroke
+    });
+  };
 
 
 /**
@@ -134,60 +135,60 @@ munimap.building.style.selectedFloorFunction =
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
 munimap.building.style.function =
-    function(options, feature, resolution) {
-      var resColor = munimap.style.RESOLUTION_COLOR.find(
-        function(obj, i, arr) {
-          return resolution > obj.resolution || i === (arr.length - 1);
-        });
+  function(options, feature, resolution) {
+    var resColor = munimap.style.RESOLUTION_COLOR.find(
+      function(obj, i, arr) {
+        return resolution > obj.resolution || i === (arr.length - 1);
+      });
 
-      var result;
-      var marked = options.markers.indexOf(feature) >= 0;
-      if (marked) {
+    var result;
+    var marked = options.markers.indexOf(feature) >= 0;
+    if (marked) {
 
-        if (!munimap.range.contains(
-          munimap.cluster.BUILDING_RESOLUTION, resolution)) {
+      if (!munimap.range.contains(
+        munimap.cluster.BUILDING_RESOLUTION, resolution)) {
 
-          if (munimap.building.hasInnerGeometry(feature)) {
-            if (munimap.marker.style.WHITE_TO_GREY_CACHE[resColor.resolution]) {
-              result =
-              munimap.marker.style.WHITE_TO_GREY_CACHE[resColor.resolution];
-            } else {
-              result = new ol.style.Style({
-                fill: new ol.style.Fill({
-                  color: resColor.color
-                }),
-                stroke: munimap.marker.style.BUILDING_STROKE
-              });
-              munimap.marker.style.WHITE_TO_GREY_CACHE[resColor.resolution] =
-              result;
-            }
-          } else {
-            result = munimap.marker.style.NO_GEOMETRY_BUILDING;
-          }
-        } else {
-          result = munimap.building.STYLE;
-        }
-      } else {
         if (munimap.building.hasInnerGeometry(feature)) {
-          if (munimap.building.style.WHITE_TO_GREY_CACHE[resColor.resolution]) {
+          if (munimap.marker.style.WHITE_TO_GREY_CACHE[resColor.resolution]) {
             result =
-            munimap.building.style.WHITE_TO_GREY_CACHE[resColor.resolution];
+              munimap.marker.style.WHITE_TO_GREY_CACHE[resColor.resolution];
           } else {
             result = new ol.style.Style({
               fill: new ol.style.Fill({
                 color: resColor.color
               }),
-              stroke: munimap.building.style.STROKE
+              stroke: munimap.marker.style.BUILDING_STROKE
             });
-            munimap.building.style.WHITE_TO_GREY_CACHE[resColor.resolution] =
-            result;
+            munimap.marker.style.WHITE_TO_GREY_CACHE[resColor.resolution] =
+              result;
           }
         } else {
-          result = munimap.building.style.NO_GEOMETRY;
+          result = munimap.marker.style.NO_GEOMETRY_BUILDING;
         }
+      } else {
+        result = munimap.building.STYLE;
       }
-      return result;
-    };
+    } else {
+      if (munimap.building.hasInnerGeometry(feature)) {
+        if (munimap.building.style.WHITE_TO_GREY_CACHE[resColor.resolution]) {
+          result =
+            munimap.building.style.WHITE_TO_GREY_CACHE[resColor.resolution];
+        } else {
+          result = new ol.style.Style({
+            fill: new ol.style.Fill({
+              color: resColor.color
+            }),
+            stroke: munimap.building.style.STROKE
+          });
+          munimap.building.style.WHITE_TO_GREY_CACHE[resColor.resolution] =
+            result;
+        }
+      } else {
+        result = munimap.building.style.NO_GEOMETRY;
+      }
+    }
+    return result;
+  };
 
 
 /**
@@ -199,20 +200,37 @@ munimap.building.style.function =
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
 munimap.building.style.labelFunction =
-    function(options, feature, resolution) {
-      var result = null;
-      var marked = options.markers.indexOf(feature) >= 0;
-      if (!marked && resolution < munimap.complex.RESOLUTION.max) {
-        if (!munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
-          result = munimap.building.style.smallScaleLabelFunction(
-            options.map, feature, resolution);
-        } else {
-          result = munimap.building.style.largeScaleLabelFunction(
-            options.map, feature, resolution);
+  function(options, feature, resolution) {
+    var result = null;
+    var marked = options.markers.indexOf(feature) >= 0;
+    if (!marked && resolution < munimap.complex.RESOLUTION.max) {
+      if (!munimap.range.contains(munimap.floor.RESOLUTION, resolution)) {
+        result = munimap.building.style.smallScaleLabelFunction(
+          options.map, feature, resolution);
+      } else {
+        result = munimap.building.style.largeScaleLabelFunction(
+          options.map, feature, resolution);
+      }
+    }
+    if (goog.isDefAndNotNull(munimap.getProps(options.map).options.labels) &&
+      !munimap.getProps(options.map).options.labels && result) {
+      if (goog.isArray(result)) {
+        result.forEach(function(el) {
+          var text = el.getText();
+          if (text) {
+            text.setText('');
+          }
+        });
+      } else {
+        var text = result.getText();
+        if (text) {
+          text.setText('');
         }
       }
       return result;
-    };
+    }
+    return result;
+  };
 
 
 /**
@@ -223,38 +241,38 @@ munimap.building.style.labelFunction =
  * @protected
  */
 munimap.building.style.smallScaleLabelFunction =
-    function(map, feature, resolution) {
-      var result = null;
-      var units = munimap.building.getUnits(feature);
-      if (units.length > 0) {
-        if (resolution < munimap.cluster.BUILDING_RESOLUTION.min) {
-          var title;
-          var complex = munimap.building.getComplex(feature);
-          if (munimap.range.contains(munimap.complex.RESOLUTION, resolution) &&
+  function(map, feature, resolution) {
+    var result = null;
+    var units = munimap.building.getUnits(feature);
+    if (units.length > 0) {
+      if (resolution < munimap.cluster.BUILDING_RESOLUTION.min) {
+        var title;
+        var complex = munimap.building.getComplex(feature);
+        if (munimap.range.contains(munimap.complex.RESOLUTION, resolution) &&
           goog.isDefAndNotNull(complex) &&
           munimap.complex.getBuildingCount(complex) > 1) {
-            title = munimap.unit.getTitleParts(units).join('\n');
-          } else {
-            title = munimap.building.getDefaultLabel(feature, resolution);
-          }
-          if (goog.isDef(title)) {
-            var geometryFunction = goog.partial(
-              munimap.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, map);
-            var options = {
-              fill: munimap.style.TEXT_FILL,
-              fontSize: munimap.building.style.FONT_SIZE,
-              geometry: geometryFunction,
-              title: title
-            };
-            result = munimap.style.getLabelWithPin(options);
-          }
+          title = munimap.unit.getTitleParts(units).join('\n');
+        } else {
+          title = munimap.building.getDefaultLabel(feature, resolution);
         }
-      } else if (resolution < munimap.complex.RESOLUTION.min) {
-        result =
-        munimap.building.style.defaultLabelFunction(map, feature, resolution);
+        if (goog.isDef(title)) {
+          var geometryFunction = goog.partial(
+            munimap.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, map);
+          var options = {
+            fill: munimap.style.TEXT_FILL,
+            fontSize: munimap.building.style.FONT_SIZE,
+            geometry: geometryFunction,
+            title: title
+          };
+          result = munimap.style.getLabelWithPin(options);
+        }
       }
-      return result;
-    };
+    } else if (resolution < munimap.complex.RESOLUTION.min) {
+      result =
+        munimap.building.style.defaultLabelFunction(map, feature, resolution);
+    }
+    return result;
+  };
 
 
 /**
@@ -265,51 +283,51 @@ munimap.building.style.smallScaleLabelFunction =
  * @protected
  */
 munimap.building.style.largeScaleLabelFunction =
-    function(map, feature, resolution) {
-      var uid = munimap.store.getUid(feature);
-      if (uid) {
-        goog.asserts.assertString(uid);
-        if (munimap.building.style.LABEL_CACHE[uid]) {
-          return munimap.building.style.LABEL_CACHE[uid];
-        }
+  function(map, feature, resolution) {
+    var uid = munimap.store.getUid(feature);
+    if (uid) {
+      goog.asserts.assertString(uid);
+      if (munimap.building.style.LABEL_CACHE[uid]) {
+        return munimap.building.style.LABEL_CACHE[uid];
       }
+    }
 
-      var result;
-      var title = munimap.building.getDefaultLabel(feature, resolution);
-      if (goog.isDef(title)) {
-        var geometryFunction = goog.partial(
-          munimap.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, map);
-        var units = munimap.building.getUnits(feature);
-        if (units.length > 0) {
-          var options = {
-            fill: munimap.style.TEXT_FILL,
-            fontSize: munimap.building.style.FONT_SIZE,
-            geometry: geometryFunction,
-            title: title
-          };
-          result = munimap.style.getLabelWithPin(options);
-        } else {
-          result = new ol.style.Style({
-            geometry: geometryFunction,
-            text: new ol.style.Text({
-              font: 'bold ' + munimap.building.style.BIG_FONT_SIZE + 'px arial',
-              fill: munimap.style.TEXT_FILL,
-              stroke: munimap.style.TEXT_STROKE,
-              text: title,
-              overflow: true
-            }),
-            zIndex: 4
-          });
-        }
+    var result;
+    var title = munimap.building.getDefaultLabel(feature, resolution);
+    if (goog.isDef(title)) {
+      var geometryFunction = goog.partial(
+        munimap.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, map);
+      var units = munimap.building.getUnits(feature);
+      if (units.length > 0) {
+        var options = {
+          fill: munimap.style.TEXT_FILL,
+          fontSize: munimap.building.style.FONT_SIZE,
+          geometry: geometryFunction,
+          title: title
+        };
+        result = munimap.style.getLabelWithPin(options);
       } else {
-        result = null;
+        result = new ol.style.Style({
+          geometry: geometryFunction,
+          text: new ol.style.Text({
+            font: 'bold ' + munimap.building.style.BIG_FONT_SIZE + 'px arial',
+            fill: munimap.style.TEXT_FILL,
+            stroke: munimap.style.TEXT_STROKE,
+            text: title,
+            overflow: true
+          }),
+          zIndex: 4
+        });
       }
-      if (uid) {
-        goog.asserts.assertString(uid);
-        munimap.building.style.LABEL_CACHE[uid] = result;
-      }
-      return result;
-    };
+    } else {
+      result = null;
+    }
+    if (uid) {
+      goog.asserts.assertString(uid);
+      munimap.building.style.LABEL_CACHE[uid] = result;
+    }
+    return result;
+  };
 
 
 /**
@@ -320,32 +338,32 @@ munimap.building.style.largeScaleLabelFunction =
  * @protected
  */
 munimap.building.style.defaultLabelFunction =
-    function(map, feature, resolution) {
-      var uid = munimap.store.getUid(feature);
-      if (uid) {
-        goog.asserts.assertString(uid);
-        if (munimap.style.LABEL_CACHE[uid]) {
-          return munimap.style.LABEL_CACHE[uid];
-        }
+  function(map, feature, resolution) {
+    var uid = munimap.store.getUid(feature);
+    if (uid) {
+      goog.asserts.assertString(uid);
+      if (munimap.style.LABEL_CACHE[uid]) {
+        return munimap.style.LABEL_CACHE[uid];
       }
+    }
 
-      var title = munimap.style.getDefaultLabel(feature, resolution);
-      var textStyle = new ol.style.Style({
-        geometry: goog.partial(
-          munimap.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, map),
-        text: new ol.style.Text({
-          font: 'bold ' + munimap.building.style.FONT_SIZE + 'px arial',
-          fill: munimap.style.TEXT_FILL,
-          stroke: munimap.style.TEXT_STROKE,
-          text: title,
-          overflow: true
-        }),
-        zIndex: 4
-      });
+    var title = munimap.style.getDefaultLabel(feature, resolution);
+    var textStyle = new ol.style.Style({
+      geometry: goog.partial(
+        munimap.geom.INTERSECT_CENTER_GEOMETRY_FUNCTION, map),
+      text: new ol.style.Text({
+        font: 'bold ' + munimap.building.style.FONT_SIZE + 'px arial',
+        fill: munimap.style.TEXT_FILL,
+        stroke: munimap.style.TEXT_STROKE,
+        text: title,
+        overflow: true
+      }),
+      zIndex: 4
+    });
 
-      if (uid) {
-        goog.asserts.assertString(uid);
-        munimap.style.LABEL_CACHE[uid] = textStyle;
-      }
-      return textStyle;
-    };
+    if (uid) {
+      goog.asserts.assertString(uid);
+      munimap.style.LABEL_CACHE[uid] = textStyle;
+    }
+    return textStyle;
+  };

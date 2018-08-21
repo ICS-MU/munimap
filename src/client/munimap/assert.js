@@ -198,3 +198,14 @@ munimap.assert.locationCodes = function(locationCodes) {
       'Parameter locationCodes should be boolean (true or false).');
   }
 };
+
+
+/**
+ * @param {boolean|undefined} labels
+ */
+munimap.assert.labels = function(labels) {
+  if (labels !== undefined) {
+    goog.asserts.assertBoolean(labels,
+      'Parameter labels should be boolean (true or false).');
+  }
+};
