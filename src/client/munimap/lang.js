@@ -56,7 +56,8 @@ munimap.lang.Translations = {
   VIRTUAL_TOUR: 'virtual-tour',
   SEZNAM_MAP: 'SEZNAM_MAP',
   GOOGLE_MAP: 'GOOGLE_MAP',
-  FIND_ME: 'FIND_ME'
+  FIND_ME: 'FIND_ME',
+  SCROLL_HINT: 'SCROLL_HINT'
 };
 
 
@@ -114,7 +115,8 @@ munimap.lang.CS_TRANSLATIONS = {
   'virtual-tour': 'virtuální prohlídka',
   'SEZNAM_MAP': 'Otevřít v Mapy.cz',
   'GOOGLE_MAP': 'Otevřít v Mapy Google',
-  'FIND_ME': 'Moje poloha'
+  'FIND_ME': 'Moje poloha',
+  'SCROLL_HINT': 'Klikněte na mapu\npro její aktivaci'
 };
 
 
@@ -173,7 +175,8 @@ munimap.lang.EN_TRANSLATIONS = {
   'virtual-tour': 'virtual tour',
   'SEZNAM_MAP': 'Open in Mapy.cz',
   'GOOGLE_MAP': 'Open in Google map',
-  'FIND_ME': 'My location'
+  'FIND_ME': 'My location',
+  'SCROLL_HINT': 'Click on the map\nto activate it'
 };
 
 
