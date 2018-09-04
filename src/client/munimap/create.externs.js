@@ -35,7 +35,11 @@ munimapx.create;
 >>>>>>> 2c1dbb3... marker filter init
 =======
  *   labels: (boolean|undefined),
+<<<<<<< HEAD
 >>>>>>> b2619a8... basemap arcgis, labels param
+=======
+ *   simpleScroll: (boolean|undefined),
+>>>>>>> eac6dbc... simpleScroll hint
  * }}
  */
 munimapx.create.Options;

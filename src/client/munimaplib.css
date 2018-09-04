@@ -35,6 +35,7 @@
 
 .ol-viewport {
   font-size: 16px;
+  transition: .3s ease-in-out all;
 }
 >>>>>>> eadf31d... removed webfont loader changes
 .ol-popup {
@@ -163,6 +164,16 @@
   width: 100%;
 }
 
+.munimap-drag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 5;
+  touch-action: auto;
+}
+
 .munimap-info-bubble {
   left: auto;
   right: auto;
@@ -267,4 +278,19 @@
 }
 .ol-attribution li a:hover {
   color: red;
+}
+
+.munimap-hint {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  transition: .3s ease-in-out all;
+  background: #000;
+  opacity: 0;
+  z-index: -1;
+}
+
+.munimap-hint--active .ol-unselectable {
+  background-color: #000;
+  opacity: 1;
 }

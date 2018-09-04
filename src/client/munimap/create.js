@@ -21,6 +21,7 @@ goog.require('munimap.floor');
 goog.require('munimap.geolocate');
 goog.require('munimap.getDefaultLayers');
 goog.require('munimap.info');
+goog.require('munimap.interaction');
 goog.require('munimap.lang');
 goog.require('munimap.layer.propName');
 goog.require('munimap.mapLinks');
@@ -96,8 +97,13 @@ munimap.create = function(options) {
 >>>>>>> 2c1dbb3... marker filter init
 =======
         markerFilter: options.markerFilter,
+<<<<<<< HEAD
         labels: options.labels
 >>>>>>> b2619a8... basemap arcgis, labels param
+=======
+        labels: options.labels,
+        simpleScroll: options.simpleScroll
+>>>>>>> eac6dbc... simpleScroll hint
       };
     }).then(function(options) {
       var target = options.target;
@@ -191,6 +197,7 @@ munimap.create = function(options) {
       var complexEl = goog.dom.createDom('div', 'munimap-complex');
       var bldgEl = goog.dom.createDom('div', 'munimap-building');
       var floorEl = goog.dom.createDom('div', 'munimap-floor');
+      
 
 >>>>>>> f35ea2b... Custom CSS prefix - munimap
       goog.dom.appendChild(infoEl, complexEl);
@@ -411,7 +418,9 @@ munimap.create = function(options) {
           munimap.style.refreshAllFromFragments(map);
         }
       });
-
+      if (goog.isDefAndNotNull(options.simpleScroll) && !options.simpleScroll) {
+        munimap.interaction.limitScroll(map, munimapEl);
+      }
       goog.dom.appendChild(munimapEl, infoEl);
       return map;
     }).then(resolve);

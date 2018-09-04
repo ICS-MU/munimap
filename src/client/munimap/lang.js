@@ -116,8 +116,13 @@ munimap.lang.Translations = {
 >>>>>>> 5450bff... fix code style
 =======
   GOOGLE_MAP: 'GOOGLE_MAP',
+<<<<<<< HEAD
   FIND_ME: 'FIND_ME'
 >>>>>>> f9478df... added geolocation control to the map
+=======
+  FIND_ME: 'FIND_ME',
+  SCROLL_HINT: 'SCROLL_HINT'
+>>>>>>> eac6dbc... simpleScroll hint
 };
 
 
@@ -241,8 +246,13 @@ munimap.lang.CS_TRANSLATIONS = {
 >>>>>>> 5450bff... fix code style
 =======
   'GOOGLE_MAP': 'Otevřít v Mapy Google',
+<<<<<<< HEAD
   'FIND_ME': 'Moje poloha'
 >>>>>>> f9478df... added geolocation control to the map
+=======
+  'FIND_ME': 'Moje poloha',
+  'SCROLL_HINT': 'Klikněte na mapu\npro její aktivaci'
+>>>>>>> eac6dbc... simpleScroll hint
 };
 
 
@@ -368,8 +378,13 @@ munimap.lang.EN_TRANSLATIONS = {
 >>>>>>> 5450bff... fix code style
 =======
   'GOOGLE_MAP': 'Open in Google map',
+<<<<<<< HEAD
   'FIND_ME': 'My location'
 >>>>>>> f9478df... added geolocation control to the map
+=======
+  'FIND_ME': 'My location',
+  'SCROLL_HINT': 'Click on the map\nto activate it'
+>>>>>>> eac6dbc... simpleScroll hint
 };
 
 
