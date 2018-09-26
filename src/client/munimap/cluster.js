@@ -192,9 +192,12 @@ munimap.cluster.getSourceFeatures = function(map) {
 munimap.cluster.containsMarker = function(map, cluster) {
   var markers = munimap.marker.getFeatures(map);
   var clusteredFeatures = cluster.get('features');
-  return clusteredFeatures.some(function(feat) {
-    return goog.array.contains(markers, feat);
-  });
+  if (clusteredFeatures) {
+    return clusteredFeatures.some(function(feat) {
+      return goog.array.contains(markers, feat);
+    });
+  }
+  return false;
 };
 
 
