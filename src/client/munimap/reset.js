@@ -42,7 +42,8 @@ munimap.reset = function(map, options) {
       return {
         view: view,
         markers: markers,
-        markerLabel: options.markerLabel
+        markerLabel: options.markerLabel,
+        markerFilter: options.markerFilter
       };
     }).then(function(options) {
       var markers = options.markers;
@@ -51,8 +52,8 @@ munimap.reset = function(map, options) {
       markerSource.clear();
       markerSource.addFeatures(markers);
 
-      // var clusterSource = munimap.cluster.getSource(map);
-      var clusterSource = munimap.cluster.getStore(map);
+      var clusterSource = munimap.cluster.getSource(map);
+      // var clusterSource = munimap.cluster.getStore(map);
       clusterSource.clear();
       clusterSource.addFeatures(markers);
       var clusterLayer = munimap.cluster.getLayer(map);

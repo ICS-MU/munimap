@@ -6,9 +6,9 @@ goog.require('munimap.lang');
  * @param {ol.Map} map
  * @param {Element} target
  */
-munimap.interaction.limitScroll = function (map, target) {
+munimap.interaction.limitScroll = function(map, target) {
   goog.dom.setFocusableTabIndex(target, true);
-  target.setAttribute("tabindex", 0);
+  target.setAttribute('tabindex', 0);
 
   window.document.addEventListener('blur', activeChange, true);
   window.document.addEventListener('focus', activeChange, true);
@@ -16,7 +16,7 @@ munimap.interaction.limitScroll = function (map, target) {
   target.addEventListener('wheel', onInteraction, true);
   target.addEventListener('touchmove', onInteraction, true);
 
-  var dragEl = goog.dom.createDom("div", "munimap-drag");
+  var dragEl = goog.dom.createDom('div', 'munimap-drag');
   goog.dom.appendChild(target, dragEl);
   function activeChange(e) {
     if (target.contains(window.document.activeElement)) {
@@ -24,9 +24,9 @@ munimap.interaction.limitScroll = function (map, target) {
       dragEl = null;
       error = false;
       map.render();
-    }
-    else if (!target.contains(window.document.activeElement) && dragEl === null) {
-      dragEl = goog.dom.createDom("div", "munimap-drag");
+    } else if (!target.contains(window.document.activeElement) &&
+      dragEl === null) {
+      dragEl = goog.dom.createDom('div', 'munimap-drag');
       goog.dom.appendChild(target, dragEl);
     }
   }
@@ -35,42 +35,43 @@ munimap.interaction.limitScroll = function (map, target) {
   var hideError;
   var error = false;
   function createError() {
-    if(dragEl === null) {
+    if (dragEl === null) {
       return;
     }
     var dpr = window.devicePixelRatio || 1;
     var ctx = canvas.getContext('2d');
-    
+
     ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#fff';
     ctx.textAlign = 'center';
     var lineHeight;
+    var size;
     if (canvas.offsetWidth < 500) {
-      var size = 22 * dpr;
+      size = 22 * dpr;
       ctx.font = size + 'px Arial';
       lineHeight = 26 * dpr;
     } else {
-      var size = 30 * dpr;
+      size = 30 * dpr;
       ctx.font = size + 'px Arial';
       lineHeight = 35 * dpr;
     }
-    
+
     var text =
       munimap.lang.getMsg(munimap.lang.Translations.SCROLL_HINT);
     var lines = text.split('\n');
-    lines.forEach(function (el, i) {
-      
+    lines.forEach(function(el, i) {
+
       ctx.fillText(
         el,
         canvas.width / 2,
         (canvas.height / 2) + i * lineHeight
-      )
+      );
     });
   }
 
   function hide() {
-    return setTimeout(function () {
+    return setTimeout(function() {
       error = false;
       map.render();
     }, 2000);
@@ -87,7 +88,7 @@ munimap.interaction.limitScroll = function (map, target) {
     error = true;
   }
 
-  map.on('postcompose', function (evt) {
+  map.on('postcompose', function(evt) {
     clearTimeout(hideError);
     error = false;
   });
