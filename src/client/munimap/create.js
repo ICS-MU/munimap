@@ -493,28 +493,31 @@ munimap.create.calculateView = function(options, markers, zoomTos) {
     minZoom: 0,
     zoom: zoom
   });
-  zoomTos = zoomTos.length ? zoomTos : markers;
-  if (zoomTos.length) {
-    var extent = munimap.extent.ofFeatures(zoomTos);
-    if (options.zoom === undefined && options.center === undefined) {
-      view.fit(extent, {
-        size: [target.offsetWidth, target.offsetHeight]
-      });
-      var res = view.getResolution();
-      ol.extent.buffer(extent, res * 30, extent);
-      view.fit(extent, {
-        size: [target.offsetWidth, target.offsetHeight]
-      });
-      if (munimap.marker.custom.isCustom(zoomTos[0])) {
-        if (view.getResolution() < munimap.floor.RESOLUTION.max) {
-          res = view.constrainResolution(
-            munimap.floor.RESOLUTION.max, undefined, 1
-          );
-          view.setResolution(res);
+  if (zoomTos || markers) {
+    zoomTos = zoomTos.length ? zoomTos : markers;
+    if (zoomTos.length) {
+      var extent = munimap.extent.ofFeatures(zoomTos);
+      if (options.zoom === undefined && options.center === undefined) {
+        view.fit(extent, {
+          size: [target.offsetWidth, target.offsetHeight]
+        });
+        var res = view.getResolution();
+        ol.extent.buffer(extent, res * 30, extent);
+        view.fit(extent, {
+          size: [target.offsetWidth, target.offsetHeight]
+        });
+        if (munimap.marker.custom.isCustom(zoomTos[0])) {
+          if (view.getResolution() < munimap.floor.RESOLUTION.max) {
+            res = view.constrainResolution(
+              munimap.floor.RESOLUTION.max, undefined, 1
+            );
+            view.setResolution(res);
+          }
         }
+      } else if (options.center === undefined) {
+        view.setCenter(ol.extent.getCenter(extent));
       }
-    } else if (options.center === undefined) {
-      view.setCenter(ol.extent.getCenter(extent));
+
     }
   }
   return view;

@@ -50,43 +50,47 @@ munimap.reset = function(map, options) {
 
       var markerSource = munimap.marker.getStore(map);
       markerSource.clear();
-      markerSource.addFeatures(markers);
 
-      var clusterSource = munimap.cluster.getSource(map);
       // var clusterSource = munimap.cluster.getStore(map);
-      clusterSource.clear();
-      clusterSource.addFeatures(markers);
       var clusterLayer = munimap.cluster.getLayer(map);
-      var oldMinRes = clusterLayer.getMinResolution();
-      var clusterResolution = munimap.cluster.BUILDING_RESOLUTION;
-      if (markers.length && (markers.some(function(el) {
-        return munimap.room.isRoom(el);
-      }) || markers.some(function(el) {
-        return munimap.door.isDoor(el);
-      })
-      )) {
-        clusterResolution = munimap.cluster.ROOM_RESOLUTION;
-      }
-      if (oldMinRes !== clusterResolution.min) {
-        clusterLayer.setMinResolution(clusterResolution.min);
-      }
-      var features = markerSource.getFeatures();
-      if (features.length > 0) {
-        var markersExtent = munimap.extent.ofFeatures(features);
-        var size = map.getSize();
-        goog.asserts.assert(goog.isDefAndNotNull(size));
-        var oldExtent = map.getView().calculateExtent(size);
-        var duration = 0;
-        if (ol.extent.intersects(oldExtent, markersExtent)) {
-          duration = munimap.move.getAnimationDuration(oldExtent,
-            markersExtent);
+      var clusterSource = munimap.cluster.getSource(map);
+      clusterSource.clear();
+      if (markers && markers.length > 0) {
+        markerSource.addFeatures(markers);
+        clusterSource.addFeatures(markers);
+
+        var oldMinRes = clusterLayer.getMinResolution();
+        var clusterResolution = munimap.cluster.BUILDING_RESOLUTION;
+        if (markers.length && (markers.some(function(el) {
+          return munimap.room.isRoom(el);
+        }) || markers.some(function(el) {
+          return munimap.door.isDoor(el);
+        })
+        )) {
+          clusterResolution = munimap.cluster.ROOM_RESOLUTION;
         }
-        map.getView().fit(markersExtent, {
-          duration: duration
-        });
+        if (oldMinRes !== clusterResolution.min) {
+          clusterLayer.setMinResolution(clusterResolution.min);
+        }
       }
-      return map;
-    }).then(resolve);
+      var currentExt = map.getView().calculateExtent();
+      var ext = options.view.calculateExtent();
+      var res = options.view.getResolution();
+      var finalExtent = ol.extent.buffer(ext, res * 50, ext);
+      var duration = 0;
+      if (ol.extent.intersects(currentExt, finalExtent)) {
+        duration = munimap.move.getAnimationDuration(currentExt,
+          finalExtent);
+      }
+      map.getView().fit(finalExtent, {
+        duration: duration,
+        callback: function() {
+          munimap.cluster.updateClusteredFeatures(
+            map, map.getView().getResolution() || 0);
+          resolve();
+        }
+      });
+    });
   });
 };
 
