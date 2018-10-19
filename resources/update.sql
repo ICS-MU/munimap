@@ -1,3 +1,27 @@
+USE [sde_munimap]
+GO
+/****** Object:  StoredProcedure [dbo].[update_munimap_db]    Script Date: 19.10.2018 17:22:28 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[update_munimap_db]
+AS
+BEGIN
+	BEGIN TRANSACTION PublicationDatabaseMunimapUpdate;
+	
+	BEGIN TRY
+
+    -- Insert statements for procedure here
 	DELETE FROM dbo.ADRESY;
 	INSERT INTO dbo.ADRESY(adresaId, ulice, cislo, psc, mesto, stat, poznamka)
 	  SELECT 
@@ -456,4 +480,14 @@
 	ALTER INDEX ALL ON dbo.OTEVIRANI_DVERI REBUILD;
 	ALTER INDEX ALL ON dbo.PRACOVISTE REBUILD;
 	ALTER INDEX ALL ON dbo.VSTUPY REBUILD;
-	ALTER INDEX ALL ON dbo.ZASTAVKY REBUILD; 
+	ALTER INDEX ALL ON dbo.ZASTAVKY REBUILD;
+	
+	COMMIT TRANSACTION PublicationDatabaseMunimapUpdate;
+	
+	END TRY
+	BEGIN CATCH
+			ROLLBACK TRANSACTION PublicationDatabaseMunimapUpdate;
+	END CATCH
+
+	
+END
