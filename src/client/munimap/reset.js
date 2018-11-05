@@ -61,11 +61,12 @@ munimap.reset = function(map, options) {
         markerOptions));
 
       var clusterLayer = munimap.cluster.getLayer(map);
-      var clusterSource = munimap.cluster.getSource(map);
+      // var clusterSource = munimap.cluster.getSource(map);
+      var clusterSource = munimap.cluster.getStore(map);
       clusterSource.clear();
       clusterLayer.setStyle(goog.partial(
         munimap.cluster.style.function, markerOptions));
-
+      var ext = options.view.calculateExtent();
       if (markers && markers.length > 0) {
         markerSource.addFeatures(markers);
         clusterSource.addFeatures(markers);
@@ -83,9 +84,11 @@ munimap.reset = function(map, options) {
         if (oldMinRes !== clusterResolution.min) {
           clusterLayer.setMinResolution(clusterResolution.min);
         }
+        ext = munimap.extent.ofFeatures(markers);
       }
       var currentExt = map.getView().calculateExtent();
-      var ext = options.view.calculateExtent();
+
+
       var res = options.view.getResolution();
       var finalExtent = ol.extent.buffer(ext, res * 50, ext);
       var duration = 0;
