@@ -43,7 +43,7 @@ munimap.reset = function(map, options) {
         view: view,
         markers: markers,
         markerLabel: options.markerLabel,
-        markerFilter: options.markerFilter
+        markerFilter: options.markerFilter,
       };
     }).then(function(options) {
       var markerLabel = options.markerLabel;
@@ -61,8 +61,8 @@ munimap.reset = function(map, options) {
         markerOptions));
 
       var clusterLayer = munimap.cluster.getLayer(map);
-      // var clusterSource = munimap.cluster.getSource(map);
-      var clusterSource = munimap.cluster.getStore(map);
+      var clusterSource = munimap.cluster.getSource(map);
+
       clusterSource.clear();
       clusterLayer.setStyle(goog.partial(
         munimap.cluster.style.function, markerOptions));
