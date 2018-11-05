@@ -35,6 +35,21 @@
 .ol-popup.munimap-hide-tale:after {
   display: none;
 }
+.munimap-loading {
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.munimap-loading--active {
+  display: block;
+}
+.munimap-loading > div {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
 .munimap-info .munimap-content > .munimap-title {
   font-weight: bold;
 }
@@ -48,12 +63,17 @@
   position: absolute;
   top: 2px;
   right: 8px;
+  font-size: 1.1rem;
 }
 .munimap-info .munimap-close-button:after {
   content: "✖";
 }
 .munimap-info .munimap-close-button:hover {
   cursor: pointer;
+}
+
+.munimap-info .munimap-close-button:hover::after {
+  color: #e51c23;
 }
 
 .munimap-info {
@@ -133,6 +153,10 @@
   height: 100%;
   position: relative;
   width: 100%;
+}
+
+.munimap a {
+  text-decoration: underline;
 }
 
 .munimap-drag {
@@ -236,10 +260,14 @@
 }
 .ol-attribution li:before {
   content: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .ol-attribution li a:after {
   content: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 .ol-attribution li a {
   padding-right: 0px !important;

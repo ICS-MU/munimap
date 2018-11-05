@@ -301,6 +301,29 @@ munimap.style.getLabelHeight = function(title, fontSize) {
   return rowCount * lineHeight;
 };
 
+/**
+ * @param {string|undefined} text
+ * @param {string=} char Character for newline (/n or </br>)
+ * @return {string|undefined}
+ */
+munimap.style.wrapText = function(text, char) {
+  if (!text) {
+    return text;
+  }
+  if (!char) {
+    char = '\n';
+  }
+  var wrappedText = [];
+  var words = text.split(' ');
+  words.forEach(function(word, i) {
+    wrappedText.push(word);
+    if ((i + 1) % 3 === 0) {
+      wrappedText.push(char);
+    }
+  });
+  return wrappedText.join(' ');
+};
+
 
 /**
  * @param {munimap.style.getLabelWithPin.Options} options
@@ -309,7 +332,6 @@ munimap.style.getLabelHeight = function(title, fontSize) {
 munimap.style.getTextStyleWithOffsetY = function(options) {
   var fontSize = options.fontSize;
   var title = options.title;
-
   var result;
   if (goog.isDef(title) && goog.isDef(fontSize)) {
     result = new ol.style.Style({

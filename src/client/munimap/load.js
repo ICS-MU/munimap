@@ -334,7 +334,10 @@ munimap.load.featuresFromParam = function(paramValue) {
             likeExprs: likeExprs
           }).then(function(features) {
             features.forEach(function(feature, index) {
-              feature.setId(index);
+              // feature.setId(index);
+              // if(!feature.getId()) {
+              //   feature.setId(Number(feature.get("OBJECTID")));
+              // }
               if (!goog.isDefAndNotNull(feature.getGeometry())) {
                 var locCode = /**@type (string)*/ (feature.get('polohKod'));
                 var building = munimap.building.getByCode(locCode);
@@ -416,6 +419,9 @@ munimap.load.featuresFromUrl = function(options) {
         });
         newLoadedFeatures.forEach(function(feature) {
           feature.set(munimap.type.NAME, options.type);
+
+          var featureId = feature.get(primaryKey);
+          feature.setId(/** @type (string|number) */(featureId));
         });
         goog.array.extend(allNewProcessedFeatures, newLoadedFeatures);
         munimap.load.waitForNewProcessedFeatures({
