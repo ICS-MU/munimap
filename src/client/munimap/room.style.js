@@ -355,7 +355,9 @@ munimap.room.style.labelFunction = function(options, feature, resolution) {
       }
       if (title) {
         if (goog.isDefAndNotNull(purposeGis) &&
-          purposeGis === munimap.poi.Purpose.CLASSROOM) {
+          purposeGis === munimap.poi.Purpose.CLASSROOM &&
+          munimap.range.contains(munimap.poi.style.Resolution.STAIRS,
+            resolution)) {
           var labelHeight = munimap.style.getLabelHeight(title, fontSize);
           var overallHeight =
             labelHeight + munimap.poi.style.ICON_HEIGHT + 2;

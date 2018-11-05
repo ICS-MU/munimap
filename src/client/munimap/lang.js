@@ -239,7 +239,7 @@ munimap.lang.CS_TRANSLATIONS = {
   'retail-location': 'prodejní místo',
   'library': 'knihovna',
   'study-room': 'studovna',
-  'virtual-tour': 'virtuální prohlídka',
+  'virtual-tour': 'VP',
   'SEZNAM_MAP': 'Otevřít v Mapy.cz',
 <<<<<<< HEAD
   'GOOGLE_MAP': 'Otevřít v Mapy Google'
@@ -371,7 +371,7 @@ munimap.lang.EN_TRANSLATIONS = {
   'retail-location': 'retail location',
   'library': 'library',
   'study-room': 'study room',
-  'virtual-tour': 'virtual tour',
+  'virtual-tour': 'VT',
   'SEZNAM_MAP': 'Open in Mapy.cz',
 <<<<<<< HEAD
   'GOOGLE_MAP': 'Open in Google map'

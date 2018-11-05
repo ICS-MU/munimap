@@ -46,15 +46,26 @@ munimap.reset = function(map, options) {
         markerFilter: options.markerFilter
       };
     }).then(function(options) {
+      var markerLabel = options.markerLabel;
       var markers = options.markers;
 
+      var markerLayer = munimap.marker.getLayer(map);
       var markerSource = munimap.marker.getStore(map);
       markerSource.clear();
+      var markerOptions = {
+        map: map,
+        markerSource: markerSource,
+        markerLabel: markerLabel
+      };
+      markerLayer.setStyle(goog.partial(munimap.marker.style.function,
+        markerOptions));
 
-      // var clusterSource = munimap.cluster.getStore(map);
       var clusterLayer = munimap.cluster.getLayer(map);
       var clusterSource = munimap.cluster.getSource(map);
       clusterSource.clear();
+      clusterLayer.setStyle(goog.partial(
+        munimap.cluster.style.function, markerOptions));
+
       if (markers && markers.length > 0) {
         markerSource.addFeatures(markers);
         clusterSource.addFeatures(markers);

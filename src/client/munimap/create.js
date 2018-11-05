@@ -49,6 +49,7 @@ munimap.create = function(options) {
 
   munimap.create.assertOptions(options);
   munimap.lang.active = options.lang || munimap.lang.Abbr.CZECH;
+  var target = goog.dom.getElement(options.target);
 
   return new goog.Promise(function(resolve, reject) {
     goog.Promise.all([
@@ -65,7 +66,7 @@ munimap.create = function(options) {
         //console.log(evt.key, view.get(evt.key));
       });
 
-      var target = goog.dom.getElement(options.target);
+
       return {
         view: view,
         markers: markers,
@@ -120,9 +121,9 @@ munimap.create = function(options) {
       }
 
       munimap.matomo.checkCustomMarker(options.markers);
-      var esriAttribution = '<a href="http://help.arcgis.com/' +
+      var esriAttribution = '© <a href="http://help.arcgis.com/' +
         'en/communitymaps/pdf/WorldTopographicMap_Contributors.pdf"' +
-        ' target="_blank">© Esri</a>';
+        ' target="_blank">Esri</a>';
 
       var osmAttribution = new ol.Attribution({
         html:
@@ -238,9 +239,7 @@ munimap.create = function(options) {
         view: view
       });
       munimap.LIST.push(map);
-      markers.forEach(function(marker, ix) {
-        marker.setId(ix);
-      });
+
       var markerSource = new ol.source.Vector({
         attributions: muAttributions,
         features: markers
@@ -615,7 +614,7 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
   var workplaces = [];
   if (options.markerFilter !== undefined) {
     options.markerFilter.forEach(function(el) {
-      workplaces.push(el);
+      workplaces.push(goog.string.unescapeEntities(el));
     });
   }
   var result;
@@ -655,7 +654,7 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
           munimap.create.roomCodes = rooms.map(function(f) {
             return f.get('polohKodLokace');
           });
-          if (ctgIds.length === 1 && !options.markerLabel) {
+          if (ctgIds.length === 1) {
             options.markerLabel = function(f, r) {
 
               var clustered = munimap.cluster.getFeatures(f);
@@ -666,17 +665,24 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
                 return goog.array.contains(munimap.create.roomCodes,
                   f.get('polohKod'));
               });
-              var ctgLabel = munimap.lang.getMsg(ctgIds[0]);
+
+              var ctgLabel = f.get('nazev_cs');
               var label;
               var clusteredNumber;
               if (clustered.length === 1) {
                 clusteredNumber = clustered[0].get('numberOfDetails');
                 if (clusteredNumber > 1) {
+                  ctgLabel = munimap.lang.getMsg(ctgIds[0]);
+
                   label = clusteredNumber + 'x ' + ctgLabel;
                 } else {
                   label = ctgLabel;
                 }
               } else if (clustered.length > 1) {
+                ctgLabel = munimap.lang.getMsg(ctgIds[0]);
+                if (ctgLabel === ' ') {
+                  ctgLabel = '';
+                }
                 var sameValueArray = [];
                 clustered.forEach(function(el) {
                   sameValueArray.push({
@@ -703,6 +709,7 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
             };
           }
 
+
           return new goog.Promise(function(resolve, reject) {
             munimap.load.featuresFromParam(munimap.create.roomCodes)
               .then(function(values) {
@@ -722,7 +729,6 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
         result = /** @type {goog.Thenable<Array<ol.Feature>>} */(
           goog.Promise.resolve(values)
         );
-
         resolve(result);
       });
     });
@@ -740,14 +746,28 @@ munimap.create.addPoiDetail = function(features, details) {
   var result = [];
   var text = '';
   features.forEach(function(feature) {
-    feature.set('numberOfDetails', 0);
-    feature.set('detail', '');
+    var featurePolKod = feature.get('polohKod');
+    var featureType = feature.getGeometry().getType();
+    var featureBuilding;
+    if (featureType === 'Point') {
+      featureBuilding = featurePolKod.substr(0, 5);
+    }
+    var numberOfDetails = 0;
+    var pracoviste = undefined;
+    var nazev_cs = undefined;
+    var detail_text = undefined;
+    var detailPolKod;
+    var name = undefined;
+    var open, url;
     details.forEach(function(detail) {
-      if (feature.get('polohKod') === detail.get('polohKodLokace')) {
-        feature.set('numberOfDetails', feature.get('numberOfDetails') + 1);
-        feature.set('pracoviste', detail.get('pracoviste'));
-        feature.set('nazev_cs', detail.get('nazev_cs'));
-        var name, open;
+      detailPolKod = detail.get('polohKodLokace');
+      if ((featurePolKod === detailPolKod) ||
+        (featureType === 'Point' &&
+        featureBuilding === detailPolKod.substr(0, 5))) {
+        numberOfDetails += 1;
+        pracoviste = detail.get('pracoviste');
+        nazev_cs = munimap.style.wrapText(
+          /** @type (string) */ (detail.get('nazev_cs')));
         if (munimap.lang.active === 'cs') {
           name = detail.get('nazev_cs');
           open = goog.isDefAndNotNull(detail.get(
@@ -763,7 +783,8 @@ munimap.create.addPoiDetail = function(features, details) {
               'provozniDoba_en') : '';
 
         }
-        var url = detail.get('url');
+        url = detail.get('url');
+        name = munimap.style.wrapText(/** @type (string) */ (name), '</br>');
         if (url) {
           name = '<a href="' + url + '" target="_blank">' + name + '</a>';
         }
@@ -771,12 +792,24 @@ munimap.create.addPoiDetail = function(features, details) {
         name = '<div class="munimap-bubble-title">' + name + '</div>';
         open = (open === '') ? '' :
           '<div class="munimap-bubble-text">' + open + '</div>';
-        text = (feature.get('detail') === undefined) ? name + open :
-          feature.get('detail') + name + open;
-        feature.set('detail', text);
+        text = (detail_text === undefined) ? name + open :
+          detail_text + name + open;
+        detail_text = text;
         result.push(feature);
       }
     });
+    if (nazev_cs !== undefined) {
+      var title = munimap.style.wrapText(
+        /** @type (string) */ (feature.get('title')));
+
+      feature.setProperties({
+        'title': title,
+        'detail': detail_text,
+        'numberOfDetails': numberOfDetails,
+        'pracoviste': pracoviste,
+        'nazev_cs': nazev_cs
+      });
+    }
   });
   return result;
 };
