@@ -43,7 +43,7 @@ munimap.reset = function(map, options) {
         view: view,
         markers: markers,
         markerLabel: options.markerLabel,
-        markerFilter: options.markerFilter,
+        markerFilter: options.markerFilter
       };
     }).then(function(options) {
       var markerLabel = options.markerLabel;
