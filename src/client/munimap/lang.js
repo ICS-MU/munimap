@@ -121,8 +121,13 @@ munimap.lang.Translations = {
 >>>>>>> f9478df... added geolocation control to the map
 =======
   FIND_ME: 'FIND_ME',
+<<<<<<< HEAD
   SCROLL_HINT: 'SCROLL_HINT'
 >>>>>>> eac6dbc... simpleScroll hint
+=======
+  SCROLL_HINT: 'SCROLL_HINT',
+  LABEL_FIELD_NAME: 'LABEL_FIELD_NAME',
+>>>>>>> 51534a8... added it center poi
 };
 
 
@@ -240,6 +245,7 @@ munimap.lang.CS_TRANSLATIONS = {
   'library': 'knihovna',
   'study-room': 'studovna',
   'virtual-tour': 'virtuální prohlídka',
+  'it-center': 'IT centrum',
   'SEZNAM_MAP': 'Otevřít v Mapy.cz',
 <<<<<<< HEAD
   'GOOGLE_MAP': 'Otevřít v Mapy Google'
@@ -251,8 +257,13 @@ munimap.lang.CS_TRANSLATIONS = {
 >>>>>>> f9478df... added geolocation control to the map
 =======
   'FIND_ME': 'Moje poloha',
+<<<<<<< HEAD
   'SCROLL_HINT': 'Klikněte na mapu\npro její aktivaci'
 >>>>>>> eac6dbc... simpleScroll hint
+=======
+  'SCROLL_HINT': 'Klikněte na mapu\npro její aktivaci',
+  'LABEL_FIELD_NAME': 'nazev_cs',
+>>>>>>> 51534a8... added it center poi
 };
 
 
@@ -372,6 +383,7 @@ munimap.lang.EN_TRANSLATIONS = {
   'library': 'library',
   'study-room': 'study room',
   'virtual-tour': 'virtual tour',
+  'it-center': 'IT center',
   'SEZNAM_MAP': 'Open in Mapy.cz',
 <<<<<<< HEAD
   'GOOGLE_MAP': 'Open in Google map'
@@ -383,8 +395,13 @@ munimap.lang.EN_TRANSLATIONS = {
 >>>>>>> f9478df... added geolocation control to the map
 =======
   'FIND_ME': 'My location',
+<<<<<<< HEAD
   'SCROLL_HINT': 'Click on the map\nto activate it'
 >>>>>>> eac6dbc... simpleScroll hint
+=======
+  'SCROLL_HINT': 'Click on the map\nto activate it',
+  'LABEL_FIELD_NAME': 'nazev_en',
+>>>>>>> 51534a8... added it center poi
 };
 
 

@@ -35,7 +35,8 @@ munimap.optpoi.ctg.Label = {
   RETAIL_LOCATION: 'Prodejní místo',
   LIBRARY: 'Knihovna',
   STUDY_ROOM: 'Studovna',
-  VIRTUAL_TOUR: 'Virtuální prohlídka'
+  VIRTUAL_TOUR: 'Virtuální prohlídka',
+  IT_CENTER: 'Centrum informačních technologií'
 };
 
 
@@ -49,7 +50,8 @@ munimap.optpoi.ctg.Id = {
   RETAIL_LOCATION: 'retail-location',
   LIBRARY: 'library',
   STUDY_ROOM: 'study-room',
-  VIRTUAL_TOUR: 'virtual-tour'
+  VIRTUAL_TOUR: 'virtual-tour',
+  IT_CENTER: 'it-center'
 };
 
 
