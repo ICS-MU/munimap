@@ -45,7 +45,7 @@ munimap.building.style.FILL = new ol.style.Fill({
  * @const
  */
 munimap.building.style.STROKE = new ol.style.Stroke({
-  color: '#002776',
+  color: '#0000dc',
   width: 1
 });
 

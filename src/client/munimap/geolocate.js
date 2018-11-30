@@ -39,7 +39,7 @@ munimap.geolocate.create = function(map) {
     image: new ol.style.Circle({
       radius: 6,
       fill: new ol.style.Fill({
-        color: '#002776'
+        color: '#0000dc'
       }),
       stroke: new ol.style.Stroke({
         color: 'rgba(0,39,118,0.25)',

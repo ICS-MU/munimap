@@ -1,14 +1,13 @@
 body {
   margin: 0px;
   padding: 0;
-  font-family: sans-serif;
+  font-family: Arial, Helvetica Neue, sans-serif;
   font-size: 16px;
 }
 h1 {
-  /*border-bottom: solid 1px #ddd;*/
   font-size: 38px;
   line-height: 38px;
-  padding: 20px 20px 10px 20px;
+  padding: 20px 0 10px 0;
   margin: 0 20px;
 }
 h3, h4 {
@@ -20,7 +19,7 @@ p {
   margin: 10px 0;
 }
 a {
-  color: #002776;
+  color: #0000dc;
   padding: 0px;
 }
 a:link {
@@ -52,7 +51,7 @@ h3 .munimap-logo {
   font-size: 26px;
 }
 .munimap-logo > .muni {
-  color: #002776;
+  color: #0000dc;
   font-size: 100%;
   text-shadow: none;
   vertical-align: initial;
@@ -65,7 +64,7 @@ a .munimap-logo:hover > .muni {
   color: #fff;
   margin: 0;
   letter-spacing: 1px;
-  text-shadow: -1px 0 #002776, 0 1px #002776, 1px 0 #002776, 0 -1px #002776;
+  text-shadow: -1px 0 #0000dc, 0 1px #0000dc, 1px 0 #0000dc, 0 -1px #0000dc;
 }
 a .munimap-logo:hover > .map {
   text-shadow: -1px 0 #e51c23, 0 1px #e51c23, 1px 0 #e51c23, 0 -1px #e51c23;
@@ -89,13 +88,16 @@ h3 > .munimap-logo > .map, h4 > .munimap-logo > .map {
 }
 .left {
   left: 0;
+  padding: 0;
 }
 .right {
   right: 0;
+  padding: 0;
 }
 
 .header {
-  padding-left: 20px;
+  padding-top: 15px;
+  padding-left: 22px;
 }
 
 .footer {
@@ -113,7 +115,7 @@ h3 > .munimap-logo > .map, h4 > .munimap-logo > .map {
 }
 
 .navigation {
-  color: #002776;
+  color: #0000dc;
   font-size: 18px;
   font-weight: bold;
   margin: 20px;
@@ -157,7 +159,7 @@ h3 > .munimap-logo > .map, h4 > .munimap-logo > .map {
 }
 .columns > div {
   margin: 0 auto;
-  padding: 0 2%;
+  /* padding: 0 2%; */
 }
 
 .munimap-links {
@@ -168,8 +170,8 @@ h3 > .munimap-logo > .map, h4 > .munimap-logo > .map {
   width: 80%;
 }
 .munimap-links a, .munimap-links.inverse a:hover {
-  border: solid 2px #002776;
-  background-color: #002776;
+  border: solid 2px #0000dc;
+  background-color: #0000dc;
   color: #fff;
   display: block;
   margin: auto;
@@ -182,7 +184,7 @@ h3 > .munimap-logo > .map, h4 > .munimap-logo > .map {
 }
 .munimap-links.inverse a, .munimap-links a:hover {
   background-color: #fff;
-  color: #002776;
+  color: #0000dc;
 }
 
 .center {
@@ -225,7 +227,7 @@ body > .separator {
 
 /**styles for change log**/
 div.version-description {
-  border-left: solid 8px #002776;
+  border-left: solid 8px #0000dc;
   margin: 0 10px 20px;
   padding: 0 20px;
 }
@@ -243,5 +245,13 @@ h2.version-number {
 @media (min-width: 800px) {
   .columns > div {
     width: 45%;
+  }
+  .left {
+    left: 0;
+    padding: 0 2% 0 0;
+  }
+  .right {
+    right: 0;
+    padding: 0 0 0 2%;
   }
 }
