@@ -57,7 +57,8 @@ munimap.lang.Translations = {
   SEZNAM_MAP: 'SEZNAM_MAP',
   GOOGLE_MAP: 'GOOGLE_MAP',
   FIND_ME: 'FIND_ME',
-  SCROLL_HINT: 'SCROLL_HINT'
+  SCROLL_HINT: 'SCROLL_HINT',
+  LABEL_FIELD_NAME: 'LABEL_FIELD_NAME',
 };
 
 
@@ -113,10 +114,12 @@ munimap.lang.CS_TRANSLATIONS = {
   'library': 'knihovna',
   'study-room': 'studovna',
   'virtual-tour': 'virtuální prohlídka',
+  'it-center': 'IT centrum',
   'SEZNAM_MAP': 'Otevřít v Mapy.cz',
   'GOOGLE_MAP': 'Otevřít v Mapy Google',
   'FIND_ME': 'Moje poloha',
-  'SCROLL_HINT': 'Klikněte na mapu\npro její aktivaci'
+  'SCROLL_HINT': 'Klikněte na mapu\npro její aktivaci',
+  'LABEL_FIELD_NAME': 'nazev_cs',
 };
 
 
@@ -173,10 +176,12 @@ munimap.lang.EN_TRANSLATIONS = {
   'library': 'library',
   'study-room': 'study room',
   'virtual-tour': 'virtual tour',
+  'it-center': 'IT center',
   'SEZNAM_MAP': 'Open in Mapy.cz',
   'GOOGLE_MAP': 'Open in Google map',
   'FIND_ME': 'My location',
-  'SCROLL_HINT': 'Click on the map\nto activate it'
+  'SCROLL_HINT': 'Click on the map\nto activate it',
+  'LABEL_FIELD_NAME': 'nazev_en',
 };
 
 
