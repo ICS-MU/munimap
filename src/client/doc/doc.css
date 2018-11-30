@@ -15,7 +15,7 @@ table {
 }
 th {
   border: solid 2px #fff;
-  background-color: #002776;
+  background-color: #0000dc;
   color: #fff;
 }
 th:first-child {
@@ -70,7 +70,7 @@ div.hint:before, div.experimental:before, div.warning:before {
   position: absolute;
 }
 div.hint:before, div.experimental:before{
-  color: #002776;
+  color: #0000dc;
   font-size: 9px;
   top: 4px;
 }

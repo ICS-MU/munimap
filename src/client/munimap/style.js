@@ -43,7 +43,7 @@ munimap.style.LABEL_CACHE = {};
  * @const
  */
 munimap.style.TEXT_FILL = new ol.style.Fill({
-  color: '#002776'
+  color: '#0000dc'
 });
 
 

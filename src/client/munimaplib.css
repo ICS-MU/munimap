@@ -256,7 +256,11 @@
   font-family: 'MunimapFont';
   font-size: 25px;
   font-style: normal;
-  color: #002776;
+  color: #0000dc;
+}
+
+.munimap-crosshairs:hover { 
+  color: #000;
 }
 
 .ol-touch .munimap-geolocate {
@@ -269,12 +273,13 @@
 }
 
 .ol-control button {
-  background-color: #002776;
+  background-color: #0000dc;
   line-height: 0;
+  font-family: Arial, Helvetica Neue, sans-serif;
 }
 .ol-control button:hover,
 .ol-control button:focus {
-  background-color: #003190;
+  background-color: #000;
   cursor: pointer;
 }
 
@@ -303,12 +308,12 @@
 }
 .ol-attribution li a {
   padding-right: 0px !important;
-  color: #002776;
+  color: #0000dc;
   font-weight: bold;
   background-image: none !important;
 }
 .ol-attribution li a:hover {
-  color: red;
+  color: #e51c23;
 }
 
 .munimap-hint {
@@ -325,3 +330,4 @@
   background-color: #000;
   opacity: 1;
 }
+
