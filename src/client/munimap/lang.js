@@ -126,8 +126,12 @@ munimap.lang.Translations = {
 >>>>>>> eac6dbc... simpleScroll hint
 =======
   SCROLL_HINT: 'SCROLL_HINT',
+<<<<<<< HEAD
   LABEL_FIELD_NAME: 'LABEL_FIELD_NAME',
 >>>>>>> 51534a8... added it center poi
+=======
+  LABEL_FIELD_NAME: 'LABEL_FIELD_NAME'
+>>>>>>> 84d1e38... fixlint
 };
 
 
@@ -262,8 +266,12 @@ munimap.lang.CS_TRANSLATIONS = {
 >>>>>>> eac6dbc... simpleScroll hint
 =======
   'SCROLL_HINT': 'Klikněte na mapu\npro její aktivaci',
+<<<<<<< HEAD
   'LABEL_FIELD_NAME': 'nazev_cs',
 >>>>>>> 51534a8... added it center poi
+=======
+  'LABEL_FIELD_NAME': 'nazev_cs'
+>>>>>>> 84d1e38... fixlint
 };
 
 
@@ -400,8 +408,12 @@ munimap.lang.EN_TRANSLATIONS = {
 >>>>>>> eac6dbc... simpleScroll hint
 =======
   'SCROLL_HINT': 'Click on the map\nto activate it',
+<<<<<<< HEAD
   'LABEL_FIELD_NAME': 'nazev_en',
 >>>>>>> 51534a8... added it center poi
+=======
+  'LABEL_FIELD_NAME': 'nazev_en'
+>>>>>>> 84d1e38... fixlint
 };
 
 
