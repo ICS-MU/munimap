@@ -151,8 +151,6 @@ code {
   padding: 0;
 }
 
-<<<<<<< HEAD:src/client/example/ics.css
-=======
 @media screen and (max-width: 850px) {
   .content > .multi-map {
       margin: 15px 0 0 0;
@@ -191,7 +189,6 @@ a.example:hover {
   padding: 20px 0;
 }
 
->>>>>>> 451c7e9... added info bubble for custom markers & POI, fixed tutorials,:src/client/example/example.css
 /***quickstart example styles***/
 .page-title {
   text-transform: uppercase;
@@ -209,4 +206,22 @@ a.example:hover {
 .guide-step-number {
   margin-right: 5px;
   text-transform: uppercase;
+}
+
+
+/**styles for windows of a greater width**/
+@media (min-width: 800px) {
+  .example-wrap {
+    float: left;
+    width: 33.33333%;
+  }
+  .example-name {
+    padding: 10px 0;
+  }
+}
+
+@media (min-width: 1092px) {
+  .example-name {
+    padding: 20px 0;
+  }
 }

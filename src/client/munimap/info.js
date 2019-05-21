@@ -11,7 +11,6 @@ goog.require('munimap.lang');
  * Equal to 2 * border-width of ol.popup:after.
  * @type {number}
  * @const
- * @protected
  */
 munimap.info.POPUP_TALE_HEIGHT = 10;
 
@@ -20,7 +19,6 @@ munimap.info.POPUP_TALE_HEIGHT = 10;
  * Equal to left positioning (- 11px of margin) of ol.popup:after.
  * @type {number}
  * @const
- * @protected
  */
 munimap.info.POPUP_TALE_INDENT = 8;
 

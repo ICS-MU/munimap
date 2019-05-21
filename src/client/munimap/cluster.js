@@ -597,88 +597,11 @@ munimap.cluster.style.getUnmarkedDefaultLabel = function(feature, resolution) {
  * @protected
  */
 munimap.cluster.style.getMarkedDefaultLabel =
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> db7e853... fix code style
-    function(options, allMarkers, feature, resolution) {
-  var clusteredFeatures = munimap.cluster.getFeatures(feature);
-  var markers = clusteredFeatures.filter(function(feat) {
-    return goog.array.contains(allMarkers, feat);
-  });
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-  if (markers.length > 3) {
-    var markerType;
-    if (munimap.building.isBuilding(firstMarker)) {
-      markerType = 'budova';
-    } else if (munimap.room.isRoom(firstMarker)) {
-      markerType = 'místnost';
-    } else {
-      markerType = 'místo';
-    }
-    titleParts.push(markers.length + 'x ' + markerType);
-  } else {
-    if (goog.isDef(options.markerLabel)) {
-      markers = markers.filter(function(marker) {
-        var title = options.markerLabel(marker, resolution);
-        if (goog.isDefAndNotNull(title)) {
-          if (title) {
-            titleParts.push(title);
-=======
-    var titleParts = [];
-
-    if (markers.length > 3) {
-      var markerType;
-      if (markers.every(function(el) {
-        return munimap.building.isBuilding(el);
-      })) {
-        markerType = munimap.lang.getMsg(munimap.lang.Translations.BUILDING);
-      } else if (markers.every(function(el) {
-        return munimap.room.isRoom(el);
-      })) {
-        markerType = munimap.lang.getMsg(munimap.lang.Translations.ROOM);
-      } else if (markers.every(function(el) {
-        return munimap.door.isDoor(el);
-      })) {
-        markerType = munimap.lang.getMsg(munimap.lang.Translations.DOOR);
-      } else {
-        markerType = munimap.lang.getMsg(munimap.lang.Translations.LOCATION);
-      }
-      titleParts.push(markers.length + 'x ' + markerType);
-    } else {
-      if (goog.isDef(options.markerLabel)) {
-        markers = markers.filter(function(marker) {
-          var title = options.markerLabel(marker, resolution);
-          if (goog.isDefAndNotNull(title)) {
-            if (title) {
-              titleParts.push(title);
-            }
-            return false;
-          } else {
-            return true;
->>>>>>> 57b81cb... Allow custom markers and
-=======
-  var titleParts = [];
-=======
-=======
->>>>>>> 49ca920... moved from closure linter to ESLint
   function(options, allMarkers, feature, resolution) {
     var clusteredFeatures = munimap.cluster.getFeatures(feature);
     var markers = clusteredFeatures.filter(function(feat) {
       return goog.array.contains(allMarkers, feat);
     });
-<<<<<<< HEAD
->>>>>>> e23660e... added matomo
-=======
->>>>>>> db7e853... fix code style
-
-  var titleParts = [];
-=======
->>>>>>> 49ca920... moved from closure linter to ESLint
 
     var titleParts = [];
 
@@ -701,26 +624,6 @@ munimap.cluster.style.getMarkedDefaultLabel =
       }
       titleParts.push(markers.length + 'x ' + markerType);
     } else {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> db7e853... fix code style
-      markerType = munimap.lang.getMsg(munimap.lang.Translations.LOCATION);
-    }
-    titleParts.push(markers.length + 'x ' + markerType);
-  } else {
-    if (goog.isDef(options.markerLabel)) {
-      markers = markers.filter(function(marker) {
-        var title = options.markerLabel(marker, resolution);
-        if (goog.isDefAndNotNull(title)) {
-          if (title) {
-            titleParts.push(title);
-<<<<<<< HEAD
->>>>>>> 5450bff... fix code style
-=======
-=======
->>>>>>> 49ca920... moved from closure linter to ESLint
       if (goog.isDef(options.markerLabel)) {
         markers = markers.filter(function(marker) {
           var title = options.markerLabel(marker, resolution);
@@ -731,12 +634,6 @@ munimap.cluster.style.getMarkedDefaultLabel =
             return false;
           } else {
             return true;
-<<<<<<< HEAD
->>>>>>> e23660e... added matomo
-=======
->>>>>>> db7e853... fix code style
-=======
->>>>>>> 49ca920... moved from closure linter to ESLint
           }
         });
       }
@@ -785,67 +682,8 @@ munimap.cluster.style.getMarkedDefaultLabel =
               titleParts.push(roomTitle);
             }
           }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-        });
-        titleParts = munimap.unit.getTitleParts(units);
-        buildingsWithoutUnits.forEach(function(building) {
-          var buildingTitle;
-          var bUnits = munimap.building.getUnits(building);
-          if (bUnits.length) {
-            buildingTitle = munimap.unit.getTitleParts(bUnits);
-          } else {
-            buildingTitle =
-                munimap.building.getDefaultLabel(building, resolution);
-          }
-          titleParts.push(buildingTitle);
-        });
-      } else if (munimap.marker.custom.isCustom(firstMarker)) {
-        markers.forEach(function(customMarker) {
-          var cmTitle = munimap.marker.custom.getLabel(customMarker);
-          if (goog.isDefAndNotNull(cmTitle)) {
-            titleParts.push(cmTitle);
-          }
-        });
-        titleParts.sort(munimap.string.localeCompare);
-      } else {
-        markers.forEach(function(room) {
-          var showLocationCodes = munimap.getProps(options.map).locationCodes;
-          var roomTitle = (showLocationCodes) ?
-              /**@type {string}*/ (room.get('polohKod')) :
-                  munimap.style.getDefaultLabel(room, resolution);
-          if (goog.isDefAndNotNull(roomTitle)) {
-            titleParts.push(roomTitle);
-          }
-        });
-=======
-
-        })
->>>>>>> 57b81cb... Allow custom markers and
-=======
-        });
->>>>>>> 5500a60... fixed code style
-      }
-=======
-        }
-      });
->>>>>>> 5450bff... fix code style
-=======
         });
       }
->>>>>>> e23660e... added matomo
-=======
-        }
-      });
->>>>>>> db7e853... fix code style
-=======
-        });
-      }
->>>>>>> 49ca920... moved from closure linter to ESLint
     }
     var title = titleParts.join('\n');
     return title;

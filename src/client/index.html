@@ -42,7 +42,12 @@
             Mapové okno vytvořené prostřednictvím této knihovny je možné velmi jednoduchým způsobem
             začlenit do jakékoli webové stránky a přizpůsobit si mapu dle potřeb konkrétního účelu.
             Tvůrce webových stránek může zvolit <b>výchozí zobrazení mapy</b> (střed, měřítko mapy),
-            ale také určit objekty (budovy či místnosti), které mají být v mapě <b>zvýrazněny</b>.
+            ale také určit objekty (budovy, místnosti či dveře), které mají být v&nbsp;mapě <b>zvýrazněny</b>.
+            Místa mimo prostory Masarykovy univerzity lze označit pomocí špendlíku s&nbsp;vlastním popiskem.
+          </p>
+          <p>
+            Knihovna munimap byla zveřejněna jako open source a její zdrojový kód je dostupný na
+            <a href="https://github.com/ICS-MU/munimap">GitHubu</a>.
           </p>
         </div>
         <div class="right">
@@ -83,25 +88,11 @@
           <h3>Kde se aktuálně používá <span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span>?</h3>
           <ul>
             <li><a href="http://www.muni.cz/" target="_blank">www.muni.cz</a></li>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
-            <li><a href="http://www.is.muni.cz/" target="_blank">www.is.muni.cz</a></li>
-            <li><a href="http://www.it.muni.cz/" target="_blank">www.it.muni.cz</a></li>
->>>>>>> 886459e... version 1.6.5
-            <li><a href="http://www.phil.muni.cz/" target="_blank">www.phil.muni.cz</a></li>
-            <li><a href="http://www.sci.muni.cz/" target="_blank">www.sci.muni.cz</a></li>
-            <li><a href="https://inet.muni.cz/" target="_blank">Inet MU</a></li>
->>>>>>> ee04a89... add Inet MU to the munimap references
-=======
             <li><a href="http://www.phil.muni.cz/" target="_blank">www.phil.muni.cz</a></li>
             <li><a href="http://www.sci.muni.cz/" target="_blank">www.sci.muni.cz</a></li>
             <li><a href="https://inet.muni.cz/" target="_blank">Inet MU</a></li>
             <li><a href="http://www.is.muni.cz/" target="_blank">IS MU</a></li>
             <li><a href="http://www.it.muni.cz/" target="_blank">www.it.muni.cz</a></li>
->>>>>>> 9b653f7... corrections in munimap changelog and websites using munimap
           </ul>
         </div>
       </div>
@@ -110,158 +101,20 @@
         <div class="left">
           <h3>Co je nového v knihovně <span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span> (v{jpad.appVersion})?</h3>
           <ul>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <li>přidána možnost umístit "špendlík" s vlastním popiskem na libovolné místo v mapě</li>
-            <li>při větším přiblížení se v mapě zobrazují i vstupy do budov</li>
-            <li>vylepšení chování shluků, v nichž je obsažen zvýrazněný objekt</li>
-=======
-            <li>přidána možnost přidání vlastní vrstvy závislé na podlaží</li>
->>>>>>> 941f3c2... version 1.3.0
-=======
-            <li>přidána možnost <a href='example/optpoi.html'>zvýraznění volitelných bodů zájmu</a></li>
->>>>>>> cbec9ad... Version 1.4.0
-=======
-            <li>přidána možnost kombinovat <a href='example/custommarker.html'>polohové kódy a vlastní označená místa</a></li>
-            <li>přidána možnost vlastní <a href='example/custommarker.html'>info bubliny k označenému místu</a></li>
-            <li>přidána možnost odkazu na <a href='example/maplinks.html'>Mapy.cz a Mapy Google</a></li>
-            <li>vlastní munimap prefix pro CSS třídy</li>
->>>>>>> 4f4f510... version 1.5.0
-=======
-              <li>přidáno tlačítko pro zjišťování polohy</li>
-=======
-              <li>přidána funkce pro zjišťování polohy</li>
->>>>>>> d49c8a3... added documentation for tutorials
-              <li>opravena chyba načítání munimapu v IE11</li>
-              <li>oprava CSS pro mobilní verzi</li>
->>>>>>> 1aaa11a... build 1.6.0
-=======
-              <li>přechod z Google Analytics na Matomo (Piwik)</li>
-              <li>tlačítko pro zjištění polohy je povoleno pouze při použití protokolu HTTPS</li>
-              <li>opraveno shlukování označených objektů</li>
-              <li>vylepšeny příklady použití</li>
->>>>>>> 68bc625... version 1.6.1
-=======
-              <li>přechod na OpenLayers 4.6.4</li>
-              <li>vylepšena animace při geolokaci</li>
->>>>>>> 4c8a284... version 1.6.2
-=======
-              <li>opraveno označování chodeb</li>
-<<<<<<< HEAD
-              <li>zvýraznění patra označeného objektu</li>
->>>>>>> b38e626... version 1.6.3
-=======
-              <li>zvýraznění podlaží označeného objektu v přepínači podlaží</li>
->>>>>>> 128287a... fix changelog
-=======
-            <li>zmenšení velikosti knihovny na polovinu</li>
-            <li>opravena duplikace textu v přepínači podlaží</li>
->>>>>>> bf0276f... version 1.6.4
-=======
-              <li>opraveno označování chodeb</li>
-              <li>zvýraznění podlaží označeného objektu v přepínači podlaží</li>
->>>>>>> 6166ee4... Revert "version 1.6.4"
-=======
-              <li>přidány nové body zájmu</li>
->>>>>>> 3bc63dc... version 1.6.4
-=======
-              <li>opraveno načítání většího počtu bodů zájmů</li>
->>>>>>> 886459e... version 1.6.5
-=======
-              <li>opraveno načítání většího počtu bodů zájmu</li>
->>>>>>> ac785a7... fixed typo
-=======
-              <li>opraveno načítání zvýrazněných objektů</li>
->>>>>>> f5b5647... version 1.6.6
-=======
-             <li>přidán parametr markerFilter pro filtraci bodů zájmů podle součástí MU</li>
-             <li>přidán parametr color pro vlastní bod kvůli úpravě barvy</li>
-             <li>přidány knihovny do bodů zájmu</li>
->>>>>>> d45b889... version 1.7.0
-=======
-            <li>přidán parametr labels pro vypnutí popisků budov MU</li>
-            <li>přidán parametr simpleScroll pro vypnutí interakce s mapou při posouvání stránky</li>
-            <li>změna výchozí podkladové mapy z OpenStreetMap na Topografickou mapu světa z ArcGIS Online</li>
->>>>>>> b631aed... version 1.8.0
-=======
-            <li>opraveno maximální přiblížení pro podkladovou mapu ArcGIS Online</li>
->>>>>>> 6528b04... version 1.8.1
-=======
-            <li>přidána možnost resetování mapy s parametrem markerFilter</li>
->>>>>>> f8ebb5e... version 1.8.2
-=======
-            <li>Optimalizace funkce reset</li>
-            <li>Zobrazení názvu bodu zájmu jako jeho popisku</li>
-            <li>Zalamování dlouhých názvů bodů zájmu</li>
-            <li>Upravení zobrazení ikon učeben</li>
-            <li>Upravení css stylů</li>
->>>>>>> 8efea87... version 1.8.3
-=======
-            <li>Oprava výpočtu přiblížení mapy při využití funkce reset</li>
->>>>>>> 56d50be... version 1.8.4
-=======
-              <li>opraven výpočet přiblížení mapy ve funkci reset</li>
-              <li>opraveno použití parametru labels ve funkci reset</li>
-<<<<<<< HEAD
->>>>>>> 9bc7e87... fix reset with param labels false
-=======
-              <li>opraven popisek pro body zájmu bez geometrie</li>
->>>>>>> 91290e3... update changelog
-=======
               <li>přidána IT centra jako bod zájmu</li>
               <li>přechod na nový vizuální styl MU</li>
->>>>>>> 69d8f40... version 1.8.5
           </ul>
         </div>        
         <div class="right">
           <h3>Jaké existují starší verze knihovny <span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span>?</h3>
           <ul>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
-=======
-=======
-              <li><a href="/munimap/1.5/">verze 1.5</a></li>
->>>>>>> 1aaa11a... build 1.6.0
-=======
-=======
             <li><a href="/munimap/1.7/">verze 1.7</a></li>
->>>>>>> b631aed... version 1.8.0
             <li><a href="/munimap/1.6/">verze 1.6</a></li>
             <li><a href="/munimap/1.5/">verze 1.5</a></li>
->>>>>>> d45b889... version 1.7.0
             <li><a href="/munimap/1.4/">verze 1.4</a></li>
->>>>>>> 4f4f510... version 1.5.0
             <li><a href="/munimap/1.3/">verze 1.3</a></li>
->>>>>>> cbec9ad... Version 1.4.0
             <li><a href="/munimap/1.2/">verze 1.2</a></li>
             <li><a href="/munimap/1.1/">verze 1.1</a></li>
->>>>>>> 941f3c2... version 1.3.0
             <li><a href="/munimap/1.0/">verze 1.0</a></li>
           </ul>
           <div class="munimap-links">

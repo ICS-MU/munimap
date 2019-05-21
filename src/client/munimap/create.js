@@ -30,6 +30,7 @@ goog.require('munimap.matomo');
 goog.require('munimap.optpoi');
 goog.require('munimap.poi');
 goog.require('munimap.poi.style');
+goog.require('munimap.pubtran.stop.layer');
 goog.require('munimap.room');
 goog.require('munimap.room.label');
 goog.require('munimap.room.style');
@@ -74,37 +75,13 @@ munimap.create = function(options) {
         target: target,
         getMainFeatureAtPixel: options.getMainFeatureAtPixel,
         layers: options.layers,
-<<<<<<< HEAD
-<<<<<<< HEAD
-        baseMap: options.baseMap || munimap.BaseMaps.OSM_BW
-=======
-        baseMap: options.baseMap || munimap.BaseMaps.OSM_BW,
-=======
         baseMap: options.baseMap || munimap.BaseMaps.ARCGIS_BW,
->>>>>>> b2619a8... basemap arcgis, labels param
         pubTran: options.pubTran,
-<<<<<<< HEAD
-        locationCodes: options.locationCodes
->>>>>>> bd66799... add switch to munimap.create for showing location codes instead of room numbers
-=======
         locationCodes: options.locationCodes,
-<<<<<<< HEAD
-        mapLinks: options.mapLinks
->>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
-=======
         mapLinks: options.mapLinks,
-<<<<<<< HEAD
-        markerFilter: options.markerFilter
->>>>>>> 2c1dbb3... marker filter init
-=======
         markerFilter: options.markerFilter,
-<<<<<<< HEAD
-        labels: options.labels
->>>>>>> b2619a8... basemap arcgis, labels param
-=======
         labels: options.labels,
         simpleScroll: options.simpleScroll
->>>>>>> eac6dbc... simpleScroll hint
       };
     }).then(function(options) {
       var target = options.target;
@@ -201,19 +178,12 @@ munimap.create = function(options) {
       }
 
       var munimapEl = goog.dom.createDom('div', 'munimap');
-<<<<<<< HEAD
-      var infoEl = goog.dom.createDom('div', 'ol-popup info');
-      var complexEl = goog.dom.createDom('div', 'complex');
-      var bldgEl = goog.dom.createDom('div', 'building');
-      var floorEl = goog.dom.createDom('div', 'floor');
-=======
       var infoEl = goog.dom.createDom('div', 'ol-popup munimap-info');
       var complexEl = goog.dom.createDom('div', 'munimap-complex');
       var bldgEl = goog.dom.createDom('div', 'munimap-building');
       var floorEl = goog.dom.createDom('div', 'munimap-floor');
 
 
->>>>>>> f35ea2b... Custom CSS prefix - munimap
       goog.dom.appendChild(infoEl, complexEl);
       goog.dom.appendChild(infoEl, bldgEl);
       goog.dom.appendChild(infoEl, floorEl);
@@ -341,8 +311,6 @@ munimap.create = function(options) {
         map.addLayer(layer);
       });
 
-<<<<<<< HEAD
-=======
       if (options.pubTran) {
         var pubTranAttribution = new ol.Attribution({
           html: munimap.lang.getMsg(
@@ -356,17 +324,11 @@ munimap.create = function(options) {
       if (options.mapLinks) {
         map.addControl(munimap.mapLinks.create(map));
       }
-<<<<<<< HEAD
-      map.addControl(munimap.geolocate.create(map));
-
->>>>>>> 57b81cb... Allow custom markers and
-=======
       if (window.location.protocol === 'https:' || jpad.DEV) {
         map.addControl(munimap.geolocate.create(map));
       } else {
         munimap.matomo.sendEvent('geolocation', 'http_hidden');
       }
->>>>>>> e23660e... added matomo
       map.addLayer(markerClusterLayer);
       map.addLayer(markerLayer);
       markerLayer.once('precompose', munimap.marker.style.getPattern);
@@ -456,19 +418,10 @@ munimap.create.assertOptions = function(options) {
   munimap.assert.layers(options.layers);
   munimap.assert.lang(options.lang);
   munimap.assert.baseMap(options.baseMap);
-<<<<<<< HEAD
-=======
   munimap.assert.pubTran(options.pubTran);
   munimap.assert.locationCodes(options.locationCodes);
-<<<<<<< HEAD
->>>>>>> bd66799... add switch to munimap.create for showing location codes instead of room numbers
-=======
   munimap.assert.mapLinks(options.mapLinks);
-<<<<<<< HEAD
->>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
-=======
   munimap.assert.labels(options.labels);
->>>>>>> b2619a8... basemap arcgis, labels param
 };
 
 

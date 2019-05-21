@@ -70,11 +70,7 @@
             | undefined</td>
           <td class="param-desc">
             <ul>
-<<<<<<< HEAD
-              <li>pole polohových kódů budov, nebo polohových kódů místností, které mají být v mapě zvýrazněny</li>
-=======
               <li>pole textových řetězců může být
->>>>>>> 33fe85f... Enable highlighting of optional POIs
               <ul>
                 <li>pole polohových kódů budov,</li>
                 <li>pole polohových kódů místností,</li>
@@ -105,7 +101,7 @@
               <li>není-li parametr zadán, nic se v mapě nezvýrazní</li>
             </ul>
             <div class="hint">
-              <p>pro zjištění polohových kódů budov či místností lze použít aplikaci <a href='https://kompas.muni.cz/'>Kompas</a></p>
+              <p>pro zjištění polohových kódů budov, místností či dveří lze použít aplikaci <a href='https://kompas.muni.cz/'>Kompas</a></p>
             </div>
           </td>
         </tr>
@@ -307,8 +303,6 @@
             </div>
           </td>
         </tr>
-<<<<<<< HEAD
-=======
         <tr id="pubTran">
           <td class="param-name">pubTran</td>
           <td class="param-type">boolean | undefined</td>
@@ -332,9 +326,6 @@
             </ul>
           </td>
         </tr>
-<<<<<<< HEAD
->>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
-=======
         <tr id="link">
           <td class="param-name">labels</td>
           <td class="param-type">boolean | undefined</td>
@@ -346,9 +337,6 @@
             </ul>
           </td>
         </tr>
-<<<<<<< HEAD
->>>>>>> b2619a8... basemap arcgis, labels param
-=======
         <tr id="link">
             <td class="param-name">simpleScroll</td>
             <td class="param-type">boolean | undefined</td>
@@ -361,7 +349,6 @@
               </ul>
             </td>
           </tr>
->>>>>>> b631aed... version 1.8.0
       </table>
       <h3>Výstup</h3>
       <p><a href="https://google.github.io/closure-library/api/goog.Promise.html" target="_blank">goog.Promise</a>&lt;<a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Map.html" target="_blank">ol.Map</a>&gt;</p>
@@ -384,32 +371,12 @@
           <th class="param-type">Typ</th>
           <th>Popis</th>
         </tr>
-        <tr>
+        <tr  id="reset-markers">
           <td class="param-name">markers</td>
           <td class="param-type">Array.&lt;string&gt; | Array.&lt;<a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Feature.html" target="_blank">ol.Feature</a>&gt; 
             | undefined</td>
           <td class="param-desc">
-<<<<<<< HEAD
-            <ul>
-              <li>pole polohových kódů budov, nebo polohových kódů místností, které mají být v mapě zvýrazněny</li>
-              <ul>
-                <li>v polohových kódech je možné využít zástupného znaku '_'</li>
-              </ul>
-              <li>od verze 1.1 je možné umístit "špendlík" na libovolné místo v mapě, a to pomocí pole objektů typu ol.Feature s parametry:
-                <ul>
-                  <li>geometry definující geometrii pomocí objektu <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.geom.Point.html" target="_blank">ol.geom.Point</a></li>
-                  <li>label pro textový popisek bodu</li>
-                  <li>detail pro textový / HTML popis v info bublině</li>
-                </ul>
-              </li>
-              <li>není-li parametr zadán, nic se v mapě nezvýrazní</li>
-            </ul>
-            <div class="hint">
-              <p>pro zjištění polohových kódů budov či místností lze použít aplikaci <a href='https://kompas.muni.cz/'>Kompas</a></p>
-            </div>
-=======
 	    <a href="#markers">viz parametr markers metody create</a>
->>>>>>> 5869632... update munimap api docs (remove reset parameters description, duplicit with create parameters)
           </td>
         </tr>
         <tr  id="reset-markers">
@@ -426,50 +393,25 @@
 	    <a href="#markerLabel">viz parametr markerLabel metody create</a>
           </td>
         </tr>
-        <tr>
+        <tr id="reset-zoomTo">
           <td class="param-name">zoomTo</td>
           <td class="param-type">Array.&lt;string&gt; | string | undefined</td>
           <td class="param-desc">
-<<<<<<< HEAD
-            <ul>
-              <li>pole polohových kódů budov, nebo polohových kódů místností, na které se má mapa zazoomovat</li>
-              <li>v polohových kódech je možné využít zástupného znaku '_'</li>
-              <li>není-li parametr zadán a současně je zadán parametr markers, převezme hodnotu tohoto parametru</li>
-            </ul>
-            <div class="hint">
-              <p>pro zjištění polohových kódů budov či místností lze použít aplikaci <a href='https://kompas.muni.cz/'>Kompas</a></p>
-            </div>
-=======
 	    <a href="#zoomTo">viz parametr zoomTo metody create</a>
->>>>>>> 5869632... update munimap api docs (remove reset parameters description, duplicit with create parameters)
           </td>
         </tr>
         <tr>
           <td class="param-name">zoom</td>
           <td class="param-type">number | undefined</td>
           <td class="param-desc">
-<<<<<<< HEAD
-            <ul>
-              <li>výchozí zoom mapy</li>
-              <li>není-li zadán, je dopočítán podle zoomTo, případně se zobrazí celé Brno</li>
-            </ul>
-=======
 	    <a href="#zoom">viz parametr zoom metody create</a>
->>>>>>> 5869632... update munimap api docs (remove reset parameters description, duplicit with create parameters)
           </td>
         </tr>
-        <tr>
+        <tr id="reset-center">
           <td class="param-name">center</td>
           <td class="param-type"><a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.html#.Coordinate" target="_blank">ol.Coordinate</a> | undefined</td>
           <td class="param-desc">
-<<<<<<< HEAD
-            <ul>
-              <li>výchozí střed mapy v zeměpisné šířce a délce (<a href="http://spatialreference.org/ref/epsg/wgs-84/" target="_blank">EPSG:4326</a>)</li>
-              <li>není-li zadán, je dopočítán podle zoomTo, případně se zobrazí celé Brno</li>
-            </ul>
-=======
 	    <a href="#center">viz parametr center metody create</a>
->>>>>>> 5869632... update munimap api docs (remove reset parameters description, duplicit with create parameters)
           </td>
         </tr>
       </table>

@@ -8,7 +8,7 @@ It also enables web administrators to mark objects of interest (such as classroo
 or headquaters) in the map and set their own labels. The map can be created in czech or english version.
 
 Current versions:
-* OpenLayers [v3.19.1](https://github.com/openlayers/ol3/releases)
+* OpenLayers [v4.6.4](https://github.com/openlayers/openlayers/releases)
 * Closure Library [2016-01-05](https://github.com/google/closure-library/commits/fe66ad635ad3ff2bc8ee85933e4bf86bfa7523fb)
 * Closure Compiler [v20151216](https://github.com/google/closure-compiler/releases)
 * Closure Linter [2015-12-10](https://github.com/google/closure-linter/commits/5c27529075bb88bdc45e73008f496dec8438d658)

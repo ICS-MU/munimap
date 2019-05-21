@@ -7,37 +7,11 @@
 @import url("_lib/closure-library/closure/goog/css/menuitem.css");
 @import url("munimap/font/font.css");
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-.munimap-info-bubble {
-  left: auto;
-  right: auto;
-  top: auto;
-  bottom: auto;
-  z-index: 2;
-}
-<<<<<<< HEAD
->>>>>>> f35ea2b... Custom CSS prefix - munimap
-=======
-
-.munimap-bubble-title {
-  font-weight: 600;
-  text-align: center;
-  margin: 5px 0;
-}
-
->>>>>>> 451c7e9... added info bubble for custom markers & POI, fixed tutorials,
-=======
->>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
-=======
 
 .ol-viewport {
   font-size: 16px;
   transition: .3s ease-in-out all;
 }
->>>>>>> eadf31d... removed webfont loader changes
 .ol-popup {
   border-radius: 6px;
   bottom: auto;
@@ -61,10 +35,6 @@
 .ol-popup.munimap-hide-tale:after {
   display: none;
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
 .munimap-loading {
   display: none;
   position: absolute;
@@ -80,7 +50,6 @@
   top: 50%;
   transform: translate(-50%, -50%);
 }
->>>>>>> 3bb8cf3... reset, optpoi text newline, css fix, classrooms default zoom
 .munimap-info .munimap-content > .munimap-title {
   font-weight: bold;
 }
@@ -102,7 +71,6 @@
 .munimap-info .munimap-close-button:hover {
   cursor: pointer;
 }
->>>>>>> f35ea2b... Custom CSS prefix - munimap
 
 .munimap-info .munimap-close-button:hover::after {
   color: #e51c23;

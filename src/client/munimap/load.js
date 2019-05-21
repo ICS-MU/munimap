@@ -18,13 +18,6 @@ munimap.load.xhrCounter = 0;
 /**
  * @type {string}
  */
-<<<<<<< HEAD
-munimap.load.MUNIMAP_URL =
-    '//maps.muni.cz/arcgis/rest/services/munimap/MapServer/';
-
-
-/**
-=======
 munimap.load.MUNIMAP_URL = (jpad.DEV) ?
   'http://kleopatra.ics.muni.cz/arcgis/rest/services/munimap/MapServer/' :
   '//maps.muni.cz/arcgis/rest/services/munimap/MapServer/';
@@ -39,7 +32,6 @@ munimap.load.MUNIMAP_PUBTRAN_URL = (jpad.DEV) ?
 
 
 /**
->>>>>>> 0f3ae86... fixed bubble position, fixed code style, link renamed to mapLinks
  * @type {goog.net.XhrManager}
  * @protected
  */

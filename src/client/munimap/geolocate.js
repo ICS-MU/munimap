@@ -72,24 +72,6 @@ munimap.geolocate.create = function(map) {
  */
 munimap.geolocate.animation = function(map, geolocation) {
   var center = geolocation.getPosition() || null;
-<<<<<<< HEAD
-  var duration = 2000;
-  var start = +new Date();
-  var pan = ol.animation.pan({
-    duration: duration,
-    source: /** @type {ol.Coordinate} */ (map.getView().getCenter()),
-    start: start,
-    easing: null
-  });
-  var bounce = ol.animation.bounce({
-    duration: duration,
-    resolution: 3 * map.getView().getResolution(),
-    start: start,
-    easing: null
-  });
-  map.beforeRender(pan, bounce);
-  map.getView().setCenter(center);
-=======
   var view = map.getView();
   var currExt = view.calculateExtent(map.getSize());
   var res = view.getResolution();
@@ -109,26 +91,6 @@ munimap.geolocate.animation = function(map, geolocation) {
     if (zoom >= 18) {
       zoom = 17.5;
     }
-<<<<<<< HEAD
-    else {
-      if(zoom >= 18) {
-        zoom = 17.5
-      }
-      view.animate({
-        center: center,
-        duration: duration
-      });
-      view.animate({
-        zoom: zoom,
-        duration: duration / 2
-      }, {
-        zoom: 18,
-        duration: duration / 2
-      });
-    }
->>>>>>> 1fb2f27... upgrade openlayers 4.6.4
-}
-=======
     view.animate({
       center: center,
       duration: duration
@@ -142,7 +104,6 @@ munimap.geolocate.animation = function(map, geolocation) {
     });
   }
 };
->>>>>>> 49ca920... moved from closure linter to ESLint
 
 /**
  * @param {Array.<number>} firstPoint
@@ -159,8 +120,4 @@ munimap.geolocate.getDistance = function(firstPoint, secondPoint) {
   var wgs84Sphere = new ol.Sphere(6378137);
   length += wgs84Sphere.haversineDistance(c1, c2);
   return length;
-<<<<<<< HEAD
-}
-=======
 };
->>>>>>> 49ca920... moved from closure linter to ESLint
