@@ -29,6 +29,10 @@
   /*border-width influences munimap.info.POPUP_TALE_HEIGHT constant*/
   border-width: 5px;
 }
+
+.munimap-info-hide {
+  display: none;  
+}
 .ol-popup.munimap-hide-tale:before {
   display: none;
 }
@@ -160,6 +164,16 @@
 }
 
 .munimap-drag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 5;
+  touch-action: auto;
+}
+
+.munimap-error {
   position: absolute;
   top: 0;
   left: 0;

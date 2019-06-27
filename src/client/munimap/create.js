@@ -51,6 +51,8 @@ munimap.create = function(options) {
   munimap.create.assertOptions(options);
   munimap.lang.active = options.lang || munimap.lang.Abbr.CZECH;
   var target = goog.dom.getElement(options.target);
+  var invalidCodeExpressions = munimap.create.
+    filterInvalidCodeExpressions(options.markers);
 
   return new goog.Promise(function(resolve, reject) {
     goog.Promise.all([
@@ -60,6 +62,8 @@ munimap.create = function(options) {
       munimap.create.loadFonts()
     ]).then(function(results) {
       var options = results[0];
+      var invalidMarkerCodes = munimap.create.filterInvalidMarkerCodes(results);
+      var invalidCodes = invalidCodeExpressions.concat(invalidMarkerCodes);
       var markers = results[1];
       var zoomTos = results[2];
       var view = munimap.create.calculateView(options, markers, zoomTos);
@@ -81,7 +85,8 @@ munimap.create = function(options) {
         mapLinks: options.mapLinks,
         markerFilter: options.markerFilter,
         labels: options.labels,
-        simpleScroll: options.simpleScroll
+        simpleScroll: options.simpleScroll,
+        invalidCodes: invalidCodes
       };
     }).then(function(options) {
       var target = options.target;
@@ -395,12 +400,46 @@ munimap.create = function(options) {
       if (goog.isDefAndNotNull(options.simpleScroll) && !options.simpleScroll) {
         munimap.interaction.limitScroll(map, munimapEl);
       }
+      if (options.invalidCodes.length) {
+        munimap.interaction.invalidCode(map, munimapEl, options.invalidCodes);
+        goog.dom.classlist.add(infoEl, 'munimap-info-hide');
+      }
       goog.dom.appendChild(munimapEl, infoEl);
       return map;
     }).then(resolve);
   });
 };
 
+/**
+ * Check filtered values with the right string/feature format and
+ * remove the ones without geometry
+ * @param {Object} results
+ * @return {Array.<string>} an array of codes without geometry
+ */
+munimap.create.filterInvalidMarkerCodes = function(results) {
+  var invalidMarkerCodes = [];
+  var invalidMarkerIndexes = [];
+  goog.array.forEach(results[1], function(marker, index) {
+    if (marker === undefined) {
+      invalidMarkerCodes.push(results[0].markers[index]);
+    }
+  });
+  invalidMarkerCodes = invalidMarkerCodes.reverse();
+  for (var i = 0; i < invalidMarkerCodes.length; i++) {
+    invalidMarkerIndexes.push(results[0].markers.
+      indexOf(invalidMarkerCodes[i]));
+  }
+  for (var j = 0; j < invalidMarkerIndexes.length; j++) {
+    var x = invalidMarkerIndexes[j];
+    results[0].markers.splice(x, 1);
+    results[1].splice(x, 1);
+  }
+  if (invalidMarkerCodes.length) {
+    console.log('Features not found in the database: ' +
+                        invalidMarkerCodes.join(', '));
+  }
+  return invalidMarkerCodes;
+};
 
 /**
  * @param {munimapx.create.Options} options
@@ -558,6 +597,39 @@ munimap.create.roomCodes = [];
 
 
 /**
+ * Check the options and remove invalid values.
+ * @param {Array.<string>|Array.<ol.Feature>|undefined} featuresLike
+ * @return {Array.<string>} an array of codes in wrong text format
+ */
+munimap.create.filterInvalidCodeExpressions = function(featuresLike) {
+  var invalidCodeExpressions = [];
+  var invalidCodeIndexes = [];
+
+  if (featuresLike !== undefined) {
+    for (var m = 0; m < featuresLike.length; m++) {
+
+      if (goog.isString(featuresLike[m])) {
+        if ((munimap.building.isCodeOrLikeExpr(featuresLike[m]) === false) &&
+        (munimap.room.isCodeOrLikeExpr(featuresLike[m]) === false) &&
+        (munimap.door.isCodeOrLikeExpr(featuresLike[m]) === false) &&
+        (munimap.optpoi.isCtgUid(featuresLike[m]) === false) &&
+        (featuresLike[m] instanceof ol.Feature === false)) {
+          invalidCodeExpressions.push(featuresLike[m]);
+          invalidCodeIndexes.push(featuresLike.indexOf(featuresLike[m]));
+        }
+      }
+    }
+
+    invalidCodeIndexes.reverse();
+    for (var n = 0; n < invalidCodeExpressions.length; n++) {
+      featuresLike.splice(invalidCodeIndexes[n], 1);
+    }
+  }
+  return invalidCodeExpressions;
+};
+
+
+/**
  * Load features by location codes or decorate custom markers.
  * @param {Array.<string>|Array.<ol.Feature>|undefined} featuresLike
  * @param {(munimapx.create.Options|munimapx.reset.Options)} options
@@ -585,9 +657,10 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
             munimap.marker.custom.decorate(el);
             resolve(el);
           } else if (goog.isString(el)) {
-            munimap.load.featuresFromParam(el).then(function(results) {
-              resolve(results[0]);
-            });
+            munimap.load.featuresFromParam(el).
+              then(function(results) {
+                resolve(results[0]);
+              });
           }
         }));
       } else {

@@ -3,6 +3,44 @@ goog.provide('munimap.interaction');
 goog.require('munimap.lang');
 
 /**
+ * @param {Element|null} canvas
+ * @param {string} message
+ */
+munimap.interaction.createCanvas = function(canvas, message) {
+
+  var dpr = window.devicePixelRatio || 1;
+  var ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'center';
+  var lineHeight;
+  var size;
+  if (canvas.offsetWidth < 500) {
+    size = 22 * dpr;
+    ctx.font = size + 'px Arial';
+    lineHeight = 26 * dpr;
+  } else {
+    size = 30 * dpr;
+    ctx.font = size + 'px Arial';
+    lineHeight = 35 * dpr;
+  }
+
+  var text =
+            munimap.lang.getMsg(message);
+  var lines = text.split('\n');
+  lines.forEach(function(el, i) {
+
+    ctx.fillText(
+      el,
+      canvas.width / 2,
+      (canvas.height / 2) + i * lineHeight
+    );
+  });
+};
+
+/**
  * @param {ol.Map} map
  * @param {Element} target
  */
@@ -38,36 +76,8 @@ munimap.interaction.limitScroll = function(map, target) {
     if (dragEl === null) {
       return;
     }
-    var dpr = window.devicePixelRatio || 1;
-    var ctx = canvas.getContext('2d');
-
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#fff';
-    ctx.textAlign = 'center';
-    var lineHeight;
-    var size;
-    if (canvas.offsetWidth < 500) {
-      size = 22 * dpr;
-      ctx.font = size + 'px Arial';
-      lineHeight = 26 * dpr;
-    } else {
-      size = 30 * dpr;
-      ctx.font = size + 'px Arial';
-      lineHeight = 35 * dpr;
-    }
-
-    var text =
-      munimap.lang.getMsg(munimap.lang.Translations.SCROLL_HINT);
-    var lines = text.split('\n');
-    lines.forEach(function(el, i) {
-
-      ctx.fillText(
-        el,
-        canvas.width / 2,
-        (canvas.height / 2) + i * lineHeight
-      );
-    });
+    munimap.interaction.createCanvas(canvas,
+      munimap.lang.getMsg(munimap.lang.Translations.ACTIVATE_MAP));
   }
 
   function hide() {
@@ -91,5 +101,57 @@ munimap.interaction.limitScroll = function(map, target) {
   map.on('postcompose', function(evt) {
     clearTimeout(hideError);
     error = false;
+  });
+};
+
+/**
+ * @param {ol.Map} map
+ * @param {Element} target
+ * @param {Array.<ol.Feature>} codes
+ */
+munimap.interaction.invalidCode = function(map, target, codes) {
+  var invalidCodes = codes;
+  goog.dom.setFocusableTabIndex(target, true);
+  target.setAttribute('tabindex', 0);
+
+  window.document.addEventListener('blur', activeChange, true);
+  window.document.addEventListener('focus', activeChange, true);
+
+  var dragEl = goog.dom.createDom('div', 'munimap-error');
+  var acCount = 0;
+  goog.dom.appendChild(target, dragEl);
+  function activeChange(e) {
+
+    if (target.contains(window.document.activeElement)) {
+      goog.dom.removeNode(dragEl);
+      var infoEl = munimap.getProps(map).info;
+      goog.dom.classlist.remove(infoEl, 'munimap-info-hide');
+      //dragEl = null;
+      map.render();
+      acCount++;
+    } else if (!target.contains(window.document.activeElement) &&
+      dragEl === null) {
+      dragEl = goog.dom.createDom('div', 'munimap-error');
+      goog.dom.appendChild(target, dragEl);
+      acCount++;
+    }
+  }
+
+  var canvas = target.getElementsByTagName('CANVAS')[0];
+  function createError() {
+    if (dragEl === null) {
+      return;
+    }
+    munimap.interaction.createCanvas(canvas,
+      (munimap.lang.getMsg(munimap.lang.Translations.ACTIVATE_MAP) + '\n' +
+     munimap.lang.getMsg(munimap.lang.Translations.NOT_FOUND) + ':\n' +
+     invalidCodes.join(', ')));
+  }
+
+  map.on('postcompose', function(evt) {
+    if (acCount === 0) {
+      createError();
+    }
+
   });
 };
