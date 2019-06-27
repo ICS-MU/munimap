@@ -29,7 +29,6 @@ module.exports = {
     'keyword-spacing': 'error',
     'max-len': ["error", { "code": 80 }],
     'no-cond-assign': 'error',
-    'no-console': 'error',
     'no-const-assign': 'error',
     'no-control-regex': 'error',
     'no-debugger': 'error',
