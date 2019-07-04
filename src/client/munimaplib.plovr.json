@@ -50,15 +50,15 @@
 
 
   "externs": [
-    "../../bower_components/ol3/munimap/build/ol.externs.js",
-    "../../bower_components/ol3/munimap/externs/missing.enum.js",
-    "../../bower_components/ol3/externs/bingmaps.js",
-    "../../bower_components/ol3/externs/closure-compiler.js",
-    "../../bower_components/ol3/externs/esrijson.js",
-    "../../bower_components/ol3/externs/topojson.js",
-    "../../bower_components/ol3/externs/oli.js",
-    "../../bower_components/ol3/externs/proj4js.js",
-    "../../bower_components/ol3/externs/tilejson.js",
+    "../../bower_components/ol4/munimap/build/ol.externs.js",
+    "../../bower_components/ol4/munimap/externs/missing.enum.js",
+    "../../bower_components/ol4/externs/bingmaps.js",
+    "../../bower_components/ol4/externs/closure-compiler.js",
+    "../../bower_components/ol4/externs/esrijson.js",
+    "../../bower_components/ol4/externs/topojson.js",
+    "../../bower_components/ol4/externs/oli.js",
+    "../../bower_components/ol4/externs/proj4js.js",
+    "../../bower_components/ol4/externs/tilejson.js",
     "../../bower_components/closure-externs/src/google-analytics-universal.js",
     "turf/turf.externs.js",
     "webfontloader/webfontloader.externs.js",
@@ -87,7 +87,7 @@
   "output-wrapper": "(function(){%output%})();",
 
   "paths": [
-    "../../bower_components/ol3/src/ol/typedefs.js",
+    "../../bower_components/ol4/src/ol/typedefs.js",
     "../client/"
   ],
   

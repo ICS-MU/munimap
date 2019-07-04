@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 require('./bower_components/closure-library/closure/goog/bootstrap/nodejs');
-var runSequence = require('run-sequence');
 var jpadCfg = require('./jpad.cfg.js');
 
 var argv = require('yargs')
@@ -61,15 +60,12 @@ jpadCfg.buildWithModulesOn = !!argv.m;
 function loadTask(task) {
     require('./tasks/' + task)(gulp, plugins, jpadCfg);
 }
-loadTask('build');
 loadTask('dev');
+loadTask('build');
 loadTask('devlint');
 loadTask('fix');
-loadTask('install');
 loadTask('lint');
 
-gulp.task('fixlint', function(cb) {
-    runSequence('fix', 'lint', cb);
-});
+gulp.task('fixlint', gulp.series('fix', 'lint'));
 
-gulp.task('default', ['dev']);
+gulp.task('default', gulp.series('dev'));

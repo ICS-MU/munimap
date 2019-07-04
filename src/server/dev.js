@@ -115,7 +115,7 @@ var serveHtmlFiles = function(req, res, next, modulesOn) {
       return;
     }
     var gulpTask = modulesOn ? 'processhtmlmodon' : 'processhtmlmodoff';
-    gulp.start(gulpTask, function(err) {
+    gulp.series(gulpTask, function(err) {
       var precompiledPath =
           path.relative(__dirname+'/../../src/client/', localHtmlPath);
       var modFolder = modulesOn ? jpadCfg.modulesOnFolder :
@@ -163,7 +163,7 @@ var serveHtmlFiles = function(req, res, next, modulesOn) {
       res.set('Content-Type', 'text/html');
       res.send(outContent);
       return;
-    });
+    })();
   } else {
     next();
   }
