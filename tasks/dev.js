@@ -119,8 +119,9 @@ module.exports = function (gulp, plugins, jpadCfg) {
     gulp.watch([
       './src/server/dev.js',
       './jpad.cfg.js'
-    ], function() {
+    ], function(callback) {
         server.start.apply(server);
+        callback();
     });
     
     cb();
