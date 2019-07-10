@@ -72,7 +72,7 @@ munimap.create = function(options) {
       });
 
 
-      return {
+      return /** @type {munimap.create.Options} */ ({
         view: view,
         markers: markers,
         markerLabel: options.markerLabel,
@@ -87,7 +87,7 @@ munimap.create = function(options) {
         labels: options.labels,
         simpleScroll: options.simpleScroll,
         invalidCodes: invalidCodes
-      };
+      });
     }).then(function(options) {
       var target = options.target;
       var markers = options.markers;
@@ -409,6 +409,26 @@ munimap.create = function(options) {
     }).then(resolve);
   });
 };
+
+/**
+ * @typedef {{
+ *   view: (ol.View),
+ *   markers: (Array.<string>|Array.<ol.Feature>|undefined),
+ *   markerLabel: (munimap.marker.LabelFunction|undefined),
+ *   target: (string|Element),
+ *   getMainFeatureAtPixel: (munimap.getMainFeatureAtPixelFunction|undefined),
+ *   layers: (Array.<ol.layer.Vector>|undefined),
+ *   baseMap: (string|undefined),
+ *   pubTran: (boolean|undefined),
+ *   locationCodes: (boolean|undefined),
+ *   mapLinks: (boolean|undefined),
+ *   markerFilter: (Array.<string>|undefined),
+ *   labels: (boolean|undefined),
+ *   simpleScroll: (boolean|undefined),
+ *   invalidCodes: (Array.<string>)
+ * }}
+ */
+munimap.create.Options;
 
 /**
  * Check filtered values with the right string/feature format and

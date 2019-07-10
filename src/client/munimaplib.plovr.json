@@ -14,7 +14,7 @@
     "checkVars": "ERROR",
     "const": "ERROR",
     "constantProperty": "ERROR",
-    "deprecated": "ERROR",
+    "deprecated": "OFF",
     "duplicate": "ERROR",
     "duplicateMessage": "ERROR",
     "es5Strict": "ERROR",
