@@ -165,9 +165,9 @@ module.exports = function (gulp, plugins, jpadCfg) {
   
   gulp.task('dev:watch:js', function() {
     var src = './src/client/**/*.js';
-    return gulp.watch(src, function() {
-      gulp.parallel('precompile:js', 'compile:delete-js')();
-    });
+    return gulp.watch(src,
+      gulp.parallel('precompile:js', 'compile:delete-js')
+    );
   });
 
   gulp.task('compile:delete-js', function(cb) {
