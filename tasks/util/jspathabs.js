@@ -25,7 +25,7 @@ function jsPathAbsolutizer(options) {
           options.includeModulesOnFolder);
         var output = recast.print(ast).code;
         var outtxt = output;
-        file.contents = new Buffer(outtxt);
+        file.contents = new Buffer.from(outtxt);
       } catch(e) {
         return cb(null, file);
       }

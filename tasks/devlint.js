@@ -15,27 +15,33 @@ module.exports = function (gulp, plugins) {
         }
       }
     };
-
-    plugins.watch('./src/client/**/*.js')
-      .pipe(plugins.shell(['fixjsstyle ' +
-            '--jslint_error=all ' +
-            '--custom_jsdoc_tags=event,fires,api,observable ' +
-            '--strict ' +
-            '<%= adjustPath(file.path) %>'], options))
-      .pipe(plugins.gjslint({
+    
+    var paths = glob.sync('./src/client/**/*.js');
+    
+    gulp.watch('./src/client/**/*.js', gulp.series(function(cb){
+      plugins.shell(['fixjsstyle ' +
+        '--jslint_error=all ' +
+        '--custom_jsdoc_tags=event,fires,api,observable ' +
+        '--strict ' +
+        '<%= adjustPath(file.path) %>'], options);
+      cb() ; 
+    }, function(cb){
+      plugins.gjslint({
         flags: [
           '--jslint_error=all',
           '--strict',
           '--custom_jsdoc_tags=event,fires,api,observable',
           '--beep'
         ]
-      }))
-      .pipe(plugins.gjslint.reporter('console'));
-
-    cb();
+      });
+      cb();
+    }, function(cb){
+      plugins.gjslint.reporter('console');
+      cb();
+    }));
   });
 
 
-  gulp.task('devlint', ['watch:fixjsstyle']);
+  gulp.task('devlint', gulp.series('watch:fixjsstyle'));
 };
 
