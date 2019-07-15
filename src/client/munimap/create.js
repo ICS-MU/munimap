@@ -673,10 +673,18 @@ munimap.create.loadOrDecorateMarkers = function(featuresLike, options) {
           workplaces: workplaces
         }).then(function(features) {
           var rooms = features.filter(function(f) {
-            var lc = f.get('polohKodLokace');
+            var lc = /**@type (string)*/ (f.get('polohKodLokace'));
             goog.asserts.assertString(lc);
-            return munimap.room.isCode(lc);
+            if (!options.poiFilter) {
+              return munimap.room.isCode(lc);
+            } else {
+              return goog.array.some(options.poiFilter, function(poiFilter) {
+                return munimap.room.isCode(lc)
+                            && f.get('poznamka') === poiFilter;
+              });
+            }
           });
+
           munimap.create.roomCodes = rooms.map(function(f) {
             return f.get('polohKodLokace');
           });
