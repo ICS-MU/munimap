@@ -106,6 +106,21 @@
             </div>
           </td>
         </tr>
+        <tr id="poiFilter">
+            <td class="param-name">poiFilter</td> 
+            <td class="param-type">Array.&lt;string&gt; | undefined</td>
+            <td class="param-desc">
+                <ul>
+                    <li>parametr upřesňující výběr bodů zájmu</li>
+                    <li>aktuálně použitelný pouze pro virtuální prohlídky (markers = poi.ctg:virtual-tour)</li>
+                    <li>není-li parametr zadán, zobrazí se všechny body zájmu podle ostatních zadaných parametrů</li>
+                    <li>hodnoty parametru mohou být</li>
+                  <ul>
+                    <li>'norm' pro běžné virtuální prohlídky,</li>
+                    <li>'tech' pro virtuální prohlídky technických prostor</li>
+              </ul>
+                </ul>
+        </tr>
         <tr id="markerFilter">
           <td class="param-name">markerFilter</td>
           <td class="param-type">Array.&lt;string&gt; | undefined</td>
@@ -378,6 +393,13 @@
             | undefined</td>
           <td class="param-desc">
 	    <a href="#markers">viz parametr markers metody create</a>
+          </td>
+        </tr>
+        <tr  id="reset-markers">
+          <td class="param-name">poiFilter</td>
+          <td class="param-type">Array.&lt;string&gt; | undefined</td>
+          <td class="param-desc">
+	    <a href="#poiFilter">viz parametr poiFilter metody create</a>
           </td>
         </tr>
         <tr  id="reset-markers">
