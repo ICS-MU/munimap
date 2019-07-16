@@ -1,6 +1,6 @@
 {
   "name": "munimap",
-  "version": "1.8.5",
+  "version": "1.9.0",
   "private": true,
   "dependencies": {
     "closure-externs": "git://github.com/jirik/closure-externs#890dbf165f617582d1111555ac9b8ef51554ec6e",
