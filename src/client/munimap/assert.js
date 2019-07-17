@@ -25,7 +25,7 @@ munimap.assert.markers = function(markers) {
             !(munimap.room.isCodeOrLikeExpr(el)) &&
             !(munimap.door.isCodeOrLikeExpr(el)) &&
             !(munimap.optpoi.isCtgUid(el))) {
-          goog.asserts.fail('Markers should contain 1. building, room or ' +
+          console.log('Markers should contain 1. building, room or ' +
               'door location codes, or 2. corresponding LIKE expressions, or ' +
               '3. POI categories.');
         }
@@ -34,7 +34,7 @@ munimap.assert.markers = function(markers) {
         featureMarkers.push(el);
         munimap.marker.custom.assertSuitable(el);
       } else {
-        goog.asserts.fail('Markers should contain only strings or ' +
+        console.log('Markers should contain only strings or ' +
             'only instances of ol.Feature');
       }
     });
@@ -44,7 +44,7 @@ munimap.assert.markers = function(markers) {
       if (!(markers.every(function(el) {
         return munimap.optpoi.isCtgUid(el);
       }))) {
-        goog.asserts.fail('Markers should contain 1. building, room or ' +
+        console.log('Markers should contain 1. building, room or ' +
             'door location codes, or 2. corresponding LIKE expressions, or ' +
             '3. POI categories.');
       }

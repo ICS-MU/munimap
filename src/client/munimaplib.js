@@ -8,7 +8,7 @@ goog.require('polyfill.es6');
 
 
 munimap.matomo.init();
-
+//console.log('a');
 
 goog.exportSymbol('munimap.create', munimap.create);
 goog.exportSymbol('munimap.reset', munimap.reset);

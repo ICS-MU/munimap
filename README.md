@@ -21,7 +21,7 @@ This repository is not officially supported by Google, ol3, or individual module
   * Windows users: `path/to/directory/with/java.exe` must be in your PATH system variable
 * [Python 2.7](https://www.python.org/downloads/) (32bit or 64bit; must correspond with node.js because of node-gyp)
   * Windows users: `path/to/python/directory` and `path/to/python/directory/Scripts` must be in your PATH system variable
-* [node.js 5.6 or higher](http://nodejs.org/download/) (32bit or 64bit; must correspond with Python 2.7 because of node-gyp)
+* [node.js 10.16 or higher](http://nodejs.org/download/) (32bit or 64bit; must correspond with Python 2.7 because of node-gyp)
 * [gulp](http://gulpjs.com/) `(sudo) npm install -g gulp-cli`
 * [bower](http://bower.io/) `(sudo) npm install -g bower`
 * [git](http://git-scm.com/downloads)

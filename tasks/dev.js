@@ -3,7 +3,6 @@ var spawn = require('child_process').spawn;
 var processhtml = require('./util/processhtml.js');
 var jspathabs = require('./util/jspathabs.js');
 var processplovrcfg = require('./util/processplovrcfg.js');
-var vinylPaths = require('vinyl-paths');
 var path = require("path");
 var fs = require("fs-extra");
 var jpad =  require('../tasks/util/jpad.js');
@@ -19,81 +18,34 @@ module.exports = function (gulp, plugins, jpadCfg) {
     cb();
   });
   
-  gulp.task('dev:serve:plovr', ['precompile:plovr', 'precompile:js'], function (cb) {
-    //start plovr server
-    var args = ['-jar', 'bower_components/plovr/index.jar', 'serve'];
-    var plovrConfigs = jpad.plovr.getPrecompileConfigs();
-    goog.array.extend(args, plovrConfigs);
-    plovr = spawn('java', args);
-    var logData = function (data) {
-      console.log(data.toString());
-    };
-    plovr.stdout.on('data', logData);
-    plovr.stderr.on('data', logData);
-    plovr.on('close', function (code) {
-      if(code!==null) { 
-       console.log('plovr exited with code ' + code);
-      }
-    });
-    
-    cb();
-  });
-  
-  gulp.task('dev:serve', ['dev:serve:plovr'], function (cb) {
-    var options = {
-      env: {
-        JPAD_APP_PATH: jpadCfg.appPath
-      }
-    }
-    //run dev server 
-    var server = plugins.liveServer(
-        './src/server/dev.js',
-        options,
-        false
-    );
-    server.start();
- 
-    //restart dev server 
-    gulp.watch([
-      './src/server/dev.js',
-      './jpad.cfg.js'
-    ], function() {
-        server.start.apply(server);
-    });
-    
-    cb();
-  });
-
-  gulp.task('dev:open', ['dev:serve'], function(){
-    var url = 'http://localhost:'+jpadCfg.port + jpadCfg.appPath;
-    gulp.src(__filename)
-        .pipe(plugins.open({
-          uri: url
-        }));
-  });
-  
-  gulp.task('processhtmlmodoff', function() {
-    var src = './src/client/**/*.html';
+  gulp.task('precompile:plovr:modoff', function() {
+    var src = [
+      'src/client/**/*.plovr.json',
+      '!src/client/**/*.modon.plovr.json',
+      '!src/client/**/*.modon.dev.plovr.json'
+    ];
     var modFolder = jpadCfg.modulesOffFolder;
     var dest = './temp/'+modFolder+'/precompile/client';
     return gulp.src(src)
         .pipe(plugins.newer(dest))
-        .pipe(processhtml({includeModulesOnFolder: false}))
+        .pipe(processplovrcfg({modulesOn: false}))
         .pipe(gulp.dest(dest));
   });
-  
-  gulp.task('processhtmlmodon', function() {
-    var src = './src/client/**/*.html';
+  gulp.task('precompile:plovr:modon', function() {
+    var src = [
+      'src/client/**/*.plovr.json'
+    ];
     var modFolder = jpadCfg.modulesOnFolder;
     var dest = './temp/'+modFolder+'/precompile/client';
     return gulp.src(src)
         .pipe(plugins.newer(dest))
-        .pipe(processhtml({includeModulesOnFolder: true}))
+        .pipe(processplovrcfg({modulesOn: true}))
         .pipe(gulp.dest(dest));
   });
   
-  gulp.task('precompile:js', ['precompile:js:modoff', 'precompile:js:modon']);
-
+  gulp.task('precompile:plovr', gulp.parallel('precompile:plovr:modoff',
+    'precompile:plovr:modon'));
+  
   gulp.task('precompile:js:modoff', function() {
     var src = [
       'src/client/**/*.js',
@@ -121,42 +73,102 @@ module.exports = function (gulp, plugins, jpadCfg) {
         .pipe(jspathabs({includeModulesOnFolder: true}))
         .pipe(gulp.dest(dest));
   });
-
-  gulp.task('precompile:plovr', [
-    'precompile:plovr:modoff',
-    'precompile:plovr:modon'
-  ]);
   
-  gulp.task('precompile:plovr:modoff', function() {
-    var src = [
-      'src/client/**/*.plovr.json',
-      '!src/client/**/*.modon.plovr.json',
-      '!src/client/**/*.modon.dev.plovr.json'
-    ];
+  gulp.task('precompile:js', gulp.parallel('precompile:js:modoff', 
+    'precompile:js:modon'));
+    
+  gulp.task('dev:serve:plovr:start', function (cb) {
+    //start plovr server
+    var args = ['-jar', 'bower_components/plovr/index.jar', 'serve'];
+    var plovrConfigs = jpad.plovr.getPrecompileConfigs();
+    goog.array.extend(args, plovrConfigs);
+    plovr = spawn('java', args);
+    var logData = function (data) {
+      console.log(data.toString());
+    };
+    plovr.stdout.on('data', logData);
+    plovr.stderr.on('data', logData);
+    plovr.on('close', function (code) {
+      if(code!==null) { 
+       console.log('plovr exited with code ' + code);
+      }
+    });
+    
+    cb();
+  });
+  
+  gulp.task('dev:serve:plovr', gulp.series(
+    gulp.parallel('precompile:plovr', 'precompile:js'), 
+    'dev:serve:plovr:start'));
+  
+  gulp.task('dev:serve', function (cb) {
+    var options = {
+      env: {
+        JPAD_APP_PATH: jpadCfg.appPath
+      }
+    };
+    //run dev server 
+    var server = plugins.liveServer(
+        './src/server/dev.js',
+        options,
+        false
+    );
+    server.start();
+ 
+    //restart dev server 
+    gulp.watch([
+      './src/server/dev.js',
+      './jpad.cfg.js'
+    ], function(callback) {
+        server.start.apply(server);
+        callback();
+    });
+    
+    cb();
+  });
+
+  gulp.task('dev:open', function(cb){
+    var url = 'http://localhost:'+jpadCfg.port + jpadCfg.appPath;
+    gulp.src(__filename)
+        .pipe(plugins.open({
+          uri: url
+        }));
+    cb();    
+  });
+  
+  gulp.task('processhtmlmodoff', function() {
+    var src = './src/client/**/*.html';
     var modFolder = jpadCfg.modulesOffFolder;
     var dest = './temp/'+modFolder+'/precompile/client';
     return gulp.src(src)
         .pipe(plugins.newer(dest))
-        .pipe(processplovrcfg({modulesOn: false}))
+        .pipe(processhtml({includeModulesOnFolder: false}))
         .pipe(gulp.dest(dest));
   });
-  gulp.task('precompile:plovr:modon', function() {
-    var src = [
-      'src/client/**/*.plovr.json'
-    ];
+  
+  gulp.task('processhtmlmodon', function() {
+    var src = './src/client/**/*.html';
     var modFolder = jpadCfg.modulesOnFolder;
     var dest = './temp/'+modFolder+'/precompile/client';
     return gulp.src(src)
         .pipe(plugins.newer(dest))
-        .pipe(processplovrcfg({modulesOn: true}))
+        .pipe(processhtml({includeModulesOnFolder: true}))
         .pipe(gulp.dest(dest));
   });
   
-  gulp.task('dev:watch:js', ['dev:serve:plovr'], function() {
+  
+
+  
+
+  
+  
+  
+  
+  gulp.task('dev:watch:js', function() {
     var src = './src/client/**/*.js';
-    return plugins.watch(src, function() {
-      gulp.start(['precompile:js', 'compile:delete-js']);
-    });
+    return gulp.watch(src,
+      gulp.parallel('precompile:js', 'compile:delete-js')
+    );
   });
 
   gulp.task('compile:delete-js', function(cb) {
@@ -168,13 +180,23 @@ module.exports = function (gulp, plugins, jpadCfg) {
     cb();
   });
 
-  gulp.task('dev:watch:plovr', ['dev:serve:plovr'], function() {
+  gulp.task('dev:watch:plovr', function() {
     var src = './src/client/**/*.plovr.json';
     
-    return plugins.watch(src)
-      .pipe(vinylPaths(function(plovrCfgs) {
-        plovrCfgs = goog.isArray(plovrCfgs) ? plovrCfgs : [plovrCfgs];
-        goog.array.forEach(plovrCfgs, function(plovrCfg) {
+    var paths = [];
+    
+    if(goog.isArray(src)){
+      goog.array.forEach(src, function(s){
+        var pths = glob.sync(s);
+        goog.array.extend(paths, pths);
+      });
+    } else {
+      var pths = glob.sync(src);
+      goog.array.extend(paths, pths);
+    }
+    
+    gulp.watch(paths, function(cb) {
+        goog.array.forEach(paths, function(plovrCfg) {
           var modulesOn = path.basename(plovrCfg)
               .indexOf('.'+jpadCfg.modulesOnFolder+'.') > -1;
           var modFolder = modulesOn ? jpadCfg.modulesOnFolder :
@@ -210,19 +232,17 @@ module.exports = function (gulp, plugins, jpadCfg) {
           plovr.kill();
           plovr = null;
         }
-        gulp.start(['dev:serve:plovr']);
-        return Promise.resolve();
-    }));
-
+        gulp.series('dev:serve:plovr')();
+        cb();
+      });
   });
   
-  gulp.task('dev', ['dev:clean-temp'], function() {
-    gulp.start([
+  gulp.task('dev', gulp.series(
+      'dev:clean-temp',
+      'dev:serve:plovr',
       'dev:serve',
       'dev:open',
-      'dev:watch:plovr',
-      'dev:watch:js'
-    ]);
-  });
+      gulp.parallel('dev:watch:plovr', 'dev:watch:js')
+  ));
 };
 

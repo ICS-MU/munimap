@@ -205,6 +205,7 @@ munimap.room.style.defaultFloorFilter =
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
 munimap.room.style.activeFunction = function(options, feature, resolution) {
+  goog.asserts.assertInstanceof(feature, ol.Feature);
   var result = munimap.room.style.function(options, feature, resolution);
   if (munimap.range.contains(
     munimap.poi.style.Resolution.STAIRS, resolution) &&
@@ -226,6 +227,7 @@ munimap.room.style.activeFunction = function(options, feature, resolution) {
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
 munimap.room.style.function = function(options, feature, resolution) {
+  goog.asserts.assertInstanceof(feature, ol.Feature);
   var markers = options.markers;
   var marked = markers.indexOf(feature) >= 0;
 
@@ -246,7 +248,7 @@ munimap.room.style.function = function(options, feature, resolution) {
  */
 munimap.room.style.getStyle = function(feature, style, marked) {
   var purposeGroup = feature.get('ucel_skupina_nazev');
-  var purpose = feature.get('ucel_nazev');
+  var purpose = /** @type {string} */ (feature.get('ucel_nazev'));
   var purpose_gis = feature.get('ucel_gis');
   var result = marked ? style.ROOM : munimap.room.STYLE;
   switch (purposeGroup) {
@@ -308,6 +310,8 @@ munimap.room.style.LABEL_CACHE = {};
  * @return {ol.style.Style|Array.<ol.style.Style>}
  */
 munimap.room.style.labelFunction = function(options, feature, resolution) {
+  goog.asserts.assertInstanceof(feature, ol.Feature);
+
   var result = [];
   var markers = options.markers;
 

@@ -2,7 +2,7 @@
 
 var jpad = {
   appPath: '/munimap/',
-  appVersion: '1.8.5',
+  appVersion: '1.9.0',
   olVersion: 'v4.6.4',
   prodDomain: 'maps.muni.cz',
   plovrPattern: 'src/client/**/*.plovr.json',
@@ -12,19 +12,19 @@ var jpad = {
   modulesOnFolder: 'modon',
   libMappings: [
     {
-      src: 'bower_components/ol3/css/',
-      dest: '_lib/ol3/css/'
+      src: 'bower_components/ol4/css/',
+      dest: '_lib/ol4/css/'
     },
     {
-      src: 'bower_components/ol3/examples/resources/',
-      dest: '_lib/ol3/examples/resources/'
+      src: 'bower_components/ol4/examples/resources/',
+      dest: '_lib/ol4/examples/resources/'
     },
     {
-      src: 'bower_components/ol3/examples/popup.css',
-      dest: '_lib/ol3/examples/popup.css'
+      src: 'bower_components/ol4/examples/popup.css',
+      dest: '_lib/ol4/examples/popup.css'
     },
     {
-      src: 'bower_components/ol3/munimap/build/',
+      src: 'bower_components/ol4/munimap/build/',
       dest: '_lib/ol/'
     },
     {

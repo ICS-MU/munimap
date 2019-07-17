@@ -88,6 +88,8 @@
                 <li><code>poi.ctg:virtual-tour</code> (virtuální prohlídky)</li>
                 <li><code>poi.ctg:library</code> (knihovny)</li>
                 <li><code>poi.ctg:it-center</code> (IT centra)</li>
+                <li><code>poi.ctg:canteen</code> (menzy)</li>
+                <li><code>poi.ctg:dormitory</code> (koleje)</li>
               </ul>
               <li>od verze 1.1 je možné umístit "špendlík" na libovolné místo v mapě, a to pomocí pole objektů typu <a href="http://openlayers.org/en/{jpad.olVersion}/apidoc/ol.Feature.html" target="_blank">ol.Feature</a> s parametry:
                 <ul>
@@ -104,6 +106,21 @@
               <p>pro zjištění polohových kódů budov, místností či dveří lze použít aplikaci <a href='https://kompas.muni.cz/'>Kompas</a></p>
             </div>
           </td>
+        </tr>
+        <tr id="poiFilter">
+            <td class="param-name">poiFilter</td> 
+            <td class="param-type">Array.&lt;string&gt; | undefined</td>
+            <td class="param-desc">
+                <ul>
+                    <li>parametr upřesňující výběr bodů zájmu</li>
+                    <li>aktuálně použitelný pouze pro virtuální prohlídky (markers = poi.ctg:virtual-tour)</li>
+                    <li>není-li parametr zadán, zobrazí se všechny body zájmu podle ostatních zadaných parametrů</li>
+                    <li>hodnoty parametru mohou být</li>
+                  <ul>
+                    <li>'norm' pro běžné virtuální prohlídky,</li>
+                    <li>'tech' pro virtuální prohlídky technických prostor</li>
+              </ul>
+                </ul>
         </tr>
         <tr id="markerFilter">
           <td class="param-name">markerFilter</td>
@@ -377,6 +394,13 @@
             | undefined</td>
           <td class="param-desc">
 	    <a href="#markers">viz parametr markers metody create</a>
+          </td>
+        </tr>
+        <tr  id="reset-markers">
+          <td class="param-name">poiFilter</td>
+          <td class="param-type">Array.&lt;string&gt; | undefined</td>
+          <td class="param-desc">
+	    <a href="#poiFilter">viz parametr poiFilter metody create</a>
           </td>
         </tr>
         <tr  id="reset-markers">

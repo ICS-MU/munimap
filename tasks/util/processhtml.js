@@ -29,7 +29,7 @@ function htmlProcessor(options) {
       });
       var outtxt = $.html();
       outtxt = jpad.fillTemplateInHtml(outtxt);
-      file.contents = new Buffer(outtxt);
+      file.contents = new Buffer.from(outtxt);
     }
     if (file.isStream()) {
       throw new PluginError(PLUGIN_NAME, 'Not yet supported!');

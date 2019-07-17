@@ -22,6 +22,7 @@ munimapx.create;
  *   markerFilter: (Array.<string>|undefined),
  *   labels: (boolean|undefined),
  *   simpleScroll: (boolean|undefined),
+ *   poiFilter: (Array.<string>|undefined)
  * }}
  */
 munimapx.create.Options;

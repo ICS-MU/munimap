@@ -19,7 +19,7 @@ module.exports = function (gulp, plugins) {
       // Alternatively use eslint.formatEach() (see Docs).
       .pipe(plugins.eslint.format())
       // if fixed, write the file to dest
-      .pipe(plugins.if(isFixed, gulp.dest('src/client/munimap')))
+      .pipe(plugins.if(isFixed, gulp.dest('src/client/munimap')));
 
     cb();
   });
@@ -38,7 +38,7 @@ module.exports = function (gulp, plugins) {
 
   });
 
-  gulp.task('fix', ['fix:eslint', 'fix:mocha']);
+  gulp.task('fix', gulp.series('fix:eslint', 'fix:mocha'));
 };
 
 

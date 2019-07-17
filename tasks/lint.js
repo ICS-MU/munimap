@@ -11,7 +11,7 @@ module.exports = function(gulp, plugins) {
           }))
           // eslint.format() outputs the lint results to the console.
           // Alternatively use eslint.formatEach() (see Docs).
-          .pipe(plugins.eslint.format())
+          .pipe(plugins.eslint.format());
     
         cb();
       });
@@ -30,6 +30,6 @@ module.exports = function(gulp, plugins) {
     
       });
     
-      gulp.task('lint', ['lint:eslint', 'lint:mocha']);
+      gulp.task('lint', gulp.series('lint:eslint', 'lint:mocha'));
 };
 

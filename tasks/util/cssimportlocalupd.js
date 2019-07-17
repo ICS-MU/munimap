@@ -27,7 +27,7 @@ function cssImportLocalUpdater(options) {
       
       var output = css.stringify(cssobj);
       var outtxt = output;
-      file.contents = new Buffer(outtxt);
+      file.contents = new Buffer.from(outtxt);
     }
     if (file.isStream()) {
       throw new PluginError(PLUGIN_NAME, 'Not yet supported!');
