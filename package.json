@@ -1,0 +1,31 @@
+{
+  "name": "munimap",
+  "version": "2.0.0-dev",
+  "description": "",
+  "main": "dist/munimap.js",
+  "scripts": {
+    "build": "webpack",
+    "server": "node -r esm server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jirik/munimap-dev-stack.git"
+  },
+  "author": "Jiri Kozel",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/jirik/munimap-dev-stack/issues"
+  },
+  "homepage": "https://github.com/jirik/munimap-dev-stack#readme",
+  "devDependencies": {
+    "@babel/core": "^7.13.14",
+    "@babel/preset-env": "^7.13.12",
+    "@babel/register": "^7.13.14",
+    "babel-loader": "^8.2.2",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "webpack": "^5.28.0",
+    "webpack-cli": "^4.6.0"
+  }
+}
