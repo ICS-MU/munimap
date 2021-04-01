@@ -9,6 +9,7 @@ module.exports = {
       name: "munimap",
       type: "umd",
     },
+    clean: true,
   },
   module: {
     rules: [
@@ -19,5 +20,5 @@ module.exports = {
       },
     ],
   },
-  mode: "development",
+  mode: "production",
 }
