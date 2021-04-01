@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import express from 'express';
 const app = express();
 const port = 8080;

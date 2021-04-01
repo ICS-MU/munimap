@@ -1,16 +1,16 @@
-import path from "path";
+import path from 'path';
 
 export default {
-  entry: path.resolve(__dirname, "src/munimap/index.js"),
+  entry: path.resolve(__dirname, 'src/munimap/index.js'),
   output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "munimaplib.js",
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'munimaplib.js',
     library: {
-      name: "munimap",
-      type: "umd",
+      name: 'munimap',
+      type: 'umd',
     },
     clean: {
-      keep: /\.html$/
+      keep: /\.html$/,
     },
   },
   module: {
@@ -18,16 +18,13 @@ export default {
       {
         test: /\.(js)$/,
         exclude: /node_modules/,
-        use: "babel-loader",
+        use: 'babel-loader',
       },
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader',
-        ],
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
-  mode: "production",
-}
+  mode: 'production',
+};
