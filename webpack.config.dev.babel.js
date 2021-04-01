@@ -1,6 +1,6 @@
-const path = require("path");
+import path from "path";
 
-module.exports = {
+export default {
   entry: path.resolve(__dirname, "src/munimap/index.js"),
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -9,7 +9,9 @@ module.exports = {
       name: "munimap",
       type: "umd",
     },
-    clean: true,
+    clean: {
+      keep: /\.html$/
+    },
   },
   devServer: {
     static: path.join(__dirname, 'dist'),
