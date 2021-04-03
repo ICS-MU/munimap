@@ -44,6 +44,9 @@
     "ol": "^6.5.0"
   },
   "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 2018
+    },
     "extends": "openlayers",
     "plugins": [
       "@openlayers"

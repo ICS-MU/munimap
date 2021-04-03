@@ -1,7 +1,10 @@
 import path from 'path';
 
 export default {
-  entry: path.resolve(__dirname, 'src/munimap/index.js'),
+  entry: [
+    'regenerator-runtime/runtime',
+    path.resolve(__dirname, 'src/munimap/index.js'),
+  ],
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'munimaplib.js',
