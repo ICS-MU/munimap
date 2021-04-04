@@ -17,6 +17,7 @@ export const MUNIMAP_URL =
  * @property {ol.coordinate.Coordinate} center
  * @property {string} center_proj
  * @property {number} zoom
+ * @property {Array.<string>} zoomTos
  */
 
 /**
@@ -27,4 +28,5 @@ export const INITIAL_STATE = {
   center: [16.605390495656977, 49.1986567194723],
   center_proj: 'EPSG:4326',
   zoom: 13,
+  zoomTos: [],
 };

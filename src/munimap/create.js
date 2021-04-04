@@ -10,6 +10,7 @@ import {INITIAL_STATE} from './conf.js';
 import {Map, View} from 'ol';
 import {createStore} from './store.js';
 import {ofFeatures as extentOfFeatures} from './extent.js';
+import * as slctr from './selector.js';
 
 /**
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
@@ -71,7 +72,16 @@ const calculateView = (options, zoomTos, map_size) => {
  * @returns {Promise<Map>} initialized map
  */
 export default async (opts) => {
-  const zoomTos = opts.zoomTo ? await load.featuresFromParam(opts.zoomTo) : [];
+  let zoomToStrings;
+  if(opts.zoomTo && opts.zoomTo.length) {
+    zoomToStrings = /** @type {Array.<string>} */ (typeof opts.zoomTo ===
+      'string' || opts.zoomTo instanceof String
+      ? [opts.zoomTo]
+      : opts.zoomTo);
+  } else {
+    zoomToStrings = [];
+  }
+  const zoomTos = zoomToStrings.length ? await load.featuresFromParam(zoomToStrings) : [];
   const map_size = /** @type {ol.size.Size} */ ([800, 400]);
   const view = calculateView(opts, zoomTos, map_size);
 
@@ -81,6 +91,7 @@ export default async (opts) => {
     map_size,
     center: view.getCenter(),
     zoom: view.getZoom(),
+    zoomTos: zoomToStrings,
   };
   const store = createStore(initialState);
 
@@ -112,6 +123,7 @@ export default async (opts) => {
     timer.stop();
     const state = store.getState();
     console.log('state', state);
+    console.log('get_zoomToFeatures', slctr.get_zoomToFeatures(state));
   }
   store.subscribe(render);
 

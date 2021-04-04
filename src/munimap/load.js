@@ -70,6 +70,8 @@ const features = async (options) => {
     extent: undefined,
   });
 
+  options.source.addFeatures(features);
+
   return features;
 };
 
@@ -118,15 +120,11 @@ const buildingsByCode = async (options) => {
 };
 
 /**
- * @param {Array.<string>|string} paramValue zoomTo or markers
+ * @param {Array.<string>} paramValues zoomTos or markers
  * @return {Promise.<Array<ol.Feature>>} promise of features contained
  * in server response
  */
-export const featuresFromParam = async (paramValue) => {
-  const paramValues = /** @type {Array.<string>} */ (typeof paramValue ===
-    'string' || paramValue instanceof String
-    ? [paramValue]
-    : paramValue);
+export const featuresFromParam = async (paramValues) => {
   const firstParamValue = paramValues[0];
   assert(building.isCodeOrLikeExpr(firstParamValue));
   const buildings = await buildingsByCode({

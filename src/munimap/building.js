@@ -50,3 +50,17 @@ export const TYPE = {
   layerId: 2,
   name: 'building',
 };
+
+/**
+ * @return {ol.source.Vector}
+ */
+export const getStore = () => {
+  return STORE;
+};
+
+/**
+ * @return {TypeOptions}
+ */
+export const getType = () => {
+  return TYPE;
+};
