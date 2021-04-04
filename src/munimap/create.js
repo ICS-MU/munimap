@@ -1,10 +1,14 @@
+import * as actions from './action.js';
 import * as load from './load.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
+import Timer from 'timer.js';
 import assert from './assert.js';
+import {INITIAL_STATE} from './conf.js';
 import {Map, View} from 'ol';
+import {createStore} from './store.js';
 import {ofFeatures as extentOfFeatures} from './extent.js';
 
 /**
@@ -68,13 +72,50 @@ const calculateView = (options, zoomTos, map_size) => {
  */
 export default async (opts) => {
   const zoomTos = opts.zoomTo ? await load.featuresFromParam(opts.zoomTo) : [];
-  const map_size = [800, 400];
-  const view = calculateView(
-    opts,
-    zoomTos,
-    /** @type {ol.size.Size} */ (map_size)
-  );
-  return new Map({
+  const map_size = /** @type {ol.size.Size} */ ([800, 400]);
+  const view = calculateView(opts, zoomTos, map_size);
+
+  // redux-related
+  const initialState = {
+    ...INITIAL_STATE,
+    map_size,
+    center: view.getCenter(),
+    zoom: view.getZoom(),
+  };
+  const store = createStore(initialState);
+
+  // map-related
+  const timer = new Timer();
+  const handleViewChange = () => {
+    timer.start(0.1);
+  };
+  const handleTimerEnd = () => {
+    store.dispatch(actions.ol_map_view_change({
+      center: view.getCenter(),
+      center_proj: 'EPSG:3857',
+      zoom: view.getZoom(),
+    }));
+  };
+  timer.on('end', handleTimerEnd);
+  const attach_view_events = (view) => {
+    view.on('change:center', handleViewChange);
+    view.on('change:resolution', handleViewChange);
+  };
+  const detach_view_events = (view) => {
+    view.un('change:center', handleViewChange);
+    view.un('change:resolution', handleViewChange);
+  };
+  attach_view_events(view);
+
+  // redux-related
+  const render = () => {
+    timer.stop();
+    const state = store.getState();
+    console.log('state', state);
+  }
+  store.subscribe(render);
+
+  const map = new Map({
     target: 'map',
     layers: [
       new TileLayer({
@@ -83,4 +124,5 @@ export default async (opts) => {
     ],
     view,
   });
+  return map;
 };

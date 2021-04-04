@@ -41,7 +41,9 @@
     "webpack-dev-server": "^4.0.0-beta.1"
   },
   "dependencies": {
-    "ol": "^6.5.0"
+    "ol": "^6.5.0",
+    "redux": "^4.0.5",
+    "timer.js": "^1.0.4"
   },
   "eslintConfig": {
     "parserOptions": {
