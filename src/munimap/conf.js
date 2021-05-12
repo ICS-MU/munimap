@@ -18,6 +18,7 @@ export const MUNIMAP_URL =
  * @property {string} center_proj
  * @property {number} zoom
  * @property {Array.<string>} zoomTos
+ * @property {Array<string>} markers
  */
 
 /**
@@ -29,4 +30,5 @@ export const INITIAL_STATE = {
   center_proj: 'EPSG:4326',
   zoom: 13,
   zoomTos: [],
+  markers: [],
 };
