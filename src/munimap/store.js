@@ -1,4 +1,4 @@
-import * as actions from './action';
+import * as actions from './action.js';
 import * as redux from 'redux';
 
 /**
@@ -7,7 +7,8 @@ import * as redux from 'redux';
 
 /**
  *
- * @param {State} initialState
+ * @param {State} initialState initial state
+ * @return {any} State
  */
 const createReducer = (initialState) => {
   return (state = initialState, action) => {
@@ -24,13 +25,17 @@ const createReducer = (initialState) => {
 };
 
 /**
- * @param {State} initialState
+ * @param {State} initialState initial state
+ * @return {any} store
  */
 export const createStore = (initialState) => {
   const reducer = createReducer(initialState);
-  const w = /** @type any */(window);
+  const w = /** @type any */ (window);
 
-  const store = redux.createStore(reducer, initialState,
-      w.__REDUX_DEVTOOLS_EXTENSION__ && w.__REDUX_DEVTOOLS_EXTENSION__());
+  const store = redux.createStore(
+    reducer,
+    initialState,
+    w.__REDUX_DEVTOOLS_EXTENSION__ && w.__REDUX_DEVTOOLS_EXTENSION__()
+  );
   return store;
 };

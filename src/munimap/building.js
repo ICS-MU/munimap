@@ -52,14 +52,14 @@ export const TYPE = {
 };
 
 /**
- * @return {ol.source.Vector}
+ * @return {ol.source.Vector} Store
  */
 export const getStore = () => {
   return STORE;
 };
 
 /**
- * @return {TypeOptions}
+ * @return {TypeOptions} Type
  */
 export const getType = () => {
   return TYPE;

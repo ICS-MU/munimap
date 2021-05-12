@@ -2,6 +2,7 @@ import * as actions from './action.js';
 import * as load from './load.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
+import * as slctr from './selector.js';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import Timer from 'timer.js';
@@ -10,7 +11,6 @@ import {INITIAL_STATE} from './conf.js';
 import {Map, View} from 'ol';
 import {createStore} from './store.js';
 import {ofFeatures as extentOfFeatures} from './extent.js';
-import * as slctr from './selector.js';
 
 /**
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
@@ -73,7 +73,7 @@ const calculateView = (options, zoomTos, map_size) => {
  */
 export default async (opts) => {
   let zoomToStrings;
-  if(opts.zoomTo && opts.zoomTo.length) {
+  if (opts.zoomTo && opts.zoomTo.length) {
     zoomToStrings = /** @type {Array.<string>} */ (typeof opts.zoomTo ===
       'string' || opts.zoomTo instanceof String
       ? [opts.zoomTo]
@@ -81,7 +81,9 @@ export default async (opts) => {
   } else {
     zoomToStrings = [];
   }
-  const zoomTos = zoomToStrings.length ? await load.featuresFromParam(zoomToStrings) : [];
+  const zoomTos = zoomToStrings.length
+    ? await load.featuresFromParam(zoomToStrings)
+    : [];
   const map_size = /** @type {ol.size.Size} */ ([800, 400]);
   const view = calculateView(opts, zoomTos, map_size);
 
@@ -101,11 +103,13 @@ export default async (opts) => {
     timer.start(0.1);
   };
   const handleTimerEnd = () => {
-    store.dispatch(actions.ol_map_view_change({
-      center: view.getCenter(),
-      center_proj: 'EPSG:3857',
-      zoom: view.getZoom(),
-    }));
+    store.dispatch(
+      actions.ol_map_view_change({
+        center: view.getCenter(),
+        center_proj: 'EPSG:3857',
+        zoom: view.getZoom(),
+      })
+    );
   };
   timer.on('end', handleTimerEnd);
   const attach_view_events = (view) => {
@@ -124,7 +128,7 @@ export default async (opts) => {
     const state = store.getState();
     console.log('state', state);
     console.log('get_zoomToFeatures', slctr.get_zoomToFeatures(state));
-  }
+  };
   store.subscribe(render);
 
   const map = new Map({
