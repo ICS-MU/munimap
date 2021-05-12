@@ -1,5 +1,6 @@
 import * as building from './building.js';
 import * as ol_proj from 'ol/proj';
+import * as utils from './utils.js';
 import assert from './assert.js';
 import {EsriJSON} from 'ol/format';
 
@@ -120,15 +121,18 @@ const buildingsByCode = async (options) => {
 };
 
 /**
- * @param {Array.<string>} paramValues zoomTos or markers
+ * @param {Array.<string>|string|undefined} paramValues zoomTos or markers
  * @return {Promise.<Array<ol.Feature>>} promise of features contained
  * in server response
  */
 export const featuresFromParam = async (paramValues) => {
-  const firstParamValue = paramValues[0];
+  const values = /**@type {Array.<string>}*/ (utils.isString(paramValues)
+    ? [paramValues]
+    : paramValues);
+  const firstParamValue = values[0];
   assert(building.isCodeOrLikeExpr(firstParamValue));
   const buildings = await buildingsByCode({
-    codes: paramValues,
+    codes: values,
   });
   return buildings;
 };

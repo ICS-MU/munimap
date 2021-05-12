@@ -3,6 +3,8 @@ import * as load from './load.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
 import * as slctr from './selector.js';
+import * as utils from './utils.js';
+import Feature from 'ol/Feature';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import Timer from 'timer.js';
@@ -10,6 +12,7 @@ import assert from './assert.js';
 import {INITIAL_STATE} from './conf.js';
 import {Map, View} from 'ol';
 import {createStore} from './store.js';
+import {decorate as decorateCustomMarker} from './markerCustom.js';
 import {ofFeatures as extentOfFeatures} from './extent.js';
 
 /**
@@ -17,6 +20,7 @@ import {ofFeatures as extentOfFeatures} from './extent.js';
  * @typedef {import("ol/layer").Vector} ol.layer.Vector
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/size").Size} ol.size.Size
+ * @typedef {import("ol/extent").Extent} ol.extent.Extent
  */
 
 /**
@@ -26,45 +30,146 @@ import {ofFeatures as extentOfFeatures} from './extent.js';
  * @property {ol.coordinate.Coordinate} [center]
  * @property {Array.<string>|string} [zoomTo]
  * @property {Array.<string>|Array.<ol.Feature>} [markers]
+ * @property {string|undefined} lang
+ */
+
+/**
+ * @typedef {Object} InitExtentOptions
+ * @property {ol.extent.Extent|undefined} extent
+ * @property {ol.size.Size} size
+ * @property {ol.coordinate.Coordinate|undefined} center
+ * @property {number|undefined} zoom
+ * @property {number|undefined} resolution
  */
 
 /**
  * @param {Options} options options
+ * @param {Array<ol.Feature>} markers markers
  * @param {Array<ol.Feature>} zoomTos zoomTos
- * @param {ol.size.Size} map_size map_size
  * @return {View} view
  */
-const calculateView = (options, zoomTos, map_size) => {
-  // var target = goog.dom.getElement(options.target);
+const calculateView = (options, markers, zoomTos) => {
+  const target = document.getElementById(options.target);
   const center = ol_proj.transform(
-    [16.605390495656977, 49.1986567194723],
+    options.center || [16.605390495656977, 49.1986567194723],
     ol_proj.get('EPSG:4326'),
     ol_proj.get('EPSG:3857')
   );
-  const zoom = 13;
+  const zoom = options.zoom === undefined ? 13 : options.zoom;
   const view = new View({
     center: center,
     maxZoom: 23,
     minZoom: 0,
     zoom: zoom,
   });
-  if (zoomTos.length) {
-    const extent = extentOfFeatures(zoomTos);
-    if (options.zoom === undefined && options.center === undefined) {
-      view.fit(extent, {
-        size: map_size,
-      });
-      const res = view.getResolution();
-      assert(res);
-      ol_extent.buffer(extent, /** @type {number} */ (res) * 30, extent);
-      view.fit(extent, {
-        size: map_size,
-      });
-    } else if (options.center === undefined) {
-      view.setCenter(ol_extent.getCenter(extent));
+  const initExtentOpts = /**@type {InitExtentOptions}*/ ({});
+  if (zoomTos || markers) {
+    zoomTos = zoomTos.length ? zoomTos : markers;
+    if (zoomTos.length) {
+      let res;
+      const extent = extentOfFeatures(zoomTos);
+      if (options.zoom === undefined && options.center === undefined) {
+        if (target.offsetWidth === 0 || target.offsetHeight === 0) {
+          view.fit(extent);
+        } else {
+          view.fit(extent, {
+            size: [target.offsetWidth, target.offsetHeight],
+          });
+          res = view.getResolution();
+          assert(res);
+          ol_extent.buffer(extent, res * 30, extent);
+          view.fit(extent, {
+            size: [target.offsetWidth, target.offsetHeight],
+          });
+          initExtentOpts.extent = extent;
+          initExtentOpts.size = [target.offsetWidth, target.offsetHeight];
+        }
+        /** constrainResolution not exists in OL6 */
+        // if (munimap.marker.custom.isCustom(zoomTos[0])) {
+        //   if (view.getResolution() < munimap.floor.RESOLUTION.max) {
+        //     res = view.constrainResolution(
+        //       munimap.floor.RESOLUTION.max,
+        //       undefined,
+        //       1
+        //     );
+        //     initExtentOpts.resolution = res;
+        //     view.setResolution(res);
+        //   }
+        // }
+      } else if (options.center === undefined) {
+        initExtentOpts.center = ol_extent.getCenter(extent);
+        view.setCenter(ol_extent.getCenter(extent));
+      }
+    } else {
+      initExtentOpts.center = center;
+      initExtentOpts.zoom = zoom;
     }
   }
+  view.set('initExtentOpts', initExtentOpts, true);
   return view;
+};
+
+/**
+ * Load features by location codes or decorate custom markers.
+ * @param {Array<string>|Array<ol.Feature>|undefined} featuresLike featuresLike
+ * @param {Options} options options
+ * @param {Array<number>} invalidMarkerIndexes invalid codes
+ * @return {Promise<Array<ol.Feature>>} promise resolving with markers
+ */
+const loadOrDecorateMarkers = async (
+  featuresLike,
+  options,
+  invalidMarkerIndexes
+) => {
+  const lang = options.lang;
+  let result;
+  const arrPromises = []; // array of promises of features
+
+  if (!Array.isArray(featuresLike)) {
+    result = Promise.resolve([]);
+    return result;
+  } else {
+    featuresLike.forEach((el) => {
+      if (true) {
+        arrPromises.push(
+          new Promise((resolve, reject) => {
+            if (el instanceof Feature) {
+              decorateCustomMarker(el);
+              resolve(el);
+            } else if (utils.isString(el)) {
+              load.featuresFromParam(el).then(function (results) {
+                if (results.length > 0) {
+                  resolve(results);
+                } else {
+                  resolve('ERROR');
+                }
+              });
+            }
+          })
+        )
+      } else {
+        console.log('is optpoi');
+      }
+    });
+    return new Promise((resolve, reject) => {
+      Promise.all(arrPromises).then((values) => {
+        for (let i = 0; i < values.length; i++) {
+          if (values[i] === 'ERROR') {
+            invalidMarkerIndexes.push(i);
+          }
+        }
+
+        // reduce array of arrays to 1 array
+        values = values.reduce((a, b) => {
+          a = a.concat(b);
+          utils.removeArrayDuplicates(a);
+          return a;
+        }, []);
+
+        resolve(values);
+      });
+    });
+  }
 };
 
 /**
@@ -81,11 +186,14 @@ export default async (opts) => {
   } else {
     zoomToStrings = [];
   }
+
+  const markers = await loadOrDecorateMarkers(opts.markers, opts, []);
+
   const zoomTos = zoomToStrings.length
     ? await load.featuresFromParam(zoomToStrings)
     : [];
   const map_size = /** @type {ol.size.Size} */ ([800, 400]);
-  const view = calculateView(opts, zoomTos, map_size);
+  const view = calculateView(opts, markers, zoomTos);
 
   // redux-related
   const initialState = {
