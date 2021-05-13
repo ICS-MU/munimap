@@ -65,6 +65,46 @@ const isBoolean = (val) => {
   return typeof val === 'boolean';
 };
 
+/**
+ * @param {?} val Variable to test
+ * @return {boolean} Whether variable is function.
+ */
+const isFunction = (val) => {
+  return typeof val === 'function';
+};
+
+/**
+ * @param {function} fn function
+ * @param {...*} partialArgs arguments
+ * @return {any} function
+ */
+const partial = (fn, ...partialArgs) => {
+  const _args = [...partialArgs];
+  return (...args) => {
+    let newArgs = _args.slice();
+    newArgs = [...newArgs, ...args];
+    return fn(newArgs);
+  };
+};
+
+/**
+ * @param {Array} arr1 array 1
+ * @param {Array} arr2  array 2
+ * @return {boolean} is equal
+ */
+const arrayEquals = (arr1, arr2) => {
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+  const l = arr1.length;
+  for (let i = 0; i < l; i++) {
+    if (arr1[i] !== arr2[i]) {
+      return false;
+    }
+  }
+  return true;
+};
+
 export {
   removeArrayDuplicates,
   isString,
@@ -73,4 +113,7 @@ export {
   isDefAndNotNull,
   isArray,
   isBoolean,
+  isFunction,
+  partial,
+  arrayEquals,
 };
