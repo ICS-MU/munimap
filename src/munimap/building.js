@@ -7,7 +7,6 @@ import * as munimap_unit from './unit.js';
 import * as munimap_utils from './utils.js';
 import munimap_assert from './assert.js';
 import {MUNIMAP_URL} from './conf.js';
-import {LIST as munimap_LIST} from './munimap.js';
 import {Vector as ol_layer_Vector} from 'ol/layer';
 import {tile as ol_loadingstrategy_tile} from 'ol/loadingstrategy';
 import {Vector as ol_source_Vector} from 'ol/source';
