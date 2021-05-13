@@ -12,6 +12,12 @@ export const MUNIMAP_URL =
   '//maps.muni.cz/arcgis/rest/services/munimap/MapServer/';
 
 /**
+ * @type {string}
+ */
+export const MUNIMAP_PUBTRAN_URL =
+  '//maps.muni.cz/arcgis/rest/services/munimap_mhd/MapServer/';
+
+/**
  * @typedef {Object} State
  * @property {ol.size.Size} map_size
  * @property {ol.coordinate.Coordinate} center
