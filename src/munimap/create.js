@@ -178,6 +178,7 @@ const loadOrDecorateMarkers = async (
  */
 export default async (opts) => {
   let zoomToStrings;
+  let markerStrings;
   if (opts.zoomTo && opts.zoomTo.length) {
     zoomToStrings = /** @type {Array.<string>} */ (typeof opts.zoomTo ===
       'string' || opts.zoomTo instanceof String
@@ -187,8 +188,14 @@ export default async (opts) => {
     zoomToStrings = [];
   }
 
-  const markers = await loadOrDecorateMarkers(opts.markers, opts, []);
+  if (opts.markers && opts.markers.length) {
+    assert(utils.isArray(opts.markers));
+    markerStrings = /** @type {Array.<string>} */ (opts.markers);
+  } else {
+    markerStrings = /** @type {Array.<string>} */ ([]);
+  }
 
+  const markers = await loadOrDecorateMarkers(opts.markers, opts, [])
   const zoomTos = zoomToStrings.length
     ? await load.featuresFromParam(zoomToStrings)
     : [];
@@ -202,6 +209,7 @@ export default async (opts) => {
     center: view.getCenter(),
     zoom: view.getZoom(),
     zoomTos: zoomToStrings,
+    markers: markerStrings,
   };
   const store = createStore(initialState);
 
