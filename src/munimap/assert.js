@@ -9,6 +9,7 @@ import Feature from 'ol/Feature';
 import {Abbr} from './lang.js';
 import {isCodeOrLikeExpr as building_isCodeOrLikeExpr} from './building.js';
 import {assertSuitable as marker_custom_assertSuitable} from './markerCustom.js';
+import { ol } from './index.js';
 
 /**
  * @extends {Error}
@@ -265,6 +266,20 @@ const markers = (markers) => {
   }
 };
 
+/**
+ * @param {Array<ol.Feature|string>} markers markers
+ * @return {Array<ol.Feature>} markers as ol features
+ */
+const assertMarkerFeatures = (markers) => {
+  const result = markers.filter((marker) => !(marker instanceof Feature));
+  if (result.length) {
+    throw new AssertionError(
+      'Something is wrong. Some loaded marker is not ol/Feature.'
+    );
+  }
+  return /**@type {Array<ol.Feature>}*/ (markers);
+};
+
 export {
   assert,
   assertArray,
@@ -276,4 +291,5 @@ export {
   zoomTo,
   lang,
   markers,
+  assertMarkerFeatures,
 };

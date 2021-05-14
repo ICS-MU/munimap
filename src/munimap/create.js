@@ -1,5 +1,6 @@
 import * as actions from './action.js';
 import * as munimap_assert from './assert.js';
+import * as munimap_building from './building.js';
 import * as munimap_lang from './lang.js';
 import * as munimap_load from './load.js';
 import * as munimap_utils from './utils.js';
@@ -116,20 +117,19 @@ const calculateView = (options, markers, zoomTos) => {
  * Load features by location codes or decorate custom markers.
  * @param {Array<string>|Array<ol.Feature>|undefined} featuresLike featuresLike
  * @param {Options} options options
- * @param {Array<number>} invalidMarkerIndexes invalid codes
- * @return {Promise<Array<ol.Feature>>} promise resolving with markers
+ * @return {Promise<{
+ *    markers: Array<ol.Feature|string>,
+ *    invalidMarkerIndexes: Array<number>,
+ *  }>} promise resolving with markers
  */
-const loadOrDecorateMarkers = async (
-  featuresLike,
-  options,
-  invalidMarkerIndexes
-) => {
+const loadOrDecorateMarkers = async (featuresLike, options) => {
   const lang = options.lang;
   let result;
   const arrPromises = []; // array of promises of features
+  const invalidMarkerIndexes = [];
 
   if (!Array.isArray(featuresLike)) {
-    result = Promise.resolve([]);
+    result = Promise.resolve({markers: [], invalidMarkerIndexes: []});
     return result;
   } else {
     featuresLike.forEach((el) => {
@@ -149,7 +149,7 @@ const loadOrDecorateMarkers = async (
               });
             }
           })
-        )
+        );
       } else {
         console.log('is optpoi');
       }
@@ -169,7 +169,7 @@ const loadOrDecorateMarkers = async (
           return a;
         }, []);
 
-        resolve(values);
+        resolve({markers: values, invalidMarkerIndexes});
       });
     });
   }
@@ -269,6 +269,73 @@ const assertOptions = (options) => {
 };
 
 /**
+ * Check the options and remove invalid values.
+ * @param {Array.<string>|Array.<ol.Feature>|undefined} featuresLike featuresLike
+ * @return {Array.<string>} an array of codes in wrong text format
+ */
+const filterInvalidCodeExpressions = (featuresLike) => {
+  const invalidCodes = [];
+  const indexesOfInvalidCodes = [];
+
+  if (featuresLike) {
+    featuresLike.forEach((featureLike, index) => {
+      if (munimap_utils.isString(featureLike)) {
+        if (
+          !munimap_building.isCodeOrLikeExpr(featureLike)
+          /*(munimap.building.isCodeOrLikeExpr(featuresLike[m]) === false) &&
+        (munimap.room.isCodeOrLikeExpr(featuresLike[m]) === false) &&
+        (munimap.door.isCodeOrLikeExpr(featuresLike[m]) === false) &&
+        (munimap.optpoi.isCtgUid(featuresLike[m]) === false) &&
+        (featuresLike[m] instanceof ol.Feature === false))*/
+        ) {
+          invalidCodes.push(featureLike);
+          indexesOfInvalidCodes.push(index);
+        }
+      }
+    });
+    indexesOfInvalidCodes.reverse();
+    for (let n = 0; n < invalidCodes.length; n++) {
+      featuresLike.splice(indexesOfInvalidCodes[n], 1);
+    }
+  }
+  return invalidCodes;
+};
+
+/**
+ * 
+ * @param {Options} options opts
+ * @param {Array<ol.Feature|string>} markers markers
+ * @param {Array<number>} invalidMarkerIndexes idxs
+ * @return {Array<string>} invalid codes
+ */
+const filterInvalidMarkerCodes = (options, markers, invalidMarkerIndexes) => {
+  const invalidMarkerCodes = [];
+  const invalidFeaturesIndexes = [];
+
+  markers.forEach((feature, idx) => {
+    if (feature === 'ERROR') {
+      invalidFeaturesIndexes.push(idx);
+    }
+  });
+
+  invalidFeaturesIndexes.reverse();
+  invalidFeaturesIndexes.forEach((fIndex) => markers.splice(fIndex, 1));
+
+  invalidMarkerIndexes.reverse();
+  invalidMarkerIndexes.forEach((mIndex) => {
+    invalidMarkerCodes.push(options.markers[mIndex]);
+    options.markers.splice(mIndex, 1);
+  });
+
+  if (invalidMarkerCodes.length) {
+    console.log(
+      `Features not found in the database: ${invalidMarkerCodes.join(', ')}`
+    );
+  }
+  return invalidMarkerCodes;
+};
+
+/**
  * @param {Options} options Options
  * @returns {Promise<Map>} initialized map
  */
@@ -309,12 +376,27 @@ export default async (options) => {
     markerStrings = /** @type {Array.<string>} */ ([]);
   }
 
-  const markers = await loadOrDecorateMarkers(options.markers, options, []);
+  let invalidMarkerCodes = filterInvalidCodeExpressions(options.markers);
+  const {markers, invalidMarkerIndexes} = await loadOrDecorateMarkers(
+    options.markers,
+    options
+  );
+
+  invalidMarkerCodes = invalidMarkerCodes.concat(
+    filterInvalidMarkerCodes(options, markers, invalidMarkerIndexes)
+  );
+  invalidMarkerCodes.sort();
+  munimap_assert.assertMarkerFeatures(markers);
+
   const zoomTos = zoomToStrings.length
     ? await munimap_load.featuresFromParam(zoomToStrings)
     : [];
   const map_size = /** @type {ol.size.Size} */ ([800, 400]);
-  const view = calculateView(options, markers, zoomTos);
+  const view = calculateView(
+    options,
+    /**@type {Array<ol.Feature>}*/ (markers),
+    zoomTos
+  );
 
   // redux-related
   const initialState = {
@@ -325,6 +407,7 @@ export default async (options) => {
     zoomTos: zoomToStrings,
     markers: markerStrings,
     loadingMessage: options.loadingMessage,
+    invalidCodes: invalidMarkerCodes,
   };
   const store = createStore(initialState);
 
