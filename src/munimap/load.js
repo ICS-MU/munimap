@@ -240,7 +240,6 @@ const featuresFromUrl = async (options) => {
     allNewProcessedFeatures.splice(allNewProcessedFeatures.indexOf(item), 1);
   });
   source.addFeatures(procOptions.new);
-  console.log(procOptions.all);
   return procOptions.all;
 };
 
