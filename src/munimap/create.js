@@ -198,7 +198,7 @@ export default async (options) => {
 
   if (options.markers && options.markers.length) {
     assert(munimap_utils.isArray(options.markers));
-    //munimap_utils.removeArrayDuplicates(options.markers);
+    munimap_utils.removeArrayDuplicates(options.markers);
     markerStrings = /** @type {Array.<string>} */ (options.markers);
   } else {
     markerStrings = /** @type {Array.<string>} */ ([]);
