@@ -1,10 +1,10 @@
 /**
  * @module markerCustom
  */
+import * as munimap_assert from './assert.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
 import Point from 'ol/geom/Point';
-import assert from './assert.js';
 import {isString} from './utils.js';
 import {NAME as munimap_type_NAME} from './type.js';
 
@@ -34,7 +34,7 @@ const isCustom = (feature) => {
  */
 const getLabel = (feature) => {
   const label = feature.get(LABEL_FIELD_NAME);
-  assert(label === undefined || isString(label));
+  munimap_assert.assert(label === undefined || isString(label));
   return /** @type {string|undefined}*/ (label);
 };
 
@@ -63,7 +63,7 @@ const isSuitable = (feature) => {
  * @return {boolean} assertion
  */
 const assertSuitable = (feature) => {
-  return assert(
+  return munimap_assert.assert(
     isSuitable(feature),
     'Custom marker represented by ol.Feature must have ol.Point geometry ' +
       'with appropriate longitude (-180;180) and latitude (-90, 90).'

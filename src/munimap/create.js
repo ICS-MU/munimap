@@ -1,4 +1,5 @@
 import * as actions from './action.js';
+import * as munimap_assert from './assert.js';
 import * as munimap_load from './load.js';
 import * as munimap_utils from './utils.js';
 import * as ol_extent from 'ol/extent';
@@ -8,7 +9,6 @@ import Feature from 'ol/Feature';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import Timer from 'timer.js';
-import assert from './assert.js';
 import {Abbr} from './lang.js';
 import {INITIAL_STATE} from './conf.js';
 import {Map, View} from 'ol';
@@ -77,7 +77,7 @@ const calculateView = (options, markers, zoomTos) => {
             size: [target.offsetWidth, target.offsetHeight],
           });
           res = view.getResolution();
-          assert(res);
+          munimap_assert.assert(res);
           ol_extent.buffer(extent, res * 30, extent);
           view.fit(extent, {
             size: [target.offsetWidth, target.offsetHeight],
@@ -178,7 +178,7 @@ const loadOrDecorateMarkers = async (
  * @returns {Promise<Map>} initialized map
  */
 export default async (options) => {
-  assert(
+  munimap_assert.assert(
     munimap_utils.isDefAndNotNull(options.target) &&
       munimap_utils.isString(options.target),
     'Target must be a string!'
@@ -197,7 +197,7 @@ export default async (options) => {
   }
 
   if (options.markers && options.markers.length) {
-    assert(munimap_utils.isArray(options.markers));
+    munimap_assert.assertArray(options.markers);
     munimap_utils.removeArrayDuplicates(options.markers);
     markerStrings = /** @type {Array.<string>} */ (options.markers);
   } else {

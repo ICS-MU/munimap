@@ -1,11 +1,11 @@
 /**
  * @module building
  */
+import * as munimap_assert from './assert.js';
 import * as munimap_lang from './lang.js';
 import * as munimap_load from './load.js';
 import * as munimap_unit from './unit.js';
 import * as munimap_utils from './utils.js';
-import munimap_assert from './assert.js';
 import {MUNIMAP_URL} from './conf.js';
 import {Vector as ol_layer_Vector} from 'ol/layer';
 import {tile as ol_loadingstrategy_tile} from 'ol/loadingstrategy';
@@ -104,12 +104,13 @@ const loadProcessor = async (options) => {
     //munimap.building.load.complexProcessor(options),
     unitsProcessor(options),
   ]);
-  munimap_assert(munimap_utils.isArray(result));
+  munimap_assert.assertArray(result);
   result.forEach((opts) => {
-    munimap_assert(opts === options);
-    munimap_assert(munimap_utils.arrayEquals(opts.all, options.all));
-    munimap_assert(munimap_utils.arrayEquals(opts.new, options.new));
-    munimap_assert(munimap_utils.arrayEquals(opts.existing, options.existing));
+    munimap_assert.assert(opts === options);
+    munimap_assert.assert(munimap_utils.arrayEquals(opts.all, options.all));
+    munimap_assert.assert(munimap_utils.arrayEquals(opts.new, options.new));
+    munimap_assert.assert(
+      munimap_utils.arrayEquals(opts.existing, options.existing));
   });
   return result[0];
 };
@@ -182,7 +183,7 @@ const isCode = (maybeCode) => {
  * @param {string} code code
  */
 const assertCode = (code) => {
-  munimap_assert(
+  munimap_assert.assert(
     !!isCode(code),
     'Location code of building should consist of 3 letters and 2 digits.'
   );
@@ -210,7 +211,7 @@ export const isCodeOrLikeExpr = (maybeCodeOrLikeExpr) => {
  * @param {string} code code
  */
 const assertCodeOrLikeExpr = (code) => {
-  munimap_assert(
+  munimap_assert.assert(
     !!code.match(LIKE_EXPR_REGEX),
     'Location code of building should consist of 3 letters and 2 digits. ' +
       'Any of these characters might be replaced with _ wildcard.'
@@ -247,7 +248,7 @@ const getLayer = (map) => {
   const layers = map.getLayers().getArray();
   const result = layers.find(isLayer);
   if (result) {
-    munimap_assert(
+    munimap_assert.assert(
       result instanceof ol_layer_Vector,
       'Expected instanceof ol/layer/Vector.'
     );
@@ -342,8 +343,8 @@ const getByCode = (code) => {
  */
 const getLocationCode = (building) => {
   const result = building.get(LOCATION_CODE_FIELD_NAME);
-  munimap_assert(
-    !!munimap_utils.isString(result),
+  munimap_assert.assertString(
+    result,
     'Something is wrong! Location code of building should be a string!'
   );
   return /** @type {string}*/ (result);
@@ -355,7 +356,7 @@ const getLocationCode = (building) => {
  */
 const getUnits = (building) => {
   const result = building.get(UNITS_FIELD_NAME);
-  munimap_assert(!!munimap_utils.isArray(result));
+  munimap_assert.assertArray(result);
   return /**@type {Array<ol.Feature>}*/ (result);
 };
 

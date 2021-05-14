@@ -1,7 +1,7 @@
+import * as munimap_assert from './assert.js';
 import * as munimap_building from './building.js';
 import * as munimap_utils from './utils.js';
 import * as ol_proj from 'ol/proj';
-import munimap_assert from './assert.js';
 import {EsriJSON} from 'ol/format';
 import {NAME as munimap_type_NAME} from './type.js';
 
@@ -171,9 +171,9 @@ const featuresFromUrl = async (options) => {
     body: body,
   });
 
-  munimap_assert(response.status === 200);
+  munimap_assert.assert(response.status === 200);
   const json = await response.json();
-  munimap_assert(!!json);
+  munimap_assert.assert(!!json);
 
   const allStoredFeatures = source.getFeatures();
   const loadedStoredFeatures = [];
@@ -317,7 +317,7 @@ const featuresForMap = async (options, extent, resolution, projection) => {
 const features = async (options) => {
   const type = options.type;
   const url = type.serviceUrl + type.layerId + '/query?';
-  munimap_assert(
+  munimap_assert.assert(
     !options.where || options.where.indexOf('"') < 0,
     'Use single quotes instead of double quotes.'
   );
@@ -368,7 +368,7 @@ const features = async (options) => {
  * @protected
  */
 const featuresByCode = async (options) => {
-  munimap_assert(
+  munimap_assert.assert(
     options.type === munimap_building.TYPE,
     'Feature type should be' + ' building, room or door type.'
   );

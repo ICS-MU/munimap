@@ -105,6 +105,21 @@ const arrayEquals = (arr1, arr2) => {
   return true;
 };
 
+/**
+ * @param {*} val value
+ * @return {string} result type
+ */
+const typeOf = (val) => {
+  if (isArray(val)) {
+    return 'array';
+  }
+  if (val === null) {
+    return 'null';
+  }
+
+  return typeof val;
+};
+
 export {
   removeArrayDuplicates,
   isString,
@@ -116,4 +131,5 @@ export {
   isFunction,
   partial,
   arrayEquals,
+  typeOf
 };

@@ -1,9 +1,9 @@
 /**
  * @module unit
  */
+import * as munimap_assert from './assert.js';
 import * as munimap_load from './load.js';
 import * as munimap_utils from './utils.js';
-import munimap_assert from './assert.js';
 import {MUNIMAP_URL} from './conf.js';
 import {Vector as ol_source_Vector} from 'ol/source';
 
@@ -42,7 +42,7 @@ const TYPE = {
  */
 const getPriority = (unit) => {
   const result = unit.get(PRIORITY_FIELD_NAME);
-  munimap_assert(munimap_utils.isNumber(result));
+  munimap_assert.assertNumber(result);
   return result;
 };
 
