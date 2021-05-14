@@ -1,14 +1,15 @@
 import * as actions from './action.js';
-import * as load from './load.js';
+import * as munimap_load from './load.js';
+import * as munimap_utils from './utils.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
 import * as slctr from './selector.js';
-import * as utils from './utils.js';
 import Feature from 'ol/Feature';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import Timer from 'timer.js';
 import assert from './assert.js';
+import {Abbr} from './lang.js';
 import {INITIAL_STATE} from './conf.js';
 import {Map, View} from 'ol';
 import {createStore} from './store.js';
@@ -136,8 +137,8 @@ const loadOrDecorateMarkers = async (
             if (el instanceof Feature) {
               decorateCustomMarker(el);
               resolve(el);
-            } else if (utils.isString(el)) {
-              load.featuresFromParam(el).then(function (results) {
+            } else if (munimap_utils.isString(el)) {
+              munimap_load.featuresFromParam(el).then(function (results) {
                 if (results.length > 0) {
                   resolve(results);
                 } else {
@@ -162,7 +163,7 @@ const loadOrDecorateMarkers = async (
         // reduce array of arrays to 1 array
         values = values.reduce((a, b) => {
           a = a.concat(b);
-          utils.removeArrayDuplicates(a);
+          munimap_utils.removeArrayDuplicates(a);
           return a;
         }, []);
 
@@ -173,34 +174,43 @@ const loadOrDecorateMarkers = async (
 };
 
 /**
- * @param {Options} opts Options
+ * @param {Options} options Options
  * @returns {Promise<Map>} initialized map
  */
-export default async (opts) => {
+export default async (options) => {
+  assert(
+    munimap_utils.isDefAndNotNull(options.target) &&
+      munimap_utils.isString(options.target),
+    'Target must be a string!'
+  );
+  const target = document.getElementById(options.target);
+
   let zoomToStrings;
   let markerStrings;
-  if (opts.zoomTo && opts.zoomTo.length) {
-    zoomToStrings = /** @type {Array.<string>} */ (typeof opts.zoomTo ===
-      'string' || opts.zoomTo instanceof String
-      ? [opts.zoomTo]
-      : opts.zoomTo);
+  if (options.zoomTo && options.zoomTo.length) {
+    zoomToStrings = /** @type {Array.<string>} */ (typeof options.zoomTo ===
+      'string' || options.zoomTo instanceof String
+      ? [options.zoomTo]
+      : options.zoomTo);
   } else {
     zoomToStrings = [];
   }
 
-  if (opts.markers && opts.markers.length) {
-    assert(utils.isArray(opts.markers));
-    markerStrings = /** @type {Array.<string>} */ (opts.markers);
+  if (options.markers && options.markers.length) {
+    assert(munimap_utils.isArray(options.markers));
+    //munimap_utils.removeArrayDuplicates(options.markers);
+    markerStrings = /** @type {Array.<string>} */ (options.markers);
   } else {
     markerStrings = /** @type {Array.<string>} */ ([]);
   }
 
-  const markers = await loadOrDecorateMarkers(opts.markers, opts, [])
+  //options.lang = options.lang || Abbr.CZECH;
+  const markers = await loadOrDecorateMarkers(options.markers, options, []);
   const zoomTos = zoomToStrings.length
-    ? await load.featuresFromParam(zoomToStrings)
+    ? await munimap_load.featuresFromParam(zoomToStrings)
     : [];
   const map_size = /** @type {ol.size.Size} */ ([800, 400]);
-  const view = calculateView(opts, markers, zoomTos);
+  const view = calculateView(options, markers, zoomTos);
 
   // redux-related
   const initialState = {
@@ -247,8 +257,12 @@ export default async (opts) => {
   };
   store.subscribe(render);
 
+  const munimapEl = document.createElement('div');
+  munimapEl.className = 'munimap';
+  target.appendChild(munimapEl);
+
   const map = new Map({
-    target: 'map',
+    target: munimapEl,
     layers: [
       new TileLayer({
         source: new OSM(),

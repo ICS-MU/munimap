@@ -236,4 +236,4 @@ const getMsg = (str, lang) => {
   return translation;
 };
 
-export {CS_TRANSLATIONS, EN_TRANSLATIONS, Translations, getMsg};
+export {CS_TRANSLATIONS, EN_TRANSLATIONS, Abbr, Translations, getMsg};
