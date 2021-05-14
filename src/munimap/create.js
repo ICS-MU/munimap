@@ -204,7 +204,7 @@ export default async (options) => {
     markerStrings = /** @type {Array.<string>} */ ([]);
   }
 
-  //options.lang = options.lang || Abbr.CZECH;
+  options.lang = options.lang || Abbr.CZECH;
   const markers = await loadOrDecorateMarkers(options.markers, options, []);
   const zoomTos = zoomToStrings.length
     ? await munimap_load.featuresFromParam(zoomToStrings)
