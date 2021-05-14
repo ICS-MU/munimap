@@ -12,15 +12,22 @@ import * as redux from 'redux';
  */
 const createReducer = (initialState) => {
   return (state = initialState, action) => {
-    if (action.type === actions.OL_MAP_VIEW_CHANGE) {
-      return {
-        ...state,
-        zoom: action.payload.view.zoom,
-        center: action.payload.view.center,
-        center_proj: action.payload.view.center_proj,
-      };
+    switch (action.type) {
+      case actions.OL_MAP_VIEW_CHANGE:
+        return {
+          ...state,
+          zoom: action.payload.view.zoom,
+          center: action.payload.view.center,
+          center_proj: action.payload.view.center_proj,
+        };
+      case actions.OL_MAP_INITIALIZED:
+        return {
+          ...state,
+          loadingMessage: action.payload.props.loadingMessage,
+        }
+      default:
+        return state;
     }
-    return state;
   };
 };
 

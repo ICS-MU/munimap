@@ -1,5 +1,6 @@
 import * as actions from './action.js';
 import * as munimap_assert from './assert.js';
+import * as munimap_lang from './lang.js';
 import * as munimap_load from './load.js';
 import * as munimap_utils from './utils.js';
 import * as ol_extent from 'ol/extent';
@@ -9,7 +10,6 @@ import Feature from 'ol/Feature';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import Timer from 'timer.js';
-import {Abbr} from './lang.js';
 import {INITIAL_STATE} from './conf.js';
 import {Map, View} from 'ol';
 import {createStore} from './store.js';
@@ -22,6 +22,7 @@ import {ofFeatures as extentOfFeatures} from './extent.js';
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/size").Size} ol.size.Size
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
+ * @typedef {import("./conf.js").State} State
  */
 
 /**
@@ -31,7 +32,8 @@ import {ofFeatures as extentOfFeatures} from './extent.js';
  * @property {ol.coordinate.Coordinate} [center]
  * @property {Array.<string>|string} [zoomTo]
  * @property {Array.<string>|Array.<ol.Feature>} [markers]
- * @property {string|undefined} lang
+ * @property {string} [lang]
+ * @property {boolean} [loadingMessage]
  */
 
 /**
@@ -174,6 +176,61 @@ const loadOrDecorateMarkers = async (
 };
 
 /**
+ * @param {Element} target target
+ * @param {string} lang language
+ */
+const addLoadingMessage = (target, lang) => {
+  const messageDiv = document.createElement('div');
+  messageDiv.id = 'message_' + target.id.toString();
+  messageDiv.className = 'loading-message';
+  messageDiv.style.cssText =
+    'color: #999; font-size: 30px;' +
+    ' font-weight: bold; vertical-align: middle; ' +
+    ' font-family: Arial, Helvetica, sans-serif; ' +
+    ' position: absolute; top: 0; left: 0; width: 100%;' +
+    ' height: 100%; text-align: center;';
+
+  const innerDiv = document.createElement('div');
+  innerDiv.className = 'inner';
+  innerDiv.style.cssText =
+    'display:inline-block; vertical-align: middle; position: relative;';
+
+  const message = document.createElement('p');
+  message.className = 'text';
+  message.appendChild(
+    document.createTextNode(
+      munimap_lang.getMsg(munimap_lang.Translations.LOADING_MAP, lang)
+    )
+  );
+
+  const styleElInnerHTML =
+    `#message_${target.id.toString()}` +
+    `:before {box-sizing: inherit; content: \'\'; display: inline-block; ` +
+    `height: 100%; vertical-align: middle; margin-right: -0.25em;}`;
+
+  const styleEl = document.createElement('style');
+  styleEl.id = 'message_' + target.id.toString() + '_style';
+  styleEl.appendChild(document.createTextNode(styleElInnerHTML));
+
+  messageDiv.appendChild(innerDiv);
+  innerDiv.appendChild(message);
+  target.appendChild(styleEl);
+  target.appendChild(messageDiv);
+};
+
+/**
+ * @param {State} state Redux state
+ * @param {Element} target target element
+ */
+const removeLoadingMessage = (state, target) => {
+  if (!state.loadingMessage) {
+    const id = target.id.toString();
+    document.getElementById(`message_${id}`).remove();
+    document.getElementById(`message_${id}_style`).remove();
+  }
+};
+
+/**
  * @param {Options} options Options
  * @returns {Promise<Map>} initialized map
  */
@@ -184,6 +241,14 @@ export default async (options) => {
     'Target must be a string!'
   );
   const target = document.getElementById(options.target);
+  options.lang = options.lang || munimap_lang.Abbr.CZECH;
+
+  if (options.loadingMessage === undefined) {
+    options.loadingMessage = true;
+  }
+  if (options.loadingMessage) {
+    addLoadingMessage(target, options.lang);
+  }
 
   let zoomToStrings;
   let markerStrings;
@@ -204,7 +269,6 @@ export default async (options) => {
     markerStrings = /** @type {Array.<string>} */ ([]);
   }
 
-  options.lang = options.lang || Abbr.CZECH;
   const markers = await loadOrDecorateMarkers(options.markers, options, []);
   const zoomTos = zoomToStrings.length
     ? await munimap_load.featuresFromParam(zoomToStrings)
@@ -220,6 +284,7 @@ export default async (options) => {
     zoom: view.getZoom(),
     zoomTos: zoomToStrings,
     markers: markerStrings,
+    loadingMessage: options.loadingMessage,
   };
   const store = createStore(initialState);
 
@@ -254,6 +319,8 @@ export default async (options) => {
     const state = store.getState();
     console.log('state', state);
     console.log('get_zoomToFeatures', slctr.get_zoomToFeatures(state));
+
+    removeLoadingMessage(state, target);
   };
   store.subscribe(render);
 
@@ -270,5 +337,12 @@ export default async (options) => {
     ],
     view,
   });
+
+  store.dispatch(
+    actions.ol_map_initialized({
+      loadingMessage: false,
+    })
+  );
+
   return map;
 };

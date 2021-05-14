@@ -25,10 +25,11 @@ export const MUNIMAP_PUBTRAN_URL =
  * @property {number} zoom
  * @property {Array.<string>} zoomTos
  * @property {Array<string>} markers
+ * @property {boolean} loadingMessage
  */
 
 /**
- * @type State
+ * @type {State}
  */
 export const INITIAL_STATE = {
   map_size: [800, 400],
@@ -37,4 +38,5 @@ export const INITIAL_STATE = {
   zoom: 13,
   zoomTos: [],
   markers: [],
+  loadingMessage: true,
 };
