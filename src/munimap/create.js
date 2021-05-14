@@ -223,8 +223,10 @@ const addLoadingMessage = (target, lang) => {
  * @param {Element} target target element
  */
 const removeLoadingMessage = (state, target) => {
-  if (!state.loadingMessage) {
-    const id = target.id.toString();
+  const id = target.id.toString();
+  const messageEl = document.getElementById(`message_${id}`);
+
+  if (!state.loadingMessage && !!messageEl) {
     document.getElementById(`message_${id}`).remove();
     document.getElementById(`message_${id}_style`).remove();
   }
