@@ -120,6 +120,15 @@ const typeOf = (val) => {
   return typeof val;
 };
 
+/**
+ * Returns true if the specified value is an object (incl. Arrays and functions).
+ * @param {*} val value
+ * @return {boolean} isObject
+ */
+const isObject = (val) => {
+  return Object(val) === val;
+};
+
 export {
   removeArrayDuplicates,
   isString,
@@ -131,5 +140,6 @@ export {
   isFunction,
   partial,
   arrayEquals,
-  typeOf
+  typeOf,
+  isObject,
 };

@@ -231,6 +231,42 @@ const removeLoadingMessage = (state, target) => {
 };
 
 /**
+ * @param {Options} options opts
+ */
+const assertOptions = (options) => {
+  munimap_assert.target(options.target);
+  munimap_assert.assert(
+    options.zoom === undefined || options.zoomTo === undefined,
+    "Zoom and zoomTo options can't be defined together."
+  );
+  munimap_assert.assert(
+    options.center === undefined || options.zoomTo === undefined,
+    "Center and zoomTo options can't be defined together."
+  );
+  munimap_assert.zoom(options.zoom);
+  munimap_assert.zoomTo(options.zoomTo);
+  // munimap_assert.getMainFeatureAtPixel(options.getMainFeatureAtPixel);
+  munimap_assert.markers(options.markers);
+  // munimap_assert.layers(options.layers);
+  munimap_assert.lang(options.lang);
+  // munimap_assert.baseMap(options.baseMap);
+  // munimap_assert.pubTran(options.pubTran);
+  // munimap_assert.locationCodes(options.locationCodes);
+  // munimap_assert.mapLinks(options.mapLinks);
+  // munimap_assert.labels(options.labels);
+  // munimap_assert.identifyTypes(options.identifyTypes);
+  // munimap_assert.identifyCallback(options.identifyCallback);
+  // if (
+  //   munimap_utils.isDef(options.identifyTypes) &&
+  //   !munimap_utils.isDef(options.identifyCallback)
+  // ) {
+  //   goog.asserts.fail(
+  //     'IdentifyTypes must be defined together with identifyCallback.'
+  //   );
+  // }
+};
+
+/**
  * @param {Options} options Options
  * @returns {Promise<Map>} initialized map
  */
@@ -249,6 +285,8 @@ export default async (options) => {
   if (options.loadingMessage) {
     addLoadingMessage(target, options.lang);
   }
+
+  assertOptions(options);
 
   let zoomToStrings;
   let markerStrings;
