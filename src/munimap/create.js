@@ -420,6 +420,25 @@ export default async (options) => {
     ? await munimap_load.featuresFromParam(zoomToStrings)
     : [];
 
+  /*-------------------------------- atrributions ----------------------------*/
+  const esriAttribution = '© <a href="http://help.arcgis.com/' +
+    'en/communitymaps/pdf/WorldTopographicMap_Contributors.pdf"' +
+    ' target="_blank">Esri</a>';
+
+  const osmAttribution = munimap_lang.getMsg(
+    munimap_lang.Translations.OSM_ATTRIBUTION_HTML,
+    options.lang
+  );
+  const muAttribution = munimap_lang.getMsg(
+    munimap_lang.Translations.MU_ATTRIBUTION_HTML,
+    options.lang
+  );
+  const munimapAttribution = munimap_lang.getMsg(
+    munimap_lang.Translations.MUNIMAP_ATTRIBUTION_HTML,
+    options.lang
+  );
+  const muAttributions = [munimapAttribution, muAttribution];
+
   /*----------------------------- create map options -------------------------*/
   const map_size = /** @type {ol.size.Size} */ ([800, 400]);
   const view = calculateView(
