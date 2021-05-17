@@ -7,6 +7,7 @@
 import * as munimap_utils from './utils.js';
 import Feature from 'ol/Feature';
 import {Abbr} from './lang.js';
+import {BASEMAPS} from './conf.js';
 import {isCodeOrLikeExpr as building_isCodeOrLikeExpr} from './building.js';
 import {assertSuitable as marker_custom_assertSuitable} from './markerCustom.js';
 import { ol } from './index.js';
@@ -280,6 +281,25 @@ const assertMarkerFeatures = (markers) => {
   return /**@type {Array<ol.Feature>}*/ (markers);
 };
 
+/**
+ * @param {string|undefined} baseMap basemap
+ */
+const baseMap = (baseMap) => {
+  if (baseMap !== undefined) {
+    if (munimap_utils.isString(baseMap)) {
+      const baseMaps = Object.values(BASEMAPS);
+      if (!baseMaps.includes(baseMap)) {
+        throw new AssertionError(
+          `Parameter baseMap contains unknown value. ` +
+            `List of possible values: ${baseMaps.join(', ')}.`
+        );
+      }
+    } else {
+      throw new AssertionError('Parameter baseMap should be string.');
+    }
+  }
+};
+
 export {
   assert,
   assertArray,
@@ -292,4 +312,5 @@ export {
   lang,
   markers,
   assertMarkerFeatures,
+  baseMap,
 };

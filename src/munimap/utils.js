@@ -129,6 +129,17 @@ const isObject = (val) => {
   return Object(val) === val;
 };
 
+/**
+ * @return {boolean} is IE
+ */
+const isUserAgentIE = () => {
+  const ua = window.navigator.userAgent;
+  const msie = ua.indexOf('MSIE ');
+  const trident = ua.indexOf('Trident/');
+
+  return msie > 0 || trident > 0;
+};
+
 export {
   removeArrayDuplicates,
   isString,
@@ -142,4 +153,5 @@ export {
   arrayEquals,
   typeOf,
   isObject,
+  isUserAgentIE,
 };

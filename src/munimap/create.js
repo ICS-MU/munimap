@@ -12,8 +12,10 @@ import Feature from 'ol/Feature';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import Timer from 'timer.js';
-import {INITIAL_STATE} from './conf.js';
+import XYZ from 'ol/source/XYZ';
+import {BASEMAPS, INITIAL_STATE} from './conf.js';
 import {Map, View} from 'ol';
+import {RESOLUTION_COLOR} from './style.js';
 import {createStore} from './store.js';
 import {decorate as decorateCustomMarker} from './markerCustom.js';
 import {ofFeatures as extentOfFeatures} from './extent.js';
@@ -36,6 +38,7 @@ import {ofFeatures as extentOfFeatures} from './extent.js';
  * @property {Array.<string>|Array.<ol.Feature>} [markers]
  * @property {string} [lang]
  * @property {boolean} [loadingMessage]
+ * @property {string} [baseMap]
  */
 
 /**
@@ -247,7 +250,7 @@ const assertOptions = (options) => {
   munimap_assert.markers(options.markers);
   // munimap_assert.layers(options.layers);
   munimap_assert.lang(options.lang);
-  // munimap_assert.baseMap(options.baseMap);
+  munimap_assert.baseMap(options.baseMap);
   // munimap_assert.pubTran(options.pubTran);
   // munimap_assert.locationCodes(options.locationCodes);
   // munimap_assert.mapLinks(options.mapLinks);
@@ -362,6 +365,38 @@ const toggleInvalidCodesInfo = (state, options) => {
 };
 
 /**
+ * @param {TileLayer} raster raster
+ * @param {Options} options options
+ */
+const setBaseMapStyle = (raster, options) => {
+  raster.on('prerender', (evt) => {
+    const ctx = evt.context;
+    ctx.fillStyle = '#dddddd';
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+    //set opacity of the layer according to current resolution
+    const resolution = evt.frameState.viewState.resolution;
+    const resColor = RESOLUTION_COLOR.find((obj, i, arr) => {
+      return resolution > obj.resolution || i === arr.length - 1;
+    });
+    raster.setOpacity(resColor.opacity);
+  });
+  if (
+    (options.baseMap === BASEMAPS.OSM_BW ||
+      options.baseMap === BASEMAPS.ARCGIS_BW) &&
+    !munimap_utils.isUserAgentIE()
+  ) {
+    raster.on('postrender', (evt) => {
+      const ctx = evt.context;
+      ctx.globalCompositeOperation = 'color';
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.fillStyle = '#000000';
+      ctx.globalCompositeOperation = 'source-over';
+    });
+  }
+};
+
+/**
  * @param {Options} options Options
  * @returns {Promise<Map>} initialized map
  */
@@ -439,6 +474,43 @@ export default async (options) => {
   );
   const muAttributions = [munimapAttribution, muAttribution];
 
+  /*------------------------------- define basemap ---------------------------*/
+  let raster;
+  let currentBaseMap;
+
+  if (!munimap_utils.isDef(options.baseMap)) {
+    options.baseMap = BASEMAPS.ARCGIS_BW;
+  }
+
+  switch (options.baseMap) {
+    case BASEMAPS.ARCGIS:
+    case BASEMAPS.ARCGIS_BW:
+      currentBaseMap = 'ArcGIS';
+      raster = new TileLayer({
+        source: new XYZ({
+          url: 'https://server.arcgisonline.com/ArcGIS/rest/services/' +
+            'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+          attributions: esriAttribution,
+          crossOrigin: null,
+          maxZoom: 19,
+        }),
+      });
+      break;
+    case BASEMAPS.OSM:
+    case BASEMAPS.OSM_BW:
+    default:
+      currentBaseMap = 'OSM';
+      raster = new TileLayer({
+        source: new OSM({
+          attributions: [osmAttribution],
+          crossOrigin: null,
+        })
+      });
+  }
+
+  const defaultBaseMap = raster;
+  setBaseMapStyle(raster, options);
+
   /*----------------------------- create map options -------------------------*/
   const map_size = /** @type {ol.size.Size} */ ([800, 400]);
   const view = calculateView(
@@ -457,6 +529,7 @@ export default async (options) => {
     markers: markerStrings,
     loadingMessage: options.loadingMessage,
     lang: options.lang,
+    baseMap: options.baseMap,
   };
   const store = createStore(initialState);
 
@@ -496,11 +569,7 @@ export default async (options) => {
   /*------------------------------- create map -------------------------------*/
   const map = new Map({
     target: munimapEl,
-    layers: [
-      new TileLayer({
-        source: new OSM(),
-      }),
-    ],
+    layers: [raster],
     view,
   });
 
