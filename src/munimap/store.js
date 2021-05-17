@@ -24,7 +24,12 @@ const createReducer = (initialState) => {
         return {
           ...state,
           loadingMessage: action.payload.props.loadingMessage,
-        }
+        };
+      case actions.CHANGE_INVALIDCODES_INFO:
+        return {
+          ...state,
+          invalidCodesInfo: action.payload.invalidCodesInfo,
+        };
       default:
         return state;
     }

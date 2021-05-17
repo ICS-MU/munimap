@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <script src="./munimaplib.js" type="text/javascript"></script>
     <style>
-      #map { width: 800px; height: 400px; }
+      #map { width: 800px; height: 400px; position: relative;}
     </style>
   </head>
   <body>
@@ -14,7 +14,8 @@
     <script type="text/javascript">
       const map_promise = munimap.create({
 	      target: 'map',
-        zoomTo: ['BMA01']
+        zoomTo: ['BMA01'],
+        //markers: ['AZT01']
       });
     </script>
   </body>

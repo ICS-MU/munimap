@@ -1,6 +1,7 @@
 import * as actions from './action.js';
 import * as munimap_assert from './assert.js';
 import * as munimap_building from './building.js';
+import * as munimap_interaction from './interaction.js';
 import * as munimap_lang from './lang.js';
 import * as munimap_load from './load.js';
 import * as munimap_utils from './utils.js';
@@ -336,6 +337,36 @@ const filterInvalidMarkerCodes = (options, markers, invalidMarkerIndexes) => {
 };
 
 /**
+ *
+ * @param {State} state redux state
+ * @param {{
+ *    createInvalidCodesInfo: function,
+ *    map: Map,
+ *    munimapEl: Element,
+ *    infoEl: Element
+ *  }} options options
+ */
+const toggleInvalidCodesInfo = (state, options) => {
+  const {createInvalidCodesInfo, map, munimapEl, infoEl} = options;
+  const {invalidCodes, createDragEl} = state.invalidCodesInfo;
+  if (createDragEl === undefined) {
+    return;
+  }
+
+  if (invalidCodes.length) {
+    createInvalidCodesInfo();
+  } else {
+    const dragEl = document.getElementById('munimap-error');
+    if (dragEl) {
+      dragEl.remove();
+      infoEl.classList.remove('munimap-info-hide');
+    }
+    //re-render map => openlayers remove the error message by re-rendering map
+    createDragEl ? munimap_interaction.createDragEl(munimapEl) : map.render();
+  }
+};
+
+/**
  * @param {Options} options Options
  * @returns {Promise<Map>} initialized map
  */
@@ -407,7 +438,6 @@ export default async (options) => {
     zoomTos: zoomToStrings,
     markers: markerStrings,
     loadingMessage: options.loadingMessage,
-    invalidCodes: invalidMarkerCodes,
   };
   const store = createStore(initialState);
 
@@ -436,19 +466,11 @@ export default async (options) => {
   };
   attach_view_events(view);
 
-  // redux-related
-  const render = () => {
-    timer.stop();
-    const state = store.getState();
-    console.log('state', state);
-    console.log('get_zoomToFeatures', slctr.get_zoomToFeatures(state));
-
-    removeLoadingMessage(state, target);
-  };
-  store.subscribe(render);
-
   const munimapEl = document.createElement('div');
+  const infoEl = document.createElement('div');
   munimapEl.className = 'munimap';
+  infoEl.className = 'ol-popup munimap-info';
+  munimapEl.appendChild(infoEl);
   target.appendChild(munimapEl);
 
   const map = new Map({
@@ -461,11 +483,51 @@ export default async (options) => {
     view,
   });
 
+  let createInvalidCodesInfo;
+  if (invalidMarkerCodes.length) {
+    createInvalidCodesInfo = munimap_interaction.initInvalidCodesInfo(
+      munimapEl,
+      {
+        dispatch: store.dispatch,
+        invalidCodes: invalidMarkerCodes,
+        lang: options.lang,
+      }
+    );
+    infoEl.classList.add('munimap-info-hide');
+  }
+
+  // redux-related
+  const render = () => {
+    timer.stop();
+    const state = store.getState();
+    console.log('state', state);
+    console.log('get_zoomToFeatures', slctr.get_zoomToFeatures(state));
+
+    removeLoadingMessage(state, target);
+    toggleInvalidCodesInfo(state, {
+      createInvalidCodesInfo,
+      map,
+      munimapEl,
+      infoEl,
+    });
+  };
+  store.subscribe(render);
+
   store.dispatch(
     actions.ol_map_initialized({
       loadingMessage: false,
     })
   );
+
+  const handleRenderComplete = () => {
+    store.dispatch(
+      actions.change_invalidcodes_info({
+        invalidCodes: invalidMarkerCodes,
+        createDragEl: invalidMarkerCodes.length > 0,
+      })
+    );
+  };
+  map.once('rendercomplete', handleRenderComplete);
 
   return map;
 };

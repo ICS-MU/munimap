@@ -26,7 +26,10 @@ export const MUNIMAP_PUBTRAN_URL =
  * @property {Array.<string>} zoomTos
  * @property {Array<string>} markers
  * @property {boolean} loadingMessage
- * @property {Array<string>} invalidCodes
+ * @property {{
+ *    invalidCodes: Array<string>,
+ *    createDragEl: boolean
+ *  }} invalidCodesInfo
  */
 
 /**
@@ -40,5 +43,8 @@ export const INITIAL_STATE = {
   zoomTos: [],
   markers: [],
   loadingMessage: true,
-  invalidCodes: [],
+  invalidCodesInfo: {
+    invalidCodes: [],
+    createDragEl: undefined,
+  },
 };
