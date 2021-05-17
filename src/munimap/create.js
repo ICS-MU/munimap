@@ -125,13 +125,11 @@ const calculateView = (options, markers, zoomTos) => {
  */
 const loadOrDecorateMarkers = async (featuresLike, options) => {
   const lang = options.lang;
-  let result;
   const arrPromises = []; // array of promises of features
   const invalidMarkerIndexes = [];
 
   if (!Array.isArray(featuresLike)) {
-    result = Promise.resolve({markers: [], invalidMarkerIndexes: []});
-    return result;
+    return {markers: [], invalidMarkerIndexes: []};
   } else {
     featuresLike.forEach((el) => {
       if (true) {
@@ -155,24 +153,21 @@ const loadOrDecorateMarkers = async (featuresLike, options) => {
         console.log('is optpoi');
       }
     });
-    return new Promise((resolve, reject) => {
-      Promise.all(arrPromises).then((values) => {
-        for (let i = 0; i < values.length; i++) {
-          if (values[i] === 'ERROR') {
-            invalidMarkerIndexes.push(i);
-          }
-        }
 
-        // reduce array of arrays to 1 array
-        values = values.reduce((a, b) => {
-          a = a.concat(b);
-          munimap_utils.removeArrayDuplicates(a);
-          return a;
-        }, []);
-
-        resolve({markers: values, invalidMarkerIndexes});
-      });
+    let markers = await Promise.all(arrPromises);
+    markers.forEach((value, idx) => {
+      if (value === 'ERROR') {
+        invalidMarkerIndexes.push(idx);
+      }
     });
+    // reduce array of arrays to 1 array
+    markers = markers.reduce((a, b) => {
+      a = a.concat(b);
+      munimap_utils.removeArrayDuplicates(a);
+      return a;
+    }, []);
+
+    return {markers, invalidMarkerIndexes};
   }
 };
 
@@ -412,6 +407,7 @@ export default async (options) => {
     options.markers,
     options
   );
+  console.log(markers, invalidMarkerIndexes);
 
   invalidMarkerCodes = invalidMarkerCodes.concat(
     filterInvalidMarkerCodes(options, markers, invalidMarkerIndexes)
