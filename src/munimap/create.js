@@ -371,6 +371,8 @@ export default async (options) => {
       munimap_utils.isString(options.target),
     'Target must be a string!'
   );
+  assertOptions(options);
+
   const target = document.getElementById(options.target);
   options.lang = options.lang || munimap_lang.Abbr.CZECH;
 
@@ -380,8 +382,6 @@ export default async (options) => {
   if (options.loadingMessage) {
     addLoadingMessage(target, options.lang);
   }
-
-  assertOptions(options);
 
   let zoomToStrings;
   let markerStrings;
@@ -407,7 +407,6 @@ export default async (options) => {
     options.markers,
     options
   );
-  console.log(markers, invalidMarkerIndexes);
 
   invalidMarkerCodes = invalidMarkerCodes.concat(
     filterInvalidMarkerCodes(options, markers, invalidMarkerIndexes)
