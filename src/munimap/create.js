@@ -366,6 +366,7 @@ const toggleInvalidCodesInfo = (state, options) => {
  * @returns {Promise<Map>} initialized map
  */
 export default async (options) => {
+  /*------------------------- parse and assert options -----------------------*/
   munimap_assert.assert(
     munimap_utils.isDefAndNotNull(options.target) &&
       munimap_utils.isString(options.target),
@@ -376,6 +377,7 @@ export default async (options) => {
   const target = document.getElementById(options.target);
   options.lang = options.lang || munimap_lang.Abbr.CZECH;
 
+  /*------------------------ check for loading message -----------------------*/
   if (options.loadingMessage === undefined) {
     options.loadingMessage = true;
   }
@@ -383,17 +385,8 @@ export default async (options) => {
     addLoadingMessage(target, options.lang);
   }
 
-  let zoomToStrings;
+  /*-------------------- load markers and get invalid codes ------------------*/
   let markerStrings;
-  if (options.zoomTo && options.zoomTo.length) {
-    zoomToStrings = /** @type {Array.<string>} */ (typeof options.zoomTo ===
-      'string' || options.zoomTo instanceof String
-      ? [options.zoomTo]
-      : options.zoomTo);
-  } else {
-    zoomToStrings = [];
-  }
-
   if (options.markers && options.markers.length) {
     munimap_assert.assertArray(options.markers);
     munimap_utils.removeArrayDuplicates(options.markers);
@@ -407,16 +400,27 @@ export default async (options) => {
     options.markers,
     options
   );
-
   invalidMarkerCodes = invalidMarkerCodes.concat(
     filterInvalidMarkerCodes(options, markers, invalidMarkerIndexes)
   );
   invalidMarkerCodes.sort();
   munimap_assert.assertMarkerFeatures(markers);
 
+  /*----------------------------- load zoomTo features -----------------------*/
+  let zoomToStrings;
+  if (options.zoomTo && options.zoomTo.length) {
+    zoomToStrings = /** @type {Array.<string>} */ (typeof options.zoomTo ===
+      'string' || options.zoomTo instanceof String
+      ? [options.zoomTo]
+      : options.zoomTo);
+  } else {
+    zoomToStrings = [];
+  }
   const zoomTos = zoomToStrings.length
     ? await munimap_load.featuresFromParam(zoomToStrings)
     : [];
+
+  /*----------------------------- create map options -------------------------*/
   const map_size = /** @type {ol.size.Size} */ ([800, 400]);
   const view = calculateView(
     options,
@@ -424,7 +428,7 @@ export default async (options) => {
     zoomTos
   );
 
-  // redux-related
+  /*----------------------------- create redux store -------------------------*/
   const initialState = {
     ...INITIAL_STATE,
     map_size,
@@ -437,7 +441,7 @@ export default async (options) => {
   };
   const store = createStore(initialState);
 
-  // map-related
+  /*--------------------------- create view listeners ------------------------*/
   const timer = new Timer();
   const handleViewChange = () => {
     timer.start(0.1);
@@ -462,6 +466,7 @@ export default async (options) => {
   };
   attach_view_events(view);
 
+  /*-------------------------- create initial elements -----------------------*/
   const munimapEl = document.createElement('div');
   const infoEl = document.createElement('div');
   munimapEl.className = 'munimap';
@@ -469,6 +474,7 @@ export default async (options) => {
   munimapEl.appendChild(infoEl);
   target.appendChild(munimapEl);
 
+  /*------------------------------- create map -------------------------------*/
   const map = new Map({
     target: munimapEl,
     layers: [
@@ -479,6 +485,7 @@ export default async (options) => {
     view,
   });
 
+  /*------------------------- create invalid codes info ----------------------*/
   let createInvalidCodesInfo;
   if (invalidMarkerCodes.length) {
     createInvalidCodesInfo = munimap_interaction.initInvalidCodesInfo(
@@ -492,7 +499,7 @@ export default async (options) => {
     infoEl.classList.add('munimap-info-hide');
   }
 
-  // redux-related
+  /*------------- create redux render function and subscribtion --------------*/
   const render = () => {
     timer.stop();
     const state = store.getState();
@@ -509,6 +516,7 @@ export default async (options) => {
   };
   store.subscribe(render);
 
+  /*----------------------------- added dispatchers --------------------------*/
   store.dispatch(
     actions.ol_map_initialized({
       loadingMessage: false,
