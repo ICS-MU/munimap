@@ -1,3 +1,4 @@
+import '../css/munimaplib.css';
 import 'ol/ol.css';
 import create from './create.js';
 import reset from './reset.js';
