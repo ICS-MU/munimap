@@ -1,4 +1,6 @@
+import PACKAGE from './package.json';
 import path from 'path';
+import webpack from 'webpack';
 
 export default {
   entry: [
@@ -31,7 +33,27 @@ export default {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'fonts/',
+            },
+          },
+        ],
+      },
     ],
   },
   mode: 'development',
+  plugins: [
+    new webpack.DefinePlugin({
+      PRODUCTION: JSON.stringify(false),
+      VERSION: JSON.stringify(PACKAGE.VERSION),
+      // APP_PATH: '/',
+      // PROD_DOMAIN: 'localhost'
+    }),
+  ],
 };
