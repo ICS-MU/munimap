@@ -438,6 +438,7 @@ export default async (options) => {
     zoomTos: zoomToStrings,
     markers: markerStrings,
     loadingMessage: options.loadingMessage,
+    lang: options.lang,
   };
   const store = createStore(initialState);
 

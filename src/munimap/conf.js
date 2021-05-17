@@ -30,6 +30,7 @@ export const MUNIMAP_PUBTRAN_URL =
  *    invalidCodes: Array<string>,
  *    createDragEl: boolean
  *  }} invalidCodesInfo
+ * @property {string} lang
  */
 
 /**
@@ -47,4 +48,5 @@ export const INITIAL_STATE = {
     invalidCodes: [],
     createDragEl: undefined,
   },
+  lang: 'cs',
 };
