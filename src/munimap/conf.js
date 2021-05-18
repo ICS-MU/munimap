@@ -35,17 +35,6 @@ export const MUNIMAP_PUBTRAN_URL =
  */
 
 /**
- *
- * @enum {string}
- */
-export const BASEMAPS = {
-  OSM: 'osm',
-  OSM_BW: 'osm-bw',
-  ARCGIS: 'arcgis',
-  ARCGIS_BW: 'arcgis-bw',
-};
-
-/**
  * @type {State}
  */
 export const INITIAL_STATE = {
@@ -61,5 +50,5 @@ export const INITIAL_STATE = {
     createDragEl: undefined,
   },
   lang: 'cs',
-  baseMap: BASEMAPS.ARCGIS_BW,
+  baseMap: 'arcgis-bw',
 };

@@ -13,7 +13,8 @@ import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import Timer from 'timer.js';
 import XYZ from 'ol/source/XYZ';
-import {BASEMAPS, INITIAL_STATE} from './conf.js';
+import {BASEMAPS} from './basemap.js';
+import {INITIAL_STATE} from './conf.js';
 import {Map, View} from 'ol';
 import {RESOLUTION_COLOR} from './style.js';
 import {createStore} from './store.js';
@@ -23,10 +24,13 @@ import {ofFeatures as extentOfFeatures} from './extent.js';
 /**
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
  * @typedef {import("ol/layer").Vector} ol.layer.Vector
+ * @typedef {import("ol/layer/Base").default} ol.layer.BaseLayer
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/size").Size} ol.size.Size
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("./conf.js").State} State
+ * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
+ * @typedef {import("ol/Collection").default} ol.Collection
  */
 
 /**
@@ -366,9 +370,9 @@ const toggleInvalidCodesInfo = (state, options) => {
 
 /**
  * @param {TileLayer} raster raster
- * @param {Options} options options
+ * @param {string} baseMap options
  */
-const setBaseMapStyle = (raster, options) => {
+const setBaseMapStyle = (raster, baseMap) => {
   raster.on('prerender', (evt) => {
     const ctx = evt.context;
     ctx.fillStyle = '#dddddd';
@@ -382,8 +386,7 @@ const setBaseMapStyle = (raster, options) => {
     raster.setOpacity(resColor.opacity);
   });
   if (
-    (options.baseMap === BASEMAPS.OSM_BW ||
-      options.baseMap === BASEMAPS.ARCGIS_BW) &&
+    (baseMap === BASEMAPS.OSM_BW || baseMap === BASEMAPS.ARCGIS_BW) &&
     !munimap_utils.isUserAgentIE()
   ) {
     raster.on('postrender', (evt) => {
@@ -393,6 +396,103 @@ const setBaseMapStyle = (raster, options) => {
       ctx.fillStyle = '#000000';
       ctx.globalCompositeOperation = 'source-over';
     });
+  }
+};
+
+/**
+ * @param {string} basemapId basemap id
+ * @param {string=} lang lang
+ * @return {TileLayer} layer
+ */
+const createTileLayer = (basemapId, lang) => {
+  let source;
+
+  if (basemapId === BASEMAPS.ARCGIS || basemapId === BASEMAPS.ARCGIS_BW) {
+    const esriAttribution =
+      '© <a href="http://help.arcgis.com/' +
+      'en/communitymaps/pdf/WorldTopographicMap_Contributors.pdf"' +
+      ' target="_blank">Esri</a>';
+
+    source = new XYZ({
+      url:
+        'https://server.arcgisonline.com/ArcGIS/rest/services/' +
+        'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+      attributions: [esriAttribution],
+      crossOrigin: null,
+      maxZoom: 19,
+    });
+  } else if (basemapId === BASEMAPS.OSM || basemapId === BASEMAPS.OSM_BW) {
+    munimap_assert.assert(
+      munimap_utils.isDefAndNotNull(lang),
+      'Language must be set.'
+    );
+    const osmAttribution = munimap_lang.getMsg(
+      munimap_lang.Translations.OSM_ATTRIBUTION_HTML,
+      lang
+    );
+
+    source = new OSM({
+      attributions: [osmAttribution],
+      crossOrigin: null,
+      maxZoom: 18,
+    });
+  }
+
+  const layer = new TileLayer({source});
+  layer.set('id', basemapId);
+  setBaseMapStyle(layer, basemapId);
+  return layer;
+};
+
+/**
+ * @param {string} basemapId basemapId
+ * @param {ol.Collection} layers layers
+ * @param {string} lang lang
+ */
+const changeBaseMapToOSM = (basemapId, layers, lang) => {
+  const baseMapIndex = layers
+    .getArray()
+    .findIndex((layer) => layer instanceof TileLayer);
+  const raster = createTileLayer(basemapId, lang);
+  layers.setAt(baseMapIndex, raster);
+};
+
+/**
+ * @param {string} basemapId basemapId
+ * @param {ol.Collection} layers layers
+ */
+const changeBaseMapToArcGIS = (basemapId, layers) => {
+  const baseMapIndex = layers
+    .getArray()
+    .findIndex((layer) => layer instanceof TileLayer);
+  const raster = createTileLayer(basemapId);
+  layers.setAt(baseMapIndex, raster);
+};
+
+/**
+ * @param {State} state redux state
+ * @param {ol.Collection} layers layers
+ */
+const changeBaseMap = (state, layers) => {
+  const basemapId = state.baseMap;
+  const currentBasemapId = layers
+    .getArray()
+    .find((layer) => layer instanceof TileLayer)
+    .get('id');
+  if (basemapId === currentBasemapId) {
+    return;
+  }
+
+  if (
+    state.baseMap === BASEMAPS.ARCGIS ||
+    state.baseMap === BASEMAPS.ARCGIS_BW
+  ) {
+    changeBaseMapToArcGIS(state.baseMap, layers);
+  } else if (
+    state.baseMap === BASEMAPS.OSM ||
+    state.baseMap === BASEMAPS.OSM_BW
+  ) {
+    changeBaseMapToOSM(state.baseMap, layers, state.lang);
   }
 };
 
@@ -456,14 +556,6 @@ export default async (options) => {
     : [];
 
   /*-------------------------------- atrributions ----------------------------*/
-  const esriAttribution = '© <a href="http://help.arcgis.com/' +
-    'en/communitymaps/pdf/WorldTopographicMap_Contributors.pdf"' +
-    ' target="_blank">Esri</a>';
-
-  const osmAttribution = munimap_lang.getMsg(
-    munimap_lang.Translations.OSM_ATTRIBUTION_HTML,
-    options.lang
-  );
   const muAttribution = munimap_lang.getMsg(
     munimap_lang.Translations.MU_ATTRIBUTION_HTML,
     options.lang
@@ -475,41 +567,11 @@ export default async (options) => {
   const muAttributions = [munimapAttribution, muAttribution];
 
   /*------------------------------- define basemap ---------------------------*/
-  let raster;
-  let currentBaseMap;
-
   if (!munimap_utils.isDef(options.baseMap)) {
     options.baseMap = BASEMAPS.ARCGIS_BW;
   }
-
-  switch (options.baseMap) {
-    case BASEMAPS.ARCGIS:
-    case BASEMAPS.ARCGIS_BW:
-      currentBaseMap = 'ArcGIS';
-      raster = new TileLayer({
-        source: new XYZ({
-          url: 'https://server.arcgisonline.com/ArcGIS/rest/services/' +
-            'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
-          attributions: esriAttribution,
-          crossOrigin: null,
-          maxZoom: 19,
-        }),
-      });
-      break;
-    case BASEMAPS.OSM:
-    case BASEMAPS.OSM_BW:
-    default:
-      currentBaseMap = 'OSM';
-      raster = new TileLayer({
-        source: new OSM({
-          attributions: [osmAttribution],
-          crossOrigin: null,
-        })
-      });
-  }
-
+  const raster = createTileLayer(options.baseMap, options.lang);
   const defaultBaseMap = raster;
-  setBaseMapStyle(raster, options);
 
   /*----------------------------- create map options -------------------------*/
   const map_size = /** @type {ol.size.Size} */ ([800, 400]);
@@ -601,6 +663,7 @@ export default async (options) => {
       munimapEl,
       infoEl,
     });
+    changeBaseMap(state, map.getLayers());
   };
   store.subscribe(render);
 
@@ -620,6 +683,18 @@ export default async (options) => {
     );
   };
   map.once('rendercomplete', handleRenderComplete);
+
+  const handleMoveEnd = (evt) => {
+    // change arcgis basemap in Antarctica
+    store.dispatch(
+      actions.ol_map_moveend({
+        defaultBaseMap: defaultBaseMap.get('id'),
+        center: view.getCenter(),
+        resolution: view.getResolution(),
+      })
+    );
+  };
+  map.on('moveend', handleMoveEnd);
 
   return map;
 };

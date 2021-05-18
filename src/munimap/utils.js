@@ -140,6 +140,16 @@ const isUserAgentIE = () => {
   return msie > 0 || trident > 0;
 };
 
+/**
+ * @param {number} x x
+ * @param {number} min min
+ * @param {number} max max
+ * @return {boolean} inRange
+ */
+const inRange = (x, min, max) => {
+  return x >= min && x <= max;
+};
+
 export {
   removeArrayDuplicates,
   isString,
@@ -154,4 +164,5 @@ export {
   typeOf,
   isObject,
   isUserAgentIE,
+  inRange,
 };

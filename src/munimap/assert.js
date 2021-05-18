@@ -7,7 +7,7 @@
 import * as munimap_utils from './utils.js';
 import Feature from 'ol/Feature';
 import {Abbr} from './lang.js';
-import {BASEMAPS} from './conf.js';
+import {BASEMAPS} from './basemap.js';
 import {isCodeOrLikeExpr as building_isCodeOrLikeExpr} from './building.js';
 import {assertSuitable as marker_custom_assertSuitable} from './markerCustom.js';
 import { ol } from './index.js';

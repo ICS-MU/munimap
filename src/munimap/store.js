@@ -1,5 +1,7 @@
 import * as actions from './action.js';
+import * as munimap_utils from './utils.js';
 import * as redux from 'redux';
+import {getPairedBasemap, isArcGISBasemap, isOSMBasemap} from './basemap.js';
 
 /**
  * @typedef {import("./conf.js").State} State
@@ -29,6 +31,37 @@ const createReducer = (initialState) => {
         return {
           ...state,
           invalidCodesInfo: action.payload.invalidCodesInfo,
+        };
+      case actions.OL_MAP_MOVEEND:
+        //restriction to zoom 12 and latitude 60°N/S
+        const inSafeLatLonRange = munimap_utils.inRange(
+          action.payload.center[1],
+          -8399737.89, //60° N
+          8399737.89 //60° S
+        );
+        const isSafeResolutionRange = munimap_utils.inRange(
+          action.payload.resolution,
+          38.21851414258813,
+          Infinity
+        );
+
+        const switchToOSM =
+          isArcGISBasemap(state.baseMap) &&
+          !isSafeResolutionRange &&
+          !inSafeLatLonRange;
+        const switchToArcGIS =
+          isOSMBasemap(state.baseMap) &&
+          action.payload.defaultBaseMap !== state.baseMap &&
+          (isSafeResolutionRange || inSafeLatLonRange);
+
+        const baseMapId =
+          switchToOSM || switchToArcGIS
+            ? getPairedBasemap(state.baseMap)
+            : state.baseMap;
+
+        return {
+          ...state,
+          baseMap: baseMapId,
         };
       default:
         return state;
