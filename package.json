@@ -44,6 +44,7 @@
   "dependencies": {
     "ol": "^6.5.0",
     "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "timer.js": "^1.0.4"
   },

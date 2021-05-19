@@ -1,6 +1,8 @@
 import * as actions from './action.js';
+import * as munimap_assert from './assert.js';
 import * as munimap_utils from './utils.js';
 import * as redux from 'redux';
+import thunkMiddleware from 'redux-thunk';
 import {getPairedBasemap, isArcGISBasemap, isOSMBasemap} from './basemap.js';
 
 /**
@@ -14,7 +16,23 @@ import {getPairedBasemap, isArcGISBasemap, isOSMBasemap} from './basemap.js';
  */
 const createReducer = (initialState) => {
   return (state = initialState, action) => {
+    console.log('action.type', action.type);
     switch (action.type) {
+      case actions.MARKERS_LOADED:
+        return {
+          ...state,
+          markersTimestamp: Date.now(),
+        };
+      case actions.ZOOMTO_LOADED:
+        return {
+          ...state,
+          zoomToTimestamp: Date.now(),
+        };
+      case actions.OL_MAP_RENDERED:
+        return {
+          ...state,
+          map_size: action.payload.size,
+        };
       case actions.OL_MAP_VIEW_CHANGE:
         return {
           ...state,
@@ -80,7 +98,10 @@ export const createStore = (initialState) => {
   const store = redux.createStore(
     reducer,
     initialState,
-    w.__REDUX_DEVTOOLS_EXTENSION__ && w.__REDUX_DEVTOOLS_EXTENSION__()
+    redux.compose(
+      redux.applyMiddleware(thunkMiddleware),
+      w.__REDUX_DEVTOOLS_EXTENSION__ && w.__REDUX_DEVTOOLS_EXTENSION__()
+    )
   );
   return store;
 };

@@ -130,7 +130,7 @@ const calculateView = (options, markers, zoomTos) => {
  *    invalidMarkerIndexes: Array<number>,
  *  }>} promise resolving with markers
  */
-const loadOrDecorateMarkers = async (featuresLike, options) => {
+export const loadOrDecorateMarkers = async (featuresLike, options) => {
   const lang = options.lang;
   const arrPromises = []; // array of promises of features
   const invalidMarkerIndexes = [];
@@ -222,17 +222,26 @@ const addLoadingMessage = (target, lang) => {
 };
 
 /**
- * @param {State} state Redux state
  * @param {Element} target target element
  */
-const removeLoadingMessage = (state, target) => {
+const removeLoadingMessage = (target) => {
   const id = target.id.toString();
   const messageEl = document.getElementById(`message_${id}`);
 
-  if (!state.loadingMessage && !!messageEl) {
+  if (messageEl) {
     document.getElementById(`message_${id}`).remove();
     document.getElementById(`message_${id}_style`).remove();
   }
+};
+
+/**
+ * 
+ * @param {boolean} add whether to add or remove
+ * @param {Element} target target element
+ * @param {string} lang language
+ */
+const toggleLoadingMessage = (add, target, lang) => {
+  add ? addLoadingMessage(target, lang) : removeLoadingMessage(target);
 };
 
 /**
@@ -500,201 +509,169 @@ const changeBaseMap = (state, layers) => {
  * @param {Options} options Options
  * @returns {Promise<Map>} initialized map
  */
-export default async (options) => {
-  /*------------------------- parse and assert options -----------------------*/
-  munimap_assert.assert(
-    munimap_utils.isDefAndNotNull(options.target) &&
-      munimap_utils.isString(options.target),
-    'Target must be a string!'
-  );
-  assertOptions(options);
-
-  const target = document.getElementById(options.target);
-  options.lang = options.lang || munimap_lang.Abbr.CZECH;
-
-  /*------------------------ check for loading message -----------------------*/
-  if (options.loadingMessage === undefined) {
-    options.loadingMessage = true;
-  }
-  if (options.loadingMessage) {
-    addLoadingMessage(target, options.lang);
-  }
-
-  /*-------------------- load markers and get invalid codes ------------------*/
-  let markerStrings;
-  if (options.markers && options.markers.length) {
-    munimap_assert.assertArray(options.markers);
-    munimap_utils.removeArrayDuplicates(options.markers);
-    markerStrings = /** @type {Array.<string>} */ (options.markers);
-  } else {
-    markerStrings = /** @type {Array.<string>} */ ([]);
-  }
-
-  let invalidMarkerCodes = filterInvalidCodeExpressions(options.markers);
-  const {markers, invalidMarkerIndexes} = await loadOrDecorateMarkers(
-    options.markers,
-    options
-  );
-  invalidMarkerCodes = invalidMarkerCodes.concat(
-    filterInvalidMarkerCodes(options, markers, invalidMarkerIndexes)
-  );
-  invalidMarkerCodes.sort();
-  munimap_assert.assertMarkerFeatures(markers);
-
-  /*----------------------------- load zoomTo features -----------------------*/
-  let zoomToStrings;
-  if (options.zoomTo && options.zoomTo.length) {
-    zoomToStrings = /** @type {Array.<string>} */ (typeof options.zoomTo ===
-      'string' || options.zoomTo instanceof String
-      ? [options.zoomTo]
-      : options.zoomTo);
-  } else {
-    zoomToStrings = [];
-  }
-  const zoomTos = zoomToStrings.length
-    ? await munimap_load.featuresFromParam(zoomToStrings)
-    : [];
-
-  /*-------------------------------- atrributions ----------------------------*/
-  const muAttribution = munimap_lang.getMsg(
-    munimap_lang.Translations.MU_ATTRIBUTION_HTML,
-    options.lang
-  );
-  const munimapAttribution = munimap_lang.getMsg(
-    munimap_lang.Translations.MUNIMAP_ATTRIBUTION_HTML,
-    options.lang
-  );
-  const muAttributions = [munimapAttribution, muAttribution];
-
-  /*------------------------------- define basemap ---------------------------*/
-  if (!munimap_utils.isDef(options.baseMap)) {
-    options.baseMap = BASEMAPS.ARCGIS_BW;
-  }
-  const raster = createTileLayer(options.baseMap, options.lang);
-  const defaultBaseMap = raster;
-
-  /*----------------------------- create map options -------------------------*/
-  const map_size = /** @type {ol.size.Size} */ ([800, 400]);
-  const view = calculateView(
-    options,
-    /**@type {Array<ol.Feature>}*/ (markers),
-    zoomTos
-  );
-
-  /*----------------------------- create redux store -------------------------*/
-  const initialState = {
-    ...INITIAL_STATE,
-    map_size,
-    center: view.getCenter(),
-    zoom: view.getZoom(),
-    zoomTos: zoomToStrings,
-    markers: markerStrings,
-    loadingMessage: options.loadingMessage,
-    lang: options.lang,
-    baseMap: options.baseMap,
-  };
-  const store = createStore(initialState);
-
-  /*--------------------------- create view listeners ------------------------*/
-  const timer = new Timer();
-  const handleViewChange = () => {
-    timer.start(0.1);
-  };
-  const handleTimerEnd = () => {
-    store.dispatch(
-      actions.ol_map_view_change({
-        center: view.getCenter(),
-        center_proj: 'EPSG:3857',
-        zoom: view.getZoom(),
-      })
+export default (options) => {
+  return new Promise((resolve, reject) => {
+    /*------------------------- parse and assert options -----------------------*/
+    munimap_assert.assert(
+      munimap_utils.isDefAndNotNull(options.target) &&
+        munimap_utils.isString(options.target),
+      'Target must be a string!'
     );
-  };
-  timer.on('end', handleTimerEnd);
-  const attach_view_events = (view) => {
-    view.on('change:center', handleViewChange);
-    view.on('change:resolution', handleViewChange);
-  };
-  const detach_view_events = (view) => {
-    view.un('change:center', handleViewChange);
-    view.un('change:resolution', handleViewChange);
-  };
-  attach_view_events(view);
+    assertOptions(options);
 
-  /*-------------------------- create initial elements -----------------------*/
-  const munimapEl = document.createElement('div');
-  const infoEl = document.createElement('div');
-  munimapEl.className = 'munimap';
-  infoEl.className = 'ol-popup munimap-info';
-  munimapEl.appendChild(infoEl);
-  target.appendChild(munimapEl);
+    /*-------------------------------- atrributions ----------------------------*/
+    /*const muAttribution = munimap_lang.getMsg(
+      munimap_lang.Translations.MU_ATTRIBUTION_HTML,
+      options.lang
+    );
+    const munimapAttribution = munimap_lang.getMsg(
+      munimap_lang.Translations.MUNIMAP_ATTRIBUTION_HTML,
+      options.lang
+    );
+    const muAttributions = [munimapAttribution, muAttribution];*/
 
-  /*------------------------------- create map -------------------------------*/
-  const map = new Map({
-    target: munimapEl,
-    layers: [raster],
-    view,
-  });
+    /*------------------------------- define basemap ---------------------------*/
+    if (!munimap_utils.isDef(options.baseMap)) {
+      options.baseMap = BASEMAPS.ARCGIS_BW;
+    }
+    const raster = createTileLayer(options.baseMap, options.lang);
+    const defaultBaseMap = raster;
 
-  /*------------------------- create invalid codes info ----------------------*/
-  let createInvalidCodesInfo;
-  if (invalidMarkerCodes.length) {
-    createInvalidCodesInfo = munimap_interaction.initInvalidCodesInfo(
-      munimapEl,
-      {
-        dispatch: store.dispatch,
-        invalidCodes: invalidMarkerCodes,
-        lang: options.lang,
+    /*----------------------------- create redux store -------------------------*/
+    const initialState = {
+      ...INITIAL_STATE,
+      loadingMessage: options.loadingMessage,
+      lang: options.lang,
+      baseMap: options.baseMap,
+      requiredOpts: {
+        target: options.target,
+        markers: options.markers === undefined ? [] : options.markers,
+        zoomTo: options.zoomTo === undefined ? [] : options.zoomTo,
+        lang: options.lang || munimap_lang.Abbr.CZECH,
+        loadingMessage:
+          options.loadingMessage === undefined ? true : options.loadingMessage,
+      },
+    };
+    const store = createStore(initialState);
+
+    /*------------------------- create invalid codes info ----------------------*/
+    /*let createInvalidCodesInfo;
+    if (invalidMarkerCodes.length) {
+      createInvalidCodesInfo = munimap_interaction.initInvalidCodesInfo(
+        munimapEl,
+        {
+          dispatch: store.dispatch,
+          invalidCodes: invalidMarkerCodes,
+          lang: options.lang,
+        }
+      );
+      infoEl.classList.add('munimap-info-hide');
+    }*/
+
+    let mapPromise;
+    let unsubscribeInit;
+
+    /**
+     * @param {Map} map map
+     * @return {Promise<Map>} initialized map
+     */
+    const mapPromiseFunction = (map) => {
+      return new Promise((resolve, reject) => {
+        resolve(map);
+      });
+    };
+
+    /*------------- create redux render function and subscribtion --------------*/
+    const render = () => {
+      const state = store.getState();
+
+      const target = document.getElementById(options.target);
+
+      let munimapEl = target.getElementsByClassName('munimap')[0];
+      if (munimapEl === undefined) {
+        /*------------------------ create initial elements ---------------------*/
+        munimapEl = document.createElement('div');
+        const infoEl = document.createElement('div');
+        munimapEl.className = 'munimap';
+        infoEl.className = 'ol-popup munimap-info';
+        munimapEl.appendChild(infoEl);
+        target.appendChild(munimapEl);
       }
-    );
-    infoEl.classList.add('munimap-info-hide');
-  }
 
-  /*------------- create redux render function and subscribtion --------------*/
-  const render = () => {
-    timer.stop();
-    const state = store.getState();
-    console.log('state', state);
-    console.log('get_zoomToFeatures', slctr.get_zoomToFeatures(state));
+      const addMsg = slctr.toggleLoadingMessage(state);
+      if (addMsg !== null) {
+        toggleLoadingMessage(addMsg, munimapEl, state.requiredOpts.lang);
+      }
 
-    removeLoadingMessage(state, target);
-    toggleInvalidCodesInfo(state, {
-      createInvalidCodesInfo,
-      map,
-      munimapEl,
-      infoEl,
-    });
-    changeBaseMap(state, map.getLayers());
-  };
-  store.subscribe(render);
+      if (state.markersTimestamp === null) {
+        store.dispatch(actions.load_markers());
+        return;
+      }
+      if (state.zoomToTimestamp === null) {
+        store.dispatch(actions.load_zoomTo());
+        return;
+      }
+      console.log('state', state);
 
-  /*----------------------------- added dispatchers --------------------------*/
-  store.dispatch(
-    actions.ol_map_initialized({
-      loadingMessage: false,
-    })
-  );
+      // toggleInvalidCodesInfo(state, {
+      //   createInvalidCodesInfo,
+      //   map,
+      //   munimapEl,
+      //   infoEl,
+      // });
+      // changeBaseMap(state, map.getLayers());
 
-  const handleRenderComplete = () => {
-    store.dispatch(
-      actions.change_invalidcodes_info({
-        invalidCodes: invalidMarkerCodes,
-        createDragEl: invalidMarkerCodes.length > 0,
-      })
-    );
-  };
-  map.once('rendercomplete', handleRenderComplete);
+      /*------------------------------ create map ------------------------------*/
+      if (state.map_size === null) {
+        const markers = slctr.getInitMarkers(state);
+        const zoomTos = slctr.getInitZoomTos(state);
+        const view = calculateView(state.requiredOpts, markers, zoomTos);
+        const map = new Map({
+          target: /**@type {HTMLElement}*/ (munimapEl),
+          layers: [raster],
+          view,
+        });
+        mapPromise = mapPromiseFunction(map);
 
-  const handleMoveEnd = (evt) => {
-    // change arcgis basemap in Antarctica
-    store.dispatch(
-      actions.ol_map_moveend({
-        defaultBaseMap: defaultBaseMap.get('id'),
-        center: view.getCenter(),
-        resolution: view.getResolution(),
-      })
-    );
-  };
-  map.on('moveend', handleMoveEnd);
+        map.once('rendercomplete', () => {
+          store.dispatch(actions.map_rendered(map.getSize()));
+        });
+      }
+    };
 
-  return map;
+    const returnFunction = () => {
+      const state = store.getState();
+      if (state.map_size !== null) {
+        unsubscribeInit();
+        resolve(mapPromise);
+      }
+    };
+    render();
+    store.subscribe(render);
+    unsubscribeInit = store.subscribe(returnFunction);
+
+    /*----------------------------- added dispatchers --------------------------*/
+
+    /*const handleRenderComplete = () => {
+      store.dispatch(
+        actions.change_invalidcodes_info({
+          invalidCodes: invalidMarkerCodes,
+          createDragEl: invalidMarkerCodes.length > 0,
+        })
+      );
+    };*/
+    // map.once('rendercomplete', handleRenderComplete);
+
+    /*const handleMoveEnd = (evt) => {
+      // change arcgis basemap in Antarctica
+      store.dispatch(
+        actions.ol_map_moveend({
+          defaultBaseMap: defaultBaseMap.get('id'),
+          center: view.getCenter(),
+          resolution: view.getResolution(),
+        })
+      );
+    };*/
+    // map.on('moveend', handleMoveEnd);
+  });
 };
