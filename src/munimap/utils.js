@@ -11,66 +11,65 @@ const removeArrayDuplicates = (arr) => {
 };
 
 /**
- * @param {?} val value
+ * @param {?} value value
  * @return {boolean} isString
  */
-const isString = (val) => {
-  return typeof val === 'string';
+const isString = (value) => {
+  return typeof value === 'string';
 };
 
 /**
- * Returns true if the specified value is a number.
- * @param {?} val Variable to test.
+ * Returns true if the value is a number.
+ * @param {?} value Variable to test.
  * @return {boolean} Whether variable is a number.
  */
-const isNumber = (val) => {
-  return typeof val === 'number';
+const isNumber = (value) => {
+  return typeof value === 'number';
 };
 
 /**
- * Returns true if the specified value is not undefined.
+ * Returns true if the value is not undefined.
  *
- * @param {?} val Variable to test.
+ * @param {?} value Variable to test.
  * @return {boolean} Whether variable is defined.
  */
-const isDef = (val) => {
-  return val !== undefined;
+const isDef = (value) => {
+  return value !== undefined;
 };
 
 /**
- * Returns true if the specified value is defined and not null.
- * @param {?} val Variable to test.
+ * Returns true if the value is defined and not null.
+ * @param {?} value Variable to test.
  * @return {boolean} Whether variable is defined and not null.
  */
-const isDefAndNotNull = (val) => {
-  //undefined == null.
-  return val != null;
+const isDefAndNotNull = (value) => {
+  return value !== undefined && value !== null;
 };
 
 /**
- * Returns true if the specified value is an array.
- * @param {?} val Variable to test.
+ * Returns true if the value is an array.
+ * @param {?} value Variable to test.
  * @return {boolean} Whether variable is an array.
  */
-const isArray = (val) => {
-  return Array.isArray(val);
+const isArray = (value) => {
+  return Array.isArray(value);
 };
 
 /**
- * Returns true if the specified value is a boolean.
- * @param {?} val Variable to test.
+ * Returns true if the value is a boolean.
+ * @param {?} value Variable to test.
  * @return {boolean} Whether variable is boolean.
  */
-const isBoolean = (val) => {
-  return typeof val === 'boolean';
+const isBoolean = (value) => {
+  return typeof value === 'boolean';
 };
 
 /**
- * @param {?} val Variable to test
+ * @param {?} value Variable to test
  * @return {boolean} Whether variable is function.
  */
-const isFunction = (val) => {
-  return typeof val === 'function';
+const isFunction = (value) => {
+  return typeof value === 'function';
 };
 
 /**
@@ -106,27 +105,27 @@ const arrayEquals = (arr1, arr2) => {
 };
 
 /**
- * @param {*} val value
+ * @param {*} value value
  * @return {string} result type
  */
-const typeOf = (val) => {
-  if (isArray(val)) {
+const typeOf = (value) => {
+  if (isArray(value)) {
     return 'array';
   }
-  if (val === null) {
+  if (value === null) {
     return 'null';
   }
 
-  return typeof val;
+  return typeof value;
 };
 
 /**
- * Returns true if the specified value is an object (incl. Arrays and functions).
- * @param {*} val value
+ * Returns true if the value is an object (incl. Arrays and functions).
+ * @param {*} value value
  * @return {boolean} isObject
  */
-const isObject = (val) => {
-  return Object(val) === val;
+const isObject = (value) => {
+  return Object(value) === value;
 };
 
 /**
