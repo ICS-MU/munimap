@@ -370,11 +370,6 @@ const changeBaseMap = (basemapLayer, map) => {
 export default (options) => {
   return new Promise((resolve, reject) => {
     /*------------------------- parse and assert options -----------------------*/
-    munimap_assert.assert(
-      munimap_utils.isDefAndNotNull(options.target) &&
-        munimap_utils.isString(options.target),
-      'Target must be a string!'
-    );
     assertOptions(options);
 
     /*----------------------------- create redux store -------------------------*/
@@ -393,19 +388,8 @@ export default (options) => {
     };
     const store = createStore(initialState);
 
-    let mapPromise;
     let unsubscribeInit;
     let map;
-
-    /**
-     * @param {Map} map map
-     * @return {Promise<Map>} initialized map
-     */
-    const mapPromiseFunction = (map) => {
-      return new Promise((resolve, reject) => {
-        resolve(map);
-      });
-    };
 
     /*------------- create redux render function and subscribtion --------------*/
     const render = () => {
@@ -451,8 +435,6 @@ export default (options) => {
           view,
         });
 
-        mapPromise = mapPromiseFunction(map);
-
         if (invalidCodes) {
           const opts = {map, invalidCodes, lang: state.requiredOpts.lang};
           createInvalidCodesInfo = munimap_interaction.initInvalidCodesInfo(
@@ -490,7 +472,7 @@ export default (options) => {
       const state = store.getState();
       if (state.map_size !== null) {
         unsubscribeInit();
-        resolve(mapPromise);
+        resolve(map);
       }
     };
     render();
