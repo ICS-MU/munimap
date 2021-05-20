@@ -281,73 +281,6 @@ const assertOptions = (options) => {
 };
 
 /**
- * Check the options and remove invalid values.
- * @param {Array.<string>|Array.<ol.Feature>|undefined} featuresLike featuresLike
- * @return {Array.<string>} an array of codes in wrong text format
- */
-const filterInvalidCodeExpressions = (featuresLike) => {
-  const invalidCodes = [];
-  const indexesOfInvalidCodes = [];
-
-  if (featuresLike) {
-    featuresLike.forEach((featureLike, index) => {
-      if (munimap_utils.isString(featureLike)) {
-        if (
-          !munimap_building.isCodeOrLikeExpr(featureLike)
-          /*(munimap.building.isCodeOrLikeExpr(featuresLike[m]) === false) &&
-        (munimap.room.isCodeOrLikeExpr(featuresLike[m]) === false) &&
-        (munimap.door.isCodeOrLikeExpr(featuresLike[m]) === false) &&
-        (munimap.optpoi.isCtgUid(featuresLike[m]) === false) &&
-        (featuresLike[m] instanceof ol.Feature === false))*/
-        ) {
-          invalidCodes.push(featureLike);
-          indexesOfInvalidCodes.push(index);
-        }
-      }
-    });
-    indexesOfInvalidCodes.reverse();
-    for (let n = 0; n < invalidCodes.length; n++) {
-      featuresLike.splice(indexesOfInvalidCodes[n], 1);
-    }
-  }
-  return invalidCodes;
-};
-
-/**
- * 
- * @param {Options} options opts
- * @param {Array<ol.Feature|string>} markers markers
- * @param {Array<number>} invalidMarkerIndexes idxs
- * @return {Array<string>} invalid codes
- */
-const filterInvalidMarkerCodes = (options, markers, invalidMarkerIndexes) => {
-  const invalidMarkerCodes = [];
-  const invalidFeaturesIndexes = [];
-
-  markers.forEach((feature, idx) => {
-    if (feature === 'ERROR') {
-      invalidFeaturesIndexes.push(idx);
-    }
-  });
-
-  invalidFeaturesIndexes.reverse();
-  invalidFeaturesIndexes.forEach((fIndex) => markers.splice(fIndex, 1));
-
-  invalidMarkerIndexes.reverse();
-  invalidMarkerIndexes.forEach((mIndex) => {
-    invalidMarkerCodes.push(options.markers[mIndex]);
-    options.markers.splice(mIndex, 1);
-  });
-
-  if (invalidMarkerCodes.length) {
-    console.log(
-      `Features not found in the database: ${invalidMarkerCodes.join(', ')}`
-    );
-  }
-  return invalidMarkerCodes;
-};
-
-/**
  * @param {TileLayer} raster raster
  * @param {string} baseMap options
  */
@@ -478,7 +411,6 @@ export default (options) => {
     let mapPromise;
     let unsubscribeInit;
     let map;
-    let createInvalidCodesInfo;
 
     /**
      * @param {Map} map map
@@ -524,6 +456,7 @@ export default (options) => {
       const invalidCodes = slctr.getInvalidCodes(state);
       const basemapLayer = slctr.getBasemapLayer(state);
       if (map === undefined) {
+        let createInvalidCodesInfo;
         const markers = slctr.getInitMarkers(state);
         const zoomTos = slctr.getInitZoomTos(state);
         const view = calculateView(state.requiredOpts, markers, zoomTos);
@@ -539,12 +472,15 @@ export default (options) => {
           const opts = {map, invalidCodes, lang: state.requiredOpts.lang};
           createInvalidCodesInfo = munimap_interaction.initInvalidCodesInfo(
             munimapEl,
+            infoEl,
             opts
           );
-          infoEl.classList.add('munimap-info-hide');
         }
 
         map.once('rendercomplete', () => {
+          if (createInvalidCodesInfo) {
+            createInvalidCodesInfo();
+          }
           store.dispatch(
             actions.map_rendered({
               map_size: map.getSize(),
@@ -563,9 +499,6 @@ export default (options) => {
       }
 
       changeBaseMap(basemapLayer, map);
-      if (invalidCodes && invalidCodes.length) {
-        createInvalidCodesInfo();
-      }
     };
 
     const returnFunction = () => {
