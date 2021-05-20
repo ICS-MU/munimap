@@ -38,11 +38,12 @@ export const getInitMarkers = createSelector(
     }
     const type = getType();
     const buildings = getStore().getFeatures();
-    return initMarkers.map((initMarker) => {
+    const result = initMarkers.map((initMarker) => {
       return buildings.find((building) => {
         return building.get(type.primaryKey) === initMarker;
       });
     });
+    return result.filter((item) => item); //remove undefined (= invalid codes)
   }
 );
 
@@ -83,5 +84,23 @@ export const getBasemapLayer = createSelector(
         : requiredBasemap;
 
     return createTileLayer(id, lang);
+  }
+);
+
+export const getInvalidCodes = createSelector(
+  [getRequiredMarkers],
+  (requiredMarkers) => {
+    console.log('computing invalid codes');
+    if (requiredMarkers.length === 0) {
+      return [];
+    }
+    const type = getType();
+    const buildings = getStore().getFeatures();
+    const loadedPk = buildings.map((building) => building.get(type.primaryKey));
+
+    const difference = requiredMarkers.filter(
+      (markerString) => !loadedPk.includes(markerString)
+    );
+    return difference;
   }
 );

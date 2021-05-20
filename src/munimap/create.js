@@ -348,36 +348,6 @@ const filterInvalidMarkerCodes = (options, markers, invalidMarkerIndexes) => {
 };
 
 /**
- *
- * @param {State} state redux state
- * @param {{
- *    createInvalidCodesInfo: function,
- *    map: Map,
- *    munimapEl: Element,
- *    infoEl: Element
- *  }} options options
- */
-const toggleInvalidCodesInfo = (state, options) => {
-  const {createInvalidCodesInfo, map, munimapEl, infoEl} = options;
-  const {invalidCodes, createDragEl} = state.invalidCodesInfo;
-  if (createDragEl === undefined) {
-    return;
-  }
-
-  if (invalidCodes.length) {
-    createInvalidCodesInfo();
-  } else {
-    const dragEl = document.getElementById('munimap-error');
-    if (dragEl) {
-      dragEl.remove();
-      infoEl.classList.remove('munimap-info-hide');
-    }
-    //re-render map => openlayers remove the error message by re-rendering map
-    createDragEl ? munimap_interaction.createDragEl(munimapEl) : map.render();
-  }
-};
-
-/**
  * @param {TileLayer} raster raster
  * @param {string} baseMap options
  */
@@ -505,23 +475,10 @@ export default (options) => {
     };
     const store = createStore(initialState);
 
-    /*------------------------- create invalid codes info ----------------------*/
-    /*let createInvalidCodesInfo;
-    if (invalidMarkerCodes.length) {
-      createInvalidCodesInfo = munimap_interaction.initInvalidCodesInfo(
-        munimapEl,
-        {
-          dispatch: store.dispatch,
-          invalidCodes: invalidMarkerCodes,
-          lang: options.lang,
-        }
-      );
-      infoEl.classList.add('munimap-info-hide');
-    }*/
-
     let mapPromise;
     let unsubscribeInit;
     let map;
+    let createInvalidCodesInfo;
 
     /**
      * @param {Map} map map
@@ -540,10 +497,10 @@ export default (options) => {
       const target = document.getElementById(options.target);
 
       let munimapEl = target.getElementsByClassName('munimap')[0];
+      let infoEl = target.getElementsByClassName('ol-popup munimap-info')[0];
       if (munimapEl === undefined) {
-        /*------------------------ create initial elements ---------------------*/
         munimapEl = document.createElement('div');
-        const infoEl = document.createElement('div');
+        infoEl = document.createElement('div');
         munimapEl.className = 'munimap';
         infoEl.className = 'ol-popup munimap-info';
         munimapEl.appendChild(infoEl);
@@ -564,14 +521,7 @@ export default (options) => {
         return;
       }
 
-      // toggleInvalidCodesInfo(state, {
-      //   createInvalidCodesInfo,
-      //   map,
-      //   munimapEl,
-      //   infoEl,
-      // });
-
-      /*------------------------------ create map ------------------------------*/
+      const invalidCodes = slctr.getInvalidCodes(state);
       const basemapLayer = slctr.getBasemapLayer(state);
       if (map === undefined) {
         const markers = slctr.getInitMarkers(state);
@@ -584,6 +534,15 @@ export default (options) => {
         });
 
         mapPromise = mapPromiseFunction(map);
+
+        if (invalidCodes) {
+          const opts = {map, invalidCodes, lang: state.requiredOpts.lang};
+          createInvalidCodesInfo = munimap_interaction.initInvalidCodesInfo(
+            munimapEl,
+            opts
+          );
+          infoEl.classList.add('munimap-info-hide');
+        }
 
         map.once('rendercomplete', () => {
           store.dispatch(
@@ -604,6 +563,9 @@ export default (options) => {
       }
 
       changeBaseMap(basemapLayer, map);
+      if (invalidCodes && invalidCodes.length) {
+        createInvalidCodesInfo();
+      }
     };
 
     const returnFunction = () => {
@@ -616,17 +578,5 @@ export default (options) => {
     render();
     store.subscribe(render);
     unsubscribeInit = store.subscribe(returnFunction);
-
-    /*----------------------------- added dispatchers --------------------------*/
-
-    /*const handleRenderComplete = () => {
-      store.dispatch(
-        actions.change_invalidcodes_info({
-          invalidCodes: invalidMarkerCodes,
-          createDragEl: invalidMarkerCodes.length > 0,
-        })
-      );
-    };*/
-    // map.once('rendercomplete', handleRenderComplete);
   });
 };

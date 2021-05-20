@@ -13,7 +13,7 @@ import * as munimap_lang from './lang.js';
  * @typedef {Object} InvalidCodeOptions
  * @property {Array<string>} invalidCodes
  * @property {string} lang
- * @property {function} dispatch
+ * @property {ol.Map} map
  */
 
 /**
@@ -66,7 +66,7 @@ const createDragEl = (target) => {
  * @return {function} createError function
  */
 const initInvalidCodesInfo = (target, options) => {
-  const {dispatch, invalidCodes, lang} = options;
+  const {map, invalidCodes, lang} = options;
   target.setAttribute('tabindex', '0');
 
   window.document.addEventListener('blur', activeChange, true);
@@ -77,32 +77,22 @@ const initInvalidCodesInfo = (target, options) => {
 
   function activeChange(e) {
     const dragEl = document.getElementById('munimap-error');
+    const infoEl = target.getElementsByClassName('ol-popup munimap-info')[0];
     if (target.contains(window.document.activeElement)) {
-      dispatch(
-        actions.change_invalidcodes_info({
-          invalidCodes: [],
-          createDragEl: false,
-        })
-      );
+      dragEl.remove();
+      infoEl.classList.remove('munimap-info-hide');
+      map.render();
       acCount++;
     } else if (
       !target.contains(window.document.activeElement) &&
       dragEl === null
     ) {
-      dispatch(
-        actions.change_invalidcodes_info({
-          invalidCodes: [],
-          createDragEl: true,
-        })
-      );
+      createDragEl(target);
       acCount++;
     } else {
-      dispatch(
-        actions.change_invalidcodes_info({
-          invalidCodes: [],
-          createDragEl: true,
-        })
-      );
+      dragEl.remove();
+      infoEl.classList.remove('munimap-info-hide');
+      createDragEl(target);
       acCount++;
     }
   }
@@ -130,4 +120,4 @@ const initInvalidCodesInfo = (target, options) => {
   return createError;
 };
 
-export {initInvalidCodesInfo, createDragEl};
+export {initInvalidCodesInfo};
