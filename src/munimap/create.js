@@ -125,18 +125,14 @@ const calculateView = (options, markers, zoomTos) => {
  * Load features by location codes or decorate custom markers.
  * @param {Array<string>|Array<ol.Feature>|undefined} featuresLike featuresLike
  * @param {Options} options options
- * @return {Promise<{
- *    markers: Array<ol.Feature|string>,
- *    invalidMarkerIndexes: Array<number>,
- *  }>} promise resolving with markers
+ * @return {Promise<Array<ol.Feature|string>>} promise resolving with markers
  */
 export const loadOrDecorateMarkers = async (featuresLike, options) => {
   const lang = options.lang;
   const arrPromises = []; // array of promises of features
-  const invalidMarkerIndexes = [];
 
   if (!Array.isArray(featuresLike)) {
-    return {markers: [], invalidMarkerIndexes: []};
+    return [];
   } else {
     featuresLike.forEach((el) => {
       if (true) {
@@ -146,12 +142,8 @@ export const loadOrDecorateMarkers = async (featuresLike, options) => {
               decorateCustomMarker(el);
               resolve(el);
             } else if (munimap_utils.isString(el)) {
-              munimap_load.featuresFromParam(el).then(function (results) {
-                if (results.length > 0) {
-                  resolve(results);
-                } else {
-                  resolve('ERROR');
-                }
+              munimap_load.featuresFromParam(el).then((results) => {
+                resolve(results);
               });
             }
           })
@@ -162,19 +154,13 @@ export const loadOrDecorateMarkers = async (featuresLike, options) => {
     });
 
     let markers = await Promise.all(arrPromises);
-    markers.forEach((value, idx) => {
-      if (value === 'ERROR') {
-        invalidMarkerIndexes.push(idx);
-      }
-    });
     // reduce array of arrays to 1 array
     markers = markers.reduce((a, b) => {
       a = a.concat(b);
       munimap_utils.removeArrayDuplicates(a);
       return a;
     }, []);
-
-    return {markers, invalidMarkerIndexes};
+    return markers;
   }
 };
 
@@ -457,7 +443,6 @@ export default (options) => {
       if (map === undefined) {
         let createInvalidCodesInfo;
         const markers = slctr.getInitMarkers(state);
-        munimap_assert.assertMarkerFeatures(markers);
         const zoomTos = slctr.getInitZoomTos(state);
         const view = calculateView(state.requiredOpts, markers, zoomTos);
         map = new Map({

@@ -40,6 +40,7 @@ export function load_markers() {
 
     return loadOrDecorateMarkers(markerStrings, state.requiredOpts).then(
       (res) => {
+        munimap_assert.assertMarkerFeatures(res);
         dispatch(markers_loaded());
       }
     );
