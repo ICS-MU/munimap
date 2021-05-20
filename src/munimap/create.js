@@ -413,7 +413,7 @@ const setBaseMapStyle = (raster, baseMap) => {
  * @param {string=} lang lang
  * @return {TileLayer} layer
  */
-const createTileLayer = (basemapId, lang) => {
+export const createTileLayer = (basemapId, lang) => {
   let source;
 
   if (basemapId === BASEMAPS.ARCGIS || basemapId === BASEMAPS.ARCGIS_BW) {
@@ -454,54 +454,24 @@ const createTileLayer = (basemapId, lang) => {
 };
 
 /**
- * @param {string} basemapId basemapId
- * @param {ol.Collection} layers layers
- * @param {string} lang lang
+ * Change basemap if necessary.
+ * @param {TileLayer} basemapLayer basemap
+ * @param {Map} map map
  */
-const changeBaseMapToOSM = (basemapId, layers, lang) => {
-  const baseMapIndex = layers
-    .getArray()
-    .findIndex((layer) => layer instanceof TileLayer);
-  const raster = createTileLayer(basemapId, lang);
-  layers.setAt(baseMapIndex, raster);
-};
-
-/**
- * @param {string} basemapId basemapId
- * @param {ol.Collection} layers layers
- */
-const changeBaseMapToArcGIS = (basemapId, layers) => {
-  const baseMapIndex = layers
-    .getArray()
-    .findIndex((layer) => layer instanceof TileLayer);
-  const raster = createTileLayer(basemapId);
-  layers.setAt(baseMapIndex, raster);
-};
-
-/**
- * @param {State} state redux state
- * @param {ol.Collection} layers layers
- */
-const changeBaseMap = (state, layers) => {
-  const basemapId = state.baseMap;
-  const currentBasemapId = layers
-    .getArray()
-    .find((layer) => layer instanceof TileLayer)
-    .get('id');
-  if (basemapId === currentBasemapId) {
+const changeBaseMap = (basemapLayer, map) => {
+  if (map === undefined) {
     return;
   }
+  const layers = map.getLayers();
 
-  if (
-    state.baseMap === BASEMAPS.ARCGIS ||
-    state.baseMap === BASEMAPS.ARCGIS_BW
-  ) {
-    changeBaseMapToArcGIS(state.baseMap, layers);
-  } else if (
-    state.baseMap === BASEMAPS.OSM ||
-    state.baseMap === BASEMAPS.OSM_BW
-  ) {
-    changeBaseMapToOSM(state.baseMap, layers, state.lang);
+  const currentIndex = layers
+    .getArray()
+    .findIndex((layer) => layer instanceof TileLayer);
+  const currentId = layers.item(currentIndex).get('id');
+  const newId = basemapLayer.get('id');
+
+  if (currentId !== newId) {
+    layers.setAt(currentIndex, basemapLayer);
   }
 };
 
@@ -519,30 +489,9 @@ export default (options) => {
     );
     assertOptions(options);
 
-    /*-------------------------------- atrributions ----------------------------*/
-    /*const muAttribution = munimap_lang.getMsg(
-      munimap_lang.Translations.MU_ATTRIBUTION_HTML,
-      options.lang
-    );
-    const munimapAttribution = munimap_lang.getMsg(
-      munimap_lang.Translations.MUNIMAP_ATTRIBUTION_HTML,
-      options.lang
-    );
-    const muAttributions = [munimapAttribution, muAttribution];*/
-
-    /*------------------------------- define basemap ---------------------------*/
-    if (!munimap_utils.isDef(options.baseMap)) {
-      options.baseMap = BASEMAPS.ARCGIS_BW;
-    }
-    const raster = createTileLayer(options.baseMap, options.lang);
-    const defaultBaseMap = raster;
-
     /*----------------------------- create redux store -------------------------*/
     const initialState = {
       ...INITIAL_STATE,
-      loadingMessage: options.loadingMessage,
-      lang: options.lang,
-      baseMap: options.baseMap,
       requiredOpts: {
         target: options.target,
         markers: options.markers === undefined ? [] : options.markers,
@@ -550,6 +499,8 @@ export default (options) => {
         lang: options.lang || munimap_lang.Abbr.CZECH,
         loadingMessage:
           options.loadingMessage === undefined ? true : options.loadingMessage,
+        baseMap:
+          options.baseMap === undefined ? BASEMAPS.ARCGIS_BW : options.baseMap,
       },
     };
     const store = createStore(initialState);
@@ -570,6 +521,7 @@ export default (options) => {
 
     let mapPromise;
     let unsubscribeInit;
+    let map;
 
     /**
      * @param {Map} map map
@@ -611,7 +563,6 @@ export default (options) => {
         store.dispatch(actions.load_zoomTo());
         return;
       }
-      console.log('state', state);
 
       // toggleInvalidCodesInfo(state, {
       //   createInvalidCodesInfo,
@@ -619,24 +570,50 @@ export default (options) => {
       //   munimapEl,
       //   infoEl,
       // });
-      // changeBaseMap(state, map.getLayers());
 
       /*------------------------------ create map ------------------------------*/
-      if (state.map_size === null) {
+      const basemapLayer = slctr.getBasemapLayer(state);
+      if (state.initMap === null) {
+        store.dispatch(
+          actions.initMap({
+            initMap: true,
+          })
+        );
         const markers = slctr.getInitMarkers(state);
         const zoomTos = slctr.getInitZoomTos(state);
         const view = calculateView(state.requiredOpts, markers, zoomTos);
-        const map = new Map({
+        map = new Map({
           target: /**@type {HTMLElement}*/ (munimapEl),
-          layers: [raster],
+          layers: [basemapLayer],
           view,
         });
+        store.dispatch(
+          actions.initMap({
+            initMap: false,
+          })
+        );
+
         mapPromise = mapPromiseFunction(map);
 
         map.once('rendercomplete', () => {
-          store.dispatch(actions.map_rendered(map.getSize()));
+          store.dispatch(
+            actions.map_rendered({
+              map_size: map.getSize(),
+            })
+          );
+        });
+
+        map.on('moveend', () => {
+          store.dispatch(
+            actions.ol_map_view_change({
+              center: view.getCenter(),
+              resolution: view.getResolution(),
+            })
+          );
         });
       }
+
+      changeBaseMap(basemapLayer, map);
     };
 
     const returnFunction = () => {
@@ -661,17 +638,5 @@ export default (options) => {
       );
     };*/
     // map.once('rendercomplete', handleRenderComplete);
-
-    /*const handleMoveEnd = (evt) => {
-      // change arcgis basemap in Antarctica
-      store.dispatch(
-        actions.ol_map_moveend({
-          defaultBaseMap: defaultBaseMap.get('id'),
-          center: view.getCenter(),
-          resolution: view.getResolution(),
-        })
-      );
-    };*/
-    // map.on('moveend', handleMoveEnd);
   });
 };

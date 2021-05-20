@@ -11,6 +11,7 @@ export const LOAD_MARKERS = 'LOAD_MARKERS';
 export const MARKERS_LOADED = 'MARKERS_LOADED';
 export const OL_MAP_RENDERED = 'OL_MAP_RENDERED';
 export const ZOOMTO_LOADED = 'ZOOMTO_LOADED';
+export const INITIALIZE_MAP = 'INITIALIZE_MAP';
 
 export function markers_loaded() {
   return {
@@ -69,14 +70,23 @@ export function load_zoomTo() {
       dispatch(zoomTo_loaded());
       return [];
     }
-  }
+  };
 }
 
 export function map_rendered(object) {
   return {
     type: OL_MAP_RENDERED,
     payload: {
-      size: object,
+      map_size: object.map_size,
+    },
+  };
+}
+
+export function initMap(object) {
+  return {
+    type: INITIALIZE_MAP,
+    payload: {
+      initMap: object.initMap,
     },
   };
 }

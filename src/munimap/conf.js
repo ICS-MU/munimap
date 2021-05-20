@@ -21,14 +21,14 @@ export const MUNIMAP_PUBTRAN_URL =
 /**
  * @typedef {Object} State
  * @property {ol.size.Size} map_size
+ * @property {boolean} initMap
  * @property {ol.coordinate.Coordinate} center
  * @property {string} center_proj
- * @property {number} zoom
+ * @property {number} resolution
  * @property {{
  *    invalidCodes: Array<string>,
  *    createDragEl: boolean
  *  }} invalidCodesInfo
- * @property {string} lang
  * @property {string} baseMap,
  * @property {CreateOptions} requiredOpts
  * @property {number} markersTimestamp
@@ -40,20 +40,23 @@ export const MUNIMAP_PUBTRAN_URL =
  */
 export const INITIAL_STATE = {
   map_size: null,
+  initMap: null,
   center: [16.605390495656977, 49.1986567194723],
   center_proj: 'EPSG:4326',
-  zoom: 13,
+  resolution: null,
   invalidCodesInfo: {
     invalidCodes: [],
     createDragEl: undefined,
   },
-  lang: 'cs',
-  baseMap: 'arcgis-bw',
   requiredOpts: {
     target: null,
     markers: [],
     lang: 'cs',
+    baseMap: 'arcgis-bw',
+    zoomTo: [],
+    loadingMessage: true,
   },
   markersTimestamp: null,
   zoomToTimestamp: null,
+  baseMap: null,
 };

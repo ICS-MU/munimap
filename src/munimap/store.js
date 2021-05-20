@@ -16,7 +16,6 @@ import {getPairedBasemap, isArcGISBasemap, isOSMBasemap} from './basemap.js';
  */
 const createReducer = (initialState) => {
   return (state = initialState, action) => {
-    console.log('action.type', action.type);
     switch (action.type) {
       case actions.MARKERS_LOADED:
         return {
@@ -31,14 +30,18 @@ const createReducer = (initialState) => {
       case actions.OL_MAP_RENDERED:
         return {
           ...state,
-          map_size: action.payload.size,
+          map_size: action.payload.map_size,
+        };
+      case actions.INITIALIZE_MAP:
+        return {
+          ...state,
+          initMap: action.payload.initMap,
         };
       case actions.OL_MAP_VIEW_CHANGE:
         return {
           ...state,
-          zoom: action.payload.view.zoom,
           center: action.payload.view.center,
-          center_proj: action.payload.view.center_proj,
+          resolution: action.payload.view.resolution,
         };
       case actions.OL_MAP_INITIALIZED:
         return {
