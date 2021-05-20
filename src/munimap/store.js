@@ -32,11 +32,6 @@ const createReducer = (initialState) => {
           ...state,
           map_size: action.payload.map_size,
         };
-      case actions.INITIALIZE_MAP:
-        return {
-          ...state,
-          initMap: action.payload.initMap,
-        };
       case actions.OL_MAP_VIEW_CHANGE:
         return {
           ...state,

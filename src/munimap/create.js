@@ -573,12 +573,7 @@ export default (options) => {
 
       /*------------------------------ create map ------------------------------*/
       const basemapLayer = slctr.getBasemapLayer(state);
-      if (state.initMap === null) {
-        store.dispatch(
-          actions.initMap({
-            initMap: true,
-          })
-        );
+      if (map === undefined) {
         const markers = slctr.getInitMarkers(state);
         const zoomTos = slctr.getInitZoomTos(state);
         const view = calculateView(state.requiredOpts, markers, zoomTos);
@@ -587,11 +582,6 @@ export default (options) => {
           layers: [basemapLayer],
           view,
         });
-        store.dispatch(
-          actions.initMap({
-            initMap: false,
-          })
-        );
 
         mapPromise = mapPromiseFunction(map);
 
