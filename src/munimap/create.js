@@ -235,7 +235,6 @@ const removeLoadingMessage = (target) => {
 };
 
 /**
- * 
  * @param {boolean} add whether to add or remove
  * @param {Element} target target element
  * @param {string} lang language
@@ -458,6 +457,7 @@ export default (options) => {
       if (map === undefined) {
         let createInvalidCodesInfo;
         const markers = slctr.getInitMarkers(state);
+        munimap_assert.assertMarkerFeatures(markers);
         const zoomTos = slctr.getInitZoomTos(state);
         const view = calculateView(state.requiredOpts, markers, zoomTos);
         map = new Map({
