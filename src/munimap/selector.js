@@ -1,11 +1,12 @@
 import * as munimap_utils from './utils.js';
 import {createSelector} from 'reselect';
-import {createTileLayer} from './create.js';
+import {createTileLayer} from './view.js';
 import {getPairedBasemap, isArcGISBasemap} from './basemap.js';
 import {getStore, getType} from './building.js';
 
 const getRequiredLoadingMessage = (state) => state.requiredOpts.loadingMessage;
 const getMarkersTimestamp = (state) => state.markersTimestamp;
+const getZoomTosTimestamp = (state) => state.zoomToTimestamp;
 const getRequiredMarkers = (state) => state.requiredOpts.markers;
 const getRequiredZoomTos = (state) => state.requiredOpts.zoomTo;
 const getRequiredBaseMap = (state) => state.requiredOpts.baseMap;
@@ -31,14 +32,14 @@ export const toggleLoadingMessage = createSelector(
 
 export const getInitMarkers = createSelector(
   [getRequiredMarkers],
-  (initMarkers) => {
+  (requiredMarkers) => {
     console.log('computing init markers');
-    if (initMarkers.length === 0) {
+    if (requiredMarkers.length === 0) {
       return [];
     }
     const type = getType();
     const buildings = getStore().getFeatures();
-    const result = initMarkers.map((initMarker) => {
+    const result = requiredMarkers.map((initMarker) => {
       return buildings.find((building) => {
         return building.get(type.primaryKey) === initMarker;
       });
@@ -64,10 +65,10 @@ export const getInitZoomTos = createSelector(
   }
 );
 
-export const getBasemapLayer = createSelector(
-  [getCenter, getResolution, getRequiredBaseMap, getLang],
-  (center, resolution, requiredBasemap, lang) => {
-    console.log('computing bm');
+export const getBasemapLayerId = createSelector(
+  [getCenter, getResolution, getRequiredBaseMap],
+  (center, resolution, requiredBasemap) => {
+    console.log('computing baseMapLayerId');
     const isSafeLatLon = munimap_utils.inRange(
       center[1],
       -8399737.89, //60° N
@@ -78,28 +79,37 @@ export const getBasemapLayer = createSelector(
       38.21851414258813,
       Infinity
     );
-    const id =
+    const basemapLayerId =
       !isSafeLatLon && !isSafeResolution && isArcGISBasemap(requiredBasemap)
         ? getPairedBasemap(requiredBasemap)
         : requiredBasemap;
+    return basemapLayerId;
+  }
+);
 
-    return createTileLayer(id, lang);
+export const getBasemapLayer = createSelector(
+  [getBasemapLayerId, getLang],
+  (basemapLayerId, lang) => {
+    console.log('computing baseMapLayer');
+    return createTileLayer(basemapLayerId, lang);
   }
 );
 
 export const getInvalidCodes = createSelector(
-  [getRequiredMarkers],
-  (requiredMarkers) => {
+  [getRequiredMarkers, getInitMarkers],
+  (requiredMarkers, initMarkers) => {
     console.log('computing invalid codes');
     if (requiredMarkers.length === 0) {
       return [];
     }
+
     const type = getType();
-    const buildings = getStore().getFeatures();
-    const loadedPk = buildings.map((building) => building.get(type.primaryKey));
+    const initMarkersCodes = initMarkers.map((marker) =>
+      marker.get(type.primaryKey)
+    );
 
     const difference = requiredMarkers.filter(
-      (markerString) => !loadedPk.includes(markerString)
+      (markerString) => !initMarkersCodes.includes(markerString)
     );
     return difference;
   }
