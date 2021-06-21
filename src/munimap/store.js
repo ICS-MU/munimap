@@ -2,8 +2,10 @@ import * as actions from './action.js';
 import * as munimap_assert from './assert.js';
 import * as munimap_utils from './utils.js';
 import * as redux from 'redux';
-import thunkMiddleware from 'redux-thunk';
+import {asyncDispatchMiddleware} from './middleware.js';
+import {featuresFromParam} from './load.js';
 import {getPairedBasemap, isArcGISBasemap, isOSMBasemap} from './basemap.js';
+import {loadOrDecorateMarkers} from './create.js';
 
 /**
  * @typedef {import("./conf.js").State} State
@@ -79,6 +81,43 @@ const createReducer = (initialState) => {
           ...state,
           baseMap: baseMapId,
         };
+      case actions.LOAD_MARKERS:
+        const requiredMarkers = state.requiredOpts.markers;
+        let markerStrings;
+        if (requiredMarkers && requiredMarkers.length) {
+          munimap_assert.assertArray(requiredMarkers);
+          munimap_utils.removeArrayDuplicates(requiredMarkers);
+          markerStrings = /** @type {Array.<string>} */ (requiredMarkers);
+        } else {
+          markerStrings = /** @type {Array.<string>} */ ([]);
+        }
+
+        loadOrDecorateMarkers(markerStrings, state.requiredOpts).then((res) => {
+          munimap_assert.assertMarkerFeatures(res);
+          action.asyncDispatch({type: actions.MARKERS_LOADED, features: res});
+        });
+        return {
+          ...state,
+          markersTimestamp: 0,
+        };
+      case actions.LOAD_ZOOMTOS:
+        let zoomToStrings;
+        if (state.requiredOpts.zoomTo && state.requiredOpts.zoomTo.length) {
+          zoomToStrings = /** @type {Array.<string>} */ (munimap_utils.isString(
+            state.requiredOpts.zoomTo
+          )
+            ? [state.requiredOpts.zoomTo]
+            : state.requiredOpts.zoomTo);
+        } else {
+          zoomToStrings = [];
+        }
+        featuresFromParam(zoomToStrings).then((res) => {
+          action.asyncDispatch({type: actions.ZOOMTO_LOADED, features: res});
+        });
+        return {
+          ...state,
+          zoomToTimestamp: 0,
+        };
       default:
         return state;
     }
@@ -97,7 +136,7 @@ export const createStore = (initialState) => {
     reducer,
     initialState,
     redux.compose(
-      redux.applyMiddleware(thunkMiddleware),
+      redux.applyMiddleware(asyncDispatchMiddleware),
       w.__REDUX_DEVTOOLS_EXTENSION__ && w.__REDUX_DEVTOOLS_EXTENSION__()
     )
   );

@@ -8,6 +8,7 @@ export const OL_MAP_INITIALIZED = 'OL_MAP_INITIALIZED';
 export const OL_MAP_MOVEEND = 'OL_MAP_MOVEEND';
 export const CHANGE_INVALIDCODES_INFO = 'CHANGE_INVALIDCODES_INFO';
 export const LOAD_MARKERS = 'LOAD_MARKERS';
+export const LOAD_ZOOMTOS = 'LOAD_ZOOMTOS';
 export const MARKERS_LOADED = 'MARKERS_LOADED';
 export const OL_MAP_RENDERED = 'OL_MAP_RENDERED';
 export const ZOOMTO_LOADED = 'ZOOMTO_LOADED';
@@ -25,51 +26,14 @@ export function zoomTo_loaded() {
 }
 
 export function load_markers() {
-  return (dispatch, getState) => {
-    const state = getState();
-
-    const requiredMarkers = state.requiredOpts.markers;
-    let markerStrings;
-    if (requiredMarkers && requiredMarkers.length) {
-      munimap_assert.assertArray(requiredMarkers);
-      munimap_utils.removeArrayDuplicates(requiredMarkers);
-      markerStrings = /** @type {Array.<string>} */ (requiredMarkers);
-    } else {
-      markerStrings = /** @type {Array.<string>} */ ([]);
-    }
-
-    return loadOrDecorateMarkers(markerStrings, state.requiredOpts).then(
-      (res) => {
-        munimap_assert.assertMarkerFeatures(res);
-        dispatch(markers_loaded());
-      }
-    );
+  return {
+    type: LOAD_MARKERS,
   };
 }
 
 export function load_zoomTo() {
-  return (dispatch, getState) => {
-    const state = getState();
-
-    let zoomToStrings;
-    if (state.requiredOpts.zoomTo && state.requiredOpts.zoomTo.length) {
-      zoomToStrings = /** @type {Array.<string>} */ (munimap_utils.isString(
-        state.requiredOpts.zoomTo
-      )
-        ? [state.requiredOpts.zoomTo]
-        : state.requiredOpts.zoomTo);
-    } else {
-      zoomToStrings = [];
-    }
-
-    if (zoomToStrings.length) {
-      return featuresFromParam(zoomToStrings).then((res) => {
-        dispatch(zoomTo_loaded());
-      });
-    } else {
-      dispatch(zoomTo_loaded());
-      return [];
-    }
+  return {
+    type: LOAD_ZOOMTOS,
   };
 }
 

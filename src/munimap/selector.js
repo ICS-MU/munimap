@@ -114,3 +114,41 @@ export const getInvalidCodes = createSelector(
     return difference;
   }
 );
+
+export const loadMarkers = createSelector(
+  [getRequiredMarkers, getMarkersTimestamp],
+  (requiredMarkers, markersTimestamp) => {
+    console.log('computing whether load markers');
+    return requiredMarkers.length > 0 && markersTimestamp === null;
+  }
+);
+
+export const loadZoomTos = createSelector(
+  [getRequiredZoomTos, getZoomTosTimestamp],
+  (requiredZoomTos, zoomTosTimestamp) => {
+    console.log('computing whether load zoomtos');
+    return requiredZoomTos.length > 0 && zoomTosTimestamp === null;
+  }
+);
+
+export const areMarkersLoaded = createSelector(
+  [getRequiredMarkers, getMarkersTimestamp],
+  (requiredMarkers, markersTimestamp) => {
+    console.log('computing if markers are loaded');
+    return (
+      (requiredMarkers.length > 0 && markersTimestamp > 0) ||
+      requiredMarkers.length === 0
+    );
+  }
+);
+
+export const areZoomTosLoaded = createSelector(
+  [getRequiredZoomTos, getZoomTosTimestamp],
+  (requiredZoomTos, zoomTosTimestamp) => {
+    console.log('computing if zoomtos are loaded');
+    return (
+      (requiredZoomTos.length > 0 && zoomTosTimestamp > 0) ||
+      requiredZoomTos.length === 0
+    );
+  }
+);
