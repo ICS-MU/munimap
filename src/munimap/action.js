@@ -1,8 +1,3 @@
-import * as munimap_assert from './assert.js';
-import * as munimap_utils from './utils.js';
-import {featuresFromParam} from './load.js';
-import {loadOrDecorateMarkers} from './create.js';
-
 export const OL_MAP_VIEW_CHANGE = 'OL_MAP_VIEW_CHANGE';
 export const OL_MAP_INITIALIZED = 'OL_MAP_INITIALIZED';
 export const OL_MAP_MOVEEND = 'OL_MAP_MOVEEND';

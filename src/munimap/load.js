@@ -1,7 +1,6 @@
 import * as munimap_assert from './assert.js';
 import * as munimap_building from './building.js';
 import * as munimap_utils from './utils.js';
-import * as ol_proj from 'ol/proj';
 import {EsriJSON} from 'ol/format';
 import {NAME as munimap_type_NAME} from './type.js';
 
