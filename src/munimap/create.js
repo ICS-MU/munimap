@@ -3,6 +3,7 @@ import * as munimap_assert from './assert.js';
 import * as munimap_interaction from './interaction.js';
 import * as munimap_lang from './lang.js';
 import * as munimap_load from './load.js';
+import * as munimap_matomo from './matomo.js';
 import * as munimap_utils from './utils.js';
 import * as munimap_view from './view.js';
 import * as ol_extent from 'ol/extent';
@@ -239,7 +240,9 @@ export default (options) => {
   return new Promise((resolve, reject) => {
     /*------------------------- parse and assert options -----------------------*/
     assertOptions(options);
-
+    /*------------------------------- matomo -----------------------------------*/
+    munimap_matomo.sendEvent('map', 'create');
+    munimap_matomo.sendEventForOptions(options);
     /*----------------------------- create redux store -------------------------*/
     const initialState = getInitialState(options);
     const store = createStore(initialState);

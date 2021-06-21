@@ -1,5 +1,6 @@
 import * as actions from './action.js';
 import * as munimap_assert from './assert.js';
+import * as munimap_matomo from './matomo.js';
 import * as munimap_utils from './utils.js';
 import * as redux from 'redux';
 import {asyncDispatchMiddleware} from './middleware.js';
@@ -94,6 +95,7 @@ const createReducer = (initialState) => {
 
         loadOrDecorateMarkers(markerStrings, state.requiredOpts).then((res) => {
           munimap_assert.assertMarkerFeatures(res);
+          munimap_matomo.checkCustomMarker(res);
           action.asyncDispatch({type: actions.MARKERS_LOADED, features: res});
         });
         return {

@@ -3,6 +3,7 @@
  */
 
 import * as munimap_lang from './lang.js';
+import * as munimap_matomo from './matomo.js';
 import * as munimap_utils from './utils.js';
 import Control from 'ol/control/Control';
 import FullScreen from 'ol/control/FullScreen';
@@ -74,9 +75,9 @@ const createMapToolsEl = () => {
 
 const addMatomoClickEvent = (parentEl) => {
   const el = parentEl.getElementsByClassName('ol-full-screen')[0];
-  // el.addEventListener('click', () => {
-  //   munimap.matomo.sendEvent('full-screen', 'click');
-  // });
+  el.addEventListener('click', () => {
+    munimap_matomo.sendEvent('full-screen', 'click');
+  });
 };
 
 /**
@@ -144,7 +145,7 @@ const createInitExtentControl = (map, target, lang) => {
 
   divEl.addEventListener('click', () => {
     zoomToInitExtent(map);
-    // munimap.matomo.sendEvent('initExtent', 'click');
+    munimap_matomo.sendEvent('initExtent', 'click');
   });
   return result;
 };
@@ -244,10 +245,10 @@ const toggleMapTools = (map, toolBarEl, mapToolsEl, lang, sizeOfControls) => {
       lang: lang,
     });
 
-    // munimap.matomo.sendEvent('mapTools', 'create');
+    munimap_matomo.sendEvent('mapTools', 'create');
     buttonEl.addEventListener('click', () => {
       toggleMapToolBar(toolBarOptions);
-      // munimap.matomo.sendEvent('mapTools', 'click');
+      munimap_matomo.sendEvent('mapTools', 'click');
     });
     map.addControl(
       new Control({
@@ -307,7 +308,7 @@ export default (map, options) => {
   if (window.location.protocol === 'https:' || !PRODUCTION) {
     map.addControl(createGeolocation(map, lang));
   } else {
-    // munimap.matomo.sendEvent('geolocation', 'http_hidden');
+    munimap_matomo.sendEvent('geolocation', 'http_hidden');
   }
 
   let remainingSpace = 0;

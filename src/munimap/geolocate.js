@@ -4,6 +4,7 @@
  */
 
 import * as munimap_lang from './lang.js';
+import * as munimap_matomo from './matomo.js';
 import * as ol_extent from 'ol/extent';
 import Circle from 'ol/style/Circle';
 import Control from 'ol/control/Control';
@@ -64,7 +65,7 @@ const animate = (map, geolocation) => {
  * @param {Geolocation} geolocation geolocation
  */
 const handleClick = (map, geolocation) => {
-  // munimap.matomo.sendEvent('geolocation', 'click');
+  munimap_matomo.sendEvent('geolocation', 'click');
   if (!geolocation.getTracking()) {
     geolocation.setTracking(true);
     geolocation.once('change', () => {

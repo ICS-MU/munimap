@@ -3,6 +3,7 @@
  * @module maplinks
  */
 import * as munimap_lang from './lang.js';
+import * as munimap_matomo from './matomo.js';
 import Control from 'ol/control/Control';
 import {get as getProjection, transform} from 'ol/proj';
 
@@ -34,7 +35,7 @@ const handleClick = (path, map, markers, pointCoordinates) => {
   const x = center[1].toString();
   const y = center[0].toString();
   if (path === SEZNAM_IMG_PATH) {
-    // munimap.matomo.sendEvent('mapLinks', 'mapy.cz');
+    munimap_matomo.sendEvent('mapLinks', 'mapy.cz');
     if (markers.length === 1) {
       window.open(
         `https://mapy.cz/zakladni?x=${y}&y=${x}&z=${zoomLevel}&source=coor&` +
@@ -44,7 +45,7 @@ const handleClick = (path, map, markers, pointCoordinates) => {
       window.open(`https://mapy.cz/zakladni?x=${zoomLevel}&y=${x}&z=${y}`);
     }
   } else {
-    // munimap.matomo.sendEvent('mapLinks', 'maps.google.com');
+    munimap_matomo.sendEvent('mapLinks', 'maps.google.com');
     if (markers.length === 1) {
       window.open(
         `http://www.google.com/maps/place/${pointCoordinates[0]},` +
