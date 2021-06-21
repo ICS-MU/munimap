@@ -48,6 +48,12 @@
     "timer.js": "^1.0.4"
   },
   "eslintConfig": {
+    "globals": {
+      "PRODUCTION": "readonly",
+      "VERSION": "readonly",
+      "APP_PATH": "readonly",
+      "PROD_DOMAIN": "readonly"
+    },
     "parserOptions": {
       "ecmaVersion": 2018
     },

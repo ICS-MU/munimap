@@ -15,7 +15,13 @@ export default {
       type: 'umd',
     },
     clean: {
-      keep: /\.html$/,
+      keep: (filename) => {
+        const keepExamples = filename.includes('example/');
+        const keepMuni = filename.includes('muni/');
+        const keepRootCss = /munimap.css$/.test(filename);
+        const keepRootHtml = /index.html$/.test(filename);
+        return keepExamples || keepMuni || keepRootCss || keepRootHtml;
+      },
     },
   },
   module: {
@@ -41,6 +47,18 @@ export default {
           },
         ],
       },
+      {
+        test: /\.(png)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'img/',
+            },
+          },
+        ],
+      },
     ],
   },
   mode: 'production',
@@ -48,6 +66,8 @@ export default {
     new webpack.DefinePlugin({
       PRODUCTION: JSON.stringify(true),
       VERSION: JSON.stringify(PACKAGE.VERSION),
+      APP_PATH: JSON.stringify('/munimap/'),
+      PROD_DOMAIN: JSON.stringify('maps.muni.cz'),
     }),
   ],
 };

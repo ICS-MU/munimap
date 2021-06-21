@@ -15,7 +15,13 @@ export default {
       type: 'umd',
     },
     clean: {
-      keep: /\.html$/,
+      keep: (filename) => {
+        const keepExamples = filename.includes('example/');
+        const keepMuni = filename.includes('muni/');
+        const keepRootCss = /munimap.css$/.test(filename);
+        const keepRootHtml = /index.html$/.test(filename);
+        return keepExamples || keepMuni || keepRootCss || keepRootHtml;
+      },
     },
   },
   devServer: {
@@ -45,6 +51,18 @@ export default {
           },
         ],
       },
+      {
+        test: /\.(png)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'img/',
+            },
+          },
+        ],
+      },
     ],
   },
   mode: 'development',
@@ -52,8 +70,8 @@ export default {
     new webpack.DefinePlugin({
       PRODUCTION: JSON.stringify(false),
       VERSION: JSON.stringify(PACKAGE.VERSION),
-      // APP_PATH: '/',
-      // PROD_DOMAIN: 'localhost'
+      APP_PATH: JSON.stringify('/'),
+      PROD_DOMAIN: JSON.stringify(`localhost:${JSON.stringify(8080)}`),
     }),
   ],
 };

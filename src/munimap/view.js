@@ -8,11 +8,13 @@ import * as munimap_utils from './utils.js';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
+import createControls from './controls.js';
 import {BASEMAPS} from './basemap.js';
 import {RESOLUTION_COLOR} from './style.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
+ * @typedef {import('./controls.js').CreateOptions} CreateOptions
  */
 
 /**
@@ -178,4 +180,13 @@ const changeBaseMap = (basemapLayer, map) => {
   }
 };
 
-export {changeBaseMap, createTileLayer, toggleLoadingMessage};
+/**
+ *
+ * @param {ol.Map} map map
+ * @param {CreateOptions} requiredOpts opts
+ */
+const addControls = (map, requiredOpts) => {
+  createControls(map, requiredOpts);
+};
+
+export {changeBaseMap, addControls, createTileLayer, toggleLoadingMessage};

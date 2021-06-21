@@ -55,6 +55,7 @@ export const INITIAL_STATE = {
     baseMap: 'arcgis-bw',
     zoomTo: [],
     loadingMessage: true,
+    mapLinks: false,
   },
   markersTimestamp: null,
   zoomToTimestamp: null,

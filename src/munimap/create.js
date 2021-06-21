@@ -1,6 +1,7 @@
 import * as actions from './action.js';
 import * as munimap_assert from './assert.js';
 import * as munimap_interaction from './interaction.js';
+import * as munimap_lang from './lang.js';
 import * as munimap_load from './load.js';
 import * as munimap_utils from './utils.js';
 import * as munimap_view from './view.js';
@@ -10,6 +11,7 @@ import * as slctr from './selector.js';
 import Feature from 'ol/Feature';
 import {INITIAL_STATE} from './conf.js';
 import {Map, View} from 'ol';
+import {defaults as control_defaults} from 'ol/control';
 import {createStore} from './store.js';
 import {decorate as decorateCustomMarker} from './markerCustom.js';
 import {ofFeatures as extentOfFeatures} from './extent.js';
@@ -36,6 +38,7 @@ import {ofFeatures as extentOfFeatures} from './extent.js';
  * @property {string} [lang]
  * @property {boolean} [loadingMessage]
  * @property {string} [baseMap]
+ * @property {boolean} [mapLinks]
  */
 
 /**
@@ -221,6 +224,9 @@ const getInitialState = (options) => {
   if (options.baseMap !== undefined) {
     initialState.requiredOpts.baseMap = options.baseMap;
   }
+  if (options.mapLinks !== undefined) {
+    initialState.requiredOpts.mapLinks = options.mapLinks;
+  }
 
   return initialState;
 };
@@ -283,10 +289,30 @@ export default (options) => {
           const zoomTos = slctr.getInitZoomTos(state);
           const view = calculateView(state.requiredOpts, markers, zoomTos);
           map = new Map({
+            controls: control_defaults({
+              attributionOptions: {
+                tipLabel: munimap_lang.getMsg(
+                  munimap_lang.Translations.ATTRIBUTIONS,
+                  state.requiredOpts.lang
+                ),
+              },
+              rotate: false,
+              zoomOptions: {
+                zoomInTipLabel: munimap_lang.getMsg(
+                  munimap_lang.Translations.ZOOM_IN,
+                  state.requiredOpts.lang
+                ),
+                zoomOutTipLabel: munimap_lang.getMsg(
+                  munimap_lang.Translations.ZOOM_OUT,
+                  state.requiredOpts.lang
+                ),
+              },
+            }),
             target: /**@type {HTMLElement}*/ (munimapEl),
             layers: [basemapLayer],
             view,
           });
+          munimap_view.addControls(map, state.requiredOpts);
 
           if (invalidCodes.length > 0) {
             const opts = {map, invalidCodes, lang: state.requiredOpts.lang};

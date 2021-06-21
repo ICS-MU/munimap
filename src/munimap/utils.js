@@ -149,6 +149,17 @@ const inRange = (x, min, max) => {
   return x >= min && x <= max;
 };
 
+/**
+ * Insert sibling after reference node.
+ * @param {Node} newNode node to insert
+ * @param {Node} refNode reference node where insert sibling
+ */
+const insertSiblingAfter = (newNode, refNode) => {
+  if (refNode.parentNode) {
+    refNode.parentNode.insertBefore(newNode, refNode.nextSibling);
+  }
+};
+
 export {
   removeArrayDuplicates,
   isString,
@@ -164,4 +175,5 @@ export {
   isObject,
   isUserAgentIE,
   inRange,
+  insertSiblingAfter,
 };
