@@ -1,7 +1,6 @@
 /**
  * @module interaction
  */
-import * as actions from './action.js';
 import * as munimap_lang from './lang.js';
 
 /**
@@ -83,9 +82,11 @@ const initInvalidCodesInfo = (target, infoEl, options) => {
     const infoEl = target.getElementsByClassName('ol-popup munimap-info')[0];
     if (target.contains(window.document.activeElement)) {
       //user clicked on map (focus map div)
-      dragEl.remove();
-      infoEl.classList.remove('munimap-info-hide');
-      map.render(); //remove error message from canvas
+      if (dragEl) {
+        dragEl.remove();
+        infoEl.classList.remove('munimap-info-hide');
+        map.render(); //remove error message from canvas
+      }
     } else if (
       !target.contains(window.document.activeElement) &&
       dragEl === null
