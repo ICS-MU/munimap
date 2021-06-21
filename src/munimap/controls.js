@@ -6,6 +6,7 @@ import * as munimap_lang from './lang.js';
 import * as munimap_utils from './utils.js';
 import Control from 'ol/control/Control';
 import FullScreen from 'ol/control/FullScreen';
+import createGeolocation from './geolocate.js';
 import createMapLinks from './maplinks.js';
 
 /**
@@ -303,11 +304,11 @@ export default (map, options) => {
   if (options.mapLinks) {
     map.addControl(createMapLinks(map, options.markers, lang));
   }
-  // if (window.location.protocol === 'https:' || jpad.DEV) {
-  //   map.addControl(munimap.geolocate.create(map));
-  // } else {
-  //   munimap.matomo.sendEvent('geolocation', 'http_hidden');
-  // }
+  if (window.location.protocol === 'https:' || !PRODUCTION) {
+    map.addControl(createGeolocation(map, lang));
+  } else {
+    // munimap.matomo.sendEvent('geolocation', 'http_hidden');
+  }
 
   let remainingSpace = 0;
   let sizeOfControls = options.mapLinks ? MAP_LINKS_SIZE : 0;
