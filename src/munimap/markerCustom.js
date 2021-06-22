@@ -11,6 +11,7 @@ import {NAME as munimap_type_NAME} from './type.js';
 /**
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/geom").Point} ol.geom.Point
+ * @typedef {import("ol/Feature").FeatureLike} ol.FeatureLike
  */
 
 const TYPE = {
@@ -20,7 +21,7 @@ const TYPE = {
 const LABEL_FIELD_NAME = 'label';
 
 /**
- * @param {ol.Feature} feature feature
+ * @param {ol.FeatureLike} feature feature
  * @return {boolean} isCustom
  */
 const isCustom = (feature) => {
@@ -29,7 +30,7 @@ const isCustom = (feature) => {
 };
 
 /**
- * @param {ol.Feature} feature feature
+ * @param {ol.FeatureLike} feature feature
  * @return {string|undefined} label
  */
 const getLabel = (feature) => {
@@ -40,7 +41,7 @@ const getLabel = (feature) => {
 
 /**
  * True if the feature is suitable to become custom marker.
- * @param {ol.Feature} feature feature
+ * @param {ol.FeatureLike} feature feature
  * @return {boolean} suitability
  */
 const isSuitable = (feature) => {
