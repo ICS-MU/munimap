@@ -2,7 +2,26 @@ import * as ol_extent from 'ol/extent';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature
+ * @typedef {import("ol/extent").Extent} ol.Extent
  */
+
+/**
+ * @type {number}
+ * @const
+ * @protected
+ */
+const EXTENT_RATIO = 0.8;
+
+/**
+ * @param {ol.Extent} extent extent
+ * @return {number} value
+ */
+export const getBufferValue = (extent) => {
+  const width = ol_extent.getWidth(extent);
+  const height = ol_extent.getHeight(extent);
+  const shorterSide = width <= height ? width : height;
+  return -((1 - EXTENT_RATIO) * shorterSide);
+};
 
 /**
  * @param {Array<ol.Feature>} features features
