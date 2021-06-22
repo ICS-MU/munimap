@@ -2,10 +2,15 @@
  * @module building
  */
 import * as munimap_assert from './assert.js';
+import * as munimap_complex from './complex.js';
+import * as munimap_floor from './floor.js';
 import * as munimap_lang from './lang.js';
 import * as munimap_load from './load.js';
+import * as munimap_range from './range.js';
+import * as munimap_style from './style.js';
 import * as munimap_unit from './unit.js';
 import * as munimap_utils from './utils.js';
+import Feature from 'ol/Feature';
 import {MUNIMAP_URL} from './conf.js';
 import {Vector as ol_layer_Vector} from 'ol/layer';
 import {tile as ol_loadingstrategy_tile} from 'ol/loadingstrategy';
@@ -15,7 +20,6 @@ import {createXYZ as ol_tilegrid_createXYZ} from 'ol/tilegrid';
 /**
  * @typedef {import("./type.js").Options} TypeOptions
  * @typedef {import("ol/source").Vector} ol.source.Vector
- * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/proj/Projection").default} ol.proj.Projection
  * @typedef {import("./load.js").featuresForMap.Options} featuresForMapOptions
@@ -24,6 +28,7 @@ import {createXYZ as ol_tilegrid_createXYZ} from 'ol/tilegrid';
  * @typedef {import("ol/Map").default} ol.Map
  * @typedef {import("./load.js").Processor.Options} Processor.Options
  * @typedef {import("ol/featureloader")} ol.FeatureLoader
+ * @typedef {import("ol/render/Feature").default} ol.render.Feature
  */
 
 /**
@@ -97,11 +102,86 @@ const unitsProcessor = async (options) => {
 
 /**
  * @param {Processor.Options} options opts
+ * @return {Promise<Processor.Options>} promise
+ * @protected
+ */
+const complexUnitsProcessor = async (options) => {
+  const newComplexes = options.new;
+  const complexIdsToLoad = newComplexes.map((complex) => {
+    return complex.get(munimap_complex.ID_FIELD_NAME);
+  });
+
+  if (complexIdsToLoad.length) {
+    const units = await munimap_unit.loadByHeadquartersComplexIds(
+      complexIdsToLoad
+    );
+    newComplexes.forEach((complex) => {
+      const complexUnits = units.filter((unit) => {
+        return (
+          unit.get('areal_sidelni_id') ===
+          complex.get(munimap_complex.ID_FIELD_NAME)
+        );
+      });
+      complex.set(munimap_complex.UNITS_FIELD_NAME, complexUnits);
+    });
+    return options;
+  } else {
+    return options;
+  }
+};
+
+/**
+ * @param {Processor.Options} options opts
+ * @return {Promise<Processor.Options>} processor
+ * @protected
+ */
+const complexProcessor = async (options) => {
+  const newBuildings = options.new;
+  let complexIdsToLoad = [];
+  const buildingsToLoadComplex = [];
+  newBuildings.forEach((building) => {
+    const complexId = building.get(COMPLEX_ID_FIELD_NAME);
+    if (munimap_utils.isNumber(complexId)) {
+      munimap_assert.assertNumber(complexId);
+      const complex = munimap_complex.getById(complexId);
+      if (complex) {
+        building.set(COMPLEX_FIELD_NAME, complex);
+      } else {
+        complexIdsToLoad.push(complexId);
+        buildingsToLoadComplex.push(building);
+      }
+    } else {
+      building.set(COMPLEX_FIELD_NAME, null);
+    }
+  });
+
+  complexIdsToLoad = [...new Set(complexIdsToLoad)];
+  if (complexIdsToLoad.length) {
+    const complexes = await munimap_complex.loadByIds({
+      ids: complexIdsToLoad,
+      processor: complexUnitsProcessor,
+    });
+    buildingsToLoadComplex.forEach((building) => {
+      const complexId = building.get(COMPLEX_ID_FIELD_NAME);
+      const complex = munimap_complex.getById(complexId, complexes);
+      if (!complex) {
+        throw new Error('Complex ' + complexId + ' not found.');
+      }
+      building.set(COMPLEX_FIELD_NAME, complex || null);
+    });
+    return options;
+  } else {
+    return options;
+  }
+};
+
+/**
+ * @param {Processor.Options} options opts
  * @return {Promise<Processor.Options>} opts
  */
 const loadProcessor = async (options) => {
   const result = await Promise.all([
-    //munimap.building.load.complexProcessor(options),
+    complexProcessor(options),
     unitsProcessor(options),
   ]);
   munimap_assert.assertArray(result);
@@ -110,7 +190,8 @@ const loadProcessor = async (options) => {
     munimap_assert.assert(munimap_utils.arrayEquals(opts.all, options.all));
     munimap_assert.assert(munimap_utils.arrayEquals(opts.new, options.new));
     munimap_assert.assert(
-      munimap_utils.arrayEquals(opts.existing, options.existing));
+      munimap_utils.arrayEquals(opts.existing, options.existing)
+    );
   });
   return result[0];
 };
@@ -120,7 +201,7 @@ const loadProcessor = async (options) => {
  * @param {ol.extent.Extent} extent extent
  * @param {number} resolution resolution
  * @param {ol.proj.Projection} projection projection
- * @return {Promise<Array<ol.Feature>>} promise of features contained
+ * @return {Promise<Array<Feature>>} promise of features contained
  * in server response
  * @this {ol.source.Vector}
  */
@@ -257,7 +338,7 @@ const getLayer = (map) => {
 };
 
 /**
- * @param {ol.Feature} feature feature
+ * @param {Feature|ol.render.Feature} feature feature
  * @return {boolean} isBuilding
  */
 const isBuilding = (feature) => {
@@ -306,12 +387,13 @@ const featureClickHandler = (options) => {
 };
 
 /**
- * @param {ol.Feature} building building
+ * @param {Feature} building building
  * @return {boolean} hasInnerGeom
  */
 const hasInnerGeometry = (building) => {
   const hasInnerGeometry = /**@type {number}*/ (building.get(
-    'maVnitrniGeometrii'));
+    'maVnitrniGeometrii'
+  ));
   let result;
   switch (hasInnerGeometry) {
     case 1:
@@ -325,7 +407,7 @@ const hasInnerGeometry = (building) => {
 
 /**
  * @param {string} code code
- * @return {ol.Feature} building
+ * @return {Feature} building
  */
 const getByCode = (code) => {
   code = code.substr(0, 5);
@@ -338,7 +420,7 @@ const getByCode = (code) => {
 };
 
 /**
- * @param {ol.Feature} building building
+ * @param {Feature|ol.render.Feature} building building
  * @return {string} location code
  */
 const getLocationCode = (building) => {
@@ -351,18 +433,18 @@ const getLocationCode = (building) => {
 };
 
 /**
- * @param {ol.Feature} building bldg
- * @return {Array<ol.Feature>} units
+ * @param {Feature} building bldg
+ * @return {Array<Feature>} units
  */
 const getUnits = (building) => {
   const result = building.get(UNITS_FIELD_NAME);
   munimap_assert.assertArray(result);
-  return /**@type {Array<ol.Feature>}*/ (result);
+  return /**@type {Array<Feature>}*/ (result);
 };
 
 /**
- * @param {Array.<ol.Feature>} buildings bldgs
- * @return {Array.<ol.Feature>} hedquaters
+ * @param {Array.<Feature>} buildings bldgs
+ * @return {Array.<Feature>} hedquaters
  */
 const filterHeadquaters = (buildings) => {
   return buildings.filter((bldg) => {
@@ -371,8 +453,8 @@ const filterHeadquaters = (buildings) => {
 };
 
 /**
- * @param {Array.<ol.Feature>} buildings bldgs
- * @return {Array.<ol.Feature>} faculty headquaters
+ * @param {Array.<Feature>} buildings bldgs
+ * @return {Array.<Feature>} faculty headquaters
  */
 const filterFacultyHeadquaters = (buildings) => {
   return buildings.filter((bldg) => {
@@ -383,7 +465,7 @@ const filterFacultyHeadquaters = (buildings) => {
 };
 
 /**
- * @param {ol.Feature} building bldg
+ * @param {Feature} building bldg
  * @param {string} lang lang
  * @param {string=} opt_separator separator
  * @return {string} building title without organizational unit
@@ -403,4 +485,135 @@ const getTitleWithoutOrgUnit = (building, lang, opt_separator) => {
   return result;
 };
 
-export {isCode, isLikeExpr, loadProcessor};
+/**
+ * @param {Feature|ol.render.Feature} building building
+ * @param {ol.Map} map map
+ * @return {boolean} whereas is selected
+ */
+const isSelected = (building, map) => {
+  return false; //not implemented yet
+  // munimap_assert.assert(isBuilding(building));
+  // const locCode = getLocationCode(building);
+  // const selectedBuilding = munimap.getProps(map).selectedBuilding;
+  // return locCode === selectedBuilding;
+};
+
+/**
+ * @param {Feature} feature feature
+ * @param {string} lang lang
+ * @param {number} [opt_resolution] resolution
+ * @return {string} name part
+ */
+const getNamePart = (feature, lang, opt_resolution) => {
+  const units = getUnits(feature);
+  const titleParts = munimap_unit.getTitleParts(units, lang);
+  return titleParts.join('\n');
+};
+
+/**
+ * @param {Feature} building bldg
+ * @return {Feature} complex
+ */
+const getComplex = (building) => {
+  const result = building.get(COMPLEX_FIELD_NAME);
+  munimap_assert.assert(result === null || result instanceof Feature);
+  return result;
+};
+
+/**
+ * @param {Feature} feature feature
+ * @param {number} resolution resolution
+ * @param {string} lang language
+ * @return {string} address part
+ */
+const getAddressPart = (feature, resolution, lang) => {
+  const titleParts = [];
+  if (munimap_utils.isDefAndNotNull(getComplex(feature))) {
+    const bldgAbbr = feature.get(
+      munimap_lang.getMsg(
+        munimap_lang.Translations.BUILDING_ABBR_FIELD_NAME,
+        lang
+      )
+    );
+    if (munimap_utils.isDefAndNotNull(bldgAbbr)) {
+      if (munimap_range.contains(munimap_floor.RESOLUTION, resolution)) {
+        const bldgType = feature.get(
+          munimap_lang.getMsg(
+            munimap_lang.Translations.BUILDING_TYPE_FIELD_NAME,
+            lang
+          )
+        );
+        if (munimap_utils.isDefAndNotNull(bldgType)) {
+          munimap_assert.assertString(bldgAbbr);
+          munimap_assert.assertString(bldgType);
+          const units = getUnits(feature);
+          if (units.length === 0) {
+            titleParts.push(
+              munimap_style.alignTextToRows([bldgType, bldgAbbr], ' ')
+            );
+          } else {
+            titleParts.push(bldgType + ' ' + bldgAbbr);
+          }
+        }
+      } else {
+        titleParts.push(bldgAbbr);
+      }
+    } else {
+      titleParts.push(getTitleWithoutOrgUnit(feature, lang, '\n'));
+    }
+  } else {
+    titleParts.push(getTitleWithoutOrgUnit(feature, lang, '\n'));
+  }
+  return titleParts.join('\n');
+};
+
+/**
+ * @param {Feature} feature feature
+ * @param {number} resolution resolution
+ * @param {string} lang lang
+ * @return {string} label
+ */
+const getDefaultLabel = (feature, resolution, lang) => {
+  const result = [];
+  const namePart = getNamePart(feature, lang, resolution);
+  if (namePart) {
+    result.push(namePart);
+  }
+
+  const complex = getComplex(feature);
+  if (
+    !namePart ||
+    !complex ||
+    munimap_complex.getBuildingCount(complex) === 1 ||
+    resolution < munimap_complex.RESOLUTION.min
+  ) {
+    const addressPart = getAddressPart(feature, resolution, lang);
+    if (addressPart) {
+      result.push(addressPart);
+    }
+  }
+  return result.join('\n');
+};
+
+/**
+ * @param {Feature} building bldg
+ * @return {Array<Feature>} faculties
+ */
+const getFaculties = (building) => {
+  const units = getUnits(building);
+  const result = units.filter((unit) => munimap_unit.getPriority(unit) > 0);
+  return result;
+};
+
+export {
+  isCode,
+  isLikeExpr,
+  loadProcessor,
+  isBuilding,
+  hasInnerGeometry,
+  isSelected,
+  getDefaultLabel,
+  getUnits,
+  getFaculties,
+  getAddressPart,
+};
