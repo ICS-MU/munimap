@@ -82,7 +82,7 @@ const partial = (fn, ...partialArgs) => {
   return (...args) => {
     let newArgs = _args.slice();
     newArgs = [...newArgs, ...args];
-    return fn(newArgs);
+    return fn(...newArgs);
   };
 };
 
