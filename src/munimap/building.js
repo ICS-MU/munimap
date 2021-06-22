@@ -225,17 +225,7 @@ const featuresForMap = async (options, extent, resolution, projection) => {
   return buildings;
 };
 
-/**
- *
- * @type {TypeOptions}
- */
-export const TYPE = {
-  primaryKey: LOCATION_CODE_FIELD_NAME,
-  serviceUrl: MUNIMAP_URL,
-  layerId: 2,
-  name: 'building',
-};
-
+/* eslint-disable no-use-before-define */
 /**
  * @type {ol.source.Vector}
  * @const
@@ -251,6 +241,19 @@ const STORE = new ol_source_Vector({
     })
   ),
 });
+
+/**
+ *
+ * @type {TypeOptions}
+ */
+export const TYPE = {
+  primaryKey: LOCATION_CODE_FIELD_NAME,
+  serviceUrl: MUNIMAP_URL,
+  store: STORE,
+  layerId: 2,
+  name: 'building',
+};
+/* eslint-enable no-use-before-define */
 
 /**
  * @param {string} maybeCode location code
@@ -606,6 +609,11 @@ const getFaculties = (building) => {
 };
 
 export {
+  LAYER_ID,
+  LABEL_LAYER_ID,
+  STORE,
+  isClickable,
+  featureClickHandler,
   isCode,
   isLikeExpr,
   loadProcessor,
@@ -616,4 +624,5 @@ export {
   getUnits,
   getFaculties,
   getAddressPart,
+  getComplex,
 };

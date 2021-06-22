@@ -19,7 +19,7 @@ import {Fill, Stroke, Style, Text} from 'ol/style';
 
 /**
  * @typedef {import("./marker").LabelFunction} MarkerLabelFunction
- * @typedef {import("ol/source/Vector")} ol.source.Vector
+ * @typedef {import("ol/source/Vector").default} ol.source.Vector
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("ol/").Map} ol.Map
@@ -436,8 +436,10 @@ export {
   PIN_SIZE,
   TEXT_STROKE,
   TEXT_FILL,
+  LABEL_CACHE,
   getLabelWithPin,
   getTextStyleWithOffsetY,
   alignTextToRows,
   getDefaultLabel,
+  refreshFromFragments,
 };

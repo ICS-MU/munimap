@@ -5,6 +5,7 @@
 import * as munimap_assert from './assert.js';
 import * as munimap_cluster from './cluster.js';
 import * as munimap_lang from './lang.js';
+import * as munimap_layer from './layer.js';
 import * as munimap_marker from './marker.js';
 import * as munimap_markerStyle from './markerStyle.js';
 import * as munimap_utils from './utils.js';
@@ -227,7 +228,7 @@ const createMarkerLayer = (map, markers, lang, attrs) => {
   // ) {
   //   clusterResolution = munimap_cluster.ROOM_RESOLUTION;
   // }
-  return new VectorLayer(
+  const markerLayer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: munimap_marker.LAYER_ID,
       isFeatureClickable: munimap_marker.isClickable,
@@ -244,6 +245,30 @@ const createMarkerLayer = (map, markers, lang, attrs) => {
       renderOrder: null,
     })
   );
+  markerLayer.once('precompose', munimap_markerStyle.getPattern);
+
+  return markerLayer;
+};
+
+/**
+ * @param {ol.Map} map map
+ * @param {VectorSource} markerSource source
+ * @param {string} lang language
+ * @return {Array<VectorLayer>} default layers
+ */
+const getDefaultLayers = (map, markerSource, lang) => {
+  const layers = munimap_layer.getDefaultLayers(map, lang);
+
+  munimap_layer.setDefaultLayersProps({
+    layers: layers,
+    markersAwareOptions: {
+      map: map,
+      markerSource: markerSource,
+      // markerLabel: markerLabel,
+    }
+  });
+
+  return layers;
 };
 
 export {
@@ -252,4 +277,5 @@ export {
   createTileLayer,
   toggleLoadingMessage,
   createMarkerLayer,
+  getDefaultLayers,
 };

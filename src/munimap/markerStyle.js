@@ -313,7 +313,6 @@ const labelFunction = (options, feature, resolution) => {
  * @return {Array.<Style>} style
  */
 export const styleFunction = (options, feature, resolution) => {
-  console.log(options, feature, resolution);
   munimap_asserts.assertInstanceof(feature, Feature);
   // if (
   //   munimap_range.contains(munimap_floor.RESOLUTION, resolution) &&
@@ -363,3 +362,5 @@ export const styleFunction = (options, feature, resolution) => {
   }
   return result;
 };
+
+export {WHITE_TO_GREY_CACHE, NO_GEOMETRY_BUILDING, BUILDING_STROKE, getPattern};

@@ -353,6 +353,12 @@ export default (options) => {
             state.requiredOpts.lang,
             muAttributions
           );
+          const layers = munimap_view.getDefaultLayers(
+            map,
+            markerLayer.getSource(),
+            state.requiredOpts.lang
+          );
+          layers.forEach((layer) => map.addLayer(layer));
           map.addLayer(markerLayer);
         }
 
