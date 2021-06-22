@@ -92,7 +92,7 @@ const assertBoolean = (val, opt_msg) => {
  * @return {number} asserted value
  */
 const assertNumber = (val, opt_msg) => {
-  if (!munimap_utils.isBoolean(val)) {
+  if (!munimap_utils.isNumber(val)) {
     const m = `Expected number not ${munimap_utils.typeOf(val)}: ${val}.`;
     if (opt_msg) {
       m + ` ${opt_msg}`;
@@ -121,7 +121,7 @@ const assertElement = (val, opt_msg) => {
 
 /**
  * @param {*} val value
- * @param {function(new: any)} type type
+ * @param {Function} type type
  * @param {string=} opt_msg optional message
  * @return {*} asserted value
  */
@@ -306,6 +306,7 @@ export {
   assertBoolean,
   assertString,
   assertNumber,
+  assertInstanceof,
   target,
   zoom,
   zoomTo,
