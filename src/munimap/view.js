@@ -3,10 +3,15 @@
  */
 
 import * as munimap_assert from './assert.js';
+import * as munimap_cluster from './cluster.js';
 import * as munimap_lang from './lang.js';
+import * as munimap_marker from './marker.js';
+import * as munimap_markerStyle from './markerStyle.js';
 import * as munimap_utils from './utils.js';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
 import XYZ from 'ol/source/XYZ';
 import createControls from './controls.js';
 import {BASEMAPS} from './basemap.js';
@@ -14,7 +19,10 @@ import {RESOLUTION_COLOR} from './style.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
+ * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import('./controls.js').CreateOptions} CreateOptions
+ * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions
+ * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  */
 
 /**
@@ -189,4 +197,59 @@ const addControls = (map, requiredOpts) => {
   createControls(map, requiredOpts);
 };
 
-export {changeBaseMap, addControls, createTileLayer, toggleLoadingMessage};
+/**
+ * @param {ol.Map} map map
+ * @param {Array<ol.Feature>} markers markers
+ * @param {string} lang lang
+ * @param {ol.AttributionLike} attrs atributions
+ * @return {VectorLayer} layer
+ */
+const createMarkerLayer = (map, markers, lang, attrs) => {
+  const markerSource = new VectorSource({
+    attributions: attrs,
+    features: markers,
+  });
+  const markerOptions = {
+    map: map,
+    markerSource: markerSource,
+    //markerLabel: options.markerLabel,
+    lang: lang,
+  };
+  const clusterResolution = munimap_cluster.BUILDING_RESOLUTION;
+  // if (
+  //   markers.length &&
+  //   (markers.some((el) => {
+  //     return munimap.room.isRoom(el);
+  //   }) ||
+  //     markers.some((el) => {
+  //       return munimap.door.isDoor(el);
+  //     })
+  // ) {
+  //   clusterResolution = munimap_cluster.ROOM_RESOLUTION;
+  // }
+  return new VectorLayer(
+    /** @type {VectorLayerOptions} */ ({
+      id: munimap_marker.LAYER_ID,
+      isFeatureClickable: munimap_marker.isClickable,
+      featureClickHandler: munimap_marker.featureClickHandler,
+      redrawOnFloorChange: true,
+      source: markerSource,
+      style: munimap_utils.partial(
+        munimap_markerStyle.styleFunction,
+        markerOptions
+      ),
+      maxResolution: clusterResolution.min,
+      updateWhileAnimating: true,
+      updateWhileInteracting: false,
+      renderOrder: null,
+    })
+  );
+};
+
+export {
+  changeBaseMap,
+  addControls,
+  createTileLayer,
+  toggleLoadingMessage,
+  createMarkerLayer,
+};

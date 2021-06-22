@@ -13,7 +13,7 @@ import Feature from 'ol/Feature';
 import {INITIAL_STATE} from './conf.js';
 import {Map, View} from 'ol';
 import {defaults as control_defaults} from 'ol/control';
-import {createStore} from './store.js';
+import {createStore} from './reduxStore.js';
 import {decorate as decorateCustomMarker} from './markerCustom.js';
 import {ofFeatures as extentOfFeatures} from './extent.js';
 
@@ -345,6 +345,15 @@ export default (options) => {
               })
             );
           });
+
+          const muAttributions = slctr.getMuAttrs(state);
+          const markerLayer = munimap_view.createMarkerLayer(
+            map,
+            markers,
+            state.requiredOpts.lang,
+            muAttributions
+          );
+          map.addLayer(markerLayer);
         }
 
         munimap_view.changeBaseMap(basemapLayer, map);

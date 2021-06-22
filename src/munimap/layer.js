@@ -3,6 +3,20 @@
  */
 
 /**
+ * @typedef {import("ol/layer/BaseVector").Options} BaseLayerOptions
+ */
+
+/**
+ * @typedef {Object} VectorLayerExtendedOptions
+ * @property {string} id
+ * @property {(options: feature.clickHandlerOptions) => boolean} isFeatureClickable
+ * @property {(options: feature.clickHandlerOptions) => void} featureClickHandler
+ * @property {boolean} redrawOnFloorChange
+ *
+ * @typedef {BaseLayerOptions & VectorLayerExtendedOptions} VectorLayerOptions
+ */
+
+/**
  * @type {string}
  * @const
  */

@@ -1,3 +1,4 @@
+import * as munimap_lang from './lang.js';
 import * as munimap_utils from './utils.js';
 import {createSelector} from 'reselect';
 import {createTileLayer} from './view.js';
@@ -152,3 +153,16 @@ export const areZoomTosLoaded = createSelector(
     );
   }
 );
+
+export const getMuAttrs = createSelector([getLang], (lang) => {
+  console.log('computing MU attrs');
+  const munimapAttr = munimap_lang.getMsg(
+    munimap_lang.Translations.MUNIMAP_ATTRIBUTION_HTML,
+    lang
+  );
+  const muAttr = munimap_lang.getMsg(
+    munimap_lang.Translations.MU_ATTRIBUTION_HTML,
+    lang
+  );
+  return [munimapAttr, muAttr];
+});
