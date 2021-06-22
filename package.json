@@ -42,6 +42,8 @@
     "webpack-dev-server": "^4.0.0-beta.1"
   },
   "dependencies": {
+    "@turf/bbox-polygon": "^4.7.3",
+    "@turf/intersect": "^4.7.3",
     "ol": "^6.5.0",
     "redux": "^4.0.5",
     "reselect": "^4.0.0",
