@@ -18,22 +18,6 @@ const getLang = (state) => state.requiredOpts.lang;
 const getCenter = (state) => state.center;
 const getResolution = (state) => state.resolution;
 
-export const toggleLoadingMessage = createSelector(
-  [getRequiredLoadingMessage, getMarkersTimestamp],
-  (requireLoadingMessage, timestamp) => {
-    console.log('computing loading message');
-    if (!requireLoadingMessage) {
-      return null;
-    } else {
-      if (timestamp) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-  }
-);
-
 export const getInitMarkers = createSelector(
   [getRequiredMarkers],
   (requiredMarkers) => {
@@ -156,6 +140,22 @@ export const areZoomTosLoaded = createSelector(
       (requiredZoomTos.length > 0 && zoomTosTimestamp > 0) ||
       requiredZoomTos.length === 0
     );
+  }
+);
+
+export const toggleLoadingMessage = createSelector(
+  [getRequiredLoadingMessage, areMarkersLoaded, areZoomTosLoaded],
+  (requireLoadingMessage, markersLoaded, zoomTosLoaded) => {
+    console.log('computing loading message');
+    if (!requireLoadingMessage) {
+      return null;
+    } else {
+      if (markersLoaded && zoomTosLoaded) {
+        return false;
+      } else {
+        return true;
+      }
+    }
   }
 );
 
