@@ -225,23 +225,6 @@ const featuresForMap = async (options, extent, resolution, projection) => {
   return buildings;
 };
 
-/* eslint-disable no-use-before-define */
-/**
- * @type {ol.source.Vector}
- * @const
- */
-const STORE = new ol_source_Vector({
-  loader: munimap_utils.partial(featuresForMap, {
-    type: () => TYPE,
-    processor: loadProcessor,
-  }),
-  strategy: ol_loadingstrategy_tile(
-    ol_tilegrid_createXYZ({
-      tileSize: 512,
-    })
-  ),
-});
-
 /**
  *
  * @type {TypeOptions}
@@ -249,11 +232,28 @@ const STORE = new ol_source_Vector({
 export const TYPE = {
   primaryKey: LOCATION_CODE_FIELD_NAME,
   serviceUrl: MUNIMAP_URL,
-  store: STORE,
   layerId: 2,
   name: 'building',
 };
-/* eslint-enable no-use-before-define */
+
+/**
+ * @type {ol.source.Vector}
+ * @const
+ */
+const STORE = new ol_source_Vector({
+  strategy: ol_loadingstrategy_tile(
+    ol_tilegrid_createXYZ({
+      tileSize: 512,
+    })
+  ),
+});
+STORE.setLoader(
+  munimap_utils.partial(featuresForMap, {
+    source: STORE,
+    type: TYPE,
+    processor: loadProcessor,
+  })
+);
 
 /**
  * @param {string} maybeCode location code

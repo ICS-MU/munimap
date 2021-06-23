@@ -10,7 +10,6 @@ import {Abbr} from './lang.js';
 import {BASEMAPS} from './basemap.js';
 import {isCodeOrLikeExpr as building_isCodeOrLikeExpr} from './building.js';
 import {assertSuitable as marker_custom_assertSuitable} from './markerCustom.js';
-import { ol } from './index.js';
 
 /**
  * @extends {Error}
@@ -137,6 +136,23 @@ const assertInstanceof = (val, type, opt_msg) => {
     throw new AssertionError(m);
   }
   return /**@type {boolean} */ (val);
+};
+
+/**
+ * @param {*} val value
+ * @param {string=} opt_msg Error message.
+ * @return {any} asserted value
+ * @throws {AssertionError} When the value is not an Element.
+ */
+const assertExists = (val, opt_msg) => {
+  if (!munimap_utils.isDefAndNotNull) {
+    const m = `Expected to exist: ${val}.`;
+    if (opt_msg) {
+      m + ` ${opt_msg}`;
+    }
+    throw new AssertionError(m);
+  }
+  return /** @type {any}*/ (val);
 };
 
 /**
@@ -307,6 +323,7 @@ export {
   assertString,
   assertNumber,
   assertInstanceof,
+  assertExists,
   target,
   zoom,
   zoomTo,

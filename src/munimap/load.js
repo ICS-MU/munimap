@@ -40,6 +40,7 @@ import {NAME as munimap_type_NAME} from './type.js';
 
 /**
  * @typedef {Object} featuresForMap.Options
+ * @property {ol.source.Vector} source
  * @property {TypeOptions|function(): TypeOptions} type
  * @property {string} [where]
  * @property {string} [method]
@@ -250,6 +251,7 @@ const featuresFromUrl = async (options) => {
  * @return {Promise<Array<ol.Feature>>} promise of features contained in response
  */
 const featuresForMap = async (options, extent, resolution, projection) => {
+  munimap_assert.assertExists(options.source, 'Source must be defined!');
   const type = munimap_utils.isFunction(options.type)
     ? /**@type {function}*/ (options.type)()
     : options.type;
@@ -296,7 +298,7 @@ const featuresForMap = async (options, extent, resolution, projection) => {
   }
 
   return featuresFromUrl({
-    source: type.store,
+    source: options.source,
     type: type,
     url: !isPost ? url + queryParams.toString() : url,
     projection: projection,
