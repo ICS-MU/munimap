@@ -1,5 +1,5 @@
 /**
- * @module buildingStyle
+ * @module style/building
  */
 
 import * as munimap_assert from '../assert/assert.js';

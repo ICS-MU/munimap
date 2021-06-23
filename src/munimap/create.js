@@ -1,3 +1,6 @@
+/**
+ * @module create
+ */
 import * as actions from './redux/action.js';
 import * as munimap_assert from './assert/assert.js';
 import * as munimap_interaction from './ui/interaction.js';

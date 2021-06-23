@@ -1,5 +1,5 @@
 /**
- * @module matomo
+ * @module matomo/matomo
  */
 
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';

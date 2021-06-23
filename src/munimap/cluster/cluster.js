@@ -1,5 +1,5 @@
 /**
- * @module cluster
+ * @module cluster/cluster
  */
 
 import * as munimap_range from '../utils/range.js';

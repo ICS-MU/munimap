@@ -1,5 +1,5 @@
 /**
- * @module middleware
+ * @module redux/middleware
  */
 
 // This middleware will just add the property "async dispatch" to all actions

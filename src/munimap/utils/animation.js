@@ -1,5 +1,5 @@
 /**
- * @module move
+ * @module utils/animation
  */
 
 import * as ol_extent from 'ol/extent';

@@ -1,5 +1,5 @@
 /**
- * @module markerStyle
+ * @module style/marker
  */
 
 import * as munimap_asserts from '../assert/assert.js';

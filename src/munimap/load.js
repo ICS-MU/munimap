@@ -1,3 +1,6 @@
+/**
+ * @module load
+ */
 import * as munimap_assert from './assert/assert.js';
 import * as munimap_building from './feature/building.js';
 import * as munimap_utils from './utils/utils.js';

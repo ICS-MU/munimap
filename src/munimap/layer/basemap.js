@@ -1,5 +1,5 @@
 /**
- * @module basemap
+ * @module layer/basemap
  */
 
 /**

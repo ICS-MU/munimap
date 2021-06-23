@@ -1,3 +1,6 @@
+/**
+ * @module redux/selector
+ */
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_utils from '../utils/utils.js';
 import {createSelector} from 'reselect';

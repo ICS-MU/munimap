@@ -1,5 +1,5 @@
 /**
- * @module geom
+ * @module utils/geom
  */
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_building from '../feature/building.js';

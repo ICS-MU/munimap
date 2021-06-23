@@ -1,5 +1,5 @@
 /**
- * @module lang
+ * @module lang/lang
  */
 
 /**

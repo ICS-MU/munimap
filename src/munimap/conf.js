@@ -1,4 +1,8 @@
 /**
+ * @module conf
+ */
+
+/**
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
  * @typedef {import("ol/layer").Vector} ol.layer.Vector
  * @typedef {import("ol").Feature} ol.Feature

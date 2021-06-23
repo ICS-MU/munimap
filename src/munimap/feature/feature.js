@@ -1,5 +1,5 @@
 /**
- * @module feature
+ * @module feature/feature
  */
 
 /**

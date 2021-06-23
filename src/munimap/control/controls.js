@@ -1,5 +1,5 @@
 /**
- * @module controls
+ * @module control/controls
  */
 
 import * as munimap_lang from '../lang/lang.js';

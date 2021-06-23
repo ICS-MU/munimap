@@ -1,6 +1,6 @@
 /**
  *
- * @module maplinks
+ * @module control/maplinks
  */
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_matomo from '../matomo/matomo.js';

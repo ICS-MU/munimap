@@ -1,5 +1,9 @@
 /* eslint-disable no-console */
 
+/**
+ * @module reset
+ */
+
 import * as munimap_matomo from './matomo/matomo.js';
 
 /**

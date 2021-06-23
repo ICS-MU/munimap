@@ -1,5 +1,5 @@
 /**
- * @module layer
+ * @module layer/layer
  */
 
 import * as munimap_building from '../feature/building.js';

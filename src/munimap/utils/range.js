@@ -1,5 +1,5 @@
 /**
- * @module range
+ * @module utils/range
  */
 
 /**

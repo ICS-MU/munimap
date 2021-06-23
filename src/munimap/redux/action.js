@@ -1,3 +1,6 @@
+/**
+ * @module redux/action
+ */
 export const OL_MAP_VIEW_CHANGE = 'OL_MAP_VIEW_CHANGE';
 export const OL_MAP_INITIALIZED = 'OL_MAP_INITIALIZED';
 export const OL_MAP_MOVEEND = 'OL_MAP_MOVEEND';

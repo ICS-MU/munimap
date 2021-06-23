@@ -1,5 +1,5 @@
 /**
- * @module interaction
+ * @module ui/interaction
  */
 import * as munimap_lang from '../lang/lang.js';
 

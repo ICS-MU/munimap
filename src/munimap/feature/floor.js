@@ -1,5 +1,5 @@
 /**
- * @module floor
+ * @module feature/floor
  */
 
 import * as munimap_range from '../utils/range.js';

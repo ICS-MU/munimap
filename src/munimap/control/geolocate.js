@@ -1,6 +1,6 @@
 /**
  *
- * @module geolocate
+ * @module control/geolocate
  */
 
 import * as munimap_lang from '../lang/lang.js';

@@ -1,5 +1,5 @@
 /**
- * @module unit
+ * @module feature/unit
  */
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_building from './building.js';

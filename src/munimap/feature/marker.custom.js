@@ -1,5 +1,5 @@
 /**
- * @module markerCustom
+ * @module feature/markercustom
  */
 import * as munimap_assert from '../assert/assert.js';
 import * as ol_extent from 'ol/extent';

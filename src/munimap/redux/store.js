@@ -1,3 +1,6 @@
+/**
+ * @module redux/store
+ */
 import * as actions from './action.js';
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_matomo from '../matomo/matomo.js';

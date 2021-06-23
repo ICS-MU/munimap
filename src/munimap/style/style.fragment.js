@@ -1,5 +1,5 @@
 /**
- * @module styleFragment
+ * @module style/stylefragment
  */
 
 /**

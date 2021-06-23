@@ -1,4 +1,7 @@
 /* eslint-disable sort-imports-es6-autofix/sort-imports-es6 */
+/**
+ * @module index
+ */
 import 'ol/ol.css';
 import '../css/munimaplib.css'; //must be after ol.css => rewrite some rules
 import '../img/google.png';

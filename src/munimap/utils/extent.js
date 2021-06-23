@@ -1,3 +1,7 @@
+/**
+ * @module utils/extent
+ */
+
 import * as ol_extent from 'ol/extent';
 
 /**

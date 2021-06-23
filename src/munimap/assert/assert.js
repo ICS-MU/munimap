@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 /**
- * @module assert
+ * @module assert/assert
  */
 
 import * as munimap_utils from '../utils/utils.js';
