@@ -55,7 +55,7 @@ const getPriority = (unit) => {
  * @protected
  */
 const load = async (where) => {
-  return await munimap_load.features({
+  return munimap_load.features({
     source: STORE,
     type: TYPE,
     method: 'POST',
@@ -71,7 +71,7 @@ const load = async (where) => {
  */
 const loadByHeadquartersIds = async (buildingIds) => {
   const where = 'budova_sidelni_id IN (' + buildingIds.join() + ')';
-  return await load(where);
+  return load(where);
 };
 
 /**
@@ -81,7 +81,7 @@ const loadByHeadquartersIds = async (buildingIds) => {
  */
 const loadByHeadquartersComplexIds = async (complexIds) => {
   const where = 'areal_sidelni_id IN (' + complexIds.join() + ')';
-  return await load(where);
+  return load(where);
 };
 
 /**

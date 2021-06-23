@@ -348,7 +348,7 @@ const features = async (options) => {
       formData.append(key, value);
     }
   }
-  return await featuresFromUrl({
+  return featuresFromUrl({
     source: options.source,
     type: type,
     url: !isPost ? url + queryParams.toString() : url,
@@ -390,7 +390,7 @@ const featuresByCode = async (options) => {
   } else {
     where = '1=1';
   }
-  return await features({
+  return features({
     source: options.source,
     type: options.type,
     where: where,
@@ -404,7 +404,7 @@ const featuresByCode = async (options) => {
  * in server response
  */
 const buildingsByCode = async (options) => {
-  return await featuresByCode({
+  return featuresByCode({
     codes: options.codes,
     type: munimap_building.getType(),
     source: munimap_building.getStore(),
