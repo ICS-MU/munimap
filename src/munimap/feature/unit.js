@@ -13,6 +13,7 @@ import {Vector as ol_source_Vector} from 'ol/source';
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
  * @typedef {import("ol/source").Vector} ol.source.Vector
  * @typedef {import("ol").Feature} ol.Feature
+ * @typedef {import("../load.js").ProcessorOptions} ProcessorOptions
  */
 
 /**
@@ -82,6 +83,30 @@ const loadByHeadquartersIds = async (buildingIds) => {
 const loadByHeadquartersComplexIds = async (complexIds) => {
   const where = 'areal_sidelni_id IN (' + complexIds.join() + ')';
   return load(where);
+};
+
+/**
+ * @param {ProcessorOptions} options opts
+ * @return {Promise<ProcessorOptions>} opts
+ */
+const loadProcessor = async (options) => {
+  const newBuildings = options.new;
+  const buildingIdsToLoad = newBuildings.map((building) => {
+    return building.get('inetId');
+  });
+
+  if (buildingIdsToLoad.length) {
+    const units = await loadByHeadquartersIds(buildingIdsToLoad);
+    newBuildings.forEach((building) => {
+      const buildingUnits = units.filter((unit) => {
+        return unit.get('budova_sidelni_id') === building.get('inetId');
+      });
+      building.set(munimap_building.UNITS_FIELD_NAME, buildingUnits);
+    });
+    return options;
+  } else {
+    return options;
+  }
 };
 
 /**
@@ -186,6 +211,7 @@ export {
   getPriority,
   loadByHeadquartersIds,
   loadByHeadquartersComplexIds,
+  loadProcessor,
   getAbbr,
   getTitle,
   getTitleParts,

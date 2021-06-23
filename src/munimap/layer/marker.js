@@ -1,4 +1,3 @@
 /**
  * @module layer/marker
  */
-

@@ -3,8 +3,11 @@
  */
 
 import * as munimap_assert from '../assert/assert.js';
+import * as munimap_building from './building.js';
 import * as munimap_load from '../load.js';
 import * as munimap_range from '../utils/range.js';
+import * as munimap_unit from '../feature/unit.js';
+import * as munimap_utils from '../utils/utils.js';
 import VectorSource from 'ol/source/Vector';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature.js';
 import {MUNIMAP_URL} from '../conf.js';
@@ -13,6 +16,7 @@ import {MUNIMAP_URL} from '../conf.js';
  * @typedef {import('../utils/range.js').RangeInterface} RangeInterface
  * @typedef {import('./feature.js').TypeOptions} TypeOptions
  * @typedef {import("../load.js").Processor} Processor
+ * @typedef {import("../load.js").ProcessorOptions} ProcessorOptions
  * @typedef {import("ol/Feature").default} ol.Feature
  */
 
@@ -117,6 +121,78 @@ const loadByIds = async (options) => {
   });
 };
 
+/**
+ * @param {ProcessorOptions} options opts
+ * @return {Promise<ProcessorOptions>} promise
+ * @protected
+ */
+const loadProcessorWithUnits = async (options) => {
+  const newComplexes = options.new;
+  const complexIdsToLoad = newComplexes.map((complex) => {
+    return complex.get(ID_FIELD_NAME);
+  });
+
+  if (complexIdsToLoad.length) {
+    const units = await munimap_unit.loadByHeadquartersComplexIds(
+      complexIdsToLoad
+    );
+    newComplexes.forEach((complex) => {
+      const complexUnits = units.filter((unit) => {
+        return unit.get('areal_sidelni_id') === complex.get(ID_FIELD_NAME);
+      });
+      complex.set(UNITS_FIELD_NAME, complexUnits);
+    });
+    return options;
+  } else {
+    return options;
+  }
+};
+
+/**
+ * @param {ProcessorOptions} options opts
+ * @return {Promise<ProcessorOptions>} processor
+ * @protected
+ */
+const loadProcessor = async (options) => {
+  const newBuildings = options.new;
+  let complexIdsToLoad = [];
+  const buildingsToLoadComplex = [];
+  newBuildings.forEach((building) => {
+    const complexId = building.get(munimap_building.COMPLEX_ID_FIELD_NAME);
+    if (munimap_utils.isNumber(complexId)) {
+      munimap_assert.assertNumber(complexId);
+      const complex = getById(complexId);
+      if (complex) {
+        building.set(munimap_building.COMPLEX_FIELD_NAME, complex);
+      } else {
+        complexIdsToLoad.push(complexId);
+        buildingsToLoadComplex.push(building);
+      }
+    } else {
+      building.set(munimap_building.COMPLEX_FIELD_NAME, null);
+    }
+  });
+
+  complexIdsToLoad = [...new Set(complexIdsToLoad)];
+  if (complexIdsToLoad.length) {
+    const complexes = await loadByIds({
+      ids: complexIdsToLoad,
+      processor: loadProcessorWithUnits,
+    });
+    buildingsToLoadComplex.forEach((building) => {
+      const complexId = building.get(munimap_building.COMPLEX_ID_FIELD_NAME);
+      const complex = getById(complexId, complexes);
+      if (!complex) {
+        throw new Error('Complex ' + complexId + ' not found.');
+      }
+      building.set(munimap_building.COMPLEX_FIELD_NAME, complex || null);
+    });
+    return options;
+  } else {
+    return options;
+  }
+};
+
 export {
   RESOLUTION,
   ID_FIELD_NAME,
@@ -125,4 +201,6 @@ export {
   getBuildingCount,
   getById,
   loadByIds,
+  loadProcessorWithUnits,
+  loadProcessor,
 };

@@ -265,7 +265,7 @@ const getDefaultLayers = (map, markerSource, lang) => {
       map: map,
       markerSource: markerSource,
       // markerLabel: markerLabel,
-    };
+    },
   });
 
   return layers;

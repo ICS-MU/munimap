@@ -17,7 +17,7 @@ import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
  */
 
 /**
- * @typedef {Object} features.Options
+ * @typedef {Object} FeaturesOptions
  * @property {ol.source.Vector} source
  * @property {TypeOptions} type
  * @property {string} [where]
@@ -27,7 +27,7 @@ import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
  */
 
 /**
- * @typedef {Object} featuresByCode.Options
+ * @typedef {Object} FeaturesByCodeOptions
  * @property {Array<string>} codes
  * @property {TypeOptions} type
  * @property {ol.source.Vector} source
@@ -36,13 +36,13 @@ import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
  */
 
 /**
- * @typedef {Object} buildingsByCode.Options
+ * @typedef {Object} BuildingsByCodeOptions
  * @property {Array<string>} codes
  * @property {Array<string>} likeExprs
  */
 
 /**
- * @typedef {Object} featuresForMap.Options
+ * @typedef {Object} FeaturesForMapOptions
  * @property {ol.source.Vector} source
  * @property {TypeOptions|function(): TypeOptions} type
  * @property {string} [where]
@@ -51,7 +51,7 @@ import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
  */
 
 /**
- * @typedef {Object} featuresFromUrl.Options
+ * @typedef {Object} FeaturesFromUrlOptions
  * @property {ol.source.Vector} source
  * @property {TypeOptions} type
  * @property {string} url
@@ -63,7 +63,7 @@ import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
  */
 
 /**
- * @typedef {Object} waitForNewProcessedFeatures.Options
+ * @typedef {Object} WaitForNewProcessedFeaturesOptions
  * @property {ol.source.Vector} source
  * @property {Array<ol.Feature>} loadedNewProcessedFeatures
  */
@@ -72,7 +72,7 @@ import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
  * Processor must return the same options object as was the input.
  * It is not allowed to change any options arrays (all, new, existing), but
  * it can change elements of those arrays (that's why processor exists).
- * @typedef {function(Processor.Options): Promise<Processor.Options>} Processor
+ * @typedef {function(ProcessorOptions): Promise<ProcessorOptions>} Processor
  */
 
 /**
@@ -81,7 +81,7 @@ import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
  * new: features that were loaded in this request and are not yet in the store
  * existing: features that were loaded in this request and are already in the
  *   store
- * @typedef {Object} Processor.Options
+ * @typedef {Object} ProcessorOptions
  * @property {Array.<ol.Feature>} all
  * @property {Array.<ol.Feature>} new
  * @property {Array.<ol.Feature>} existing
@@ -117,7 +117,7 @@ const getNewProcessedFeatures = (type) => {
 };
 
 /**
- * @param {Processor.Options} options opts
+ * @param {ProcessorOptions} options opts
  * @protected
  */
 const defaultProcessor = async (options) => {
@@ -131,7 +131,7 @@ const defaultProcessor = async (options) => {
 const FORMAT = new EsriJSON();
 
 /**
- * @param {waitForNewProcessedFeatures.Options} options opts
+ * @param {WaitForNewProcessedFeaturesOptions} options opts
  */
 const waitForNewProcessedFeatures = async (options) => {
   const loadedNewProcessedFeatures = options.loadedNewProcessedFeatures.concat();
@@ -158,7 +158,7 @@ const waitForNewProcessedFeatures = async (options) => {
 };
 
 /**
- * @param {featuresFromUrl.Options} options opts
+ * @param {FeaturesFromUrlOptions} options opts
  * @return {Promise<Array<ol.Feature>>} promise of features contained in response
  */
 const featuresFromUrl = async (options) => {
@@ -247,7 +247,7 @@ const featuresFromUrl = async (options) => {
 };
 
 /**
- * @param {featuresForMap.Options} options opts
+ * @param {FeaturesForMapOptions} options opts
  * @param {ol.extent.Extent} extent extent
  * @param {number} resolution resolution
  * @param {ol.proj.Projection} projection projection
@@ -313,7 +313,7 @@ const featuresForMap = async (options, extent, resolution, projection) => {
 };
 
 /**
- * @param {features.Options} options options
+ * @param {FeaturesOptions} options options
  * @return {Promise<Array<ol.Feature>>} promise of features contained
  * in server response
  */
@@ -365,7 +365,7 @@ const features = async (options) => {
 };
 
 /**
- * @param {featuresByCode.Options} options options
+ * @param {FeaturesByCodeOptions} options options
  * @return {Promise<Array<ol.Feature>>} promise of features contained
  * in server response
  * @protected
@@ -404,7 +404,7 @@ const featuresByCode = async (options) => {
 };
 
 /**
- * @param {buildingsByCode.Options} options options
+ * @param {BuildingsByCodeOptions} options options
  * @return {Promise<Array<ol.Feature>>} promise of features contained
  * in server response
  */

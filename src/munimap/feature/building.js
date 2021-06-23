@@ -23,11 +23,11 @@ import {createXYZ as ol_tilegrid_createXYZ} from 'ol/tilegrid';
  * @typedef {import("ol/source").Vector} ol.source.Vector
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/proj/Projection").default} ol.proj.Projection
- * @typedef {import("../load.js").featuresForMap.Options} featuresForMapOptions
+ * @typedef {import("../load.js").FeaturesForMapOptions} featuresForMapOptions
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import("ol/layer/Vector").default} ol.layer.Vector
  * @typedef {import("ol/Map").default} ol.Map
- * @typedef {import("../load.js").Processor.Options} Processor.Options
+ * @typedef {import("../load.js").ProcessorOptions} ProcessorOptions
  * @typedef {import("ol/featureloader")} ol.FeatureLoader
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  */
@@ -78,112 +78,13 @@ const LAYER_ID = 'building';
 const LABEL_LAYER_ID = 'building-label';
 
 /**
- * @param {Processor.Options} options opts
- * @return {Promise<Processor.Options>} opts
- */
-const unitsProcessor = async (options) => {
-  const newBuildings = options.new;
-  const buildingIdsToLoad = newBuildings.map((building) => {
-    return building.get('inetId');
-  });
-
-  if (buildingIdsToLoad.length) {
-    const units = await munimap_unit.loadByHeadquartersIds(buildingIdsToLoad);
-    newBuildings.forEach((building) => {
-      const buildingUnits = units.filter((unit) => {
-        return unit.get('budova_sidelni_id') === building.get('inetId');
-      });
-      building.set(UNITS_FIELD_NAME, buildingUnits);
-    });
-    return options;
-  } else {
-    return options;
-  }
-};
-
-/**
- * @param {Processor.Options} options opts
- * @return {Promise<Processor.Options>} promise
- * @protected
- */
-const complexUnitsProcessor = async (options) => {
-  const newComplexes = options.new;
-  const complexIdsToLoad = newComplexes.map((complex) => {
-    return complex.get(munimap_complex.ID_FIELD_NAME);
-  });
-
-  if (complexIdsToLoad.length) {
-    const units = await munimap_unit.loadByHeadquartersComplexIds(
-      complexIdsToLoad
-    );
-    newComplexes.forEach((complex) => {
-      const complexUnits = units.filter((unit) => {
-        return (
-          unit.get('areal_sidelni_id') ===
-          complex.get(munimap_complex.ID_FIELD_NAME)
-        );
-      });
-      complex.set(munimap_complex.UNITS_FIELD_NAME, complexUnits);
-    });
-    return options;
-  } else {
-    return options;
-  }
-};
-
-/**
- * @param {Processor.Options} options opts
- * @return {Promise<Processor.Options>} processor
- * @protected
- */
-const complexProcessor = async (options) => {
-  const newBuildings = options.new;
-  let complexIdsToLoad = [];
-  const buildingsToLoadComplex = [];
-  newBuildings.forEach((building) => {
-    const complexId = building.get(COMPLEX_ID_FIELD_NAME);
-    if (munimap_utils.isNumber(complexId)) {
-      munimap_assert.assertNumber(complexId);
-      const complex = munimap_complex.getById(complexId);
-      if (complex) {
-        building.set(COMPLEX_FIELD_NAME, complex);
-      } else {
-        complexIdsToLoad.push(complexId);
-        buildingsToLoadComplex.push(building);
-      }
-    } else {
-      building.set(COMPLEX_FIELD_NAME, null);
-    }
-  });
-
-  complexIdsToLoad = [...new Set(complexIdsToLoad)];
-  if (complexIdsToLoad.length) {
-    const complexes = await munimap_complex.loadByIds({
-      ids: complexIdsToLoad,
-      processor: complexUnitsProcessor,
-    });
-    buildingsToLoadComplex.forEach((building) => {
-      const complexId = building.get(COMPLEX_ID_FIELD_NAME);
-      const complex = munimap_complex.getById(complexId, complexes);
-      if (!complex) {
-        throw new Error('Complex ' + complexId + ' not found.');
-      }
-      building.set(COMPLEX_FIELD_NAME, complex || null);
-    });
-    return options;
-  } else {
-    return options;
-  }
-};
-
-/**
- * @param {Processor.Options} options opts
- * @return {Promise<Processor.Options>} opts
+ * @param {ProcessorOptions} options opts
+ * @return {Promise<ProcessorOptions>} opts
  */
 const loadProcessor = async (options) => {
   const result = await Promise.all([
-    complexProcessor(options),
-    unitsProcessor(options),
+    munimap_complex.loadProcessor(options),
+    munimap_unit.loadProcessor(options),
   ]);
   munimap_assert.assertArray(result);
   result.forEach((opts) => {
@@ -613,6 +514,9 @@ export {
   LAYER_ID,
   LABEL_LAYER_ID,
   STORE,
+  UNITS_FIELD_NAME,
+  COMPLEX_ID_FIELD_NAME,
+  COMPLEX_FIELD_NAME,
   isClickable,
   featureClickHandler,
   isCode,
