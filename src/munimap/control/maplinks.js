@@ -8,6 +8,11 @@ import Control from 'ol/control/Control';
 import {get as getProjection, transform} from 'ol/proj';
 
 /**
+ * @typedef {import("ol").Map} ol.Map
+ * @typedef {import("ol/Feature").default} ol.Feature
+ */
+
+/**
  * @type {string}
  * @const
  */

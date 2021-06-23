@@ -11,13 +11,14 @@ import * as munimap_style from '../style/style.js';
  * @typedef {import("ol/layer/Vector").default} ol.layer.Vector
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("../style/style.js").MarkersAwareOptions} MarkersAwareOptions
+ * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  */
 
 /**
  * @typedef {Object} VectorLayerExtendedOptions
  * @property {string} id
- * @property {(options: feature.clickHandlerOptions) => boolean} isFeatureClickable
- * @property {(options: feature.clickHandlerOptions) => void} featureClickHandler
+ * @property {(options: FeatureClickHandlerOptions) => boolean} isFeatureClickable
+ * @property {(options: FeatureClickHandlerOptions) => void} featureClickHandler
  * @property {boolean} [redrawOnFloorChange]
  *
  * @typedef {BaseLayerOptions & VectorLayerExtendedOptions} VectorLayerOptions

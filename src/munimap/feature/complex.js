@@ -6,13 +6,14 @@ import * as munimap_assert from '../assert/assert.js';
 import * as munimap_load from '../load.js';
 import * as munimap_range from '../utils/range.js';
 import VectorSource from 'ol/source/Vector';
+import {FEATURE_TYPE_PROPERTY_NAME} from './feature.js';
 import {MUNIMAP_URL} from '../conf.js';
-import {NAME as TYPE_NAME} from './type.js';
 
 /**
  * @typedef {import('../utils/range.js').RangeInterface} RangeInterface
- * @typedef {import('./type.js').Options} TypeOptions
+ * @typedef {import('./feature.js').TypeOptions} TypeOptions
  * @typedef {import("../load.js").Processor} Processor
+ * @typedef {import("ol/Feature").default} ol.Feature
  */
 
 /**
@@ -87,7 +88,7 @@ const getById = (id, opt_features) => {
  * @return {boolean} whereas is feature complex
  */
 const isComplex = (feature) => {
-  const fType = feature.get(TYPE_NAME);
+  const fType = feature.get(FEATURE_TYPE_PROPERTY_NAME);
   return fType === TYPE;
 };
 

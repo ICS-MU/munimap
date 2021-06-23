@@ -10,7 +10,7 @@ import {MUNIMAP_URL} from '../conf.js';
 import {Vector as ol_source_Vector} from 'ol/source';
 
 /**
- * @typedef {import("./type.js").Options} TypeOptions
+ * @typedef {import("./feature.js").TypeOptions} TypeOptions
  * @typedef {import("ol/source").Vector} ol.source.Vector
  * @typedef {import("ol").Feature} ol.Feature
  */

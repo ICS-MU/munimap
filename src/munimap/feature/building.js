@@ -18,7 +18,8 @@ import {Vector as ol_source_Vector} from 'ol/source';
 import {createXYZ as ol_tilegrid_createXYZ} from 'ol/tilegrid';
 
 /**
- * @typedef {import("./type.js").Options} TypeOptions
+ * @typedef {import("./feature.js").TypeOptions} TypeOptions
+ * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  * @typedef {import("ol/source").Vector} ol.source.Vector
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/proj/Projection").default} ol.proj.Projection
@@ -350,7 +351,7 @@ const isBuilding = (feature) => {
 };
 
 /**
- * @param {feature.clickHandlerOptions} options options
+ * @param {FeatureClickHandlerOptions} options options
  * @return {boolean} isClickable
  */
 const isClickable = (options) => {
@@ -368,7 +369,7 @@ const isClickable = (options) => {
 };
 
 /**
- * @param {feature.clickHandlerOptions} options options
+ * @param {FeatureClickHandlerOptions} options options
  */
 const featureClickHandler = (options) => {
   console.log('Yot implemented yet');

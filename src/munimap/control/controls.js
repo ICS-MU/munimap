@@ -21,6 +21,7 @@ import createMapLinks from '../control/maplinks.js';
 
 /**
  * @typedef {import("../create.js").Options} CreateOptions
+ * @typedef {import("ol").Map} ol.Map
  */
 
 /**

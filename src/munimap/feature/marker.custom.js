@@ -5,8 +5,8 @@ import * as munimap_assert from '../assert/assert.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
 import Point from 'ol/geom/Point';
+import {FEATURE_TYPE_PROPERTY_NAME} from './feature.js';
 import {isString} from '../utils/utils.js';
-import {NAME as munimap_type_NAME} from './type.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature
@@ -25,7 +25,7 @@ const LABEL_FIELD_NAME = 'label';
  * @return {boolean} isCustom
  */
 const isCustom = (feature) => {
-  const fType = feature.get(munimap_type_NAME);
+  const fType = feature.get(FEATURE_TYPE_PROPERTY_NAME);
   return fType === TYPE;
 };
 
@@ -77,7 +77,7 @@ const assertSuitable = (feature) => {
  * @param {ol.Feature} feature feature
  */
 const decorate = (feature) => {
-  feature.set(munimap_type_NAME, TYPE);
+  feature.set(FEATURE_TYPE_PROPERTY_NAME, TYPE);
   const geom = feature.getGeometry();
   const transformFn = ol_proj.getTransform('EPSG:4326', 'EPSG:3857');
   geom.applyTransform(transformFn);

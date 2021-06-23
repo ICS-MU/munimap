@@ -2,10 +2,10 @@ import * as munimap_assert from './assert/assert.js';
 import * as munimap_building from './feature/building.js';
 import * as munimap_utils from './utils/utils.js';
 import {EsriJSON} from 'ol/format';
-import {NAME as munimap_type_NAME} from './feature/type.js';
+import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
 
 /**
- * @typedef {import("./feature/type.js").Options} TypeOptions
+ * @typedef {import("./feature/feature.js").TypeOptions} TypeOptions
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/source").Vector} ol.source.Vector
  * @typedef {import("ol/source/Vector").VectorSourceEvent} ol.source.Vector.Event
@@ -206,7 +206,7 @@ const featuresFromUrl = async (options) => {
     extent: null,
   });
   newLoadedFeatures.forEach((feature) => {
-    feature.set(munimap_type_NAME, options.type);
+    feature.set(FEATURE_TYPE_PROPERTY_NAME, options.type);
     const featureId = /** @type {string|number} */ (feature.get(primaryKey));
     feature.setId(featureId);
   });

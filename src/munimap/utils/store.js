@@ -3,13 +3,13 @@
  */
 
 import * as munimap_assert from '../assert/assert.js';
-import {NAME as TYPE_NAME} from '../feature/type.js';
+import {FEATURE_TYPE_PROPERTY_NAME} from '../feature/feature.js';
 
 /**
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("ol/Feature").FeatureLike} ol.FeatureLike
  * @typedef {import("ol/source/Vector").default} ol.source.Vector
- * @typedef {import("../feature/type.js").Options} TypeOptions
+ * @typedef {import("../feature/feature.js").TypeOptions} TypeOptions
  */
 
 /**
@@ -22,7 +22,9 @@ export const getUid = (feature) => {
   if (code) {
     uid = munimap_assert.assertString(code);
   } else {
-    const type = /**@type {TypeOptions}*/ (feature.get(TYPE_NAME));
+    const type = /**@type {TypeOptions}*/ (feature.get(
+      FEATURE_TYPE_PROPERTY_NAME
+    ));
     if (type) {
       const pk = feature.get(type.primaryKey);
       uid = type.name + ':' + pk;

@@ -16,7 +16,11 @@ import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import {getAnimationDuration} from '../utils/animation.js'
+import {getAnimationDuration} from '../utils/animation.js';
+
+/**
+ * @typedef {import("ol").Map} ol.Map
+ */
 
 /**
  * @param {ol.Map} map map

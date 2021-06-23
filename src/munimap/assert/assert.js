@@ -12,6 +12,10 @@ import {isCodeOrLikeExpr as building_isCodeOrLikeExpr} from '../feature/building
 import {assertSuitable as marker_custom_assertSuitable} from '../feature/marker.custom.js';
 
 /**
+ * @typedef {import("ol/Feature").default} ol.Feature
+ */
+
+/**
  * @extends {Error}
  */
 class AssertionError extends Error {

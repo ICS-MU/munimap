@@ -13,6 +13,7 @@ import VectorLayer from 'ol/layer/Vector';
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("ol/source/Vector").default} ol.source.Vector
  * @typedef {import("../utils/range").RangeInterface} RangeInterface
+ * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  */
 
 /**
@@ -80,7 +81,7 @@ const isMarker = (map, feature) => {
 };
 
 /**
- * @param {feature.clickHandlerOptions} options opts
+ * @param {FeatureClickHandlerOptions} options opts
  * @return {boolean} whether is clickable
  */
 const isClickable = (options) => {
@@ -109,7 +110,7 @@ const isClickable = (options) => {
 };
 
 /**
- * @param {feature.clickHandlerOptions} options opts
+ * @param {FeatureClickHandlerOptions} options opts
  */
 const featureClickHandler = (options) => {
   console.log('Yot implemented yet');
