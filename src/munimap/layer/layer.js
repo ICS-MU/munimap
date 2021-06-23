@@ -3,7 +3,7 @@
  */
 
 import * as munimap_building from '../feature/building.js';
-import * as munimap_buildingLayer from './building.js';
+import * as munimap_layer_building from './building.js';
 import * as munimap_style from '../style/style.js';
 
 /**
@@ -82,13 +82,13 @@ const TYPE = 'type';
  */
 const getDefaultLayers = (map, lang) => {
   const result = [];
-  const buildings = munimap_buildingLayer.create();
+  const buildings = munimap_layer_building.create();
   // const rooms = munimap.room.layer.create();
   // const activeRooms = munimap.room.layer.createActive();
   // const doors = munimap.door.layer.create();
   // const poi = munimap.poi.layer.create();
   // const roomLabels = munimap.room.layer.createLabel(map);
-  const buildingLabels = munimap_buildingLayer.createLabel(lang);
+  const buildingLabels = munimap_layer_building.createLabel(lang);
   result.push(
     buildings,
     // rooms,

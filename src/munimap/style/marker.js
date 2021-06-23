@@ -4,12 +4,12 @@
 
 import * as munimap_asserts from '../assert/assert.js';
 import * as munimap_building from '../feature/building.js';
-import * as munimap_buildingStyle from './building.js';
 import * as munimap_cluster from '../cluster/cluster.js';
 import * as munimap_floor from '../feature/floor.js';
 import * as munimap_markerCustom from '../feature/marker.custom.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_style from './style.js';
+import * as munimap_style_building from './building.js';
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {
@@ -275,9 +275,9 @@ const labelFunction = (options, feature, resolution) => {
     isBuilding &&
     munimap_range.contains(munimap_floor.RESOLUTION, resolution)
   ) {
-    fontSize = munimap_buildingStyle.BIG_FONT_SIZE;
+    fontSize = munimap_style_building.BIG_FONT_SIZE;
   } else {
-    fontSize = munimap_buildingStyle.FONT_SIZE;
+    fontSize = munimap_style_building.FONT_SIZE;
   }
 
   const intersectFunction = munimap_utils.partial(
