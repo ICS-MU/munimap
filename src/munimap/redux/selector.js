@@ -58,6 +58,8 @@ export const getInitZoomTos = createSelector(
     console.log('computing init zoomTos');
     if (initZoomTos.length === 0) {
       return [];
+    } else if (munimap_utils.isString(initZoomTos)) {
+      initZoomTos = [initZoomTos];
     }
     const type = getType();
     const buildings = getStore().getFeatures();
