@@ -1,21 +1,21 @@
-import * as actions from './action.js';
-import * as munimap_assert from './assert.js';
-import * as munimap_interaction from './interaction.js';
-import * as munimap_lang from './lang.js';
+import * as actions from './redux/action.js';
+import * as munimap_assert from './assert/assert.js';
+import * as munimap_interaction from './ui/interaction.js';
+import * as munimap_lang from './lang/lang.js';
 import * as munimap_load from './load.js';
-import * as munimap_matomo from './matomo.js';
-import * as munimap_utils from './utils.js';
+import * as munimap_matomo from './matomo/matomo.js';
+import * as munimap_utils from './utils/utils.js';
 import * as munimap_view from './view.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
-import * as slctr from './selector.js';
+import * as slctr from './redux/selector.js';
 import Feature from 'ol/Feature';
 import {INITIAL_STATE} from './conf.js';
 import {Map, View} from 'ol';
 import {defaults as control_defaults} from 'ol/control';
-import {createStore} from './reduxStore.js';
-import {decorate as decorateCustomMarker} from './markerCustom.js';
-import {ofFeatures as extentOfFeatures} from './extent.js';
+import {createStore} from './redux/store.js';
+import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
+import {ofFeatures as extentOfFeatures} from './utils/extent.js';
 
 /**
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate

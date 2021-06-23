@@ -1,17 +1,17 @@
 /**
  * @module building
  */
-import * as munimap_assert from './assert.js';
+import * as munimap_assert from '../assert/assert.js';
 import * as munimap_complex from './complex.js';
 import * as munimap_floor from './floor.js';
-import * as munimap_lang from './lang.js';
-import * as munimap_load from './load.js';
-import * as munimap_range from './range.js';
-import * as munimap_style from './style.js';
+import * as munimap_lang from '../lang/lang.js';
+import * as munimap_load from '../load.js';
+import * as munimap_range from '../utils/range.js';
+import * as munimap_style from '../style/style.js';
 import * as munimap_unit from './unit.js';
-import * as munimap_utils from './utils.js';
+import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
-import {MUNIMAP_URL} from './conf.js';
+import {MUNIMAP_URL} from '../conf.js';
 import {Vector as ol_layer_Vector} from 'ol/layer';
 import {tile as ol_loadingstrategy_tile} from 'ol/loadingstrategy';
 import {Vector as ol_source_Vector} from 'ol/source';
@@ -22,11 +22,11 @@ import {createXYZ as ol_tilegrid_createXYZ} from 'ol/tilegrid';
  * @typedef {import("ol/source").Vector} ol.source.Vector
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/proj/Projection").default} ol.proj.Projection
- * @typedef {import("./load.js").featuresForMap.Options} featuresForMapOptions
+ * @typedef {import("../load.js").featuresForMap.Options} featuresForMapOptions
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import("ol/layer/Vector").default} ol.layer.Vector
  * @typedef {import("ol/Map").default} ol.Map
- * @typedef {import("./load.js").Processor.Options} Processor.Options
+ * @typedef {import("../load.js").Processor.Options} Processor.Options
  * @typedef {import("ol/featureloader")} ol.FeatureLoader
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  */

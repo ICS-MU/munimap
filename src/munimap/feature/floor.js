@@ -2,10 +2,10 @@
  * @module floor
  */
 
-import * as munimap_range from './range.js';
+import * as munimap_range from '../utils/range.js';
 
 /**
- * @typedef {import("./range").RangeInterface} RangeInterface
+ * @typedef {import("../utils/range").RangeInterface} RangeInterface
  */
 
 /**

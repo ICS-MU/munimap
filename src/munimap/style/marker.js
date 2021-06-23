@@ -2,20 +2,20 @@
  * @module markerStyle
  */
 
-import * as munimap_asserts from './assert.js';
-import * as munimap_building from './building.js';
-import * as munimap_buildingStyle from './buildingStyle.js';
-import * as munimap_cluster from './cluster.js';
-import * as munimap_floor from './floor.js';
-import * as munimap_markerCustom from './markerCustom.js';
-import * as munimap_range from './range.js';
+import * as munimap_asserts from '../assert/assert.js';
+import * as munimap_building from '../feature/building.js';
+import * as munimap_buildingStyle from './building.js';
+import * as munimap_cluster from '../cluster/cluster.js';
+import * as munimap_floor from '../feature/floor.js';
+import * as munimap_markerCustom from '../feature/marker.custom.js';
+import * as munimap_range from '../utils/range.js';
 import * as munimap_style from './style.js';
-import * as munimap_utils from './utils.js';
+import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {
   CENTER_GEOMETRY_FUNCTION,
   INTERSECT_CENTER_GEOMETRY_FUNCTION,
-} from './geom.js';
+} from '../utils/geom.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
 
 /**
@@ -24,7 +24,7 @@ import {Fill, Stroke, Style, Text} from 'ol/style';
  * @typedef {import("ol/style/Style").GeometryFunction} ol.style.Style.GeometryFunction
  * @typedef {import("ol/source/Vector").default} ol.source.Vector
  * @typedef {import("ol").Map} ol.Map
- * @typedef {import("./marker.js").LabelFunction} LabelFunction
+ * @typedef {import("../feature/marker.js").LabelFunction} LabelFunction
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  */
 

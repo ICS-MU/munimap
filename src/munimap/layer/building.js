@@ -2,16 +2,16 @@
  * @module buildingLayer
  */
 
-import * as munimap_building from './building.js';
-import * as munimap_complex from './complex.js';
-import * as munimap_utils from './utils.js';
+import * as munimap_building from '../feature/building.js';
+import * as munimap_complex from '../feature/complex.js';
+import * as munimap_utils from '../utils/utils.js';
 import VectorLayer from 'ol/layer/Vector';
 import {
   labelFunction,
   selectedFloorFilter,
   selectedFloorFunction,
   styleFunction,
-} from './buildingStyle.js';
+} from '../style/building.js';
 
 /**
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions

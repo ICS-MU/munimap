@@ -3,8 +3,8 @@
  * @module geolocate
  */
 
-import * as munimap_lang from './lang.js';
-import * as munimap_matomo from './matomo.js';
+import * as munimap_lang from '../lang/lang.js';
+import * as munimap_matomo from '../matomo/matomo.js';
 import * as ol_extent from 'ol/extent';
 import Circle from 'ol/style/Circle';
 import Control from 'ol/control/Control';
@@ -16,7 +16,7 @@ import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import {getAnimationDuration} from './move.js';
+import {getAnimationDuration} from '../utils/animation.js'
 
 /**
  * @param {ol.Map} map map

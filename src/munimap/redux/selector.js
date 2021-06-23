@@ -1,9 +1,9 @@
-import * as munimap_lang from './lang.js';
-import * as munimap_utils from './utils.js';
+import * as munimap_lang from '../lang/lang.js';
+import * as munimap_utils from '../utils/utils.js';
 import {createSelector} from 'reselect';
-import {createTileLayer} from './view.js';
-import {getPairedBasemap, isArcGISBasemap} from './basemap.js';
-import {getStore, getType} from './building.js';
+import {createTileLayer} from '../view.js';
+import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
+import {getStore, getType} from '../feature/building.js';
 
 const getRequiredLoadingMessage = (state) => state.requiredOpts.loadingMessage;
 const getMarkersTimestamp = (state) => state.markersTimestamp;

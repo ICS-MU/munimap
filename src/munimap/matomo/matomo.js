@@ -2,10 +2,10 @@
  * @module matomo
  */
 
-import {isCustom as isCustomMarker} from './markerCustom.js';
+import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
 
 /**
- * @typedef {import("./create.js").Options} CreateOptions
+ * @typedef {import("../create.js").Options} CreateOptions
  */
 
 /**
@@ -88,4 +88,4 @@ export const sendEventForOptions = (options) => {
   // if (String(options.identifyCallback) !== 'undefined') {
   //   sendEvent('identifyCallback', 'true');
   // }
-}
+};

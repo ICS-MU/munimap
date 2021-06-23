@@ -2,27 +2,27 @@
  * @module view
  */
 
-import * as munimap_assert from './assert.js';
-import * as munimap_cluster from './cluster.js';
-import * as munimap_lang from './lang.js';
-import * as munimap_layer from './layer.js';
-import * as munimap_marker from './marker.js';
-import * as munimap_markerStyle from './markerStyle.js';
-import * as munimap_utils from './utils.js';
+import * as munimap_assert from './assert/assert.js';
+import * as munimap_cluster from './cluster/cluster.js';
+import * as munimap_lang from './lang/lang.js';
+import * as munimap_layer from './layer/layer.js';
+import * as munimap_marker from './feature/marker.js';
+import * as munimap_markerStyle from './style/marker.js';
+import * as munimap_utils from './utils/utils.js';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import XYZ from 'ol/source/XYZ';
-import createControls from './controls.js';
-import {BASEMAPS} from './basemap.js';
-import {RESOLUTION_COLOR} from './style.js';
+import createControls from './control/controls.js';
+import {BASEMAPS} from './layer/basemap.js';
+import {RESOLUTION_COLOR} from './style/style.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("ol/Feature").default} ol.Feature
- * @typedef {import('./controls.js').CreateOptions} CreateOptions
- * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions
+ * @typedef {import('./control/controls.js').CreateOptions} CreateOptions
+ * @typedef {import("./layer/layer.js").VectorLayerOptions} VectorLayerOptions
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  */
 

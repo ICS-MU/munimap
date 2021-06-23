@@ -2,16 +2,15 @@
  * @module layer
  */
 
-import * as munimap_building from './building.js';
-import * as munimap_buildingLayer from './buildingLayer.js';
-import * as munimap_style from './style.js';
-import * as munimap_utils from './utils.js';
+import * as munimap_building from '../feature/building.js';
+import * as munimap_buildingLayer from './building.js';
+import * as munimap_style from '../style/style.js';
 
 /**
  * @typedef {import("ol/layer/BaseVector").Options} BaseLayerOptions
  * @typedef {import("ol/layer/Vector").default} ol.layer.Vector
  * @typedef {import("ol").Map} ol.Map
- * @typedef {import("./style.js").MarkersAwareOptions} MarkersAwareOptions
+ * @typedef {import("../style/style.js").MarkersAwareOptions} MarkersAwareOptions
  */
 
 /**

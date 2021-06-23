@@ -1,11 +1,11 @@
 /**
  * @module markerCustom
  */
-import * as munimap_assert from './assert.js';
+import * as munimap_assert from '../assert/assert.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
 import Point from 'ol/geom/Point';
-import {isString} from './utils.js';
+import {isString} from '../utils/utils.js';
 import {NAME as munimap_type_NAME} from './type.js';
 
 /**

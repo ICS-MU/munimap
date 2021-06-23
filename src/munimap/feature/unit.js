@@ -1,12 +1,12 @@
 /**
  * @module unit
  */
-import * as munimap_assert from './assert.js';
+import * as munimap_assert from '../assert/assert.js';
 import * as munimap_building from './building.js';
-import * as munimap_lang from './lang.js';
-import * as munimap_load from './load.js';
-import * as munimap_utils from './utils.js';
-import {MUNIMAP_URL} from './conf.js';
+import * as munimap_lang from '../lang/lang.js';
+import * as munimap_load from '../load.js';
+import * as munimap_utils from '../utils/utils.js';
+import {MUNIMAP_URL} from '../conf.js';
 import {Vector as ol_source_Vector} from 'ol/source';
 
 /**

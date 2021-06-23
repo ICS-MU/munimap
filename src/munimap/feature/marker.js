@@ -2,12 +2,9 @@
  * @module marker
  */
 
-import * as munimap_assert from './assert.js';
-import * as munimap_building from './building.js';
-import * as munimap_customMarker from './markerCustom.js';
-import * as munimap_range from './range.js';
+import * as munimap_assert from '../assert/assert.js';
+import * as munimap_range from '../utils/range.js';
 import VectorLayer from 'ol/layer/Vector';
-import {RESOLUTION as FLOOR_RESOLUTION} from './floor.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
@@ -15,7 +12,7 @@ import {RESOLUTION as FLOOR_RESOLUTION} from './floor.js';
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("ol/source/Vector").default} ol.source.Vector
- * @typedef {import("./range").RangeInterface} RangeInterface
+ * @typedef {import("../utils/range").RangeInterface} RangeInterface
  */
 
 /**

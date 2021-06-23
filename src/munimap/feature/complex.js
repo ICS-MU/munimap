@@ -2,17 +2,17 @@
  * @module complex
  */
 
-import * as munimap_assert from './assert.js';
-import * as munimap_load from './load.js';
-import * as munimap_range from './range.js';
+import * as munimap_assert from '../assert/assert.js';
+import * as munimap_load from '../load.js';
+import * as munimap_range from '../utils/range.js';
 import VectorSource from 'ol/source/Vector';
-import {MUNIMAP_URL} from './conf.js';
+import {MUNIMAP_URL} from '../conf.js';
 import {NAME as TYPE_NAME} from './type.js';
 
 /**
- * @typedef {import('./range.js').RangeInterface} RangeInterface
+ * @typedef {import('../utils/range.js').RangeInterface} RangeInterface
  * @typedef {import('./type.js').Options} TypeOptions
- * @typedef {import("./load.js").Processor} Processor
+ * @typedef {import("../load.js").Processor} Processor
  */
 
 /**

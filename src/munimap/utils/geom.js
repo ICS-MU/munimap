@@ -1,8 +1,8 @@
 /**
  * @module geom
  */
-import * as munimap_assert from './assert.js';
-import * as munimap_building from './building.js';
+import * as munimap_assert from '../assert/assert.js';
+import * as munimap_building from '../feature/building.js';
 import * as munimap_utils from './utils.js';
 import * as ol_extent from 'ol/extent';
 import Feature from 'ol/Feature';

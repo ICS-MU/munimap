@@ -14,7 +14,6 @@
  * @property {number} layerId
  * @property {string} name
  */
-const Options = {};
 
 /**
  * @type {string}
@@ -22,4 +21,4 @@ const Options = {};
  */
 const NAME = 'featureType';
 
-export {Options, NAME};
+export {NAME};

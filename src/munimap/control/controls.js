@@ -2,13 +2,13 @@
  * @module controls
  */
 
-import * as munimap_lang from './lang.js';
-import * as munimap_matomo from './matomo.js';
-import * as munimap_utils from './utils.js';
+import * as munimap_lang from '../lang/lang.js';
+import * as munimap_matomo from '../matomo/matomo.js';
+import * as munimap_utils from '../utils/utils.js';
 import Control from 'ol/control/Control';
 import FullScreen from 'ol/control/FullScreen';
-import createGeolocation from './geolocate.js';
-import createMapLinks from './maplinks.js';
+import createGeolocation from '../control/geolocate.js';
+import createMapLinks from '../control/maplinks.js';
 
 /**
  * @typedef {Object} ToolbarOptions
@@ -20,7 +20,7 @@ import createMapLinks from './maplinks.js';
  */
 
 /**
- * @typedef {import("./create.js").Options} CreateOptions
+ * @typedef {import("../create.js").Options} CreateOptions
  */
 
 /**

@@ -2,14 +2,14 @@
  * @module store
  */
 
-import * as munimap_assert from './assert.js';
-import {NAME as TYPE_NAME} from './type.js';
+import * as munimap_assert from '../assert/assert.js';
+import {NAME as TYPE_NAME} from '../feature/type.js';
 
 /**
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("ol/Feature").FeatureLike} ol.FeatureLike
  * @typedef {import("ol/source/Vector").default} ol.source.Vector
- * @typedef {import("./type.js").Options} TypeOptions
+ * @typedef {import("../feature/type.js").Options} TypeOptions
  */
 
 /**

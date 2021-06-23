@@ -2,19 +2,19 @@
  * @module style
  */
 
-import * as munimap_assert from './assert.js';
-import * as munimap_building from './building.js';
-import * as munimap_customMarker from './markerCustom.js';
-import * as munimap_floor from './floor.js';
-import * as munimap_layerPropName from './layer.js';
-import * as munimap_marker from './marker.js';
-import * as munimap_range from './range.js';
-import * as munimap_store from './store.js';
-import * as munimap_utils from './utils.js';
+import * as munimap_assert from '../assert/assert.js';
+import * as munimap_building from '../feature/building.js';
+import * as munimap_customMarker from '../feature/marker.custom.js';
+import * as munimap_floor from '../feature/floor.js';
+import * as munimap_layerPropName from '../layer/layer.js';
+import * as munimap_marker from '../feature/marker.js';
+import * as munimap_range from '../utils/range.js';
+import * as munimap_store from '../utils/store.js';
+import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import VectorLayer from 'ol/layer/Vector';
-import {CENTER_GEOMETRY_FUNCTION} from './geom.js';
-import {ORDER as FRAGMENT_ORDER} from './styleFragment.js';
+import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
+import {ORDER as FRAGMENT_ORDER} from './style.fragment.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
 
 /**
@@ -24,8 +24,8 @@ import {Fill, Stroke, Style, Text} from 'ol/style';
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("ol/").Map} ol.Map
  * @typedef {import("ol/style/Style").StyleFunction} ol.StyleFunction
- * @typedef {import("./styleFragment.js").FragmentLayerOptions} FragmentLayerOptions
- * @typedef {import("./styleFragment.js").FragmentOptions} FragmentOptions
+ * @typedef {import("./style.fragment.js").FragmentLayerOptions} FragmentLayerOptions
+ * @typedef {import("./style.fragment.js").FragmentOptions} FragmentOptions
  * @typedef {import("ol/Feature").FeatureLike} ol.FeatureLike
  * @typedef {import("ol/geom/Geometry").default} ol.geom.Geometry
  */

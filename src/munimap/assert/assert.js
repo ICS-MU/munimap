@@ -4,12 +4,12 @@
  * @module assert
  */
 
-import * as munimap_utils from './utils.js';
+import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
-import {Abbr} from './lang.js';
-import {BASEMAPS} from './basemap.js';
-import {isCodeOrLikeExpr as building_isCodeOrLikeExpr} from './building.js';
-import {assertSuitable as marker_custom_assertSuitable} from './markerCustom.js';
+import {Abbr} from '../lang/lang.js';
+import {BASEMAPS} from '../layer/basemap.js';
+import {isCodeOrLikeExpr as building_isCodeOrLikeExpr} from '../feature/building.js';
+import {assertSuitable as marker_custom_assertSuitable} from '../feature/marker.custom.js';
 
 /**
  * @extends {Error}

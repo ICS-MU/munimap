@@ -1,11 +1,11 @@
-import * as munimap_assert from './assert.js';
-import * as munimap_building from './building.js';
-import * as munimap_utils from './utils.js';
+import * as munimap_assert from './assert/assert.js';
+import * as munimap_building from './feature/building.js';
+import * as munimap_utils from './utils/utils.js';
 import {EsriJSON} from 'ol/format';
-import {NAME as munimap_type_NAME} from './type.js';
+import {NAME as munimap_type_NAME} from './feature/type.js';
 
 /**
- * @typedef {import("./type.js").Options} TypeOptions
+ * @typedef {import("./feature/type.js").Options} TypeOptions
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/source").Vector} ol.source.Vector
  * @typedef {import("ol/source/Vector").VectorSourceEvent} ol.source.Vector.Event

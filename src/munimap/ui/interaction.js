@@ -1,7 +1,7 @@
 /**
  * @module interaction
  */
-import * as munimap_lang from './lang.js';
+import * as munimap_lang from '../lang/lang.js';
 
 /**
  * @typedef {import("ol/Map").default} ol.Map

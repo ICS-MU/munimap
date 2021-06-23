@@ -1,15 +1,19 @@
 import * as actions from './action.js';
-import * as munimap_assert from './assert.js';
-import * as munimap_matomo from './matomo.js';
-import * as munimap_utils from './utils.js';
+import * as munimap_assert from '../assert/assert.js';
+import * as munimap_matomo from '../matomo/matomo.js';
+import * as munimap_utils from '../utils/utils.js';
 import * as redux from 'redux';
 import {asyncDispatchMiddleware} from './middleware.js';
-import {featuresFromParam} from './load.js';
-import {getPairedBasemap, isArcGISBasemap, isOSMBasemap} from './basemap.js';
-import {loadOrDecorateMarkers} from './create.js';
+import {featuresFromParam} from '../load.js';
+import {
+  getPairedBasemap,
+  isArcGISBasemap,
+  isOSMBasemap,
+} from '../layer/basemap.js';
+import {loadOrDecorateMarkers} from '../create.js';
 
 /**
- * @typedef {import("./conf.js").State} State
+ * @typedef {import("../conf.js").State} State
  */
 
 /**

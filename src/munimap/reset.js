@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import * as munimap_matomo from './matomo.js';
+import * as munimap_matomo from './matomo/matomo.js';
 
 /**
  * @param {Object} opts Options

@@ -2,18 +2,18 @@
  * @module buildingStyle
  */
 
-import * as munimap_assert from './assert.js';
-import * as munimap_building from './building.js';
-import * as munimap_cluster from './cluster.js';
-import * as munimap_complex from './complex.js';
-import * as munimap_floor from './floor.js';
-import * as munimap_geom from './geom.js';
-import * as munimap_markerStyle from './markerStyle.js';
-import * as munimap_range from './range.js';
-import * as munimap_store from './store.js';
+import * as munimap_assert from '../assert/assert.js';
+import * as munimap_building from '../feature/building.js';
+import * as munimap_cluster from '../cluster/cluster.js';
+import * as munimap_complex from '../feature/complex.js';
+import * as munimap_floor from '../feature/floor.js';
+import * as munimap_geom from '../utils/geom.js';
+import * as munimap_markerStyle from './marker.js';
+import * as munimap_range from '../utils/range.js';
+import * as munimap_store from '../utils/store.js';
 import * as munimap_style from './style.js';
-import * as munimap_unit from './unit.js';
-import * as munimap_utils from './utils.js';
+import * as munimap_unit from '../feature/unit.js';
+import * as munimap_utils from '../utils/utils.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
 
 /**

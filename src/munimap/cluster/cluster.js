@@ -2,10 +2,10 @@
  * @module cluster
  */
 
-import * as munimap_range from './range.js';
+import * as munimap_range from '../utils/range.js';
 
 /**
- * @typedef {import("./range").RangeInterface} RangeInterface
+ * @typedef {import("../utils/range").RangeInterface} RangeInterface
  */
 
 /**
@@ -26,4 +26,4 @@ const BUILDING_RESOLUTION = munimap_range.createResolution(
   Number.POSITIVE_INFINITY
 );
 
-export {BUILDING_RESOLUTION, ROOM_RESOLUTION}
+export {BUILDING_RESOLUTION, ROOM_RESOLUTION};
