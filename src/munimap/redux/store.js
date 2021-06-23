@@ -109,7 +109,7 @@ const createReducer = (initialState) => {
           ...state,
           markersTimestamp: 0,
         };
-      case actions.LOAD_ZOOMTOS:
+      case actions.LOAD_ZOOMTO:
         let zoomToStrings;
         if (state.requiredOpts.zoomTo && state.requiredOpts.zoomTo.length) {
           zoomToStrings = /** @type {Array.<string>} */ (munimap_utils.isString(

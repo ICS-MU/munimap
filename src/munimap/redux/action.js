@@ -6,7 +6,7 @@ export const OL_MAP_INITIALIZED = 'OL_MAP_INITIALIZED';
 export const OL_MAP_MOVEEND = 'OL_MAP_MOVEEND';
 export const CHANGE_INVALIDCODES_INFO = 'CHANGE_INVALIDCODES_INFO';
 export const LOAD_MARKERS = 'LOAD_MARKERS';
-export const LOAD_ZOOMTOS = 'LOAD_ZOOMTOS';
+export const LOAD_ZOOMTO = 'LOAD_ZOOMTO';
 export const MARKERS_LOADED = 'MARKERS_LOADED';
 export const OL_MAP_RENDERED = 'OL_MAP_RENDERED';
 export const ZOOMTO_LOADED = 'ZOOMTO_LOADED';
@@ -31,7 +31,7 @@ export function load_markers() {
 
 export function load_zoomTo() {
   return {
-    type: LOAD_ZOOMTOS,
+    type: LOAD_ZOOMTO,
   };
 }
 

@@ -10,9 +10,9 @@ import {getStore, getType} from '../feature/building.js';
 
 const getRequiredLoadingMessage = (state) => state.requiredOpts.loadingMessage;
 const getMarkersTimestamp = (state) => state.markersTimestamp;
-const getZoomTosTimestamp = (state) => state.zoomToTimestamp;
+const getZoomToTimestamp = (state) => state.zoomToTimestamp;
 const getRequiredMarkers = (state) => state.requiredOpts.markers;
-const getRequiredZoomTos = (state) => state.requiredOpts.zoomTo;
+const getRequiredZoomTo = (state) => state.requiredOpts.zoomTo;
 const getRequiredBaseMap = (state) => state.requiredOpts.baseMap;
 const getLang = (state) => state.requiredOpts.lang;
 const getCenter = (state) => state.center;
@@ -36,18 +36,18 @@ export const getInitMarkers = createSelector(
   }
 );
 
-export const getInitZoomTos = createSelector(
-  [getRequiredZoomTos],
-  (initZoomTos) => {
-    console.log('computing init zoomTos');
-    if (initZoomTos.length === 0) {
+export const getInitZoomTo = createSelector(
+  [getRequiredZoomTo],
+  (initZoomTo) => {
+    console.log('computing init zoomTo');
+    if (initZoomTo.length === 0) {
       return [];
-    } else if (munimap_utils.isString(initZoomTos)) {
-      initZoomTos = [initZoomTos];
+    } else if (munimap_utils.isString(initZoomTo)) {
+      initZoomTo = [initZoomTo];
     }
     const type = getType();
     const buildings = getStore().getFeatures();
-    return initZoomTos.map((initZoomTo) => {
+    return initZoomTo.map((initZoomTo) => {
       return buildings.find((building) => {
         return building.get(type.primaryKey) === initZoomTo;
       });
@@ -113,11 +113,11 @@ export const loadMarkers = createSelector(
   }
 );
 
-export const loadZoomTos = createSelector(
-  [getRequiredZoomTos, getZoomTosTimestamp],
-  (requiredZoomTos, zoomTosTimestamp) => {
-    console.log('computing whether load zoomtos');
-    return requiredZoomTos.length > 0 && zoomTosTimestamp === null;
+export const loadZoomTo = createSelector(
+  [getRequiredZoomTo, getZoomToTimestamp],
+  (requiredZoomTo, zoomToTimestamp) => {
+    console.log('computing whether load zoomto');
+    return requiredZoomTo.length > 0 && zoomToTimestamp === null;
   }
 );
 
@@ -132,25 +132,25 @@ export const areMarkersLoaded = createSelector(
   }
 );
 
-export const areZoomTosLoaded = createSelector(
-  [getRequiredZoomTos, getZoomTosTimestamp],
-  (requiredZoomTos, zoomTosTimestamp) => {
-    console.log('computing if zoomtos are loaded');
+export const areZoomToLoaded = createSelector(
+  [getRequiredZoomTo, getZoomToTimestamp],
+  (requiredZoomTo, zoomToTimestamp) => {
+    console.log('computing if zoomto are loaded');
     return (
-      (requiredZoomTos.length > 0 && zoomTosTimestamp > 0) ||
-      requiredZoomTos.length === 0
+      (requiredZoomTo.length > 0 && zoomToTimestamp > 0) ||
+      requiredZoomTo.length === 0
     );
   }
 );
 
 export const toggleLoadingMessage = createSelector(
-  [getRequiredLoadingMessage, areMarkersLoaded, areZoomTosLoaded],
-  (requireLoadingMessage, markersLoaded, zoomTosLoaded) => {
+  [getRequiredLoadingMessage, areMarkersLoaded, areZoomToLoaded],
+  (requireLoadingMessage, markersLoaded, zoomToLoaded) => {
     console.log('computing loading message');
     if (!requireLoadingMessage) {
       return null;
     } else {
-      if (markersLoaded && zoomTosLoaded) {
+      if (markersLoaded && zoomToLoaded) {
         return false;
       } else {
         return true;

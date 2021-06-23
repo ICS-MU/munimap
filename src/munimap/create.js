@@ -57,10 +57,10 @@ import {ofFeatures as extentOfFeatures} from './utils/extent.js';
 /**
  * @param {Options} options options
  * @param {Array<ol.Feature>} markers markers
- * @param {Array<ol.Feature>} zoomTos zoomTos
+ * @param {Array<ol.Feature>} zoomTo zoomTo
  * @return {View} view
  */
-const calculateView = (options, markers, zoomTos) => {
+const calculateView = (options, markers, zoomTo) => {
   const target = document.getElementById(options.target);
   const center = ol_proj.transform(
     options.center || [16.605390495656977, 49.1986567194723],
@@ -75,11 +75,11 @@ const calculateView = (options, markers, zoomTos) => {
     zoom: zoom,
   });
   const initExtentOpts = /**@type {InitExtentOptions}*/ ({});
-  if (zoomTos || markers) {
-    zoomTos = zoomTos.length ? zoomTos : markers;
-    if (zoomTos.length) {
+  if (zoomTo || markers) {
+    zoomTo = zoomTo.length ? zoomTo : markers;
+    if (zoomTo.length) {
       let res;
-      const extent = extentOfFeatures(zoomTos);
+      const extent = extentOfFeatures(zoomTo);
       if (options.zoom === undefined && options.center === undefined) {
         if (target.offsetWidth === 0 || target.offsetHeight === 0) {
           view.fit(extent);
@@ -97,7 +97,7 @@ const calculateView = (options, markers, zoomTos) => {
           initExtentOpts.size = [target.offsetWidth, target.offsetHeight];
         }
         /** constrainResolution not exists in OL6 */
-        // if (munimap.marker.custom.isCustom(zoomTos[0])) {
+        // if (munimap.marker.custom.isCustom(zoomTo[0])) {
         //   if (view.getResolution() < munimap.floor.RESOLUTION.max) {
         //     res = view.constrainResolution(
         //       munimap.floor.RESOLUTION.max,
@@ -253,7 +253,7 @@ export default (options) => {
     if (slctr.loadMarkers(initialState)) {
       store.dispatch(actions.load_markers());
     }
-    if (slctr.loadZoomTos(initialState)) {
+    if (slctr.loadZoomTo(initialState)) {
       store.dispatch(actions.load_zoomTo());
     }
 
@@ -286,14 +286,14 @@ export default (options) => {
         );
       }
 
-      if (slctr.areMarkersLoaded(state) && slctr.areZoomTosLoaded(state)) {
+      if (slctr.areMarkersLoaded(state) && slctr.areZoomToLoaded(state)) {
         const invalidCodes = slctr.getInvalidCodes(state);
         const basemapLayer = slctr.getBasemapLayer(state);
         if (map === undefined) {
           let createInvalidCodesInfo;
           const markers = slctr.getInitMarkers(state);
-          const zoomTos = slctr.getInitZoomTos(state);
-          const view = calculateView(state.requiredOpts, markers, zoomTos);
+          const zoomTo = slctr.getInitZoomTo(state);
+          const view = calculateView(state.requiredOpts, markers, zoomTo);
           map = new Map({
             controls: control_defaults({
               attributionOptions: {

@@ -419,7 +419,7 @@ const buildingsByCode = async (options) => {
 };
 
 /**
- * @param {Array.<string>|string|undefined} paramValue zoomTos or markers
+ * @param {Array.<string>|string|undefined} paramValue zoomTo or markers
  * @return {Promise.<Array<ol.Feature>>} promise of features contained
  * in server response
  */
