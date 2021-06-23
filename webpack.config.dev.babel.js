@@ -20,7 +20,10 @@ export default {
         const keepMuni = filename.includes('muni/');
         const keepRootCss = /munimap.css$/.test(filename);
         const keepRootHtml = /index.html$/.test(filename);
-        return keepExamples || keepMuni || keepRootCss || keepRootHtml;
+        const keepFavicon = filename === 'favicon.ico';
+        return (
+          keepExamples || keepMuni || keepRootCss || keepRootHtml || keepFavicon
+        );
       },
     },
   },
