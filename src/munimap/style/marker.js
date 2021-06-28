@@ -34,6 +34,7 @@ import {Fill, Stroke, Style, Text} from 'ol/style';
  * @property {string} lang
  * @property {ol.source.Vector} markerSource
  * @property {LabelFunction} [markerLabel]
+ * @property {boolean} [locationCodes]
  * }}
  */
 
@@ -248,8 +249,7 @@ const labelFunction = (options, feature, resolution) => {
     }
   }
   if (!munimap_utils.isDefAndNotNull(title) /*&& !isDoor*/) {
-    /*var showLocationCodes = munimap.getProps(options.map).locationCodes;*/
-    let showLocationCodes;
+    const showLocationCodes = options.locationCodes;
     title = showLocationCodes
       ? /**@type {string}*/ (feature.get('polohKod'))
       : munimap_style.getDefaultLabel(feature, resolution, lang);

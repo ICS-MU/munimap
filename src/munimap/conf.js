@@ -62,6 +62,7 @@ export const INITIAL_STATE = {
     mapLinks: false,
     clusterFacultyAbbr: false,
     labels: true,
+    locationCodes: false,
   },
   markersTimestamp: null,
   zoomToTimestamp: null,

@@ -46,6 +46,7 @@ import {ofFeatures as extentOfFeatures} from './utils/extent.js';
  * @property {boolean} [mapLinks]
  * @property {boolean} [clusterFacultyAbbr]
  * @property {boolean} [labels]
+ * @property {boolean} [locationCodes]
  */
 
 /**
@@ -197,7 +198,7 @@ const assertOptions = (options) => {
   munimap_assert.lang(options.lang);
   munimap_assert.baseMap(options.baseMap);
   // munimap_assert.pubTran(options.pubTran);
-  // munimap_assert.locationCodes(options.locationCodes);
+  munimap_assert.locationCodes(options.locationCodes);
   munimap_assert.mapLinks(options.mapLinks);
   munimap_assert.labels(options.labels);
   // munimap_assert.identifyTypes(options.identifyTypes);
@@ -248,6 +249,9 @@ const getInitialState = (options) => {
   }
   if (options.labels !== undefined) {
     initialState.requiredOpts.labels = options.labels;
+  }
+  if (options.locationCodes !== undefined) {
+    initialState.requiredOpts.locationCodes = options.locationCodes;
   }
 
   return initialState;
@@ -393,6 +397,7 @@ export default (options) => {
             muAttrs: slctr.getMuAttrs(state),
             clusterFacultyAbbr: state.requiredOpts.clusterFacultyAbbr,
             showLabels: state.requiredOpts.labels,
+            locationCodes: state.requiredOpts.locationCodes,
           });
         }
 

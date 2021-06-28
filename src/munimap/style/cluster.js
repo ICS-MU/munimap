@@ -24,7 +24,12 @@ import {localeCompare} from '../utils/string.js';
  */
 
 /**
- * @typedef {LabelFunctionOptions & {clusterFacultyAbbr: boolean}} ClusterLabelFunctionOptions
+ * @typedef {Object} ExtraLabelFunctionOptions
+ * @property {boolean} clusterFacultyAbbr
+ */
+
+/**
+ * @typedef {LabelFunctionOptions & ExtraLabelFunctionOptions} ClusterLabelFunctionOptions
  */
 
 /**
@@ -245,8 +250,7 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
  * @protected
  */
 const pinFunction = (options, clusterFeature, feature, resolution) => {
-  const {lang, clusterFacultyAbbr} = options;
-  // const showLocationCodes = munimap.getProps(options.map).locationCodes;
+  const {lang, clusterFacultyAbbr, locationCodes} = options;
 
   const color = /**@type {string}*/ (feature.get('color'));
   const isMarked = munimap_marker.isMarker(options.map, feature);
@@ -262,9 +266,9 @@ const pinFunction = (options, clusterFeature, feature, resolution) => {
     title = options.markerLabel(clusterFeature, resolution);
   }
 
-  // if (showLocationCodes) {
-  //   title = /**@type {string}*/ (feature.get('polohKod'));
-  // }
+  if (locationCodes) {
+    title = /**@type {string}*/ (feature.get('polohKod'));
+  }
 
   if (!munimap_utils.isDefAndNotNull(title)) {
     if (isMarked) {

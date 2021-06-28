@@ -34,6 +34,7 @@ import {create as createClusterLayer} from './layer/cluster.js';
  * @property {ol.AttributionLike} muAttrs
  * @property {boolean} [clusterFacultyAbbr]
  * @property {boolean} [showLabels]
+ * @property {boolean} [locationCodes]
  */
 
 /**
@@ -214,7 +215,7 @@ const addControls = (map, requiredOpts) => {
  * @return {VectorLayer} layer
  */
 const createMarkerLayer = (map, options) => {
-  const {markers, lang, muAttrs} = options;
+  const {markers, lang, muAttrs, locationCodes} = options;
   const markerSource = munimap_marker.STORE;
   markerSource.setAttributions(muAttrs);
   markerSource.addFeatures(markers);
@@ -224,6 +225,7 @@ const createMarkerLayer = (map, options) => {
     markerSource: markerSource,
     //markerLabel: options.markerLabel,
     lang: lang,
+    locationCodes: locationCodes,
   };
   const clusterResolution = munimap_cluster.BUILDING_RESOLUTION;
   // if (
