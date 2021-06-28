@@ -125,4 +125,82 @@ const initInvalidCodesInfo = (target, infoEl, options) => {
   return createError;
 };
 
-export {initInvalidCodesInfo};
+/**
+ * @param {ol.Map} map map
+ * @param {Element} target target
+ * @param {string} lang language
+ * @return {function} fc
+ */
+const limitScroll = (map, target, lang) => {
+  let dragEl = document.createElement('div');
+  dragEl.className = 'munimap-drag';
+
+  let hideError;
+  let error = false;
+
+  target.setAttribute('tabindex', '0');
+  target.appendChild(dragEl);
+
+  function createError() {
+    const canvas = /**@type {HTMLCanvasElement}*/ (target.getElementsByTagName(
+      'CANVAS'
+    )[0]);
+    if (dragEl === null || canvas === undefined) {
+      return;
+    }
+    createCanvas(
+      canvas,
+      munimap_lang.getMsg(munimap_lang.Translations.ACTIVATE_MAP, lang),
+      lang
+    );
+  }
+
+  function hide() {
+    return setTimeout(() => {
+      error = false;
+      map.render();
+    }, 2000);
+  }
+
+  function onInteraction(e) {
+    if (!error) {
+      createError();
+      hideError = hide();
+    } else {
+      clearTimeout(hideError);
+      hideError = hide();
+    }
+    error = true;
+  }
+
+  function activeChange(e) {
+    if (target.contains(window.document.activeElement)) {
+      dragEl.remove();
+      dragEl = null;
+      error = false;
+      map.render();
+    } else if (
+      !target.contains(window.document.activeElement) &&
+      dragEl === null
+    ) {
+      dragEl = document.createElement('div');
+      dragEl.className = 'munimap-drag';
+      target.appendChild(dragEl);
+    }
+  }
+
+  window.document.addEventListener('blur', activeChange, true);
+  window.document.addEventListener('focus', activeChange, true);
+
+  target.addEventListener('wheel', onInteraction, true);
+  target.addEventListener('touchmove', onInteraction, true);
+
+  function onPostCompose(e) {
+    clearTimeout(hideError);
+    error = false;
+  }
+
+  return onPostCompose;
+};
+
+export {initInvalidCodesInfo, limitScroll};

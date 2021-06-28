@@ -47,6 +47,7 @@ import {ofFeatures as extentOfFeatures} from './utils/extent.js';
  * @property {boolean} [clusterFacultyAbbr]
  * @property {boolean} [labels]
  * @property {boolean} [locationCodes]
+ * @property {boolean} [simpleScroll]
  */
 
 /**
@@ -63,6 +64,7 @@ import {ofFeatures as extentOfFeatures} from './utils/extent.js';
  * @property {redux.Store} store
  * @property {View} view
  * @property {function} createInvalidCodesInfo
+ * @property {function} createLimitScrollInfo
  * @property {boolean} showLabels
  */
 
@@ -253,6 +255,9 @@ const getInitialState = (options) => {
   if (options.locationCodes !== undefined) {
     initialState.requiredOpts.locationCodes = options.locationCodes;
   }
+  if (options.simpleScroll !== undefined) {
+    initialState.requiredOpts.simpleScroll = options.simpleScroll;
+  }
 
   return initialState;
 };
@@ -263,10 +268,20 @@ const getInitialState = (options) => {
  * @param {MapListenersOptions} options opts
  */
 const attachMapListeners = (map, options) => {
-  const {store, view, createInvalidCodesInfo, showLabels} = options;
+  const {
+    store,
+    view,
+    createInvalidCodesInfo,
+    createLimitScrollInfo,
+    showLabels,
+  } = options;
+
   map.once('rendercomplete', () => {
     if (createInvalidCodesInfo) {
       createInvalidCodesInfo();
+    }
+    if (createLimitScrollInfo) {
+      createLimitScrollInfo();
     }
     store.dispatch(
       actions.map_rendered({
@@ -346,6 +361,7 @@ export default (options) => {
         const basemapLayer = slctr.getBasemapLayer(state);
         if (map === undefined) {
           let createInvalidCodesInfo;
+          let createLimitScrollInfo;
           const markers = slctr.getInitMarkers(state);
           const zoomTo = slctr.getInitZoomTo(state);
           const view = calculateView(state.requiredOpts, markers, zoomTo);
@@ -375,6 +391,13 @@ export default (options) => {
           });
           munimap_view.addControls(map, state.requiredOpts);
 
+          if (state.requiredOpts.simpleScroll) {
+            createLimitScrollInfo = munimap_interaction.limitScroll(
+              map,
+              munimapEl,
+              state.requiredOpts.lang
+            );
+          }
           if (invalidCodes.length > 0) {
             const opts = {map, invalidCodes, lang: state.requiredOpts.lang};
             createInvalidCodesInfo = munimap_interaction.initInvalidCodesInfo(
@@ -388,6 +411,7 @@ export default (options) => {
             store,
             view,
             createInvalidCodesInfo,
+            createLimitScrollInfo,
             showLabels: state.requiredOpts.labels,
           });
 

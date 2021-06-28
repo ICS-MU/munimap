@@ -63,6 +63,7 @@ export const INITIAL_STATE = {
     clusterFacultyAbbr: false,
     labels: true,
     locationCodes: false,
+    simpleScroll: true,
   },
   markersTimestamp: null,
   zoomToTimestamp: null,
