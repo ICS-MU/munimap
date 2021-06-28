@@ -45,6 +45,7 @@ import {ofFeatures as extentOfFeatures} from './utils/extent.js';
  * @property {string} [baseMap]
  * @property {boolean} [mapLinks]
  * @property {boolean} [clusterFacultyAbbr]
+ * @property {boolean} [labels]
  */
 
 /**
@@ -61,6 +62,7 @@ import {ofFeatures as extentOfFeatures} from './utils/extent.js';
  * @property {redux.Store} store
  * @property {View} view
  * @property {function} createInvalidCodesInfo
+ * @property {boolean} showLabels
  */
 
 /**
@@ -197,7 +199,7 @@ const assertOptions = (options) => {
   // munimap_assert.pubTran(options.pubTran);
   // munimap_assert.locationCodes(options.locationCodes);
   // munimap_assert.mapLinks(options.mapLinks);
-  // munimap_assert.labels(options.labels);
+  munimap_assert.labels(options.labels);
   // munimap_assert.identifyTypes(options.identifyTypes);
   // munimap_assert.identifyCallback(options.identifyCallback);
   // if (
@@ -244,6 +246,9 @@ const getInitialState = (options) => {
   if (options.clusterFacultyAbbr !== undefined) {
     initialState.requiredOpts.clusterFacultyAbbr = options.clusterFacultyAbbr;
   }
+  if (options.labels !== undefined) {
+    initialState.requiredOpts.labels = options.labels;
+  }
 
   return initialState;
 };
@@ -254,7 +259,7 @@ const getInitialState = (options) => {
  * @param {MapListenersOptions} options opts
  */
 const attachMapListeners = (map, options) => {
-  const {store, view, createInvalidCodesInfo} = options;
+  const {store, view, createInvalidCodesInfo, showLabels} = options;
   map.once('rendercomplete', () => {
     if (createInvalidCodesInfo) {
       createInvalidCodesInfo();
@@ -277,7 +282,7 @@ const attachMapListeners = (map, options) => {
 
   map.on('precompose', (evt) => {
     const res = evt.frameState.viewState.resolution;
-    munimap_view.updateClusteredFeatures(map, res);
+    munimap_view.updateClusteredFeatures(map, res, showLabels);
   });
 };
 
@@ -379,6 +384,7 @@ export default (options) => {
             store,
             view,
             createInvalidCodesInfo,
+            showLabels: state.requiredOpts.labels,
           });
 
           munimap_view.addLayers(map, {
@@ -386,6 +392,7 @@ export default (options) => {
             lang: state.requiredOpts.lang,
             muAttrs: slctr.getMuAttrs(state),
             clusterFacultyAbbr: state.requiredOpts.clusterFacultyAbbr,
+            showLabels: state.requiredOpts.labels,
           });
         }
 

@@ -77,10 +77,11 @@ const TYPE = 'type';
 /**
  * @param {ol.Map} map map
  * @param {string} lang lang
+ * @param {boolean} showLabels whether show labels for MU objects
  *
  * @return {Array.<ol.layer.Vector>} layers
  */
-const getDefaultLayers = (map, lang) => {
+const getDefaultLayers = (map, lang, showLabels) => {
   const result = [];
   const buildings = munimap_layer_building.create();
   // const rooms = munimap.room.layer.create();
@@ -88,7 +89,7 @@ const getDefaultLayers = (map, lang) => {
   // const doors = munimap.door.layer.create();
   // const poi = munimap.poi.layer.create();
   // const roomLabels = munimap.room.layer.createLabel(map);
-  const buildingLabels = munimap_layer_building.createLabel(lang);
+  const buildingLabels = munimap_layer_building.createLabel(lang, showLabels);
   result.push(
     buildings,
     // rooms,
@@ -98,10 +99,9 @@ const getDefaultLayers = (map, lang) => {
     // roomLabels,
     buildingLabels
   );
-  // if (munimap_utils.isDefAndNotNull(munimap.getProps(map).options.labels) &&
-  //   !munimap.getProps(map).options.labels) {
-  //   return result;
-  // }
+  if (showLabels === false) {
+    return result;
+  }
   // const complexes = munimap.complex.layer.create();
   // result.push(complexes);
   return result;

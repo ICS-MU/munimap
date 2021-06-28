@@ -53,9 +53,10 @@ const create = () => {
 
 /**
  * @param {string} lang language
+ * @param {boolean} showLabels wherther to show labels for MU objects
  * @return {VectorLayer} layer
  */
-const createLabel = (lang) => {
+const createLabel = (lang, showLabels) => {
   const styleFragments = {
     selectedFloorFeature: {
       filter: selectedFloorFilter,
@@ -67,7 +68,7 @@ const createLabel = (lang) => {
       filter: () => {
         return true;
       },
-      style: munimap_utils.partial(labelFunction, lang),
+      style: munimap_utils.partial(labelFunction, {lang, showLabels}),
     },
   };
 

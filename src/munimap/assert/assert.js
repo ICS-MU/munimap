@@ -320,6 +320,42 @@ const baseMap = (baseMap) => {
   }
 };
 
+/**
+ * @param {boolean|undefined} mapLinks maplinks
+ */
+const mapLinks = (mapLinks) => {
+  if (mapLinks !== undefined) {
+    assertBoolean(
+      mapLinks,
+      'Parameter mapLinks should be boolean (true or false).'
+    );
+  }
+};
+
+/**
+ * @param {boolean|undefined} locationCodes codes
+ */
+const locationCodes = (locationCodes) => {
+  if (locationCodes !== undefined) {
+    assertBoolean(
+      locationCodes,
+      'Parameter locationCodes should be boolean (true or false).'
+    );
+  }
+};
+
+/**
+ * @param {boolean|undefined} labels labels
+ */
+const labels = (labels) => {
+  if (labels !== undefined) {
+    assertBoolean(
+      labels,
+      'Parameter labels should be boolean (true or false).'
+    );
+  }
+};
+
 export {
   assert,
   assertArray,
@@ -335,4 +371,7 @@ export {
   markers,
   assertMarkerFeatures,
   baseMap,
+  locationCodes,
+  labels,
+  mapLinks,
 };

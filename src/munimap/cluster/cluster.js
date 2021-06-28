@@ -298,12 +298,12 @@ const featureClickHandler = (options) => {
 /**
  * @param {ol.Map} map map
  * @param {number} resolution resolution
+ * @param {boolean} showLabels whether to show labels for MU objects
  */
-const updateClusteredFeatures = (map, resolution) => {
-  // if (munimap_utils.isDefAndNotNull(munimap.getProps(map).options.labels) &&
-  //   !munimap.getProps(map).options.labels) {
-  //   return;
-  // }
+const updateClusteredFeatures = (map, resolution, showLabels) => {
+  if (showLabels === false) {
+    return;
+  }
   const oldFeatures = getSourceFeatures(map);
   const features = getClusteredFeatures(map, resolution);
   let allFeatures = oldFeatures.concat(features);

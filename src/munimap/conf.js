@@ -61,6 +61,7 @@ export const INITIAL_STATE = {
     loadingMessage: true,
     mapLinks: false,
     clusterFacultyAbbr: false,
+    labels: true,
   },
   markersTimestamp: null,
   zoomToTimestamp: null,

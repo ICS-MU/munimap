@@ -24,6 +24,12 @@ import {Fill, Stroke, Style, Text} from 'ol/style';
  */
 
 /**
+ * @typedef {Object} LabelOptions
+ * @property {string} lang lang
+ * @property {boolean} showLabels wherther to show labels for MU objects
+ */
+
+/**
  * @type {Object.<string, Style|Array.<Style>>}
  * @protected
  * @const
@@ -328,40 +334,49 @@ const largeScaleLabelFunction = (map, feature, resolution, lang) => {
 
 /**
  * Style function of a style fragment (type munimap.style.Function).
- * @param {string} lang lang
- * @param {StyleFunctionOptions} options opts
+ * @param {LabelOptions} labelOptions label opts
+ * @param {StyleFunctionOptions} markerOptions opts
  * @param {ol.Feature} feature feature
  * @param {number} resolution resolution
  * @return {Style|Array.<Style>} style
  */
-const labelFunction = (lang, options, feature, resolution) => {
+const labelFunction = (labelOptions, markerOptions, feature, resolution) => {
+  const {lang, showLabels} = labelOptions;
   let result = null;
-  const marked = options.markers.indexOf(feature) >= 0;
+  const marked = markerOptions.markers.indexOf(feature) >= 0;
   if (!marked && resolution < munimap_complex.RESOLUTION.max) {
     if (!munimap_range.contains(munimap_floor.RESOLUTION, resolution)) {
-      result = smallScaleLabelFunction(options.map, feature, resolution, lang);
+      result = smallScaleLabelFunction(
+        markerOptions.map,
+        feature,
+        resolution,
+        lang
+      );
     } else {
-      result = largeScaleLabelFunction(options.map, feature, resolution, lang);
+      result = largeScaleLabelFunction(
+        markerOptions.map,
+        feature,
+        resolution,
+        lang
+      );
     }
   }
-  // if (munimap_utils.isDefAndNotNull(
-  //   munimap.getProps(options.map).options.labels) &&
-  //   !munimap.getProps(options.map).options.labels && result) {
-  //   if (jpad.func.isArray(result)) {
-  //     result.forEach(function(el) {
-  //       var text = el.getText();
-  //       if (text) {
-  //         text.setText('');
-  //       }
-  //     });
-  //   } else {
-  //     var text = result.getText();
-  //     if (text) {
-  //       text.setText('');
-  //     }
-  //   }
-  //   return result;
-  // }
+  if (showLabels === false && result) {
+    if (Array.isArray(result)) {
+      result.forEach((el) => {
+        const text = el.getText();
+        if (text) {
+          text.setText('');
+        }
+      });
+    } else {
+      const text = result.getText();
+      if (text) {
+        text.setText('');
+      }
+    }
+    return result;
+  }
   return result;
 };
 

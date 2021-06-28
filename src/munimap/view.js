@@ -33,6 +33,7 @@ import {create as createClusterLayer} from './layer/cluster.js';
  * @property {string} lang
  * @property {ol.AttributionLike} muAttrs
  * @property {boolean} [clusterFacultyAbbr]
+ * @property {boolean} [showLabels]
  */
 
 /**
@@ -262,10 +263,11 @@ const createMarkerLayer = (map, options) => {
  * @param {ol.Map} map map
  * @param {ol.source.Vector} markerSource source
  * @param {string} lang language
+ * @param {boolean} showLabels whether to show labels for MU objects
  * @return {Array<VectorLayer>} default layers
  */
-const getDefaultLayers = (map, markerSource, lang) => {
-  const layers = munimap_layer.getDefaultLayers(map, lang);
+const getDefaultLayers = (map, markerSource, lang, showLabels) => {
+  const layers = munimap_layer.getDefaultLayers(map, lang, showLabels);
 
   munimap_layer.setDefaultLayersProps({
     layers: layers,
@@ -291,9 +293,10 @@ const createMarkerClusterLayer = (map, options) => {
 /**
  * @param {ol.Map} map map
  * @param {number} resolution  resolution
+ * @param {boolean} showLabels wheteher to show labels for MU objects
  */
-const updateClusteredFeatures = (map, resolution) => {
-  munimap_cluster.updateClusteredFeatures(map, resolution);
+const updateClusteredFeatures = (map, resolution, showLabels) => {
+  munimap_cluster.updateClusteredFeatures(map, resolution, showLabels);
 };
 
 /**
@@ -302,15 +305,20 @@ const updateClusteredFeatures = (map, resolution) => {
  * @param {AddLayersOptions} options opts
  */
 const addLayers = (map, options) => {
-  const {lang} = options;
+  const {lang, showLabels} = options;
   const view = map.getView();
   const markerLayer = createMarkerLayer(map, options);
   const markerClusterLayer = createMarkerClusterLayer(map, options);
-  const layers = getDefaultLayers(map, markerLayer.getSource(), lang);
+  const layers = getDefaultLayers(
+    map,
+    markerLayer.getSource(),
+    lang,
+    showLabels
+  );
   layers.forEach((layer) => map.addLayer(layer));
   map.addLayer(markerClusterLayer);
   map.addLayer(markerLayer);
-  updateClusteredFeatures(map, view.getResolution());
+  updateClusteredFeatures(map, view.getResolution(), showLabels);
 };
 
 export {
