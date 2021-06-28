@@ -48,9 +48,9 @@ const assert = (assertion, opt_msg) => {
  */
 const assertString = (val, opt_msg) => {
   if (!munimap_utils.isString(val)) {
-    const m = `Expected string not ${munimap_utils.typeOf(val)}: ${val}.`;
+    let m = `Expected string not ${munimap_utils.typeOf(val)}: ${val}.`;
     if (opt_msg) {
-      m + ` ${opt_msg}`;
+      m += ` ${opt_msg}`;
     }
     throw new AssertionError(m);
   }
@@ -64,9 +64,9 @@ const assertString = (val, opt_msg) => {
  */
 const assertArray = (val, opt_msg) => {
   if (!munimap_utils.isArray(val)) {
-    const m = `Expected array not ${munimap_utils.typeOf(val)}: ${val}.`;
+    let m = `Expected array not ${munimap_utils.typeOf(val)}: ${val}.`;
     if (opt_msg) {
-      m + ` ${opt_msg}`;
+      m += ` ${opt_msg}`;
     }
     throw new AssertionError(m);
   }
@@ -79,11 +79,13 @@ const assertArray = (val, opt_msg) => {
  * @return {boolean} asserted value
  */
 const assertBoolean = (val, opt_msg) => {
+  console.log(opt_msg);
   if (!munimap_utils.isBoolean(val)) {
-    const m = `Expected boolean not ${munimap_utils.typeOf(val)}: ${val}.`;
+    let m = `Expected boolean not ${munimap_utils.typeOf(val)}: ${val}.`;
     if (opt_msg) {
-      m + ` ${opt_msg}`;
+      m += ` ${opt_msg}`;
     }
+    console.log(m);
     throw new AssertionError(m);
   }
   return /**@type {boolean} */ (val);
@@ -96,9 +98,9 @@ const assertBoolean = (val, opt_msg) => {
  */
 const assertNumber = (val, opt_msg) => {
   if (!munimap_utils.isNumber(val)) {
-    const m = `Expected number not ${munimap_utils.typeOf(val)}: ${val}.`;
+    let m = `Expected number not ${munimap_utils.typeOf(val)}: ${val}.`;
     if (opt_msg) {
-      m + ` ${opt_msg}`;
+      m += ` ${opt_msg}`;
     }
     throw new AssertionError(m);
   }
@@ -113,9 +115,9 @@ const assertNumber = (val, opt_msg) => {
  */
 const assertElement = (val, opt_msg) => {
   if (!munimap_utils.isObject(val) || val.nodeType !== Node.ELEMENT_NODE) {
-    const m = `Expected Element not ${munimap_utils.typeOf(val)}: ${val}.`;
+    let m = `Expected Element not ${munimap_utils.typeOf(val)}: ${val}.`;
     if (opt_msg) {
-      m + ` ${opt_msg}`;
+      m += ` ${opt_msg}`;
     }
     throw new AssertionError(m);
   }
@@ -130,12 +132,12 @@ const assertElement = (val, opt_msg) => {
  */
 const assertInstanceof = (val, type, opt_msg) => {
   if (!(val instanceof type)) {
-    const m = `Expected instanceof ${munimap_utils.typeOf(
+    let m = `Expected instanceof ${munimap_utils.typeOf(
       type
     )} not ${munimap_utils.typeOf(val)}.`;
 
     if (opt_msg) {
-      m + ` ${opt_msg}`;
+      m += ` ${opt_msg}`;
     }
     throw new AssertionError(m);
   }
@@ -150,9 +152,9 @@ const assertInstanceof = (val, type, opt_msg) => {
  */
 const assertExists = (val, opt_msg) => {
   if (!munimap_utils.isDefAndNotNull) {
-    const m = `Expected to exist: ${val}.`;
+    let m = `Expected to exist: ${val}.`;
     if (opt_msg) {
-      m + ` ${opt_msg}`;
+      m += ` ${opt_msg}`;
     }
     throw new AssertionError(m);
   }
