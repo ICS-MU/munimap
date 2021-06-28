@@ -81,6 +81,7 @@ const calculateView = (options, markers, zoomTo) => {
     maxZoom: 23,
     minZoom: 0,
     zoom: zoom,
+    constrainResolution: true,
   });
   const initExtentOpts = /**@type {InitExtentOptions}*/ ({});
   if (zoomTo || markers) {
