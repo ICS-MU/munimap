@@ -198,7 +198,7 @@ const assertOptions = (options) => {
   munimap_assert.baseMap(options.baseMap);
   // munimap_assert.pubTran(options.pubTran);
   // munimap_assert.locationCodes(options.locationCodes);
-  // munimap_assert.mapLinks(options.mapLinks);
+  munimap_assert.mapLinks(options.mapLinks);
   munimap_assert.labels(options.labels);
   // munimap_assert.identifyTypes(options.identifyTypes);
   // munimap_assert.identifyCallback(options.identifyCallback);
