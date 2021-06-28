@@ -23,7 +23,7 @@ import {getCenter} from 'ol/extent';
  * @return {VectorLayer} marker cluster layer
  */
 export const create = (map, options) => {
-  const {markers, lang, muAttrs} = options;
+  const {markers, lang, muAttrs, clusterFacultyAbbr} = options;
   const clusterFeatures = markers.concat();
   const markerClusterSrc = new EnhancedClusterSource({
     attributions: muAttrs,
@@ -62,6 +62,7 @@ export const create = (map, options) => {
     markerSource: munimap_marker.STORE,
     //markerLabel: options.markerLabel,
     lang: lang,
+    clusterFacultyAbbr: clusterFacultyAbbr,
   };
 
   const markerClusterLayer = new VectorLayer(

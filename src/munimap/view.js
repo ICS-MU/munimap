@@ -32,6 +32,7 @@ import {create as createClusterLayer} from './layer/cluster.js';
  * @property {Array<ol.Feature>} markers
  * @property {string} lang
  * @property {ol.AttributionLike} muAttrs
+ * @property {boolean} [clusterFacultyAbbr]
  */
 
 /**

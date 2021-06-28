@@ -44,6 +44,7 @@ import {ofFeatures as extentOfFeatures} from './utils/extent.js';
  * @property {boolean} [loadingMessage]
  * @property {string} [baseMap]
  * @property {boolean} [mapLinks]
+ * @property {boolean} [clusterFacultyAbbr]
  */
 
 /**
@@ -240,6 +241,9 @@ const getInitialState = (options) => {
   if (options.mapLinks !== undefined) {
     initialState.requiredOpts.mapLinks = options.mapLinks;
   }
+  if (options.clusterFacultyAbbr !== undefined) {
+    initialState.requiredOpts.clusterFacultyAbbr = options.clusterFacultyAbbr;
+  }
 
   return initialState;
 };
@@ -381,6 +385,7 @@ export default (options) => {
             markers,
             lang: state.requiredOpts.lang,
             muAttrs: slctr.getMuAttrs(state),
+            clusterFacultyAbbr: state.requiredOpts.clusterFacultyAbbr,
           });
         }
 

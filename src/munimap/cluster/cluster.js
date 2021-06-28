@@ -336,28 +336,6 @@ const updateClusteredFeatures = (map, resolution) => {
   }
 };
 
-// /**
-//  * @param {ol.render.Event} evt event
-//  */
-// const handleMapPrecomposeEvt = (evt) => {
-//   dát asi do reduxu
-//   const map = /**@type {ol.Map}*/ (evt.target);
-//   // const mapProps = munimap.getProps(map);
-//   const viewState = evt.frameState.viewState;
-
-//   // const oldRes = mapProps.currentResolution;
-//   const res = viewState.resolution;
-
-//   // const oldRange = getResolutionRange(oldRes);
-//   // const range = getResolutionRange(res);
-
-//   // if (range !== oldRange) {
-//   //updateClusteredFeatures(map, res);
-//   // }
-
-//   // mapProps.currentResolution = res;
-// };
-
 export {
   BUILDING_RESOLUTION,
   ROOM_RESOLUTION,
@@ -370,5 +348,4 @@ export {
   getResolutionRange,
   getMinorFeatures,
   updateClusteredFeatures,
-  //handleMapPrecomposeEvt,
 };

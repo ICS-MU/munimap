@@ -60,6 +60,7 @@ export const INITIAL_STATE = {
     zoomTo: [],
     loadingMessage: true,
     mapLinks: false,
+    clusterFacultyAbbr: false,
   },
   markersTimestamp: null,
   zoomToTimestamp: null,
