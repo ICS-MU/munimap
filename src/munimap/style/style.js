@@ -28,6 +28,7 @@ import {Fill, Stroke, Style, Text} from 'ol/style';
  * @typedef {import("./style.fragment.js").FragmentOptions} FragmentOptions
  * @typedef {import("ol/Feature").FeatureLike} ol.FeatureLike
  * @typedef {import("ol/geom/Geometry").default} ol.geom.Geometry
+ * @typedef {import("../utils/geom.js").GeometryFunction} GeometryFunction
  */
 
 /**
@@ -66,7 +67,7 @@ import {Fill, Stroke, Style, Text} from 'ol/style';
  * @typedef {Object} LabelWithPinOptions
  * @property {Fill}  fill
  * @property {number}  [fontSize]
- * @property {function(Feature):ol.geom.Geometry|ol.geom.Geometry}  geometry
+ * @property {GeometryFunction|ol.geom.Geometry|string}  geometry
  * @property {string}  [title]
  * @property {string}  [minorTitle]
  * @property {number}  [zIndex]
@@ -442,4 +443,5 @@ export {
   alignTextToRows,
   getDefaultLabel,
   refreshFromFragments,
+  getLabelHeight,
 };

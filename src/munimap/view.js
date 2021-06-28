@@ -12,18 +12,26 @@ import * as munimap_utils from './utils/utils.js';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
 import XYZ from 'ol/source/XYZ';
 import createControls from './control/controls.js';
 import {BASEMAPS} from './layer/basemap.js';
 import {RESOLUTION_COLOR} from './style/style.js';
+import {create as createClusterLayer} from './layer/cluster.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("ol/Feature").default} ol.Feature
+ * @typedef {import("ol/source/Vector").default} ol.source.Vector
  * @typedef {import('./control/controls.js').CreateOptions} CreateOptions
  * @typedef {import("./layer/layer.js").VectorLayerOptions} VectorLayerOptions
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
+ */
+
+/**
+ * @typedef {Object} AddLayersOptions
+ * @property {Array<ol.Feature>} markers
+ * @property {string} lang
+ * @property {ol.AttributionLike} muAttrs
  */
 
 /**
@@ -200,16 +208,15 @@ const addControls = (map, requiredOpts) => {
 
 /**
  * @param {ol.Map} map map
- * @param {Array<ol.Feature>} markers markers
- * @param {string} lang lang
- * @param {ol.AttributionLike} attrs atributions
+ * @param {AddLayersOptions} options opts
  * @return {VectorLayer} layer
  */
-const createMarkerLayer = (map, markers, lang, attrs) => {
-  const markerSource = new VectorSource({
-    attributions: attrs,
-    features: markers,
-  });
+const createMarkerLayer = (map, options) => {
+  const {markers, lang, muAttrs} = options;
+  const markerSource = munimap_marker.STORE;
+  markerSource.setAttributions(muAttrs);
+  markerSource.addFeatures(markers);
+
   const markerOptions = {
     map: map,
     markerSource: markerSource,
@@ -252,7 +259,7 @@ const createMarkerLayer = (map, markers, lang, attrs) => {
 
 /**
  * @param {ol.Map} map map
- * @param {VectorSource} markerSource source
+ * @param {ol.source.Vector} markerSource source
  * @param {string} lang language
  * @return {Array<VectorLayer>} default layers
  */
@@ -271,11 +278,48 @@ const getDefaultLayers = (map, markerSource, lang) => {
   return layers;
 };
 
+/**
+ * @param {ol.Map} map map
+ * @param {AddLayersOptions} options opts
+ * @return {VectorLayer} marker cluster layer
+ */
+const createMarkerClusterLayer = (map, options) => {
+  return createClusterLayer(map, options);
+};
+
+/**
+ * @param {ol.Map} map map
+ * @param {number} resolution  resolution
+ */
+const updateClusteredFeatures = (map, resolution) => {
+  munimap_cluster.updateClusteredFeatures(map, resolution);
+};
+
+/**
+ * Add layers to map.
+ * @param {ol.Map} map map
+ * @param {AddLayersOptions} options opts
+ */
+const addLayers = (map, options) => {
+  const {lang} = options;
+  const view = map.getView();
+  const markerLayer = createMarkerLayer(map, options);
+  const markerClusterLayer = createMarkerClusterLayer(map, options);
+  const layers = getDefaultLayers(map, markerLayer.getSource(), lang);
+  layers.forEach((layer) => map.addLayer(layer));
+  map.addLayer(markerClusterLayer);
+  map.addLayer(markerLayer);
+  updateClusteredFeatures(map, view.getResolution());
+};
+
 export {
   changeBaseMap,
   addControls,
+  addLayers,
   createTileLayer,
   toggleLoadingMessage,
   createMarkerLayer,
   getDefaultLayers,
+  createMarkerClusterLayer,
+  updateClusteredFeatures,
 };

@@ -30,6 +30,7 @@ import {ofFeatures as extentOfFeatures} from './utils/extent.js';
  * @typedef {import("./conf.js").State} State
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  * @typedef {import("ol/Collection").default} ol.Collection
+ * @typedef {import("redux").Store} redux.Store
  */
 
 /**
@@ -52,6 +53,13 @@ import {ofFeatures as extentOfFeatures} from './utils/extent.js';
  * @property {ol.coordinate.Coordinate|undefined} center
  * @property {number|undefined} zoom
  * @property {number|undefined} resolution
+ */
+
+/**
+ * @typedef {Object} MapListenersOptions
+ * @property {redux.Store} store
+ * @property {View} view
+ * @property {function} createInvalidCodesInfo
  */
 
 /**
@@ -236,6 +244,39 @@ const getInitialState = (options) => {
 };
 
 /**
+ * Attach listeners to Map.
+ * @param {Map} map map
+ * @param {MapListenersOptions} options opts
+ */
+const attachMapListeners = (map, options) => {
+  const {store, view, createInvalidCodesInfo} = options;
+  map.once('rendercomplete', () => {
+    if (createInvalidCodesInfo) {
+      createInvalidCodesInfo();
+    }
+    store.dispatch(
+      actions.map_rendered({
+        map_size: map.getSize(),
+      })
+    );
+  });
+
+  map.on('moveend', () => {
+    store.dispatch(
+      actions.ol_map_view_change({
+        center: view.getCenter(),
+        resolution: view.getResolution(),
+      })
+    );
+  });
+
+  map.on('precompose', (evt) => {
+    const res = evt.frameState.viewState.resolution;
+    munimap_view.updateClusteredFeatures(map, res);
+  });
+};
+
+/**
  * @param {Options} options Options
  * @returns {Promise<Map>} initialized map
  */
@@ -329,40 +370,17 @@ export default (options) => {
             );
           }
 
-          map.once('rendercomplete', () => {
-            if (createInvalidCodesInfo) {
-              createInvalidCodesInfo();
-            }
-            store.dispatch(
-              actions.map_rendered({
-                map_size: map.getSize(),
-              })
-            );
+          attachMapListeners(map, {
+            store,
+            view,
+            createInvalidCodesInfo,
           });
 
-          map.on('moveend', () => {
-            store.dispatch(
-              actions.ol_map_view_change({
-                center: view.getCenter(),
-                resolution: view.getResolution(),
-              })
-            );
-          });
-
-          const muAttributions = slctr.getMuAttrs(state);
-          const markerLayer = munimap_view.createMarkerLayer(
-            map,
+          munimap_view.addLayers(map, {
             markers,
-            state.requiredOpts.lang,
-            muAttributions
-          );
-          const layers = munimap_view.getDefaultLayers(
-            map,
-            markerLayer.getSource(),
-            state.requiredOpts.lang
-          );
-          layers.forEach((layer) => map.addLayer(layer));
-          map.addLayer(markerLayer);
+            lang: state.requiredOpts.lang,
+            muAttrs: slctr.getMuAttrs(state),
+          });
         }
 
         munimap_view.changeBaseMap(basemapLayer, map);

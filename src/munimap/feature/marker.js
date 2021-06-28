@@ -5,6 +5,7 @@
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_range from '../utils/range.js';
 import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
 
 /**
  * @typedef {import("ol").Map} ol.Map
@@ -25,6 +26,12 @@ import VectorLayer from 'ol/layer/Vector';
  * @const
  */
 const RESOLUTION = munimap_range.createResolution(0, 2.39);
+
+/**
+ * @type {VectorSource}
+ * @const
+ */
+const STORE = new VectorSource();
 
 /**
  * @type {string}
@@ -116,4 +123,12 @@ const featureClickHandler = (options) => {
   console.log('Yot implemented yet');
 };
 
-export {LAYER_ID, isClickable, featureClickHandler, getStore};
+export {
+  LAYER_ID,
+  STORE,
+  isClickable,
+  featureClickHandler,
+  getStore,
+  isMarker,
+  getFeatures,
+};

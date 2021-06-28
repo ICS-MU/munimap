@@ -25,6 +25,11 @@ import {getBufferValue} from './extent.js';
  * @typedef {import("ol/format/GeoJSON").GeoJSONFeature} GeoJSONFeature
  * @typedef {import("ol/geom/LinearRing").default} ol.geom.LinearRing
  * @typedef {import("@turf/helpers").Polygon} TurfPolygon
+ * @typedef {import("ol/Feature").FeatureLike} ol.FeatureLike
+ */
+
+/**
+ * @typedef {function(ol.FeatureLike): (Geometry|ol.render.Feature|undefined)} GeometryFunction
  */
 
 /**

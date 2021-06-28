@@ -135,7 +135,7 @@ const createReducer = (initialState) => {
 
 /**
  * @param {State} initialState initial state
- * @return {any} store
+ * @return {redux.Store} store
  */
 export const createStore = (initialState) => {
   const reducer = createReducer(initialState);

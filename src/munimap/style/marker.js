@@ -182,17 +182,19 @@ const getPattern = (event) => {
 };
 
 /**
- * @type {Text}
- * @const
+ * This must be a function because of asynchronous import of munimap_style.
+ * @return {Text} pin text
  */
-const PIN_TEXT = new Text({
-  text: '\uf041',
-  font: 'normal ' + munimap_style.PIN_SIZE + 'px MunimapFont',
-  fill: TEXT_FILL,
-  offsetY: -munimap_style.PIN_SIZE / 2,
-  stroke: munimap_style.TEXT_STROKE,
-  overflow: true,
-});
+const getPinText = function () {
+  return new Text({
+    text: '\uf041',
+    font: 'normal ' + munimap_style.PIN_SIZE + 'px MunimapFont',
+    fill: TEXT_FILL,
+    offsetY: -munimap_style.PIN_SIZE / 2,
+    stroke: munimap_style.TEXT_STROKE,
+    overflow: true,
+  });
+};
 
 /**
  * @param {ol.geom.Geometry|ol.style.Style.GeometryFunction} geometry geom
@@ -201,16 +203,16 @@ const PIN_TEXT = new Text({
 const createPinFromGeometry = (geometry) => {
   return new Style({
     geometry: geometry,
-    text: PIN_TEXT,
+    text: getPinText(),
     zIndex: 6,
   });
 };
 
 /**
- * @type {Style}
- * @const
+ * This must be a function because of asynchronous import of munimap_style.
+ * @return {Style} PIN
  */
-const PIN = createPinFromGeometry(CENTER_GEOMETRY_FUNCTION);
+const getPin = () => createPinFromGeometry(CENTER_GEOMETRY_FUNCTION);
 
 /**
  * @param {LabelFunctionOptions} options opts
@@ -300,7 +302,7 @@ const labelFunction = (options, feature, resolution) => {
       const textStyle = munimap_style.getTextStyleWithOffsetY(opts);
       styleArray = styleArray.concat(textStyle);
     }
-    const pin = isMarked ? PIN : munimap_style.PIN;
+    const pin = isMarked ? getPin() : munimap_style.PIN;
     styleArray.push(pin);
   }
   return styleArray;
@@ -363,4 +365,16 @@ export const styleFunction = (options, feature, resolution) => {
   return result;
 };
 
-export {WHITE_TO_GREY_CACHE, NO_GEOMETRY_BUILDING, BUILDING_STROKE, getPattern};
+export {
+  FILL,
+  BUILDING,
+  ROOM,
+  DOOR,
+  CORRIDOR,
+  WHITE_TO_GREY_CACHE,
+  NO_GEOMETRY_BUILDING,
+  BUILDING_STROKE,
+  TEXT_FILL,
+  getPattern,
+  createPinFromGeometry,
+};

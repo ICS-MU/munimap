@@ -114,16 +114,6 @@ const featuresForMap = async (options, extent, resolution, projection) => {
     resolution,
     projection
   );
-
-  // if (buildings.length) {
-  //   munimap_LIST.forEach((map) => {
-  //     const view = map.getView();
-  //     const res = view ? view.getResolution() : null;
-  //     if (res) {
-  //       munimap_cluster.updateClusteredFeatures(map, res);
-  //     }
-  //   });
-  // }
   return buildings;
 };
 
@@ -530,4 +520,6 @@ export {
   getFaculties,
   getAddressPart,
   getComplex,
+  filterHeadquaters,
+  filterFacultyHeadquaters,
 };
