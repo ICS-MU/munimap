@@ -173,7 +173,7 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
     }
     titleParts.push(markers.length + 'x ' + markerType);
   } else {
-    if (munimap_utils.isDef(options.markerLabel)) {
+    if (munimap_utils.isDefAndNotNull(options.markerLabel)) {
       markers = markers.filter((marker) => {
         const title = options.markerLabel(marker, resolution);
         if (munimap_utils.isDefAndNotNull(title)) {
@@ -262,7 +262,7 @@ const pinFunction = (options, clusterFeature, feature, resolution) => {
   let title;
   let minorTitle;
 
-  if (munimap_utils.isDef(options.markerLabel)) {
+  if (munimap_utils.isDefAndNotNull(options.markerLabel)) {
     title = options.markerLabel(clusterFeature, resolution);
   }
 
@@ -355,7 +355,7 @@ const multipleLabelFunction = (options, feature, resolution) => {
     allMarkers = options.markerSource.getFeatures();
   }
 
-  if (munimap_utils.isDef(options.markerLabel)) {
+  if (munimap_utils.isDefAndNotNull(options.markerLabel)) {
     title = options.markerLabel(feature, resolution);
   }
 

@@ -23,6 +23,7 @@ import {create as createMarkerLyr} from './layer/marker.js';
  * @typedef {import("ol/layer/Vector").default} ol.layer.Vector
  * @typedef {import('./control/controls.js').CreateOptions} CreateOptions
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
+ * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
  */
 
 /**
@@ -33,6 +34,7 @@ import {create as createMarkerLyr} from './layer/marker.js';
  * @property {boolean} [clusterFacultyAbbr]
  * @property {boolean} [showLabels]
  * @property {boolean} [locationCodes]
+ * @property {MarkerLabelFunction} [markerLabel]
  */
 
 /**
@@ -219,11 +221,12 @@ const createMarkerLayer = (map, options) => {
 /**
  * @param {ol.Map} map map
  * @param {ol.source.Vector} markerSource source
+ * @param {MarkerLabelFunction} markerLabel markerLabel
  * @param {string} lang language
  * @param {boolean} showLabels whether to show labels for MU objects
  * @return {Array<ol.layer.Vector>} default layers
  */
-const getDefaultLayers = (map, markerSource, lang, showLabels) => {
+const getDefaultLayers = (map, markerSource, markerLabel, lang, showLabels) => {
   const layers = munimap_layer.getDefaultLayers(map, lang, showLabels);
 
   munimap_layer.setDefaultLayersProps({
@@ -231,7 +234,7 @@ const getDefaultLayers = (map, markerSource, lang, showLabels) => {
     markersAwareOptions: {
       map: map,
       markerSource: markerSource,
-      // markerLabel: markerLabel,
+      markerLabel: markerLabel,
     },
   });
 
@@ -262,13 +265,14 @@ const updateClusteredFeatures = (map, resolution, showLabels) => {
  * @param {AddLayersOptions} options opts
  */
 const addLayers = (map, options) => {
-  const {lang, showLabels} = options;
+  const {lang, showLabels, markerLabel} = options;
   const view = map.getView();
   const markerLayer = createMarkerLayer(map, options);
   const markerClusterLayer = createMarkerClusterLayer(map, options);
   const layers = getDefaultLayers(
     map,
     markerLayer.getSource(),
+    markerLabel,
     lang,
     showLabels
   );

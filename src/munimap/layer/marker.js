@@ -28,7 +28,7 @@ export const create = (map, options) => {
   const markerOptions = {
     map: map,
     markerSource: markerSource,
-    //markerLabel: options.markerLabel,
+    markerLabel: options.markerLabel,
     lang: lang,
     locationCodes: locationCodes,
   };

@@ -31,6 +31,7 @@ import {ofFeatures as extentOfFeatures} from './utils/extent.js';
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  * @typedef {import("ol/Collection").default} ol.Collection
  * @typedef {import("redux").Store} redux.Store
+ * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
  */
 
 /**
@@ -48,6 +49,7 @@ import {ofFeatures as extentOfFeatures} from './utils/extent.js';
  * @property {boolean} [labels]
  * @property {boolean} [locationCodes]
  * @property {boolean} [simpleScroll]
+ * @property {MarkerLabelFunction} [markerLabel]
  */
 
 /**
@@ -258,6 +260,9 @@ const getInitialState = (options) => {
   if (options.simpleScroll !== undefined) {
     initialState.requiredOpts.simpleScroll = options.simpleScroll;
   }
+  if (options.markerLabel !== undefined) {
+    initialState.requiredOpts.markerLabel = options.markerLabel;
+  }
 
   return initialState;
 };
@@ -422,6 +427,7 @@ export default (options) => {
             clusterFacultyAbbr: state.requiredOpts.clusterFacultyAbbr,
             showLabels: state.requiredOpts.labels,
             locationCodes: state.requiredOpts.locationCodes,
+            markerLabel: state.requiredOpts.markerLabel,
           });
         }
 

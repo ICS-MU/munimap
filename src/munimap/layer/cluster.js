@@ -60,7 +60,7 @@ export const create = (map, options) => {
   const markerOptions = {
     map: map,
     markerSource: munimap_marker.STORE,
-    //markerLabel: options.markerLabel,
+    markerLabel: options.markerLabel,
     lang: lang,
     clusterFacultyAbbr: clusterFacultyAbbr,
     locationCodes: locationCodes,

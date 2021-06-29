@@ -231,7 +231,7 @@ const labelFunction = (options, feature, resolution) => {
   const isCustomMarker = munimap_markerCustom.isCustom(feature);
 
   let title;
-  if (munimap_utils.isDef(options.markerLabel)) {
+  if (munimap_utils.isDefAndNotNull(options.markerLabel)) {
     const titleParts = [];
     const name = options.markerLabel(feature, resolution);
     if (munimap_utils.isDefAndNotNull(name)) {
