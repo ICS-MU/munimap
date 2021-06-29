@@ -132,19 +132,24 @@ const initInvalidCodesInfo = (target, infoEl, options) => {
  * @return {function} fc
  */
 const limitScroll = (map, target, lang) => {
-  let dragEl = document.createElement('div');
-  dragEl.className = 'munimap-drag';
+  // let dragEl = document.createElement('div');
+  // dragEl.className = 'munimap-drag';
+
+  createDragEl(target);
 
   let hideError;
   let error = false;
 
   target.setAttribute('tabindex', '0');
-  target.appendChild(dragEl);
+  // target.appendChild(dragEl);
 
   function createError() {
     const canvas = /**@type {HTMLCanvasElement}*/ (target.getElementsByTagName(
       'CANVAS'
     )[0]);
+    const dragEl = document.getElementById(
+      `munimap-error_${target.parentElement.id.toString()}`
+    );
     if (dragEl === null || canvas === undefined) {
       return;
     }
@@ -174,18 +179,19 @@ const limitScroll = (map, target, lang) => {
   }
 
   function activeChange(e) {
+    const dragEl = document.getElementById(
+      `munimap-error_${target.parentElement.id.toString()}`
+    );
     if (target.contains(window.document.activeElement)) {
       dragEl.remove();
-      dragEl = null;
+      // dragEl = null;
       error = false;
       map.render();
     } else if (
       !target.contains(window.document.activeElement) &&
       dragEl === null
     ) {
-      dragEl = document.createElement('div');
-      dragEl.className = 'munimap-drag';
-      target.appendChild(dragEl);
+      createDragEl(target);
     }
   }
 
