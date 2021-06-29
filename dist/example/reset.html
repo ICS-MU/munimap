@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link href="example.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="../munimap.css" media="all" rel="stylesheet" type="text/css" />
+    
+    <link rel='shortcut icon' type='image/x-icon' href='../favicon.ico' />
+
+    <script src="../munimaplib.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script id="cookie1" type="text/javascript" src="https://cdn.muni.cz/mvcscripts/libs/cookiebar/1.0/cookie1.js"></script>
+    
+    <title>munimap - reset mapy</title>
+  </head>
+
+  <body>
+    <div class="header">
+      <img src="../muni/logo.svg" alt="Masarykova univerzita" title="Masarykova univerzita">
+    </div>
+    <h1><a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> - reset mapy</h1>
+    <div class="munimap-warning-wrapper">
+      <div class="munimap-warning">
+        <span class="munimap-warning">Upozornění</span> Toto je starší verze ({jpad.appVersion}) munimapu. Doporučujeme použít <a href="/munimap/latest/example/reset.html">nejnovější verzi</a>.
+      </div>
+    </div>
+    <div class="separator-solid">
+    </div>
+    <div class="navigation">
+      <div class="left">
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>reset mapy</span>
+      </div>
+    </div>
+    <div class="content">
+      <div id="map" class="map"></div>
+    </div>
+    <div class="content">
+      <p>
+        Pomocí funkce <code><a href="../doc/#reset">munimap.reset</a></code> lze přenastavit parametry mapy.
+        Chybějící parametry (oproti parametrům původního volání funkce
+        <code><a href="../doc/#create">munimap.create</a></code>) se nastaví na výchozí hodnotu.
+      </p>
+      <p>
+        Funkci <code><a href="../doc/#reset">munimap.reset</a></code> voláme v callbacku funkce 
+        <code><a href="../doc/#create">munimap.create</a></code>, kde již máme k dispozici objekt mapy.
+        Tento objekt předáme callbacku jako parametr.
+      </p>
+      <button id="resetButton">RESET</button>
+        - Tlačítko pro reset mapy (id je resetButton)
+      <pre class="prettyprint">
+&lt;script type="text/javascript"&gt;
+  munimap.create({
+    target: 'map',
+    zoom: 17,
+    markers: ['BMA01']
+  }).then(function(map) {
+    var button = document.getElementById('resetButton');
+    button.onclick = function() {
+      munimap.reset(map, {
+        markers: ['BMB01']
+      });
+    };
+  });
+&lt;/script&gt;
+      </pre>
+      <p>
+        V příkladu použité parametry funkce <code><a href="../doc/#create">munimap.create</a></code> jsou následující:
+      </p>
+      <ul>
+        <li><code><a href="../doc/#target">target</a></code> - určuje id elementu, do kterého se mapa vykreslí</li>
+        <li><code><a href="../doc/#zoom">zoom</a></code> - určuje úroveň přiblížení mapy po načtení stránky</li>
+        <li><code><a href="../doc/#markers">markers</a></code> - určuje, která budova či budovy se v mapě označí a mapa se na ně vycentruje</li>
+      </ul>
+      <p>
+        V příkladu použité parametry funkce <code><a href="../doc/#reset">munimap.reset</a></code> jsou následující:
+      </p>
+      <ul>
+        <li><code><a href="../doc/#reset-markers">markers</a></code> - určuje, která budova či budovy se v mapě nově označí a mapa se na ně vycentruje</li>
+      </ul>
+      <p>
+        Více se dozvíte v naší <a href="../doc">dokumentaci</a>.
+      </p>        
+    </div>
+    <div class="navigation">
+      <div class="left">
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>reset mapy</span>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="left">
+        Kontakt: <a href="mailto:gishelp%40ics.muni.cz">gishelp&#064;ics.muni.cz</a>
+      </div>
+      <div class="right">
+        <a href="http://www.ics.muni.cz/" target="_blank"><img class="logo-uvt" src="../muni/ics/logo.png" alt="Ústav výpočetní techniky MU" title="Ústav výpočetní techniky MU"></a>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      munimap.create({
+        target: 'map',
+        zoom: 17,
+        markers: ['BMA01']
+      }).then(function(map) {
+        var button = document.getElementById('resetButton');
+        button.onclick = function() {
+          munimap.reset(map, {
+            markers: ['BMB01']
+          });
+        };
+      });
+    </script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-43867643-3', 'maps.muni.cz');
+      ga('send', 'pageview');
+    
+    </script>    
+    
+  </body>
+</html>
