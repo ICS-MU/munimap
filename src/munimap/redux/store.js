@@ -8,11 +8,6 @@ import * as munimap_utils from '../utils/utils.js';
 import * as redux from 'redux';
 import {asyncDispatchMiddleware} from './middleware.js';
 import {featuresFromParam} from '../load.js';
-import {
-  getPairedBasemap,
-  isArcGISBasemap,
-  isOSMBasemap,
-} from '../layer/basemap.js';
 import {loadOrDecorateMarkers} from '../create.js';
 
 /**
@@ -22,7 +17,7 @@ import {loadOrDecorateMarkers} from '../create.js';
 /**
  *
  * @param {State} initialState initial state
- * @return {any} State
+ * @return {redux.Reducer<State, redux.AnyAction>} reducer
  */
 const createReducer = (initialState) => {
   return (state = initialState, action) => {
@@ -47,47 +42,6 @@ const createReducer = (initialState) => {
           ...state,
           center: action.payload.view.center,
           resolution: action.payload.view.resolution,
-        };
-      case actions.OL_MAP_INITIALIZED:
-        return {
-          ...state,
-          loadingMessage: action.payload.props.loadingMessage,
-        };
-      case actions.CHANGE_INVALIDCODES_INFO:
-        return {
-          ...state,
-          invalidCodesInfo: action.payload.invalidCodesInfo,
-        };
-      case actions.OL_MAP_MOVEEND:
-        //restriction to zoom 12 and latitude 60°N/S
-        const inSafeLatLonRange = munimap_utils.inRange(
-          action.payload.center[1],
-          -8399737.89, //60° N
-          8399737.89 //60° S
-        );
-        const isSafeResolutionRange = munimap_utils.inRange(
-          action.payload.resolution,
-          38.21851414258813,
-          Infinity
-        );
-
-        const switchToOSM =
-          isArcGISBasemap(state.baseMap) &&
-          !isSafeResolutionRange &&
-          !inSafeLatLonRange;
-        const switchToArcGIS =
-          isOSMBasemap(state.baseMap) &&
-          action.payload.defaultBaseMap !== state.baseMap &&
-          (isSafeResolutionRange || inSafeLatLonRange);
-
-        const baseMapId =
-          switchToOSM || switchToArcGIS
-            ? getPairedBasemap(state.baseMap)
-            : state.baseMap;
-
-        return {
-          ...state,
-          baseMap: baseMapId,
         };
       case actions.LOAD_MARKERS:
         const requiredMarkers = state.requiredOpts.markers;

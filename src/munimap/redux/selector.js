@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * @module redux/selector
  */
@@ -8,16 +9,89 @@ import {createTileLayer} from '../view.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
 import {getStore, getType} from '../feature/building.js';
 
+/**
+ * @typedef {import("../conf.js").State} State
+ * @typedef {import("ol/Feature").default} ol.Feature
+ * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
+ * @typedef {import("ol/layer/Tile").default} ol.layer.Tile
+ * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
+ */
+
+/**
+ * @type {Reselect.Selector<State, boolean>}
+ * @param {State} state state
+ * @return {boolean} msg
+ */
 const getRequiredLoadingMessage = (state) => state.requiredOpts.loadingMessage;
+
+/**
+ * @type {Reselect.Selector<State, number?>}
+ * @param {State} state state
+ * @return {number|null} timestamp
+ */
 const getMarkersTimestamp = (state) => state.markersTimestamp;
+
+/**
+ * @type {Reselect.Selector<State, number?>}
+ * @param {State} state state
+ * @return {number|null} timestamp
+ */
 const getZoomToTimestamp = (state) => state.zoomToTimestamp;
+
+/**
+ * @type {Reselect.Selector<State, Array.<string>|Array.<ol.Feature>>}
+ * @param {State} state state
+ * @return {Array.<string>|Array.<ol.Feature>} required markers
+ */
 const getRequiredMarkers = (state) => state.requiredOpts.markers;
+
+/**
+ * @type {Reselect.Selector<State, string|Array<string>>}
+ * @param {State} state state
+ * @return {string|Array<string>} zoomTo
+ */
 const getRequiredZoomTo = (state) => state.requiredOpts.zoomTo;
+
+/**
+ * @type {Reselect.Selector<State, string>}
+ * @param {State} state state
+ * @return {string} basemap
+ */
 const getRequiredBaseMap = (state) => state.requiredOpts.baseMap;
+
+/**
+ * @type {Reselect.Selector<State, string>}
+ * @param {State} state state
+ * @return {string} lang
+ */
 const getLang = (state) => state.requiredOpts.lang;
+
+/**
+ * @type {Reselect.Selector<State, ol.Coordinate>}
+ * @param {State} state state
+ * @return {ol.Coordinate} center
+ */
 const getCenter = (state) => state.center;
+
+/**
+ * @type {Reselect.Selector<State, number>}
+ * @param {State} state state
+ * @return {number} res
+ */
 const getResolution = (state) => state.resolution;
 
+/**
+ * createSelector return type Reselect.OutputSelector<S, T, (res: R1) => T>
+ *    S: State (for Selector functions above)
+ *    T: Returned type (must be same as returned type below)
+ *    arg2: Function where arguments are returned types from Selector and
+ *          return type is the same as T.
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    Array<ol.Feature>,
+ *    function(Array<string>|Array<ol.Feature>): Array<ol.Feature>
+ * >}
+ */
 export const getInitMarkers = createSelector(
   [getRequiredMarkers],
   (requiredMarkers) => {
@@ -36,6 +110,13 @@ export const getInitMarkers = createSelector(
   }
 );
 
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    Array<ol.Feature>,
+ *    function(Array<string>|string): Array<ol.Feature>
+ * >}
+ */
 export const getInitZoomTo = createSelector(
   [getRequiredZoomTo],
   (initZoomTo) => {
@@ -43,11 +124,11 @@ export const getInitZoomTo = createSelector(
     if (initZoomTo.length === 0) {
       return [];
     } else if (munimap_utils.isString(initZoomTo)) {
-      initZoomTo = [initZoomTo];
+      initZoomTo = [/**@type {string}*/ (initZoomTo)];
     }
     const type = getType();
     const buildings = getStore().getFeatures();
-    return initZoomTo.map((initZoomTo) => {
+    return /**@type {Array<string>}*/ (initZoomTo).map((initZoomTo) => {
       return buildings.find((building) => {
         return building.get(type.primaryKey) === initZoomTo;
       });
@@ -55,6 +136,13 @@ export const getInitZoomTo = createSelector(
   }
 );
 
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    string,
+ *    function(ol.Coordinate, number, string): string
+ * >}
+ */
 export const getBasemapLayerId = createSelector(
   [getCenter, getResolution, getRequiredBaseMap],
   (center, resolution, requiredBasemap) => {
@@ -77,6 +165,13 @@ export const getBasemapLayerId = createSelector(
   }
 );
 
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    ol.layer.Tile,
+ *    function(string, string): ol.layer.Tile
+ * >}
+ */
 export const getBasemapLayer = createSelector(
   [getBasemapLayerId, getLang],
   (basemapLayerId, lang) => {
@@ -85,6 +180,13 @@ export const getBasemapLayer = createSelector(
   }
 );
 
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    Array<string>,
+ *    function(Array<string>|Array<ol.Feature>, Array<ol.Feature>): Array<string>
+ * >}
+ */
 export const getInvalidCodes = createSelector(
   [getRequiredMarkers, getInitMarkers],
   (requiredMarkers, initMarkers) => {
@@ -98,13 +200,24 @@ export const getInvalidCodes = createSelector(
       marker.get(type.primaryKey)
     );
 
-    const difference = requiredMarkers.filter(
-      (markerString) => !initMarkersCodes.includes(markerString)
+    const difference = /**@type {Array}*/ (requiredMarkers).filter(
+      (markerString) => {
+        return munimap_utils.isString(markerString)
+          ? !initMarkersCodes.includes(markerString)
+          : false;
+      }
     );
     return difference;
   }
 );
 
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    boolean,
+ *    function(Array<string>|Array<ol.Feature>, number?): boolean
+ * >}
+ */
 export const loadMarkers = createSelector(
   [getRequiredMarkers, getMarkersTimestamp],
   (requiredMarkers, markersTimestamp) => {
@@ -113,6 +226,13 @@ export const loadMarkers = createSelector(
   }
 );
 
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    boolean,
+ *    function(Array<string>|string, number?): boolean
+ * >}
+ */
 export const loadZoomTo = createSelector(
   [getRequiredZoomTo, getZoomToTimestamp],
   (requiredZoomTo, zoomToTimestamp) => {
@@ -121,6 +241,13 @@ export const loadZoomTo = createSelector(
   }
 );
 
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    boolean,
+ *    function(Array<string>|Array<ol.Feature>, number?): boolean
+ * >}
+ */
 export const areMarkersLoaded = createSelector(
   [getRequiredMarkers, getMarkersTimestamp],
   (requiredMarkers, markersTimestamp) => {
@@ -132,6 +259,13 @@ export const areMarkersLoaded = createSelector(
   }
 );
 
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    boolean,
+ *    function(Array<string>|string, number?): boolean
+ * >}
+ */
 export const areZoomToLoaded = createSelector(
   [getRequiredZoomTo, getZoomToTimestamp],
   (requiredZoomTo, zoomToTimestamp) => {
@@ -143,6 +277,13 @@ export const areZoomToLoaded = createSelector(
   }
 );
 
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    boolean?,
+ *    function(boolean?, boolean, boolean): boolean
+ * >}
+ */
 export const toggleLoadingMessage = createSelector(
   [getRequiredLoadingMessage, areMarkersLoaded, areZoomToLoaded],
   (requireLoadingMessage, markersLoaded, zoomToLoaded) => {
@@ -159,6 +300,13 @@ export const toggleLoadingMessage = createSelector(
   }
 );
 
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    ol.AttributionLike,
+ *    function(string): ol.AttributionLike
+ * >}
+ */
 export const getMuAttrs = createSelector([getLang], (lang) => {
   console.log('computing MU attrs');
   const munimapAttr = munimap_lang.getMsg(
