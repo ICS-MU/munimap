@@ -53,6 +53,12 @@ const ZOOM_IN_OUT_SIZE = 'ontouchstart' in window ? 83 : 70;
 const MAP_LINKS_SIZE = 'ontouchstart' in window ? 83 : 70;
 
 /**
+ * An array to store controls from toolBar present in the map.
+ * @type {Array<Control>}
+ */
+const MAP_TOOLS_STORE = [];
+
+/**
  * Creates element for Tool Bar
  * @returns {HTMLElement} element
  */
@@ -166,6 +172,9 @@ const addControls = (map, controls) => {
   while (munimap_utils.isDef(current)) {
     if (!addedControls.includes(current)) {
       map.addControl(current);
+      if (MAP_TOOLS_STORE.indexOf(current) === -1) {
+        MAP_TOOLS_STORE.push(current);
+      }
     }
     totalSize += controlSize;
     current = controls.pop();
@@ -205,11 +214,13 @@ const toggleMapTools = (map, toolBarEl, mapToolsEl, lang, sizeOfControls) => {
   const remainingSpace = map.getSize()[1] - sizeOfControls - ZOOM_IN_OUT_SIZE;
   if (remainingSpace >= 0) {
     toolBarEl.classList.add('default');
-    map.addControl(
-      new Control({
-        element: toolBarEl, // the map is big enough to show all the tools
-      })
-    );
+    const toolBarControl = new Control({
+      element: toolBarEl, // the map is big enough to show all the tools
+    });
+    map.addControl(toolBarControl);
+    if (MAP_TOOLS_STORE.indexOf(toolBarControl) === -1) {
+      MAP_TOOLS_STORE.push(toolBarControl);
+    }
   } else {
     const buttonEl = document.createElement('div');
     buttonEl.className += ' munimap-map-tools-button';
@@ -230,12 +241,14 @@ const toggleMapTools = (map, toolBarEl, mapToolsEl, lang, sizeOfControls) => {
       munimap_utils.insertSiblingAfter(getVerticalLineEl(), children[i]);
     }
 
-    map.addControl(
-      new Control({
-        element: toolBarEl,
-        target: mapToolsEl,
-      })
-    );
+    const toolBarControl = new Control({
+      element: toolBarEl,
+      target: mapToolsEl,
+    });
+    map.addControl(toolBarControl);
+    if (MAP_TOOLS_STORE.indexOf(toolBarControl) === -1) {
+      MAP_TOOLS_STORE.push(toolBarControl);
+    }
     toolBarEl.style.display = 'none';
 
     const toolBarOptions = /**@type {ToolbarOptions}*/ ({
@@ -251,11 +264,13 @@ const toggleMapTools = (map, toolBarEl, mapToolsEl, lang, sizeOfControls) => {
       toggleMapToolBar(toolBarOptions);
       munimap_matomo.sendEvent('mapTools', 'click');
     });
-    map.addControl(
-      new Control({
-        element: mapToolsEl,
-      })
-    );
+    const mapToolsControl = new Control({
+      element: mapToolsEl,
+    });
+    map.addControl(mapToolsControl);
+    if (MAP_TOOLS_STORE.indexOf(mapToolsControl) === -1) {
+      MAP_TOOLS_STORE.push(mapToolsControl);
+    }
   }
 };
 
@@ -290,6 +305,25 @@ const needToChange = (map, remainingSpace, sizeOfControls) => {
     (remainingSpace >= 0 && newRemainingSpace < 0) ||
     (remainingSpace < 0 && newRemainingSpace >= 0)
   );
+};
+
+/**
+ * Removes controls which are part of the toolBar and have to toggle because of
+ * change of size of the map.
+ * @param {ol.Map} map map
+ */
+const removeControls = (map) => {
+  const controlsToRemove = [];
+  map
+    .getControls()
+    .getArray()
+    .forEach((control) => {
+      if (MAP_TOOLS_STORE.includes(control)) {
+        controlsToRemove.push(control);
+        MAP_TOOLS_STORE.splice(MAP_TOOLS_STORE.indexOf(control), 1);
+      }
+    });
+  controlsToRemove.forEach((control) => map.removeControl(control));
 };
 
 /**
@@ -344,11 +378,7 @@ export default (map, options) => {
 
   map.on('change:size', () => {
     if (needToChange(map, remainingSpace, sizeOfControls)) {
-      if (toolBarEl.classList.contains('default')) {
-        toolBarEl.parentNode.removeChild(toolBarEl);
-      } else if (toolBarEl.classList.contains('nested')) {
-        mapToolsEl.parentNode.removeChild(mapToolsEl);
-      }
+      removeControls(map);
       sizeOfControls = options.mapLinks ? MAP_LINKS_SIZE : 0;
       toolBarEl = createToolBarEl();
       mapToolsEl = createMapToolsEl();
