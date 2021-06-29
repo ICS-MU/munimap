@@ -21,7 +21,9 @@ const ol = {
   Map,
   View,
   Feature,
-  Point,
+  geom: {
+    Point,
+  },
 };
 
 export {create, reset, ol};

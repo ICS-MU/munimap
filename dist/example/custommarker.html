@@ -74,14 +74,14 @@
   munimap.create({
         target: 'map',
         markers: [
-          new ol.Feature({
-            geometry: new ol.geom.Point([16.612802, 49.190582]),
+          new munimap.ol.Feature({
+            geometry: new munimap.ol.geom.Point([16.612802, 49.190582]),
             label: 'Brno hlavní nádraží',
             detail: '&lt;h4&gt;Hlavní nádraží&lt;/h4&gt;&lt;a href="https://www.cd.cz" target="_blank">www.cd.cz&lt;/a&gt;',
             color: '#009900'
           }),
-          new ol.Feature({
-            geometry: new ol.geom.Point([16.616667, 49.185833]),
+          new munimap.ol.Feature({
+            geometry: new munimap.ol.geom.Point([16.616667, 49.185833]),
             label: 'Autobusové nádraží Zvonařka'
           }),
           'BMA01'
@@ -133,13 +133,13 @@
       target: 'map',
       markers: [
         new munimap.ol.Feature({
-          geometry: new munimap.ol.Point([16.612802, 49.190582]),
+          geometry: new munimap.ol.geom.Point([16.612802, 49.190582]),
           label: 'Brno hlavní nádraží',
           detail: '<h4>Hlavní nádraží</h4><a href="https://www.cd.cz" target="_blank">www.cd.cz</a>',
           color: '#009900'
         }),
         new munimap.ol.Feature({
-          geometry: new munimap.ol.Point([16.616667, 49.185833]),
+          geometry: new munimap.ol.geom.Point([16.616667, 49.185833]),
           label: 'Autobusové nádraží Zvonařka'
         }),
         'BMA01'
