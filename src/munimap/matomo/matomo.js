@@ -74,9 +74,9 @@ export const sendEventForOptions = (options) => {
     console.log('send_maplinks');
     sendEvent('mapLinks', String(options.mapLinks));
   }
-  // if (String(options.pubTran) !== 'undefined') {
-  //   sendEvent('pubTran', String(options.pubTran));
-  // }
+  if (String(options.pubTran) !== 'undefined') {
+    sendEvent('pubTran', String(options.pubTran));
+  }
   if (String(options.baseMap) !== 'undefined') {
     console.log('send_basemap');
     sendEvent('baseMap', String(options.baseMap));

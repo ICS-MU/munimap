@@ -15,6 +15,7 @@ import {BASEMAPS} from './layer/basemap.js';
 import {RESOLUTION_COLOR} from './style/style.js';
 import {create as createClusterLayer} from './layer/cluster.js';
 import {create as createMarkerLyr} from './layer/marker.js';
+import {create as createPubtranStopLayer} from './layer/pubtran.stop.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
@@ -35,6 +36,7 @@ import {create as createMarkerLyr} from './layer/marker.js';
  * @property {boolean} [showLabels]
  * @property {boolean} [locationCodes]
  * @property {MarkerLabelFunction} [markerLabel]
+ * @property {boolean} [pubTran]
  */
 
 /**
@@ -260,6 +262,21 @@ const updateClusteredFeatures = (map, resolution, showLabels) => {
 };
 
 /**
+ * @param {string} lang language
+ * @return {ol.layer.Vector} layer
+ */
+const createPubtranLayer = (lang) => {
+  const pubTranAttribution = munimap_lang.getMsg(
+    munimap_lang.Translations.PUBTRAN_ATTRIBUTION_HTML,
+    lang
+  );
+  const pubTranLayer = createPubtranStopLayer();
+  const pubTranSource = pubTranLayer.getSource();
+  pubTranSource.setAttributions([pubTranAttribution]);
+  return pubTranLayer;
+};
+
+/**
  * Add layers to map.
  * @param {ol.Map} map map
  * @param {AddLayersOptions} options opts
@@ -277,6 +294,12 @@ const addLayers = (map, options) => {
     showLabels
   );
   layers.forEach((layer) => map.addLayer(layer));
+
+  if (options.pubTran) {
+    const pubTranLayer = createPubtranLayer(lang);
+    map.addLayer(pubTranLayer);
+  }
+
   map.addLayer(markerClusterLayer);
   map.addLayer(markerLayer);
   updateClusteredFeatures(map, view.getResolution(), showLabels);

@@ -358,6 +358,18 @@ const labels = (labels) => {
   }
 };
 
+/**
+ * @param {boolean|undefined} pubTran pubtran
+ */
+const pubTran = (pubTran) => {
+  if (pubTran !== undefined) {
+    assertBoolean(
+      pubTran,
+      'Parameter pubTran should be boolean (true or false).'
+    );
+  }
+};
+
 export {
   assert,
   assertArray,
@@ -376,4 +388,5 @@ export {
   locationCodes,
   labels,
   mapLinks,
+  pubTran,
 };

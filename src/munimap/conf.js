@@ -57,6 +57,7 @@ export const INITIAL_STATE = {
     locationCodes: false,
     simpleScroll: true,
     markerLabel: null,
+    pubTran: false,
   },
   markersTimestamp: null,
   zoomToTimestamp: null,

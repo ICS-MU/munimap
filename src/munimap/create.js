@@ -50,6 +50,7 @@ import {ofFeatures as extentOfFeatures} from './utils/extent.js';
  * @property {boolean} [locationCodes]
  * @property {boolean} [simpleScroll]
  * @property {MarkerLabelFunction} [markerLabel]
+ * @property {boolean} [pubTran]
  */
 
 /**
@@ -201,7 +202,7 @@ const assertOptions = (options) => {
   // munimap_assert.layers(options.layers);
   munimap_assert.lang(options.lang);
   munimap_assert.baseMap(options.baseMap);
-  // munimap_assert.pubTran(options.pubTran);
+  munimap_assert.pubTran(options.pubTran);
   munimap_assert.locationCodes(options.locationCodes);
   munimap_assert.mapLinks(options.mapLinks);
   munimap_assert.labels(options.labels);
@@ -262,6 +263,9 @@ const getInitialState = (options) => {
   }
   if (options.markerLabel !== undefined) {
     initialState.requiredOpts.markerLabel = options.markerLabel;
+  }
+  if (options.pubTran !== undefined) {
+    initialState.requiredOpts.pubTran = options.pubTran;
   }
 
   return initialState;
@@ -428,6 +432,7 @@ export default (options) => {
             showLabels: state.requiredOpts.labels,
             locationCodes: state.requiredOpts.locationCodes,
             markerLabel: state.requiredOpts.markerLabel,
+            pubTran: state.requiredOpts.pubTran,
           });
         }
 
