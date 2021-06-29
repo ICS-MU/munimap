@@ -29,10 +29,6 @@ export const MUNIMAP_PUBTRAN_URL =
  * @property {ol.coordinate.Coordinate} center
  * @property {string} center_proj
  * @property {number} resolution
- * @property {{
- *    invalidCodes: Array<string>,
- *    createDragEl: boolean
- *  }} invalidCodesInfo
  * @property {string} baseMap,
  * @property {CreateOptions} requiredOpts
  * @property {number} markersTimestamp
@@ -48,10 +44,6 @@ export const INITIAL_STATE = {
   center: [16.605390495656977, 49.1986567194723],
   center_proj: 'EPSG:4326',
   resolution: null,
-  invalidCodesInfo: {
-    invalidCodes: [],
-    createDragEl: undefined,
-  },
   requiredOpts: {
     target: null,
     markers: [],
