@@ -4,6 +4,7 @@
  */
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_utils from '../utils/utils.js';
+import Feature from 'ol/Feature';
 import {createSelector} from 'reselect';
 import {createTileLayer} from '../view.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
@@ -11,7 +12,6 @@ import {getStore, getType} from '../feature/building.js';
 
 /**
  * @typedef {import("../conf.js").State} State
- * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
  * @typedef {import("ol/layer/Tile").default} ol.layer.Tile
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
@@ -39,9 +39,9 @@ const getMarkersTimestamp = (state) => state.markersTimestamp;
 const getZoomToTimestamp = (state) => state.zoomToTimestamp;
 
 /**
- * @type {Reselect.Selector<State, Array.<string>|Array.<ol.Feature>>}
+ * @type {Reselect.Selector<State, Array.<string>|Array.<Feature>>}
  * @param {State} state state
- * @return {Array.<string>|Array.<ol.Feature>} required markers
+ * @return {Array.<string>|Array.<Feature>} required markers
  */
 const getRequiredMarkers = (state) => state.requiredOpts.markers;
 
@@ -88,8 +88,8 @@ const getResolution = (state) => state.resolution;
  *          return type is the same as T.
  * @type {Reselect.OutputSelector<
  *    State,
- *    Array<ol.Feature>,
- *    function(Array<string>|Array<ol.Feature>): Array<ol.Feature>
+ *    Array<Feature>,
+ *    function(Array<string>|Array<Feature>): Array<Feature>
  * >}
  */
 export const getInitMarkers = createSelector(
@@ -102,9 +102,13 @@ export const getInitMarkers = createSelector(
     const type = getType();
     const buildings = getStore().getFeatures();
     const result = requiredMarkers.map((initMarker) => {
-      return buildings.find((building) => {
-        return building.get(type.primaryKey) === initMarker;
-      });
+      if (initMarker instanceof Feature) {
+        return initMarker;
+      } else {
+        return buildings.find((building) => {
+          return building.get(type.primaryKey) === initMarker;
+        });
+      }
     });
     return result.filter((item) => item); //remove undefined (= invalid codes)
   }
@@ -113,8 +117,8 @@ export const getInitMarkers = createSelector(
 /**
  * @type {Reselect.OutputSelector<
  *    State,
- *    Array<ol.Feature>,
- *    function(Array<string>|string): Array<ol.Feature>
+ *    Array<Feature>,
+ *    function(Array<string>|string): Array<Feature>
  * >}
  */
 export const getInitZoomTo = createSelector(
@@ -184,7 +188,7 @@ export const getBasemapLayer = createSelector(
  * @type {Reselect.OutputSelector<
  *    State,
  *    Array<string>,
- *    function(Array<string>|Array<ol.Feature>, Array<ol.Feature>): Array<string>
+ *    function(Array<string>|Array<Feature>, Array<Feature>): Array<string>
  * >}
  */
 export const getInvalidCodes = createSelector(
@@ -215,7 +219,7 @@ export const getInvalidCodes = createSelector(
  * @type {Reselect.OutputSelector<
  *    State,
  *    boolean,
- *    function(Array<string>|Array<ol.Feature>, number?): boolean
+ *    function(Array<string>|Array<Feature>, number?): boolean
  * >}
  */
 export const loadMarkers = createSelector(
@@ -245,7 +249,7 @@ export const loadZoomTo = createSelector(
  * @type {Reselect.OutputSelector<
  *    State,
  *    boolean,
- *    function(Array<string>|Array<ol.Feature>, number?): boolean
+ *    function(Array<string>|Array<Feature>, number?): boolean
  * >}
  */
 export const areMarkersLoaded = createSelector(
