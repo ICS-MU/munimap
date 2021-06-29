@@ -10,7 +10,8 @@ import '../img/marker.style.coridors.bg.png';
 import * as munimap_matomo from './matomo/matomo.js';
 import create from './create.js';
 import reset from './reset.js';
-import {Map, View} from 'ol';
+import {Map, View, Feature} from 'ol';
+import {Point} from 'ol/geom';
 
 munimap_matomo.init();
 
@@ -19,6 +20,8 @@ munimap_matomo.init();
 const ol = {
   Map,
   View,
+  Feature,
+  Point,
 };
 
 export {create, reset, ol};
