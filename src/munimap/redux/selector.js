@@ -67,6 +67,13 @@ const getRequiredBaseMap = (state) => state.requiredOpts.baseMap;
 const getLang = (state) => state.requiredOpts.lang;
 
 /**
+ * @type {Reselect.Selector<State, string>}
+ * @param {State} state state
+ * @return {string} target
+ */
+const getTarget = (state) => state.requiredOpts.target;
+
+/**
  * @type {Reselect.Selector<State, ol.Coordinate>}
  * @param {State} state state
  * @return {ol.Coordinate} center
@@ -170,15 +177,18 @@ export const getBasemapLayerId = createSelector(
 );
 
 /**
+ * Get basemap layer. There must be target param, otherwise
+ * multiple maps would share a single tile layer.
+ *
  * @type {Reselect.OutputSelector<
  *    State,
  *    ol.layer.Tile,
- *    function(string, string): ol.layer.Tile
+ *    function(string, string, string): ol.layer.Tile
  * >}
  */
 export const getBasemapLayer = createSelector(
-  [getBasemapLayerId, getLang],
-  (basemapLayerId, lang) => {
+  [getBasemapLayerId, getLang, getTarget],
+  (basemapLayerId, lang, target) => {
     console.log('computing baseMapLayer');
     return createTileLayer(basemapLayerId, lang);
   }
