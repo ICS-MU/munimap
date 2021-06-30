@@ -16,11 +16,17 @@ import VectorSource from 'ol/source/Vector';
  */
 
 /**
+ * @type {string}
+ * @const
+ */
+const LAYER_ID = 'marker';
+
+/**
  * @param {ol.Map} map map
  * @param {AddLayersOptions} options opts
  * @return {VectorLayer} lyr
  */
-export const create = (map, options) => {
+const create = (map, options) => {
   const {markers, lang, muAttrs, locationCodes} = options;
 
   //to support multiple maps, each map must have its own marker source
@@ -49,7 +55,7 @@ export const create = (map, options) => {
   // }
   const markerLayer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
-      id: munimap_marker.LAYER_ID,
+      id: LAYER_ID,
       isFeatureClickable: munimap_marker.isClickable,
       featureClickHandler: munimap_marker.featureClickHandler,
       redrawOnFloorChange: true,
@@ -68,3 +74,5 @@ export const create = (map, options) => {
 
   return markerLayer;
 };
+
+export {LAYER_ID, create};
