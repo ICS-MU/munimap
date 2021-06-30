@@ -436,7 +436,6 @@ const multipleLabelFunction = (options, feature, resolution) => {
     }
   }
 
-  console.log(textStyle);
   return textStyle;
 };
 
@@ -484,7 +483,6 @@ const styleFunction = (options, feature, resolution) => {
       circleStyle = getMultiple();
     }
     result.push(circleStyle);
-    console.log(result);
   }
   return result;
 };
