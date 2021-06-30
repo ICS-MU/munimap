@@ -6,8 +6,8 @@ import * as munimap_building from './building.js';
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_load from '../load.js';
 import * as munimap_utils from '../utils/utils.js';
+import VectorSource from 'ol/source/Vector';
 import {MUNIMAP_URL} from '../conf.js';
-import {Vector as ol_source_Vector} from 'ol/source';
 
 /**
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
@@ -26,7 +26,7 @@ const PRIORITY_FIELD_NAME = 'priorita';
  * @type {ol.source.Vector}
  * @const
  */
-const STORE = new ol_source_Vector();
+const STORE = new VectorSource();
 
 /**
  * @type {TypeOptions}
