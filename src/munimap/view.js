@@ -232,11 +232,12 @@ const getDefaultLayers = (map, options) => {
   const layers = munimap_layer.getDefaultLayers(map, lang, showLabels);
 
   munimap_layer.setDefaultLayersProps({
-    layers: layers,
+    layers,
     markersAwareOptions: {
       map: map,
       markerSource: markerSource,
       markerLabel: markerLabel,
+      lang,
     },
   });
 

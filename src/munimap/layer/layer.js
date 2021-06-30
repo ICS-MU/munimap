@@ -3,7 +3,10 @@
  */
 
 import * as munimap_layer_building from './building.js';
+import * as munimap_layer_complex from './complex.js';
 import * as munimap_style from '../style/style.js';
+import * as munimap_style_complex from '../style/complex.js';
+import * as munimap_utils from '../utils/utils.js';
 
 /**
  * @typedef {import("ol/layer/BaseVector").Options} BaseLayerOptions
@@ -101,8 +104,8 @@ const getDefaultLayers = (map, lang, showLabels) => {
   if (showLabels === false) {
     return result;
   }
-  // const complexes = munimap.complex.layer.create();
-  // result.push(complexes);
+  const complexes = munimap_layer_complex.create();
+  result.push(complexes);
   return result;
 };
 
@@ -114,7 +117,6 @@ const setDefaultLayersProps = (options) => {
   const layers = options.layers;
   const markersAwareOpts = options.markersAwareOptions;
   const map = markersAwareOpts.map || null;
-  // const markerSource = markersAwareOpts.markerSource;
 
   // let activeRoomsStore;
 
@@ -122,13 +124,14 @@ const setDefaultLayersProps = (options) => {
     const layerId = layer.get('id');
 
     switch (layerId) {
-      // case munimap_complex.LAYER_ID:
-      //   layer.setStyle(goog.partial(munimap.complex.style.function, {
-      //     markerSource: markerSource,
-      //     map: map
-      //   })
-      //   );
-      //   break;
+      case munimap_layer_complex.LAYER_ID:
+        layer.setStyle(
+          munimap_utils.partial(
+            munimap_style_complex.styleFunction,
+            markersAwareOpts
+          )
+        );
+        break;
       case munimap_layer_building.LAYER_ID:
         break;
       // case munimap.room.DEFAULT_LAYER_ID:

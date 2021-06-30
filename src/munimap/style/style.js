@@ -53,6 +53,7 @@ import {Fill, Stroke, Style, Text} from 'ol/style';
  * @property {ol.source.Vector} markerSource
  * @property {MarkerLabelFunction}  [markerLabel]
  * @property {ol.Map}  [map]
+ * @property {string} [lang]
  * }}
  */
 
