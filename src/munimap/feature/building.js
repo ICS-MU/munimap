@@ -13,7 +13,6 @@ import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {MUNIMAP_URL} from '../conf.js';
 import {VectorSourceEvent} from 'ol/source/Vector';
-import {Vector as ol_layer_Vector} from 'ol/layer';
 import {tile as ol_loadingstrategy_tile} from 'ol/loadingstrategy';
 import {Vector as ol_source_Vector} from 'ol/source';
 import {createXYZ as ol_tilegrid_createXYZ} from 'ol/tilegrid';
@@ -65,18 +64,6 @@ const COMPLEX_ID_FIELD_NAME = 'arealId';
  * @type {string}
  */
 const UNITS_FIELD_NAME = 'pracoviste';
-
-/**
- * @type {string}
- * @const
- */
-const LAYER_ID = 'building';
-
-/**
- * @type {string}
- * @const
- */
-const LABEL_LAYER_ID = 'building-label';
 
 /**
  * @param {ProcessorOptions} options opts
@@ -197,41 +184,10 @@ const assertCodeOrLikeExpr = (code) => {
 };
 
 /**
- * @return {ol.source.Vector} Store
- */
-export const getStore = () => {
-  return STORE;
-};
-
-/**
  * @return {TypeOptions} Type
  */
 export const getType = () => {
   return TYPE;
-};
-
-/**
- * @param {ol.layer.Base} layer layer
- * @return {boolean} isLayer
- */
-const isLayer = (layer) => {
-  return layer.get('id') === LAYER_ID;
-};
-
-/**
- * @param {ol.Map} map map
- * @return {ol.layer.Vector|undefined} vector
- */
-const getLayer = (map) => {
-  const layers = map.getLayers().getArray();
-  const result = layers.find(isLayer);
-  if (result) {
-    munimap_assert.assert(
-      result instanceof ol_layer_Vector,
-      'Expected instanceof ol/layer/Vector.'
-    );
-  }
-  return /**@type {ol.layer.Vector|undefined}*/ (result);
 };
 
 /**
@@ -503,8 +459,6 @@ const getFaculties = (building) => {
 };
 
 export {
-  LAYER_ID,
-  LABEL_LAYER_ID,
   STORE,
   UNITS_FIELD_NAME,
   COMPLEX_ID_FIELD_NAME,

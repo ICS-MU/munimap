@@ -2,6 +2,7 @@
  * @module layer/building
  */
 
+import * as munimap_assert from '../assert/assert.js';
 import * as munimap_building from '../feature/building.js';
 import * as munimap_complex from '../feature/complex.js';
 import * as munimap_utils from '../utils/utils.js';
@@ -15,7 +16,53 @@ import {
 
 /**
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions
+ * @typedef {import("ol/source/Vector").default} ol.source.Vector
+ * @typedef {import("ol/layer/Base").default} ol.layer.Base
+ * @typedef {import("ol").Map} ol.Map
  */
+
+/**
+ * @type {string}
+ * @const
+ */
+const LAYER_ID = 'building';
+
+/**
+ * @type {string}
+ * @const
+ */
+const LABEL_LAYER_ID = 'building-label';
+
+/**
+ * @return {ol.source.Vector} Store
+ */
+export const getStore = () => {
+  return munimap_building.STORE;
+};
+
+/**
+ * @param {ol.layer.Base} layer layer
+ * @return {boolean} isLayer
+ */
+const isLayer = (layer) => {
+  return layer.get('id') === LAYER_ID;
+};
+
+/**
+ * @param {ol.Map} map map
+ * @return {VectorLayer|undefined} vector
+ */
+const getLayer = (map) => {
+  const layers = map.getLayers().getArray();
+  const result = layers.find(isLayer);
+  if (result) {
+    munimap_assert.assert(
+      result instanceof VectorLayer,
+      'Expected instanceof ol/layer/Vector.'
+    );
+  }
+  return /**@type {VectorLayer|undefined}*/ (result);
+};
 
 /**
  * @return {VectorLayer} layer
@@ -36,7 +83,7 @@ const create = () => {
 
   return new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
-      id: munimap_building.LAYER_ID,
+      id: LAYER_ID,
       isFeatureClickable: munimap_building.isClickable,
       featureClickHandler: munimap_building.featureClickHandler,
       type: munimap_building.TYPE,
@@ -74,7 +121,7 @@ const createLabel = (lang, showLabels) => {
 
   return new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
-      id: munimap_building.LABEL_LAYER_ID,
+      id: LABEL_LAYER_ID,
       isFeatureClickable: munimap_building.isClickable,
       featureClickHandler: munimap_building.featureClickHandler,
       type: munimap_building.TYPE,
@@ -88,4 +135,4 @@ const createLabel = (lang, showLabels) => {
   );
 };
 
-export {create, createLabel};
+export {LAYER_ID, LABEL_LAYER_ID, create, createLabel};

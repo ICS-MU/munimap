@@ -7,8 +7,9 @@ import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {createSelector} from 'reselect';
 import {createTileLayer} from '../view.js';
+import {getStore as getBuildingStore} from '../layer/building.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
-import {getStore, getType} from '../feature/building.js';
+import {getType} from '../feature/building.js';
 
 /**
  * @typedef {import("../conf.js").State} State
@@ -107,7 +108,7 @@ export const getInitMarkers = createSelector(
       return [];
     }
     const type = getType();
-    const buildings = getStore().getFeatures();
+    const buildings = getBuildingStore().getFeatures();
     const result = requiredMarkers.map((initMarker) => {
       if (initMarker instanceof Feature) {
         return initMarker;
@@ -138,7 +139,7 @@ export const getInitZoomTo = createSelector(
       initZoomTo = [/**@type {string}*/ (initZoomTo)];
     }
     const type = getType();
-    const buildings = getStore().getFeatures();
+    const buildings = getBuildingStore().getFeatures();
     return /**@type {Array<string>}*/ (initZoomTo).map((initZoomTo) => {
       return buildings.find((building) => {
         return building.get(type.primaryKey) === initZoomTo;

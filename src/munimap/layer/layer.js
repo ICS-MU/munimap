@@ -2,7 +2,6 @@
  * @module layer/layer
  */
 
-import * as munimap_building from '../feature/building.js';
 import * as munimap_layer_building from './building.js';
 import * as munimap_style from '../style/style.js';
 
@@ -130,7 +129,7 @@ const setDefaultLayersProps = (options) => {
       //   })
       //   );
       //   break;
-      case munimap_building.LAYER_ID:
+      case munimap_layer_building.LAYER_ID:
         break;
       // case munimap.room.DEFAULT_LAYER_ID:
       //   layer.once('precompose', munimap.room.style.setCorridorStyle);

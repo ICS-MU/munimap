@@ -12,7 +12,7 @@ import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import createControls from './control/controls.js';
 import {BASEMAPS} from './layer/basemap.js';
-import {LAYER_ID as BUILDING_LAYER_ID} from './feature/building.js';
+import {LAYER_ID as BUILDING_LAYER_ID} from './layer/building.js';
 import {RESOLUTION_COLOR} from './style/style.js';
 import {create as createClusterLyr} from './layer/cluster.js';
 import {create as createMarkerLyr} from './layer/marker.js';

@@ -3,6 +3,7 @@
  */
 import * as munimap_assert from './assert/assert.js';
 import * as munimap_building from './feature/building.js';
+import * as munimap_layer_building from './layer/building.js';
 import * as munimap_utils from './utils/utils.js';
 import {EsriJSON} from 'ol/format';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
@@ -412,7 +413,7 @@ const buildingsByCode = async (options) => {
   return featuresByCode({
     codes: options.codes,
     type: munimap_building.getType(),
-    source: munimap_building.getStore(),
+    source: munimap_layer_building.getStore(),
     likeExprs: options.likeExprs,
     processor: munimap_building.loadProcessor,
   });
