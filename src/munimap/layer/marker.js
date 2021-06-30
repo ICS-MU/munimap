@@ -7,6 +7,7 @@ import * as munimap_marker from '../feature/marker.js';
 import * as munimap_markerStyle from '../style/marker.js';
 import * as munimap_utils from '../utils/utils.js';
 import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
 
 /**
  * @typedef {import("ol").Map} ol.Map
@@ -21,7 +22,9 @@ import VectorLayer from 'ol/layer/Vector';
  */
 export const create = (map, options) => {
   const {markers, lang, muAttrs, locationCodes} = options;
-  const markerSource = munimap_marker.STORE;
+
+  //to support multiple maps, each map must have its own marker source
+  const markerSource = new VectorSource();
   markerSource.setAttributions(muAttrs);
   markerSource.addFeatures(markers);
 

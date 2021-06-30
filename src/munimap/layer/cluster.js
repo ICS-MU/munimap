@@ -2,7 +2,6 @@
  * @module layer/cluster
  */
 import * as munimap_cluster from '../cluster/cluster.js';
-import * as munimap_marker from '../feature/marker.js';
 import * as munimap_utils from '../utils/utils.js';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
@@ -23,10 +22,10 @@ import {getCenter} from 'ol/extent';
  * @return {VectorLayer} marker cluster layer
  */
 export const create = (map, options) => {
-  const {markers, lang, muAttrs, clusterFacultyAbbr, locationCodes} = options;
+  const {markers, lang} = options;
   const clusterFeatures = markers.concat();
   const markerClusterSrc = new EnhancedClusterSource({
-    attributions: muAttrs,
+    attributions: options.muAttrs,
     source: new VectorSource({
       features: clusterFeatures,
     }),
@@ -59,11 +58,11 @@ export const create = (map, options) => {
 
   const markerOptions = {
     map: map,
-    markerSource: munimap_marker.STORE,
+    markerSource: options.markerSource,
     markerLabel: options.markerLabel,
-    lang: lang,
-    clusterFacultyAbbr: clusterFacultyAbbr,
-    locationCodes: locationCodes,
+    lang: options.lang,
+    clusterFacultyAbbr: options.clusterFacultyAbbr,
+    locationCodes: options.locationCodes,
   };
 
   const markerClusterLayer = new VectorLayer(

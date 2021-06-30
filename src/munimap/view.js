@@ -13,7 +13,7 @@ import XYZ from 'ol/source/XYZ';
 import createControls from './control/controls.js';
 import {BASEMAPS} from './layer/basemap.js';
 import {RESOLUTION_COLOR} from './style/style.js';
-import {create as createClusterLayer} from './layer/cluster.js';
+import {create as createClusterLyr} from './layer/cluster.js';
 import {create as createMarkerLyr} from './layer/marker.js';
 import {create as createPubtranStopLayer} from './layer/pubtran.stop.js';
 
@@ -37,6 +37,7 @@ import {create as createPubtranStopLayer} from './layer/pubtran.stop.js';
  * @property {boolean} [locationCodes]
  * @property {MarkerLabelFunction} [markerLabel]
  * @property {boolean} [pubTran]
+ * @property {ol.source.Vector} [markerSource]
  */
 
 /**
@@ -222,13 +223,11 @@ const createMarkerLayer = (map, options) => {
 
 /**
  * @param {ol.Map} map map
- * @param {ol.source.Vector} markerSource source
- * @param {MarkerLabelFunction} markerLabel markerLabel
- * @param {string} lang language
- * @param {boolean} showLabels whether to show labels for MU objects
+ * @param {AddLayersOptions} options opts
  * @return {Array<ol.layer.Vector>} default layers
  */
-const getDefaultLayers = (map, markerSource, markerLabel, lang, showLabels) => {
+const getDefaultLayers = (map, options) => {
+  const {markerSource, markerLabel, lang, showLabels} = options;
   const layers = munimap_layer.getDefaultLayers(map, lang, showLabels);
 
   munimap_layer.setDefaultLayersProps({
@@ -248,8 +247,8 @@ const getDefaultLayers = (map, markerSource, markerLabel, lang, showLabels) => {
  * @param {AddLayersOptions} options opts
  * @return {ol.layer.Vector} marker cluster layer
  */
-const createMarkerClusterLayer = (map, options) => {
-  return createClusterLayer(map, options);
+const createClusterLayer = (map, options) => {
+  return createClusterLyr(map, options);
 };
 
 /**
@@ -282,17 +281,13 @@ const createPubtranLayer = (lang) => {
  * @param {AddLayersOptions} options opts
  */
 const addLayers = (map, options) => {
-  const {lang, showLabels, markerLabel} = options;
+  const {lang, showLabels} = options;
   const view = map.getView();
   const markerLayer = createMarkerLayer(map, options);
-  const markerClusterLayer = createMarkerClusterLayer(map, options);
-  const layers = getDefaultLayers(
-    map,
-    markerLayer.getSource(),
-    markerLabel,
-    lang,
-    showLabels
-  );
+  options.markerSource = markerLayer.getSource();
+
+  const markerClusterLayer = createClusterLayer(map, options);
+  const layers = getDefaultLayers(map, options);
   layers.forEach((layer) => map.addLayer(layer));
 
   if (options.pubTran) {
@@ -311,8 +306,5 @@ export {
   addLayers,
   createTileLayer,
   toggleLoadingMessage,
-  createMarkerLayer,
-  getDefaultLayers,
-  createMarkerClusterLayer,
   updateClusteredFeatures,
 };
