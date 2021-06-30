@@ -8,6 +8,7 @@ import * as munimap_utils from '../utils/utils.js';
 import * as redux from 'redux';
 import {asyncDispatchMiddleware} from './middleware.js';
 import {featuresFromParam} from '../load.js';
+import {getResolutionRange} from '../cluster/cluster.js';
 import {loadOrDecorateMarkers} from '../create.js';
 
 /**
@@ -80,6 +81,16 @@ const createReducer = (initialState) => {
         return {
           ...state,
           zoomToTimestamp: 0,
+        };
+      case actions.OL_MAP_PRECOMPOSED:
+        const oldRes = state.resolution;
+        const newRes = action.payload.resolution;
+        const clusterResolutionExceeded =
+          getResolutionRange(newRes) !== getResolutionRange(oldRes);
+        return {
+          ...state,
+          clusterResolutionExceeded: clusterResolutionExceeded,
+          resolution: newRes,
         };
       default:
         return state;

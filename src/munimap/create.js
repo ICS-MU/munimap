@@ -310,7 +310,11 @@ const attachMapListeners = (map, options) => {
 
   map.on('precompose', (evt) => {
     const res = evt.frameState.viewState.resolution;
-    munimap_view.updateClusteredFeatures(map, res, showLabels);
+    store.dispatch(
+      actions.map_precomposed({
+        resolution: res,
+      })
+    );
   });
 };
 
@@ -437,6 +441,14 @@ export default (options) => {
         }
 
         munimap_view.changeBaseMap(basemapLayer, map);
+
+        if (state.clusterResolutionExceeded) {
+          munimap_view.updateClusteredFeatures(
+            map,
+            state.resolution,
+            state.requiredOpts.labels
+          );
+        }
       }
     };
 

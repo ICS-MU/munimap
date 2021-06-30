@@ -36,6 +36,12 @@ export const OL_MAP_RENDERED = 'OL_MAP_RENDERED';
  * @type {string}
  * @const
  */
+ export const OL_MAP_PRECOMPOSED = 'OL_MAP_PRECOMPOSED';
+
+/**
+ * @type {string}
+ * @const
+ */
 export const ZOOMTO_LOADED = 'ZOOMTO_LOADED';
 
 /**
@@ -89,6 +95,19 @@ export function map_rendered(object) {
     type: OL_MAP_RENDERED,
     payload: {
       map_size: object.map_size,
+    },
+  };
+}
+
+/**
+ * @param {{resolution: number}} object action object
+ * @return {redux.AnyAction} action
+ */
+export function map_precomposed(object) {
+  return {
+    type: OL_MAP_PRECOMPOSED,
+    payload: {
+      resolution: object.resolution,
     },
   };
 }

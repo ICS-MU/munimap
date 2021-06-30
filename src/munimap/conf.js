@@ -33,6 +33,7 @@ export const MUNIMAP_PUBTRAN_URL =
  * @property {CreateOptions} requiredOpts
  * @property {number} markersTimestamp
  * @property {number} zoomToTimestamp
+ * @property {boolean} clusterResolutionExceeded
  */
 
 /**
@@ -62,4 +63,5 @@ export const INITIAL_STATE = {
   markersTimestamp: null,
   zoomToTimestamp: null,
   baseMap: null,
+  clusterResolutionExceeded: null,
 };

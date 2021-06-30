@@ -12,6 +12,7 @@ import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import createControls from './control/controls.js';
 import {BASEMAPS} from './layer/basemap.js';
+import {LAYER_ID as BUILDING_LAYER_ID} from './feature/building.js';
 import {RESOLUTION_COLOR} from './style/style.js';
 import {create as createClusterLyr} from './layer/cluster.js';
 import {create as createMarkerLyr} from './layer/marker.js';
@@ -288,7 +289,14 @@ const addLayers = (map, options) => {
 
   const markerClusterLayer = createClusterLayer(map, options);
   const layers = getDefaultLayers(map, options);
-  layers.forEach((layer) => map.addLayer(layer));
+  layers.forEach((layer) => {
+    map.addLayer(layer);
+    if (layer.get('id') === BUILDING_LAYER_ID) {
+      layer.getSource().on('featuresadded', (evt) => {
+        updateClusteredFeatures(map, view.getResolution(), showLabels);
+      });
+    }
+  });
 
   if (options.pubTran) {
     const pubTranLayer = createPubtranLayer(lang);
@@ -297,7 +305,6 @@ const addLayers = (map, options) => {
 
   map.addLayer(markerClusterLayer);
   map.addLayer(markerLayer);
-  updateClusteredFeatures(map, view.getResolution(), showLabels);
 };
 
 export {

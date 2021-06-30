@@ -12,6 +12,7 @@ import * as munimap_unit from './unit.js';
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {MUNIMAP_URL} from '../conf.js';
+import {VectorSourceEvent} from 'ol/source/Vector';
 import {Vector as ol_layer_Vector} from 'ol/layer';
 import {tile as ol_loadingstrategy_tile} from 'ol/loadingstrategy';
 import {Vector as ol_source_Vector} from 'ol/source';
@@ -114,6 +115,7 @@ const featuresForMap = async (options, extent, resolution, projection) => {
     resolution,
     projection
   );
+  options.source.dispatchEvent(new VectorSourceEvent('featuresadded'));
   return buildings;
 };
 
