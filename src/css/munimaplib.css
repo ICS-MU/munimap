@@ -454,6 +454,10 @@
 .ol-attribution {
   z-index: 5;
 }
+.ol-attribution ul {
+  font-size: .7rem;
+  /* line-height: 1.375em; */
+}
 .ol-attribution li {
   display: inline-block;
   font-weight: normal;

@@ -77,8 +77,9 @@ const CS_TRANSLATIONS = {
   'OSM_ATTRIBUTION_HTML':
     '© Přispěvatelé <a href="http://www.openstreetmap.org/copyright"' +
     ' target="_blank">OpenStreetMap</a>',
-  // 'MUNIMAP_ATTRIBUTION_HTML': '<a href="//' + jpad.PROD_DOMAIN + jpad.APP_PATH +
-  //   '" target="_blank" title="Mapová knihovna munimap">munimap</a>',
+  'MUNIMAP_ATTRIBUTION_HTML':
+    `<a href="//${PROD_DOMAIN}${APP_PATH}` +
+    `" target="_blank" title="Mapová knihovna munimap">munimap</a>`,
   'PUBTRAN_ATTRIBUTION_HTML':
     '© <a href="http://www.idsjmk.cz/"' +
     ' target="_blank" title="Informace o umístění zastávek MHD poskytuje' +
@@ -148,8 +149,9 @@ const EN_TRANSLATIONS = {
   'OSM_ATTRIBUTION_HTML':
     '© <a href="http://www.openstreetmap.org/copyright"' +
     ' target="_blank">OpenStreetMap</a> contributors',
-  // 'MUNIMAP_ATTRIBUTION_HTML': '<a href="//' + jpad.PROD_DOMAIN + jpad.APP_PATH +
-  //   '" target="_blank" title="munimap mapping library">munimap</a>',
+  'MUNIMAP_ATTRIBUTION_HTML':
+    `<a href="//${PROD_DOMAIN}${APP_PATH}` +
+    `" target="_blank" title="munimap mapping library">munimap</a>`,
   'PUBTRAN_ATTRIBUTION_HTML':
     '© <a href="http://www.idsjmk.cz/EN/default.aspx"' +
     ' target="_blank" title="Public transport data is provided by' +
