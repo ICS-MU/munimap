@@ -1,14 +1,15 @@
 /**
  * @module cluster/cluster
  */
-import * as munimap_assert from '../assert/assert.js';
+// import * as munimap_assert from '../assert/assert.js';
 import * as munimap_building from '../feature/building.js';
 import * as munimap_marker from '../feature/marker.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
-import ClusterSource from 'ol/source/Cluster';
-import VectorLayer from 'ol/layer/Vector';
+// import ClusterSource from 'ol/source/Cluster';
+// import VectorLayer from 'ol/layer/Vector';
 import {Feature} from 'ol';
+import {getSource, getSourceFeatures} from '../layer/cluster.js';
 
 /**
  * @typedef {import("../utils/range").RangeInterface} RangeInterface
@@ -36,12 +37,6 @@ const BUILDING_RESOLUTION = munimap_range.createResolution(
   2.39,
   Number.POSITIVE_INFINITY
 );
-
-/**
- * @type {string}
- * @const
- */
-const LAYER_ID = 'markercluster';
 
 /**
  * @param {FeatureClickHandlerOptions} options options
@@ -173,54 +168,6 @@ const getMinorFeatures = (map, feature) => {
 };
 
 /**
- * @param {ol.layer.Base} layer layer
- * @return {boolean} whether is layer
- */
-const isLayer = (layer) => layer.get('id') === LAYER_ID;
-
-/**
- * @param {ol.Map} map map
- * @return {VectorLayer} layer
- */
-const getLayer = (map) => {
-  const layers = map.getLayers().getArray();
-  const result = layers.find(isLayer);
-  munimap_assert.assertInstanceof(result, VectorLayer);
-  return /** @type {VectorLayer}*/ (result);
-};
-
-/**
- * @param {ol.Map} map map
- * @return {ClusterSource} source
- */
-const getStore = (map) => {
-  const layer = getLayer(map);
-  const result = layer.getSource();
-  munimap_assert.assertInstanceof(result, ClusterSource);
-  return /** @type {ClusterSource}*/ (result);
-};
-
-/**
- * @param {ol.Map} map map
- * @return {ol.source.Vector} source
- */
-const getSource = (map) => {
-  const clusterStore = getStore(map);
-  munimap_assert.assertInstanceof(clusterStore, ClusterSource);
-  return clusterStore.getSource();
-};
-
-/**
- * @param {ol.Map} map map
- * @return {Array.<Feature>} source features
- * @protected
- */
-const getSourceFeatures = (map) => {
-  const source = getSource(map);
-  return source.getFeatures();
-};
-
-/**
  * @param {FeatureClickHandlerOptions} options options
  */
 const featureClickHandler = (options) => {
@@ -339,7 +286,6 @@ const updateClusteredFeatures = (map, resolution, showLabels) => {
 export {
   BUILDING_RESOLUTION,
   ROOM_RESOLUTION,
-  LAYER_ID,
   Resolutions,
   isClickable,
   featureClickHandler,

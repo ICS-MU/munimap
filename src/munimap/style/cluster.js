@@ -40,36 +40,38 @@ import {localeCompare} from '../utils/string.js';
 const RADIUS = 12;
 
 /**
- * @type {Style}
+ * @return {Style} style
  * @protected
- * @const
  */
-const MULTIPLE = new Style({
-  image: new Circle({
-    radius: RADIUS,
-    fill: munimap_style.TEXT_FILL,
-    stroke: new Stroke({
-      color: '#ffffff',
-      width: 2,
+const getMultiple = () => {
+  return new Style({
+    image: new Circle({
+      radius: RADIUS,
+      fill: munimap_style.TEXT_FILL,
+      stroke: new Stroke({
+        color: '#ffffff',
+        width: 2,
+      }),
     }),
-  }),
-});
+  });
+};
 
 /**
- * @type {Style}
+ * @return {Style} style
  * @protected
- * @const
  */
-const MULTIPLE_MARKED = new Style({
-  image: new Circle({
-    radius: RADIUS,
-    fill: munimap_style_marker.FILL,
-    stroke: new Stroke({
-      color: '#ffffff',
-      width: 3,
+const getMultipleMarked = () => {
+  return new Style({
+    image: new Circle({
+      radius: RADIUS,
+      fill: munimap_style_marker.FILL,
+      stroke: new Stroke({
+        color: '#ffffff',
+        width: 3,
+      }),
     }),
-  }),
-});
+  });
+};
 
 /**
  *
@@ -434,6 +436,7 @@ const multipleLabelFunction = (options, feature, resolution) => {
     }
   }
 
+  console.log(textStyle);
   return textStyle;
 };
 
@@ -478,9 +481,10 @@ const styleFunction = (options, feature, resolution) => {
         zIndex: 7,
       });
     } else {
-      circleStyle = MULTIPLE;
+      circleStyle = getMultiple();
     }
     result.push(circleStyle);
+    console.log(result);
   }
   return result;
 };

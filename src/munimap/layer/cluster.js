@@ -1,8 +1,10 @@
 /**
  * @module layer/cluster
  */
+import * as munimap_assert from '../assert/assert.js';
 import * as munimap_cluster from '../cluster/cluster.js';
 import * as munimap_utils from '../utils/utils.js';
+import ClusterSource from 'ol/source/Cluster';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import {EnhancedClusterSource, clusterCompareFn} from '../source/cluster.js';
@@ -14,14 +16,70 @@ import {getCenter} from 'ol/extent';
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("../layer/layer.js").VectorLayerOptions} VectorLayerOptions
  * @typedef {import("../view.js").AddLayersOptions} AddLayersOptions
+ * @typedef {import("ol").Feature} ol.Feature
+ * @typedef {import("ol/layer/Base").default} ol.layer.Base
  */
+
+/**
+ * @type {string}
+ * @const
+ */
+const LAYER_ID = 'markercluster';
+
+/**
+ * @param {ol.layer.Base} layer layer
+ * @return {boolean} whether is layer
+ */
+const isLayer = (layer) => layer.get('id') === LAYER_ID;
+
+/**
+ * @param {ol.Map} map map
+ * @return {VectorLayer} layer
+ */
+const getLayer = (map) => {
+  const layers = map.getLayers().getArray();
+  const result = layers.find(isLayer);
+  munimap_assert.assertInstanceof(result, VectorLayer);
+  return /** @type {VectorLayer}*/ (result);
+};
+
+/**
+ * @param {ol.Map} map map
+ * @return {ClusterSource} source
+ */
+const getStore = (map) => {
+  const layer = getLayer(map);
+  const result = layer.getSource();
+  munimap_assert.assertInstanceof(result, ClusterSource);
+  return /** @type {ClusterSource}*/ (result);
+};
+
+/**
+ * @param {ol.Map} map map
+ * @return {VectorSource} source
+ */
+const getSource = (map) => {
+  const clusterStore = getStore(map);
+  munimap_assert.assertInstanceof(clusterStore, ClusterSource);
+  return clusterStore.getSource();
+};
+
+/**
+ * @param {ol.Map} map map
+ * @return {Array.<ol.Feature>} source features
+ * @protected
+ */
+const getSourceFeatures = (map) => {
+  const source = getSource(map);
+  return source.getFeatures();
+};
 
 /**
  * @param {ol.Map} map map
  * @param {AddLayersOptions} options opts
  * @return {VectorLayer} marker cluster layer
  */
-export const create = (map, options) => {
+const create = (map, options) => {
   const {markers, lang} = options;
   const clusterFeatures = markers.concat();
   const markerClusterSrc = new EnhancedClusterSource({
@@ -67,7 +125,7 @@ export const create = (map, options) => {
 
   const markerClusterLayer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
-      id: munimap_cluster.LAYER_ID,
+      id: LAYER_ID,
       isFeatureClickable: munimap_cluster.isClickable,
       featureClickHandler: munimap_cluster.featureClickHandler,
       source: markerClusterSrc,
@@ -78,3 +136,5 @@ export const create = (map, options) => {
   );
   return markerClusterLayer;
 };
+
+export {create, getSource, getSourceFeatures};
