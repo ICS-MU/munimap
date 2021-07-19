@@ -1,9 +1,8 @@
 /**
  * @module control/controls
  */
-
+import * as actions from '../redux/action.js';
 import * as munimap_lang from '../lang/lang.js';
-import * as munimap_matomo from '../matomo/matomo.js';
 import * as munimap_utils from '../utils/utils.js';
 import Control from 'ol/control/Control';
 import FullScreen from 'ol/control/FullScreen';
@@ -20,8 +19,17 @@ import createMapLinks from '../control/maplinks.js';
  */
 
 /**
+ * @typedef {Object} MapToolsOptions
+ * @property {HTMLElement} toolBarEl toolbar element
+ * @property {HTMLElement} mapToolsEl maptools element
+ * @property {string} lang language
+ * @property {number} sizeOfControls total count
+ */
+
+/**
  * @typedef {import("../create.js").Options} CreateOptions
  * @typedef {import("ol").Map} ol.Map
+ * @typedef {import("redux").Store} redux.Store
  */
 
 /**
@@ -80,10 +88,19 @@ const createMapToolsEl = () => {
   return mapToolsEl;
 };
 
-const addMatomoClickEvent = (parentEl) => {
+/**
+ * @param {redux.Store} store store
+ * @param {Element} parentEl parent element
+ */
+const addMatomoClickEvent = (store, parentEl) => {
   const el = parentEl.getElementsByClassName('ol-full-screen')[0];
   el.addEventListener('click', () => {
-    munimap_matomo.sendEvent('full-screen', 'click');
+    store.dispatch(
+      actions.send_to_matomo({
+        category: 'full-screen',
+        action: 'click',
+      })
+    );
   });
 };
 
@@ -122,11 +139,12 @@ const zoomToInitExtent = (map) => {
 
 /**
  * @param {ol.Map} map map
+ * @param {redux.Store} store store
  * @param {HTMLElement} target target
  * @param {string} lang language
  * @return {Control} control
  * */
-const createInitExtentControl = (map, target, lang) => {
+const createInitExtentControl = (map, store, target, lang) => {
   const divEl = document.createElement('div');
   divEl.className += ' munimap-initial-extent';
   divEl.id = 'muni-init-extent';
@@ -152,7 +170,12 @@ const createInitExtentControl = (map, target, lang) => {
 
   divEl.addEventListener('click', () => {
     zoomToInitExtent(map);
-    munimap_matomo.sendEvent('initExtent', 'click');
+    store.dispatch(
+      actions.send_to_matomo({
+        category: 'initExtent',
+        action: 'click',
+      })
+    );
   });
   return result;
 };
@@ -205,12 +228,11 @@ const toggleMapToolBar = (options) => {
 /**
  * Toggles Tool Bar into Map Tools
  * @param {ol.Map} map map
- * @param {HTMLElement} toolBarEl toolbar element
- * @param {HTMLElement} mapToolsEl maptools element
- * @param {string} lang language
- * @param {number} sizeOfControls total count
+ * @param {redux.Store} store store
+ * @param {MapToolsOptions} options opts
  */
-const toggleMapTools = (map, toolBarEl, mapToolsEl, lang, sizeOfControls) => {
+const toggleMapTools = (map, store, options) => {
+  const {toolBarEl, mapToolsEl, lang, sizeOfControls} = options;
   const remainingSpace = map.getSize()[1] - sizeOfControls - ZOOM_IN_OUT_SIZE;
   if (remainingSpace >= 0) {
     toolBarEl.classList.add('default');
@@ -259,10 +281,20 @@ const toggleMapTools = (map, toolBarEl, mapToolsEl, lang, sizeOfControls) => {
       lang: lang,
     });
 
-    munimap_matomo.sendEvent('mapTools', 'create');
+    store.dispatch(
+      actions.send_to_matomo({
+        category: 'mapTools',
+        action: 'create',
+      })
+    );
     buttonEl.addEventListener('click', () => {
       toggleMapToolBar(toolBarOptions);
-      munimap_matomo.sendEvent('mapTools', 'click');
+      store.dispatch(
+        actions.send_to_matomo({
+          category: 'mapTools',
+          action: 'click',
+        })
+      );
     });
     const mapToolsControl = new Control({
       element: mapToolsEl,
@@ -329,21 +361,27 @@ const removeControls = (map) => {
 /**
  * Create additional map tools
  * @param {ol.Map} map map
+ * @param {redux.Store} store store
  * @param {CreateOptions} options opts
  */
-export default (map, options) => {
+export default (map, store, options) => {
   const lang = options.lang;
 
   // if (jpad.func.isDef(options.identifyCallback)) {
   //   map.addControl(munimap.identify.createControl(map));
   // }
   if (options.mapLinks) {
-    map.addControl(createMapLinks(map, options.markers, lang));
+    map.addControl(createMapLinks(map, store, options.markers, lang));
   }
   if (window.location.protocol === 'https:' || !PRODUCTION) {
-    map.addControl(createGeolocation(map, lang));
+    map.addControl(createGeolocation(map, store, lang));
   } else {
-    munimap_matomo.sendEvent('geolocation', 'http_hidden');
+    store.dispatch(
+      actions.send_to_matomo({
+        category: 'geolocation',
+        action: 'http_hidden',
+      })
+    );
   }
 
   let remainingSpace = 0;
@@ -361,7 +399,7 @@ export default (map, options) => {
         target: toolBarEl,
       })
     );
-    controlsToAdd.push(createInitExtentControl(map, toolBarEl, lang));
+    controlsToAdd.push(createInitExtentControl(map, store, toolBarEl, lang));
   };
 
   const addMapTools = () => {
@@ -369,11 +407,11 @@ export default (map, options) => {
     storeControls(controlsToAdd);
     sizeOfControls += addControls(map, controlsToAdd);
     remainingSpace = map.getSize()[1] - sizeOfControls - ZOOM_IN_OUT_SIZE;
-    toggleMapTools(map, toolBarEl, mapToolsEl, lang, sizeOfControls);
+    toggleMapTools(map, store, {toolBarEl, mapToolsEl, lang, sizeOfControls});
   };
 
   addMapTools();
-  addMatomoClickEvent(toolBarEl);
+  addMatomoClickEvent(store, toolBarEl);
   toggleMapLinks(map, options);
 
   map.on('change:size', () => {
@@ -383,7 +421,7 @@ export default (map, options) => {
       toolBarEl = createToolBarEl();
       mapToolsEl = createMapToolsEl();
       addMapTools();
-      addMatomoClickEvent(toolBarEl);
+      addMatomoClickEvent(store, toolBarEl);
     }
     toggleMapLinks(map, options);
   });

@@ -26,6 +26,7 @@ import {create as createPubtranStopLayer} from './layer/pubtran.stop.js';
  * @typedef {import('./control/controls.js').CreateOptions} CreateOptions
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
+ * @typedef {import("redux").Store} redux.Store
  */
 
 /**
@@ -205,12 +206,13 @@ const ensureBaseMap = (basemapLayer, map) => {
 };
 
 /**
- *
+ * Add controls to map.
  * @param {ol.Map} map map
+ * @param {redux.Store} store store
  * @param {CreateOptions} requiredOpts opts
  */
-const addControls = (map, requiredOpts) => {
-  createControls(map, requiredOpts);
+const addControls = (map, store, requiredOpts) => {
+  createControls(map, store, requiredOpts);
 };
 
 /**

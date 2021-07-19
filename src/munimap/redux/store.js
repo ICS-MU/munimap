@@ -90,6 +90,21 @@ const createReducer = (initialState) => {
           markersTimestamp: 0,
           zoomToTimestamp: 0,
         };
+
+      //MATOMO_SEND
+      case actions.MATOMO_SEND:
+        munimap_matomo.sendEvent(
+          action.payload.category,
+          action.payload.action
+        );
+        return {...state};
+
+      //MATOMO_SEND_FOR_OPTS
+      case actions.MATOMO_SEND_FOR_OPTS:
+        munimap_matomo.sendEventForOptions(action.payload.options);
+        return {...state};
+
+      //DEAFULT
       default:
         return state;
     }

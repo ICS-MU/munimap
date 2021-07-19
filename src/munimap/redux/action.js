@@ -1,5 +1,5 @@
 /**
- * @module redux/action
+ * @typedef {import("../create.js").Options} CreateOptions
  */
 
 /**
@@ -37,6 +37,18 @@ export const OL_MAP_PRECOMPOSED = 'OL_MAP_PRECOMPOSED';
  * @const
  */
 export const ZOOMTO_LOADED = 'ZOOMTO_LOADED';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const MATOMO_SEND = 'MATOMO_SEND';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const MATOMO_SEND_FOR_OPTS = 'MATOMO_SEND_FOR_OPTS';
 
 /**
  * @typedef {import("redux").AnyAction} redux.AnyAction
@@ -109,6 +121,36 @@ export function ol_map_view_change(object) {
     type: OL_MAP_VIEW_CHANGE,
     payload: {
       view: object,
+    },
+  };
+}
+
+/**
+ * @param {{
+ *    category: string,
+ *    action: string
+ * }} object action object
+ * @return {redux.AnyAction} action
+ */
+export function send_to_matomo(object) {
+  return {
+    type: MATOMO_SEND,
+    payload: {
+      category: object.category,
+      action: object.action,
+    },
+  };
+}
+
+/**
+ * @param {CreateOptions} options action object
+ * @return {redux.AnyAction} action
+ */
+export function send_to_matomo_for_opts(options) {
+  return {
+    type: MATOMO_SEND_FOR_OPTS,
+    payload: {
+      options,
     },
   };
 }

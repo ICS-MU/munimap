@@ -54,6 +54,7 @@ export const sendEvent = (category, action) => {
     '&e_a=' +
     action +
     '&send_image=0';
+  console.log(matomo);
   //fetch(encodeURI(matomo));
 };
 

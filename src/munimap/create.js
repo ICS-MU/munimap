@@ -6,25 +6,22 @@ import * as munimap_assert from './assert/assert.js';
 import * as munimap_interaction from './ui/interaction.js';
 import * as munimap_lang from './lang/lang.js';
 import * as munimap_load from './load.js';
-import * as munimap_matomo from './matomo/matomo.js';
 import * as munimap_utils from './utils/utils.js';
 import * as munimap_view from './view.js';
-import * as ol_extent from 'ol/extent';
-import * as ol_proj from 'ol/proj';
 import * as slctr from './redux/selector.js';
 import Feature from 'ol/Feature';
 import {INITIAL_STATE, MUNIMAP_PROPS_ID} from './conf.js';
-import {Map, View} from 'ol';
+import {Map} from 'ol';
 import {defaults as control_defaults} from 'ol/control';
 import {createStore} from './redux/store.js';
 import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
-import {ofFeatures as extentOfFeatures} from './utils/extent.js';
 
 /**
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
  * @typedef {import("ol/layer").Vector} ol.layer.Vector
  * @typedef {import("ol/layer/Base").default} ol.layer.BaseLayer
  * @typedef {import("ol").Feature} ol.Feature
+ * @typedef {import("ol").View} ol.View
  * @typedef {import("ol/size").Size} ol.size.Size
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("./conf.js").State} State
@@ -66,7 +63,7 @@ import {ofFeatures as extentOfFeatures} from './utils/extent.js';
 /**
  * @typedef {Object} MapListenersOptions
  * @property {redux.Store} store
- * @property {View} view
+ * @property {ol.View} view
  * @property {function} createInvalidCodesInfo
  * @property {function} createLimitScrollInfo
  */
@@ -247,21 +244,24 @@ const attachMapListeners = (map, options) => {
  */
 export default (options) => {
   return new Promise((resolve, reject) => {
-    /*------------------------- parse and assert options -----------------------*/
     assertOptions(options);
-    /*------------------------------- matomo -----------------------------------*/
-    munimap_matomo.sendEvent('map', 'create');
-    munimap_matomo.sendEventForOptions(options);
-    /*----------------------------- create redux store -------------------------*/
+
     const initialState = getInitialState(options);
     const store = createStore(initialState);
 
+    store.dispatch(
+      actions.send_to_matomo({
+        category: 'map',
+        action: 'create',
+      })
+    );
+    store.dispatch(actions.send_to_matomo_for_opts(options));
     store.dispatch(actions.create_munimap());
 
     let unsubscribeInit;
     let map;
 
-    /*------------- create redux render function and subscribtion --------------*/
+    /*------------ create redux render function and subscribtion -------------*/
     const render = () => {
       const state = store.getState();
 
@@ -325,7 +325,7 @@ export default (options) => {
           });
           map.set(MUNIMAP_PROPS_ID, mapProps);
 
-          munimap_view.addControls(map, state.requiredOpts);
+          munimap_view.addControls(map, store, state.requiredOpts);
 
           if (state.requiredOpts.simpleScroll) {
             createLimitScrollInfo = munimap_interaction.limitScroll(
