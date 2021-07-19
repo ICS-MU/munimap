@@ -18,7 +18,6 @@ import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
  * @typedef {import("ol/layer").Vector} ol.layer.Vector
  * @typedef {import("ol/layer/Base").default} ol.layer.BaseLayer
- * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol").View} ol.View
  * @typedef {import("ol/size").Size} ol.size.Size
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
@@ -35,7 +34,7 @@ import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
  * @property {number} [zoom]
  * @property {ol.coordinate.Coordinate} [center]
  * @property {Array.<string>|string} [zoomTo]
- * @property {Array.<string>|Array.<ol.Feature>} [markers]
+ * @property {Array.<string>|Array.<Feature>} [markers]
  * @property {string} [lang]
  * @property {boolean} [loadingMessage]
  * @property {string} [baseMap]
@@ -66,10 +65,20 @@ import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
  */
 
 /**
+ * @type {Object<string, Feature>}
+ */
+export const REQUIRED_CUSTOM_MARKERS = {};
+
+/**
+ * @type {Object<string, MarkerLabelFunction>}
+ */
+export const REQUIRED_MARKER_LABEL = {};
+
+/**
  * Load features by location codes or decorate custom markers.
- * @param {Array<string>|Array<ol.Feature>|undefined} featuresLike featuresLike
+ * @param {Array<string>|Array<Feature>|undefined} featuresLike featuresLike
  * @param {Options} options options
- * @return {Promise<Array<ol.Feature|string>>} promise resolving with markers
+ * @return {Promise<Array<Feature|string>>} promise resolving with markers
  */
 export const loadOrDecorateMarkers = async (featuresLike, options) => {
   const lang = options.lang;
@@ -82,9 +91,10 @@ export const loadOrDecorateMarkers = async (featuresLike, options) => {
       if (true) {
         arrPromises.push(
           new Promise((resolve, reject) => {
-            if (el instanceof Feature) {
-              decorateCustomMarker(el);
-              resolve(el);
+            if (REQUIRED_CUSTOM_MARKERS[el]) {
+              console.log(REQUIRED_CUSTOM_MARKERS[el]);
+              decorateCustomMarker(REQUIRED_CUSTOM_MARKERS[el]);
+              resolve(REQUIRED_CUSTOM_MARKERS[el]);
             } else if (munimap_utils.isString(el)) {
               munimap_load.featuresFromParam(el).then((results) => {
                 resolve(results);
@@ -158,7 +168,18 @@ const getInitialState = (options) => {
     },
   };
   if (options.markers !== undefined) {
-    initialState.requiredOpts.markers = options.markers;
+    const reqMarkers = /** @type {Array.<string>}*/ ([]);
+    options.markers.forEach((marker, idx) => {
+      if (marker instanceof Feature) {
+        const id = `CUSTOM_MARKER_${options.target}_${idx}`;
+        REQUIRED_CUSTOM_MARKERS[id] = marker;
+        reqMarkers.push(id);
+      } else {
+        reqMarkers.push(marker);
+      }
+    });
+
+    initialState.requiredOpts.markerIds = reqMarkers;
   }
   if (options.zoomTo !== undefined) {
     initialState.requiredOpts.zoomTo = options.zoomTo;
@@ -188,7 +209,9 @@ const getInitialState = (options) => {
     initialState.requiredOpts.simpleScroll = options.simpleScroll;
   }
   if (options.markerLabel !== undefined) {
-    initialState.requiredOpts.markerLabel = options.markerLabel;
+    const id = `MARKER_LABEL_${options.target}`;
+    REQUIRED_MARKER_LABEL[id] = options.markerLabel;
+    initialState.requiredOpts.markerLabelId = id;
   }
   if (options.pubTran !== undefined) {
     initialState.requiredOpts.pubTran = options.pubTran;
@@ -228,7 +251,7 @@ export default (options) => {
 
     /*------------ create redux render function and subscribtion -------------*/
     const render = () => {
-      const state = store.getState();
+      const state = /**@type {State}*/ (store.getState());
 
       const target = document.getElementById(options.target);
 
@@ -305,7 +328,8 @@ export default (options) => {
             clusterFacultyAbbr: state.requiredOpts.clusterFacultyAbbr,
             showLabels: state.requiredOpts.labels,
             locationCodes: state.requiredOpts.locationCodes,
-            markerLabel: state.requiredOpts.markerLabel,
+            markerLabel:
+              REQUIRED_MARKER_LABEL[state.requiredOpts.markerLabelId],
             pubTran: state.requiredOpts.pubTran,
           });
 

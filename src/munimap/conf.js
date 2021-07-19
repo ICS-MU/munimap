@@ -7,7 +7,6 @@
  * @typedef {import("ol/layer").Vector} ol.layer.Vector
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/size").Size} ol.size.Size
- * @typedef {import("./create.js").Options} CreateOptions
  */
 
 /**
@@ -29,13 +28,32 @@ export const MUNIMAP_PUBTRAN_URL =
 export const MUNIMAP_PROPS_ID = 'munimapProps';
 
 /**
+ * @typedef {Object} RequiredOptions
+ * @property {string} target
+ * @property {number} [zoom]
+ * @property {ol.coordinate.Coordinate} [center]
+ * @property {Array.<string>|string} [zoomTo]
+ * @property {Array.<string>} [markerIds]
+ * @property {string} [lang]
+ * @property {boolean} [loadingMessage]
+ * @property {string} [baseMap]
+ * @property {boolean} [mapLinks]
+ * @property {boolean} [clusterFacultyAbbr]
+ * @property {boolean} [labels]
+ * @property {boolean} [locationCodes]
+ * @property {boolean} [simpleScroll]
+ * @property {string} [markerLabelId]
+ * @property {boolean} [pubTran]
+ */
+
+/**
  * @typedef {Object} State
  * @property {ol.size.Size} map_size
  * @property {boolean} initMap
  * @property {ol.coordinate.Coordinate} center
  * @property {number} resolution
  * @property {string} baseMap,
- * @property {CreateOptions} requiredOpts
+ * @property {RequiredOptions} requiredOpts
  * @property {number} markersTimestamp
  * @property {number} zoomToTimestamp
  */
@@ -55,7 +73,7 @@ export const INITIAL_STATE = {
   resolution: null,
   requiredOpts: {
     target: null,
-    markers: [],
+    markerIds: [],
     lang: 'cs',
     baseMap: 'arcgis-bw',
     zoomTo: [],
@@ -65,7 +83,7 @@ export const INITIAL_STATE = {
     labels: true,
     locationCodes: false,
     simpleScroll: true,
-    markerLabel: null,
+    markerLabelId: null,
     pubTran: false,
     zoom: null,
     center: null,

@@ -48,7 +48,7 @@ const createReducer = (initialState) => {
       //CREATE_MUNIMAP
       case actions.CREATE_MUNIMAP:
         if (slctr.loadMarkers(initialState)) {
-          const requiredMarkers = state.requiredOpts.markers;
+          const requiredMarkers = state.requiredOpts.markerIds;
           let markerStrings;
           if (requiredMarkers && requiredMarkers.length) {
             munimap_assert.assertArray(requiredMarkers);

@@ -7,8 +7,8 @@ import * as munimap_lang from '../lang/lang.js';
 import * as munimap_utils from '../utils/utils.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
-import Feature from 'ol/Feature';
 import View from 'ol/View';
+import {REQUIRED_CUSTOM_MARKERS} from '../create.js';
 import {defaults as control_defaults} from 'ol/control';
 import {createSelector} from 'reselect';
 import {createTileLayer} from '../view.js';
@@ -16,9 +16,11 @@ import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
 import {getStore as getBuildingStore} from '../layer/building.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
 import {getType} from '../feature/building.js';
+import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
 
 /**
  * @typedef {import("../conf.js").State} State
+ * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("../create.js").InitExtentOptions} InitExtentOptions
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
  * @typedef {import("ol/control/Control").default} ol.control.Control
@@ -55,11 +57,11 @@ const getMarkersTimestamp = (state) => state.markersTimestamp;
 const getZoomToTimestamp = (state) => state.zoomToTimestamp;
 
 /**
- * @type {Reselect.Selector<State, Array.<string>|Array.<Feature>>}
+ * @type {Reselect.Selector<State, Array.<string>>}
  * @param {State} state state
- * @return {Array.<string>|Array.<Feature>} required markers
+ * @return {Array.<string>} required markers
  */
-const getRequiredMarkers = (state) => state.requiredOpts.markers;
+const getRequiredMarkerIds = (state) => state.requiredOpts.markerIds;
 
 /**
  * @type {Reselect.Selector<State, string|Array<string>>}
@@ -132,25 +134,25 @@ const getResolution = (state) => state.resolution;
  *          return type is the same as T.
  * @type {Reselect.OutputSelector<
  *    State,
- *    Array<Feature>,
- *    function(Array<string>|Array<Feature>): Array<Feature>
+ *    Array<ol.Feature>,
+ *    function(Array<string>): Array<ol.Feature>
  * >}
  */
 export const getInitMarkers = createSelector(
-  [getRequiredMarkers],
-  (requiredMarkers) => {
+  [getRequiredMarkerIds],
+  (requiredMarkerIds) => {
     console.log('computing init markers');
-    if (requiredMarkers.length === 0) {
+    if (requiredMarkerIds.length === 0) {
       return [];
     }
     const type = getType();
     const buildings = getBuildingStore().getFeatures();
-    const result = requiredMarkers.map((initMarker) => {
-      if (initMarker instanceof Feature) {
-        return initMarker;
+    const result = requiredMarkerIds.map((initMarkerId) => {
+      if (REQUIRED_CUSTOM_MARKERS[initMarkerId]) {
+        return REQUIRED_CUSTOM_MARKERS[initMarkerId];
       } else {
         return buildings.find((building) => {
-          return building.get(type.primaryKey) === initMarker;
+          return building.get(type.primaryKey) === initMarkerId;
         });
       }
     });
@@ -161,8 +163,8 @@ export const getInitMarkers = createSelector(
 /**
  * @type {Reselect.OutputSelector<
  *    State,
- *    Array<Feature>,
- *    function(Array<string>|string): Array<Feature>
+ *    Array<ol.Feature>,
+ *    function(Array<string>|string): Array<ol.Feature>
  * >}
  */
 export const getInitZoomTo = createSelector(
@@ -239,25 +241,29 @@ export const getBasemapLayer = createSelector(
  * @type {Reselect.OutputSelector<
  *    State,
  *    Array<string>,
- *    function(Array<string>|Array<Feature>, Array<Feature>): Array<string>
+ *    function(Array<string>, Array<ol.Feature>): Array<string>
  * >}
  */
 export const getInvalidCodes = createSelector(
-  [getRequiredMarkers, getInitMarkers],
-  (requiredMarkers, initMarkers) => {
+  [getRequiredMarkerIds, getInitMarkers],
+  (requiredMarkerIds, initMarkers) => {
     console.log('computing invalid codes');
-    if (requiredMarkers.length === 0) {
+    if (requiredMarkerIds.length === 0) {
       return [];
     }
 
     const type = getType();
-    const initMarkersCodes = initMarkers.map((marker) =>
-      marker.get(type.primaryKey)
-    );
+    const initMarkersCodes = [];
+    initMarkers.forEach((marker) => {
+      if (!isCustomMarker(marker)) {
+        initMarkersCodes.push(marker.get(type.primaryKey));
+      }
+    });
 
-    const difference = /**@type {Array}*/ (requiredMarkers).filter(
+    const difference = /**@type {Array}*/ (requiredMarkerIds).filter(
       (markerString) => {
-        return munimap_utils.isString(markerString)
+        return munimap_utils.isString(markerString) &&
+          !REQUIRED_CUSTOM_MARKERS[markerString]
           ? !initMarkersCodes.includes(markerString)
           : false;
       }
@@ -270,14 +276,14 @@ export const getInvalidCodes = createSelector(
  * @type {Reselect.OutputSelector<
  *    State,
  *    boolean,
- *    function(Array<string>|Array<Feature>, number?): boolean
+ *    function(Array<string>, number?): boolean
  * >}
  */
 export const loadMarkers = createSelector(
-  [getRequiredMarkers, getMarkersTimestamp],
-  (requiredMarkers, markersTimestamp) => {
+  [getRequiredMarkerIds, getMarkersTimestamp],
+  (requiredMarkerIds, markersTimestamp) => {
     console.log('computing whether load markers');
-    return requiredMarkers.length > 0 && markersTimestamp === null;
+    return requiredMarkerIds.length > 0 && markersTimestamp === null;
   }
 );
 
@@ -300,16 +306,16 @@ export const loadZoomTo = createSelector(
  * @type {Reselect.OutputSelector<
  *    State,
  *    boolean,
- *    function(Array<string>|Array<Feature>, number?): boolean
+ *    function(Array<string>, number?): boolean
  * >}
  */
 export const areMarkersLoaded = createSelector(
-  [getRequiredMarkers, getMarkersTimestamp],
-  (requiredMarkers, markersTimestamp) => {
+  [getRequiredMarkerIds, getMarkersTimestamp],
+  (requiredMarkerIds, markersTimestamp) => {
     console.log('computing if markers are loaded');
     return (
-      (requiredMarkers.length > 0 && markersTimestamp > 0) ||
-      requiredMarkers.length === 0
+      (requiredMarkerIds.length > 0 && markersTimestamp > 0) ||
+      requiredMarkerIds.length === 0
     );
   }
 );
@@ -385,7 +391,7 @@ export const getMuAttrs = createSelector([getLang], (lang) => {
 export const getInitViewProps = createSelector(
   [getRequiredTarget, getRequiredCenter, getRequiredZoom],
   (requiredTarget, requiredCenter, requiredZoom) => {
-    console.log('calculate initial view props');
+    console.log('computing initial view props');
     return {requiredTarget, requiredCenter, requiredZoom};
   }
 );
@@ -394,13 +400,13 @@ export const getInitViewProps = createSelector(
  * @type {Reselect.OutputSelector<
  *    State,
  *    View,
- *    function(InitialViewProps, Array<Feature>, Array<Feature>): View
+ *    function(InitialViewProps, Array<ol.Feature>, Array<ol.Feature>): View
  * >}
  */
 export const calculateView = createSelector(
   [getInitViewProps, getInitMarkers, getInitZoomTo],
   (initialViewProps, markers, zoomTo) => {
-    console.log('calculate view');
+    console.log('computing view');
     const {requiredTarget, requiredCenter, requiredZoom} = initialViewProps;
     const target = document.getElementById(requiredTarget);
     const center = ol_proj.transform(
@@ -473,7 +479,7 @@ export const calculateView = createSelector(
  * >}
  */
 export const getDefaultControls = createSelector([getLang], (lang) => {
-  console.log('compute default controls');
+  console.log('computing default controls');
   return control_defaults({
     attributionOptions: {
       tipLabel: munimap_lang.getMsg(

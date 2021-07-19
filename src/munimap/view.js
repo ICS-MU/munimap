@@ -23,7 +23,7 @@ import {create as createPubtranStopLayer} from './layer/pubtran.stop.js';
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("ol/source/Vector").default} ol.source.Vector
  * @typedef {import("ol/layer/Vector").default} ol.layer.Vector
- * @typedef {import('./control/mapcontrolsview.js').CreateOptions} CreateOptions
+ * @typedef {import('./conf.js').RequiredOptions} RequiredOptions
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("redux").Store} redux.Store
@@ -210,7 +210,7 @@ const ensureBaseMap = (basemapLayer, map) => {
  * Add controls to map.
  * @param {ol.Map} map map
  * @param {redux.Store} store store
- * @param {CreateOptions} requiredOpts opts
+ * @param {RequiredOptions} requiredOpts opts
  */
 const addCustomControls = (map, store, requiredOpts) => {
   createControls(map, store, requiredOpts);

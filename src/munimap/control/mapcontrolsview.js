@@ -27,7 +27,7 @@ import createMapLinks from './maplinksview.js';
  */
 
 /**
- * @typedef {import("../create.js").Options} CreateOptions
+ * @typedef {import("../conf.js").RequiredOptions} RequiredOptions
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("redux").Store} redux.Store
  */
@@ -309,7 +309,7 @@ const toggleMapTools = (map, store, options) => {
 /**
  *
  * @param {ol.Map} map map
- * @param {CreateOptions} options opts
+ * @param {RequiredOptions} options opts
  */
 const toggleMapLinks = (map, options) => {
   const mapLinkEl = /**@type {HTMLElement}*/ (map
@@ -362,7 +362,7 @@ const removeControls = (map) => {
  * Create additional map tools
  * @param {ol.Map} map map
  * @param {redux.Store} store store
- * @param {CreateOptions} options opts
+ * @param {RequiredOptions} options opts
  */
 export default (map, store, options) => {
   const lang = options.lang;
@@ -371,7 +371,7 @@ export default (map, store, options) => {
   //   map.addControl(munimap.identify.createControl(map));
   // }
   if (options.mapLinks) {
-    map.addControl(createMapLinks(map, store, options.markers, lang));
+    map.addControl(createMapLinks(map, store, options.markerIds, lang));
   }
   if (window.location.protocol === 'https:' || !PRODUCTION) {
     map.addControl(createGeolocation(map, store, lang));
