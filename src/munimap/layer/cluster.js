@@ -8,6 +8,7 @@ import ClusterSource from 'ol/source/Cluster';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import {EnhancedClusterSource, clusterCompareFn} from '../source/cluster.js';
+import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {Point} from 'ol/geom';
 import {styleFunction as clusterStyleFunction} from '../style/cluster.js';
 import {getCenter} from 'ol/extent';
@@ -18,6 +19,7 @@ import {getCenter} from 'ol/extent';
  * @typedef {import("../view.js").AddLayersOptions} AddLayersOptions
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
+ * @typedef {import("../conf.js").MapProps} MapProps
  */
 
 /**
@@ -80,7 +82,7 @@ const getSourceFeatures = (map) => {
  * @return {VectorLayer} marker cluster layer
  */
 const create = (map, options) => {
-  const {markers, lang} = options;
+  const {markers, lang, showLabels} = options;
   const clusterFeatures = markers.concat();
   const markerClusterSrc = new EnhancedClusterSource({
     attributions: options.muAttrs,
@@ -134,6 +136,21 @@ const create = (map, options) => {
       renderOrder: null,
     })
   );
+
+  markerClusterLayer.on('prerender', (evt) => {
+    const mapProps = /** @type {MapProps}*/ (map.get(MUNIMAP_PROPS_ID));
+    const oldRes = mapProps.currentRes;
+    const res = evt.frameState.viewState.resolution;
+
+    const oldRange = munimap_cluster.getResolutionRange(oldRes);
+    const range = munimap_cluster.getResolutionRange(res);
+
+    if (range !== oldRange) {
+      munimap_cluster.updateClusteredFeatures(map, res, showLabels);
+    }
+
+    mapProps.currentRes = res;
+  });
   return markerClusterLayer;
 };
 

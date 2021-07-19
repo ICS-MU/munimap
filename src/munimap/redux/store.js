@@ -9,7 +9,6 @@ import * as redux from 'redux';
 import * as slctr from './selector.js';
 import {asyncDispatchMiddleware} from './middleware.js';
 import {featuresFromParam} from '../load.js';
-import {getResolutionRange} from '../cluster/cluster.js';
 import {loadOrDecorateMarkers} from '../create.js';
 
 /**
@@ -44,16 +43,6 @@ const createReducer = (initialState) => {
           ...state,
           center: action.payload.view.center,
           resolution: action.payload.view.resolution,
-        };
-      case actions.OL_MAP_PRECOMPOSED:
-        const oldRes = state.resolution;
-        const newRes = action.payload.resolution;
-        const clusterResolutionExceeded =
-          getResolutionRange(newRes) !== getResolutionRange(oldRes);
-        return {
-          ...state,
-          clusterResolutionExceeded: clusterResolutionExceeded,
-          resolution: newRes,
         };
 
       //CREATE_MUNIMAP

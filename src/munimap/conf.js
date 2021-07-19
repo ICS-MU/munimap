@@ -23,6 +23,12 @@ export const MUNIMAP_PUBTRAN_URL =
   '//maps.muni.cz/arcgis/rest/services/munimap_mhd/MapServer/';
 
 /**
+ * @type {string}
+ * @const
+ */
+export const MUNIMAP_PROPS_ID = 'munimapProps';
+
+/**
  * @typedef {Object} State
  * @property {ol.size.Size} map_size
  * @property {boolean} initMap
@@ -33,7 +39,11 @@ export const MUNIMAP_PUBTRAN_URL =
  * @property {CreateOptions} requiredOpts
  * @property {number} markersTimestamp
  * @property {number} zoomToTimestamp
- * @property {boolean} clusterResolutionExceeded
+ */
+
+/**
+ * @typedef {Object} MapProps
+ * @property {number} currentRes
  */
 
 /**
@@ -63,5 +73,4 @@ export const INITIAL_STATE = {
   markersTimestamp: null,
   zoomToTimestamp: null,
   baseMap: null,
-  clusterResolutionExceeded: null,
 };

@@ -13,7 +13,7 @@ import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
 import * as slctr from './redux/selector.js';
 import Feature from 'ol/Feature';
-import {INITIAL_STATE} from './conf.js';
+import {INITIAL_STATE, MUNIMAP_PROPS_ID} from './conf.js';
 import {Map, View} from 'ol';
 import {defaults as control_defaults} from 'ol/control';
 import {createStore} from './redux/store.js';
@@ -28,6 +28,7 @@ import {ofFeatures as extentOfFeatures} from './utils/extent.js';
  * @typedef {import("ol/size").Size} ol.size.Size
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("./conf.js").State} State
+ * @typedef {import("./conf.js").MapProps} MapProps
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  * @typedef {import("ol/Collection").default} ol.Collection
  * @typedef {import("redux").Store} redux.Store
@@ -307,17 +308,6 @@ const attachMapListeners = (map, options) => {
       })
     );
   });
-
-  map.on('precompose', (evt) => {
-    //get state
-    //map prop
-    const res = evt.frameState.viewState.resolution;
-    store.dispatch(
-      actions.map_precomposed({
-        resolution: res,
-      })
-    );
-  });
 };
 
 /**
@@ -399,6 +389,12 @@ export default (options) => {
             layers: [basemapLayer],
             view,
           });
+
+          const mapProps = /**@type {MapProps}*/ ({
+            currentRes: view.getResolution(),
+          });
+          map.set(MUNIMAP_PROPS_ID, mapProps);
+
           munimap_view.addControls(map, state.requiredOpts);
 
           if (state.requiredOpts.simpleScroll) {
@@ -435,17 +431,15 @@ export default (options) => {
             markerLabel: state.requiredOpts.markerLabel,
             pubTran: state.requiredOpts.pubTran,
           });
-        }
 
-        munimap_view.changeBaseMap(basemapLayer, map);
-
-        if (state.clusterResolutionExceeded) {
           munimap_view.updateClusteredFeatures(
             map,
             state.resolution,
             state.requiredOpts.labels
           );
         }
+
+        munimap_view.changeBaseMap(basemapLayer, map);
       }
     };
 
