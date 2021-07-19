@@ -10,7 +10,7 @@ import * as munimap_utils from './utils/utils.js';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
-import createControls from './control/controls.js';
+import createControls from './control/mapcontrolsview.js';
 import {BASEMAPS} from './layer/basemap.js';
 import {LAYER_ID as BUILDING_LAYER_ID} from './layer/building.js';
 import {RESOLUTION_COLOR} from './style/style.js';
@@ -23,7 +23,7 @@ import {create as createPubtranStopLayer} from './layer/pubtran.stop.js';
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("ol/source/Vector").default} ol.source.Vector
  * @typedef {import("ol/layer/Vector").default} ol.layer.Vector
- * @typedef {import('./control/controls.js').CreateOptions} CreateOptions
+ * @typedef {import('./control/mapcontrolsview.js').CreateOptions} CreateOptions
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("redux").Store} redux.Store

@@ -6,8 +6,8 @@ import * as munimap_lang from '../lang/lang.js';
 import * as munimap_utils from '../utils/utils.js';
 import Control from 'ol/control/Control';
 import FullScreen from 'ol/control/FullScreen';
-import createGeolocation from '../control/geolocate.js';
-import createMapLinks from '../control/maplinks.js';
+import createGeolocation from './geolocateview.js';
+import createMapLinks from './maplinksview.js';
 
 /**
  * @typedef {Object} ToolbarOptions
