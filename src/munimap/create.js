@@ -72,74 +72,6 @@ import {ofFeatures as extentOfFeatures} from './utils/extent.js';
  */
 
 /**
- * @param {Options} options options
- * @param {Array<ol.Feature>} markers markers
- * @param {Array<ol.Feature>} zoomTo zoomTo
- * @return {View} view
- */
-const calculateView = (options, markers, zoomTo) => {
-  const target = document.getElementById(options.target);
-  const center = ol_proj.transform(
-    options.center || [16.605390495656977, 49.1986567194723],
-    ol_proj.get('EPSG:4326'),
-    ol_proj.get('EPSG:3857')
-  );
-  const zoom = options.zoom === null ? 13 : options.zoom;
-  const view = new View({
-    center: center,
-    maxZoom: 23,
-    minZoom: 0,
-    zoom: zoom,
-    constrainResolution: true,
-  });
-  const initExtentOpts = /**@type {InitExtentOptions}*/ ({});
-  if (zoomTo || markers) {
-    zoomTo = zoomTo.length ? zoomTo : markers;
-    if (zoomTo.length) {
-      let res;
-      const extent = extentOfFeatures(zoomTo);
-      if (options.zoom === null && options.center === null) {
-        if (target.offsetWidth === 0 || target.offsetHeight === 0) {
-          view.fit(extent);
-        } else {
-          view.fit(extent, {
-            size: [target.offsetWidth, target.offsetHeight],
-          });
-          res = view.getResolution();
-          munimap_assert.assert(res);
-          ol_extent.buffer(extent, res * 30, extent);
-          view.fit(extent, {
-            size: [target.offsetWidth, target.offsetHeight],
-          });
-          initExtentOpts.extent = extent;
-          initExtentOpts.size = [target.offsetWidth, target.offsetHeight];
-        }
-        /** constrainResolution not exists in OL6 */
-        // if (munimap.marker.custom.isCustom(zoomTo[0])) {
-        //   if (view.getResolution() < munimap.floor.RESOLUTION.max) {
-        //     res = view.constrainResolution(
-        //       munimap.floor.RESOLUTION.max,
-        //       undefined,
-        //       1
-        //     );
-        //     initExtentOpts.resolution = res;
-        //     view.setResolution(res);
-        //   }
-        // }
-      } else if (options.center === null) {
-        initExtentOpts.center = ol_extent.getCenter(extent);
-        view.setCenter(ol_extent.getCenter(extent));
-      }
-    } else {
-      initExtentOpts.center = center;
-      initExtentOpts.zoom = zoom;
-    }
-  }
-  view.set('initExtentOpts', initExtentOpts, true);
-  return view;
-};
-
-/**
  * Load features by location codes or decorate custom markers.
  * @param {Array<string>|Array<ol.Feature>|undefined} featuresLike featuresLike
  * @param {Options} options options
@@ -362,8 +294,7 @@ export default (options) => {
           let createInvalidCodesInfo;
           let createLimitScrollInfo;
           const markers = slctr.getInitMarkers(state);
-          const zoomTo = slctr.getInitZoomTo(state);
-          const view = calculateView(state.requiredOpts, markers, zoomTo);
+          const view = slctr.calculateView(state);
           map = new Map({
             controls: control_defaults({
               attributionOptions: {
