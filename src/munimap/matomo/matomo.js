@@ -68,7 +68,11 @@ export const checkCustomMarker = (markers) => {
 };
 
 /**
- * @param {CreateOptions} options opts
+ * @param {{
+ *    mapLinks: (boolean|undefined),
+ *    pubTran: (boolean|undefined),
+ *    baseMap: (string|undefined)
+ * }} options opts
  */
 export const sendEventForOptions = (options) => {
   if (String(options.mapLinks) !== 'undefined') {

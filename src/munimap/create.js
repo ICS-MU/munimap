@@ -243,7 +243,15 @@ export default (options) => {
         action: 'create',
       })
     );
-    store.dispatch(actions.send_to_matomo_for_opts(options));
+    store.dispatch(
+      actions.send_to_matomo_for_opts({
+        mapLinks: options.mapLinks,
+        pubTran: options.pubTran,
+        baseMap: options.baseMap,
+        // identifyTypes: options.identifyTypes,
+        // identifyCallback: options.identifyCallback
+      })
+    );
     store.dispatch(actions.create_munimap());
 
     let unsubscribeInit;

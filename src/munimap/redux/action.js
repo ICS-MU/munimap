@@ -143,7 +143,11 @@ export function send_to_matomo(object) {
 }
 
 /**
- * @param {CreateOptions} options action object
+ * @param {{
+ *    mapLinks: (boolean|undefined),
+ *    pubTran: (boolean|undefined),
+ *    baseMap: (string|undefined)
+ * }} options action object
  * @return {redux.AnyAction} action
  */
 export function send_to_matomo_for_opts(options) {

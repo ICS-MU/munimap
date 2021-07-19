@@ -79,7 +79,6 @@ const assertArray = (val, opt_msg) => {
  * @return {boolean} asserted value
  */
 const assertBoolean = (val, opt_msg) => {
-  console.log(opt_msg);
   if (!munimap_utils.isBoolean(val)) {
     let m = `Expected boolean not ${munimap_utils.typeOf(val)}: ${val}.`;
     if (opt_msg) {
