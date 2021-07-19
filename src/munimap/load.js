@@ -432,13 +432,15 @@ export const featuresFromParam = async (paramValue) => {
   let codes;
   let likeExprs;
 
-  if (munimap_building.isCodeOrLikeExpr(firstParamValue)) {
-    codes = values.filter(munimap_building.isCode);
-    likeExprs = values.filter(munimap_building.isLikeExpr);
-    return await buildingsByCode({
-      codes: codes,
-      likeExprs: likeExprs,
-    });
+  if (paramValue && paramValue.length) {
+    if (munimap_building.isCodeOrLikeExpr(firstParamValue)) {
+      codes = values.filter(munimap_building.isCode);
+      likeExprs = values.filter(munimap_building.isLikeExpr);
+      return await buildingsByCode({
+        codes: codes,
+        likeExprs: likeExprs,
+      });
+    }
   }
   return [];
 };

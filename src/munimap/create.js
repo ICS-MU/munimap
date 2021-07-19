@@ -309,6 +309,8 @@ const attachMapListeners = (map, options) => {
   });
 
   map.on('precompose', (evt) => {
+    //get state
+    //map prop
     const res = evt.frameState.viewState.resolution;
     store.dispatch(
       actions.map_precomposed({
@@ -333,12 +335,7 @@ export default (options) => {
     const initialState = getInitialState(options);
     const store = createStore(initialState);
 
-    if (slctr.loadMarkers(initialState)) {
-      store.dispatch(actions.load_markers());
-    }
-    if (slctr.loadZoomTo(initialState)) {
-      store.dispatch(actions.load_zoomTo());
-    }
+    store.dispatch(actions.create_munimap());
 
     let unsubscribeInit;
     let map;

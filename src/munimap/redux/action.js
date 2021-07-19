@@ -12,13 +12,7 @@ export const OL_MAP_VIEW_CHANGE = 'OL_MAP_VIEW_CHANGE';
  * @type {string}
  * @const
  */
-export const LOAD_MARKERS = 'LOAD_MARKERS';
-
-/**
- * @type {string}
- * @const
- */
-export const LOAD_ZOOMTO = 'LOAD_ZOOMTO';
+export const CREATE_MUNIMAP = 'CREATE_MUNIMAP';
 
 /**
  * @type {string}
@@ -36,7 +30,7 @@ export const OL_MAP_RENDERED = 'OL_MAP_RENDERED';
  * @type {string}
  * @const
  */
- export const OL_MAP_PRECOMPOSED = 'OL_MAP_PRECOMPOSED';
+export const OL_MAP_PRECOMPOSED = 'OL_MAP_PRECOMPOSED';
 
 /**
  * @type {string}
@@ -71,18 +65,9 @@ export function zoomTo_loaded() {
 /**
  * @return {redux.AnyAction} action
  */
-export function load_markers() {
+export function create_munimap() {
   return {
-    type: LOAD_MARKERS,
-  };
-}
-
-/**
- * @return {redux.AnyAction} action
- */
-export function load_zoomTo() {
-  return {
-    type: LOAD_ZOOMTO,
+    type: CREATE_MUNIMAP,
   };
 }
 
