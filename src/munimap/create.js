@@ -368,7 +368,7 @@ export default (options) => {
           );
         }
 
-        munimap_view.changeBaseMap(basemapLayer, map);
+        munimap_view.ensureBaseMap(basemapLayer, map);
       }
     };
 

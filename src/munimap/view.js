@@ -183,11 +183,11 @@ const createTileLayer = (basemapId, lang) => {
 };
 
 /**
- * Change basemap if necessary.
+ * Ensure basemap and change it if necessary.
  * @param {TileLayer} basemapLayer basemap
  * @param {ol.Map} map map
  */
-const changeBaseMap = (basemapLayer, map) => {
+const ensureBaseMap = (basemapLayer, map) => {
   if (map === undefined) {
     return;
   }
@@ -309,7 +309,7 @@ const addLayers = (map, options) => {
 };
 
 export {
-  changeBaseMap,
+  ensureBaseMap,
   addControls,
   addLayers,
   createTileLayer,
