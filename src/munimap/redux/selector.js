@@ -158,6 +158,10 @@ export const getInitZoomTo = createSelector(
 export const getBasemapLayerId = createSelector(
   [getCenter, getResolution, getRequiredBaseMap],
   (center, resolution, requiredBasemap) => {
+    if (!center) {
+      return requiredBasemap;
+    }
+
     console.log('computing baseMapLayerId');
     const isSafeLatLon = munimap_utils.inRange(
       center[1],

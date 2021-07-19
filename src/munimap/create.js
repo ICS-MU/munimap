@@ -69,7 +69,6 @@ import {ofFeatures as extentOfFeatures} from './utils/extent.js';
  * @property {View} view
  * @property {function} createInvalidCodesInfo
  * @property {function} createLimitScrollInfo
- * @property {boolean} showLabels
  */
 
 /**
@@ -85,7 +84,7 @@ const calculateView = (options, markers, zoomTo) => {
     ol_proj.get('EPSG:4326'),
     ol_proj.get('EPSG:3857')
   );
-  const zoom = options.zoom === undefined ? 13 : options.zoom;
+  const zoom = options.zoom === null ? 13 : options.zoom;
   const view = new View({
     center: center,
     maxZoom: 23,
@@ -99,7 +98,7 @@ const calculateView = (options, markers, zoomTo) => {
     if (zoomTo.length) {
       let res;
       const extent = extentOfFeatures(zoomTo);
-      if (options.zoom === undefined && options.center === undefined) {
+      if (options.zoom === null && options.center === null) {
         if (target.offsetWidth === 0 || target.offsetHeight === 0) {
           view.fit(extent);
         } else {
@@ -127,7 +126,7 @@ const calculateView = (options, markers, zoomTo) => {
         //     view.setResolution(res);
         //   }
         // }
-      } else if (options.center === undefined) {
+      } else if (options.center === null) {
         initExtentOpts.center = ol_extent.getCenter(extent);
         view.setCenter(ol_extent.getCenter(extent));
       }
@@ -268,6 +267,12 @@ const getInitialState = (options) => {
   if (options.pubTran !== undefined) {
     initialState.requiredOpts.pubTran = options.pubTran;
   }
+  if (options.zoom !== undefined) {
+    initialState.requiredOpts.zoom = options.zoom;
+  }
+  if (options.center !== undefined) {
+    initialState.requiredOpts.center = options.center;
+  }
 
   return initialState;
 };
@@ -278,13 +283,7 @@ const getInitialState = (options) => {
  * @param {MapListenersOptions} options opts
  */
 const attachMapListeners = (map, options) => {
-  const {
-    store,
-    view,
-    createInvalidCodesInfo,
-    createLimitScrollInfo,
-    showLabels,
-  } = options;
+  const {store, view, createInvalidCodesInfo, createLimitScrollInfo} = options;
 
   map.once('rendercomplete', () => {
     if (createInvalidCodesInfo) {
@@ -418,7 +417,6 @@ export default (options) => {
             view,
             createInvalidCodesInfo,
             createLimitScrollInfo,
-            showLabels: state.requiredOpts.labels,
           });
 
           munimap_view.addLayers(map, {

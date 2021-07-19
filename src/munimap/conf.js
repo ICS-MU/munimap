@@ -33,7 +33,6 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {ol.size.Size} map_size
  * @property {boolean} initMap
  * @property {ol.coordinate.Coordinate} center
- * @property {string} center_proj
  * @property {number} resolution
  * @property {string} baseMap,
  * @property {CreateOptions} requiredOpts
@@ -52,8 +51,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
 export const INITIAL_STATE = {
   map_size: null,
   initMap: null,
-  center: [16.605390495656977, 49.1986567194723],
-  center_proj: 'EPSG:4326',
+  center: null,
   resolution: null,
   requiredOpts: {
     target: null,
@@ -69,6 +67,8 @@ export const INITIAL_STATE = {
     simpleScroll: true,
     markerLabel: null,
     pubTran: false,
+    zoom: null,
+    center: null,
   },
   markersTimestamp: null,
   zoomToTimestamp: null,
