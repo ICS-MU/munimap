@@ -211,7 +211,7 @@ const ensureBaseMap = (basemapLayer, map) => {
  * @param {redux.Store} store store
  * @param {CreateOptions} requiredOpts opts
  */
-const addControls = (map, store, requiredOpts) => {
+const addCustomControls = (map, store, requiredOpts) => {
   createControls(map, store, requiredOpts);
 };
 
@@ -312,7 +312,7 @@ const addLayers = (map, options) => {
 
 export {
   ensureBaseMap,
-  addControls,
+  addCustomControls,
   addLayers,
   createTileLayer,
   toggleLoadingMessage,

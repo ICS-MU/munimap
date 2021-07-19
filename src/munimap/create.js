@@ -4,7 +4,6 @@
 import * as actions from './redux/action.js';
 import * as munimap_assert from './assert/assert.js';
 import * as munimap_interaction from './ui/interaction.js';
-import * as munimap_lang from './lang/lang.js';
 import * as munimap_load from './load.js';
 import * as munimap_utils from './utils/utils.js';
 import * as munimap_view from './view.js';
@@ -12,7 +11,6 @@ import * as slctr from './redux/selector.js';
 import Feature from 'ol/Feature';
 import {INITIAL_STATE, MUNIMAP_PROPS_ID} from './conf.js';
 import {Map} from 'ol';
-import {defaults as control_defaults} from 'ol/control';
 import {createStore} from './redux/store.js';
 import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
 
@@ -27,7 +25,6 @@ import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
  * @typedef {import("./conf.js").State} State
  * @typedef {import("./conf.js").MapProps} MapProps
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
- * @typedef {import("ol/Collection").default} ol.Collection
  * @typedef {import("redux").Store} redux.Store
  * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
  */
@@ -295,26 +292,9 @@ export default (options) => {
           let createLimitScrollInfo;
           const markers = slctr.getInitMarkers(state);
           const view = slctr.calculateView(state);
+          const defaultControls = slctr.getDefaultControls(state);
           map = new Map({
-            controls: control_defaults({
-              attributionOptions: {
-                tipLabel: munimap_lang.getMsg(
-                  munimap_lang.Translations.ATTRIBUTIONS,
-                  state.requiredOpts.lang
-                ),
-              },
-              rotate: false,
-              zoomOptions: {
-                zoomInTipLabel: munimap_lang.getMsg(
-                  munimap_lang.Translations.ZOOM_IN,
-                  state.requiredOpts.lang
-                ),
-                zoomOutTipLabel: munimap_lang.getMsg(
-                  munimap_lang.Translations.ZOOM_OUT,
-                  state.requiredOpts.lang
-                ),
-              },
-            }),
+            controls: defaultControls,
             target: /**@type {HTMLElement}*/ (munimapEl),
             layers: [basemapLayer],
             view,
@@ -325,7 +305,7 @@ export default (options) => {
           });
           map.set(MUNIMAP_PROPS_ID, mapProps);
 
-          munimap_view.addControls(map, store, state.requiredOpts);
+          munimap_view.addCustomControls(map, store, state.requiredOpts);
 
           if (state.requiredOpts.simpleScroll) {
             createLimitScrollInfo = munimap_interaction.limitScroll(

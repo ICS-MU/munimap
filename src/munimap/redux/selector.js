@@ -9,16 +9,19 @@ import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
 import Feature from 'ol/Feature';
 import View from 'ol/View';
+import {defaults as control_defaults} from 'ol/control';
 import {createSelector} from 'reselect';
 import {createTileLayer} from '../view.js';
 import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
 import {getStore as getBuildingStore} from '../layer/building.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
 import {getType} from '../feature/building.js';
+
 /**
  * @typedef {import("../conf.js").State} State
  * @typedef {import("../create.js").InitExtentOptions} InitExtentOptions
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
+ * @typedef {import("ol/control/Control").default} ol.control.Control
  * @typedef {import("ol/layer/Tile").default} ol.layer.Tile
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  */
@@ -461,3 +464,33 @@ export const calculateView = createSelector(
     return view;
   }
 );
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    import("ol/Collection").default<ol.control.Control>,
+ *    function(string): import("ol/Collection").default<ol.control.Control>
+ * >}
+ */
+export const getDefaultControls = createSelector([getLang], (lang) => {
+  console.log('compute default controls');
+  return control_defaults({
+    attributionOptions: {
+      tipLabel: munimap_lang.getMsg(
+        munimap_lang.Translations.ATTRIBUTIONS,
+        lang
+      ),
+    },
+    rotate: false,
+    zoomOptions: {
+      zoomInTipLabel: munimap_lang.getMsg(
+        munimap_lang.Translations.ZOOM_IN,
+        lang
+      ),
+      zoomOutTipLabel: munimap_lang.getMsg(
+        munimap_lang.Translations.ZOOM_OUT,
+        lang
+      ),
+    },
+  });
+});
