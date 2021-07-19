@@ -1,7 +1,7 @@
 /**
  * @module view
  */
-
+import * as actions from './redux/action.js';
 import * as munimap_assert from './assert/assert.js';
 import * as munimap_cluster from './cluster/cluster.js';
 import * as munimap_lang from './lang/lang.js';
@@ -27,6 +27,7 @@ import {create as createPubtranStopLayer} from './layer/pubtran.stop.js';
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("redux").Store} redux.Store
+ * @typedef {import("./create").MapListenersOptions} MapListenersOptions
  */
 
 /**
@@ -310,7 +311,40 @@ const addLayers = (map, options) => {
   map.addLayer(markerLayer);
 };
 
+/**
+ * Attach listeners to Map.
+ * @param {ol.Map} map map
+ * @param {MapListenersOptions} options opts
+ */
+const attachMapListeners = (map, options) => {
+  const {store, view, createInvalidCodesInfo, createLimitScrollInfo} = options;
+
+  map.once('rendercomplete', () => {
+    if (createInvalidCodesInfo) {
+      createInvalidCodesInfo();
+    }
+    if (createLimitScrollInfo) {
+      createLimitScrollInfo();
+    }
+    store.dispatch(
+      actions.map_rendered({
+        map_size: map.getSize(),
+      })
+    );
+  });
+
+  map.on('moveend', () => {
+    store.dispatch(
+      actions.ol_map_view_change({
+        center: view.getCenter(),
+        resolution: view.getResolution(),
+      })
+    );
+  });
+};
+
 export {
+  attachMapListeners,
   ensureBaseMap,
   addCustomControls,
   addLayers,

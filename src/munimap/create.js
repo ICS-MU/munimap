@@ -204,38 +204,6 @@ const getInitialState = (options) => {
 };
 
 /**
- * Attach listeners to Map.
- * @param {Map} map map
- * @param {MapListenersOptions} options opts
- */
-const attachMapListeners = (map, options) => {
-  const {store, view, createInvalidCodesInfo, createLimitScrollInfo} = options;
-
-  map.once('rendercomplete', () => {
-    if (createInvalidCodesInfo) {
-      createInvalidCodesInfo();
-    }
-    if (createLimitScrollInfo) {
-      createLimitScrollInfo();
-    }
-    store.dispatch(
-      actions.map_rendered({
-        map_size: map.getSize(),
-      })
-    );
-  });
-
-  map.on('moveend', () => {
-    store.dispatch(
-      actions.ol_map_view_change({
-        center: view.getCenter(),
-        resolution: view.getResolution(),
-      })
-    );
-  });
-};
-
-/**
  * @param {Options} options Options
  * @returns {Promise<Map>} initialized map
  */
@@ -323,7 +291,7 @@ export default (options) => {
             );
           }
 
-          attachMapListeners(map, {
+          munimap_view.attachMapListeners(map, {
             store,
             view,
             createInvalidCodesInfo,
