@@ -3,10 +3,13 @@
  */
 import * as munimap_assert from './assert/assert.js';
 import * as munimap_building from './feature/building.js';
-import * as munimap_layer_building from './layer/building.js';
 import * as munimap_utils from './utils/utils.js';
 import {EsriJSON} from 'ol/format';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
+import {VectorSourceEvent} from 'ol/source/Vector';
+import {loadProcessor as complexLoadProcessor} from './feature/complex.js';
+import {getBuildingStore} from './view/building.js';
+import {loadProcessor as unitLoadProcessor} from './feature/unit.js';
 
 /**
  * @typedef {import("./feature/feature.js").TypeOptions} TypeOptions
@@ -373,7 +376,7 @@ const features = async (options) => {
  */
 const featuresByCode = async (options) => {
   munimap_assert.assert(
-    options.type === munimap_building.TYPE,
+    JSON.stringify(options.type) == JSON.stringify(munimap_building.getType()),
     'Feature type should be' + ' building, room or door type.'
   );
 
@@ -405,6 +408,52 @@ const featuresByCode = async (options) => {
 };
 
 /**
+ * @param {ProcessorOptions} options opts
+ * @return {Promise<ProcessorOptions>} opts
+ */
+const buildingLoadProcessor = async (options) => {
+  const result = await Promise.all([
+    complexLoadProcessor(options),
+    unitLoadProcessor(options),
+  ]);
+  munimap_assert.assertArray(result);
+  result.forEach((opts) => {
+    munimap_assert.assert(opts === options);
+    munimap_assert.assert(munimap_utils.arrayEquals(opts.all, options.all));
+    munimap_assert.assert(munimap_utils.arrayEquals(opts.new, options.new));
+    munimap_assert.assert(
+      munimap_utils.arrayEquals(opts.existing, options.existing)
+    );
+  });
+  return result[0];
+};
+
+/**
+ * @param {FeaturesForMapOptions} options options
+ * @param {ol.extent.Extent} extent extent
+ * @param {number} resolution resolution
+ * @param {ol.proj.Projection} projection projection
+ * @return {Promise<Array<ol.Feature>>} promise of features contained
+ * in server response
+ * @this {ol.source.Vector}
+ */
+const buildingFeaturesForMap = async (
+  options,
+  extent,
+  resolution,
+  projection
+) => {
+  const buildings = await featuresForMap(
+    options,
+    extent,
+    resolution,
+    projection
+  );
+  options.source.dispatchEvent(new VectorSourceEvent('featuresadded'));
+  return buildings;
+};
+
+/**
  * @param {BuildingsByCodeOptions} options options
  * @return {Promise<Array<ol.Feature>>} promise of features contained
  * in server response
@@ -413,9 +462,9 @@ const buildingsByCode = async (options) => {
   return featuresByCode({
     codes: options.codes,
     type: munimap_building.getType(),
-    source: munimap_layer_building.getStore(),
+    source: getBuildingStore(),
     likeExprs: options.likeExprs,
-    processor: munimap_building.loadProcessor,
+    processor: buildingLoadProcessor,
   });
 };
 
@@ -445,4 +494,9 @@ export const featuresFromParam = async (paramValue) => {
   return [];
 };
 
-export {featuresForMap, features};
+export {
+  buildingFeaturesForMap,
+  buildingLoadProcessor,
+  featuresForMap,
+  features,
+};

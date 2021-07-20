@@ -7,6 +7,7 @@ import * as munimap_building from '../feature/building.js';
 import * as munimap_complex from '../feature/complex.js';
 import * as munimap_utils from '../utils/utils.js';
 import VectorLayer from 'ol/layer/Vector';
+import {getBuildingStore} from '../view/building.js';
 import {
   labelFunction,
   selectedFloorFilter,
@@ -32,13 +33,6 @@ const LAYER_ID = 'building';
  * @const
  */
 const LABEL_LAYER_ID = 'building-label';
-
-/**
- * @return {ol.source.Vector} Store
- */
-export const getStore = () => {
-  return munimap_building.STORE;
-};
 
 /**
  * @param {ol.layer.Base} layer layer
@@ -86,10 +80,10 @@ const create = () => {
       id: LAYER_ID,
       isFeatureClickable: munimap_building.isClickable,
       featureClickHandler: munimap_building.featureClickHandler,
-      type: munimap_building.TYPE,
+      type: munimap_building.getType(),
       refreshStyleOnFloorChange: true,
       styleFragments: styleFragments,
-      source: munimap_building.STORE,
+      source: getBuildingStore(),
       maxResolution: munimap_complex.RESOLUTION.max,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
@@ -124,10 +118,10 @@ const createLabel = (lang, showLabels) => {
       id: LABEL_LAYER_ID,
       isFeatureClickable: munimap_building.isClickable,
       featureClickHandler: munimap_building.featureClickHandler,
-      type: munimap_building.TYPE,
+      type: munimap_building.getType(),
       refreshStyleOnFloorChange: true,
       styleFragments: styleFragments,
-      source: munimap_building.STORE,
+      source: getBuildingStore(),
       updateWhileAnimating: true,
       updateWhileInteracting: false,
       renderOrder: null,

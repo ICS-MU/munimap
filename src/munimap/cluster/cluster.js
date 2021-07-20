@@ -9,6 +9,7 @@ import * as munimap_utils from '../utils/utils.js';
 // import ClusterSource from 'ol/source/Cluster';
 // import VectorLayer from 'ol/layer/Vector';
 import {Feature} from 'ol';
+import {getBuildingStore} from '../view/building.js';
 import {getSource, getSourceFeatures} from '../layer/cluster.js';
 
 /**
@@ -88,7 +89,7 @@ const getClusteredFeatures = (map, resolution) => {
   const ranges = Resolutions;
   let result;
   const markers = munimap_marker.getFeatures(map).concat();
-  const bldgs = munimap_building.STORE.getFeatures();
+  const bldgs = getBuildingStore().getFeatures();
   switch (range) {
     case ranges.MARKERS_ONLY:
       result = markers;

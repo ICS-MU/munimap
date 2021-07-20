@@ -13,7 +13,7 @@ import {defaults as control_defaults} from 'ol/control';
 import {createSelector} from 'reselect';
 import {createTileLayer} from '../view.js';
 import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
-import {getStore as getBuildingStore} from '../layer/building.js';
+import {getBuildingStore} from '../view/building.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
 import {getType} from '../feature/building.js';
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';

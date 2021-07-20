@@ -5,17 +5,13 @@ import * as munimap_assert from '../assert/assert.js';
 import * as munimap_complex from './complex.js';
 import * as munimap_floor from './floor.js';
 import * as munimap_lang from '../lang/lang.js';
-import * as munimap_load from '../load.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_style from '../style/style.js';
 import * as munimap_unit from './unit.js';
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {MUNIMAP_URL} from '../conf.js';
-import {VectorSourceEvent} from 'ol/source/Vector';
-import {tile as ol_loadingstrategy_tile} from 'ol/loadingstrategy';
-import {Vector as ol_source_Vector} from 'ol/source';
-import {createXYZ as ol_tilegrid_createXYZ} from 'ol/tilegrid';
+import {getBuildingStore} from '../view/building';
 
 /**
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
@@ -66,75 +62,25 @@ const COMPLEX_ID_FIELD_NAME = 'arealId';
 const UNITS_FIELD_NAME = 'pracoviste';
 
 /**
- * @param {ProcessorOptions} options opts
- * @return {Promise<ProcessorOptions>} opts
- */
-const loadProcessor = async (options) => {
-  const result = await Promise.all([
-    munimap_complex.loadProcessor(options),
-    munimap_unit.loadProcessor(options),
-  ]);
-  munimap_assert.assertArray(result);
-  result.forEach((opts) => {
-    munimap_assert.assert(opts === options);
-    munimap_assert.assert(munimap_utils.arrayEquals(opts.all, options.all));
-    munimap_assert.assert(munimap_utils.arrayEquals(opts.new, options.new));
-    munimap_assert.assert(
-      munimap_utils.arrayEquals(opts.existing, options.existing)
-    );
-  });
-  return result[0];
-};
-
-/**
- * @param {featuresForMapOptions} options options
- * @param {ol.extent.Extent} extent extent
- * @param {number} resolution resolution
- * @param {ol.proj.Projection} projection projection
- * @return {Promise<Array<Feature>>} promise of features contained
- * in server response
- * @this {ol.source.Vector}
- */
-const featuresForMap = async (options, extent, resolution, projection) => {
-  const buildings = await munimap_load.featuresForMap(
-    options,
-    extent,
-    resolution,
-    projection
-  );
-  options.source.dispatchEvent(new VectorSourceEvent('featuresadded'));
-  return buildings;
-};
-
-/**
  *
  * @type {TypeOptions}
  */
-export const TYPE = {
-  primaryKey: LOCATION_CODE_FIELD_NAME,
-  serviceUrl: MUNIMAP_URL,
-  layerId: 2,
-  name: 'building',
-};
+let TYPE;
 
 /**
- * @type {ol.source.Vector}
- * @const
+ * @return {TypeOptions} Type
  */
-const STORE = new ol_source_Vector({
-  strategy: ol_loadingstrategy_tile(
-    ol_tilegrid_createXYZ({
-      tileSize: 512,
-    })
-  ),
-});
-STORE.setLoader(
-  munimap_utils.partial(featuresForMap, {
-    source: STORE,
-    type: TYPE,
-    processor: loadProcessor,
-  })
-);
+const getType = () => {
+  if (!TYPE) {
+    TYPE = {
+      primaryKey: LOCATION_CODE_FIELD_NAME,
+      serviceUrl: MUNIMAP_URL,
+      layerId: 2,
+      name: 'building',
+    };
+  }
+  return TYPE;
+};
 
 /**
  * @param {string} maybeCode location code
@@ -181,13 +127,6 @@ const assertCodeOrLikeExpr = (code) => {
     'Location code of building should consist of 3 letters and 2 digits. ' +
       'Any of these characters might be replaced with _ wildcard.'
   );
-};
-
-/**
- * @return {TypeOptions} Type
- */
-export const getType = () => {
-  return TYPE;
 };
 
 /**
@@ -264,7 +203,7 @@ const hasInnerGeometry = (building) => {
  */
 const getByCode = (code) => {
   code = code.substr(0, 5);
-  const features = STORE.getFeatures();
+  const features = getBuildingStore().getFeatures();
   const building = features.find((feature) => {
     const idProperty = TYPE.primaryKey;
     return feature.get(idProperty) === code;
@@ -459,7 +398,6 @@ const getFaculties = (building) => {
 };
 
 export {
-  STORE,
   UNITS_FIELD_NAME,
   COMPLEX_ID_FIELD_NAME,
   COMPLEX_FIELD_NAME,
@@ -467,7 +405,6 @@ export {
   featureClickHandler,
   isCode,
   isLikeExpr,
-  loadProcessor,
   isBuilding,
   hasInnerGeometry,
   isSelected,
@@ -478,4 +415,5 @@ export {
   getComplex,
   filterHeadquaters,
   filterFacultyHeadquaters,
+  getType,
 };
