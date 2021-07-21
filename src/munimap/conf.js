@@ -56,6 +56,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {RequiredOptions} requiredOpts
  * @property {number} markersTimestamp
  * @property {number} zoomToTimestamp
+ * @property {number} buildingsTimestamp
  */
 
 /**
@@ -91,4 +92,5 @@ export const INITIAL_STATE = {
   markersTimestamp: null,
   zoomToTimestamp: null,
   baseMap: null,
+  buildingsTimestamp: null,
 };

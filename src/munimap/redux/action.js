@@ -51,6 +51,12 @@ export const MATOMO_SEND = 'MATOMO_SEND';
 export const MATOMO_SEND_FOR_OPTS = 'MATOMO_SEND_FOR_OPTS';
 
 /**
+ * @type {string}
+ * @const
+ */
+export const BUILDINGS_LOADED = 'BUILDINGS_LOADED';
+
+/**
  * @typedef {import("redux").AnyAction} redux.AnyAction
  * @typedef {import("ol/size").Size} ol.Size
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
@@ -156,5 +162,11 @@ export function send_to_matomo_for_opts(options) {
     payload: {
       options,
     },
+  };
+}
+
+export function buildings_loaded() {
+  return {
+    type: BUILDINGS_LOADED,
   };
 }

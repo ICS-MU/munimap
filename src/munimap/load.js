@@ -6,7 +6,6 @@ import * as munimap_building from './feature/building.js';
 import * as munimap_utils from './utils/utils.js';
 import {EsriJSON} from 'ol/format';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
-import {VectorSourceEvent} from 'ol/source/Vector';
 import {loadProcessor as complexLoadProcessor} from './feature/complex.js';
 import {getBuildingStore} from './view/building.js';
 import {loadProcessor as unitLoadProcessor} from './feature/unit.js';
@@ -52,6 +51,7 @@ import {loadProcessor as unitLoadProcessor} from './feature/unit.js';
  * @property {string} [where]
  * @property {string} [method]
  * @property {Processor} [processor]
+ * @property {Function} [callback]
  */
 
 /**
@@ -449,7 +449,10 @@ const buildingFeaturesForMap = async (
     resolution,
     projection
   );
-  options.source.dispatchEvent(new VectorSourceEvent('featuresadded'));
+
+  if (options.callback) {
+    options.callback();
+  }
   return buildings;
 };
 

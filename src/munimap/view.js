@@ -3,7 +3,6 @@
  */
 import * as actions from './redux/action.js';
 import * as munimap_assert from './assert/assert.js';
-import * as munimap_cluster from './cluster/cluster.js';
 import * as munimap_lang from './lang/lang.js';
 import * as munimap_layer from './layer/layer.js';
 import * as munimap_utils from './utils/utils.js';
@@ -12,8 +11,8 @@ import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import createControls from './control/mapcontrolsview.js';
 import {BASEMAPS} from './layer/basemap.js';
-import {LAYER_ID as BUILDING_LAYER_ID} from './layer/building.js';
 import {RESOLUTION_COLOR} from './style/style.js';
+import {createBuildingStore} from './view/building.js';
 import {create as createClusterLyr} from './layer/cluster.js';
 import {create as createMarkerLyr} from './layer/marker.js';
 import {create as createPubtranStopLayer} from './layer/pubtran.stop.js';
@@ -257,15 +256,6 @@ const createClusterLayer = (map, options) => {
 };
 
 /**
- * @param {ol.Map} map map
- * @param {number} resolution  resolution
- * @param {boolean} showLabels wheteher to show labels for MU objects
- */
-const updateClusteredFeatures = (map, resolution, showLabels) => {
-  munimap_cluster.updateClusteredFeatures(map, resolution, showLabels);
-};
-
-/**
  * @param {string} lang language
  * @return {ol.layer.Vector} layer
  */
@@ -286,21 +276,13 @@ const createPubtranLayer = (lang) => {
  * @param {AddLayersOptions} options opts
  */
 const addLayers = (map, options) => {
-  const {lang, showLabels} = options;
-  const view = map.getView();
+  const {lang} = options;
   const markerLayer = createMarkerLayer(map, options);
   options.markerSource = markerLayer.getSource();
 
   const markerClusterLayer = createClusterLayer(map, options);
   const layers = getDefaultLayers(map, options);
-  layers.forEach((layer) => {
-    map.addLayer(layer);
-    if (layer.get('id') === BUILDING_LAYER_ID) {
-      layer.getSource().on('featuresadded', (evt) => {
-        updateClusteredFeatures(map, view.getResolution(), showLabels);
-      });
-    }
-  });
+  layers.forEach((layer) => map.addLayer(layer));
 
   if (options.pubTran) {
     const pubTranLayer = createPubtranLayer(lang);
@@ -343,6 +325,15 @@ const attachMapListeners = (map, options) => {
   });
 };
 
+/**
+ * Create global stores for features - buildings, rooms...
+ * @param {redux.Store} reduxStore store
+ */
+const createFeatureStores = (reduxStore) => {
+  const callbackFn = (action) => () => reduxStore.dispatch(action);
+  createBuildingStore(callbackFn(actions.buildings_loaded()));
+};
+
 export {
   attachMapListeners,
   ensureBaseMap,
@@ -350,5 +341,5 @@ export {
   addLayers,
   createTileLayer,
   toggleLoadingMessage,
-  updateClusteredFeatures,
+  createFeatureStores,
 };

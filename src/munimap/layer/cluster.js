@@ -12,6 +12,7 @@ import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {Point} from 'ol/geom';
 import {styleFunction as clusterStyleFunction} from '../style/cluster.js';
 import {getCenter} from 'ol/extent';
+import {updateClusteredFeatures} from '../view/cluster.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
@@ -146,7 +147,7 @@ const create = (map, options) => {
     const range = munimap_cluster.getResolutionRange(res);
 
     if (range !== oldRange) {
-      munimap_cluster.updateClusteredFeatures(map, res, showLabels);
+      updateClusteredFeatures(map, res, showLabels);
     }
 
     mapProps.currentRes = res;

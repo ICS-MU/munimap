@@ -75,6 +75,11 @@ export const REQUIRED_CUSTOM_MARKERS = {};
 export const REQUIRED_MARKER_LABEL = {};
 
 /**
+ * @type {Object<string, Map>}
+ */
+export const CREATED_MAPS = {};
+
+/**
  * Load features by location codes or decorate custom markers.
  * @param {Array<string>|Array<Feature>|undefined} featuresLike featuresLike
  * @param {Options} options options
@@ -252,6 +257,8 @@ export default (options) => {
         // identifyCallback: options.identifyCallback
       })
     );
+
+    munimap_view.createFeatureStores(store);
     store.dispatch(actions.create_munimap());
 
     let unsubscribeInit;
@@ -303,6 +310,7 @@ export default (options) => {
             currentRes: view.getResolution(),
           });
           map.set(MUNIMAP_PROPS_ID, mapProps);
+          CREATED_MAPS[state.requiredOpts.target] = map;
 
           munimap_view.addCustomControls(map, store, state.requiredOpts);
 
@@ -340,15 +348,10 @@ export default (options) => {
               REQUIRED_MARKER_LABEL[state.requiredOpts.markerLabelId],
             pubTran: state.requiredOpts.pubTran,
           });
-
-          munimap_view.updateClusteredFeatures(
-            map,
-            state.resolution,
-            state.requiredOpts.labels
-          );
         }
 
         munimap_view.ensureBaseMap(basemapLayer, map);
+        slctr.updateClusteredFeatures(state);
       }
     };
 

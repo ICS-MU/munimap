@@ -104,6 +104,13 @@ const createReducer = (initialState) => {
         munimap_matomo.sendEventForOptions(action.payload.options);
         return {...state};
 
+      //BUILDINGS_LOADED
+      case actions.BUILDINGS_LOADED:
+        return {
+          ...state,
+          buildingsTimestamp: Date.now(),
+        };
+
       //DEAFULT
       default:
         return state;

@@ -3,12 +3,14 @@
  * @module redux/selector
  */
 import * as munimap_assert from '../assert/assert.js';
+import * as munimap_cluster from '../cluster/cluster.js';
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_utils from '../utils/utils.js';
+import * as munimap_view_cluster from '../view/cluster.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
 import View from 'ol/View';
-import {REQUIRED_CUSTOM_MARKERS} from '../create.js';
+import {CREATED_MAPS, REQUIRED_CUSTOM_MARKERS} from '../create.js';
 import {defaults as control_defaults} from 'ol/control';
 import {createSelector} from 'reselect';
 import {createTileLayer} from '../view.js';
@@ -57,6 +59,13 @@ const getMarkersTimestamp = (state) => state.markersTimestamp;
 const getZoomToTimestamp = (state) => state.zoomToTimestamp;
 
 /**
+ * @type {Reselect.Selector<State, number?>}
+ * @param {State} state state
+ * @return {number|null} timestamp
+ */
+const getBuildingsTimestamp = (state) => state.buildingsTimestamp;
+
+/**
  * @type {Reselect.Selector<State, Array.<string>>}
  * @param {State} state state
  * @return {Array.<string>} required markers
@@ -76,6 +85,13 @@ const getRequiredZoomTo = (state) => state.requiredOpts.zoomTo;
  * @return {string} basemap
  */
 const getRequiredBaseMap = (state) => state.requiredOpts.baseMap;
+
+/**
+ * @type {Reselect.Selector<State, boolean>}
+ * @param {State} state state
+ * @return {boolean} basemap
+ */
+const getRequiredLabels = (state) => state.requiredOpts.labels;
 
 /**
  * @type {Reselect.Selector<State, string>}
@@ -500,3 +516,44 @@ export const getDefaultControls = createSelector([getLang], (lang) => {
     },
   });
 });
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    number,
+ *    function(number): number
+ * >}
+ */
+export const getLoadedBuildingsCount = createSelector(
+  [getBuildingsTimestamp],
+  (buildingsTimestamp) => {
+    console.log('calculate buildings count');
+
+    if (buildingsTimestamp === null) {
+      return 0;
+    }
+    return getBuildingStore().getFeatures().length;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    void,
+ *    function(number, boolean, string): void
+ * >}
+ */
+export const updateClusteredFeatures = createSelector(
+  [getLoadedBuildingsCount, getRequiredLabels, getTarget],
+  (buildingsCount, requiredLabels, target) => {
+    if (requiredLabels === false) {
+      return;
+    }
+    const map = CREATED_MAPS[target];
+    munimap_view_cluster.updateClusteredFeatures(
+      map,
+      map.getView().getResolution(),
+      requiredLabels
+    );
+  }
+);

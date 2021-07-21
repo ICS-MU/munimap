@@ -11,7 +11,7 @@ import * as munimap_unit from './unit.js';
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {MUNIMAP_URL} from '../conf.js';
-import {getBuildingStore} from '../view/building';
+import {getBuildingStore} from '../view/building.js';
 
 /**
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
