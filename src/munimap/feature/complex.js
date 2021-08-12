@@ -3,14 +3,10 @@
  */
 
 import * as munimap_assert from '../assert/assert.js';
-import * as munimap_building from './building.js';
-import * as munimap_load from '../load.js';
 import * as munimap_range from '../utils/range.js';
-import * as munimap_unit from '../feature/unit.js';
-import * as munimap_utils from '../utils/utils.js';
-import VectorSource from 'ol/source/Vector';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature.js';
 import {MUNIMAP_URL} from '../conf.js';
+import {getStore as getComplexStore} from '../view/complex.js';
 
 /**
  * @typedef {import('../utils/range.js').RangeInterface} RangeInterface
@@ -19,12 +15,6 @@ import {MUNIMAP_URL} from '../conf.js';
  * @typedef {import("../load.js").ProcessorOptions} ProcessorOptions
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
- */
-
-/**
- * @typedef {Object} LoadByIdsOptions
- * @property {Array<number>} ids
- * @property {Processor} [processor]
  */
 
 /**
@@ -51,21 +41,24 @@ const UNITS_FIELD_NAME = 'pracoviste';
 const FONT_SIZE = 13;
 
 /**
- * @type {VectorSource}
- * @const
- */
-const STORE = new VectorSource();
-
-/**
  *
  * @type {TypeOptions}
  */
-const TYPE = {
-  primaryKey: ID_FIELD_NAME,
-  serviceUrl: MUNIMAP_URL,
-  store: STORE,
-  layerId: 4,
-  name: 'complex',
+let TYPE;
+
+/**
+ * @return {TypeOptions} Type
+ */
+const getType = () => {
+  if (!TYPE) {
+    TYPE = {
+      primaryKey: ID_FIELD_NAME,
+      serviceUrl: MUNIMAP_URL,
+      layerId: 4,
+      name: 'complex',
+    };
+  }
+  return TYPE;
 };
 
 /**
@@ -74,9 +67,9 @@ const TYPE = {
  * @return {ol.Feature} building
  */
 const getById = (id, opt_features) => {
-  const features = opt_features || STORE.getFeatures();
+  const features = opt_features || getComplexStore().getFeatures();
   const result = features.find((feature) => {
-    const idProperty = TYPE.primaryKey;
+    const idProperty = getType().primaryKey;
     return feature.get(idProperty) === id;
   });
   return result || null;
@@ -88,7 +81,7 @@ const getById = (id, opt_features) => {
  */
 const isComplex = (feature) => {
   const fType = feature.get(FEATURE_TYPE_PROPERTY_NAME);
-  return fType === TYPE;
+  return fType === getType();
 };
 
 /**
@@ -151,93 +144,6 @@ const featureClickHandler = (options) => {
 };
 
 /**
- * @param {LoadByIdsOptions} options opts
- * @return {Promise<Array<ol.Feature>>} promise
- */
-const loadByIds = async (options) => {
-  return munimap_load.features({
-    source: STORE,
-    type: TYPE,
-    method: 'POST',
-    returnGeometry: true,
-    where: 'inetId IN (' + options.ids.join() + ')',
-    processor: options.processor,
-  });
-};
-
-/**
- * @param {ProcessorOptions} options opts
- * @return {Promise<ProcessorOptions>} promise
- * @protected
- */
-const loadProcessorWithUnits = async (options) => {
-  const newComplexes = options.new;
-  const complexIdsToLoad = newComplexes.map((complex) => {
-    return complex.get(ID_FIELD_NAME);
-  });
-
-  if (complexIdsToLoad.length) {
-    const units = await munimap_unit.loadByHeadquartersComplexIds(
-      complexIdsToLoad
-    );
-    newComplexes.forEach((complex) => {
-      const complexUnits = units.filter((unit) => {
-        return unit.get('areal_sidelni_id') === complex.get(ID_FIELD_NAME);
-      });
-      complex.set(UNITS_FIELD_NAME, complexUnits);
-    });
-    return options;
-  } else {
-    return options;
-  }
-};
-
-/**
- * @param {ProcessorOptions} options opts
- * @return {Promise<ProcessorOptions>} processor
- * @protected
- */
-const loadProcessor = async (options) => {
-  const newBuildings = options.new;
-  let complexIdsToLoad = [];
-  const buildingsToLoadComplex = [];
-  newBuildings.forEach((building) => {
-    const complexId = building.get(munimap_building.COMPLEX_ID_FIELD_NAME);
-    if (munimap_utils.isNumber(complexId)) {
-      munimap_assert.assertNumber(complexId);
-      const complex = getById(complexId);
-      if (complex) {
-        building.set(munimap_building.COMPLEX_FIELD_NAME, complex);
-      } else {
-        complexIdsToLoad.push(complexId);
-        buildingsToLoadComplex.push(building);
-      }
-    } else {
-      building.set(munimap_building.COMPLEX_FIELD_NAME, null);
-    }
-  });
-
-  complexIdsToLoad = [...new Set(complexIdsToLoad)];
-  if (complexIdsToLoad.length) {
-    const complexes = await loadByIds({
-      ids: complexIdsToLoad,
-      processor: loadProcessorWithUnits,
-    });
-    buildingsToLoadComplex.forEach((building) => {
-      const complexId = building.get(munimap_building.COMPLEX_ID_FIELD_NAME);
-      const complex = getById(complexId, complexes);
-      if (!complex) {
-        throw new Error('Complex ' + complexId + ' not found.');
-      }
-      building.set(munimap_building.COMPLEX_FIELD_NAME, complex || null);
-    });
-    return options;
-  } else {
-    return options;
-  }
-};
-
-/**
  * @param {ol.Feature} complex complex
  * @return {Array<ol.Feature>} units
  */
@@ -253,14 +159,11 @@ export {
   UNITS_FIELD_NAME,
   FONT_SIZE,
   TYPE,
-  STORE,
   isClickable,
   featureClickHandler,
   isComplex,
   getBuildingCount,
   getById,
-  loadByIds,
-  loadProcessorWithUnits,
-  loadProcessor,
+  getType,
   getUnits,
 };

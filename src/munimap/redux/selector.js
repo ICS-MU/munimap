@@ -13,11 +13,13 @@ import * as ol_proj from 'ol/proj';
 import View from 'ol/View';
 import {CREATED_MAPS, REQUIRED_CUSTOM_MARKERS} from '../create.js';
 import {ENABLE_SELECTOR_LOGS} from '../conf.js';
+import {styleFunction as complexStyleFunction} from '../style/complex.js';
 import {defaults as control_defaults} from 'ol/control';
 import {createSelector} from 'reselect';
 import {createTileLayer} from '../view.js';
 import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
 import {getStore as getBuildingStore} from '../view/building.js';
+import {getStore as getMarkerStore} from '../view/marker.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
 import {getType} from '../feature/building.js';
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
@@ -792,3 +794,25 @@ export const getStyleForBuildingLabelLayer = createSelector(
     return styleFce;
   }
 );
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    StyleFunction,
+ *    function(string): StyleFunction
+ * >}
+ */
+export const getStyleForComplexLayer = createSelector([getLang], (lang) => {
+  if (ENABLE_SELECTOR_LOGS) {
+    console.log('STYLE - computing style for complexes');
+  }
+
+  //asi nemusi byt selector, protoze se bere z funkce
+  const markers = getMarkerStore().getFeatures();
+  const styleFce = (feature, res) => {
+    const style = complexStyleFunction(feature, res, markers, lang);
+    return style;
+  };
+
+  return styleFce;
+});

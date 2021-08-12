@@ -16,18 +16,17 @@ import {getUid as getStoreUid} from '../utils/store.js';
 /***
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("ol/Map").default} ol.Map
- * @typedef {import("./style.js").MarkersAwareOptions} MarkersAwareOptions
  */
 
 /**
- * @param {MarkersAwareOptions} options opts
  * @param {Feature|ol.render.Feature} feature feature
  * @param {number} resolution res
+ * @param {Array<Feature>} markers markers
+ * @param {string} lang language
  * @return {Style|Array<Style>} style
  */
-const styleFunction = (options, feature, resolution) => {
+const styleFunction = (feature, resolution, markers, lang) => {
   let showLabel = true;
-  const lang = options.lang;
 
   munimap_assert.assertInstanceof(feature, Feature);
   const bldgCount = munimap_complex.getBuildingCount(
@@ -37,8 +36,6 @@ const styleFunction = (options, feature, resolution) => {
     showLabel =
       munimap_complex.getUnits(/**@type {Feature}*/ (feature)).length === 0;
     if (showLabel) {
-      const markerSource = options.markerSource;
-      const markers = markerSource.getFeatures();
       if (markers.length && munimap_building.isBuilding(markers[0])) {
         const complexId =
           /**@type {number}*/

@@ -16,6 +16,7 @@ import {
   isLabelLayer as isBuildingLabelLayer,
   isLayer as isBuildingLayer,
 } from '../layer/building.js';
+import {isLayer as isComplexLayer} from '../layer/complex.js';
 
 /**
  * @typedef {import("./marker").LabelFunction} MarkerLabelFunction
@@ -201,6 +202,8 @@ const refresh = (state, layers) => {
       style = slctr.getStyleForBuildingLayer(state);
     } else if (isBuildingLabelLayer(layer)) {
       style = slctr.getStyleForBuildingLabelLayer(state);
+    } else if (isComplexLayer(layer)) {
+      style = slctr.getStyleForComplexLayer(state);
     }
 
     if (style && layer instanceof VectorLayer) {

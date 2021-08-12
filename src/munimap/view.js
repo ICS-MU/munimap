@@ -14,6 +14,7 @@ import {BASEMAPS} from './layer/basemap.js';
 import {RESOLUTION_COLOR, refresh as refreshStyle} from './style/style.js';
 import {createStore as createBuildingStore} from './view/building.js';
 import {create as createClusterLyr} from './layer/cluster.js';
+import {createStore as createComplexStore} from './view/complex.js';
 import {create as createMarkerLyr} from './layer/marker.js';
 import {createStore as createMarkerStore} from './view/marker.js';
 import {create as createPubtranStopLayer} from './layer/pubtran.stop.js';
@@ -336,6 +337,7 @@ const createFeatureStores = (reduxStore) => {
   const callbackFn = (action) => () => reduxStore.dispatch(action);
   createBuildingStore(callbackFn(actions.buildings_loaded()));
   createMarkerStore();
+  createComplexStore();
 };
 
 /**
