@@ -199,13 +199,12 @@ const CENTER_GEOMETRY_FUNCTION = (feature) => {
 };
 
 /**
- * @param {ol.Map} map map
+ * @param {ol.Extent} viewExt map
  * @param {Feature} feature feature
  * @return {Point} center point
  * @const
  */
-const INTERSECT_CENTER_GEOMETRY_FUNCTION = (map, feature) => {
-  const viewExt = map.getView().calculateExtent(map.getSize() || null);
+const INTERSECT_CENTER_GEOMETRY_FUNCTION = (viewExt, feature) => {
   const refExt = ol_extent.buffer(viewExt, getBufferValue(viewExt));
   munimap_assert.assertInstanceof(feature, Feature);
   let geom = feature.getGeometry() || null;

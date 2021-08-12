@@ -97,7 +97,6 @@ export const loadOrDecorateMarkers = async (featuresLike, options) => {
         arrPromises.push(
           new Promise((resolve, reject) => {
             if (REQUIRED_CUSTOM_MARKERS[el]) {
-              console.log(REQUIRED_CUSTOM_MARKERS[el]);
               decorateCustomMarker(REQUIRED_CUSTOM_MARKERS[el]);
               resolve(REQUIRED_CUSTOM_MARKERS[el]);
             } else if (munimap_utils.isString(el)) {
@@ -352,6 +351,7 @@ export default (options) => {
 
         munimap_view.ensureBaseMap(basemapLayer, map);
         slctr.updateClusteredFeatures(state);
+        munimap_view.refreshStyles(state, map.getLayers().getArray());
       }
     };
 

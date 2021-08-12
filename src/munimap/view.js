@@ -11,10 +11,11 @@ import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import createControls from './control/mapcontrolsview.js';
 import {BASEMAPS} from './layer/basemap.js';
-import {RESOLUTION_COLOR} from './style/style.js';
-import {createBuildingStore} from './view/building.js';
+import {RESOLUTION_COLOR, refresh as refreshStyle} from './style/style.js';
+import {createStore as createBuildingStore} from './view/building.js';
 import {create as createClusterLyr} from './layer/cluster.js';
 import {create as createMarkerLyr} from './layer/marker.js';
+import {createStore as createMarkerStore} from './view/marker.js';
 import {create as createPubtranStopLayer} from './layer/pubtran.stop.js';
 
 /**
@@ -22,10 +23,12 @@ import {create as createPubtranStopLayer} from './layer/pubtran.stop.js';
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("ol/source/Vector").default} ol.source.Vector
  * @typedef {import("ol/layer/Vector").default} ol.layer.Vector
+ * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import('./conf.js').RequiredOptions} RequiredOptions
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("redux").Store} redux.Store
+ * @typedef {import("./conf.js").State} State
  * @typedef {import("./create").MapListenersOptions} MapListenersOptions
  */
 
@@ -332,6 +335,16 @@ const attachMapListeners = (map, options) => {
 const createFeatureStores = (reduxStore) => {
   const callbackFn = (action) => () => reduxStore.dispatch(action);
   createBuildingStore(callbackFn(actions.buildings_loaded()));
+  createMarkerStore();
+};
+
+/**
+ * Refresh styles for layers.
+ * @param {State} state state
+ * @param {Array<ol.layer.Base>} layers layers
+ */
+const refreshStyles = (state, layers) => {
+  refreshStyle(state, layers);
 };
 
 export {
@@ -342,4 +355,5 @@ export {
   createTileLayer,
   toggleLoadingMessage,
   createFeatureStores,
+  refreshStyles,
 };

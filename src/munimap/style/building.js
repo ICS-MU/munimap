@@ -15,18 +15,21 @@ import * as munimap_style from './style.js';
 import * as munimap_unit from '../feature/unit.js';
 import * as munimap_utils from '../utils/utils.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
+import {getStore as getMarkerStore} from '../view/marker.js';
 
 /**
  * @typedef {import("./style").StyleFunctionOptions} StyleFunctionOptions
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("ol/Map").default} ol.Map
+ * @typedef {import("ol/extent").Extent} ol.Extent
  */
 
 /**
  * @typedef {Object} LabelOptions
  * @property {string} lang lang
  * @property {boolean} showLabels wherther to show labels for MU objects
+ * @property {ol.Extent} extent map extent based on current state
  */
 
 /**
@@ -93,36 +96,20 @@ const FONT_SIZE = 13;
 const BIG_FONT_SIZE = 15;
 
 /**
- * Filter function of a style fragment (type munimap.style.FilterFunction).
- *
- * @param {ol.Feature} feature feature
- * @param {?string} selectedFloorCode location code
- * @param {Array.<string>} activeFloorCodes active floor codes
- * @return {boolean} filter boolean
- */
-const selectedFloorFilter = (feature, selectedFloorCode, activeFloorCodes) => {
-  if (munimap_utils.isDefAndNotNull(selectedFloorCode)) {
-    const locCode = /**@type {string}*/ (feature.get('polohKod'));
-    return selectedFloorCode.startsWith(locCode);
-  }
-  return false;
-};
-
-/**
  * Style function of a style fragment (type munimap.style.Function).
  *
- * @param {StyleFunctionOptions} options opts
  * @param {ol.Feature} feature feature
  * @param {number} resolution resolution
+ * @param {boolean} showSelected whether tho show building as selected
  * @return {Style|Array.<Style>} style
  */
-const styleFunction = (options, feature, resolution) => {
+const styleFunction = (feature, resolution, showSelected) => {
   const resColor = munimap_style.RESOLUTION_COLOR.find((obj, i, arr) => {
     return resolution > obj.resolution || i === arr.length - 1;
   });
 
   let result;
-  const marked = options.markers.indexOf(feature) >= 0;
+  const marked = getMarkerStore().getFeatures().indexOf(feature) >= 0;
   if (marked) {
     if (
       !munimap_range.contains(munimap_cluster.BUILDING_RESOLUTION, resolution)
@@ -162,45 +149,31 @@ const styleFunction = (options, feature, resolution) => {
       result = NO_GEOMETRY;
     }
   }
-  return result;
+
+  if (result instanceof Style && showSelected) {
+    return new Style({
+      fill: new Fill({
+        color: result.getFill().getColor(),
+      }),
+      stroke: new Stroke({
+        color: result.getStroke().getColor(),
+        width: 2 * result.getStroke().getWidth(),
+      }),
+    });
+  } else {
+    return result;
+  }
 };
 
 /**
- * Style function of a style fragment (type munimap.style.Function).
- *
- * @param {StyleFunctionOptions} options options
- * @param {ol.Feature} feature feature
- * @param {number} resolution resolution
- * @return {Style|Array.<Style>} style
- */
-const selectedFloorFunction = (options, feature, resolution) => {
-  const style = /** @type {Style}*/ (styleFunction(
-    options,
-    feature,
-    resolution
-  ));
-  const selectedFill = new Fill({
-    color: style.getFill().getColor(),
-  });
-  const selectedStroke = new Stroke({
-    color: style.getStroke().getColor(),
-    width: 2 * style.getStroke().getWidth(),
-  });
-  return new Style({
-    fill: selectedFill,
-    stroke: selectedStroke,
-  });
-};
-
-/**
- * @param {ol.Map} map map
  * @param {ol.Feature|ol.render.Feature} feature feature
  * @param {number} resolution resolution
+ * @param {ol.Extent} extent map extent
  * @param {string} lang lang
  * @return {Style|Array<Style>} style
  * @protected
  */
-const defaultLabelFunction = (map, feature, resolution, lang) => {
+const defaultLabelFunction = (feature, resolution, extent, lang) => {
   const uid = munimap_store.getUid(feature);
   if (uid) {
     munimap_assert.assertString(uid);
@@ -213,7 +186,7 @@ const defaultLabelFunction = (map, feature, resolution, lang) => {
   const textStyle = new Style({
     geometry: munimap_utils.partial(
       munimap_geom.INTERSECT_CENTER_GEOMETRY_FUNCTION,
-      map
+      extent
     ),
     text: new Text({
       font: 'bold ' + FONT_SIZE + 'px arial',
@@ -233,14 +206,14 @@ const defaultLabelFunction = (map, feature, resolution, lang) => {
 };
 
 /**
- * @param {ol.Map} map map
  * @param {ol.Feature} feature feature
  * @param {number} resolution resolution
+ * @param {ol.Extent} extent map extent
  * @param {string} lang lang
  * @return {Array.<Style>|Style} style
  * @protected
  */
-const smallScaleLabelFunction = (map, feature, resolution, lang) => {
+const smallScaleLabelFunction = (feature, resolution, extent, lang) => {
   let result = null;
   const units = munimap_building.getUnits(feature);
   if (units.length > 0) {
@@ -259,7 +232,7 @@ const smallScaleLabelFunction = (map, feature, resolution, lang) => {
       if (munimap_utils.isDef(title)) {
         const geometryFunction = munimap_utils.partial(
           munimap_geom.INTERSECT_CENTER_GEOMETRY_FUNCTION,
-          map
+          extent
         );
         const options = {
           fill: munimap_style.TEXT_FILL,
@@ -271,20 +244,20 @@ const smallScaleLabelFunction = (map, feature, resolution, lang) => {
       }
     }
   } else if (resolution < munimap_complex.RESOLUTION.min) {
-    result = defaultLabelFunction(map, feature, resolution, lang);
+    result = defaultLabelFunction(feature, resolution, extent, lang);
   }
   return result;
 };
 
 /**
- * @param {ol.Map} map map
  * @param {ol.Feature} feature feature
  * @param {number} resolution resolution
+ * @param {ol.Extent} extent map extent
  * @param {string} lang lang
  * @return {Array.<Style>|Style} style
  * @protected
  */
-const largeScaleLabelFunction = (map, feature, resolution, lang) => {
+const largeScaleLabelFunction = (feature, resolution, extent, lang) => {
   const uid = munimap_store.getUid(feature);
   if (uid) {
     munimap_assert.assertString(uid);
@@ -298,7 +271,7 @@ const largeScaleLabelFunction = (map, feature, resolution, lang) => {
   if (munimap_utils.isDef(title)) {
     const geometryFunction = munimap_utils.partial(
       munimap_geom.INTERSECT_CENTER_GEOMETRY_FUNCTION,
-      map
+      extent
     );
     const units = munimap_building.getUnits(feature);
     if (units.length > 0) {
@@ -335,30 +308,24 @@ const largeScaleLabelFunction = (map, feature, resolution, lang) => {
 /**
  * Style function of a style fragment (type munimap.style.Function).
  * @param {LabelOptions} labelOptions label opts
- * @param {StyleFunctionOptions} markerOptions opts
  * @param {ol.Feature} feature feature
  * @param {number} resolution resolution
  * @return {Style|Array.<Style>} style
  */
-const labelFunction = (labelOptions, markerOptions, feature, resolution) => {
-  const {lang, showLabels} = labelOptions;
+const labelFunction = (labelOptions, feature, resolution) => {
+  const {lang, showLabels, extent} = labelOptions;
+
+  if (!extent) {
+    return null;
+  }
+
   let result = null;
-  const marked = markerOptions.markers.indexOf(feature) >= 0;
+  const marked = getMarkerStore().getFeatures().indexOf(feature) >= 0;
   if (!marked && resolution < munimap_complex.RESOLUTION.max) {
     if (!munimap_range.contains(munimap_floor.RESOLUTION, resolution)) {
-      result = smallScaleLabelFunction(
-        markerOptions.map,
-        feature,
-        resolution,
-        lang
-      );
+      result = smallScaleLabelFunction(feature, resolution, extent, lang);
     } else {
-      result = largeScaleLabelFunction(
-        markerOptions.map,
-        feature,
-        resolution,
-        lang
-      );
+      result = largeScaleLabelFunction(feature, resolution, extent, lang);
     }
   }
   if (showLabels === false && result) {
@@ -380,11 +347,4 @@ const labelFunction = (labelOptions, markerOptions, feature, resolution) => {
   return result;
 };
 
-export {
-  FONT_SIZE,
-  BIG_FONT_SIZE,
-  styleFunction,
-  labelFunction,
-  selectedFloorFilter,
-  selectedFloorFunction,
-};
+export {FONT_SIZE, BIG_FONT_SIZE, styleFunction, labelFunction};

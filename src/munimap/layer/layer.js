@@ -4,7 +4,6 @@
 
 import * as munimap_layer_building from './building.js';
 import * as munimap_layer_complex from './complex.js';
-import * as munimap_style from '../style/style.js';
 import * as munimap_style_complex from '../style/complex.js';
 import * as munimap_utils from '../utils/utils.js';
 
@@ -161,8 +160,6 @@ const setDefaultLayersProps = (options) => {
       default:
         break;
     }
-
-    munimap_style.refreshFromFragments(map, layer);
   });
 };
 

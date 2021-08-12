@@ -7,13 +7,7 @@ import * as munimap_building from '../feature/building.js';
 import * as munimap_complex from '../feature/complex.js';
 import * as munimap_utils from '../utils/utils.js';
 import VectorLayer from 'ol/layer/Vector';
-import {getBuildingStore} from '../view/building.js';
-import {
-  labelFunction,
-  selectedFloorFilter,
-  selectedFloorFunction,
-  styleFunction,
-} from '../style/building.js';
+import {getStore as getBuildingStore} from '../view/building.js';
 
 /**
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions
@@ -43,6 +37,14 @@ const isLayer = (layer) => {
 };
 
 /**
+ * @param {ol.layer.Base} layer layer
+ * @return {boolean} isLayer
+ */
+const isLabelLayer = (layer) => {
+  return layer.get('id') === LABEL_LAYER_ID;
+};
+
+/**
  * @param {ol.Map} map map
  * @return {VectorLayer|undefined} vector
  */
@@ -62,27 +64,12 @@ const getLayer = (map) => {
  * @return {VectorLayer} layer
  */
 const create = () => {
-  const styleFragments = {
-    selectedFloorFeature: {
-      filter: selectedFloorFilter,
-      style: selectedFloorFunction,
-    },
-    outdoorFeature: {
-      filter: () => {
-        return true;
-      },
-      style: styleFunction,
-    },
-  };
-
   return new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: LAYER_ID,
       isFeatureClickable: munimap_building.isClickable,
       featureClickHandler: munimap_building.featureClickHandler,
       type: munimap_building.getType(),
-      refreshStyleOnFloorChange: true,
-      styleFragments: styleFragments,
       source: getBuildingStore(),
       maxResolution: munimap_complex.RESOLUTION.max,
       updateWhileAnimating: true,
@@ -98,29 +85,12 @@ const create = () => {
  * @return {VectorLayer} layer
  */
 const createLabel = (lang, showLabels) => {
-  const styleFragments = {
-    selectedFloorFeature: {
-      filter: selectedFloorFilter,
-      style: () => {
-        return null;
-      },
-    },
-    outdoorFeature: {
-      filter: () => {
-        return true;
-      },
-      style: munimap_utils.partial(labelFunction, {lang, showLabels}),
-    },
-  };
-
   return new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: LABEL_LAYER_ID,
       isFeatureClickable: munimap_building.isClickable,
       featureClickHandler: munimap_building.featureClickHandler,
       type: munimap_building.getType(),
-      refreshStyleOnFloorChange: true,
-      styleFragments: styleFragments,
       source: getBuildingStore(),
       updateWhileAnimating: true,
       updateWhileInteracting: false,
@@ -129,4 +99,4 @@ const createLabel = (lang, showLabels) => {
   );
 };
 
-export {LAYER_ID, LABEL_LAYER_ID, create, createLabel};
+export {LAYER_ID, LABEL_LAYER_ID, create, createLabel, isLayer, isLabelLayer};

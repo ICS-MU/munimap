@@ -3,31 +3,39 @@
  * @module redux/selector
  */
 import * as munimap_assert from '../assert/assert.js';
-import * as munimap_cluster from '../cluster/cluster.js';
+import * as munimap_floor from '../feature/floor.js';
 import * as munimap_lang from '../lang/lang.js';
+import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
 import * as munimap_view_cluster from '../view/cluster.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
 import View from 'ol/View';
 import {CREATED_MAPS, REQUIRED_CUSTOM_MARKERS} from '../create.js';
+import {ENABLE_SELECTOR_LOGS} from '../conf.js';
 import {defaults as control_defaults} from 'ol/control';
 import {createSelector} from 'reselect';
 import {createTileLayer} from '../view.js';
 import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
-import {getBuildingStore} from '../view/building.js';
+import {getStore as getBuildingStore} from '../view/building.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
 import {getType} from '../feature/building.js';
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
+import {labelFunction, styleFunction} from '../style/building.js';
 
 /**
  * @typedef {import("../conf.js").State} State
  * @typedef {import("ol").Feature} ol.Feature
+ * @typedef {import("ol/size").Size} ol.Size
+ * @typedef {import("ol/extent").Extent} ol.Extent
  * @typedef {import("../create.js").InitExtentOptions} InitExtentOptions
+ * @typedef {import("../feature/floor.js").Options} FloorOptions
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
  * @typedef {import("ol/control/Control").default} ol.control.Control
  * @typedef {import("ol/layer/Tile").default} ol.layer.Tile
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
+ * @typedef {import("ol/style/Style").default} ol.style.Style
+ * @typedef {import("ol/style/Style").StyleFunction} StyleFunction
  */
 
 /**
@@ -115,6 +123,20 @@ const getTarget = (state) => state.requiredOpts.target;
 const getCenter = (state) => state.center;
 
 /**
+ * @type {Reselect.Selector<State, number>}
+ * @param {State} state state
+ * @return {number} rotation
+ */
+const getRotation = (state) => state.rotation;
+
+/**
+ * @type {Reselect.Selector<State, ol.Size>}
+ * @param {State} state state
+ * @return {ol.Size} map size
+ */
+const getSize = (state) => state.map_size;
+
+/**
  * @type {Reselect.Selector<State, ol.Coordinate>}
  * @param {State} state state
  * @return {ol.Coordinate} center
@@ -143,6 +165,13 @@ const getRequiredTarget = (state) => state.requiredOpts.target;
 const getResolution = (state) => state.resolution;
 
 /**
+ * @type {Reselect.Selector<State, FloorOptions>}
+ * @param {State} state state
+ * @return {FloorOptions} selected floor
+ */
+const getSelectedFloor = (state) => state.selectedFloor;
+
+/**
  * createSelector return type Reselect.OutputSelector<S, T, (res: R1) => T>
  *    S: State (for Selector functions above)
  *    T: Returned type (must be same as returned type below)
@@ -157,7 +186,9 @@ const getResolution = (state) => state.resolution;
 export const getInitMarkers = createSelector(
   [getRequiredMarkerIds],
   (requiredMarkerIds) => {
-    console.log('computing init markers');
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing init markers');
+    }
     if (requiredMarkerIds.length === 0) {
       return [];
     }
@@ -186,7 +217,9 @@ export const getInitMarkers = createSelector(
 export const getInitZoomTo = createSelector(
   [getRequiredZoomTo],
   (initZoomTo) => {
-    console.log('computing init zoomTo');
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing init zoomTo');
+    }
     if (initZoomTo.length === 0) {
       return [];
     } else if (munimap_utils.isString(initZoomTo)) {
@@ -216,7 +249,9 @@ export const getBasemapLayerId = createSelector(
       return requiredBasemap;
     }
 
-    console.log('computing baseMapLayerId');
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing baseMapLayerId');
+    }
     const isSafeLatLon = munimap_utils.inRange(
       center[1],
       -8399737.89, //60° N
@@ -248,7 +283,9 @@ export const getBasemapLayerId = createSelector(
 export const getBasemapLayer = createSelector(
   [getBasemapLayerId, getLang, getTarget],
   (basemapLayerId, lang, target) => {
-    console.log('computing baseMapLayer');
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing baseMapLayer');
+    }
     return createTileLayer(basemapLayerId, lang);
   }
 );
@@ -263,7 +300,9 @@ export const getBasemapLayer = createSelector(
 export const getInvalidCodes = createSelector(
   [getRequiredMarkerIds, getInitMarkers],
   (requiredMarkerIds, initMarkers) => {
-    console.log('computing invalid codes');
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing invalid codes');
+    }
     if (requiredMarkerIds.length === 0) {
       return [];
     }
@@ -298,7 +337,9 @@ export const getInvalidCodes = createSelector(
 export const loadMarkers = createSelector(
   [getRequiredMarkerIds, getMarkersTimestamp],
   (requiredMarkerIds, markersTimestamp) => {
-    console.log('computing whether load markers');
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing whether load markers');
+    }
     return requiredMarkerIds.length > 0 && markersTimestamp === null;
   }
 );
@@ -313,7 +354,9 @@ export const loadMarkers = createSelector(
 export const loadZoomTo = createSelector(
   [getRequiredZoomTo, getZoomToTimestamp],
   (requiredZoomTo, zoomToTimestamp) => {
-    console.log('computing whether load zoomto');
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing whether load zoomto');
+    }
     return requiredZoomTo.length > 0 && zoomToTimestamp === null;
   }
 );
@@ -328,7 +371,9 @@ export const loadZoomTo = createSelector(
 export const areMarkersLoaded = createSelector(
   [getRequiredMarkerIds, getMarkersTimestamp],
   (requiredMarkerIds, markersTimestamp) => {
-    console.log('computing if markers are loaded');
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing if markers are loaded');
+    }
     return (
       (requiredMarkerIds.length > 0 && markersTimestamp > 0) ||
       requiredMarkerIds.length === 0
@@ -346,7 +391,9 @@ export const areMarkersLoaded = createSelector(
 export const areZoomToLoaded = createSelector(
   [getRequiredZoomTo, getZoomToTimestamp],
   (requiredZoomTo, zoomToTimestamp) => {
-    console.log('computing if zoomto are loaded');
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing if zoomto are loaded');
+    }
     return (
       (requiredZoomTo.length > 0 && zoomToTimestamp > 0) ||
       requiredZoomTo.length === 0
@@ -364,7 +411,9 @@ export const areZoomToLoaded = createSelector(
 export const toggleLoadingMessage = createSelector(
   [getRequiredLoadingMessage, areMarkersLoaded, areZoomToLoaded],
   (requireLoadingMessage, markersLoaded, zoomToLoaded) => {
-    console.log('computing loading message');
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing loading message');
+    }
     if (!requireLoadingMessage) {
       return null;
     } else {
@@ -385,7 +434,9 @@ export const toggleLoadingMessage = createSelector(
  * >}
  */
 export const getMuAttrs = createSelector([getLang], (lang) => {
-  console.log('computing MU attrs');
+  if (ENABLE_SELECTOR_LOGS) {
+    console.log('computing MU attrs');
+  }
   const munimapAttr = munimap_lang.getMsg(
     munimap_lang.Translations.MUNIMAP_ATTRIBUTION_HTML,
     lang
@@ -407,7 +458,9 @@ export const getMuAttrs = createSelector([getLang], (lang) => {
 export const getInitViewProps = createSelector(
   [getRequiredTarget, getRequiredCenter, getRequiredZoom],
   (requiredTarget, requiredCenter, requiredZoom) => {
-    console.log('computing initial view props');
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing initial view props');
+    }
     return {requiredTarget, requiredCenter, requiredZoom};
   }
 );
@@ -422,7 +475,9 @@ export const getInitViewProps = createSelector(
 export const calculateView = createSelector(
   [getInitViewProps, getInitMarkers, getInitZoomTo],
   (initialViewProps, markers, zoomTo) => {
-    console.log('computing view');
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing view');
+    }
     const {requiredTarget, requiredCenter, requiredZoom} = initialViewProps;
     const target = document.getElementById(requiredTarget);
     const center = ol_proj.transform(
@@ -495,7 +550,9 @@ export const calculateView = createSelector(
  * >}
  */
 export const getDefaultControls = createSelector([getLang], (lang) => {
-  console.log('computing default controls');
+  if (ENABLE_SELECTOR_LOGS) {
+    console.log('computing default controls');
+  }
   return control_defaults({
     attributionOptions: {
       tipLabel: munimap_lang.getMsg(
@@ -527,7 +584,9 @@ export const getDefaultControls = createSelector([getLang], (lang) => {
 export const getLoadedBuildingsCount = createSelector(
   [getBuildingsTimestamp],
   (buildingsTimestamp) => {
-    console.log('calculate buildings count');
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('calculate buildings count');
+    }
 
     if (buildingsTimestamp === null) {
       return 0;
@@ -555,5 +614,181 @@ export const updateClusteredFeatures = createSelector(
       map.getView().getResolution(),
       requiredLabels
     );
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    string,
+ *    function(FloorOptions): string
+ * >}
+ */
+export const getSelectedFloorCode = createSelector(
+  [getSelectedFloor],
+  (selectedFloor) => {
+    return selectedFloor.locationCode || null;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    number,
+ *    function(FloorOptions): number
+ * >}
+ */
+export const getSelectedFloorLayerId = createSelector(
+  [getSelectedFloor],
+  (selectedFloor) => {
+    return selectedFloor.floorLayerId || null;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    Array<string>,
+ *    function(number): Array<string>
+ * >}
+ */
+export const getActiveFloors = createSelector(
+  [getSelectedFloorLayerId],
+  (selectedFloorLayerId) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing active floors');
+    }
+    return [];
+    // if (!selectedFloorLayerId) {
+    //   return [];
+    // }
+
+    // var floors = munimap.floor.STORE.getFeatures();
+    // var active = floors.filter(function(floor) {
+    //   var layerId = /**@type {number}*/ (floor.get('vrstvaId'));
+    //   if (layerId === selectedFloorLayerId) {
+    //     return true;
+    //   }
+    //   return false;
+    // });
+    // codes = active.map(function(floor) {
+    //   return /**@type {string}*/ (floor.get('polohKod'));
+    // });
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    boolean,
+ *    function(number): boolean
+ * >}
+ */
+export const isIndoorResolution = createSelector(
+  [getResolution],
+  (resolution) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing whether is indoor resolution');
+    }
+    return (
+      munimap_utils.isDef(resolution) &&
+      munimap_range.contains(
+        munimap_floor.RESOLUTION,
+        /**@type {number}*/ (resolution)
+      )
+    );
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    StyleFunction,
+ *    function(boolean, string): StyleFunction
+ * >}
+ */
+export const getStyleForBuildingLayer = createSelector(
+  [isIndoorResolution, getSelectedFloorCode],
+  (showIndoor, selectedFloorCode) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('STYLE - computing style for building');
+    }
+
+    const selectedFloor = showIndoor ? selectedFloorCode : null;
+    const styleFce = (feature, res) => {
+      const showSelected =
+        showIndoor && munimap_floor.selectedFloorFilter(feature, selectedFloor);
+      const style = styleFunction(feature, res, showSelected);
+      return style;
+    };
+
+    return styleFce;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    ol.Extent,
+ *    function(number, ol.Coordinate, number, ol.Size): ol.Extent
+ * >}
+ */
+export const getExtent = createSelector(
+  [getResolution, getCenter, getRotation, getSize],
+  (resolution, center, rotation, size) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing extent');
+    }
+
+    if (!size) {
+      return;
+    }
+    return ol_extent.getForViewAndSize(center, resolution, rotation, size);
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    StyleFunction,
+ *    function(ol.Extent, string, boolean): StyleFunction
+ * >}
+ */
+export const getBuildingLabelFunction = createSelector(
+  [getExtent, getLang, getRequiredLabels],
+  (extent, lang, requiredLabels) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('STYLE - computing building label function');
+    }
+    return munimap_utils.partial(labelFunction, {lang, requiredLabels, extent});
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    StyleFunction,
+ *    function(boolean, string, StyleFunction): StyleFunction
+ * >}
+ */
+export const getStyleForBuildingLabelLayer = createSelector(
+  [isIndoorResolution, getSelectedFloorCode, getBuildingLabelFunction],
+  (showIndoor, selectedFloorCode, buildingLabelFunction) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('STYLE - computing style for building label');
+    }
+    const selectedFloor = showIndoor ? selectedFloorCode : null;
+    const styleFce = (feature, res) => {
+      const showSelected =
+        showIndoor && munimap_floor.selectedFloorFilter(feature, selectedFloor);
+      if (showSelected) {
+        return null;
+      } else {
+        const style = buildingLabelFunction(feature, res);
+        return style;
+      }
+    };
+
+    return styleFce;
   }
 );

@@ -5,17 +5,17 @@
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_building from '../feature/building.js';
 import * as munimap_customMarker from '../feature/marker.custom.js';
-import * as munimap_floor from '../feature/floor.js';
-import * as munimap_layerPropName from '../layer/layer.js';
-import * as munimap_marker from '../feature/marker.js';
-import * as munimap_range from '../utils/range.js';
 import * as munimap_store from '../utils/store.js';
 import * as munimap_utils from '../utils/utils.js';
+import * as slctr from '../redux/selector.js';
 import Feature from 'ol/Feature';
 import VectorLayer from 'ol/layer/Vector';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
-import {ORDER as FRAGMENT_ORDER} from './style.fragment.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
+import {
+  isLabelLayer as isBuildingLabelLayer,
+  isLayer as isBuildingLayer,
+} from '../layer/building.js';
 
 /**
  * @typedef {import("./marker").LabelFunction} MarkerLabelFunction
@@ -29,6 +29,7 @@ import {Fill, Stroke, Style, Text} from 'ol/style';
  * @typedef {import("ol/Feature").FeatureLike} ol.FeatureLike
  * @typedef {import("ol/geom/Geometry").default} ol.geom.Geometry
  * @typedef {import("../utils/geom.js").GeometryFunction} GeometryFunction
+ * @typedef {import("../conf.js").State} State
  */
 
 /**
@@ -42,8 +43,7 @@ import {Fill, Stroke, Style, Text} from 'ol/style';
 
 /**
  * @typedef {Object} StyleFunctionOptions
- * @property {ol.Map}  map //?
- * @property {Array<Feature>}  markers //?
+ * @property {Array<Feature>}  [markers]
  * }}
  */
 
@@ -185,105 +185,28 @@ const alignTextToRows = (parts, separator) => {
 };
 
 /**
- * @param {ol.Map} map map
- * @param {FragmentLayerOptions} fragments fragments
- * @return {ol.StyleFunction} style function
+ * Refresh style for layer.
+ * @param {State} state state
+ * @param {Array<ol.layer.Base>|ol.layer.Base} layers layers
  */
-const createFromFragments = (map, fragments) => {
-  const resolution = map.getView().getResolution();
-  const showIndoor =
-    munimap_utils.isDef(resolution) &&
-    munimap_range.contains(
-      munimap_floor.RESOLUTION,
-      /**@type {number}*/ (resolution)
-    );
-
-  let selectedFloor;
-  let activeFloors;
-  if (showIndoor) {
-    // const selectedFloorOpts = munimap.getProps(map).selectedFloor;
-    // selectedFloor = selectedFloorOpts ? selectedFloorOpts.locationCode : null;
-    // activeFloors = munimap_floor.getActiveFloors(map);
-  } else {
-    selectedFloor = null;
-    activeFloors = [];
+const refresh = (state, layers) => {
+  let lyrs = layers;
+  if (!Array.isArray(lyrs)) {
+    lyrs = [lyrs];
   }
 
-  /**
-   * @param {ol.FeatureLike} feature feature
-   * @param {number} resolution resolution
-   * @return {Style|Array.<Style>} style
-   */
-  const styleFce = function (feature, resolution) {
-    munimap_assert.assertInstanceof(feature, Feature);
-
-    /**
-     * @param {FragmentOptions} fragment fragment
-     * @return {boolean|undefined} result
-     */
-    const testFragment = (fragment) => {
-      munimap_assert.assertInstanceof(feature, Feature);
-      if (fragment) {
-        return fragment.filter(
-          /**@type {Feature}*/ (feature),
-          selectedFloor,
-          activeFloors
-        );
-      }
-      return undefined;
-    };
-
+  lyrs.forEach((layer) => {
     let style;
-    if (showIndoor) {
-      FRAGMENT_ORDER.find((frag) => {
-        const fragment = fragments[frag];
-        if (testFragment(fragment)) {
-          style = fragment.style;
-          return true;
-        }
-        return false;
-      });
-    } else {
-      const fragment = fragments['outdoorFeature'];
-      if (testFragment(fragment)) {
-        style = fragment.style;
-      }
+    if (isBuildingLayer(layer)) {
+      style = slctr.getStyleForBuildingLayer(state);
+    } else if (isBuildingLabelLayer(layer)) {
+      style = slctr.getStyleForBuildingLabelLayer(state);
     }
-    if (style && munimap_utils.isFunction(style)) {
-      const opts = {
-        map: map,
-        markers: munimap_marker.getStore(map).getFeatures(),
-      };
-      return /** @type {StyleFunction}*/ (style)(opts, feature, resolution);
+
+    if (style && layer instanceof VectorLayer) {
+      layer.setStyle(style);
     }
-    return /** @type {Style|Array<Style>}*/ (style);
-  };
-
-  return styleFce;
-};
-
-/**
- * @param {ol.Map} map map
- * @param {ol.layer.Base} layer layer
- */
-const refreshFromFragments = (map, layer) => {
-  const refreshStyle = layer.get(munimap_layerPropName.REFRESH_STYLE);
-  if (munimap_utils.isDef(refreshStyle) && refreshStyle) {
-    const fragments =
-      /**@type {FragmentLayerOptions}*/
-      (layer.get(munimap_layerPropName.STYLE_FRAGMENTS));
-    const style = createFromFragments(map, fragments);
-    munimap_assert.assertInstanceof(layer, VectorLayer);
-    /**@type {VectorLayer} */ (layer).setStyle(style);
-  }
-};
-
-/**
- * @param {ol.Map} map map
- */
-const refreshAllFromFragments = (map) => {
-  const layers = map.getLayers();
-  layers.forEach((layer) => refreshFromFragments(map, layer));
+  });
 };
 
 /**
@@ -443,6 +366,6 @@ export {
   getTextStyleWithOffsetY,
   alignTextToRows,
   getDefaultLabel,
-  refreshFromFragments,
+  refresh,
   getLabelHeight,
 };

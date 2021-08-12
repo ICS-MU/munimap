@@ -7,7 +7,7 @@ import * as munimap_utils from './utils/utils.js';
 import {EsriJSON} from 'ol/format';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
 import {loadProcessor as complexLoadProcessor} from './feature/complex.js';
-import {getBuildingStore} from './view/building.js';
+import {getStore as getBuildingStore} from './view/building.js';
 import {loadProcessor as unitLoadProcessor} from './feature/unit.js';
 
 /**

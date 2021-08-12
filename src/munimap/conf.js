@@ -7,7 +7,14 @@
  * @typedef {import("ol/layer").Vector} ol.layer.Vector
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/size").Size} ol.size.Size
+ * @typedef {import("./feature/floor.js").Options} FloorOptions
  */
+
+/**
+ * Whether to log selectors to console.
+ * @type {boolean}
+ */
+export const ENABLE_SELECTOR_LOGS = true;
 
 /**
  * @type {string}
@@ -52,11 +59,13 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {boolean} initMap
  * @property {ol.coordinate.Coordinate} center
  * @property {number} resolution
+ * @property {number} rotation
  * @property {string} baseMap,
  * @property {RequiredOptions} requiredOpts
  * @property {number} markersTimestamp
  * @property {number} zoomToTimestamp
  * @property {number} buildingsTimestamp
+ * @property {FloorOptions} selectedFloor
  */
 
 /**
@@ -72,6 +81,7 @@ export const INITIAL_STATE = {
   initMap: null,
   center: null,
   resolution: null,
+  rotation: 0,
   requiredOpts: {
     target: null,
     markerIds: [],
@@ -93,4 +103,8 @@ export const INITIAL_STATE = {
   zoomToTimestamp: null,
   baseMap: null,
   buildingsTimestamp: null,
+  selectedFloor: {
+    locationCode: null,
+    floorLayerId: null,
+  },
 };

@@ -9,15 +9,16 @@ import {tile as ol_loadingstrategy_tile} from 'ol/loadingstrategy';
 import {createXYZ as ol_tilegrid_createXYZ} from 'ol/tilegrid';
 
 /**
- * @typedef {import("ol/source/Vector").default} ol.source.Vector
- */
-
-/**
- * @type {ol.source.Vector}
+ * @type {VectorSource}
  */
 let BUILDING_STORE;
 
-const createBuildingStore = (callback) => {
+/**
+ * Create store for buildings.
+ * @param {Function} callback callback
+ * @return {VectorSource} store
+ */
+const createStore = (callback) => {
   BUILDING_STORE = new VectorSource({
     strategy: ol_loadingstrategy_tile(
       ol_tilegrid_createXYZ({
@@ -37,11 +38,11 @@ const createBuildingStore = (callback) => {
 };
 
 /**
- * Create or get Building source.
+ * Get building store.
  * @return {VectorSource} store
  */
-const getBuildingStore = () => {
+const getStore = () => {
   return BUILDING_STORE;
 };
 
-export {createBuildingStore, getBuildingStore};
+export {createStore, getStore};

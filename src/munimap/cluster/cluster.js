@@ -1,15 +1,12 @@
 /**
  * @module cluster/cluster
  */
-// import * as munimap_assert from '../assert/assert.js';
 import * as munimap_building from '../feature/building.js';
 import * as munimap_marker from '../feature/marker.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
-// import ClusterSource from 'ol/source/Cluster';
-// import VectorLayer from 'ol/layer/Vector';
 import {Feature} from 'ol';
-import {getBuildingStore} from '../view/building.js';
+import {getStore as getBuildingStore} from '../view/building.js';
 
 /**
  * @typedef {import("../utils/range").RangeInterface} RangeInterface
