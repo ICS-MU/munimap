@@ -10,7 +10,7 @@ import {EsriJSON} from 'ol/format';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
 import {getStore as getBuildingStore} from './view/building.js';
 import {getStore as getComplexStore} from './view/complex.js';
-import {loadProcessor as unitLoadProcessor} from './feature/unit.js';
+import {getStore as getUnitStore} from './view/unit.js';
 
 /**
  * @typedef {import("./feature/feature.js").TypeOptions} TypeOptions
@@ -51,7 +51,6 @@ import {loadProcessor as unitLoadProcessor} from './feature/unit.js';
  * @property {Array<number>} ids
  * @property {Processor} [processor]
  */
-
 
 /**
  * @typedef {Object} FeaturesForMapOptions
@@ -417,36 +416,6 @@ const featuresByCode = async (options) => {
 };
 
 /**
- * @param {ProcessorOptions} options opts
- * @return {Promise<ProcessorOptions>} promise
- * @protected
- */
-const complexLoadProcessorWithUnits = async (options) => {
-  const newComplexes = options.new;
-  const complexIdsToLoad = newComplexes.map((complex) => {
-    return complex.get(munimap_complex.ID_FIELD_NAME);
-  });
-
-  if (complexIdsToLoad.length) {
-    const units = await munimap_unit.loadByHeadquartersComplexIds(
-      complexIdsToLoad
-    );
-    newComplexes.forEach((complex) => {
-      const complexUnits = units.filter((unit) => {
-        return (
-          unit.get('areal_sidelni_id') ===
-          complex.get(munimap_complex.ID_FIELD_NAME)
-        );
-      });
-      complex.set(munimap_complex.UNITS_FIELD_NAME, complexUnits);
-    });
-    return options;
-  } else {
-    return options;
-  }
-};
-
-/**
  * @param {ComplexByIdsOptions} options opts
  * @return {Promise<Array<ol.Feature>>} complexes
  * @protected
@@ -460,6 +429,122 @@ const complexByIds = async (options) => {
     where: 'inetId IN (' + options.ids.join() + ')',
     processor: options.processor,
   });
+};
+
+/**
+ * @param {FeaturesForMapOptions} options options
+ * @param {ol.extent.Extent} extent extent
+ * @param {number} resolution resolution
+ * @param {ol.proj.Projection} projection projection
+ * @return {Promise<Array<ol.Feature>>} promise of features contained
+ * in server response
+ * @this {ol.source.Vector}
+ */
+const buildingFeaturesForMap = async (
+  options,
+  extent,
+  resolution,
+  projection
+) => {
+  const buildings = await featuresForMap(
+    options,
+    extent,
+    resolution,
+    projection
+  );
+
+  if (options.callback) {
+    options.callback();
+  }
+  return buildings;
+};
+
+/**
+ * @param {string} where where
+ * @return {Promise<Array<ol.Feature>>} promise of features contained
+ * in server response
+ * @protected
+ */
+const loadUnits = async (where) => {
+  return features({
+    source: getUnitStore(),
+    type: munimap_unit.getType(),
+    method: 'POST',
+    returnGeometry: false,
+    where: where,
+  });
+};
+
+/**
+ * @param {Array<number>} buildingIds ids
+ * @return {Promise<Array<ol.Feature>>} promise of features contained
+ * in server response
+ */
+const loadUnitsByHeadquartersIds = async (buildingIds) => {
+  const where = 'budova_sidelni_id IN (' + buildingIds.join() + ')';
+  return loadUnits(where);
+};
+
+/**
+ * @param {Array<number>} complexIds complex ids
+ * @return {Promise<Array<ol.Feature>>} promise of features contained
+ * in server response
+ */
+const loadUnitsByHeadquartersComplexIds = async (complexIds) => {
+  const where = 'areal_sidelni_id IN (' + complexIds.join() + ')';
+  return loadUnits(where);
+};
+
+/**
+ * @param {ProcessorOptions} options opts
+ * @return {Promise<ProcessorOptions>} opts
+ */
+const unitLoadProcessor = async (options) => {
+  const newBuildings = options.new;
+  const buildingIdsToLoad = newBuildings.map((building) => {
+    return building.get('inetId');
+  });
+
+  if (buildingIdsToLoad.length) {
+    const units = await loadUnitsByHeadquartersIds(buildingIdsToLoad);
+    newBuildings.forEach((building) => {
+      const buildingUnits = units.filter((unit) => {
+        return unit.get('budova_sidelni_id') === building.get('inetId');
+      });
+      building.set(munimap_building.UNITS_FIELD_NAME, buildingUnits);
+    });
+    return options;
+  } else {
+    return options;
+  }
+};
+
+/**
+ * @param {ProcessorOptions} options opts
+ * @return {Promise<ProcessorOptions>} promise
+ * @protected
+ */
+const complexLoadProcessorWithUnits = async (options) => {
+  const newComplexes = options.new;
+  const complexIdsToLoad = newComplexes.map((complex) => {
+    return complex.get(munimap_complex.ID_FIELD_NAME);
+  });
+
+  if (complexIdsToLoad.length) {
+    const units = await loadUnitsByHeadquartersComplexIds(complexIdsToLoad);
+    newComplexes.forEach((complex) => {
+      const complexUnits = units.filter((unit) => {
+        return (
+          unit.get('areal_sidelni_id') ===
+          complex.get(munimap_complex.ID_FIELD_NAME)
+        );
+      });
+      complex.set(munimap_complex.UNITS_FIELD_NAME, complexUnits);
+    });
+    return options;
+  } else {
+    return options;
+  }
 };
 
 /**
@@ -526,34 +611,6 @@ const buildingLoadProcessor = async (options) => {
     );
   });
   return result[0];
-};
-
-/**
- * @param {FeaturesForMapOptions} options options
- * @param {ol.extent.Extent} extent extent
- * @param {number} resolution resolution
- * @param {ol.proj.Projection} projection projection
- * @return {Promise<Array<ol.Feature>>} promise of features contained
- * in server response
- * @this {ol.source.Vector}
- */
-const buildingFeaturesForMap = async (
-  options,
-  extent,
-  resolution,
-  projection
-) => {
-  const buildings = await featuresForMap(
-    options,
-    extent,
-    resolution,
-    projection
-  );
-
-  if (options.callback) {
-    options.callback();
-  }
-  return buildings;
 };
 
 /**

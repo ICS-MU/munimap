@@ -18,6 +18,7 @@ import {createStore as createComplexStore} from './view/complex.js';
 import {create as createMarkerLyr} from './layer/marker.js';
 import {createStore as createMarkerStore} from './view/marker.js';
 import {create as createPubtranStopLayer} from './layer/pubtran.stop.js';
+import {createStore as createUnitStore} from './view/unit.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
@@ -338,6 +339,7 @@ const createFeatureStores = (reduxStore) => {
   createBuildingStore(callbackFn(actions.buildings_loaded()));
   createMarkerStore();
   createComplexStore();
+  createUnitStore();
 };
 
 /**

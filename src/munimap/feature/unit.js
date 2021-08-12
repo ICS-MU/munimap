@@ -4,9 +4,7 @@
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_building from './building.js';
 import * as munimap_lang from '../lang/lang.js';
-import * as munimap_load from '../load.js';
 import * as munimap_utils from '../utils/utils.js';
-import VectorSource from 'ol/source/Vector';
 import {MUNIMAP_URL} from '../conf.js';
 
 /**
@@ -23,20 +21,23 @@ import {MUNIMAP_URL} from '../conf.js';
 const PRIORITY_FIELD_NAME = 'priorita';
 
 /**
- * @type {ol.source.Vector}
- * @const
+ * @type {TypeOptions}
  */
-const STORE = new VectorSource();
+let TYPE;
 
 /**
- * @type {TypeOptions}
- * @const
+ * @return {TypeOptions} Type
  */
-const TYPE = {
-  primaryKey: 'OBJECTID',
-  serviceUrl: MUNIMAP_URL,
-  layerId: 6,
-  name: 'unit',
+const getType = () => {
+  if (!TYPE) {
+    TYPE = {
+      primaryKey: 'OBJECTID',
+      serviceUrl: MUNIMAP_URL,
+      layerId: 6,
+      name: 'unit',
+    };
+  }
+  return TYPE;
 };
 
 /**
@@ -47,66 +48,6 @@ const getPriority = (unit) => {
   const result = unit.get(PRIORITY_FIELD_NAME);
   munimap_assert.assertNumber(result);
   return result;
-};
-
-/**
- * @param {string} where where
- * @return {Promise<Array<ol.Feature>>} promise of features contained
- * in server response
- * @protected
- */
-const load = async (where) => {
-  return munimap_load.features({
-    source: STORE,
-    type: TYPE,
-    method: 'POST',
-    returnGeometry: false,
-    where: where,
-  });
-};
-
-/**
- * @param {Array<number>} buildingIds ids
- * @return {Promise<Array<ol.Feature>>} promise of features contained
- * in server response
- */
-const loadByHeadquartersIds = async (buildingIds) => {
-  const where = 'budova_sidelni_id IN (' + buildingIds.join() + ')';
-  return load(where);
-};
-
-/**
- * @param {Array<number>} complexIds complex ids
- * @return {Promise<Array<ol.Feature>>} promise of features contained
- * in server response
- */
-const loadByHeadquartersComplexIds = async (complexIds) => {
-  const where = 'areal_sidelni_id IN (' + complexIds.join() + ')';
-  return load(where);
-};
-
-/**
- * @param {ProcessorOptions} options opts
- * @return {Promise<ProcessorOptions>} opts
- */
-const loadProcessor = async (options) => {
-  const newBuildings = options.new;
-  const buildingIdsToLoad = newBuildings.map((building) => {
-    return building.get('inetId');
-  });
-
-  if (buildingIdsToLoad.length) {
-    const units = await loadByHeadquartersIds(buildingIdsToLoad);
-    newBuildings.forEach((building) => {
-      const buildingUnits = units.filter((unit) => {
-        return unit.get('budova_sidelni_id') === building.get('inetId');
-      });
-      building.set(munimap_building.UNITS_FIELD_NAME, buildingUnits);
-    });
-    return options;
-  } else {
-    return options;
-  }
 };
 
 /**
@@ -209,12 +150,10 @@ const getTitleParts = (units, lang) => {
 
 export {
   getPriority,
-  loadByHeadquartersIds,
-  loadByHeadquartersComplexIds,
-  loadProcessor,
   getAbbr,
   getTitle,
   getTitleParts,
   getFacultiesOfBuildings,
   getUnitsOfBuildings,
+  getType,
 };
