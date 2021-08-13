@@ -70,63 +70,16 @@ const REFRESH_STYLE = 'refreshStyleOnFloorChange';
 const TYPE = 'type';
 
 /**
- * @param {ol.Map} map map
- * @param {string} lang lang
- * @param {boolean} showLabels whether show labels for MU objects
- *
- * @return {Array.<ol.layer.Vector>} layers
- */
-const getDefaultLayers = (map, lang, showLabels) => {
-  const result = [];
-  const buildings = munimap_layer_building.create();
-  // const rooms = munimap.room.layer.create();
-  // const activeRooms = munimap.room.layer.createActive();
-  // const doors = munimap.door.layer.create();
-  // const poi = munimap.poi.layer.create();
-  // const roomLabels = munimap.room.layer.createLabel(map);
-  const buildingLabels = munimap_layer_building.createLabel(lang, showLabels);
-  result.push(
-    buildings,
-    // rooms,
-    // activeRooms,
-    // doors,
-    // poi,
-    // roomLabels,
-    buildingLabels
-  );
-  if (showLabels === false) {
-    return result;
-  }
-  const complexes = munimap_layer_complex.create();
-  result.push(complexes);
-  return result;
-};
-
-/**
- * @param {DefaultLayersPropsOptions} options opts
+ * @param {Array.<ol.layer.Vector>} layers layers
  * @protected
  */
-const setDefaultLayersProps = (options) => {
-  const layers = options.layers;
-  const markersAwareOpts = options.markersAwareOptions;
-  const map = markersAwareOpts.map || null;
-
+const setDefaultLayersProps = (layers) => {
   // let activeRoomsStore;
 
   layers.forEach((layer) => {
     const layerId = layer.get('id');
 
     switch (layerId) {
-      case munimap_layer_complex.LAYER_ID:
-        layer.setStyle(
-          munimap_utils.partial(
-            munimap_style_complex.styleFunction,
-            markersAwareOpts
-          )
-        );
-        break;
-      case munimap_layer_building.LAYER_ID:
-        break;
       // case munimap.room.DEFAULT_LAYER_ID:
       //   layer.once('precompose', munimap.room.style.setCorridorStyle);
       //   break;
@@ -157,6 +110,40 @@ const setDefaultLayersProps = (options) => {
   });
 };
 
+/**
+ * @param {string} lang lang
+ * @param {boolean} showLabels whether show labels for MU objects
+ *
+ * @return {Array.<ol.layer.Vector>} layers
+ */
+const getDefaultLayers = (lang, showLabels) => {
+  const result = [];
+  const buildings = munimap_layer_building.create();
+  // const rooms = munimap.room.layer.create();
+  // const activeRooms = munimap.room.layer.createActive();
+  // const doors = munimap.door.layer.create();
+  // const poi = munimap.poi.layer.create();
+  // const roomLabels = munimap.room.layer.createLabel(map);
+  const buildingLabels = munimap_layer_building.createLabel(lang, showLabels);
+  result.push(
+    buildings,
+    // rooms,
+    // activeRooms,
+    // doors,
+    // poi,
+    // roomLabels,
+    buildingLabels
+  );
+  if (showLabels === false) {
+    return result;
+  }
+  const complexes = munimap_layer_complex.create();
+  result.push(complexes);
+
+  setDefaultLayersProps(result);
+  return result;
+};
+
 export {
   CLICK_HANDLER,
   IS_CLICKABLE,
@@ -165,5 +152,4 @@ export {
   REFRESH_STYLE,
   TYPE,
   getDefaultLayers,
-  setDefaultLayersProps,
 };

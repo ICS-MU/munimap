@@ -15,8 +15,8 @@ import {CREATED_MAPS, REQUIRED_CUSTOM_MARKERS} from '../create.js';
 import {ENABLE_SELECTOR_LOGS} from '../conf.js';
 import {styleFunction as complexStyleFunction} from '../style/complex.js';
 import {defaults as control_defaults} from 'ol/control';
+import {createLayer as createBasemapLayer} from '../layer/basemap.js';
 import {createSelector} from 'reselect';
-import {createTileLayer} from '../view.js';
 import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
 import {getStore as getBuildingStore} from '../view/building.js';
 import {getStore as getMarkerStore} from '../view/marker.js';
@@ -288,7 +288,7 @@ export const getBasemapLayer = createSelector(
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing baseMapLayer');
     }
-    return createTileLayer(basemapLayerId, lang);
+    return createBasemapLayer(basemapLayerId, lang);
   }
 );
 

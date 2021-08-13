@@ -2,6 +2,14 @@
  * @module layer/basemap
  */
 
+import * as munimap_lang from '../lang/lang.js';
+import OSM from 'ol/source/OSM';
+import TileLayer from 'ol/layer/Tile';
+import XYZ from 'ol/source/XYZ';
+import {assert} from '../assert/assert.js';
+import {isDefAndNotNull} from '../utils/utils.js';
+import {setStyle as setBaseMapStyle} from '../style/basemap.js';
+
 /**
  *
  * @enum {string}
@@ -56,4 +64,53 @@ const getPairedBasemap = (id) => {
   }
 };
 
-export {BASEMAPS, isArcGISBasemap, isOSMBasemap, isBWBasemap, getPairedBasemap};
+/**
+ * @param {string} basemapId basemap id
+ * @param {string=} lang lang
+ * @return {TileLayer} layer
+ */
+const createLayer = (basemapId, lang) => {
+  let source;
+
+  if (basemapId === BASEMAPS.ARCGIS || basemapId === BASEMAPS.ARCGIS_BW) {
+    const esriAttribution =
+      '© <a href="http://help.arcgis.com/' +
+      'en/communitymaps/pdf/WorldTopographicMap_Contributors.pdf"' +
+      ' target="_blank">Esri</a>';
+
+    source = new XYZ({
+      url:
+        'https://server.arcgisonline.com/ArcGIS/rest/services/' +
+        'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+      attributions: [esriAttribution],
+      crossOrigin: null,
+      maxZoom: 19,
+    });
+  } else if (basemapId === BASEMAPS.OSM || basemapId === BASEMAPS.OSM_BW) {
+    assert(isDefAndNotNull(lang), 'Language must be set.');
+    const osmAttribution = munimap_lang.getMsg(
+      munimap_lang.Translations.OSM_ATTRIBUTION_HTML,
+      lang
+    );
+
+    source = new OSM({
+      attributions: [osmAttribution],
+      crossOrigin: null,
+      maxZoom: 18,
+    });
+  }
+
+  const layer = new TileLayer({source});
+  layer.set('id', basemapId);
+  setBaseMapStyle(layer, basemapId);
+  return layer;
+};
+
+export {
+  BASEMAPS,
+  isArcGISBasemap,
+  isOSMBasemap,
+  isBWBasemap,
+  getPairedBasemap,
+  createLayer,
+};

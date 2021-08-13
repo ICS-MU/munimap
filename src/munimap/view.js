@@ -2,23 +2,22 @@
  * @module view
  */
 import * as actions from './redux/action.js';
-import * as munimap_assert from './assert/assert.js';
 import * as munimap_lang from './lang/lang.js';
-import * as munimap_layer from './layer/layer.js';
-import * as munimap_utils from './utils/utils.js';
-import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
-import XYZ from 'ol/source/XYZ';
 import createControls from './control/mapcontrolsview.js';
-import {BASEMAPS} from './layer/basemap.js';
-import {RESOLUTION_COLOR, refresh as refreshStyle} from './style/style.js';
 import {createStore as createBuildingStore} from './view/building.js';
-import {create as createClusterLyr} from './layer/cluster.js';
+import {create as createClusterLayer} from './layer/cluster.js';
 import {createStore as createComplexStore} from './view/complex.js';
-import {create as createMarkerLyr} from './layer/marker.js';
+import {create as createMarkerLayer} from './layer/marker.js';
 import {createStore as createMarkerStore} from './view/marker.js';
-import {create as createPubtranStopLayer} from './layer/pubtran.stop.js';
+import {create as createPubtranLayer} from './layer/pubtran.stop.js';
 import {createStore as createUnitStore} from './view/unit.js';
+import {getDefaultLayers} from './layer/layer.js';
+import {
+  refreshLabelStyle as refreshBuildingLabelStyle,
+  refreshStyle as refreshBuildingStyle,
+} from './view/building.js';
+import {refreshStyle as refreshComplexStyle} from './view/complex.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
@@ -113,82 +112,6 @@ const toggleLoadingMessage = (add, target, lang) => {
 };
 
 /**
- * @param {TileLayer} raster raster
- * @param {string} baseMap options
- */
-const setBaseMapStyle = (raster, baseMap) => {
-  raster.on('prerender', (evt) => {
-    const ctx = evt.context;
-    ctx.fillStyle = '#dddddd';
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-    //set opacity of the layer according to current resolution
-    const resolution = evt.frameState.viewState.resolution;
-    const resColor = RESOLUTION_COLOR.find((obj, i, arr) => {
-      return resolution > obj.resolution || i === arr.length - 1;
-    });
-    raster.setOpacity(resColor.opacity);
-  });
-  if (
-    (baseMap === BASEMAPS.OSM_BW || baseMap === BASEMAPS.ARCGIS_BW) &&
-    !munimap_utils.isUserAgentIE()
-  ) {
-    raster.on('postrender', (evt) => {
-      const ctx = evt.context;
-      ctx.globalCompositeOperation = 'color';
-      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-      ctx.fillStyle = '#000000';
-      ctx.globalCompositeOperation = 'source-over';
-    });
-  }
-};
-
-/**
- * @param {string} basemapId basemap id
- * @param {string=} lang lang
- * @return {TileLayer} layer
- */
-const createTileLayer = (basemapId, lang) => {
-  let source;
-
-  if (basemapId === BASEMAPS.ARCGIS || basemapId === BASEMAPS.ARCGIS_BW) {
-    const esriAttribution =
-      '© <a href="http://help.arcgis.com/' +
-      'en/communitymaps/pdf/WorldTopographicMap_Contributors.pdf"' +
-      ' target="_blank">Esri</a>';
-
-    source = new XYZ({
-      url:
-        'https://server.arcgisonline.com/ArcGIS/rest/services/' +
-        'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
-      attributions: [esriAttribution],
-      crossOrigin: null,
-      maxZoom: 19,
-    });
-  } else if (basemapId === BASEMAPS.OSM || basemapId === BASEMAPS.OSM_BW) {
-    munimap_assert.assert(
-      munimap_utils.isDefAndNotNull(lang),
-      'Language must be set.'
-    );
-    const osmAttribution = munimap_lang.getMsg(
-      munimap_lang.Translations.OSM_ATTRIBUTION_HTML,
-      lang
-    );
-
-    source = new OSM({
-      attributions: [osmAttribution],
-      crossOrigin: null,
-      maxZoom: 18,
-    });
-  }
-
-  const layer = new TileLayer({source});
-  layer.set('id', basemapId);
-  setBaseMapStyle(layer, basemapId);
-  return layer;
-};
-
-/**
  * Ensure basemap and change it if necessary.
  * @param {TileLayer} basemapLayer basemap
  * @param {ol.Map} map map
@@ -221,72 +144,17 @@ const addCustomControls = (map, store, requiredOpts) => {
 };
 
 /**
- * @param {ol.Map} map map
- * @param {AddLayersOptions} options opts
- * @return {ol.layer.Vector} layer
- */
-const createMarkerLayer = (map, options) => {
-  return createMarkerLyr(map, options);
-};
-
-/**
- * @param {ol.Map} map map
- * @param {AddLayersOptions} options opts
- * @return {Array<ol.layer.Vector>} default layers
- */
-const getDefaultLayers = (map, options) => {
-  const {markerSource, markerLabel, lang, showLabels} = options;
-  const layers = munimap_layer.getDefaultLayers(map, lang, showLabels);
-
-  munimap_layer.setDefaultLayersProps({
-    layers,
-    markersAwareOptions: {
-      map: map,
-      markerSource: markerSource,
-      markerLabel: markerLabel,
-      lang,
-    },
-  });
-
-  return layers;
-};
-
-/**
- * @param {ol.Map} map map
- * @param {AddLayersOptions} options opts
- * @return {ol.layer.Vector} marker cluster layer
- */
-const createClusterLayer = (map, options) => {
-  return createClusterLyr(map, options);
-};
-
-/**
- * @param {string} lang language
- * @return {ol.layer.Vector} layer
- */
-const createPubtranLayer = (lang) => {
-  const pubTranAttribution = munimap_lang.getMsg(
-    munimap_lang.Translations.PUBTRAN_ATTRIBUTION_HTML,
-    lang
-  );
-  const pubTranLayer = createPubtranStopLayer();
-  const pubTranSource = pubTranLayer.getSource();
-  pubTranSource.setAttributions([pubTranAttribution]);
-  return pubTranLayer;
-};
-
-/**
  * Add layers to map.
  * @param {ol.Map} map map
  * @param {AddLayersOptions} options opts
  */
 const addLayers = (map, options) => {
-  const {lang} = options;
+  const {lang, showLabels} = options;
   const markerLayer = createMarkerLayer(map, options);
   options.markerSource = markerLayer.getSource();
 
   const markerClusterLayer = createClusterLayer(map, options);
-  const layers = getDefaultLayers(map, options);
+  const layers = getDefaultLayers(lang, showLabels);
   layers.forEach((layer) => map.addLayer(layer));
 
   if (options.pubTran) {
@@ -348,7 +216,9 @@ const createFeatureStores = (reduxStore) => {
  * @param {Array<ol.layer.Base>} layers layers
  */
 const refreshStyles = (state, layers) => {
-  refreshStyle(state, layers);
+  refreshBuildingStyle(state, layers);
+  refreshBuildingLabelStyle(state, layers);
+  refreshComplexStyle(state, layers);
 };
 
 export {
@@ -356,7 +226,6 @@ export {
   ensureBaseMap,
   addCustomControls,
   addLayers,
-  createTileLayer,
   toggleLoadingMessage,
   createFeatureStores,
   refreshStyles,

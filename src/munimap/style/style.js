@@ -184,33 +184,6 @@ const alignTextToRows = (parts, separator) => {
 };
 
 /**
- * Refresh style for layer.
- * @param {State} state state
- * @param {Array<ol.layer.Base>|ol.layer.Base} layers layers
- */
-const refresh = (state, layers) => {
-  let lyrs = layers;
-  if (!Array.isArray(lyrs)) {
-    lyrs = [lyrs];
-  }
-
-  lyrs.forEach((layer) => {
-    let style;
-    if (isBuildingLayer(layer)) {
-      style = slctr.getStyleForBuildingLayer(state);
-    } else if (isBuildingLabelLayer(layer)) {
-      style = slctr.getStyleForBuildingLabelLayer(state);
-    } else if (isComplexLayer(layer)) {
-      style = slctr.getStyleForComplexLayer(state);
-    }
-
-    if (style && layer instanceof VectorLayer) {
-      layer.setStyle(style);
-    }
-  });
-};
-
-/**
  *
  * @param {Feature|ol.render.Feature} feature feature
  * @param {number} resolution resolution
@@ -367,6 +340,5 @@ export {
   getTextStyleWithOffsetY,
   alignTextToRows,
   getDefaultLabel,
-  refresh,
   getLabelHeight,
 };

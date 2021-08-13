@@ -1,7 +1,7 @@
 /**
  * @module layer/pubtranstop
  */
-
+import * as munimap_lang from '../lang/lang.js';
 import * as munimap_pubtran_stop from '../feature/pubtran.stop.js';
 import PubtranStopStyleFunction from '../style/pubtran.stop.js';
 import VectorLayer from 'ol/layer/Vector';
@@ -17,10 +17,15 @@ import VectorLayer from 'ol/layer/Vector';
 const LAYER_ID = 'publictransport';
 
 /**
+ * @param {string} lang language
  * @return {VectorLayer} pubtran layer
  */
-export const create = () => {
-  return new VectorLayer(
+export const create = (lang) => {
+  const pubTranAttribution = munimap_lang.getMsg(
+    munimap_lang.Translations.PUBTRAN_ATTRIBUTION_HTML,
+    lang
+  );
+  const pubTranLayer = new VectorLayer(
     /** @type {VectorLayerOptions} */
     ({
       id: LAYER_ID,
@@ -38,4 +43,7 @@ export const create = () => {
       renderOrder: null,
     })
   );
+  const pubTranSource = pubTranLayer.getSource();
+  pubTranSource.setAttributions([pubTranAttribution]);
+  return pubTranLayer;
 };
