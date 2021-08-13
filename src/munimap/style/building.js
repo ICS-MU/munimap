@@ -96,7 +96,6 @@ const FONT_SIZE = 13;
 const BIG_FONT_SIZE = 15;
 
 /**
- * Style function of a style fragment (type munimap.style.Function).
  *
  * @param {ol.Feature} feature feature
  * @param {number} resolution resolution
@@ -306,7 +305,6 @@ const largeScaleLabelFunction = (feature, resolution, extent, lang) => {
 };
 
 /**
- * Style function of a style fragment (type munimap.style.Function).
  * @param {LabelOptions} labelOptions label opts
  * @param {ol.Feature} feature feature
  * @param {number} resolution resolution

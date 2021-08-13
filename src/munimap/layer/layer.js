@@ -67,12 +67,6 @@ const REFRESH_STYLE = 'refreshStyleOnFloorChange';
  * @type {string}
  * @const
  */
-const STYLE_FRAGMENTS = 'styleFragments';
-
-/**
- * @type {string}
- * @const
- */
 const TYPE = 'type';
 
 /**
@@ -169,7 +163,6 @@ export {
   CLEAR_SOURCE,
   REDRAW,
   REFRESH_STYLE,
-  STYLE_FRAGMENTS,
   TYPE,
   getDefaultLayers,
   setDefaultLayersProps,

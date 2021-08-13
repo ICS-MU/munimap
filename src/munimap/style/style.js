@@ -25,8 +25,6 @@ import {isLayer as isComplexLayer} from '../layer/complex.js';
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("ol/").Map} ol.Map
  * @typedef {import("ol/style/Style").StyleFunction} ol.StyleFunction
- * @typedef {import("./style.fragment.js").FragmentLayerOptions} FragmentLayerOptions
- * @typedef {import("./style.fragment.js").FragmentOptions} FragmentOptions
  * @typedef {import("ol/Feature").FeatureLike} ol.FeatureLike
  * @typedef {import("ol/geom/Geometry").default} ol.geom.Geometry
  * @typedef {import("../utils/geom.js").GeometryFunction} GeometryFunction
