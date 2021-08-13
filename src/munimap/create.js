@@ -6,7 +6,7 @@ import * as munimap_assert from './assert/assert.js';
 import * as munimap_interaction from './ui/interaction.js';
 import * as munimap_load from './load.js';
 import * as munimap_utils from './utils/utils.js';
-import * as munimap_view from './view.js';
+import * as munimap_view from './view/view.js';
 import * as slctr from './redux/selector.js';
 import Feature from 'ol/Feature';
 import {INITIAL_STATE, MUNIMAP_PROPS_ID} from './conf.js';

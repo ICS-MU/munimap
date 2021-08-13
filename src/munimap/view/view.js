@@ -1,23 +1,23 @@
 /**
  * @module view
  */
-import * as actions from './redux/action.js';
-import * as munimap_lang from './lang/lang.js';
+import * as actions from '../redux/action.js';
+import * as munimap_lang from '../lang/lang.js';
 import TileLayer from 'ol/layer/Tile';
-import createControls from './control/mapcontrolsview.js';
-import {createStore as createBuildingStore} from './view/building.js';
-import {create as createClusterLayer} from './layer/cluster.js';
-import {createStore as createComplexStore} from './view/complex.js';
-import {create as createMarkerLayer} from './layer/marker.js';
-import {createStore as createMarkerStore} from './view/marker.js';
-import {create as createPubtranLayer} from './layer/pubtran.stop.js';
-import {createStore as createUnitStore} from './view/unit.js';
-import {getDefaultLayers} from './layer/layer.js';
+import createControls from '../control/mapcontrolsview.js';
+import {createStore as createBuildingStore} from './building.js';
+import {create as createClusterLayer} from '../layer/cluster.js';
+import {createStore as createComplexStore} from './complex.js';
+import {create as createMarkerLayer} from '../layer/marker.js';
+import {createStore as createMarkerStore} from './marker.js';
+import {create as createPubtranLayer} from '../layer/pubtran.stop.js';
+import {createStore as createUnitStore} from './unit.js';
+import {getDefaultLayers} from '../layer/layer.js';
 import {
   refreshLabelStyle as refreshBuildingLabelStyle,
   refreshStyle as refreshBuildingStyle,
-} from './view/building.js';
-import {refreshStyle as refreshComplexStyle} from './view/complex.js';
+} from './building.js';
+import {refreshStyle as refreshComplexStyle} from './complex.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
@@ -25,12 +25,12 @@ import {refreshStyle as refreshComplexStyle} from './view/complex.js';
  * @typedef {import("ol/source/Vector").default} ol.source.Vector
  * @typedef {import("ol/layer/Vector").default} ol.layer.Vector
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
- * @typedef {import('./conf.js').RequiredOptions} RequiredOptions
+ * @typedef {import('../conf.js').RequiredOptions} RequiredOptions
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
- * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
+ * @typedef {import("../feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("redux").Store} redux.Store
- * @typedef {import("./conf.js").State} State
- * @typedef {import("./create").MapListenersOptions} MapListenersOptions
+ * @typedef {import("../conf.js").State} State
+ * @typedef {import("../create").MapListenersOptions} MapListenersOptions
  */
 
 /**

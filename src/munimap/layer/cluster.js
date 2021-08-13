@@ -17,7 +17,7 @@ import {updateClusteredFeatures} from '../view/cluster.js';
 /**
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("../layer/layer.js").VectorLayerOptions} VectorLayerOptions
- * @typedef {import("../view.js").AddLayersOptions} AddLayersOptions
+ * @typedef {import("../view/view.js").AddLayersOptions} AddLayersOptions
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import("../conf.js").MapProps} MapProps

@@ -12,7 +12,7 @@ import {getStore} from '../view/marker.js';
 /**
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("../layer/layer.js").VectorLayerOptions} VectorLayerOptions
- * @typedef {import("../view.js").AddLayersOptions} AddLayersOptions
+ * @typedef {import("../view/view.js").AddLayersOptions} AddLayersOptions
  */
 
 /**
