@@ -10,6 +10,8 @@ import {EsriJSON} from 'ol/format';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
 import {getStore as getBuildingStore} from './view/building.js';
 import {getStore as getComplexStore} from './view/complex.js';
+import {getStore as getFloorStore} from './view/floor.js';
+import {getType as getFloorType} from './feature/floor.js';
 import {getStore as getUnitStore} from './view/unit.js';
 
 /**
@@ -629,11 +631,26 @@ const buildingsByCode = async (options) => {
 };
 
 /**
+ *
+ * @param {string} where where
+ * @return {Promise<Array<ol.Feature>>} promise of features contained
+ * in server response
+ */
+const loadFloors = (where) => {
+  return features({
+    source: getFloorStore(),
+    type: getFloorType(),
+    returnGeometry: false,
+    where: where,
+  });
+};
+
+/**
  * @param {Array.<string>|string|undefined} paramValue zoomTo or markers
  * @return {Promise.<Array<ol.Feature>>} promise of features contained
  * in server response
  */
-export const featuresFromParam = async (paramValue) => {
+const featuresFromParam = async (paramValue) => {
   const values = /**@type {Array.<string>}*/ (munimap_utils.isString(paramValue)
     ? [paramValue]
     : paramValue);
@@ -659,4 +676,6 @@ export {
   buildingLoadProcessor,
   featuresForMap,
   features,
+  featuresFromParam,
+  loadFloors,
 };

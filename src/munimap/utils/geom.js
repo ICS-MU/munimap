@@ -225,4 +225,5 @@ export {
   CENTER_GEOMETRY_FUNCTION,
   INTERSECT_CENTER_GEOMETRY_FUNCTION,
   getGeometryCenterOfFeatures,
+  featureExtentIntersect,
 };

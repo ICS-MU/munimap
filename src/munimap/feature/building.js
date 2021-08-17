@@ -12,6 +12,7 @@ import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {MUNIMAP_URL} from '../conf.js';
 import {getStore as getBuildingStore} from '../view/building.js';
+import {getStore as getMarkerStore} from '../view/marker.js';
 
 /**
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
@@ -26,6 +27,7 @@ import {getStore as getBuildingStore} from '../view/building.js';
  * @typedef {import("../load.js").ProcessorOptions} ProcessorOptions
  * @typedef {import("ol/featureloader")} ol.FeatureLoader
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
+ * @typedef {import("../feature/floor.js").Options} FloorOptions
  */
 
 /**
@@ -291,6 +293,44 @@ const isSelected = (building, map) => {
 };
 
 /**
+ * @param {Feature} building building
+ * @param {Array<string>} activeFloorCodes active floor codes
+ * @return {string} floor code
+ */
+const getSelectedFloorCode = (building, activeFloorCodes) => {
+  let floorCode = activeFloorCodes.find((code) => {
+    return code.substr(0, 5) === getLocationCode(building);
+  });
+  if (!floorCode) {
+    const markerSource = getMarkerStore();
+    const markedFeatures = markerSource.getFeatures();
+    if (markedFeatures.length > 0) {
+      const firstMarked = markedFeatures.find((marked) => {
+        // if (munimap.room.isRoom(marked) || munimap.door.isDoor(marked)) {
+        //   var buildingLocCode = munimap.building.getLocationCode(building);
+        //   var locationCode =
+        //   /**@type {string}*/ (marked.get('polohKod'));
+        //   return locationCode.substr(0, 5) === buildingLocCode;
+        // } else {
+        return false;
+        // }
+      });
+
+      if (firstMarked) {
+        const firstMarkedCode = /**@type {string}*/ (firstMarked.get(
+          'polohKod'
+        ));
+        floorCode = firstMarkedCode.substr(0, 8);
+      }
+    }
+    if (!floorCode) {
+      floorCode = building.get('vychoziPodlazi');
+    }
+  }
+  return floorCode;
+};
+
+/**
  * @param {Feature} feature feature
  * @param {string} lang lang
  * @param {number} [opt_resolution] resolution
@@ -416,4 +456,7 @@ export {
   filterHeadquaters,
   filterFacultyHeadquaters,
   getType,
+  getByCode,
+  getLocationCode,
+  getSelectedFloorCode,
 };

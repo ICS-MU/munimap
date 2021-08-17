@@ -55,7 +55,8 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
 
 /**
  * @typedef {Object} State
- * @property {ol.size.Size} map_size
+ * @property {boolean} mapInitialized
+ * @property {ol.size.Size} mapSize
  * @property {boolean} initMap
  * @property {ol.coordinate.Coordinate} center
  * @property {number} resolution
@@ -66,6 +67,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {number} zoomToTimestamp
  * @property {number} buildingsTimestamp
  * @property {FloorOptions} selectedFloor
+ * @property {string} selectedBuilding
  */
 
 /**
@@ -77,7 +79,8 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @type {State}
  */
 export const INITIAL_STATE = {
-  map_size: null,
+  mapInitialized: false,
+  mapSize: null,
   initMap: null,
   center: null,
   resolution: null,
@@ -107,4 +110,5 @@ export const INITIAL_STATE = {
     locationCode: null,
     floorLayerId: null,
   },
+  selectedBuilding: null,
 };

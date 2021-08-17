@@ -13,15 +13,26 @@ import * as ol_proj from 'ol/proj';
 import View from 'ol/View';
 import {CREATED_MAPS, REQUIRED_CUSTOM_MARKERS} from '../create.js';
 import {ENABLE_SELECTOR_LOGS} from '../conf.js';
+import {GeoJSON} from 'ol/format';
+import {MultiPolygon, Polygon} from 'ol/geom';
 import {styleFunction as complexStyleFunction} from '../style/complex.js';
 import {defaults as control_defaults} from 'ol/control';
 import {createLayer as createBasemapLayer} from '../layer/basemap.js';
 import {createSelector} from 'reselect';
-import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
+import {
+  ofFeatures as extentOfFeatures,
+  getBufferValue,
+} from '../utils/extent.js';
+import {featureExtentIntersect} from '../utils/geom.js';
+import {
+  getByCode as getBuildingByCode,
+  getType,
+  hasInnerGeometry,
+} from '../feature/building.js';
 import {getStore as getBuildingStore} from '../view/building.js';
+import {getStore as getFloorStore} from '../view/floor.js';
 import {getStore as getMarkerStore} from '../view/marker.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
-import {getType} from '../feature/building.js';
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
 import {labelFunction, styleFunction} from '../style/building.js';
 
@@ -136,7 +147,7 @@ const getRotation = (state) => state.rotation;
  * @param {State} state state
  * @return {ol.Size} map size
  */
-const getSize = (state) => state.map_size;
+const getSize = (state) => state.mapSize;
 
 /**
  * @type {Reselect.Selector<State, ol.Coordinate>}
@@ -172,6 +183,13 @@ const getResolution = (state) => state.resolution;
  * @return {FloorOptions} selected floor
  */
 const getSelectedFloor = (state) => state.selectedFloor;
+
+/**
+ * @type {Reselect.Selector<State, string>}
+ * @param {State} state state
+ * @return {string} selected floor
+ */
+const getSelectedBuilding = (state) => state.selectedBuilding;
 
 /**
  * createSelector return type Reselect.OutputSelector<S, T, (res: R1) => T>
@@ -654,28 +672,29 @@ export const getSelectedFloorLayerId = createSelector(
  *    function(number): Array<string>
  * >}
  */
-export const getActiveFloors = createSelector(
+export const getActiveFloorCodes = createSelector(
   [getSelectedFloorLayerId],
   (selectedFloorLayerId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing active floors');
     }
-    return [];
-    // if (!selectedFloorLayerId) {
-    //   return [];
-    // }
+    if (!selectedFloorLayerId) {
+      return [];
+    }
 
-    // var floors = munimap.floor.STORE.getFeatures();
-    // var active = floors.filter(function(floor) {
-    //   var layerId = /**@type {number}*/ (floor.get('vrstvaId'));
-    //   if (layerId === selectedFloorLayerId) {
-    //     return true;
-    //   }
-    //   return false;
-    // });
-    // codes = active.map(function(floor) {
-    //   return /**@type {string}*/ (floor.get('polohKod'));
-    // });
+    let codes = [];
+    const floors = getFloorStore().getFeatures();
+    const active = floors.filter((floor) => {
+      const layerId = /**@type {number}*/ (floor.get('vrstvaId'));
+      if (layerId === selectedFloorLayerId) {
+        return true;
+      }
+      return false;
+    });
+    codes = active.map((floor) => {
+      return /**@type {string}*/ (floor.get('polohKod'));
+    });
+    return codes;
   }
 );
 
@@ -816,3 +835,145 @@ export const getStyleForComplexLayer = createSelector([getLang], (lang) => {
 
   return styleFce;
 });
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    ol.Extent,
+ *    function(ol.Extent): ol.Extent
+ * >}
+ */
+export const getReferenceExtent = createSelector([getExtent], (extent) => {
+  if (ENABLE_SELECTOR_LOGS) {
+    console.log('computing reference extent');
+  }
+  return ol_extent.buffer(extent, getBufferValue(extent));
+});
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    boolean,
+ *    function(ol.Extent, string): boolean
+ * >}
+ */
+export const isSelectedInExtent = createSelector(
+  [getReferenceExtent, getSelectedBuilding],
+  (refExtent, selectedBuilding) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing whether selected building in extent');
+    }
+    if (munimap_utils.isDefAndNotNull(selectedBuilding)) {
+      munimap_assert.assertString(selectedBuilding);
+      const building = getBuildingByCode(
+        /**@type {string}*/ (/**@type {unknown}*/ (selectedBuilding))
+      );
+      const geom = building.getGeometry();
+      return geom.intersectsExtent(refExtent);
+    }
+    return false;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    boolean,
+ *    function(number): boolean
+ * >}
+ */
+const isInFloorResolutionRange = createSelector(
+  [getResolution],
+  (resolution) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing whether is resolution in floor resolution. range');
+    }
+    return munimap_range.contains(munimap_floor.RESOLUTION, resolution);
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    ol.Feature,
+ *    function(ol.Extent): ol.Feature
+ * >}
+ */
+const getFeatureForChangingFloor = createSelector(
+  [getReferenceExtent],
+  (refExt) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing feature for changing floor');
+    }
+    let marker = null; //munimap.getProps(map).selectedMarker;
+    if (!marker) {
+      const markers = getMarkerStore().getFeatures();
+      marker = markers.find((f) => {
+        return f.getGeometry()
+          ? f.getGeometry().intersectsExtent(refExt)
+          : null;
+      });
+    }
+    if (marker) {
+      return marker;
+    } else {
+      let selectFeature;
+      let maxArea;
+      const format = new GeoJSON();
+      const buildingStore = getBuildingStore();
+      buildingStore.forEachFeatureIntersectingExtent(refExt, (building) => {
+        if (hasInnerGeometry(building)) {
+          const intersect = featureExtentIntersect(building, refExt, format);
+          const geom = intersect.getGeometry();
+          if (geom instanceof Polygon || geom instanceof MultiPolygon) {
+            const area = geom.getArea();
+            if (!munimap_utils.isDef(maxArea) || area > maxArea) {
+              maxArea = area;
+              selectFeature = building;
+            }
+          }
+        }
+      });
+      return selectFeature || null;
+    }
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    (ol.Feature|undefined),
+ *    function(ol.Size, string, ol.Feature, boolean, boolean):
+ *      (ol.Feature|undefined)
+ * >}
+ */
+export const getFeatureForRefreshingSelected = createSelector(
+  [
+    getSize,
+    getSelectedBuilding,
+    getFeatureForChangingFloor,
+    isInFloorResolutionRange,
+    isSelectedInExtent,
+  ],
+  (
+    size,
+    selectedBuilding,
+    featureForChangingFloor,
+    inFloorResolutionRange,
+    selectedInExtent
+  ) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing feature for refreshing selected');
+    }
+    if (!size) {
+      return;
+    }
+
+    if (!selectedBuilding || !selectedInExtent) {
+      return inFloorResolutionRange ? featureForChangingFloor : null;
+    } else {
+      // munimap.info.refreshElementPosition(map);
+      return;
+    }
+  }
+);

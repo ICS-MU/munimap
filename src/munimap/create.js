@@ -357,7 +357,7 @@ export default (options) => {
 
     const returnFunction = () => {
       const state = store.getState();
-      if (state.map_size !== null) {
+      if (state.mapInitialized === true) {
         unsubscribeInit();
         resolve(map);
       }

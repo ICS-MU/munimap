@@ -3,20 +3,32 @@
  */
 import * as actions from '../redux/action.js';
 import * as munimap_lang from '../lang/lang.js';
+import * as munimap_utils from '../utils/utils.js';
+import * as slctr from '../redux/selector.js';
+import Feature from 'ol/Feature';
 import TileLayer from 'ol/layer/Tile';
 import createControls from '../control/mapcontrolsview.js';
-import {createStore as createBuildingStore} from './building.js';
+import {
+  createStore as createBuildingStore,
+  refreshLabelStyle as refreshBuildingLabelStyle,
+  refreshStyle as refreshBuildingStyle,
+} from './building.js';
 import {create as createClusterLayer} from '../layer/cluster.js';
 import {createStore as createComplexStore} from './complex.js';
+import {createStore as createFloorStore} from './floor.js';
 import {create as createMarkerLayer} from '../layer/marker.js';
 import {createStore as createMarkerStore} from './marker.js';
 import {create as createPubtranLayer} from '../layer/pubtran.stop.js';
 import {createStore as createUnitStore} from './unit.js';
-import {getDefaultLayers} from '../layer/layer.js';
 import {
-  refreshLabelStyle as refreshBuildingLabelStyle,
-  refreshStyle as refreshBuildingStyle,
-} from './building.js';
+  getByCode as getBuildingByCode,
+  getLocationCode as getBuildingLocationCode,
+  getSelectedFloorCode as getSelectedFloorCodeForBuilding,
+  hasInnerGeometry,
+  isBuilding,
+} from '../feature/building.js';
+import {getDefaultLayers} from '../layer/layer.js';
+import {loadFloors} from '../load.js';
 import {refreshStyle as refreshComplexStyle} from './complex.js';
 
 /**
@@ -181,11 +193,7 @@ const attachMapListeners = (map, options) => {
     if (createLimitScrollInfo) {
       createLimitScrollInfo();
     }
-    store.dispatch(
-      actions.map_rendered({
-        map_size: map.getSize(),
-      })
-    );
+    store.dispatch(actions.map_initialized());
   });
 
   map.on('moveend', () => {
@@ -193,8 +201,15 @@ const attachMapListeners = (map, options) => {
       actions.ol_map_view_change({
         center: view.getCenter(),
         resolution: view.getResolution(),
+        mapSize: map.getSize(),
       })
     );
+
+    const feature = slctr.getFeatureForRefreshingSelected(store.getState());
+    if (feature !== undefined) {
+      //null is valid value
+      store.dispatch(actions.change_floor(feature));
+    }
   });
 };
 
@@ -208,6 +223,7 @@ const createFeatureStores = (reduxStore) => {
   createMarkerStore();
   createComplexStore();
   createUnitStore();
+  createFloorStore();
 };
 
 /**
@@ -221,6 +237,93 @@ const refreshStyles = (state, layers) => {
   refreshComplexStyle(state, layers);
 };
 
+/**
+ * @param {Feature|string} featureOrCode feature or location code
+ * @param {State} state state
+ * @return {{
+ *    selectedBuilding: string,
+ *    selectedFloorCode: string
+ * }} result object
+ */
+const getSelectedFromFeatureOrCode = (featureOrCode, state) => {
+  //originally munimap.changeFloor
+  const {selectedBuilding, selectedFloor} = state;
+  const result = {
+    selectedBuilding: undefined,
+    selectedFloorCode: undefined,
+  };
+
+  let feature;
+  let floorCode;
+  let locCode;
+  let building = null;
+  if (featureOrCode instanceof Feature) {
+    feature = featureOrCode;
+    if (isBuilding(feature)) {
+      if (hasInnerGeometry(feature)) {
+        building = feature;
+        floorCode = getSelectedFloorCodeForBuilding(
+          building,
+          slctr.getActiveFloorCodes(state)
+        );
+      }
+    }
+    // else if (munimap.room.isRoom(feature) || munimap.door.isDoor(feature)) {
+    //   locCode = /**@type (string)*/ (feature.get('polohKod'));
+    //   building = munimap.building.getByCode(locCode);
+    //   floorCode = locCode.substr(0, 8);
+    // }
+    else {
+      floorCode = /**@type {string}*/ (feature.get('polohKodPodlazi'));
+      if (floorCode) {
+        building = getBuildingByCode(floorCode);
+      }
+    }
+  } else if (munimap_utils.isString(featureOrCode)) {
+    floorCode = featureOrCode;
+    building = getBuildingByCode(floorCode);
+  }
+
+  if (building) {
+    locCode = getBuildingLocationCode(building);
+    if (selectedBuilding !== locCode) {
+      result.selectedBuilding = locCode;
+      // building.changed();
+      // munimap.info.setBuildingTitle(map, building);
+    }
+    // munimap.info.refreshElementPosition(map);
+  }
+
+  if (floorCode) {
+    if (!selectedFloor || selectedFloor.locationCode !== floorCode) {
+      result.selectedFloorCode = floorCode;
+    }
+    return result;
+  } else {
+    if (munimap_utils.isDefAndNotNull(selectedFloor)) {
+      result.selectedFloorCode = null;
+      //munimap.floor.refreshFloorBasedLayers(map);
+    }
+    if (building) {
+      const buildingCode = getBuildingLocationCode(building);
+      const where = `polohKod LIKE '${buildingCode}%'`;
+      loadFloors(where).then((floors) => {
+        //munimap.info.refreshFloorSelect(map, floors);
+      });
+      return result;
+    } else {
+      if (selectedBuilding) {
+        building = getBuildingByCode(selectedBuilding);
+        result.selectedBuilding = null;
+        // building.changed();
+      }
+      // munimap.info.refreshFloorSelect(map, null);
+      // munimap.info.setBuildingTitle(map, null);
+      return result;
+    }
+  }
+};
+
 export {
   attachMapListeners,
   ensureBaseMap,
@@ -229,4 +332,5 @@ export {
   toggleLoadingMessage,
   createFeatureStores,
   refreshStyles,
+  getSelectedFromFeatureOrCode,
 };

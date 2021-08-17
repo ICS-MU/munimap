@@ -1,5 +1,10 @@
 /**
  * @typedef {import("../create.js").Options} CreateOptions
+ * @typedef {import("../feature/floor.js").Options} FloorOptions
+ * @typedef {import("ol/Feature").default} ol.Feature
+ * @typedef {import("redux").AnyAction} redux.AnyAction
+ * @typedef {import("ol/size").Size} ol.Size
+ * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
  */
 
 /**
@@ -24,7 +29,7 @@ export const MARKERS_LOADED = 'MARKERS_LOADED';
  * @type {string}
  * @const
  */
-export const OL_MAP_RENDERED = 'OL_MAP_RENDERED';
+export const MAP_INITIALIZED = 'MAP_INITIALIZED';
 
 /**
  * @type {string}
@@ -57,10 +62,16 @@ export const MATOMO_SEND_FOR_OPTS = 'MATOMO_SEND_FOR_OPTS';
 export const BUILDINGS_LOADED = 'BUILDINGS_LOADED';
 
 /**
- * @typedef {import("redux").AnyAction} redux.AnyAction
- * @typedef {import("ol/size").Size} ol.Size
- * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
+ * @type {string}
+ * @const
  */
+export const CHANGE_FLOOR = 'CHANGE_FLOOR';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const SET_SELECTED_FLOOR = 'SET_SELECTED_FLOOR';
 
 /**
  * @return {redux.AnyAction} action
@@ -90,15 +101,11 @@ export function create_munimap() {
 }
 
 /**
- * @param {{map_size: ol.Size}} object action object
  * @return {redux.AnyAction} action
  */
-export function map_rendered(object) {
+export function map_initialized() {
   return {
-    type: OL_MAP_RENDERED,
-    payload: {
-      map_size: object.map_size,
-    },
+    type: MAP_INITIALIZED,
   };
 }
 
@@ -118,7 +125,8 @@ export function map_precomposed(object) {
 /**
  * @param {{
  *    center: ol.Coordinate,
- *    resolution: number
+ *    resolution: number,
+ *    mapSize: ol.Size
  * }} object action object
  * @return {redux.AnyAction} action
  */
@@ -165,8 +173,37 @@ export function send_to_matomo_for_opts(options) {
   };
 }
 
+/**
+ * @return {redux.AnyAction} action
+ */
 export function buildings_loaded() {
   return {
     type: BUILDINGS_LOADED,
+  };
+}
+
+/**
+ * @param {ol.Feature} object action object
+ * @return {redux.AnyAction} action
+ */
+export function change_floor(object) {
+  return {
+    type: CHANGE_FLOOR,
+    payload: {
+      featureOrCode: object,
+    },
+  };
+}
+
+/**
+ * @param {FloorOptions} object action object
+ * @return {redux.AnyAction} action
+ */
+export function set_selected_floor(object) {
+  return {
+    type: SET_SELECTED_FLOOR,
+    payload: {
+      selectedFloor: object,
+    },
   };
 }

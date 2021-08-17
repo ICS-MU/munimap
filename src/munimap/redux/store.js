@@ -8,7 +8,9 @@ import * as munimap_utils from '../utils/utils.js';
 import * as redux from 'redux';
 import * as slctr from './selector.js';
 import {asyncDispatchMiddleware} from './middleware.js';
+import {changeSelected as changeSelectedFloor} from '../view/floor.js';
 import {featuresFromParam} from '../load.js';
+import {getSelectedFromFeatureOrCode} from '../view/view.js';
 import {loadOrDecorateMarkers} from '../create.js';
 
 /**
@@ -33,16 +35,19 @@ const createReducer = (initialState) => {
           ...state,
           zoomToTimestamp: Date.now(),
         };
-      case actions.OL_MAP_RENDERED:
+
+      // MAP_INITIALIZED
+      case actions.MAP_INITIALIZED:
         return {
           ...state,
-          map_size: action.payload.map_size,
+          mapInitialized: true,
         };
       case actions.OL_MAP_VIEW_CHANGE:
         return {
           ...state,
           center: action.payload.view.center,
           resolution: action.payload.view.resolution,
+          mapSize: action.payload.view.mapSize,
         };
 
       //CREATE_MUNIMAP
@@ -109,6 +114,34 @@ const createReducer = (initialState) => {
         return {
           ...state,
           buildingsTimestamp: Date.now(),
+        };
+
+      //CHANGE_FLOOR
+      case actions.CHANGE_FLOOR:
+        const {
+          selectedBuilding,
+          selectedFloorCode,
+        } = getSelectedFromFeatureOrCode(action.payload.featureOrCode, state);
+
+        changeSelectedFloor(
+          {
+            buildingCode: selectedBuilding,
+            floorCode: selectedFloorCode,
+            activeFloors: slctr.getActiveFloorCodes(state),
+          },
+          action.asyncDispatch //=> set selected floor
+        );
+
+        return {
+          ...state,
+          selectedBuilding: selectedBuilding || null,
+        };
+
+      //SET_SELECTED_FLOOR
+      case actions.SET_SELECTED_FLOOR:
+        return {
+          ...state,
+          selectedFloor: action.payload.selectedFloor,
         };
 
       //DEAFULT
