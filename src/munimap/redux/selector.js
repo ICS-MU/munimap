@@ -11,7 +11,11 @@ import * as munimap_view_cluster from '../view/cluster.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
 import View from 'ol/View';
-import {CREATED_MAPS, REQUIRED_CUSTOM_MARKERS} from '../create.js';
+import {
+  CREATED_MAPS,
+  REQUIRED_CUSTOM_MARKERS,
+  REQUIRED_MARKER_LABEL,
+} from '../create.js';
 import {ENABLE_SELECTOR_LOGS} from '../conf.js';
 import {GeoJSON} from 'ol/format';
 import {MultiPolygon, Polygon} from 'ol/geom';
@@ -28,6 +32,8 @@ import {
   getByCode as getBuildingByCode,
   getType,
   hasInnerGeometry,
+  isBuilding,
+  isSelected,
 } from '../feature/building.js';
 import {getStore as getBuildingStore} from '../view/building.js';
 import {getStore as getFloorStore} from '../view/floor.js';
@@ -35,6 +41,7 @@ import {getStore as getMarkerStore} from '../view/marker.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
 import {labelFunction, styleFunction} from '../style/building.js';
+import {styleFunction as markerStyleFunction} from '../style/marker.js';
 
 /**
  * @typedef {import("../conf.js").State} State
@@ -187,9 +194,23 @@ const getSelectedFloor = (state) => state.selectedFloor;
 /**
  * @type {Reselect.Selector<State, string>}
  * @param {State} state state
- * @return {string} selected floor
+ * @return {string} selected building
  */
 const getSelectedBuilding = (state) => state.selectedBuilding;
+
+/**
+ * @type {Reselect.Selector<State, string>}
+ * @param {State} state state
+ * @return {string} marker label function id
+ */
+const getRequiredMarkerLabelId = (state) => state.requiredOpts.markerLabelId;
+
+/**
+ * @type {Reselect.Selector<State, boolean>}
+ * @param {State} state state
+ * @return {boolean} marker label function id
+ */
+const getRequiredLocationCodes = (state) => state.requiredOpts.locationCodes;
 
 /**
  * createSelector return type Reselect.OutputSelector<S, T, (res: R1) => T>
@@ -975,5 +996,57 @@ export const getFeatureForRefreshingSelected = createSelector(
       // munimap.info.refreshElementPosition(map);
       return;
     }
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    StyleFunction,
+ *    function(string, string, ol.Extent, boolean, boolean, string):
+ *      StyleFunction
+ * >}
+ */
+export const getStyleForMarkerLayer = createSelector(
+  [
+    getLang,
+    getRequiredMarkerLabelId,
+    getExtent,
+    getRequiredLocationCodes,
+    isInFloorResolutionRange,
+    getSelectedBuilding,
+  ],
+  (
+    lang,
+    requiredMarkerLabelId,
+    extent,
+    locationCodes,
+    inFloorResolutionRange,
+    selectedBuilding
+  ) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('STYLE - computing style for markers');
+    }
+
+    const options = {
+      markers: getMarkerStore().getFeatures(),
+      markerLabel: REQUIRED_MARKER_LABEL[requiredMarkerLabelId],
+      lang,
+      extent,
+      locationCodes,
+    };
+    const styleFce = (feature, res) => {
+      if (
+        inFloorResolutionRange &&
+        isBuilding(feature) &&
+        isSelected(feature, selectedBuilding)
+      ) {
+        return null;
+      }
+      const style = markerStyleFunction(feature, res, options);
+      return style;
+    };
+
+    return styleFce;
   }
 );

@@ -30,6 +30,7 @@ import {
 import {getDefaultLayers} from '../layer/layer.js';
 import {loadFloors} from '../load.js';
 import {refreshStyle as refreshComplexStyle} from './complex.js';
+import {refreshStyle as refreshMarkerStyle} from './marker.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
@@ -235,6 +236,7 @@ const refreshStyles = (state, layers) => {
   refreshBuildingStyle(state, layers);
   refreshBuildingLabelStyle(state, layers);
   refreshComplexStyle(state, layers);
+  refreshMarkerStyle(state, layers);
 };
 
 /**

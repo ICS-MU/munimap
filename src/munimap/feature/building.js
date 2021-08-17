@@ -281,15 +281,13 @@ const getTitleWithoutOrgUnit = (building, lang, opt_separator) => {
 
 /**
  * @param {Feature|ol.render.Feature} building building
- * @param {ol.Map} map map
+ * @param {string} selectedBuilding selected building
  * @return {boolean} whereas is selected
  */
-const isSelected = (building, map) => {
-  return false; //not implemented yet
-  // munimap_assert.assert(isBuilding(building));
-  // const locCode = getLocationCode(building);
-  // const selectedBuilding = munimap.getProps(map).selectedBuilding;
-  // return locCode === selectedBuilding;
+const isSelected = (building, selectedBuilding) => {
+  munimap_assert.assert(isBuilding(building));
+  const locCode = getLocationCode(building);
+  return locCode === selectedBuilding;
 };
 
 /**

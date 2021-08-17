@@ -7,16 +7,9 @@ import * as munimap_building from '../feature/building.js';
 import * as munimap_customMarker from '../feature/marker.custom.js';
 import * as munimap_store from '../utils/store.js';
 import * as munimap_utils from '../utils/utils.js';
-import * as slctr from '../redux/selector.js';
 import Feature from 'ol/Feature';
-import VectorLayer from 'ol/layer/Vector';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
-import {
-  isLabelLayer as isBuildingLabelLayer,
-  isLayer as isBuildingLayer,
-} from '../layer/building.js';
-import {isLayer as isComplexLayer} from '../layer/complex.js';
 
 /**
  * @typedef {import("./marker").LabelFunction} MarkerLabelFunction
@@ -43,16 +36,6 @@ import {isLayer as isComplexLayer} from '../layer/complex.js';
 /**
  * @typedef {Object} StyleFunctionOptions
  * @property {Array<Feature>}  [markers]
- * }}
- */
-
-/**
- * The same options are munimap.marker.style.labelFunction.Options
- * @typedef {Object} MarkersAwareOptions
- * @property {ol.source.Vector} markerSource
- * @property {MarkerLabelFunction}  [markerLabel]
- * @property {ol.Map}  [map]
- * @property {string} [lang]
  * }}
  */
 

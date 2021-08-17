@@ -5,7 +5,6 @@
 import * as munimap_cluster from '../cluster/cluster.js';
 import * as munimap_marker from '../feature/marker.js';
 import * as munimap_markerStyle from '../style/marker.js';
-import * as munimap_utils from '../utils/utils.js';
 import VectorLayer from 'ol/layer/Vector';
 import {getStore} from '../view/marker.js';
 
@@ -13,6 +12,7 @@ import {getStore} from '../view/marker.js';
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("../layer/layer.js").VectorLayerOptions} VectorLayerOptions
  * @typedef {import("../view/view.js").AddLayersOptions} AddLayersOptions
+ * @typedef {import("ol/layer/Base").default} ol.layer.Base
  */
 
 /**
@@ -22,24 +22,25 @@ import {getStore} from '../view/marker.js';
 const LAYER_ID = 'marker';
 
 /**
+ * @param {ol.layer.Base} layer layer
+ * @return {boolean} isLayer
+ */
+const isLayer = (layer) => {
+  return layer.get('id') === LAYER_ID;
+};
+
+/**
  * @param {ol.Map} map map
  * @param {AddLayersOptions} options opts
  * @return {VectorLayer} lyr
  */
 const create = (map, options) => {
-  const {markers, lang, muAttrs, locationCodes} = options;
+  const {markers, muAttrs} = options;
 
   const markerSource = getStore();
   markerSource.setAttributions(muAttrs);
   markerSource.addFeatures(markers);
 
-  const markerOptions = {
-    map: map,
-    markerSource: markerSource,
-    markerLabel: options.markerLabel,
-    lang: lang,
-    locationCodes: locationCodes,
-  };
   const clusterResolution = munimap_cluster.BUILDING_RESOLUTION;
   // if (
   //   markers.length &&
@@ -59,10 +60,6 @@ const create = (map, options) => {
       featureClickHandler: munimap_marker.featureClickHandler,
       redrawOnFloorChange: true,
       source: markerSource,
-      style: munimap_utils.partial(
-        munimap_markerStyle.styleFunction,
-        markerOptions
-      ),
       maxResolution: clusterResolution.min,
       updateWhileAnimating: true,
       updateWhileInteracting: false,
@@ -74,4 +71,4 @@ const create = (map, options) => {
   return markerLayer;
 };
 
-export {LAYER_ID, create};
+export {LAYER_ID, create, isLayer};

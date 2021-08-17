@@ -11,7 +11,6 @@ import * as munimap_utils from '../utils/utils.js';
  * @typedef {import("ol/layer/BaseVector").Options} BaseLayerOptions
  * @typedef {import("ol/layer/Vector").default} ol.layer.Vector
  * @typedef {import("ol").Map} ol.Map
- * @typedef {import("../style/style.js").MarkersAwareOptions} MarkersAwareOptions
  * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  */
 
@@ -23,14 +22,6 @@ import * as munimap_utils from '../utils/utils.js';
  * @property {boolean} [redrawOnFloorChange]
  *
  * @typedef {BaseLayerOptions & VectorLayerExtendedOptions} VectorLayerOptions
- */
-
-/**
- *
- * @typedef {Object} DefaultLayersPropsOptions
- * @property {Array.<ol.layer.Vector>} layers
- * @property {MarkersAwareOptions} markersAwareOptions
- * }}
  */
 
 /**

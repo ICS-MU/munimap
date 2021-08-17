@@ -21,6 +21,7 @@ import {Fill, Stroke, Style, Text} from 'ol/style';
 /**
  * @typedef {import("ol/render/Event").default} RenderEvent
  * @typedef {import("ol/geom/Geometry").default} ol.geom.Geometry
+ * @typedef {import("ol/extent").Extent} ol.Extent
  * @typedef {import("ol/style/Style").GeometryFunction} ol.style.Style.GeometryFunction
  * @typedef {import("ol/source/Vector").default} ol.source.Vector
  * @typedef {import("ol").Map} ol.Map
@@ -36,6 +37,15 @@ import {Fill, Stroke, Style, Text} from 'ol/style';
  * @property {LabelFunction} [markerLabel]
  * @property {boolean} [locationCodes]
  * }}
+ */
+
+/**
+ * @typedef {Object} StyleFunctionOptions
+ * @property {Array<Feature>} markers markers
+ * @property {string} lang language
+ * @property {ol.Extent} extent extent
+ * @property {boolean} locationCodes whether to show only location codes
+ * @property {LabelFunction} [markerLabel] marker label function
  */
 
 /**
@@ -216,14 +226,19 @@ const createPinFromGeometry = (geometry) => {
 const getPin = () => createPinFromGeometry(CENTER_GEOMETRY_FUNCTION);
 
 /**
- * @param {LabelFunctionOptions} options opts
  * @param {Feature|ol.render.Feature} feature feature
  * @param {number} resolution resolution
+ * @param {StyleFunctionOptions} options options
  * @return {Array.<Style>} style
  */
-const labelFunction = (options, feature, resolution) => {
+const labelFunction = (feature, resolution, options) => {
+  const {markers, markerLabel, lang, extent, locationCodes} = options;
+
+  if (!extent) {
+    return null;
+  }
+
   let styleArray = [];
-  const lang = options.lang;
   munimap_asserts.assertInstanceof(feature, Feature);
   const isBuilding = munimap_building.isBuilding(feature);
   // var isRoom = munimap.room.isRoom(feature);
@@ -231,9 +246,9 @@ const labelFunction = (options, feature, resolution) => {
   const isCustomMarker = munimap_markerCustom.isCustom(feature);
 
   let title;
-  if (munimap_utils.isDefAndNotNull(options.markerLabel)) {
+  if (munimap_utils.isDefAndNotNull(markerLabel)) {
     const titleParts = [];
-    const name = options.markerLabel(feature, resolution);
+    const name = markerLabel(feature, resolution);
     if (munimap_utils.isDefAndNotNull(name)) {
       titleParts.push(name);
       if (isBuilding) {
@@ -249,12 +264,11 @@ const labelFunction = (options, feature, resolution) => {
     }
   }
   if (!munimap_utils.isDefAndNotNull(title) /*&& !isDoor*/) {
-    const showLocationCodes = options.locationCodes;
+    const showLocationCodes = locationCodes;
     title = showLocationCodes
       ? /**@type {string}*/ (feature.get('polohKod'))
       : munimap_style.getDefaultLabel(feature, resolution, lang);
   }
-  const markers = options.markerSource.getFeatures();
   const isMarked = markers.includes(/** @type {Feature}*/ (feature));
 
   let fill;
@@ -284,7 +298,7 @@ const labelFunction = (options, feature, resolution) => {
 
   const intersectFunction = munimap_utils.partial(
     INTERSECT_CENTER_GEOMETRY_FUNCTION,
-    options.map
+    extent
   );
   const geometry = isBuilding ? intersectFunction : CENTER_GEOMETRY_FUNCTION;
 
@@ -309,20 +323,13 @@ const labelFunction = (options, feature, resolution) => {
 };
 
 /**
- * @param {LabelFunctionOptions} options opts
  * @param {Feature|ol.render.Feature} feature feature
  * @param {number} resolution resolution
+ * @param {StyleFunctionOptions} options options
  * @return {Array.<Style>} style
  */
-export const styleFunction = (options, feature, resolution) => {
+export const styleFunction = (feature, resolution, options) => {
   munimap_asserts.assertInstanceof(feature, Feature);
-  // if (
-  //   munimap_range.contains(munimap_floor.RESOLUTION, resolution) &&
-  //   munimap_building.isBuilding(feature) &&
-  //   munimap_building.isSelected(feature, options.map)
-  // ) {
-  //   return null;
-  // }
 
   let result = [];
   const isBuilding = munimap_building.isBuilding(feature);
@@ -357,7 +364,7 @@ export const styleFunction = (options, feature, resolution) => {
     /*!(isRoom || isDoor) ||*/ isBuilding ||
     !munimap_range.contains(munimap_cluster.ROOM_RESOLUTION, resolution)
   ) {
-    const textStyle = labelFunction(options, feature, resolution);
+    const textStyle = labelFunction(feature, resolution, options);
     if (munimap_utils.isDefAndNotNull(textStyle)) {
       result.push(...textStyle);
     }
