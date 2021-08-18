@@ -209,9 +209,17 @@ const getRequiredMarkerLabelId = (state) => state.requiredOpts.markerLabelId;
 /**
  * @type {Reselect.Selector<State, boolean>}
  * @param {State} state state
- * @return {boolean} marker label function id
+ * @return {boolean} whether to show only location codes
  */
 const getRequiredLocationCodes = (state) => state.requiredOpts.locationCodes;
+
+/**
+ * @type {Reselect.Selector<State, boolean>}
+ * @param {State} state state
+ * @return {boolean} whether to cluster faculty abbreviations
+ */
+const getRequiredClusterFacultyAbbr = (state) =>
+  state.requiredOpts.clusterFacultyAbbr;
 
 /**
  * createSelector return type Reselect.OutputSelector<S, T, (res: R1) => T>
@@ -1056,13 +1064,18 @@ export const getStyleForMarkerLayer = createSelector(
  * @type {Reselect.OutputSelector<
  *    State,
  *    StyleFunction,
- *    function(string, boolean, string):
+ *    function(string, boolean, string, boolean):
  *      StyleFunction
  * >}
  */
 export const getStyleForClusterLayer = createSelector(
-  [getLang, getRequiredLocationCodes, getRequiredMarkerLabelId],
-  (lang, locationCodes, requiredMarkerLabelId) => {
+  [
+    getLang,
+    getRequiredLocationCodes,
+    getRequiredMarkerLabelId,
+    getRequiredClusterFacultyAbbr,
+  ],
+  (lang, locationCodes, requiredMarkerLabelId, clusterFacultyAbbr) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - computing style for clusters');
     }
@@ -1071,7 +1084,7 @@ export const getStyleForClusterLayer = createSelector(
       lang,
       locationCodes,
       markerLabel: REQUIRED_MARKER_LABEL[requiredMarkerLabelId],
-      //clusterFacultyAbbr,
+      clusterFacultyAbbr,
     };
     const styleFce = (feature, res) => {
       const style = clusterStyleFunction(feature, res, options);

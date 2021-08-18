@@ -252,7 +252,7 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
  * @protected
  */
 const pinFunction = (options, clusterFeature, feature, resolution) => {
-  const {lang, locationCodes} = options;
+  const {lang, locationCodes, clusterFacultyAbbr} = options;
 
   const color = /**@type {string}*/ (feature.get('color'));
   const isMarked = munimap_marker.isMarker(feature);
@@ -296,10 +296,10 @@ const pinFunction = (options, clusterFeature, feature, resolution) => {
     fill = munimap_style.TEXT_FILL;
   }
 
-  // if (clusterFacultyAbbr) {
-  //   const minorFeatures = munimap_cluster.getMinorFeatures(clusterFeature);
-  //   minorTitle = getMinorTitleParts(minorFeatures, isMarked, lang);
-  // }
+  if (clusterFacultyAbbr) {
+    const minorFeatures = munimap_cluster.getMinorFeatures(clusterFeature);
+    minorTitle = getMinorTitleParts(minorFeatures, isMarked, lang);
+  }
 
   const opts = {
     fill: fill,
@@ -333,7 +333,7 @@ const pinFunction = (options, clusterFeature, feature, resolution) => {
  */
 const multipleLabelFunction = (options, feature, resolution) => {
   munimap_assert.assertInstanceof(feature, Feature);
-  const {lang} = options;
+  const {lang, clusterFacultyAbbr} = options;
 
   const features = munimap_cluster.getMainFeatures(
     /**@type {Feature}*/ (feature)
@@ -384,9 +384,9 @@ const multipleLabelFunction = (options, feature, resolution) => {
       ? munimap_geom.getGeometryCenterOfFeatures(features)
       : munimap_geom.CENTER_GEOMETRY_FUNCTION;
 
-    // if (clusterFacultyAbbr) {
-    //   minorTitle = getMinorTitleParts(minorFeatures, marked, lang);
-    // }
+    if (clusterFacultyAbbr) {
+      minorTitle = getMinorTitleParts(minorFeatures, marked, lang);
+    }
 
     textStyle.push(
       new Style({
@@ -403,32 +403,32 @@ const multipleLabelFunction = (options, feature, resolution) => {
       })
     );
 
-    // if (clusterFacultyAbbr) {
-    //   minorTitle = getMinorTitleParts(minorFeatures, marked, lang);
+    if (clusterFacultyAbbr) {
+      minorTitle = getMinorTitleParts(minorFeatures, marked, lang);
 
-    //   if (minorTitle) {
-    //     const minorOffsetY =
-    //       RADIUS +
-    //       2 +
-    //       munimap_style.getLabelHeight(title, fontSize) +
-    //       munimap_style.getLabelHeight(minorTitle, fontSize) / 2;
+      if (minorTitle) {
+        const minorOffsetY =
+          RADIUS +
+          2 +
+          munimap_style.getLabelHeight(title, fontSize) +
+          munimap_style.getLabelHeight(minorTitle, fontSize) / 2;
 
-    //     textStyle.push(
-    //       new Style({
-    //         geometry: geometry,
-    //         text: new Text({
-    //           font: 'bold ' + fontSize + 'px arial',
-    //           fill: munimap_style.TEXT_FILL,
-    //           offsetY: minorOffsetY,
-    //           stroke: munimap_style.TEXT_STROKE,
-    //           text: minorTitle,
-    //           overflow: true,
-    //         }),
-    //         zIndex: marked ? 7 : 4,
-    //       })
-    //     );
-    //   }
-    // }
+        textStyle.push(
+          new Style({
+            geometry: geometry,
+            text: new Text({
+              font: 'bold ' + fontSize + 'px arial',
+              fill: munimap_style.TEXT_FILL,
+              offsetY: minorOffsetY,
+              stroke: munimap_style.TEXT_STROKE,
+              text: minorTitle,
+              overflow: true,
+            }),
+            zIndex: marked ? 7 : 4,
+          })
+        );
+      }
+    }
   }
 
   return textStyle;
