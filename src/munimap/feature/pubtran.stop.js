@@ -2,13 +2,8 @@
  * @module feature/pubtranstop
  */
 
-import * as munimap_load from '../load.js';
 import * as munimap_range from '../utils/range.js';
-import * as munimap_utils from '../utils/utils.js';
-import VectorSource from 'ol/source/Vector';
 import {MUNIMAP_PUBTRAN_URL} from '../conf.js';
-import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
-import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
 
 /**
  * @typedef {import("../utils/range.js").RangeInterface} RangeInterface
@@ -33,51 +28,25 @@ const RESOLUTION = munimap_range.createResolution(0, 2.39);
 const CLUSTER_RESOLUTION = munimap_range.createResolution(0.6, 2.39);
 
 /**
- * @param {featuresForMapOptions} options opts
- * @param {ol.extent.Extent} extent extent
- * @param {number} resolution resolution
- * @param {ol.proj.Projection} projection projection
- * @return {Promise<Array<ol.Feature>>} promise of features contained
- * in server response
- * @this {ol.source.Vector}
- */
-const featuresForMap = async (options, extent, resolution, projection) => {
-  return await munimap_load.featuresForMap(
-    options,
-    extent,
-    resolution,
-    projection
-  );
-};
-
-/**
+ *
  * @type {TypeOptions}
- * @const
  */
-const TYPE = {
-  primaryKey: 'OBJECTID',
-  serviceUrl: MUNIMAP_PUBTRAN_URL,
-  layerId: 0,
-  name: 'publictransport',
-};
+let TYPE;
 
 /**
- * @type {VectorSource}
- * @const
+ * @return {TypeOptions} Type
  */
-const STORE = new VectorSource({
-  strategy: tileLoadingStrategy(
-    createTilegridXYZ({
-      tileSize: 512,
-    })
-  ),
-});
-STORE.setLoader(
-  munimap_utils.partial(featuresForMap, {
-    source: STORE,
-    type: TYPE,
-  })
-);
+const getType = () => {
+  if (!TYPE) {
+    TYPE = {
+      primaryKey: 'OBJECTID',
+      serviceUrl: MUNIMAP_PUBTRAN_URL,
+      layerId: 0,
+      name: 'publictransport',
+    };
+  }
+  return TYPE;
+};
 
 /**
  * @param {FeatureClickHandlerOptions} options opts
@@ -127,10 +96,9 @@ const featureClickHandler = (options) => {
 };
 
 export {
-  TYPE,
-  STORE,
   RESOLUTION,
   CLUSTER_RESOLUTION,
   isClickable,
   featureClickHandler,
+  getType,
 };

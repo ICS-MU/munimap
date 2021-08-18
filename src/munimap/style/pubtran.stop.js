@@ -48,7 +48,7 @@ const STYLE = [
  *
  * @return {Style|Array<Style>} style
  */
-export default (feature, resolution) => {
+export const styleFunction = (feature, resolution) => {
   const inClusterRes = munimap_range.contains(
     munimap_pubtran_stop.CLUSTER_RESOLUTION,
     resolution

@@ -19,6 +19,7 @@ import {createStore as createFloorStore} from './floor.js';
 import {create as createMarkerLayer} from '../layer/marker.js';
 import {createStore as createMarkerStore} from './marker.js';
 import {create as createPubtranLayer} from '../layer/pubtran.stop.js';
+import {createStore as createPubtranStore} from '../view/pubtran.stop.js';
 import {createStore as createUnitStore} from './unit.js';
 import {
   getByCode as getBuildingByCode,
@@ -32,6 +33,7 @@ import {loadFloors} from '../load.js';
 import {refreshStyle as refreshClusterStyle} from './cluster.js';
 import {refreshStyle as refreshComplexStyle} from './complex.js';
 import {refreshStyle as refreshMarkerStyle} from './marker.js';
+import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
@@ -226,6 +228,11 @@ const createFeatureStores = (reduxStore) => {
   createComplexStore();
   createUnitStore();
   createFloorStore();
+
+  const state = reduxStore.getState();
+  if (state.requiredOpts.pubTran) {
+    createPubtranStore();
+  }
 };
 
 /**
@@ -239,6 +246,10 @@ const refreshStyles = (state, layers) => {
   refreshComplexStyle(state, layers);
   refreshMarkerStyle(state, layers);
   refreshClusterStyle(state, layers);
+
+  if (state.requiredOpts.pubTran) {
+    refreshPubtranStyle(layers);
+  }
 };
 
 /**

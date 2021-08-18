@@ -3,11 +3,12 @@
  */
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_pubtran_stop from '../feature/pubtran.stop.js';
-import PubtranStopStyleFunction from '../style/pubtran.stop.js';
 import VectorLayer from 'ol/layer/Vector';
+import {getStore as getPubtranStore} from '../view/pubtran.stop.js';
 
 /**
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions
+ * @typedef {import("ol/layer/Base").default} ol.layer.Base
  */
 
 /**
@@ -17,10 +18,18 @@ import VectorLayer from 'ol/layer/Vector';
 const LAYER_ID = 'publictransport';
 
 /**
+ * @param {ol.layer.Base} layer layer
+ * @return {boolean} isLayer
+ */
+const isLayer = (layer) => {
+  return layer.get('id') === LAYER_ID;
+};
+
+/**
  * @param {string} lang language
  * @return {VectorLayer} pubtran layer
  */
-export const create = (lang) => {
+const create = (lang) => {
   const pubTranAttribution = munimap_lang.getMsg(
     munimap_lang.Translations.PUBTRAN_ATTRIBUTION_HTML,
     lang
@@ -31,10 +40,8 @@ export const create = (lang) => {
       id: LAYER_ID,
       isFeatureClickable: munimap_pubtran_stop.isClickable,
       featureClickHandler: munimap_pubtran_stop.featureClickHandler,
-      type: munimap_pubtran_stop.TYPE,
       maxResolution: munimap_pubtran_stop.RESOLUTION.max,
-      source: munimap_pubtran_stop.STORE,
-      style: PubtranStopStyleFunction,
+      source: getPubtranStore(),
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       refreshStyleOnFloorChange: false,
@@ -47,3 +54,5 @@ export const create = (lang) => {
   pubTranSource.setAttributions([pubTranAttribution]);
   return pubTranLayer;
 };
+
+export {create, isLayer};
