@@ -2,10 +2,8 @@
  * @module feature/marker
  */
 
-import * as munimap_assert from '../assert/assert.js';
 import * as munimap_range from '../utils/range.js';
-import VectorLayer from 'ol/layer/Vector';
-import {LAYER_ID} from '../layer/marker.js';
+import {getStore as getMarkerStore} from '../view/marker.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
@@ -28,50 +26,11 @@ import {LAYER_ID} from '../layer/marker.js';
 const RESOLUTION = munimap_range.createResolution(0, 2.39);
 
 /**
- * @param {ol.layer.Base} layer layer
- * @return {boolean} whether is marker layer
- */
-const isLayer = (layer) => {
-  return layer.get('id') === LAYER_ID;
-};
-
-/**
- * @param {ol.Map} map map
- * @return {VectorLayer} layer
- */
-const getLayer = (map) => {
-  const layers = map.getLayers().getArray();
-  const result = layers.find(isLayer);
-  munimap_assert.assertInstanceof(result, VectorLayer);
-  return /** @type {VectorLayer}*/ (result);
-};
-
-/**
- * @param {ol.Map} map map
- * @return {ol.source.Vector} source
- */
-const getStore = (map) => {
-  const layer = getLayer(map);
-  const result = layer.getSource();
-  return result;
-};
-
-/**
- * @param {ol.Map} map map
- * @return {Array.<ol.Feature>} features
- */
-const getFeatures = (map) => {
-  const store = getStore(map);
-  return store.getFeatures();
-};
-
-/**
- * @param {ol.Map} map map
  * @param {ol.Feature} feature feature
  * @return {boolean} whether is marker feature
  */
-const isMarker = (map, feature) => {
-  const result = getFeatures(map).indexOf(feature) >= 0;
+const isMarker = (feature) => {
+  const result = getMarkerStore().getFeatures().indexOf(feature) >= 0;
   return result;
 };
 
@@ -111,4 +70,4 @@ const featureClickHandler = (options) => {
   console.log('Yot implemented yet');
 };
 
-export {isClickable, featureClickHandler, getStore, isMarker, getFeatures};
+export {isClickable, featureClickHandler, isMarker};

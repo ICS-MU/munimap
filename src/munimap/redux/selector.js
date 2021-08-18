@@ -19,6 +19,7 @@ import {
 import {ENABLE_SELECTOR_LOGS} from '../conf.js';
 import {GeoJSON} from 'ol/format';
 import {MultiPolygon, Polygon} from 'ol/geom';
+import {styleFunction as clusterStyleFunction} from '../style//cluster.js';
 import {styleFunction as complexStyleFunction} from '../style/complex.js';
 import {defaults as control_defaults} from 'ol/control';
 import {createLayer as createBasemapLayer} from '../layer/basemap.js';
@@ -1044,6 +1045,36 @@ export const getStyleForMarkerLayer = createSelector(
         return null;
       }
       const style = markerStyleFunction(feature, res, options);
+      return style;
+    };
+
+    return styleFce;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    StyleFunction,
+ *    function(string, boolean, string):
+ *      StyleFunction
+ * >}
+ */
+export const getStyleForClusterLayer = createSelector(
+  [getLang, getRequiredLocationCodes, getRequiredMarkerLabelId],
+  (lang, locationCodes, requiredMarkerLabelId) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('STYLE - computing style for clusters');
+    }
+
+    const options = {
+      lang,
+      locationCodes,
+      markerLabel: REQUIRED_MARKER_LABEL[requiredMarkerLabelId],
+      //clusterFacultyAbbr,
+    };
+    const styleFce = (feature, res) => {
+      const style = clusterStyleFunction(feature, res, options);
       return style;
     };
 

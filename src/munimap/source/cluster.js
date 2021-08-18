@@ -83,15 +83,14 @@ class EnhancedClusterSource extends ClusterSource {
 }
 
 /**
- * @param {ol.Map} map map
  * @param {string} lang language
  * @param {Feature} f1 feature1
  * @param {Feature} f2 feature2
  * @return {number} comparation number
  */
-const clusterCompareFn = (map, lang, f1, f2) => {
-  const m1 = isMarker(map, f1) ? 1 : 0;
-  const m2 = isMarker(map, f2) ? 1 : 0;
+const clusterCompareFn = (lang, f1, f2) => {
+  const m1 = isMarker(f1) ? 1 : 0;
+  const m2 = isMarker(f2) ? 1 : 0;
   let result = m2 - m1;
   if (!result) {
     const n1 =

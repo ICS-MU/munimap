@@ -16,20 +16,20 @@ import * as munimap_unit from '../feature/unit.js';
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {Circle, Fill, Stroke, Style, Text} from 'ol/style';
+import {getStore as getMarkerStore} from '../view/marker.js';
 import {localeCompare} from '../utils/string.js';
 
 /**
- * @typedef {import("../style/marker.js").LabelFunctionOptions} LabelFunctionOptions
+ * @typedef {import("../style/marker.js").LabelFunction} LabelFunction
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  */
 
 /**
- * @typedef {Object} ExtraLabelFunctionOptions
- * @property {boolean} clusterFacultyAbbr
- */
-
-/**
- * @typedef {LabelFunctionOptions & ExtraLabelFunctionOptions} ClusterLabelFunctionOptions
+ * @typedef {Object} StyleFunctionOptions
+ * @property {string} lang language
+ * @property {boolean} [locationCodes] whether to show only location codes
+ * @property {LabelFunction} [markerLabel] marker label function
+ * @property {boolean} [clusterFacultyAbbr] whether to cluster faculty abbrs
  */
 
 /**
@@ -142,7 +142,7 @@ const getUnmarkedDefaultLabel = (feature, resolution, lang) => {
 
 /**
  * Clustered features are buildings only.
- * @param {ClusterLabelFunctionOptions} options options
+ * @param {StyleFunctionOptions} options options
  * @param {Array<Feature>} allMarkers all markers
  * @param {Feature} feature feature
  * @param {number} resolution resolution
@@ -244,7 +244,7 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
 };
 
 /**
- * @param {ClusterLabelFunctionOptions} options options
+ * @param {StyleFunctionOptions} options opts
  * @param {Feature} clusterFeature cluster feature
  * @param {Feature} feature feature
  * @param {number} resolution resolution
@@ -252,10 +252,10 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
  * @protected
  */
 const pinFunction = (options, clusterFeature, feature, resolution) => {
-  const {lang, clusterFacultyAbbr, locationCodes} = options;
+  const {lang, locationCodes} = options;
 
   const color = /**@type {string}*/ (feature.get('color'));
-  const isMarked = munimap_marker.isMarker(options.map, feature);
+  const isMarked = munimap_marker.isMarker(feature);
   const geometry = feature.getGeometry();
   munimap_assert.assert(!!geometry);
 
@@ -274,7 +274,7 @@ const pinFunction = (options, clusterFeature, feature, resolution) => {
 
   if (!munimap_utils.isDefAndNotNull(title)) {
     if (isMarked) {
-      const allMarkers = options.markerSource.getFeatures();
+      const allMarkers = getMarkerStore().getFeatures();
       title = getMarkedDefaultLabel(
         options,
         allMarkers,
@@ -296,13 +296,10 @@ const pinFunction = (options, clusterFeature, feature, resolution) => {
     fill = munimap_style.TEXT_FILL;
   }
 
-  if (clusterFacultyAbbr) {
-    const minorFeatures = munimap_cluster.getMinorFeatures(
-      options.map,
-      clusterFeature
-    );
-    minorTitle = getMinorTitleParts(minorFeatures, isMarked, lang);
-  }
+  // if (clusterFacultyAbbr) {
+  //   const minorFeatures = munimap_cluster.getMinorFeatures(clusterFeature);
+  //   minorTitle = getMinorTitleParts(minorFeatures, isMarked, lang);
+  // }
 
   const opts = {
     fill: fill,
@@ -328,7 +325,7 @@ const pinFunction = (options, clusterFeature, feature, resolution) => {
 };
 
 /**
- * @param {ClusterLabelFunctionOptions} options options
+ * @param {StyleFunctionOptions} options opts
  * @param {Feature|ol.render.Feature} feature feature
  * @param {number} resolution resolution
  * @return {Array.<Style>!} style
@@ -336,17 +333,15 @@ const pinFunction = (options, clusterFeature, feature, resolution) => {
  */
 const multipleLabelFunction = (options, feature, resolution) => {
   munimap_assert.assertInstanceof(feature, Feature);
-  const {map, lang, clusterFacultyAbbr} = options;
+  const {lang} = options;
 
   const features = munimap_cluster.getMainFeatures(
-    map,
     /**@type {Feature}*/ (feature)
   );
   const minorFeatures = munimap_cluster.getMinorFeatures(
-    options.map,
     /**@type {Feature}*/ (feature)
   );
-  const marked = munimap_marker.isMarker(map, features[0]);
+  const marked = munimap_marker.isMarker(features[0]);
   const textStyle = [];
 
   let allMarkers;
@@ -354,7 +349,7 @@ const multipleLabelFunction = (options, feature, resolution) => {
   let minorTitle;
 
   if (marked) {
-    allMarkers = options.markerSource.getFeatures();
+    allMarkers = getMarkerStore().getFeatures();
   }
 
   if (munimap_utils.isDefAndNotNull(options.markerLabel)) {
@@ -389,9 +384,9 @@ const multipleLabelFunction = (options, feature, resolution) => {
       ? munimap_geom.getGeometryCenterOfFeatures(features)
       : munimap_geom.CENTER_GEOMETRY_FUNCTION;
 
-    if (clusterFacultyAbbr) {
-      minorTitle = getMinorTitleParts(minorFeatures, marked, lang);
-    }
+    // if (clusterFacultyAbbr) {
+    //   minorTitle = getMinorTitleParts(minorFeatures, marked, lang);
+    // }
 
     textStyle.push(
       new Style({
@@ -408,52 +403,51 @@ const multipleLabelFunction = (options, feature, resolution) => {
       })
     );
 
-    if (clusterFacultyAbbr) {
-      minorTitle = getMinorTitleParts(minorFeatures, marked, lang);
+    // if (clusterFacultyAbbr) {
+    //   minorTitle = getMinorTitleParts(minorFeatures, marked, lang);
 
-      if (minorTitle) {
-        const minorOffsetY =
-          RADIUS +
-          2 +
-          munimap_style.getLabelHeight(title, fontSize) +
-          munimap_style.getLabelHeight(minorTitle, fontSize) / 2;
+    //   if (minorTitle) {
+    //     const minorOffsetY =
+    //       RADIUS +
+    //       2 +
+    //       munimap_style.getLabelHeight(title, fontSize) +
+    //       munimap_style.getLabelHeight(minorTitle, fontSize) / 2;
 
-        textStyle.push(
-          new Style({
-            geometry: geometry,
-            text: new Text({
-              font: 'bold ' + fontSize + 'px arial',
-              fill: munimap_style.TEXT_FILL,
-              offsetY: minorOffsetY,
-              stroke: munimap_style.TEXT_STROKE,
-              text: minorTitle,
-              overflow: true,
-            }),
-            zIndex: marked ? 7 : 4,
-          })
-        );
-      }
-    }
+    //     textStyle.push(
+    //       new Style({
+    //         geometry: geometry,
+    //         text: new Text({
+    //           font: 'bold ' + fontSize + 'px arial',
+    //           fill: munimap_style.TEXT_FILL,
+    //           offsetY: minorOffsetY,
+    //           stroke: munimap_style.TEXT_STROKE,
+    //           text: minorTitle,
+    //           overflow: true,
+    //         }),
+    //         zIndex: marked ? 7 : 4,
+    //       })
+    //     );
+    //   }
+    // }
   }
 
   return textStyle;
 };
 
 /**
- * @param {ClusterLabelFunctionOptions} options opts
  * @param {Feature|ol.render.Feature} feature feature
  * @param {number} resolution resolution
+ * @param {StyleFunctionOptions} options opts
  * @return {Style|Array.<Style>} style
  */
-const styleFunction = (options, feature, resolution) => {
+const styleFunction = (feature, resolution, options) => {
   munimap_assert.assertInstanceof(feature, Feature);
   let result;
   const features = munimap_cluster.getMainFeatures(
-    options.map,
     /** @type {Feature}*/ (feature)
   );
   const firstFeature = features[0];
-  const marked = munimap_marker.isMarker(options.map, firstFeature);
+  const marked = munimap_marker.isMarker(firstFeature);
   if (features.length === 1) {
     result = pinFunction(
       options,

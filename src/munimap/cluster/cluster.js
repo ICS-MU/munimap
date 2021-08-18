@@ -7,6 +7,7 @@ import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
 import {Feature} from 'ol';
 import {getStore as getBuildingStore} from '../view/building.js';
+import {getStore as getMarkerStore} from '../view/marker.js';
 
 /**
  * @typedef {import("../utils/range").RangeInterface} RangeInterface
@@ -73,18 +74,17 @@ const getResolutionRange = (resolution) => {
 };
 
 /**
- * @param {ol.Map} map map
  * @param {number|RangeInterface} resolution resolution
  * @return {Array<Feature>} features
  * @protected
  */
-const getClusteredFeatures = (map, resolution) => {
+const getClusteredFeatures = (resolution) => {
   const range = munimap_utils.isNumber(resolution)
     ? getResolutionRange(/** @type {number}*/ (resolution))
     : resolution;
   const ranges = Resolutions;
   let result;
-  const markers = munimap_marker.getFeatures(map).concat();
+  const markers = getMarkerStore().getFeatures().concat();
   const bldgs = getBuildingStore().getFeatures();
   switch (range) {
     case ranges.MARKERS_ONLY:
@@ -117,12 +117,11 @@ const isCluster = (feature) => {
 };
 
 /**
- * @param {ol.Map} map map
  * @param {Feature} cluster cluster
  * @return {boolean} whether contains marker
  */
-const containsMarker = (map, cluster) => {
-  const markers = munimap_marker.getFeatures(map);
+const containsMarker = (cluster) => {
+  const markers = getMarkerStore().getFeatures();
   const clusteredFeatures = cluster.get('features');
   if (clusteredFeatures) {
     return clusteredFeatures.some((feat) => markers.includes(feat));
@@ -141,26 +140,24 @@ const getFeatures = (feature) => {
 };
 
 /**
- * @param {ol.Map} map map
  * @param {Feature} feature feature
  * @return {Array.<Feature>} main features
  */
-const getMainFeatures = (map, feature) => {
+const getMainFeatures = (feature) => {
   let result = getFeatures(feature);
-  if (containsMarker(map, feature)) {
-    result = result.filter(munimap_utils.partial(munimap_marker.isMarker, map));
+  if (containsMarker(feature)) {
+    result = result.filter(munimap_marker.isMarker);
   }
   return result;
 };
 
 /**
- * @param {ol.Map} map map
  * @param {Feature} feature feature
  * @return {Array.<Feature>} minor features
  */
-const getMinorFeatures = (map, feature) => {
+const getMinorFeatures = (feature) => {
   let result = getFeatures(feature);
-  result = result.filter((f) => !munimap_marker.isMarker(map, f));
+  result = result.filter((f) => !munimap_marker.isMarker(f));
   return result;
 };
 

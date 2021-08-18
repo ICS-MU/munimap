@@ -29,6 +29,7 @@ import {
 } from '../feature/building.js';
 import {getDefaultLayers} from '../layer/layer.js';
 import {loadFloors} from '../load.js';
+import {refreshStyle as refreshClusterStyle} from './cluster.js';
 import {refreshStyle as refreshComplexStyle} from './complex.js';
 import {refreshStyle as refreshMarkerStyle} from './marker.js';
 
@@ -237,6 +238,7 @@ const refreshStyles = (state, layers) => {
   refreshBuildingLabelStyle(state, layers);
   refreshComplexStyle(state, layers);
   refreshMarkerStyle(state, layers);
+  refreshClusterStyle(state, layers);
 };
 
 /**
