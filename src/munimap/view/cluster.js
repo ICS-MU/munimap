@@ -71,11 +71,10 @@ const getVectorStore = () => {
 };
 
 /**
- * @param {ol.Map} map map
  * @param {number} resolution resolution
  * @param {boolean} showLabels whether to show labels for MU objects
  */
-const updateClusteredFeatures = (map, resolution, showLabels) => {
+const updateClusteredFeatures = (resolution, showLabels) => {
   if (showLabels === false) {
     return;
   }

@@ -299,6 +299,7 @@ export default (options) => {
 
           const mapProps = /**@type {MapProps}*/ ({
             currentRes: view.getResolution(),
+            buildingsCount: slctr.getLoadedBuildingsCount(state),
           });
           map.set(MUNIMAP_PROPS_ID, mapProps);
           CREATED_MAPS[state.requiredOpts.target] = map;
@@ -341,8 +342,8 @@ export default (options) => {
           });
         }
 
+        munimap_view.ensureClusterUpdate(state, map);
         munimap_view.ensureBaseMap(basemapLayer, map);
-        slctr.updateClusteredFeatures(state);
         munimap_view.refreshStyles(state, map.getLayers().getArray());
       }
     };

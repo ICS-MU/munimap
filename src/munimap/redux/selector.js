@@ -7,18 +7,13 @@ import * as munimap_floor from '../feature/floor.js';
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
-import * as munimap_view_cluster from '../view/cluster.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
 import View from 'ol/View';
-import {
-  CREATED_MAPS,
-  REQUIRED_CUSTOM_MARKERS,
-  REQUIRED_MARKER_LABEL,
-} from '../create.js';
 import {ENABLE_SELECTOR_LOGS} from '../conf.js';
 import {GeoJSON} from 'ol/format';
 import {MultiPolygon, Polygon} from 'ol/geom';
+import {REQUIRED_CUSTOM_MARKERS, REQUIRED_MARKER_LABEL} from '../create.js';
 import {styleFunction as clusterStyleFunction} from '../style//cluster.js';
 import {styleFunction as complexStyleFunction} from '../style/complex.js';
 import {defaults as control_defaults} from 'ol/control';
@@ -642,28 +637,6 @@ export const getLoadedBuildingsCount = createSelector(
       return 0;
     }
     return getBuildingStore().getFeatures().length;
-  }
-);
-
-/**
- * @type {Reselect.OutputSelector<
- *    State,
- *    void,
- *    function(number, boolean, string): void
- * >}
- */
-export const updateClusteredFeatures = createSelector(
-  [getLoadedBuildingsCount, getRequiredLabels, getTarget],
-  (buildingsCount, requiredLabels, target) => {
-    if (requiredLabels === false) {
-      return;
-    }
-    const map = CREATED_MAPS[target];
-    munimap_view_cluster.updateClusteredFeatures(
-      map,
-      map.getView().getResolution(),
-      requiredLabels
-    );
   }
 );
 

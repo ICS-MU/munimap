@@ -8,6 +8,7 @@ import * as slctr from '../redux/selector.js';
 import Feature from 'ol/Feature';
 import TileLayer from 'ol/layer/Tile';
 import createControls from '../control/mapcontrolsview.js';
+import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {
   createStore as createBuildingStore,
   refreshLabelStyle as refreshBuildingLabelStyle,
@@ -30,7 +31,10 @@ import {
 } from '../feature/building.js';
 import {getDefaultLayers} from '../layer/layer.js';
 import {loadFloors} from '../load.js';
-import {refreshStyle as refreshClusterStyle} from './cluster.js';
+import {
+  refreshStyle as refreshClusterStyle,
+  updateClusteredFeatures,
+} from './cluster.js';
 import {refreshStyle as refreshComplexStyle} from './complex.js';
 import {refreshStyle as refreshMarkerStyle} from './marker.js';
 import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
@@ -339,6 +343,29 @@ const getSelectedFromFeatureOrCode = (featureOrCode, state) => {
   }
 };
 
+/**
+ * Ensure update clusters in map.
+ * @param {State} state state
+ * @param {ol.Map} map map
+ */
+const ensureClusterUpdate = (state, map) => {
+  if (!map) {
+    return;
+  }
+
+  const oldBuildingsCount = map.get(MUNIMAP_PROPS_ID).buildingsCount;
+  const newBuildingsCount = slctr.getLoadedBuildingsCount(state);
+
+  if (newBuildingsCount !== oldBuildingsCount) {
+    const requiredLabels = state.requiredOpts.labels;
+    map.get(MUNIMAP_PROPS_ID).buildingsCount = newBuildingsCount;
+    if (requiredLabels !== false) {
+      const resolution = map.getView().getResolution();
+      updateClusteredFeatures(resolution, requiredLabels);
+    }
+  }
+};
+
 export {
   attachMapListeners,
   ensureBaseMap,
@@ -348,4 +375,5 @@ export {
   createFeatureStores,
   refreshStyles,
   getSelectedFromFeatureOrCode,
+  ensureClusterUpdate,
 };

@@ -70,7 +70,7 @@ const create = (map, options) => {
     const range = munimap_cluster.getResolutionRange(res);
 
     if (range !== oldRange) {
-      updateClusteredFeatures(map, res, showLabels);
+      updateClusteredFeatures(res, showLabels);
     }
 
     mapProps.currentRes = res;
