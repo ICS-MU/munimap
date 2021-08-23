@@ -222,8 +222,8 @@ const attachMapListeners = (map, options) => {
  * @param {redux.Store} reduxStore store
  */
 const createFeatureStores = (reduxStore) => {
-  const callbackFn = (action) => () => reduxStore.dispatch(action);
-  createBuildingStore(callbackFn(actions.buildings_loaded()));
+  const callbackFn = (actionCreator) => reduxStore.dispatch(actionCreator());
+  createBuildingStore(callbackFn);
   createMarkerStore();
   createComplexStore();
   createUnitStore();

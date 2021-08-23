@@ -1,6 +1,7 @@
 /**
  * @module load
  */
+import * as actions from './redux/action.js';
 import * as munimap_assert from './assert/assert.js';
 import * as munimap_building from './feature/building.js';
 import * as munimap_complex from './feature/complex.js';
@@ -456,7 +457,7 @@ const buildingFeaturesForMap = async (
   );
 
   if (options.callback) {
-    options.callback();
+    options.callback(actions.buildings_loaded);
   }
   return buildings;
 };
