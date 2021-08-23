@@ -55,13 +55,6 @@ import {styleFunction as markerStyleFunction} from '../style/marker.js';
  */
 
 /**
- * @typedef {Object} InitialViewProps
- * @property {string} requiredTarget
- * @property {ol.Coordinate} requiredCenter
- * @property {number} requiredZoom
- */
-
-/**
  * @type {Reselect.Selector<State, boolean>}
  * @param {State} state state
  * @return {boolean} msg
@@ -496,34 +489,22 @@ export const getMuAttrs = createSelector([getLang], (lang) => {
 /**
  * @type {Reselect.OutputSelector<
  *    State,
- *    InitialViewProps,
- *    function(string, ol.Coordinate, number): InitialViewProps
- * >}
- */
-export const getInitViewProps = createSelector(
-  [getRequiredTarget, getRequiredCenter, getRequiredZoom],
-  (requiredTarget, requiredCenter, requiredZoom) => {
-    if (ENABLE_SELECTOR_LOGS) {
-      console.log('computing initial view props');
-    }
-    return {requiredTarget, requiredCenter, requiredZoom};
-  }
-);
-
-/**
- * @type {Reselect.OutputSelector<
- *    State,
  *    View,
- *    function(InitialViewProps, Array<ol.Feature>, Array<ol.Feature>): View
+ *    function(string, ol.Coordinate, number, Array<ol.Feature>, Array<ol.Feature>): View
  * >}
  */
 export const calculateView = createSelector(
-  [getInitViewProps, getInitMarkers, getInitZoomTo],
-  (initialViewProps, markers, zoomTo) => {
+  [
+    getRequiredTarget,
+    getRequiredCenter,
+    getRequiredZoom,
+    getInitMarkers,
+    getInitZoomTo,
+  ],
+  (requiredTarget, requiredCenter, requiredZoom, markers, zoomTo) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing view');
     }
-    const {requiredTarget, requiredCenter, requiredZoom} = initialViewProps;
     const target = document.getElementById(requiredTarget);
     const center = ol_proj.transform(
       requiredCenter || [16.605390495656977, 49.1986567194723],
