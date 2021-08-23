@@ -52,7 +52,7 @@ const createReducer = (initialState) => {
 
       //CREATE_MUNIMAP
       case actions.CREATE_MUNIMAP:
-        if (slctr.loadMarkers(initialState)) {
+        if (slctr.loadMarkers(state)) {
           const requiredMarkers = state.requiredOpts.markerIds;
           let markerStrings;
           if (requiredMarkers && requiredMarkers.length) {
@@ -75,7 +75,7 @@ const createReducer = (initialState) => {
           );
         }
 
-        if (slctr.loadZoomTo(initialState)) {
+        if (slctr.loadZoomTo(state)) {
           let zoomToStrings;
           if (state.requiredOpts.zoomTo && state.requiredOpts.zoomTo.length) {
             zoomToStrings = /**@type {Array.<string>}*/ (munimap_utils.isString(
