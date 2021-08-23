@@ -80,31 +80,14 @@ const updateClusteredFeatures = (resolution, showLabels) => {
   }
   const source = getVectorStore();
   const oldFeatures = source.getFeatures();
-  const features = getClusteredFeatures(resolution);
-  let allFeatures = oldFeatures.concat(features);
-  allFeatures = [...new Set(allFeatures)];
-  const bucket = {
-    'remove': [],
-    'add': [],
-  };
-  allFeatures.forEach((feature) => {
-    if (oldFeatures.indexOf(feature) >= 0 && features.indexOf(feature) < 0) {
-      bucket['remove'].push(feature);
-    } else if (
-      oldFeatures.indexOf(feature) < 0 &&
-      features.indexOf(feature) >= 0
-    ) {
-      bucket['add'].push(feature);
-    }
-  });
-  const featuresToRemove = bucket['remove'] || [];
-  const featuresToAdd = bucket['add'] || [];
+  const newFeatures = getClusteredFeatures(resolution);
 
-  if (featuresToRemove.length > 0) {
-    featuresToRemove.forEach((feature) => {
-      source.removeFeature(feature);
-    });
-  }
+  const featuresToRemove =
+    oldFeatures.filter((x) => !newFeatures.includes(x)) || [];
+  const featuresToAdd =
+    newFeatures.filter((x) => !oldFeatures.includes(x)) || [];
+
+  featuresToRemove.forEach((feature) => source.removeFeature(feature));
   if (featuresToAdd.length > 0) {
     source.addFeatures(featuresToAdd);
   }
