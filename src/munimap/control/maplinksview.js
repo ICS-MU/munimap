@@ -65,7 +65,7 @@ const handleClick = (path, map, store, markers, pointCoordinates) => {
     }
   }
   store.dispatch(
-    actions.send_to_matomo({
+    actions.log_action_happened({
       category: 'mapLinks',
       action: matomoAction,
     })

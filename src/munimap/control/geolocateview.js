@@ -71,7 +71,7 @@ const animate = (map, geolocation) => {
  */
 const handleClick = (map, store, geolocation) => {
   store.dispatch(
-    actions.send_to_matomo({
+    actions.log_action_happened({
       category: 'geolocation',
       action: 'click',
     })

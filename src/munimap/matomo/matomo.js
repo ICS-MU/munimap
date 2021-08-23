@@ -5,7 +5,10 @@
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
 
 /**
- * @typedef {import("../create.js").Options} CreateOptions
+ * @typedef {Object} Options
+ * @property {boolean} [mapLinks]
+ * @property {boolean} [pubTran]
+ * @property {string} [baseMap]
  */
 
 /**
@@ -68,11 +71,7 @@ export const checkCustomMarker = (markers) => {
 };
 
 /**
- * @param {{
- *    mapLinks: (boolean|undefined),
- *    pubTran: (boolean|undefined),
- *    baseMap: (string|undefined)
- * }} options opts
+ * @param {Options} options opts
  */
 export const sendEventForOptions = (options) => {
   if (String(options.mapLinks) !== 'undefined') {

@@ -241,14 +241,9 @@ export default (options) => {
     const initialState = getInitialState(options);
     const store = createStore(initialState);
 
+    munimap_view.createFeatureStores(store);
     store.dispatch(
-      actions.send_to_matomo({
-        category: 'map',
-        action: 'create',
-      })
-    );
-    store.dispatch(
-      actions.send_to_matomo_for_opts({
+      actions.create_munimap({
         mapLinks: options.mapLinks,
         pubTran: options.pubTran,
         baseMap: options.baseMap,
@@ -256,9 +251,6 @@ export default (options) => {
         // identifyCallback: options.identifyCallback
       })
     );
-
-    munimap_view.createFeatureStores(store);
-    store.dispatch(actions.create_munimap());
 
     let unsubscribeInit;
     let map;

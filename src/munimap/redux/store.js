@@ -3,12 +3,12 @@
  */
 import * as actions from './action.js';
 import * as munimap_assert from '../assert/assert.js';
-import * as munimap_matomo from '../matomo/matomo.js';
 import * as munimap_utils from '../utils/utils.js';
 import * as redux from 'redux';
 import * as slctr from './selector.js';
 import {asyncDispatchMiddleware} from './middleware.js';
 import {changeSelected as changeSelectedFloor} from '../view/floor.js';
+import {checkCustomMarker as checkCustomMarkerForMatomo} from '../matomo/matomo.js';
 import {featuresFromParam} from '../load.js';
 import {getSelectedFromFeatureOrCode} from '../view/view.js';
 import {loadOrDecorateMarkers} from '../create.js';
@@ -25,11 +25,14 @@ import {loadOrDecorateMarkers} from '../create.js';
 const createReducer = (initialState) => {
   return (state = initialState, action) => {
     switch (action.type) {
+      // MARKERS_LOADED
       case actions.MARKERS_LOADED:
         return {
           ...state,
           markersTimestamp: Date.now(),
         };
+
+      // ZOOMTO_LOADED
       case actions.ZOOMTO_LOADED:
         return {
           ...state,
@@ -42,6 +45,8 @@ const createReducer = (initialState) => {
           ...state,
           mapInitialized: true,
         };
+
+      // OL_MAP_VIEW_CHANGE
       case actions.OL_MAP_VIEW_CHANGE:
         return {
           ...state,
@@ -66,7 +71,7 @@ const createReducer = (initialState) => {
           loadOrDecorateMarkers(markerStrings, state.requiredOpts).then(
             (res) => {
               munimap_assert.assertMarkerFeatures(res);
-              munimap_matomo.checkCustomMarker(res);
+              checkCustomMarkerForMatomo(res);
               action.asyncDispatch({
                 type: actions.MARKERS_LOADED,
                 features: res,
@@ -95,19 +100,6 @@ const createReducer = (initialState) => {
           markersTimestamp: 0,
           zoomToTimestamp: 0,
         };
-
-      //MATOMO_SEND
-      case actions.MATOMO_SEND:
-        munimap_matomo.sendEvent(
-          action.payload.category,
-          action.payload.action
-        );
-        return {...state};
-
-      //MATOMO_SEND_FOR_OPTS
-      case actions.MATOMO_SEND_FOR_OPTS:
-        munimap_matomo.sendEventForOptions(action.payload.options);
-        return {...state};
 
       //BUILDINGS_LOADED
       case actions.BUILDINGS_LOADED:

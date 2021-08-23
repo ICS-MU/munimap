@@ -96,7 +96,7 @@ const addMatomoClickEvent = (store, parentEl) => {
   const el = parentEl.getElementsByClassName('ol-full-screen')[0];
   el.addEventListener('click', () => {
     store.dispatch(
-      actions.send_to_matomo({
+      actions.log_action_happened({
         category: 'full-screen',
         action: 'click',
       })
@@ -171,7 +171,7 @@ const createInitExtentControl = (map, store, target, lang) => {
   divEl.addEventListener('click', () => {
     zoomToInitExtent(map);
     store.dispatch(
-      actions.send_to_matomo({
+      actions.log_action_happened({
         category: 'initExtent',
         action: 'click',
       })
@@ -282,7 +282,7 @@ const toggleMapTools = (map, store, options) => {
     });
 
     store.dispatch(
-      actions.send_to_matomo({
+      actions.log_action_happened({
         category: 'mapTools',
         action: 'create',
       })
@@ -290,7 +290,7 @@ const toggleMapTools = (map, store, options) => {
     buttonEl.addEventListener('click', () => {
       toggleMapToolBar(toolBarOptions);
       store.dispatch(
-        actions.send_to_matomo({
+        actions.log_action_happened({
           category: 'mapTools',
           action: 'click',
         })
@@ -377,7 +377,7 @@ export default (map, store, options) => {
     map.addControl(createGeolocation(map, store, lang));
   } else {
     store.dispatch(
-      actions.send_to_matomo({
+      actions.log_action_happened({
         category: 'geolocation',
         action: 'http_hidden',
       })

@@ -1,10 +1,17 @@
 /**
+ * @module redux/action
+ */
+
+import {sendEvent, sendEventForOptions} from '../matomo/matomo.js';
+
+/**
  * @typedef {import("../create.js").Options} CreateOptions
  * @typedef {import("../feature/floor.js").Options} FloorOptions
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("redux").AnyAction} redux.AnyAction
  * @typedef {import("ol/size").Size} ol.Size
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
+ * @typedef {import("../matomo/matomo.js").Options} MatomoOptions
  */
 
 /**
@@ -47,13 +54,7 @@ export const ZOOMTO_LOADED = 'ZOOMTO_LOADED';
  * @type {string}
  * @const
  */
-export const MATOMO_SEND = 'MATOMO_SEND';
-
-/**
- * @type {string}
- * @const
- */
-export const MATOMO_SEND_FOR_OPTS = 'MATOMO_SEND_FOR_OPTS';
+export const LOG_ACTION_HAPPENED = 'LOG_ACTION_HAPPENED';
 
 /**
  * @type {string}
@@ -92,9 +93,15 @@ export function zoomTo_loaded() {
 }
 
 /**
+ * Inital for creating munimap. At first, action sends info to matomo and
+ * after that creates and returns action object.
+ * @param {MatomoOptions} options options
  * @return {redux.AnyAction} action
  */
-export function create_munimap() {
+export function create_munimap(options) {
+  sendEvent('map', 'create');
+  sendEventForOptions(options);
+
   return {
     type: CREATE_MUNIMAP,
   };
@@ -146,30 +153,10 @@ export function ol_map_view_change(object) {
  * }} object action object
  * @return {redux.AnyAction} action
  */
-export function send_to_matomo(object) {
+export function log_action_happened(object) {
+  sendEvent(object.category, object.action);
   return {
-    type: MATOMO_SEND,
-    payload: {
-      category: object.category,
-      action: object.action,
-    },
-  };
-}
-
-/**
- * @param {{
- *    mapLinks: (boolean|undefined),
- *    pubTran: (boolean|undefined),
- *    baseMap: (string|undefined)
- * }} options action object
- * @return {redux.AnyAction} action
- */
-export function send_to_matomo_for_opts(options) {
-  return {
-    type: MATOMO_SEND_FOR_OPTS,
-    payload: {
-      options,
-    },
+    type: LOG_ACTION_HAPPENED,
   };
 }
 
