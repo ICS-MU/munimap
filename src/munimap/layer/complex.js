@@ -4,7 +4,7 @@
 
 import * as munimap_complex from '../feature/complex.js';
 import VectorLayer from 'ol/layer/Vector';
-import {getStore as getComplexStore} from '../view/complex.js';
+import {getStore as getComplexStore} from '../source/complex.js';
 
 /**
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions

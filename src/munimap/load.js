@@ -9,11 +9,11 @@ import * as munimap_unit from './feature/unit.js';
 import * as munimap_utils from './utils/utils.js';
 import {EsriJSON} from 'ol/format';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
-import {getStore as getBuildingStore} from './view/building.js';
-import {getStore as getComplexStore} from './view/complex.js';
-import {getStore as getFloorStore} from './view/floor.js';
+import {getStore as getBuildingStore} from './source/building.js';
+import {getStore as getComplexStore} from './source/complex.js';
+import {getStore as getFloorStore} from './source/floor.js';
 import {getType as getFloorType} from './feature/floor.js';
-import {getStore as getUnitStore} from './view/unit.js';
+import {getStore as getUnitStore} from './source/unit.js';
 
 /**
  * @typedef {import("./feature/feature.js").TypeOptions} TypeOptions

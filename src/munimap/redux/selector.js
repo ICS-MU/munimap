@@ -31,9 +31,9 @@ import {
   isBuilding,
   isSelected,
 } from '../feature/building.js';
-import {getStore as getBuildingStore} from '../view/building.js';
-import {getStore as getFloorStore} from '../view/floor.js';
-import {getStore as getMarkerStore} from '../view/marker.js';
+import {getStore as getBuildingStore} from '../source/building.js';
+import {getStore as getFloorStore} from '../source/floor.js';
+import {getStore as getMarkerStore} from '../source/marker.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
 import {labelFunction, styleFunction} from '../style/building.js';

@@ -4,7 +4,7 @@
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_pubtran_stop from '../feature/pubtran.stop.js';
 import VectorLayer from 'ol/layer/Vector';
-import {getStore as getPubtranStore} from '../view/pubtran.stop.js';
+import {getStore as getPubtranStore} from '../source/pubtran.stop.js';
 
 /**
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions

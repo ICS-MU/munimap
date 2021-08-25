@@ -3,7 +3,7 @@
  */
 
 import * as munimap_range from '../utils/range.js';
-import {getStore as getMarkerStore} from '../view/marker.js';
+import {getStore as getMarkerStore} from '../source/marker.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map

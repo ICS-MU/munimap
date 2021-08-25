@@ -6,7 +6,7 @@ import * as munimap_assert from '../assert/assert.js';
 import * as munimap_range from '../utils/range.js';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature.js';
 import {MUNIMAP_URL} from '../conf.js';
-import {getStore as getComplexStore} from '../view/complex.js';
+import {getStore as getComplexStore} from '../source/complex.js';
 
 /**
  * @typedef {import('../utils/range.js').RangeInterface} RangeInterface

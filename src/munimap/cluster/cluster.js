@@ -6,8 +6,8 @@ import * as munimap_marker from '../feature/marker.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
 import {Feature} from 'ol';
-import {getStore as getBuildingStore} from '../view/building.js';
-import {getStore as getMarkerStore} from '../view/marker.js';
+import {getStore as getBuildingStore} from '../source/building.js';
+import {getStore as getMarkerStore} from '../source/marker.js';
 
 /**
  * @typedef {import("../utils/range").RangeInterface} RangeInterface

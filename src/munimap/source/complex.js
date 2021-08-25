@@ -1,5 +1,5 @@
 /**
- * @module view/unit
+ * @module source/complex
  */
 
 import VectorSource from 'ol/source/Vector';
@@ -7,15 +7,15 @@ import VectorSource from 'ol/source/Vector';
 /**
  * @type {VectorSource}
  */
-let UNIT_STORE;
+let COMPLEX_STORE;
 
 /**
- * Create store for units.
+ * Create store for complexes.
  * @return {VectorSource} store
  */
 const createStore = () => {
-  UNIT_STORE = new VectorSource();
-  return UNIT_STORE;
+  COMPLEX_STORE = new VectorSource();
+  return COMPLEX_STORE;
 };
 
 /**
@@ -23,7 +23,7 @@ const createStore = () => {
  * @return {VectorSource} store
  */
 const getStore = () => {
-  return UNIT_STORE;
+  return COMPLEX_STORE;
 };
 
 export {createStore, getStore};

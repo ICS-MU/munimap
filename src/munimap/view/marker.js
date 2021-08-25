@@ -2,7 +2,6 @@
  * @module view/marker
  */
 import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
 import {getStyleForMarkerLayer} from '../redux/selector.js';
 import {isLayer} from '../layer/marker.js';
 
@@ -10,28 +9,6 @@ import {isLayer} from '../layer/marker.js';
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import("../conf.js").State} State
  */
-
-/**
- * @type {VectorSource}
- */
-let MARKER_STORE;
-
-/**
- * Create store for markers.
- * @return {VectorSource} store
- */
-const createStore = () => {
-  MARKER_STORE = new VectorSource();
-  return MARKER_STORE;
-};
-
-/**
- * Get markers source.
- * @return {VectorSource} store
- */
-const getStore = () => {
-  return MARKER_STORE;
-};
 
 /**
  * @param {State} state state
@@ -48,4 +25,4 @@ const refreshStyle = (state, layers) => {
   }
 };
 
-export {createStore, getStore, refreshStyle};
+export {refreshStyle};

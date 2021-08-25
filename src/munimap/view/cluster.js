@@ -1,74 +1,17 @@
 /**
  * @module view/cluster
  */
-import * as munimap_utils from '../utils/utils.js';
+
 import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
-import {EnhancedClusterSource, clusterCompareFn} from '../source/cluster.js';
-import {Point} from 'ol/geom';
-import {getCenter} from 'ol/extent';
 import {getClusteredFeatures} from '../cluster/cluster.js';
 import {getStyleForClusterLayer} from '../redux/selector.js';
+import {getVectorStore} from '../source/cluster.js';
 import {isLayer} from '../layer/cluster.js';
 
 /**
- * @typedef {import("ol").Map} ol.Map
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import("../conf.js").State} State
- * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
- * @typedef {import("ol/Feature").default} ol.Feature
  */
-
-/**
- * @type {EnhancedClusterSource}
- */
-let CLUSTER_STORE;
-
-/**
- * Create store for clusters.
- * @param {Array<ol.Feature>} clusterFeatures features
- * @param {ol.AttributionLike} muAttrs attributions
- * @param {string} lang language
- * @return {EnhancedClusterSource} store
- */
-const createStore = (clusterFeatures, muAttrs, lang) => {
-  CLUSTER_STORE = new EnhancedClusterSource({
-    attributions: muAttrs,
-    source: new VectorSource({
-      features: clusterFeatures,
-    }),
-    compareFn: munimap_utils.partial(clusterCompareFn, lang),
-    geometryFunction: (feature) => {
-      let result = null;
-      const geom = feature.getGeometry();
-      if (geom instanceof Point) {
-        result = geom;
-      } else if (geom) {
-        result = new Point(getCenter(geom.getExtent()));
-      }
-      return result;
-    },
-    distance: 80,
-  });
-  return CLUSTER_STORE;
-};
-
-/**
- * Get cluster source.
- * @return {EnhancedClusterSource} store
- */
-const getStore = () => {
-  return CLUSTER_STORE;
-};
-
-/**
- * Get vector source from cluster. ClusterSource/EnhancedClusterSource has
- * this.source_ where VectorSource and features are stored.
- * @return {VectorSource} store
- */
-const getVectorStore = () => {
-  return CLUSTER_STORE.getSource();
-};
 
 /**
  * @param {number} resolution resolution
@@ -108,10 +51,4 @@ const refreshStyle = (state, layers) => {
   }
 };
 
-export {
-  createStore,
-  getStore,
-  getVectorStore,
-  refreshStyle,
-  updateClusteredFeatures,
-};
+export {refreshStyle, updateClusteredFeatures};

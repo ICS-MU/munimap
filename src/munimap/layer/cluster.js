@@ -4,7 +4,7 @@
 import * as munimap_cluster from '../cluster/cluster.js';
 import VectorLayer from 'ol/layer/Vector';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
-import {createStore as createClusterStore} from '../view/cluster.js';
+import {createStore as createClusterStore} from '../source/cluster.js';
 import {updateClusteredFeatures} from '../view/cluster.js';
 
 /**

@@ -3,10 +3,17 @@
 /**
  * @module source/cluster
  */
-
+import * as munimap_utils from '../utils/utils.js';
 import ClusterSource from 'ol/source/Cluster';
+import VectorSource from 'ol/source/Vector';
+import {Point} from 'ol/geom';
 import {Translations, getMsg} from '../lang/lang.js';
-import {buffer, createEmpty, createOrUpdateFromCoordinate} from 'ol/extent';
+import {
+  buffer,
+  createEmpty,
+  createOrUpdateFromCoordinate,
+  getCenter,
+} from 'ol/extent';
 import {getUid} from 'ol/util';
 import {isMarker} from '../feature/marker.js';
 
@@ -108,4 +115,61 @@ const clusterCompareFn = (lang, f1, f2) => {
   return result;
 };
 
-export {EnhancedClusterSource, clusterCompareFn};
+/**
+ * @type {EnhancedClusterSource}
+ */
+let CLUSTER_STORE;
+
+/**
+ * Create store for clusters.
+ * @param {Array<ol.Feature>} clusterFeatures features
+ * @param {ol.AttributionLike} muAttrs attributions
+ * @param {string} lang language
+ * @return {EnhancedClusterSource} store
+ */
+const createStore = (clusterFeatures, muAttrs, lang) => {
+  CLUSTER_STORE = new EnhancedClusterSource({
+    attributions: muAttrs,
+    source: new VectorSource({
+      features: clusterFeatures,
+    }),
+    compareFn: munimap_utils.partial(clusterCompareFn, lang),
+    geometryFunction: (feature) => {
+      let result = null;
+      const geom = feature.getGeometry();
+      if (geom instanceof Point) {
+        result = geom;
+      } else if (geom) {
+        result = new Point(getCenter(geom.getExtent()));
+      }
+      return result;
+    },
+    distance: 80,
+  });
+  return CLUSTER_STORE;
+};
+
+/**
+ * Get cluster source.
+ * @return {EnhancedClusterSource} store
+ */
+const getStore = () => {
+  return CLUSTER_STORE;
+};
+
+/**
+ * Get vector source from cluster. ClusterSource/EnhancedClusterSource has
+ * this.source_ where VectorSource and features are stored.
+ * @return {VectorSource} store
+ */
+const getVectorStore = () => {
+  return CLUSTER_STORE.getSource();
+};
+
+export {
+  EnhancedClusterSource,
+  clusterCompareFn,
+  createStore,
+  getStore,
+  getVectorStore,
+};

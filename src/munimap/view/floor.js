@@ -5,7 +5,6 @@
 import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
 import Feature from 'ol/Feature';
-import VectorSource from 'ol/source/Vector';
 import {getFloorObject} from '../feature/floor.js';
 import {loadFloors} from '../load.js';
 
@@ -21,28 +20,6 @@ import {loadFloors} from '../load.js';
  * @property {string} floorCode
  * @property {Array<string>} activeFloors
  */
-
-/**
- * @type {VectorSource}
- */
-let FLOOR_STORE;
-
-/**
- * Create store for complexes.
- * @return {VectorSource} store
- */
-const createStore = () => {
-  FLOOR_STORE = new VectorSource();
-  return FLOOR_STORE;
-};
-
-/**
- * Get building store.
- * @return {VectorSource} store
- */
-const getStore = () => {
-  return FLOOR_STORE;
-};
 
 /**
  * @param {ChangeSelectedFloorOptions} options options
@@ -83,4 +60,4 @@ const changeSelected = (options, asyncDispatch) => {
   });
 };
 
-export {changeSelected, createStore, getStore};
+export {changeSelected};

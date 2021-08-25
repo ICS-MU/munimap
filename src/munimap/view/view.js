@@ -9,19 +9,15 @@ import Feature from 'ol/Feature';
 import TileLayer from 'ol/layer/Tile';
 import createControls from '../control/mapcontrolsview.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
-import {
-  createStore as createBuildingStore,
-  refreshLabelStyle as refreshBuildingLabelStyle,
-  refreshStyle as refreshBuildingStyle,
-} from './building.js';
+import {createStore as createBuildingStore} from '../source/building.js';
 import {create as createClusterLayer} from '../layer/cluster.js';
-import {createStore as createComplexStore} from './complex.js';
-import {createStore as createFloorStore} from './floor.js';
+import {createStore as createComplexStore} from '../source/complex.js';
+import {createStore as createFloorStore} from '../source/floor.js';
 import {create as createMarkerLayer} from '../layer/marker.js';
-import {createStore as createMarkerStore} from './marker.js';
+import {createStore as createMarkerStore} from '../source/marker.js';
 import {create as createPubtranLayer} from '../layer/pubtran.stop.js';
-import {createStore as createPubtranStore} from '../view/pubtran.stop.js';
-import {createStore as createUnitStore} from './unit.js';
+import {createStore as createPubtranStore} from '../source/pubtran.stop.js';
+import {createStore as createUnitStore} from '../source/unit.js';
 import {
   getByCode as getBuildingByCode,
   getLocationCode as getBuildingLocationCode,
@@ -31,6 +27,10 @@ import {
 } from '../feature/building.js';
 import {getDefaultLayers} from '../layer/layer.js';
 import {loadFloors} from '../load.js';
+import {
+  refreshLabelStyle as refreshBuildingLabelStyle,
+  refreshStyle as refreshBuildingStyle,
+} from './building.js';
 import {
   refreshStyle as refreshClusterStyle,
   updateClusteredFeatures,

@@ -5,9 +5,8 @@
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_building from '../feature/building.js';
 import * as munimap_complex from '../feature/complex.js';
-import * as munimap_utils from '../utils/utils.js';
 import VectorLayer from 'ol/layer/Vector';
-import {getStore as getBuildingStore} from '../view/building.js';
+import {getStore as getBuildingStore} from '../source/building.js';
 
 /**
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions

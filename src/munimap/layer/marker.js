@@ -6,7 +6,7 @@ import * as munimap_cluster from '../cluster/cluster.js';
 import * as munimap_marker from '../feature/marker.js';
 import * as munimap_markerStyle from '../style/marker.js';
 import VectorLayer from 'ol/layer/Vector';
-import {getStore} from '../view/marker.js';
+import {getStore} from '../source/marker.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map

@@ -15,7 +15,7 @@ import * as munimap_style from './style.js';
 import * as munimap_unit from '../feature/unit.js';
 import * as munimap_utils from '../utils/utils.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
-import {getStore as getMarkerStore} from '../view/marker.js';
+import {getStore as getMarkerStore} from '../source/marker.js';
 
 /**
  * @typedef {import("./style").StyleFunctionOptions} StyleFunctionOptions
