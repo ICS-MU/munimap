@@ -24,7 +24,10 @@ const refreshStyle = (state, layers) => {
   const lyr = layers.length === 1 ? layers[0] : layers.find((l) => isLayer(l));
 
   if (lyr && lyr instanceof VectorLayer) {
-    lyr.setStyle(getStyleForBuildingLayer(state));
+    const style = getStyleForBuildingLayer(state);
+    if (style !== lyr.getStyle()) {
+      lyr.setStyle(style);
+    }
   }
 };
 
@@ -40,7 +43,10 @@ const refreshLabelStyle = (state, layers) => {
     layers.length === 1 ? layers[0] : layers.find((l) => isLabelLayer(l));
 
   if (lyr && lyr instanceof VectorLayer) {
-    lyr.setStyle(getStyleForBuildingLabelLayer(state));
+    const style = getStyleForBuildingLabelLayer(state);
+    if (style !== lyr.getStyle()) {
+      lyr.setStyle(style);
+    }
   }
 };
 

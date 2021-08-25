@@ -22,7 +22,10 @@ const refreshStyle = (state, layers) => {
   const lyr = layers.length === 1 ? layers[0] : layers.find((l) => isLayer(l));
 
   if (lyr && lyr instanceof VectorLayer) {
-    lyr.setStyle(getStyleForComplexLayer(state));
+    const style = getStyleForComplexLayer(state);
+    if (style !== lyr.getStyle()) {
+      lyr.setStyle(style);
+    }
   }
 };
 

@@ -47,7 +47,10 @@ const refreshStyle = (state, layers) => {
   const lyr = layers.length === 1 ? layers[0] : layers.find((l) => isLayer(l));
 
   if (lyr && lyr instanceof VectorLayer) {
-    lyr.setStyle(getStyleForClusterLayer(state));
+    const style = getStyleForClusterLayer(state);
+    if (style !== lyr.getStyle()) {
+      lyr.setStyle(style);
+    }
   }
 };
 
