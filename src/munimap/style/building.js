@@ -133,7 +133,7 @@ const styleFunction = (feature, resolution, showSelected) => {
     }
   } else {
     if (munimap_building.hasInnerGeometry(feature)) {
-      if (WHITE_TO_GREY_CACHE[resColor.resolution]) {
+      if (munimap_utils.isDef(WHITE_TO_GREY_CACHE[resColor.resolution])) {
         result = WHITE_TO_GREY_CACHE[resColor.resolution];
       } else {
         result = new Style({
@@ -176,7 +176,7 @@ const defaultLabelFunction = (feature, resolution, extent, lang) => {
   const uid = munimap_store.getUid(feature);
   if (uid) {
     munimap_assert.assertString(uid);
-    if (munimap_style.LABEL_CACHE[uid]) {
+    if (munimap_utils.isDef(munimap_style.LABEL_CACHE[uid])) {
       return munimap_style.LABEL_CACHE[uid];
     }
   }
@@ -260,14 +260,20 @@ const largeScaleLabelFunction = (feature, resolution, extent, lang) => {
   const uid = munimap_store.getUid(feature);
   if (uid) {
     munimap_assert.assertString(uid);
-    if (LABEL_CACHE[lang + uid]) {
+    if (munimap_utils.isDef(LABEL_CACHE[lang + uid])) {
       return LABEL_CACHE[lang + uid];
     }
   }
 
   let result;
   const title = munimap_building.getDefaultLabel(feature, resolution, lang);
-  if (munimap_utils.isDef(title)) {
+
+  const noInitialFloor =
+    !munimap_building.hasInnerGeometry(feature) ||
+    (munimap_building.hasInnerGeometry(feature) &&
+      !feature.get('vychoziPodlazi'));
+
+  if (munimap_utils.isDef(title) && noInitialFloor) {
     const geometryFunction = munimap_utils.partial(
       munimap_geom.INTERSECT_CENTER_GEOMETRY_FUNCTION,
       extent

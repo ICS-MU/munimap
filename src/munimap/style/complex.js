@@ -57,7 +57,7 @@ const styleFunction = (feature, resolution, markers, lang) => {
     let title;
     const uid = getStoreUid(feature);
     munimap_assert.assertString(uid);
-    if (munimap_style.LABEL_CACHE[lang + uid]) {
+    if (munimap_utils.isDef(munimap_style.LABEL_CACHE[lang + uid])) {
       return munimap_style.LABEL_CACHE[lang + uid];
     }
 

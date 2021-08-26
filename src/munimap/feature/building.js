@@ -181,7 +181,7 @@ const featureClickHandler = (options) => {
 };
 
 /**
- * @param {Feature} building building
+ * @param {Feature|ol.render.Feature} building building
  * @return {boolean} hasInnerGeom
  */
 const hasInnerGeometry = (building) => {

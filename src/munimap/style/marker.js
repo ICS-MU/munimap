@@ -333,6 +333,14 @@ export const styleFunction = (feature, resolution, options) => {
 
   let result = [];
   const isBuilding = munimap_building.isBuilding(feature);
+
+  if (
+    isBuilding &&
+    munimap_range.contains(munimap_floor.RESOLUTION, resolution) &&
+    munimap_building.hasInnerGeometry(feature)
+  ) {
+    return result;
+  }
   // var isRoom = munimap.room.isRoom(feature);
   // var isDoor = munimap.door.isDoor(feature);
 
