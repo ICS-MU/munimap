@@ -708,8 +708,7 @@ export const getStyleForBuildingLayer = createSelector(
 
     const selectedFloor = showIndoor ? selectedFloorCode : null;
     const styleFce = (feature, res) => {
-      const showSelected =
-        showIndoor && munimap_floor.selectedFloorFilter(feature, selectedFloor);
+      const showSelected = showIndoor && isSelected(feature, selectedFloor);
       const style = styleFunction(feature, res, showSelected);
       return style;
     };
@@ -771,8 +770,7 @@ export const getStyleForBuildingLabelLayer = createSelector(
     }
     const selectedFloor = showIndoor ? selectedFloorCode : null;
     const styleFce = (feature, res) => {
-      const showSelected =
-        showIndoor && munimap_floor.selectedFloorFilter(feature, selectedFloor);
+      const showSelected = showIndoor && isSelected(feature, selectedFloor);
       if (showSelected) {
         return null;
       } else {

@@ -62,21 +62,6 @@ export const isCode = (maybeCode) => {
 };
 
 /**
- * Filter function.
- *
- * @param {ol.Feature} feature feature
- * @param {?string} selectedFloorCode location code
- * @return {boolean} filter boolean
- */
-export const selectedFloorFilter = (feature, selectedFloorCode) => {
-  if (munimap_utils.isDefAndNotNull(selectedFloorCode)) {
-    const locCode = /**@type {string}*/ (feature.get('polohKod'));
-    return selectedFloorCode.startsWith(locCode);
-  }
-  return false;
-};
-
-/**
  * Get floor from its store by floor code.
  * @param {string} code location code
  * @return {ol.Feature} floor feature
