@@ -26,9 +26,11 @@ import {
 import {featureExtentIntersect} from '../utils/geom.js';
 import {
   getByCode as getBuildingByCode,
+  getSelectedFloorCode as getSelectedFloorCodeForBuilding,
   getType,
   hasInnerGeometry,
   isBuilding,
+  isCode as isBuildingCode,
   isSelected,
 } from '../feature/building.js';
 import {getStore as getBuildingStore} from '../source/building.js';
@@ -174,18 +176,18 @@ const getRequiredTarget = (state) => state.requiredOpts.target;
 const getResolution = (state) => state.resolution;
 
 /**
- * @type {Reselect.Selector<State, FloorOptions>}
- * @param {State} state state
- * @return {FloorOptions} selected floor
- */
-const getSelectedFloor = (state) => state.selectedFloor;
-
-/**
  * @type {Reselect.Selector<State, string>}
  * @param {State} state state
- * @return {string} selected building
+ * @return {string} selected floor
  */
-const getSelectedBuilding = (state) => state.selectedBuilding;
+const getSelectedFeature = (state) => state.selectedFeature;
+
+/**
+ * @type {Reselect.Selector<State, number>}
+ * @param {State} state state
+ * @return {number} selected floor
+ */
+const getActiveFloorLayerId = (state) => state.activeFloorLayerId;
 
 /**
  * @type {Reselect.Selector<State, string>}
@@ -625,27 +627,17 @@ export const getLoadedBuildingsCount = createSelector(
  * @type {Reselect.OutputSelector<
  *    State,
  *    string,
- *    function(FloorOptions): string
+ *    function(string): string
  * >}
  */
 export const getSelectedFloorCode = createSelector(
-  [getSelectedFloor],
-  (selectedFloor) => {
-    return selectedFloor.locationCode || null;
-  }
-);
-
-/**
- * @type {Reselect.OutputSelector<
- *    State,
- *    number,
- *    function(FloorOptions): number
- * >}
- */
-export const getSelectedFloorLayerId = createSelector(
-  [getSelectedFloor],
-  (selectedFloor) => {
-    return selectedFloor.floorLayerId || null;
+  [getSelectedFeature],
+  (selectedFeature) => {
+    if (!selectedFeature) {
+      return null;
+    } else {
+      return munimap_floor.isCode(selectedFeature) ? selectedFeature : null;
+    }
   }
 );
 
@@ -657,25 +649,20 @@ export const getSelectedFloorLayerId = createSelector(
  * >}
  */
 export const getActiveFloorCodes = createSelector(
-  [getSelectedFloorLayerId],
-  (selectedFloorLayerId) => {
+  [getActiveFloorLayerId],
+  (activeFloorLayerId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing active floors');
     }
-    if (!selectedFloorLayerId) {
+    if (!activeFloorLayerId) {
       return [];
     }
 
-    let codes = [];
     const floors = getFloorStore().getFeatures();
-    const active = floors.filter((floor) => {
-      const layerId = /**@type {number}*/ (floor.get('vrstvaId'));
-      if (layerId === selectedFloorLayerId) {
-        return true;
-      }
-      return false;
-    });
-    codes = active.map((floor) => {
+    const active = floors.filter(
+      (floor) => floor.get('vrstvaId') === activeFloorLayerId
+    );
+    const codes = active.map((floor) => {
       return /**@type {string}*/ (floor.get('polohKod'));
     });
     return codes;
@@ -842,10 +829,10 @@ export const getReferenceExtent = createSelector([getExtent], (extent) => {
  * >}
  */
 export const isSelectedInExtent = createSelector(
-  [getReferenceExtent, getSelectedBuilding],
+  [getReferenceExtent, getSelectedFeature],
   (refExtent, selectedBuilding) => {
     if (ENABLE_SELECTOR_LOGS) {
-      console.log('computing whether selected building in extent');
+      console.log('computing whether is selected building in extent');
     }
     if (munimap_utils.isDefAndNotNull(selectedBuilding)) {
       munimap_assert.assertString(selectedBuilding);
@@ -877,26 +864,26 @@ const isInFloorResolutionRange = createSelector(
 );
 
 /**
+ * Returns feature from which the selected feature will be computed to state.
+ *
  * @type {Reselect.OutputSelector<
  *    State,
  *    ol.Feature,
- *    function(ol.Extent): ol.Feature
+ *    function(ol.Extent, number, number): ol.Feature
  * >}
  */
-const getFeatureForChangingFloor = createSelector(
-  [getReferenceExtent],
-  (refExt) => {
+const getFeatureForComputingSelected = createSelector(
+  [getReferenceExtent, getBuildingsTimestamp, getMarkersTimestamp],
+  (refExt, buildingsTimestamp, markersTimestamp) => {
     if (ENABLE_SELECTOR_LOGS) {
-      console.log('computing feature for changing floor');
+      console.log('computing feature for creating selected');
     }
     let marker = null; //munimap.getProps(map).selectedMarker;
     if (!marker) {
       const markers = getMarkerStore().getFeatures();
-      marker = markers.find((f) => {
-        return f.getGeometry()
-          ? f.getGeometry().intersectsExtent(refExt)
-          : null;
-      });
+      marker = markers.find((f) =>
+        f.getGeometry() ? f.getGeometry().intersectsExtent(refExt) : null
+      );
     }
     if (marker) {
       return marker;
@@ -924,37 +911,47 @@ const getFeatureForChangingFloor = createSelector(
 );
 
 /**
+ * Get selected location code. Returns location code if some should be selected,
+ * null if no one shloud be selected (deselect), undefined if nothing to change.
+ *
  * @type {Reselect.OutputSelector<
  *    State,
- *    (ol.Feature|undefined),
+ *    (string|undefined),
  *    function(ol.Size, string, ol.Feature, boolean, boolean):
- *      (ol.Feature|undefined)
+ *      (string|undefined)
  * >}
  */
-export const getFeatureForRefreshingSelected = createSelector(
+export const getSelectedLocationCode = createSelector(
   [
     getSize,
-    getSelectedBuilding,
-    getFeatureForChangingFloor,
+    getSelectedFeature,
+    getFeatureForComputingSelected,
     isInFloorResolutionRange,
     isSelectedInExtent,
   ],
   (
     size,
-    selectedBuilding,
-    featureForChangingFloor,
+    selectedFeature,
+    featureForComputingSelected,
     inFloorResolutionRange,
     selectedInExtent
   ) => {
     if (ENABLE_SELECTOR_LOGS) {
-      console.log('computing feature for refreshing selected');
+      console.log('computing selected location code');
     }
     if (!size) {
       return;
     }
 
-    if (!selectedBuilding || !selectedInExtent) {
-      return inFloorResolutionRange ? featureForChangingFloor : null;
+    if (!selectedFeature || !selectedInExtent) {
+      if (inFloorResolutionRange) {
+        //poi is not implemented yet
+        return featureForComputingSelected
+          ? featureForComputingSelected.get('polohKod')
+          : null;
+      } else {
+        return null;
+      }
     } else {
       // munimap.info.refreshElementPosition(map);
       return;
@@ -977,7 +974,7 @@ export const getStyleForMarkerLayer = createSelector(
     getExtent,
     getRequiredLocationCodes,
     isInFloorResolutionRange,
-    getSelectedBuilding,
+    getSelectedFeature,
   ],
   (
     lang,
@@ -985,7 +982,7 @@ export const getStyleForMarkerLayer = createSelector(
     extent,
     locationCodes,
     inFloorResolutionRange,
-    selectedBuilding
+    selectedFeature
   ) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - computing style for markers');
@@ -1002,7 +999,7 @@ export const getStyleForMarkerLayer = createSelector(
       if (
         inFloorResolutionRange &&
         isBuilding(feature) &&
-        isSelected(feature, selectedBuilding)
+        isSelected(feature, selectedFeature)
       ) {
         return null;
       }
@@ -1046,5 +1043,50 @@ export const getStyleForClusterLayer = createSelector(
     };
 
     return styleFce;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    string,
+ *    function(string, Array<string>): string
+ * >}
+ */
+export const calculateSelectedFloor = createSelector(
+  [getSelectedFeature, getActiveFloorCodes],
+  (selectedFeature, activeFloorCodes) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing selected floor');
+    }
+
+    if (!selectedFeature) {
+      return;
+    } else if (munimap_floor.isCode(selectedFeature)) {
+      return selectedFeature;
+    }
+
+    if (isBuildingCode(selectedFeature)) {
+      const building = getBuildingByCode(selectedFeature);
+      if (hasInnerGeometry(building)) {
+        const floorCode = activeFloorCodes.find(
+          (code) => code.substr(0, 5) === selectedFeature
+        );
+
+        if (floorCode) {
+          return floorCode;
+        } else {
+          return getSelectedFloorCodeForBuilding(building);
+        }
+      }
+    }
+    // else if (munimap.room.isRoom(feature) || munimap.door.isDoor(feature)) {
+    //   locCode = /**@type (string)*/ (feature.get('polohKod'));
+    //   building = munimap.building.getByCode(locCode);
+    //   floorCode = locCode.substr(0, 8);
+    // } else {
+    //   return /**@type {string}*/ (feature.get('polohKodPodlazi'));
+    // }
+    return;
   }
 );

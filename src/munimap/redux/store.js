@@ -7,10 +7,11 @@ import * as munimap_utils from '../utils/utils.js';
 import * as redux from 'redux';
 import * as slctr from './selector.js';
 import {asyncDispatchMiddleware} from './middleware.js';
-import {changeSelected as changeSelectedFloor} from '../view/floor.js';
+// import {changeSelected as changeSelectedFloor} from '../view/floor.js';
 import {checkCustomMarker as checkCustomMarkerForMatomo} from '../matomo/matomo.js';
-import {featuresFromParam} from '../load.js';
-import {getSelectedFromFeatureOrCode} from '../view/view.js';
+import {featuresFromParam, loadFloors} from '../load.js';
+import {getFloorLayerIdByCode} from '../feature/floor.js';
+// import {getSelectedFromFeatureOrCode} from '../view/view.js';
 import {loadOrDecorateMarkers} from '../create.js';
 
 /**
@@ -24,6 +25,8 @@ import {loadOrDecorateMarkers} from '../create.js';
  */
 const createReducer = (initialState) => {
   return (state = initialState, action) => {
+    let newState;
+
     switch (action.type) {
       // MARKERS_LOADED
       case actions.MARKERS_LOADED:
@@ -44,15 +47,6 @@ const createReducer = (initialState) => {
         return {
           ...state,
           mapInitialized: true,
-        };
-
-      // OL_MAP_VIEW_CHANGE
-      case actions.OL_MAP_VIEW_CHANGE:
-        return {
-          ...state,
-          center: action.payload.view.center,
-          resolution: action.payload.view.resolution,
-          mapSize: action.payload.view.mapSize,
         };
 
       //CREATE_MUNIMAP
@@ -108,33 +102,64 @@ const createReducer = (initialState) => {
           buildingsTimestamp: Date.now(),
         };
 
-      //CHANGE_FLOOR
-      case actions.CHANGE_FLOOR:
-        const {
-          selectedBuilding,
-          selectedFloorCode,
-        } = getSelectedFromFeatureOrCode(action.payload.featureOrCode, state);
+      //FLOORS_LOADED
+      case actions.FLOORS_LOADED:
+        const floorCode = slctr.calculateSelectedFloor(state);
+        let result;
+        let flId;
+        if (floorCode) {
+          result = floorCode;
+          flId = getFloorLayerIdByCode(floorCode);
 
-        changeSelectedFloor(
-          {
-            buildingCode: selectedBuilding,
-            floorCode: selectedFloorCode,
-            activeFloors: slctr.getActiveFloorCodes(state),
-          },
-          action.asyncDispatch //=> set selected floor
-        );
+          const newSelectedWasActive = flId === state.activeFloorLayerId;
+          if (!newSelectedWasActive) {
+            const where = 'vrstvaId = ' + flId;
+            loadFloors(where).then((floors) => {
+              if (floors) {
+                //munimap.floor.refreshFloorBasedLayers(map);
+              }
+              action.asyncDispatch(actions.floors_loaded());
+            });
+          }
+        } else {
+          //selected feature has not been changed
+          //(the building remains selected, but flId must be deselected)
+          result = state.selectedFeature;
+          flId = null;
+        }
 
         return {
           ...state,
-          selectedBuilding: selectedBuilding || null,
+          floorsTimestamp: Date.now(),
+          selectedFeature: result,
+          activeFloorLayerId: flId,
         };
 
-      //SET_SELECTED_FLOOR
-      case actions.SET_SELECTED_FLOOR:
-        return {
+      // OL_MAP_VIEW_CHANGE
+      case actions.OL_MAP_VIEW_CHANGE:
+        newState = {
           ...state,
-          selectedFloor: action.payload.selectedFloor,
+          center: action.payload.view.center,
+          resolution: action.payload.view.resolution,
+          mapSize: action.payload.view.mapSize,
         };
+        const locationCode = slctr.getSelectedLocationCode(newState);
+        if (locationCode !== undefined) {
+          //null is valid value
+          if (locationCode !== null) {
+            //set to state
+            newState.selectedFeature = locationCode;
+            const where = `polohKod LIKE '${locationCode.substring(0, 5)}%'`;
+            loadFloors(where).then((floors) =>
+              action.asyncDispatch(actions.floors_loaded())
+            );
+          } else {
+            //deselect feature and active floor layer id from state
+            newState.selectedFeature = null;
+            newState.activeFloorLayerId = null;
+          }
+        }
+        return newState;
 
       //DEAFULT
       default:

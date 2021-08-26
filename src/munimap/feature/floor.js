@@ -5,6 +5,7 @@
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
 import {MUNIMAP_URL} from '../conf.js';
+import {getStore as getFloorStore} from '../source/floor.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature
@@ -18,6 +19,12 @@ import {MUNIMAP_URL} from '../conf.js';
  * @property {string} locationCode
  * @property {number} floorLayerId
  */
+
+/**
+ * @type {RegExp}
+ * @protected
+ */
+const CODE_REGEX = /^[A-Z]{3}[0-9]{2}[NPMZS][0-9]{2}$/gi;
 
 /**
  * @type {RangeInterface}
@@ -44,6 +51,14 @@ export const getType = () => {
     };
   }
   return TYPE;
+};
+
+/**
+ * @param {string} maybeCode location code
+ * @return {boolean} if it it location code or not
+ */
+export const isCode = (maybeCode) => {
+  return !!maybeCode.match(CODE_REGEX);
 };
 
 /**
@@ -75,4 +90,33 @@ export const getFloorObject = (feature) => {
     return floorObj;
   }
   return null;
+};
+
+/**
+ * Get floor from its store by floor code.
+ * @param {string} code location code
+ * @return {ol.Feature} floor feature
+ */
+export const getFloorByCode = (code) => {
+  const store = getFloorStore();
+  if (store) {
+    return (
+      store.getFeatures().find((floor) => floor.get('polohKod') === code) ||
+      null
+    );
+  }
+  return null;
+};
+
+/**
+ * Get floor layer id by floor code.
+ * @param {string} code location code
+ * @return {number} floor lazer id
+ */
+export const getFloorLayerIdByCode = (code) => {
+  const floor = getFloorByCode(code);
+  if (!floor) {
+    return;
+  }
+  return floor.get('vrstvaId');
 };

@@ -66,8 +66,9 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {number} markersTimestamp
  * @property {number} zoomToTimestamp
  * @property {number} buildingsTimestamp
- * @property {FloorOptions} selectedFloor
- * @property {string} selectedBuilding
+ * @property {string} selectedFeature
+ * @property {number} floorsTimestamp
+ * @property {number} activeFloorLayerId
  */
 
 /**
@@ -106,9 +107,7 @@ export const INITIAL_STATE = {
   zoomToTimestamp: null,
   baseMap: null,
   buildingsTimestamp: null,
-  selectedFloor: {
-    locationCode: null,
-    floorLayerId: null,
-  },
-  selectedBuilding: null,
+  selectedFeature: null,
+  floorsTimestamp: null,
+  activeFloorLayerId: null,
 };

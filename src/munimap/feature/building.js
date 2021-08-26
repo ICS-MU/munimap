@@ -281,50 +281,45 @@ const getTitleWithoutOrgUnit = (building, lang, opt_separator) => {
 
 /**
  * @param {Feature|ol.render.Feature} building building
- * @param {string} selectedBuilding selected building
+ * @param {string} selectedFeature selected feature
  * @return {boolean} whereas is selected
  */
-const isSelected = (building, selectedBuilding) => {
+const isSelected = (building, selectedFeature) => {
   munimap_assert.assert(isBuilding(building));
   const locCode = getLocationCode(building);
-  return locCode === selectedBuilding;
+  //selectedFeature doesn't have to be only building
+  return selectedFeature ? locCode === selectedFeature.substring(0, 5) : false;
 };
 
 /**
  * @param {Feature} building building
- * @param {Array<string>} activeFloorCodes active floor codes
  * @return {string} floor code
  */
-const getSelectedFloorCode = (building, activeFloorCodes) => {
-  let floorCode = activeFloorCodes.find((code) => {
-    return code.substr(0, 5) === getLocationCode(building);
-  });
-  if (!floorCode) {
-    const markerSource = getMarkerStore();
-    const markedFeatures = markerSource.getFeatures();
-    if (markedFeatures.length > 0) {
-      const firstMarked = markedFeatures.find((marked) => {
-        // if (munimap.room.isRoom(marked) || munimap.door.isDoor(marked)) {
-        //   var buildingLocCode = munimap.building.getLocationCode(building);
-        //   var locationCode =
-        //   /**@type {string}*/ (marked.get('polohKod'));
-        //   return locationCode.substr(0, 5) === buildingLocCode;
-        // } else {
-        return false;
-        // }
-      });
+const getSelectedFloorCode = (building) => {
+  let floorCode;
+  const markerSource = getMarkerStore();
+  const markedFeatures = markerSource.getFeatures();
+  if (markedFeatures.length > 0) {
+    const firstMarked = markedFeatures.find((marked) => {
+      // if (munimap.room.isRoom(marked) || munimap.door.isDoor(marked)) {
+      //   var buildingLocCode = munimap.building.getLocationCode(building);
+      //   var locationCode =
+      //   /**@type {string}*/ (marked.get('polohKod'));
+      //   return locationCode.substr(0, 5) === buildingLocCode;
+      // } else {
+      return false;
+      // }
+    });
 
-      if (firstMarked) {
-        const firstMarkedCode = /**@type {string}*/ (firstMarked.get(
-          'polohKod'
-        ));
-        floorCode = firstMarkedCode.substr(0, 8);
-      }
-    }
-    if (!floorCode) {
-      floorCode = building.get('vychoziPodlazi');
+    if (firstMarked) {
+      const firstMarkedCode = /**@type {string}*/ (firstMarked.get('polohKod'));
+      floorCode = firstMarkedCode.substr(0, 8);
     }
   }
+  if (!floorCode) {
+    floorCode = building.get('vychoziPodlazi');
+  }
+
   return floorCode;
 };
 

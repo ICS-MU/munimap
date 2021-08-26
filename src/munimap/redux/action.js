@@ -66,13 +66,7 @@ export const BUILDINGS_LOADED = 'BUILDINGS_LOADED';
  * @type {string}
  * @const
  */
-export const CHANGE_FLOOR = 'CHANGE_FLOOR';
-
-/**
- * @type {string}
- * @const
- */
-export const SET_SELECTED_FLOOR = 'SET_SELECTED_FLOOR';
+export const FLOORS_LOADED = 'FLOORS_LOADED';
 
 /**
  * @return {redux.AnyAction} action
@@ -170,27 +164,10 @@ export function buildings_loaded() {
 }
 
 /**
- * @param {ol.Feature} object action object
  * @return {redux.AnyAction} action
  */
-export function change_floor(object) {
+export function floors_loaded() {
   return {
-    type: CHANGE_FLOOR,
-    payload: {
-      featureOrCode: object,
-    },
-  };
-}
-
-/**
- * @param {FloorOptions} object action object
- * @return {redux.AnyAction} action
- */
-export function set_selected_floor(object) {
-  return {
-    type: SET_SELECTED_FLOOR,
-    payload: {
-      selectedFloor: object,
-    },
+    type: FLOORS_LOADED,
   };
 }
