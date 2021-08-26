@@ -77,22 +77,6 @@ export const selectedFloorFilter = (feature, selectedFloorCode) => {
 };
 
 /**
- * Create floor object from floor feature.
- * @param {ol.Feature} feature feature
- * @return {?FloorOptions} floor
- */
-export const getFloorObject = (feature) => {
-  if (feature) {
-    const floorObj = {
-      locationCode: /**@type {string}*/ (feature.get('polohKod')),
-      floorLayerId: /**@type {number}*/ (feature.get('vrstvaId')),
-    };
-    return floorObj;
-  }
-  return null;
-};
-
-/**
  * Get floor from its store by floor code.
  * @param {string} code location code
  * @return {ol.Feature} floor feature
