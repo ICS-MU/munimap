@@ -8,9 +8,8 @@
     <meta name="author" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="cache-control" content="no-cache" />
-    <link href="munimap.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="index.css" media="all" rel="stylesheet" type="text/css" />
     <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
-    <script src="munimaplib.js" type="text/javascript"></script>
     <script id="cookie1" type="text/javascript" src="https://cdn.muni.cz/mvcscripts/libs/cookiebar/1.0/cookie1.js"></script>
     
     <title>munimap</title>
@@ -19,12 +18,12 @@
 
   <body>
     <div class="header">
-      <img src="muni/logo.svg" alt="Masarykova univerzita" title="Masarykova univerzita">
+      <img src="./img/logo_muni.svg" alt="Masarykova univerzita" title="Masarykova univerzita">
     </div>
     <h1><a href=""><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a></h1>
     <div class="munimap-warning-wrapper">
       <div class="munimap-warning">
-        <span class="munimap-warning">Upozornění</span> Toto je starší verze ({jpad.appVersion}) munimapu. Doporučujeme použít <a href="/munimap/latest/">nejnovější verzi</a>.
+        <span class="munimap-warning">Upozornění</span> Toto je starší verze (<%= htmlWebpackPlugin.options.appVersion %>) munimapu. Doporučujeme použít <a href="/munimap/latest/">nejnovější verzi</a>.
       </div>
     </div>
     <div class="separator-solid">
@@ -53,9 +52,9 @@
         <div class="right">
           <h3>Jak použít <span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span>?</h3>
           <div class="munimap-links">
-            <a href="example/quickstart.html">Jak začít</a>
-            <a href="doc">Popis rozhraní</a>
-            <a href="example/">Příklady použití</a>
+            <a href="./example/quickstart.html">Jak začít</a>
+            <a href="./doc">Popis rozhraní</a>
+            <a href="./example/">Příklady použití</a>
           </div>
           <h3>Kdo vytvořil <span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span>?</h3>
           <p>
@@ -76,7 +75,7 @@
         <div class="left">
           <h3>Jaké technologie používá <span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span>?</h3>
           <ul>
-            <li><a href="http://openlayers.org/" target="_blank">OpenLayers 5</a> - {jpad.olVersion}</li>
+            <li><a href="http://openlayers.org/" target="_blank">OpenLayers 5</a> - <%= htmlWebpackPlugin.options.olVersion %></li>
             <li><a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a></li>
             <li><a href="https://developers.google.com/closure/" target="_blank">Google Closure Tools</a></li>
             <li><a href="http://fontawesome.io/" target="_blank">Font Awesome</a></li>
@@ -112,7 +111,7 @@
       <div class="separator"></div>
       <div class="columns">
         <div class="left">
-          <h3>Co je nového v knihovně <span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span> (v{jpad.appVersion})?</h3>
+          <h3>Co je nového v knihovně <span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span> (v<%= htmlWebpackPlugin.options.appVersion %>)?</h3>
           <ul>
             <li>přidáno tlačítko pro návrat do výchozí pozice</li>
             <li>v případě nedostatku místa na mapě dochází k odebrání odkazů na Mapy.cz/Google Maps a sbalení panelu tlačítek</li>
@@ -147,7 +146,7 @@
               </div>
           </div>
           <div class="munimap-links">
-            <a href="/munimap/latest/doc/changelog.html" target="_blank">Historie změn</a>
+            <a href="./doc/changelog.html" target="_blank">Historie změn</a>
           </div>
         </div>        
       </div>
@@ -157,7 +156,7 @@
         Kontakt: <a href="mailto:gishelp%40ics.muni.cz">gishelp&#064;ics.muni.cz</a>
       </div>
       <div class="right">
-        <a href="http://www.ics.muni.cz/" target="_blank"><img class="logo-uvt" src="muni/ics/logo.png" alt="Ústav výpočetní techniky MU" title="Ústav výpočetní techniky MU"></a>
+        <a href="http://www.ics.muni.cz/" target="_blank"><img class="logo-uvt" src="./img/logo_ics.png" alt="Ústav výpočetní techniky MU" title="Ústav výpočetní techniky MU"></a>
       </div>
     </div>
 

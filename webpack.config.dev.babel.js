@@ -1,31 +1,50 @@
+import CopyPlugin from 'copy-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 import PACKAGE from './package.json';
+import glob from 'glob';
 import path from 'path';
 import webpack from 'webpack';
 
+const APP_PATH = '/';
+const PROD_DOMAIN = `localhost:${JSON.stringify(8080)}`;
+
+const opts = {
+  scriptLoading: 'blocking',
+  inject: 'head',
+  minify: false,
+  appVersion: PACKAGE.version,
+  olVersion: PACKAGE.dependencies.ol.substr(0, 1).match(/[0-9]/i)
+    ? PACKAGE.dependencies.ol
+    : PACKAGE.dependencies.ol.substring(1),
+  appPath: APP_PATH,
+  prodDomain: PROD_DOMAIN,
+};
+const examplePageNames = glob
+  .sync('./src/example/*.html')
+  .map((item) => path.basename(item, '.html'));
+const exampleHtmlPlugins = examplePageNames.map((name) => {
+  return new HtmlWebpackPlugin({
+    template: `./src/example/${name}.html`,
+    filename: `./example/${name}.html`,
+    ...opts,
+  });
+});
+
 export default {
-  entry: [
-    'regenerator-runtime/runtime',
-    path.resolve(__dirname, 'src/munimap/index.js'),
-  ],
+  entry: {
+    munimaplib: [
+      'regenerator-runtime/runtime',
+      path.resolve(__dirname, 'src/munimap/index.js'),
+    ],
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'munimaplib.js',
+    filename: '[name].js',
     library: {
       name: 'munimap',
       type: 'umd',
     },
-    clean: {
-      keep: (filename) => {
-        const keepExamples = filename.includes('example/');
-        const keepMuni = filename.includes('muni/');
-        const keepRootCss = /munimap.css$/.test(filename);
-        const keepRootHtml = /index.html$/.test(filename);
-        const keepFavicon = filename === 'favicon.ico';
-        return (
-          keepExamples || keepMuni || keepRootCss || keepRootHtml || keepFavicon
-        );
-      },
-    },
+    clean: true,
   },
   devServer: {
     static: path.join(__dirname, 'dist'),
@@ -73,9 +92,42 @@ export default {
   plugins: [
     new webpack.DefinePlugin({
       PRODUCTION: JSON.stringify(false),
-      VERSION: JSON.stringify(PACKAGE.VERSION),
-      APP_PATH: JSON.stringify('/'),
-      PROD_DOMAIN: JSON.stringify(`localhost:${JSON.stringify(8080)}`),
+      VERSION: JSON.stringify(PACKAGE.version),
+      APP_PATH: JSON.stringify(APP_PATH),
+      PROD_DOMAIN: JSON.stringify(PROD_DOMAIN),
     }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: '*.css',
+          context: path.resolve(__dirname, 'src', 'css'),
+        },
+        {
+          from: '*.css',
+          to: 'example',
+          context: path.resolve(__dirname, 'src', 'css', 'example'),
+        },
+        {
+          from: '*.@(png|svg)',
+          to: 'img',
+          context: path.resolve(__dirname, 'src', 'img'),
+        },
+        {
+          from: '*.ico',
+          context: path.resolve(__dirname, 'src', 'img'),
+        },
+        {
+          from: '*.geojson',
+          to: 'example',
+          context: path.resolve(__dirname, 'resources'),
+        },
+      ],
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: './index.html',
+      ...opts,
+    }),
+    ...exampleHtmlPlugins,
   ],
 };

@@ -6,32 +6,31 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
     <link href="example.css" media="all" rel="stylesheet" type="text/css" />
-    <link href="../munimap.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="../index.css" media="all" rel="stylesheet" type="text/css" />
     
     <link rel='shortcut icon' type='image/x-icon' href='../favicon.ico' />
 
-    <script src="../munimaplib.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
     <script id="cookie1" type="text/javascript" src="https://cdn.muni.cz/mvcscripts/libs/cookiebar/1.0/cookie1.js"></script>
     
-    <title>munimap - změna jazyka</title>
+    <title>munimap - označení objektu MU</title>
   </head>
 
   <body>
     <div class="header">
-      <img src="../muni/logo.svg" alt="Masarykova univerzita" title="Masarykova univerzita">
+      <img src="../img/logo_muni.svg" alt="Masarykova univerzita" title="Masarykova univerzita">
     </div>
-    <h1><a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> - změna jazyka</h1>
+    <h1><a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> - označení objektu MU</h1>
     <div class="munimap-warning-wrapper">
       <div class="munimap-warning">
-        <span class="munimap-warning">Upozornění</span> Toto je starší verze ({jpad.appVersion}) munimapu. Doporučujeme použít <a href="/munimap/latest/example/language.html">nejnovější verzi</a>.
+        <span class="munimap-warning">Upozornění</span> Toto je starší verze (<%= htmlWebpackPlugin.options.appVersion %>) munimapu. Doporučujeme použít <a href="/munimap/latest/example/marker.html">nejnovější verzi</a>.
       </div>
     </div>
     <div class="separator-solid">
     </div>
     <div class="navigation">
       <div class="left">
-        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>změna jazyka</span>
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>označení objektu MU</span>
       </div>
     </div>
     <div class="content">
@@ -39,37 +38,38 @@
     </div>
     <div class="content">
       <p>
-        Mapové okno vytvořené pomocí knihovny munimap může být prezentováno v češtině a angličtině. Jazyk, který je
-        použit pro zobrazení popisků a názvů nástrojů v mapě, si vyberete pomocí parametru <code><a href="../doc/#lang">lang</a></code> funkce
-        <code><a href="../doc/#create">munimap.create</a></code>. Pro češtinu použijte
-        jako hodnotu tohoto parametru řetězec <code>cs</code> a pro angličtinu <code>en</code>:
+        Pro zvýraznění budovy / místnosti / dveří v mapě vložte následující kód na konec stránky (před uzavírací značku <code>&lt;/body&gt;</code>),
+        ten ovládá nastavení mapy:
       </p>
       <pre class="prettyprint">
 &lt;script type="text/javascript"&gt;
   munimap.create({
     target: 'map',
-    lang: 'en'
+    markers: ['BMA01', 'BMB01N01057', 'BMB02P01D077']
   });
 &lt;/script&gt;
       </pre>
-      <p>
-        Změnu jazyka můžete ověřit například v bublinovém popisku tlačítek pro přiblížení
-        a oddálení mapy.
-      </p>
       <p>
         V příkladu použité parametry funkce <code><a href="../doc/#create">munimap.create</a></code> jsou následující:
       </p>
       <ul>
         <li><code><a href="../doc/#target">target</a></code> - určuje id elementu, do kterého se mapa vykreslí</li>
-        <li><code><a href="../doc/#lang">lang</a></code> - umožňuje přepínat mezi českými a anglickými popisy v mapě</li>
-      </ul>      
+        <li><code><a href="../doc/#zoom">zoom</a></code> - určuje úroveň přiblížení mapy po načtení stránky</li>
+        <li><code><a href="../doc/#markers">markers</a></code> - určuje, který objekt či objekty se v mapě označí a mapa se na ně vycentruje</li>
+      </ul>
+      <p>
+        Parametr <code>markers</code> akceptuje polohový kód objektu (nebo jejich seznam oddělený čárkou).
+        Tyto polohové kódy můžete k jednotlivým objektům dohledat například v aplikaci
+        <a href="https://maps.muni.cz/kompas" target="_blank">Kompas</a>.
+      </p>
       <p>
         Více se dozvíte v naší <a href="../doc">dokumentaci</a>.
-      </p>      
+      </p>
+
     </div>
     <div class="navigation">
       <div class="left">
-        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>změna jazyka</span>
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>zvýraznění budovy</span>
       </div>
     </div>
     <div class="footer">
@@ -77,14 +77,15 @@
         Kontakt: <a href="mailto:gishelp%40ics.muni.cz">gishelp&#064;ics.muni.cz</a>
       </div>
       <div class="right">
-        <a href="http://www.ics.muni.cz/" target="_blank"><img class="logo-uvt" src="../muni/ics/logo.png" alt="Ústav výpočetní techniky MU" title="Ústav výpočetní techniky MU"></a>
+        <a href="http://www.ics.muni.cz/" target="_blank"><img class="logo-uvt" src="../img/logo_ics.png" alt="Ústav výpočetní techniky MU" title="Ústav výpočetní techniky MU"></a>
       </div>
     </div>
 
     <script type="text/javascript">
       munimap.create({
         target: 'map',
-        lang: 'en'
+        //zoom: 17,
+        markers: ['BMA01', 'BMB01N01057', 'BMB02P01D077']
       });
     </script>
     <script>

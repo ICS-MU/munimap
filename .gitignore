@@ -1,6 +1,4 @@
 /.idea
 /node_modules
-/dist/munimaplib.js*
-/dist/fonts
-/dist/img
+/dist
 /.vscode

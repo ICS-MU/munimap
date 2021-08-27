@@ -6,51 +6,52 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
     <link href="example.css" media="all" rel="stylesheet" type="text/css" />
-    <link href="../munimap.css" media="all" rel="stylesheet" type="text/css" />
-    
+    <link href="../index.css" media="all" rel="stylesheet" type="text/css" />
     <link rel='shortcut icon' type='image/x-icon' href='../favicon.ico' />
 
-    <script src="../munimaplib.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
     <script id="cookie1" type="text/javascript" src="https://cdn.muni.cz/mvcscripts/libs/cookiebar/1.0/cookie1.js"></script>
     
-    <title>munimap - zobrazení odkazů Mapy.cz / Mapy Google</title>
+    <title>munimap - změna podkladové mapy</title>
   </head>
 
   <body>
     <div class="header">
-      <img src="../muni/logo.svg" alt="Masarykova univerzita" title="Masarykova univerzita">
+      <img src="../img/logo_muni.svg" alt="Masarykova univerzita" title="Masarykova univerzita">
     </div>
-    <h1><a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> - odkaz na Mapy.cz / Mapy Google</h1>
+    <h1><a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> - změna podkladové mapy</h1>
     <div class="munimap-warning-wrapper">
       <div class="munimap-warning">
-        <span class="munimap-warning">Upozornění</span> Toto je starší verze ({jpad.appVersion}) munimapu. Doporučujeme použít <a href="/munimap/latest/example/language.html">nejnovější verzi</a>.
+        <span class="munimap-warning">Upozornění</span> Toto je starší verze (<%= htmlWebpackPlugin.options.appVersion %>) munimapu. Doporučujeme použít <a href="/munimap/latest/example/basemap.html">nejnovější verzi</a>.
       </div>
     </div>
     <div class="separator-solid">
     </div>
     <div class="navigation">
       <div class="left">
-        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>odkaz na Mapy.cz / Mapy Google</span>
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>změna podkladové mapy</span>
       </div>
     </div>
     <div class="content">
       <div id="map" class="map"></div>
     </div>
+    
     <div class="content">
       <p>
-        Do mapy si můžete přidat odkazy na Mapy.cz a Mapy Google nastavením <code><a href="../doc/#link">mapLinks</a></code> funkce
-        <code><a href="../doc/#create">munimap.create</a></code>. na hodnotu <code>true</code>. Pokud není tento parametr použit,
-        odkazy se nezobrazují. Stejně tak se nezobrazují, pokud je tento parametr nastaven na <code>false</code>.
+        Podkladovou mapu si vyberete pomocí parametru <code><a href="../doc/#baseMap">baseMap</a></code> funkce
+        <code><a href="../doc/#create">munimap.create</a></code>. Pro barevnou ArcGIS Online mapu použijte <code>arcgis</code> a pro její černobílou variantu pak <code>arcgis-bw</code>.
+        Výchozí hodnota je <code>arcgis-bw</code>, pokud tedy parametr <code><a href="../doc/#baseMap">baseMap</a></code> vynecháte,
+        zobrazí se černobílá ArcGIS Online mapa. Pro barevnou OpenStreetMapu použijte
+        jako hodnotu tohoto parametru řetězec <code>osm</code> a pro její černobílou variantu pak <code>osm-bw</code>.
       </p>
       <p>
+        V prohlížečích Internet Explorer je podkladová mapa zobrazena vždy barevně nezávisle na hodnotě parametru baseMap.
       </p>
       <pre class="prettyprint">
 &lt;script type="text/javascript"&gt;
   munimap.create({
     target: 'map',
-    zoom: 18,
-    mapLinks: true
+    baseMap: 'arcgis'
   });
 &lt;/script&gt;
       </pre>
@@ -59,8 +60,7 @@
       </p>
       <ul>
         <li><code><a href="../doc/#target">target</a></code> - určuje id elementu, do kterého se mapa vykreslí</li>
-        <li><code><a href="../doc/#zoom">zoom</a></code> - určuje úroveň přiblížení mapy po načtení stránky</li>
-        <li><code><a href="../doc/#link">mapLinks</a></code> - zapíná/vypíná odkazy</li>
+        <li><code><a href="../doc/#baseMap">basemap</a></code> - umožňuje vybrat podkladovou mapu</li>
       </ul>      
       <p>
         Více se dozvíte v naší <a href="../doc">dokumentaci</a>.
@@ -68,7 +68,7 @@
     </div>
     <div class="navigation">
       <div class="left">
-        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>odkaz na Mapy.cz / Mapy Google</span>
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>změna podkladové mapy</span>
       </div>
     </div>
     <div class="footer">
@@ -76,15 +76,14 @@
         Kontakt: <a href="mailto:gishelp%40ics.muni.cz">gishelp&#064;ics.muni.cz</a>
       </div>
       <div class="right">
-        <a href="http://www.ics.muni.cz/" target="_blank"><img class="logo-uvt" src="../muni/ics/logo.png" alt="Ústav výpočetní techniky MU" title="Ústav výpočetní techniky MU"></a>
+        <a href="http://www.ics.muni.cz/" target="_blank"><img class="logo-uvt" src="../img/logo_ics.png" alt="Ústav výpočetní techniky MU" title="Ústav výpočetní techniky MU"></a>
       </div>
     </div>
-
+    
     <script type="text/javascript">
       munimap.create({
         target: 'map',
-        zoom: 18,
-        mapLinks: true
+        baseMap: 'arcgis'
       });
     </script>
     <script>
