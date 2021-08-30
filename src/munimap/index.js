@@ -3,12 +3,16 @@
  * @module index
  */
 import 'ol/ol.css';
-import '../index.css'; //must be after ol.css => rewrite some rules
+import '../css/munimaplib.css'; //must be after ol.css => rewrite some rules
 import * as munimap_matomo from './matomo/matomo.js';
 import create from './create.js';
 import reset from './reset.js';
 import {Map, View, Feature} from 'ol';
 import {Point} from 'ol/geom';
+
+import '../img/google.png';
+import '../img/seznam.png';
+import '../img/marker.style.coridors.bg.png';
 
 munimap_matomo.init();
 

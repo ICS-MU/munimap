@@ -5,10 +5,10 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-  <link href="example.css" media="all" rel="stylesheet" type="text/css" />
-  <link href="../index.css" media="all" rel="stylesheet" type="text/css" />
+  <link href="../css/example/example.css" media="all" rel="stylesheet" type="text/css" />
+  <link href="../css/munimap.css" media="all" rel="stylesheet" type="text/css" />
 
-  <link rel='shortcut icon' type='image/x-icon' href='../favicon.ico' />
+  <link rel='shortcut icon' type='image/x-icon' href='../img/favicon.ico' />
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 
@@ -27,7 +27,7 @@
     </a> - označení místa mimo MU</h1>
   <div class="munimap-warning-wrapper">
     <div class="munimap-warning">
-      <span class="munimap-warning">Upozornění</span> Toto je starší verze (<%= htmlWebpackPlugin.options.appVersion %>) munimapu. Doporučujeme použít
+      <span class="munimap-warning">Upozornění</span> Toto je starší verze (<%= appVersion %>) munimapu. Doporučujeme použít
       <a href="/munimap/latest/example/custommarker.html">nejnovější verzi</a>.
     </div>
   </div>
@@ -51,11 +51,11 @@
     <p>
       Knihovna munimap umožňuje vložit "špendlík" na libovolné místo v mapě. V tomto příkladu je v mapě vyznačena poloha brněnského
       hlavního nádraží a autobusového nádraží. "Špendlík" je definován jako objekt typu
-      <a href="http://openlayers.org/en/<%= htmlWebpackPlugin.options.olVersion %>/apidoc/module-ol_Feature-Feature.html" target="_blank">ol/Feature</a> s parametry:</p>
+      <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_Feature-Feature.html" target="_blank">ol/Feature</a> s parametry:</p>
     <ul class="">
       <li>
         <b>geometry</b> - pomocí objektu typu
-        <a href="http://openlayers.org/en/<%= htmlWebpackPlugin.options.olVersion %>/apidoc/module-ol_geom_Point-Point.html" target="_blank">ol/geom/Point</a> definuje polohu "špendlíku" v mapě
+        <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_geom_Point-Point.html" target="_blank">ol/geom/Point</a> definuje polohu "špendlíku" v mapě
       </li>
       <li>
         <b>label</b> - textový popis, který se zobrazí u "špendlíku" v mapě

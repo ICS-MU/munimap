@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <link href="example.css" media="all" rel="stylesheet" type="text/css" />
-    <link href="../index.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="../css/example/example.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="../css/munimap.css" media="all" rel="stylesheet" type="text/css" />
     
-    <link rel='shortcut icon' type='image/x-icon' href='../favicon.ico' />
+    <link rel='shortcut icon' type='image/x-icon' href='../img/favicon.ico' />
 
     <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
     <script id="cookie1" type="text/javascript" src="https://cdn.muni.cz/mvcscripts/libs/cookiebar/1.0/cookie1.js"></script>
@@ -22,7 +22,7 @@
     <h1><a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> - přidání vrstvy nezávislé na podlaží</h1>
     <div class="munimap-warning-wrapper">
       <div class="munimap-warning">
-        <span class="munimap-warning">Upozornění</span> Toto je starší verze (<%= htmlWebpackPlugin.options.appVersion %>) munimapu. Doporučujeme použít <a href="/munimap/latest/example/faculties.html">nejnovější verzi</a>.
+        <span class="munimap-warning">Upozornění</span> Toto je starší verze (<%= appVersion %>) munimapu. Doporučujeme použít <a href="/munimap/latest/example/faculties.html">nejnovější verzi</a>.
       </div>
     </div>
     <div class="separator-solid">
@@ -43,12 +43,12 @@
       </p>
       <p>
         Nejprve definujeme vrstvu, kterou budeme chtít do mapy přidat, jako objekt typu 
-        <a href="http://openlayers.org/en/<%= htmlWebpackPlugin.options.olVersion %>/apidoc/module-ol_layer_Vector-VectorLayer.html" target="_blank">ol/layer/Vector</a>. Objektu lze nastavit například:
+        <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_layer_Vector-VectorLayer.html" target="_blank">ol/layer/Vector</a>. Objektu lze nastavit například:
       </p>
       <ul>
-        <li>zdroj dat pro vrstvu (<code>source</code>) - <a href="http://openlayers.org/en/<%= htmlWebpackPlugin.options.olVersion %>/apidoc/module-ol_source_Vector-VectorSource.html" target="_blank">ol/source/Vector</a></li>
+        <li>zdroj dat pro vrstvu (<code>source</code>) - <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_source_Vector-VectorSource.html" target="_blank">ol/source/Vector</a></li>
         <li>
-          styl vykreslení vrstvy (<code>style</code>)- <a href="http://openlayers.org/en/<%= htmlWebpackPlugin.options.olVersion %>/apidoc/module-ol_style_Style-Style.html" target="_blank">ol/style/Style</a>
+          styl vykreslení vrstvy (<code>style</code>)- <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_style_Style-Style.html" target="_blank">ol/style/Style</a>
         </li>
         <li>
           rozsah měřítek, v nichž má být vrstva vykreslena (<code>minResolution</code>, <code>maxResolution</code>).
@@ -75,10 +75,10 @@
       <p>  
         Mapové okno vytvoříme voláním funkce <code><a href="../doc/#create">munimap.create</a></code> a pro zvýraznění vybraných budov zadáme  
         do parametru <code>markers</code> jejich polohové kódy oddělené čárkou. Funkce <code><a href="../doc/#create">munimap.create</a></code>
-        vrací objekt typu <a href="https://google.github.io/closure-library/api/goog.Promise.html" target="_blank">goog.Promise</a>&lt;<a href="http://openlayers.org/en/<%= htmlWebpackPlugin.options.olVersion %>/apidoc/module-ol_Map-Map.html" target="_blank">ol/Map</a>&gt;. Díky tomu je možné dále pracovat s mapou,
+        vrací objekt typu <a href="https://google.github.io/closure-library/api/goog.Promise.html" target="_blank">goog.Promise</a>&lt;<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_Map-Map.html" target="_blank">ol/Map</a>&gt;. Díky tomu je možné dále pracovat s mapou,
         která je vytvořena touto funkcí. K tomu použijeme následné volání funkce <code>then</code>, v němž je definováno, co se provede po úspěšném
       vytvoření mapy pomocí funkce s&nbsp;parametrem, kterým je právě vytvořená mapa. Uvnitř této funkce je možné s mapou dále pracovat,
-      a tak do ní můžeme přidat dříve nadefinovanou vrstvu pomocí metody <a href="http://openlayers.org/en/<%= htmlWebpackPlugin.options.olVersion %>/apidoc/module-ol_Map-Map.html#addLayer" target="_blank">addLayer</a>.
+      a tak do ní můžeme přidat dříve nadefinovanou vrstvu pomocí metody <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_Map-Map.html#addLayer" target="_blank">addLayer</a>.
       </p>
       <pre class="prettyprint">
   munimap.create({
@@ -155,7 +155,7 @@
         source: new ol.source.Vector({
           format: new ol.format.GeoJSON(),
           projection: 'EPSG:3857',
-          url: 'layer.geojson'
+          url: 'data/layer.geojson'
         }),
         style: new ol.style.Style({
           stroke: new ol.style.Stroke({

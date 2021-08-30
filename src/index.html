@@ -8,8 +8,8 @@
     <meta name="author" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="cache-control" content="no-cache" />
-    <link href="index.css" media="all" rel="stylesheet" type="text/css" />
-    <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
+    <link href="./css/munimap.css" media="all" rel="stylesheet" type="text/css" />
+    <link rel='shortcut icon' type='image/x-icon' href='./img/favicon.ico' />
     <script id="cookie1" type="text/javascript" src="https://cdn.muni.cz/mvcscripts/libs/cookiebar/1.0/cookie1.js"></script>
     
     <title>munimap</title>
@@ -23,7 +23,7 @@
     <h1><a href=""><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a></h1>
     <div class="munimap-warning-wrapper">
       <div class="munimap-warning">
-        <span class="munimap-warning">Upozornění</span> Toto je starší verze (<%= htmlWebpackPlugin.options.appVersion %>) munimapu. Doporučujeme použít <a href="/munimap/latest/">nejnovější verzi</a>.
+        <span class="munimap-warning">Upozornění</span> Toto je starší verze (<%= appVersion %>) munimapu. Doporučujeme použít <a href="/munimap/latest/">nejnovější verzi</a>.
       </div>
     </div>
     <div class="separator-solid">
@@ -75,7 +75,7 @@
         <div class="left">
           <h3>Jaké technologie používá <span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span>?</h3>
           <ul>
-            <li><a href="http://openlayers.org/" target="_blank">OpenLayers 5</a> - <%= htmlWebpackPlugin.options.olVersion %></li>
+            <li><a href="http://openlayers.org/" target="_blank">OpenLayers 5</a> - <%= olVersion %></li>
             <li><a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a></li>
             <li><a href="https://developers.google.com/closure/" target="_blank">Google Closure Tools</a></li>
             <li><a href="http://fontawesome.io/" target="_blank">Font Awesome</a></li>
@@ -111,7 +111,7 @@
       <div class="separator"></div>
       <div class="columns">
         <div class="left">
-          <h3>Co je nového v knihovně <span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span> (v<%= htmlWebpackPlugin.options.appVersion %>)?</h3>
+          <h3>Co je nového v knihovně <span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span> (v<%= appVersion %>)?</h3>
           <ul>
             <li>přidáno tlačítko pro návrat do výchozí pozice</li>
             <li>v případě nedostatku místa na mapě dochází k odebrání odkazů na Mapy.cz/Google Maps a sbalení panelu tlačítek</li>

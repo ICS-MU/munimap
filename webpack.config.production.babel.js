@@ -12,7 +12,7 @@ const PROD_DOMAIN = 'maps.muni.cz';
 const opts = {
   scriptLoading: 'blocking',
   inject: 'head',
-  minify: false, //true
+  minify: true,
   appVersion: PACKAGE.version,
   olVersion: PACKAGE.dependencies.ol.substr(0, 1).match(/[0-9]/i)
     ? PACKAGE.dependencies.ol
@@ -30,6 +30,16 @@ const exampleHtmlPlugins = examplePageNames.map((name) => {
     ...opts,
   });
 });
+
+const preprocessor = (content) => {
+  const newContent = (content) => {
+    const INCLUDE_PATTERN = /<%= (.*) %>/gi;
+    return INCLUDE_PATTERN.test(content)
+      ? content.replace(INCLUDE_PATTERN, (_, group) => opts[group])
+      : content;
+  };
+  return newContent(content);
+};
 
 export default {
   entry: {
@@ -50,37 +60,56 @@ export default {
   module: {
     rules: [
       {
+        test: /\.html$/,
+        use: [
+          {
+            loader: 'html-loader',
+            options: {
+              minimize: true,
+              preprocessor: preprocessor,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.css$/,
+        exclude: [
+          path.resolve(__dirname, 'src', 'css', 'example'),
+          path.join(__dirname, 'src', 'css', 'munimap.css'),
+        ],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+      {
+        test: /\.css/,
+        include: [
+          path.resolve(__dirname, 'src', 'css', 'example'),
+          path.join(__dirname, 'src', 'css', 'munimap.css'),
+        ],
+        type: 'asset/resource',
+        generator: {
+          filename: 'css/[name][ext][query]',
+        },
+      },
+      {
         test: /\.(js)$/,
         exclude: /node_modules/,
         use: 'babel-loader',
       },
       {
-        test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        test: /\.(png|jpg|jpeg|svg|ico)/,
+        exclude: /font/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'img/[name][ext][query]',
+        },
       },
       {
         test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'fonts/',
-            },
-          },
-        ],
-      },
-      {
-        test: /\.(png)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'img/',
-            },
-          },
-        ],
+        include: /font/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'font/[name][ext][query]',
+        },
       },
     ],
   },
@@ -96,26 +125,8 @@ export default {
     new CopyPlugin({
       patterns: [
         {
-          from: '*.css',
-          context: path.resolve(__dirname, 'src', 'css'),
-        },
-        {
-          from: '*.css',
-          to: 'example',
-          context: path.resolve(__dirname, 'src', 'css', 'example'),
-        },
-        {
-          from: '*.@(png|svg)',
-          to: 'img',
-          context: path.resolve(__dirname, 'src', 'img'),
-        },
-        {
-          from: '*.ico',
-          context: path.resolve(__dirname, 'src', 'img'),
-        },
-        {
           from: '*.geojson',
-          to: 'example',
+          to: 'example/data',
           context: path.resolve(__dirname, 'resources'),
         },
       ],
