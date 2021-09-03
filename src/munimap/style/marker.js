@@ -49,6 +49,12 @@ import {Fill, Stroke, Style, Text} from 'ol/style';
  */
 
 /**
+ * @type {string}
+ * @const
+ */
+const CORRIDOR_IMG_PATH = APP_PATH + 'img/marker.style.coridors.bg.png';
+
+/**
  * @type {Fill}
  * @const
  */
@@ -181,7 +187,7 @@ const getRoom = () => ROOM;
 const getPattern = (event) => {
   const context = event.context;
   const image = new Image();
-  const imgsrc = './img/marker.style.coridors.bg.png';
+  const imgsrc = CORRIDOR_IMG_PATH;
   image.src = imgsrc;
   image.onload = () => {
     const pattern = context.createPattern(image, 'repeat');

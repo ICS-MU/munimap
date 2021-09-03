@@ -6,8 +6,10 @@ import glob from 'glob';
 import path from 'path';
 import webpack from 'webpack';
 
-const APP_PATH = '/munimap/';
+const APP_PATH = '/munimap/latest/';
 const PROD_DOMAIN = 'maps.muni.cz';
+
+const OUTPUT_PATH = path.join(path.resolve(__dirname, 'dist'), APP_PATH);
 
 const opts = {
   scriptLoading: 'blocking',
@@ -49,7 +51,8 @@ export default {
     ],
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    // path: path.resolve(__dirname, 'dist'),
+    path: OUTPUT_PATH,
     filename: '[name].js',
     library: {
       name: 'munimap',

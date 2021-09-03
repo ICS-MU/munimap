@@ -31,7 +31,7 @@ const BIG_LABEL_RESOLUTION = munimap_range.createResolution(0, 0.15);
  * @type {string}
  * @const
  */
-const CORRIDOR_IMG_PATH = '/img/room.style.coridors.bg.png';
+const CORRIDOR_IMG_PATH = APP_PATH + 'img/room.style.coridors.bg.png';
 
 /**
  * @type {Array<Style>}

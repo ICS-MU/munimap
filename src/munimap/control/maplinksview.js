@@ -17,13 +17,13 @@ import {get as getProjection, transform} from 'ol/proj';
  * @type {string}
  * @const
  */
-const SEZNAM_IMG_PATH = '/img/seznam.png';
+const SEZNAM_IMG_PATH = APP_PATH + 'img/seznam.png';
 
 /**
  * @type {string}
  * @const
  */
-const GOOGLE_IMG_PATH = '/img/google.png';
+const GOOGLE_IMG_PATH = APP_PATH + 'img/google.png';
 
 /**
  * @param {string} path path

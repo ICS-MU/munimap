@@ -5,8 +5,10 @@ import glob from 'glob';
 import path from 'path';
 import webpack from 'webpack';
 
-const APP_PATH = '/';
+const APP_PATH = '/munimap/testing/';
 const PROD_DOMAIN = `localhost:${JSON.stringify(8080)}`;
+
+const OUTPUT_PATH = path.join(path.resolve(__dirname, 'dist'), APP_PATH);
 
 const opts = {
   scriptLoading: 'blocking',
@@ -48,7 +50,8 @@ export default {
     ],
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    //path: path.resolve(__dirname, 'dist'),
+    path: OUTPUT_PATH,
     filename: '[name].js',
     library: {
       name: 'munimap',
@@ -57,9 +60,13 @@ export default {
     clean: true,
   },
   devServer: {
-    static: path.join(__dirname, 'dist'),
+    //static: path.join(__dirname, 'dist'),
+    static: OUTPUT_PATH,
     hot: true,
-    open: true,
+    open: [APP_PATH],
+    dev: {
+      publicPath: APP_PATH,
+    },
   },
   module: {
     rules: [
