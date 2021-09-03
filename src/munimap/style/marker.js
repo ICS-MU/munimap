@@ -166,6 +166,16 @@ const DOOR = new Style({
 let CORRIDOR = [];
 
 /**
+ * @return {Array<Style>} corridor style
+ */
+const getCorridor = () => CORRIDOR;
+
+/**
+ * @return {Style} room style
+ */
+const getRoom = () => ROOM;
+
+/**
  * @param {RenderEvent} event event
  */
 const getPattern = (event) => {
@@ -383,9 +393,9 @@ export const styleFunction = (feature, resolution, options) => {
 export {
   FILL,
   BUILDING,
-  ROOM,
   DOOR,
-  CORRIDOR,
+  getCorridor,
+  getRoom,
   WHITE_TO_GREY_CACHE,
   NO_GEOMETRY_BUILDING,
   BUILDING_STROKE,

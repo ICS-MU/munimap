@@ -345,6 +345,7 @@ export default (options) => {
         munimap_view.ensureClusterUpdate(state, map);
         munimap_view.ensureBaseMap(basemapLayer, map);
         munimap_view.refreshStyles(state, map.getLayers().getArray());
+        munimap_view.refreshActiveLayers(state);
       }
     };
 

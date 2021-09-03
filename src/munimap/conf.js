@@ -69,6 +69,8 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {string} selectedFeature
  * @property {number} floorsTimestamp
  * @property {number} activeFloorLayerId
+ * @property {number} defaultRoomsTimestamp
+ * @property {number} activeRoomsTimestamp
  */
 
 /**
@@ -110,4 +112,6 @@ export const INITIAL_STATE = {
   selectedFeature: null,
   floorsTimestamp: null,
   activeFloorLayerId: null,
+  defaultRoomsTimestamp: null,
+  activeRoomsTimestamp: null,
 };

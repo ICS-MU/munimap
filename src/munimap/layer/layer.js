@@ -4,8 +4,11 @@
 
 import * as munimap_layer_building from './building.js';
 import * as munimap_layer_complex from './complex.js';
-import * as munimap_style_complex from '../style/complex.js';
-import * as munimap_utils from '../utils/utils.js';
+import {
+  createActive as createActiveRoomLayer,
+  createLabel as createRoomLabelLayer,
+  create as createRoomLayer,
+} from './room.js';
 
 /**
  * @typedef {import("ol/layer/BaseVector").Options} BaseLayerOptions
@@ -17,8 +20,8 @@ import * as munimap_utils from '../utils/utils.js';
 /**
  * @typedef {Object} VectorLayerExtendedOptions
  * @property {string} id
- * @property {(options: FeatureClickHandlerOptions) => boolean} isFeatureClickable
- * @property {(options: FeatureClickHandlerOptions) => void} featureClickHandler
+ * @property {(options: FeatureClickHandlerOptions) => boolean} [isFeatureClickable]
+ * @property {(options: FeatureClickHandlerOptions) => void} [featureClickHandler]
  * @property {boolean} [redrawOnFloorChange]
  *
  * @typedef {BaseLayerOptions & VectorLayerExtendedOptions} VectorLayerOptions
@@ -71,22 +74,6 @@ const setDefaultLayersProps = (layers) => {
     const layerId = layer.get('id');
 
     switch (layerId) {
-      // case munimap.room.DEFAULT_LAYER_ID:
-      //   layer.once('precompose', munimap.room.style.setCorridorStyle);
-      //   break;
-      // case munimap.room.ACTIVE_LAYER_ID:
-      //   if (!activeRoomsStore) {
-      //     activeRoomsStore = munimap.room.createActiveStore(map);
-      //   }
-      //   layer.setSource(activeRoomsStore);
-      //   layer.once('precompose', munimap.room.style.setCorridorStyle);
-      //   break;
-      // case munimap.room.label.LAYER_ID:
-      //   if (!activeRoomsStore) {
-      //     activeRoomsStore = munimap.room.createActiveStore(map);
-      //   }
-      //   layer.setSource(activeRoomsStore);
-      //   break;
       // case munimap.door.ACTIVE_LAYER_ID:
       //   var doorsStore = munimap.door.createActiveStore(map);
       //   layer.setSource(doorsStore);
@@ -104,25 +91,26 @@ const setDefaultLayersProps = (layers) => {
 /**
  * @param {string} lang lang
  * @param {boolean} showLabels whether show labels for MU objects
+ * @param {boolean} showLocationCodes whether to show only location codes
  *
  * @return {Array.<ol.layer.Vector>} layers
  */
-const getDefaultLayers = (lang, showLabels) => {
+const getDefaultLayers = (lang, showLabels, showLocationCodes) => {
   const result = [];
   const buildings = munimap_layer_building.create();
-  // const rooms = munimap.room.layer.create();
-  // const activeRooms = munimap.room.layer.createActive();
+  const rooms = createRoomLayer();
+  const activeRooms = createActiveRoomLayer();
   // const doors = munimap.door.layer.create();
   // const poi = munimap.poi.layer.create();
-  // const roomLabels = munimap.room.layer.createLabel(map);
+  const roomLabels = createRoomLabelLayer(showLocationCodes);
   const buildingLabels = munimap_layer_building.createLabel(lang, showLabels);
   result.push(
     buildings,
-    // rooms,
-    // activeRooms,
+    rooms,
+    activeRooms,
     // doors,
     // poi,
-    // roomLabels,
+    roomLabels,
     buildingLabels
   );
   if (showLabels === false) {

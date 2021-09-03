@@ -4,8 +4,8 @@
 
 import * as munimap_cluster from '../cluster/cluster.js';
 import * as munimap_marker from '../feature/marker.js';
-import * as munimap_markerStyle from '../style/marker.js';
 import VectorLayer from 'ol/layer/Vector';
+import {getPattern} from '../style/marker.js';
 import {getStore} from '../source/marker.js';
 
 /**
@@ -66,7 +66,7 @@ const create = (map, options) => {
       renderOrder: null,
     })
   );
-  markerLayer.once('precompose', munimap_markerStyle.getPattern);
+  markerLayer.once('prerender', getPattern);
 
   return markerLayer;
 };

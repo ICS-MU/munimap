@@ -7,12 +7,21 @@ import * as munimap_building from './feature/building.js';
 import * as munimap_complex from './feature/complex.js';
 import * as munimap_unit from './feature/unit.js';
 import * as munimap_utils from './utils/utils.js';
+import * as slctr from './redux/selector.js';
+import VectorSource from 'ol/source/Vector';
 import {EsriJSON} from 'ol/format';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
+import {ROOM_TYPES, getType as getRoomType} from './feature/room.js';
+import {
+  getActiveStore as getActiveRoomStore,
+  getDefaultStore as getDefaultRoomStore,
+  getStore as getRoomStore,
+} from './source/room.js';
 import {getStore as getBuildingStore} from './source/building.js';
 import {getStore as getComplexStore} from './source/complex.js';
 import {getStore as getFloorStore} from './source/floor.js';
 import {getType as getFloorType} from './feature/floor.js';
+import {getNotYetAddedFeatures} from './utils/store.js';
 import {getStore as getUnitStore} from './source/unit.js';
 
 /**
@@ -22,6 +31,7 @@ import {getStore as getUnitStore} from './source/unit.js';
  * @typedef {import("ol/source/Vector").VectorSourceEvent} ol.source.Vector.Event
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/proj/Projection").default} ol.proj.Projection
+ * @typedef {import("redux").Store} redux.Store
  */
 
 /**
@@ -63,6 +73,12 @@ import {getStore as getUnitStore} from './source/unit.js';
  * @property {string} [method]
  * @property {Processor} [processor]
  * @property {Function} [callback]
+ */
+
+/**
+ * @typedef {Object} LoadActiveOptions
+ * @property {Function} [callback]
+ * @property {redux.Store} [store]
  */
 
 /**
@@ -684,6 +700,70 @@ const featuresFromParam = async (paramValue) => {
   return [];
 };
 
+/**
+ *
+ * @param {FeaturesForMapOptions} options options
+ * @param {ol.extent.Extent} extent extent
+ * @param {number} resolution resolution
+ * @param {ol.proj.Projection} projection projection
+ */
+const loadDefaultRooms = async (options, extent, resolution, projection) => {
+  const rooms = await featuresForMap(options, extent, resolution, projection);
+  const defaultRoomStore = getDefaultRoomStore();
+  const roomsToAdd = getNotYetAddedFeatures(defaultRoomStore, rooms);
+  defaultRoomStore.addFeatures(roomsToAdd);
+
+  if (options.callback) {
+    options.callback(actions.rooms_loaded, ROOM_TYPES.DEFAULT);
+  }
+};
+
+/**
+ *
+ * @param {LoadActiveOptions} options options
+ * @param {ol.extent.Extent} extent extent
+ * @param {number} resolution resolution
+ * @param {ol.proj.Projection} projection projection
+ */
+const loadActiveRooms = async (
+  {store, callback},
+  extent,
+  resolution,
+  projection
+) => {
+  const activeFloorCodes = slctr.getActiveFloorCodes(store.getState());
+
+  let where;
+  if (activeFloorCodes.length > 0) {
+    const conditions = [];
+    activeFloorCodes.forEach((floorCode) =>
+      conditions.push(`polohKod LIKE '${floorCode}%'`)
+    );
+    where = conditions.join(' OR ');
+    const opts = {
+      source: getRoomStore(),
+      type: getRoomType(),
+      where: where,
+      method: 'POST',
+    };
+    const rooms = await featuresForMap(opts, extent, resolution, projection);
+    const activeStore = getActiveRoomStore();
+    munimap_assert.assertInstanceof(activeStore, VectorSource);
+    const roomsFromActiveFloor = rooms.filter((room) =>
+      activeFloorCodes.includes(room.get('polohKod').substr(0, 8))
+    );
+    const roomsToAdd = getNotYetAddedFeatures(
+      activeStore,
+      roomsFromActiveFloor
+    );
+    activeStore.addFeatures(roomsToAdd);
+
+    if (callback) {
+      callback(actions.rooms_loaded, ROOM_TYPES.ACTIVE);
+    }
+  }
+};
+
 export {
   buildingFeaturesForMap,
   buildingLoadProcessor,
@@ -692,4 +772,6 @@ export {
   featuresFromParam,
   loadFloors,
   pubtranFeaturesForMap,
+  loadDefaultRooms,
+  loadActiveRooms,
 };

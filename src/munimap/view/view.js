@@ -8,6 +8,11 @@ import * as slctr from '../redux/selector.js';
 import TileLayer from 'ol/layer/Tile';
 import createControls from '../control/mapcontrolsview.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
+import {
+  createActiveStore as createActiveRoomStore,
+  createDefaultStore as createDefaultRoomStore,
+  createStore as createRoomStore,
+} from '../source/room.js';
 import {createStore as createBuildingStore} from '../source/building.js';
 import {create as createClusterLayer} from '../layer/cluster.js';
 import {createStore as createComplexStore} from '../source/complex.js';
@@ -18,6 +23,11 @@ import {create as createPubtranLayer} from '../layer/pubtran.stop.js';
 import {createStore as createPubtranStore} from '../source/pubtran.stop.js';
 import {createStore as createUnitStore} from '../source/unit.js';
 import {getDefaultLayers} from '../layer/layer.js';
+import {
+  refreshActiveStyle as refreshActiveRoomStyle,
+  refreshLabelStyle as refreshRoomLabelStyle,
+  refreshStyle as refreshRoomStyle,
+} from './room.js';
 import {
   refreshLabelStyle as refreshBuildingLabelStyle,
   refreshStyle as refreshBuildingStyle,
@@ -160,12 +170,12 @@ const addCustomControls = (map, store, requiredOpts) => {
  * @param {AddLayersOptions} options opts
  */
 const addLayers = (map, options) => {
-  const {lang, showLabels} = options;
+  const {lang, showLabels, locationCodes} = options;
   const markerLayer = createMarkerLayer(map, options);
   options.markerSource = markerLayer.getSource();
 
   const markerClusterLayer = createClusterLayer(map, options);
-  const layers = getDefaultLayers(lang, showLabels);
+  const layers = getDefaultLayers(lang, showLabels, locationCodes);
   layers.forEach((layer) => map.addLayer(layer));
 
   if (options.pubTran) {
@@ -211,12 +221,17 @@ const attachMapListeners = (map, options) => {
  * @param {redux.Store} reduxStore store
  */
 const createFeatureStores = (reduxStore) => {
-  const callbackFn = (actionCreator) => reduxStore.dispatch(actionCreator());
+  const callbackFn = (actionCreator, opt_args) =>
+    reduxStore.dispatch(actionCreator(opt_args));
+
   createBuildingStore(callbackFn);
   createMarkerStore();
   createComplexStore();
   createUnitStore();
   createFloorStore();
+  createRoomStore();
+  createDefaultRoomStore(callbackFn);
+  createActiveRoomStore(reduxStore, callbackFn);
 
   const state = reduxStore.getState();
   if (state.requiredOpts.pubTran) {
@@ -235,11 +250,35 @@ const refreshStyles = (state, layers) => {
   refreshComplexStyle(state, layers);
   refreshMarkerStyle(state, layers);
   refreshClusterStyle(state, layers);
+  refreshRoomStyle(state, layers);
+  refreshRoomLabelStyle(state, layers);
+  refreshActiveRoomStyle(state, layers);
 
   if (state.requiredOpts.pubTran) {
     refreshPubtranStyle(layers);
   }
 };
+
+// /**
+//  * Refresh floor based layers.
+//  * @param {Array<ol.layer.Base>} layers layers
+//  */
+// const refreshFloorBasedLayers = (layers) => {
+//   layers.forEach((layer) => {
+//     if (layer instanceof VectorLayer) {
+//       const clearSource = layer.get('clearSourceOnFloorChange');
+//       if (munimap_utils.isDef(clearSource) && clearSource) {
+//         layer.getSource().clear();
+//       } else {
+//         const redraw = layer.get('redrawOnFloorChange');
+//         if (munimap_utils.isDef(redraw) && redraw) {
+//           layer.changed();
+//         }
+//       }
+//       // munimap.style.refreshFromFragments(map, layer); udela se v create
+//     }
+//   });
+// };
 
 /**
  * Ensure update clusters in map.
@@ -264,6 +303,13 @@ const ensureClusterUpdate = (state, map) => {
   }
 };
 
+/**
+ * @param {State} state state
+ */
+const refreshActiveLayers = (state) => {
+  slctr.refreshActiveLayers(state);
+};
+
 export {
   attachMapListeners,
   ensureBaseMap,
@@ -273,4 +319,5 @@ export {
   createFeatureStores,
   refreshStyles,
   ensureClusterUpdate,
+  refreshActiveLayers,
 };

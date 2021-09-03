@@ -69,6 +69,12 @@ export const BUILDINGS_LOADED = 'BUILDINGS_LOADED';
 export const FLOORS_LOADED = 'FLOORS_LOADED';
 
 /**
+ * @type {string}
+ * @const
+ */
+export const ROOMS_LOADED = 'ROOMS_LOADED';
+
+/**
  * @return {redux.AnyAction} action
  */
 export function markers_loaded() {
@@ -169,5 +175,16 @@ export function buildings_loaded() {
 export function floors_loaded() {
   return {
     type: FLOORS_LOADED,
+  };
+}
+
+/**
+ * @param {string} roomType loaded room type
+ * @return {redux.AnyAction} action
+ */
+export function rooms_loaded(roomType) {
+  return {
+    type: ROOMS_LOADED,
+    payload: roomType,
   };
 }

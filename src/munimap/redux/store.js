@@ -6,12 +6,11 @@ import * as munimap_assert from '../assert/assert.js';
 import * as munimap_utils from '../utils/utils.js';
 import * as redux from 'redux';
 import * as slctr from './selector.js';
+import {ROOM_TYPES} from '../feature/room.js';
 import {asyncDispatchMiddleware} from './middleware.js';
-// import {changeSelected as changeSelectedFloor} from '../view/floor.js';
 import {checkCustomMarker as checkCustomMarkerForMatomo} from '../matomo/matomo.js';
 import {featuresFromParam, loadFloors} from '../load.js';
 import {getFloorLayerIdByCode} from '../feature/floor.js';
-// import {getSelectedFromFeatureOrCode} from '../view/view.js';
 import {loadOrDecorateMarkers} from '../create.js';
 
 /**
@@ -160,6 +159,22 @@ const createReducer = (initialState) => {
           }
         }
         return newState;
+
+      //ROOMS_LOADED
+      case actions.ROOMS_LOADED:
+        const type = action.payload;
+        if (type === ROOM_TYPES.DEFAULT) {
+          return {
+            ...state,
+            defaultRoomsTimestamp: Date.now(),
+          };
+        } else if (type === ROOM_TYPES.ACTIVE) {
+          return {
+            ...state,
+            activeRoomsTimestamp: Date.now(),
+          };
+        }
+        return state;
 
       //DEAFULT
       default:

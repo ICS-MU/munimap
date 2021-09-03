@@ -13,6 +13,7 @@ import {Point} from 'ol/geom';
 import '../img/google.png';
 import '../img/seznam.png';
 import '../img/marker.style.coridors.bg.png';
+import '../img/room.style.coridors.bg.png';
 
 munimap_matomo.init();
 
