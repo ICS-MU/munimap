@@ -5,7 +5,9 @@
   "main": "dist/munimap.js",
   "scripts": {
     "dev": "webpack serve --config webpack.config.dev.babel.js",
-    "build": "webpack --config webpack.config.production.babel.js",
+    "build": "webpack --config webpack.config.production.babel.js --env dir=latest",
+    "build-v2n": "webpack --config webpack.config.production.babel.js --env dir=v2n",
+    "build-testing": "webpack --config webpack.config.production.babel.js --env dir=testing",
     "lint": "eslint src server.js webpack.config.dev.babel.js webpack.config.production.babel.js",
     "fix-lint": "eslint --fix src server.js webpack.config.dev.babel.js webpack.config.production.babel.js",
     "start-build": "node -r esm server.js",
@@ -29,6 +31,7 @@
     "@openlayers/eslint-plugin": "^4.0.0",
     "@types/ol": "^6.4.2",
     "babel-loader": "^8.2.2",
+    "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^8.1.1",
     "css-loader": "^5.2.0",
     "eslint": "^7.23.0",

@@ -212,7 +212,10 @@ span.munimap-warning {
 }
 .munimap-warning-wrapper {
   padding: 0 20px;
-  display: none; /* hide warning about latest version */
+  /* display: none; hide warning about latest version */
+}
+.munimap-warning-wrapper.hide {
+  display: none;
 }
 .munimap-warning.latest {
   display: none;
