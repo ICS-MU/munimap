@@ -53,6 +53,7 @@ export default (env) => {
     },
     output: {
       path: OUTPUT_PATH,
+      publicPath: APP_PATH,
       filename: '[name].js',
       library: {
         name: 'munimap',
@@ -61,12 +62,12 @@ export default (env) => {
       clean: true,
     },
     devServer: {
-      static: OUTPUT_PATH,
-      hot: true,
-      open: [APP_PATH],
-      dev: {
+      static: {
+        directory: OUTPUT_PATH,
         publicPath: APP_PATH,
       },
+      hot: true,
+      open: [APP_PATH],
     },
     module: {
       rules: [
