@@ -1,5 +1,5 @@
 /**
- * @module view
+ * @module view/view
  */
 import * as actions from '../redux/action.js';
 import * as munimap_lang from '../lang/lang.js';
@@ -259,27 +259,6 @@ const refreshStyles = (state, layers) => {
   }
 };
 
-// /**
-//  * Refresh floor based layers.
-//  * @param {Array<ol.layer.Base>} layers layers
-//  */
-// const refreshFloorBasedLayers = (layers) => {
-//   layers.forEach((layer) => {
-//     if (layer instanceof VectorLayer) {
-//       const clearSource = layer.get('clearSourceOnFloorChange');
-//       if (munimap_utils.isDef(clearSource) && clearSource) {
-//         layer.getSource().clear();
-//       } else {
-//         const redraw = layer.get('redrawOnFloorChange');
-//         if (munimap_utils.isDef(redraw) && redraw) {
-//           layer.changed();
-//         }
-//       }
-//       // munimap.style.refreshFromFragments(map, layer); udela se v create
-//     }
-//   });
-// };
-
 /**
  * Ensure update clusters in map.
  * @param {State} state state
@@ -303,13 +282,6 @@ const ensureClusterUpdate = (state, map) => {
   }
 };
 
-/**
- * @param {State} state state
- */
-const refreshActiveLayers = (state) => {
-  slctr.refreshActiveLayers(state);
-};
-
 export {
   attachMapListeners,
   ensureBaseMap,
@@ -319,5 +291,4 @@ export {
   createFeatureStores,
   refreshStyles,
   ensureClusterUpdate,
-  refreshActiveLayers,
 };

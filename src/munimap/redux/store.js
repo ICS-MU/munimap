@@ -8,6 +8,10 @@ import * as redux from 'redux';
 import * as slctr from './selector.js';
 import {ROOM_TYPES} from '../feature/room.js';
 import {asyncDispatchMiddleware} from './middleware.js';
+import {
+  clearFloorBasedStores,
+  refreshFloorBasedStores,
+} from '../source/source.js';
 import {featuresFromParam, loadFloors} from '../load.js';
 import {
   getFloorLayerIdByCode,
@@ -102,7 +106,7 @@ const createReducer = (initialState) => {
       //FLOORS_LOADED
       case actions.FLOORS_LOADED:
         const floorCode = slctr.calculateSelectedFloor(state);
-        const newSelectedIsActive = action.payload;
+        const newSelectedIsActive = action.payload.newSelectedIsActive;
         let result;
         let flId;
         if (floorCode) {
@@ -113,9 +117,9 @@ const createReducer = (initialState) => {
             const where = 'vrstvaId = ' + flId;
             loadFloors(where).then((floors) => {
               if (floors) {
-                //munimap.floor.refreshFloorBasedLayers(map);
+                refreshFloorBasedStores();
               }
-              action.asyncDispatch(actions.floors_loaded(true));
+              action.asyncDispatch(actions.floors_loaded(true, floors));
             });
           }
         } else {
@@ -146,12 +150,13 @@ const createReducer = (initialState) => {
             const where = `polohKod LIKE '${locationCode.substring(0, 5)}%'`;
             loadFloors(where).then((floors) =>
               action.asyncDispatch(
-                actions.floors_loaded(isFloorCode(locationCode))
+                actions.floors_loaded(isFloorCode(locationCode), floors)
               )
             );
           } else {
             //deselect feature from state
             newState.selectedFeature = null;
+            clearFloorBasedStores();
           }
         }
         return newState;
@@ -171,6 +176,15 @@ const createReducer = (initialState) => {
           };
         }
         return state;
+
+      //NEW_FLOOR_SELECTED:
+      case actions.NEW_FLOOR_SELECTED:
+        newState = {
+          ...state,
+          selectedFeature: action.payload,
+        };
+        refreshFloorBasedStores();
+        return newState;
 
       //DEAFULT
       default:

@@ -2,8 +2,8 @@
  * @module view/room
  */
 import VectorLayer from 'ol/layer/Vector';
-import {activeStyleFunction} from '../style/room.js';
 import {
+  getStyleForActiveRoomLayer,
   getStyleForRoomLabelLayer,
   getStyleForRoomLayer,
 } from '../redux/selector.js';
@@ -64,7 +64,7 @@ const refreshActiveStyle = (state, layers) => {
     layers.length === 1 ? layers[0] : layers.find((l) => isActiveLayer(l));
 
   if (lyr && lyr instanceof VectorLayer) {
-    const style = activeStyleFunction;
+    const style = getStyleForActiveRoomLayer(state);
     if (style !== lyr.getStyle()) {
       lyr.setStyle(style);
     }

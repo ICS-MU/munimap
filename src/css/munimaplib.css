@@ -340,6 +340,37 @@
   top: 1px;
 }
 
+.munimap-temp-control {
+  float: left;
+  width: 27.09px;
+  border-radius: 4px;
+}
+
+.munimap-temp-control .munimap-temp-control-button {
+  background-color: #ff0000;
+  margin: 1px;
+  margin-bottom: 0px;
+  padding: 0;
+  line-height: 25.09px;
+  text-align: center;
+  height: 25.09px;
+  border-radius: 2px;
+}
+
+.munimap-temp-control-icon {
+  font-family: 'MunimapFont';
+  font-size: 1.14em;
+  font-style: normal;
+  color: #fff;
+  position: relative;
+  top: 1px;
+}
+
+.munimap-temp-control-button:hover { 
+  background-color: #000;
+  cursor: pointer;
+}
+
 .munimap-map-tools .munimap-home {
   top: 1px;
 }

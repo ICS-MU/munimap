@@ -44,7 +44,7 @@ let CORRIDOR = [];
 let STAIRCASE = [];
 
 /**
- * @type {Object.<string, Style|Array.<Style>>}
+ * @type {Object<string, Style|Array<Style>>}
  * @const
  */
 const LABEL_CACHE = {};
@@ -80,7 +80,7 @@ const STROKE = new Style({
 });
 
 /**
- * @type {Array.<Style>}
+ * @type {Array<Style>}
  * @const
  */
 const STYLE = [
@@ -92,7 +92,7 @@ const STYLE = [
 ];
 
 /**
- * @type {Array.<string>}
+ * @type {Array<string>}
  * @const
  */
 const PURPOSES_TO_OMIT = [
@@ -287,7 +287,7 @@ const defaultStyleFunction = (feature, resolution) => {
  * @param {number} resolution resolution
  * @param {string} lang language
  * @param {boolean} showLocationCodes whether to show location codes
- * @return {Style|Array.<Style>} style
+ * @return {Style|Array<Style>} style
  */
 const labelFunction = (feature, resolution, lang, showLocationCodes) => {
   const result = [];
@@ -362,27 +362,8 @@ const labelFunction = (feature, resolution, lang, showLocationCodes) => {
   return result.length ? result : null;
 };
 
-/**
- * Style function of a style fragment (type munimap.style.Function).
- *
- * @param {ol.Feature} feature feature
- * @param {number} resolution resolution
- * @return {Style|Array.<Style>} style
- */
-const activeStyleFunction = (feature, resolution) => {
-  const result = defaultStyleFunction(feature, resolution);
-  // if (munimap_range.contains(
-  //   munimap.poi.style.Resolution.STAIRS, resolution) &&
-  //   result === munimap.room.style.staircase) {
-  //   result = goog.array.concat(
-  //     result, munimap.room.style.STAIRCASE_ICON);
-  // }
-  return result;
-};
-
 export {
   setCorridorStyle,
-  activeStyleFunction,
   alignRoomTitleToRows,
   defaultStyleFunction,
   labelFunction,

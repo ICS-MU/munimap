@@ -172,7 +172,7 @@ const getInitialState = (options) => {
     },
   };
   if (options.markers !== undefined) {
-    const reqMarkers = /** @type {Array.<string>}*/ ([]);
+    const reqMarkers = /** @type {Array<string>}*/ ([]);
     options.markers.forEach((marker, idx) => {
       if (marker instanceof Feature) {
         const id = `CUSTOM_MARKER_${options.target}_${idx}`;
@@ -232,7 +232,7 @@ const getInitialState = (options) => {
 
 /**
  * @param {Options} options Options
- * @returns {Promise<Map>} initialized map
+ * @return {Promise<Map>} initialized map
  */
 export default (options) => {
   return new Promise((resolve, reject) => {
@@ -345,7 +345,6 @@ export default (options) => {
         munimap_view.ensureClusterUpdate(state, map);
         munimap_view.ensureBaseMap(basemapLayer, map);
         munimap_view.refreshStyles(state, map.getLayers().getArray());
-        munimap_view.refreshActiveLayers(state);
       }
     };
 

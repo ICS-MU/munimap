@@ -28,7 +28,6 @@ import {
   getBufferValue,
 } from '../utils/extent.js';
 import {featureExtentIntersect} from '../utils/geom.js';
-import {getActiveStore as getActiveRoomStore} from '../source/room.js';
 import {
   getByCode as getBuildingByCode,
   getSelectedFloorCode as getSelectedFloorCodeForBuilding,
@@ -207,13 +206,6 @@ const getResolution = (state) => state.resolution;
  * @return {string} selected floor
  */
 const getSelectedFeature = (state) => state.selectedFeature;
-
-// /**
-//  * @type {Reselect.Selector<State, number>}
-//  * @param {State} state state
-//  * @return {number} selected floor
-//  */
-// const getActiveFloorLayerId = (state) => state.activeFloorLayerId;
 
 /**
  * @type {Reselect.Selector<State, string>}
@@ -691,7 +683,6 @@ export const getActiveFloorCodes = createSelector(
     const floors = getFloorStore().getFeatures();
     const activeFloorLayerId =
       munimap_floor.getFloorLayerIdByCode(selectedFeature);
-    console.log({activeFloorLayerId});
     const active = floors.filter(
       (floor) => floor.get('vrstvaId') === activeFloorLayerId
     );
@@ -979,7 +970,9 @@ export const getSelectedLocationCode = createSelector(
     if (!selectedFeature || !selectedInExtent) {
       if (inFloorResolutionRange) {
         //poi is not implemented yet
-        const lc = featureForComputingSelected.get('polohKod') || null;
+        const lc = featureForComputingSelected
+          ? featureForComputingSelected.get('polohKod') || null
+          : null;
         if (activeFloorCodes.length > 0 && lc) {
           const afc = activeFloorCodes.find((activeFloorCode) =>
             activeFloorCode.startsWith(lc)
@@ -1022,7 +1015,7 @@ export const getStyleForMarkerLayer = createSelector(
     extent,
     locationCodes,
     inFloorResolutionRange,
-    selectedFeature
+    selectedFeature //redrawOnFloorChange
   ) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - computing style for markers');
@@ -1195,20 +1188,20 @@ export const getStyleForRoomLayer = createSelector(
 /**
  * @type {Reselect.OutputSelector<
  *    State,
- *    void,
- *    function(Array<string>, number): void
+ *    StyleFunction,
+ *    function(Array<string>): StyleFunction
  * >}
  */
-export const refreshActiveLayers = createSelector(
-  [getActiveFloorCodes, getFloorsTimestamp],
-  (activeFloorCodes, floorsTimestamp) => {
+export const getStyleForActiveRoomLayer = createSelector(
+  [getActiveFloorCodes],
+  (activeFloorCodes) => {
     if (ENABLE_SELECTOR_LOGS) {
-      console.log('refresh active layers');
+      console.log('STYLE - computing style for active rooms');
     }
 
-    if (activeFloorCodes === [] || floorsTimestamp === null) {
-      return;
-    }
-    getActiveRoomStore().refresh();
+    const styleFce = (feature, res) => {
+      return defaultRoomStyleFunction(feature, res);
+    };
+    return styleFce;
   }
 );

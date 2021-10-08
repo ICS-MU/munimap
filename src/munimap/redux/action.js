@@ -79,6 +79,12 @@ export const FLOORS_LOADED = 'FLOORS_LOADED';
 export const ROOMS_LOADED = 'ROOMS_LOADED';
 
 /**
+ * @type {string}
+ * @const
+ */
+export const NEW_FLOOR_SELECTED = 'NEW_FLOOR_SELECTED';
+
+/**
  * @param {Array<ol.Feature|string>} markers markers
  * @return {redux.AnyAction} action
  */
@@ -177,12 +183,13 @@ export function buildings_loaded() {
 
 /**
  * @param {boolean} newSelectedIsActive newSelectedIsActive
+ * @param {Array<ol.Feature>} floors floors
  * @return {redux.AnyAction} action
  */
-export function floors_loaded(newSelectedIsActive) {
+export function floors_loaded(newSelectedIsActive, floors) {
   return {
     type: FLOORS_LOADED,
-    payload: newSelectedIsActive,
+    payload: {newSelectedIsActive, floors},
   };
 }
 
@@ -194,5 +201,16 @@ export function rooms_loaded(roomType) {
   return {
     type: ROOMS_LOADED,
     payload: roomType,
+  };
+}
+
+/**
+ * @param {string} newFloorCode new floor code
+ * @return {redux.AnyAction} action
+ */
+export function new_floor_selected(newFloorCode) {
+  return {
+    type: NEW_FLOOR_SELECTED,
+    payload: newFloorCode,
   };
 }

@@ -675,14 +675,14 @@ const loadFloors = (where) => {
 };
 
 /**
- * @param {Array.<string>|string|undefined} paramValue zoomTo or markers
- * @return {Promise.<Array<ol.Feature>>} promise of features contained
+ * @param {Array<string>|string|undefined} paramValue zoomTo or markers
+ * @return {Promise<Array<ol.Feature>>} promise of features contained
  * in server response
  */
 const featuresFromParam = async (paramValue) => {
-  const values = /**@type {Array.<string>}*/ (munimap_utils.isString(paramValue)
-    ? [paramValue]
-    : paramValue);
+  const values = /**@type {Array.<string>}*/ (
+    munimap_utils.isString(paramValue) ? [paramValue] : paramValue
+  );
   const firstParamValue = values[0];
   let codes;
   let likeExprs;
@@ -732,7 +732,6 @@ const loadActiveRooms = async (
   projection
 ) => {
   const activeFloorCodes = slctr.getActiveFloorCodes(store.getState());
-  console.log({activeFloorCodes})
 
   let where;
   if (activeFloorCodes.length > 0) {
