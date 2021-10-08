@@ -25,10 +25,8 @@ const updateClusteredFeatures = (resolution, showLabels) => {
   const oldFeatures = source.getFeatures();
   const newFeatures = getClusteredFeatures(resolution);
 
-  const featuresToRemove =
-    oldFeatures.filter((x) => !newFeatures.includes(x)) || [];
-  const featuresToAdd =
-    newFeatures.filter((x) => !oldFeatures.includes(x)) || [];
+  const featuresToRemove = oldFeatures.filter((x) => !newFeatures.includes(x));
+  const featuresToAdd = newFeatures.filter((x) => !oldFeatures.includes(x));
 
   featuresToRemove.forEach((feature) => source.removeFeature(feature));
   if (featuresToAdd.length > 0) {
