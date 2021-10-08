@@ -1,6 +1,7 @@
 import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import PACKAGE from './package.json';
+import express from 'express';
 import glob from 'glob';
 import path from 'path';
 import webpack from 'webpack';
@@ -64,10 +65,28 @@ export default (env) => {
     devServer: {
       static: {
         directory: OUTPUT_PATH,
-        publicPath: APP_PATH,
       },
       hot: true,
       open: [APP_PATH],
+      devMiddleware: {
+        publicPath: APP_PATH,
+        writeToDisk: false,
+      },
+      onAfterSetupMiddleware: (devServer) => {
+        if (!devServer) {
+          throw new Error('webpack-dev-server is not defined');
+        }
+
+        devServer.app.use(
+          /\/munimap\/testing\/css/,
+          express.static(path.resolve(__dirname, 'src', 'css'))
+        );
+
+        devServer.app.use(
+          /\/munimap\/testing\/img/,
+          express.static(path.resolve(__dirname, 'src', 'img'))
+        );
+      },
     },
     module: {
       rules: [
@@ -93,13 +112,18 @@ export default (env) => {
         },
         {
           test: /\.css/,
-          include: [
-            path.resolve(__dirname, 'src', 'css', 'example'),
-            path.join(__dirname, 'src', 'css', 'munimap.css'),
-          ],
+          include: [path.join(__dirname, 'src', 'css', 'munimap.css')],
           type: 'asset/resource',
           generator: {
             filename: 'css/[name][ext][query]',
+          },
+        },
+        {
+          test: /\.css/,
+          include: [path.resolve(__dirname, 'src', 'css', 'example')],
+          type: 'asset/resource',
+          generator: {
+            filename: 'css/example/[name][ext][query]',
           },
         },
         {
