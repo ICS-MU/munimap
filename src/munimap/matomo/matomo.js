@@ -64,7 +64,7 @@ export const sendEvent = (category, action) => {
 /**
  * @param {Array} markers markers
  */
-export const checkCustomMarker = (markers) => {
+export const sendEventForCustomMarker = (markers) => {
   if (markers.length && markers.some((el) => isCustomMarker(el))) {
     sendEvent('customMarker', 'true');
   }

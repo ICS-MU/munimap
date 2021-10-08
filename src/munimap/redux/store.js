@@ -8,7 +8,6 @@ import * as redux from 'redux';
 import * as slctr from './selector.js';
 import {ROOM_TYPES} from '../feature/room.js';
 import {asyncDispatchMiddleware} from './middleware.js';
-import {checkCustomMarker as checkCustomMarkerForMatomo} from '../matomo/matomo.js';
 import {featuresFromParam, loadFloors} from '../load.js';
 import {getFloorLayerIdByCode} from '../feature/floor.js';
 import {loadOrDecorateMarkers} from '../create.js';
@@ -56,19 +55,15 @@ const createReducer = (initialState) => {
           if (requiredMarkers && requiredMarkers.length) {
             munimap_assert.assertArray(requiredMarkers);
             munimap_utils.removeArrayDuplicates(requiredMarkers);
-            markerStrings = /** @type {Array.<string>} */ (requiredMarkers);
+            markerStrings = /** @type {Array<string>} */ (requiredMarkers);
           } else {
-            markerStrings = /** @type {Array.<string>} */ ([]);
+            markerStrings = /** @type {Array<string>} */ ([]);
           }
 
           loadOrDecorateMarkers(markerStrings, state.requiredOpts).then(
             (res) => {
               munimap_assert.assertMarkerFeatures(res);
-              checkCustomMarkerForMatomo(res);
-              action.asyncDispatch({
-                type: actions.MARKERS_LOADED,
-                features: res,
-              });
+              action.asyncDispatch(actions.markers_loaded(res));
             }
           );
         }
@@ -76,16 +71,16 @@ const createReducer = (initialState) => {
         if (slctr.loadZoomTo(state)) {
           let zoomToStrings;
           if (state.requiredOpts.zoomTo && state.requiredOpts.zoomTo.length) {
-            zoomToStrings = /**@type {Array.<string>}*/ (munimap_utils.isString(
-              state.requiredOpts.zoomTo
-            )
-              ? [state.requiredOpts.zoomTo]
-              : state.requiredOpts.zoomTo);
+            zoomToStrings = /**@type {Array<string>}*/ (
+              munimap_utils.isString(state.requiredOpts.zoomTo)
+                ? [state.requiredOpts.zoomTo]
+                : state.requiredOpts.zoomTo
+            );
           } else {
             zoomToStrings = [];
           }
           featuresFromParam(zoomToStrings).then((res) => {
-            action.asyncDispatch({type: actions.ZOOMTO_LOADED, features: res});
+            action.asyncDispatch(actions.zoomTo_loaded());
           });
         }
         return {

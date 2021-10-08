@@ -2,7 +2,11 @@
  * @module redux/action
  */
 
-import {sendEvent, sendEventForOptions} from '../matomo/matomo.js';
+import {
+  sendEvent,
+  sendEventForCustomMarker,
+  sendEventForOptions,
+} from '../matomo/matomo.js';
 
 /**
  * @typedef {import("../create.js").Options} CreateOptions
@@ -75,9 +79,11 @@ export const FLOORS_LOADED = 'FLOORS_LOADED';
 export const ROOMS_LOADED = 'ROOMS_LOADED';
 
 /**
+ * @param {Array<ol.Feature|string>} markers markers
  * @return {redux.AnyAction} action
  */
-export function markers_loaded() {
+export function markers_loaded(markers) {
+  sendEventForCustomMarker(markers);
   return {
     type: MARKERS_LOADED,
   };
