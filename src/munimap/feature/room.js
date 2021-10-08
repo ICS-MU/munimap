@@ -179,4 +179,4 @@ const getNamePart = (feature, lang) => {
  */
 const getDefaultLabel = (feature, lang) => getNamePart(feature, lang);
 
-export {ROOM_TYPES, getDefaultLabel, getType};
+export {ROOM_TYPES, getDefaultLabel, getType, isCode};

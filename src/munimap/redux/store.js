@@ -9,7 +9,10 @@ import * as slctr from './selector.js';
 import {ROOM_TYPES} from '../feature/room.js';
 import {asyncDispatchMiddleware} from './middleware.js';
 import {featuresFromParam, loadFloors} from '../load.js';
-import {getFloorLayerIdByCode} from '../feature/floor.js';
+import {
+  getFloorLayerIdByCode,
+  isCode as isFloorCode,
+} from '../feature/floor.js';
 import {loadOrDecorateMarkers} from '../create.js';
 
 /**
@@ -99,34 +102,31 @@ const createReducer = (initialState) => {
       //FLOORS_LOADED
       case actions.FLOORS_LOADED:
         const floorCode = slctr.calculateSelectedFloor(state);
+        const newSelectedIsActive = action.payload;
         let result;
         let flId;
         if (floorCode) {
           result = floorCode;
           flId = getFloorLayerIdByCode(floorCode);
 
-          const newSelectedWasActive = flId === state.activeFloorLayerId;
-          if (!newSelectedWasActive) {
+          if (!newSelectedIsActive) {
             const where = 'vrstvaId = ' + flId;
             loadFloors(where).then((floors) => {
               if (floors) {
                 //munimap.floor.refreshFloorBasedLayers(map);
               }
-              action.asyncDispatch(actions.floors_loaded());
+              action.asyncDispatch(actions.floors_loaded(true));
             });
           }
         } else {
           //selected feature has not been changed
-          //(the building remains selected, but flId must be deselected)
           result = state.selectedFeature;
-          flId = null;
         }
 
         return {
           ...state,
           floorsTimestamp: Date.now(),
           selectedFeature: result,
-          activeFloorLayerId: flId,
         };
 
       // OL_MAP_VIEW_CHANGE
@@ -141,16 +141,17 @@ const createReducer = (initialState) => {
         if (locationCode !== undefined) {
           //null is valid value
           if (locationCode !== null) {
-            //set to state
+            //set to state - it can be building/floor code
             newState.selectedFeature = locationCode;
             const where = `polohKod LIKE '${locationCode.substring(0, 5)}%'`;
             loadFloors(where).then((floors) =>
-              action.asyncDispatch(actions.floors_loaded())
+              action.asyncDispatch(
+                actions.floors_loaded(isFloorCode(locationCode))
+              )
             );
           } else {
-            //deselect feature and active floor layer id from state
+            //deselect feature from state
             newState.selectedFeature = null;
-            newState.activeFloorLayerId = null;
           }
         }
         return newState;

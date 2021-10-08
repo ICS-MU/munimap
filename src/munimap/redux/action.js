@@ -176,11 +176,13 @@ export function buildings_loaded() {
 }
 
 /**
+ * @param {boolean} newSelectedIsActive newSelectedIsActive
  * @return {redux.AnyAction} action
  */
-export function floors_loaded() {
+export function floors_loaded(newSelectedIsActive) {
   return {
     type: FLOORS_LOADED,
+    payload: newSelectedIsActive,
   };
 }
 

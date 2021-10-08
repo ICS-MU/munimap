@@ -111,9 +111,9 @@ const getDefaultRoomsTimestamp = (state) => state.defaultRoomsTimestamp;
 const getActiveRoomsTimestamp = (state) => state.activeRoomsTimestamp;
 
 /**
- * @type {Reselect.Selector<State, Array.<string>>}
+ * @type {Reselect.Selector<State, Array<string>>}
  * @param {State} state state
- * @return {Array.<string>} required markers
+ * @return {Array<string>} required markers
  */
 const getRequiredMarkerIds = (state) => state.requiredOpts.markerIds;
 
@@ -208,12 +208,12 @@ const getResolution = (state) => state.resolution;
  */
 const getSelectedFeature = (state) => state.selectedFeature;
 
-/**
- * @type {Reselect.Selector<State, number>}
- * @param {State} state state
- * @return {number} selected floor
- */
-const getActiveFloorLayerId = (state) => state.activeFloorLayerId;
+// /**
+//  * @type {Reselect.Selector<State, number>}
+//  * @param {State} state state
+//  * @return {number} selected floor
+//  */
+// const getActiveFloorLayerId = (state) => state.activeFloorLayerId;
 
 /**
  * @type {Reselect.Selector<State, string>}
@@ -671,20 +671,27 @@ export const getSelectedFloorCode = createSelector(
  * @type {Reselect.OutputSelector<
  *    State,
  *    Array<string>,
- *    function(number, number): Array<string>
+ *    function(string, number): Array<string>
  * >}
  */
 export const getActiveFloorCodes = createSelector(
-  [getActiveFloorLayerId, getFloorsTimestamp],
-  (activeFloorLayerId, floorsTimestamp) => {
+  [getSelectedFeature, getFloorsTimestamp],
+  (selectedFeature, floorsTimestamp) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing active floors');
     }
-    if (!activeFloorLayerId || floorsTimestamp === null) {
+    if (
+      !selectedFeature ||
+      isBuildingCode(selectedFeature) ||
+      floorsTimestamp === null
+    ) {
       return [];
     }
 
     const floors = getFloorStore().getFeatures();
+    const activeFloorLayerId =
+      munimap_floor.getFloorLayerIdByCode(selectedFeature);
+    console.log({activeFloorLayerId});
     const active = floors.filter(
       (floor) => floor.get('vrstvaId') === activeFloorLayerId
     );
@@ -941,7 +948,7 @@ const getFeatureForComputingSelected = createSelector(
  * @type {Reselect.OutputSelector<
  *    State,
  *    (string|undefined),
- *    function(ol.Size, string, ol.Feature, boolean, boolean):
+ *    function(ol.Size, string, ol.Feature, boolean, boolean, Array<string>):
  *      (string|undefined)
  * >}
  */
@@ -952,13 +959,15 @@ export const getSelectedLocationCode = createSelector(
     getFeatureForComputingSelected,
     isInFloorResolutionRange,
     isSelectedInExtent,
+    getActiveFloorCodes,
   ],
   (
     size,
     selectedFeature,
     featureForComputingSelected,
     inFloorResolutionRange,
-    selectedInExtent
+    selectedInExtent,
+    activeFloorCodes
   ) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing selected location code');
@@ -970,9 +979,16 @@ export const getSelectedLocationCode = createSelector(
     if (!selectedFeature || !selectedInExtent) {
       if (inFloorResolutionRange) {
         //poi is not implemented yet
-        return featureForComputingSelected
-          ? featureForComputingSelected.get('polohKod')
-          : null;
+        const lc = featureForComputingSelected.get('polohKod') || null;
+        if (activeFloorCodes.length > 0 && lc) {
+          const afc = activeFloorCodes.find((activeFloorCode) =>
+            activeFloorCode.startsWith(lc)
+          );
+          //returns floor code or building location code
+          return afc || lc;
+        } else {
+          return lc;
+        }
       } else {
         return null;
       }
@@ -1180,17 +1196,17 @@ export const getStyleForRoomLayer = createSelector(
  * @type {Reselect.OutputSelector<
  *    State,
  *    void,
- *    function(number, number): void
+ *    function(Array<string>, number): void
  * >}
  */
 export const refreshActiveLayers = createSelector(
-  [getActiveFloorLayerId, getFloorsTimestamp],
-  (activeFloorLayerId, floorsTimestamp) => {
+  [getActiveFloorCodes, getFloorsTimestamp],
+  (activeFloorCodes, floorsTimestamp) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('refresh active layers');
     }
 
-    if (activeFloorLayerId === null || floorsTimestamp === null) {
+    if (activeFloorCodes === [] || floorsTimestamp === null) {
       return;
     }
     getActiveRoomStore().refresh();

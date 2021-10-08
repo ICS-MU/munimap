@@ -732,6 +732,7 @@ const loadActiveRooms = async (
   projection
 ) => {
   const activeFloorCodes = slctr.getActiveFloorCodes(store.getState());
+  console.log({activeFloorCodes})
 
   let where;
   if (activeFloorCodes.length > 0) {
