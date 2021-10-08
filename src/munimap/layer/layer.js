@@ -11,7 +11,7 @@ import {
 } from './room.js';
 
 /**
- * @typedef {import("ol/layer/BaseVector").Options} BaseLayerOptions
+ * @typedef {import("ol/layer/BaseVector").Options<any>} BaseLayerOptions
  * @typedef {import("ol/layer/Vector").default} ol.layer.Vector
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
