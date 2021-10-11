@@ -195,10 +195,13 @@ const addLayers = (map, options) => {
 const attachMapListeners = (map, options) => {
   const {store, view, createInvalidCodesInfo, createLimitScrollInfo} = options;
 
-  map.once('rendercomplete', () => {
+  map.on('rendercomplete', () => {
     if (createInvalidCodesInfo) {
       createInvalidCodesInfo();
     }
+  });
+
+  map.once('rendercomplete', () => {
     if (createLimitScrollInfo) {
       createLimitScrollInfo();
     }
