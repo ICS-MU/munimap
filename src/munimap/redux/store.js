@@ -119,7 +119,7 @@ const createReducer = (initialState) => {
               if (floors) {
                 refreshFloorBasedStores();
               }
-              action.asyncDispatch(actions.floors_loaded(true, floors));
+              action.asyncDispatch(actions.floors_loaded(true));
             });
           }
         } else {
@@ -150,7 +150,7 @@ const createReducer = (initialState) => {
             const where = `polohKod LIKE '${locationCode.substring(0, 5)}%'`;
             loadFloors(where).then((floors) =>
               action.asyncDispatch(
-                actions.floors_loaded(isFloorCode(locationCode), floors)
+                actions.floors_loaded(isFloorCode(locationCode))
               )
             );
           } else {

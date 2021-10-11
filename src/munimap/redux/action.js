@@ -183,13 +183,12 @@ export function buildings_loaded() {
 
 /**
  * @param {boolean} newSelectedIsActive newSelectedIsActive
- * @param {Array<ol.Feature>} floors floors
  * @return {redux.AnyAction} action
  */
-export function floors_loaded(newSelectedIsActive, floors) {
+export function floors_loaded(newSelectedIsActive) {
   return {
     type: FLOORS_LOADED,
-    payload: {newSelectedIsActive, floors},
+    payload: {newSelectedIsActive},
   };
 }
 
