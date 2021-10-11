@@ -13,7 +13,7 @@ import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
 import {Style, Text} from 'ol/style';
 import {getUid as getStoreUid} from '../utils/store.js';
 
-/***
+/**
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("ol/Map").default} ol.Map
  */
@@ -61,12 +61,14 @@ const styleFunction = (feature, resolution, markers, lang) => {
       return munimap_style.LABEL_CACHE[lang + uid];
     }
 
-    title = /**@type {string}*/ (feature.get(
-      munimap_lang.getMsg(
-        munimap_lang.Translations.COMPLEX_TITLE_FIELD_NAME,
-        lang
+    title = /**@type {string}*/ (
+      feature.get(
+        munimap_lang.getMsg(
+          munimap_lang.Translations.COMPLEX_TITLE_FIELD_NAME,
+          lang
+        )
       )
-    ));
+    );
     title = title.split(', ')[0];
     title = munimap_style.alignTextToRows(title.split(' '), ' ');
     const style = new Style({

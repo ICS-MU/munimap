@@ -30,38 +30,38 @@ import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
 
 /**
  * @typedef {Object} Options
- * @property {string} target
- * @property {number} [zoom]
- * @property {ol.coordinate.Coordinate} [center]
- * @property {Array.<string>|string} [zoomTo]
- * @property {Array.<string>|Array.<Feature>} [markers]
- * @property {string} [lang]
- * @property {boolean} [loadingMessage]
- * @property {string} [baseMap]
- * @property {boolean} [mapLinks]
- * @property {boolean} [clusterFacultyAbbr]
- * @property {boolean} [labels]
- * @property {boolean} [locationCodes]
- * @property {boolean} [simpleScroll]
- * @property {MarkerLabelFunction} [markerLabel]
- * @property {boolean} [pubTran]
+ * @property {string} target target
+ * @property {number} [zoom] zoom
+ * @property {ol.coordinate.Coordinate} [center] center
+ * @property {Array<string>|string} [zoomTo] zoom to
+ * @property {Array<string>|Array<Feature>} [markers] markers
+ * @property {string} [lang] language
+ * @property {boolean} [loadingMessage] loading message
+ * @property {string} [baseMap] basemap
+ * @property {boolean} [mapLinks] maplinks
+ * @property {boolean} [clusterFacultyAbbr] cluster faculty abbreviations
+ * @property {boolean} [labels] labels
+ * @property {boolean} [locationCodes] location codes
+ * @property {boolean} [simpleScroll] simple scroll
+ * @property {MarkerLabelFunction} [markerLabel] marker label function
+ * @property {boolean} [pubTran] public transportation stops
  */
 
 /**
  * @typedef {Object} InitExtentOptions
- * @property {ol.extent.Extent|undefined} extent
- * @property {ol.size.Size} size
- * @property {ol.coordinate.Coordinate|undefined} center
- * @property {number|undefined} zoom
- * @property {number|undefined} resolution
+ * @property {ol.extent.Extent|undefined} extent extent
+ * @property {ol.size.Size} size size
+ * @property {ol.coordinate.Coordinate|undefined} center center
+ * @property {number|undefined} zoom zoom
+ * @property {number|undefined} resolution resolution
  */
 
 /**
  * @typedef {Object} MapListenersOptions
- * @property {redux.Store} store
- * @property {ol.View} view
- * @property {function} createInvalidCodesInfo
- * @property {function} createLimitScrollInfo
+ * @property {redux.Store} store store
+ * @property {ol.View} view view
+ * @property {Function} createInvalidCodesInfo create invalid codes info
+ * @property {Function} createLimitScrollInfo create limit scroll info
  */
 
 /**

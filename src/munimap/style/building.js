@@ -33,7 +33,7 @@ import {getStore as getMarkerStore} from '../source/marker.js';
  */
 
 /**
- * @type {Object.<string, Style|Array.<Style>>}
+ * @type {Object<string, Style|Array<Style>>}
  * @protected
  * @const
  */
@@ -41,7 +41,7 @@ const LABEL_CACHE = {};
 
 /**
  * Styles corresponding different resolutions.
- * @type {Object.<number, Style|Array.<Style>>}
+ * @type {Object<number, Style|Array<Style>>}
  * @protected
  * @const
  */
@@ -100,7 +100,7 @@ const BIG_FONT_SIZE = 15;
  * @param {ol.Feature} feature feature
  * @param {number} resolution resolution
  * @param {boolean} showSelected whether tho show building as selected
- * @return {Style|Array.<Style>} style
+ * @return {Style|Array<Style>} style
  */
 const styleFunction = (feature, resolution, showSelected) => {
   const resColor = munimap_style.RESOLUTION_COLOR.find((obj, i, arr) => {
@@ -209,7 +209,7 @@ const defaultLabelFunction = (feature, resolution, extent, lang) => {
  * @param {number} resolution resolution
  * @param {ol.Extent} extent map extent
  * @param {string} lang lang
- * @return {Array.<Style>|Style} style
+ * @return {Array<Style>|Style} style
  * @protected
  */
 const smallScaleLabelFunction = (feature, resolution, extent, lang) => {
@@ -253,7 +253,7 @@ const smallScaleLabelFunction = (feature, resolution, extent, lang) => {
  * @param {number} resolution resolution
  * @param {ol.Extent} extent map extent
  * @param {string} lang lang
- * @return {Array.<Style>|Style} style
+ * @return {Array<Style>|Style} style
  * @protected
  */
 const largeScaleLabelFunction = (feature, resolution, extent, lang) => {
@@ -309,7 +309,7 @@ const largeScaleLabelFunction = (feature, resolution, extent, lang) => {
  * @param {LabelOptions} labelOptions label opts
  * @param {ol.Feature} feature feature
  * @param {number} resolution resolution
- * @return {Style|Array.<Style>} style
+ * @return {Style|Array<Style>} style
  */
 const labelFunction = (labelOptions, feature, resolution) => {
   const {lang, showLabels, extent} = labelOptions;

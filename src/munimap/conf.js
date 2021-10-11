@@ -36,45 +36,44 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
 
 /**
  * @typedef {Object} RequiredOptions
- * @property {string} target
- * @property {number} [zoom]
- * @property {ol.coordinate.Coordinate} [center]
- * @property {Array.<string>|string} [zoomTo]
- * @property {Array.<string>} [markerIds]
- * @property {string} [lang]
- * @property {boolean} [loadingMessage]
- * @property {string} [baseMap]
- * @property {boolean} [mapLinks]
- * @property {boolean} [clusterFacultyAbbr]
- * @property {boolean} [labels]
- * @property {boolean} [locationCodes]
- * @property {boolean} [simpleScroll]
- * @property {string} [markerLabelId]
- * @property {boolean} [pubTran]
+ * @property {string} target target
+ * @property {number} [zoom] zoom
+ * @property {ol.coordinate.Coordinate} [center] center
+ * @property {Array<string>|string} [zoomTo] zoom to
+ * @property {Array<string>} [markerIds] marker ids
+ * @property {string} [lang] language
+ * @property {boolean} [loadingMessage] whether to show loading message
+ * @property {string} [baseMap] basemap
+ * @property {boolean} [mapLinks] whether to show maplinks
+ * @property {boolean} [clusterFacultyAbbr] whether to cluster faculty abbreviations
+ * @property {boolean} [labels] whether to show labels
+ * @property {boolean} [locationCodes] whether to show location codes
+ * @property {boolean} [simpleScroll] whether to simple scrool or not
+ * @property {string} [markerLabelId] marker label function id
+ * @property {boolean} [pubTran] whethet to show public transportation stops
  */
 
 /**
  * @typedef {Object} State
- * @property {boolean} mapInitialized
- * @property {ol.size.Size} mapSize
- * @property {boolean} initMap
- * @property {ol.coordinate.Coordinate} center
- * @property {number} resolution
- * @property {number} rotation
- * @property {string} baseMap,
- * @property {RequiredOptions} requiredOpts
- * @property {number} markersTimestamp
- * @property {number} zoomToTimestamp
- * @property {number} buildingsTimestamp
- * @property {string} selectedFeature
- * @property {number} floorsTimestamp
- * @property {number} defaultRoomsTimestamp
- * @property {number} activeRoomsTimestamp
+ * @property {boolean} mapInitialized whther is map initialized
+ * @property {ol.size.Size} mapSize map size
+ * @property {ol.coordinate.Coordinate} center center
+ * @property {number} resolution resolution
+ * @property {number} rotation rotation
+ * @property {string} baseMap basemap id
+ * @property {RequiredOptions} requiredOpts required options
+ * @property {number} markersTimestamp marker timestamp
+ * @property {number} zoomToTimestamp zoom tos timestamp
+ * @property {number} buildingsTimestamp buildings timestamp
+ * @property {string} selectedFeature selected feature (building or floor)
+ * @property {number} floorsTimestamp floors timestamp
+ * @property {number} defaultRoomsTimestamp default rooms timestamp
+ * @property {number} activeRoomsTimestamp active rooms timestamp
  */
 
 /**
  * @typedef {Object} MapProps
- * @property {number} currentRes
+ * @property {number} currentRes current resolution
  */
 
 /**
@@ -83,7 +82,6 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
 export const INITIAL_STATE = {
   mapInitialized: false,
   mapSize: null,
-  initMap: null,
   center: null,
   resolution: null,
   rotation: 0,

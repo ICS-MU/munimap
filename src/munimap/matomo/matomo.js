@@ -6,9 +6,9 @@ import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
 
 /**
  * @typedef {Object} Options
- * @property {boolean} [mapLinks]
- * @property {boolean} [pubTran]
- * @property {string} [baseMap]
+ * @property {boolean} [mapLinks] maplinks
+ * @property {boolean} [pubTran] pubtran
+ * @property {string} [baseMap] basemap
  */
 
 /**

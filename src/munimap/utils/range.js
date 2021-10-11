@@ -4,10 +4,10 @@
 
 /**
  * @typedef {Object} RangeInterface
- * @property {number} min
- * @property {number} max
- * @property {boolean} includesMin
- * @property {boolean} includesMax
+ * @property {number} min minimum
+ * @property {number} max maximum
+ * @property {boolean} includesMin includes minimum
+ * @property {boolean} includesMax includes maximum
  */
 
 /**

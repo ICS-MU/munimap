@@ -131,17 +131,17 @@ const containsMarker = (cluster) => {
 
 /**
  * @param {Feature} feature feature
- * @return {Array.<Feature>} features
+ * @return {Array<Feature>} features
  */
 const getFeatures = (feature) => {
   return isCluster(feature)
-    ? /** @type {Array.<Feature>} */ (feature.get('features'))
+    ? /** @type {Array<Feature>} */ (feature.get('features'))
     : [];
 };
 
 /**
  * @param {Feature} feature feature
- * @return {Array.<Feature>} main features
+ * @return {Array<Feature>} main features
  */
 const getMainFeatures = (feature) => {
   let result = getFeatures(feature);
@@ -153,7 +153,7 @@ const getMainFeatures = (feature) => {
 
 /**
  * @param {Feature} feature feature
- * @return {Array.<Feature>} minor features
+ * @return {Array<Feature>} minor features
  */
 const getMinorFeatures = (feature) => {
   let result = getFeatures(feature);

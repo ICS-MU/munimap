@@ -11,7 +11,7 @@ import {
 } from './room.js';
 
 /**
- * @typedef {import("ol/layer/BaseVector").Options<any>} BaseLayerOptions
+ * @typedef {import("ol/layer/BaseVector").Options} BaseLayerOptions
  * @typedef {import("ol/layer/Vector").default} ol.layer.Vector
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
@@ -19,10 +19,10 @@ import {
 
 /**
  * @typedef {Object} VectorLayerExtendedOptions
- * @property {string} id
- * @property {(options: FeatureClickHandlerOptions) => boolean} [isFeatureClickable]
- * @property {(options: FeatureClickHandlerOptions) => void} [featureClickHandler]
- * @property {boolean} [redrawOnFloorChange]
+ * @property {string} id id
+ * @property {(options: FeatureClickHandlerOptions) => boolean} [isFeatureClickable] whether is feature clickable
+ * @property {(options: FeatureClickHandlerOptions) => void} [featureClickHandler] what to do if user clicked on feature
+ * @property {boolean} [redrawOnFloorChange] redrawOnFloorChange
  *
  * @typedef {BaseLayerOptions & VectorLayerExtendedOptions} VectorLayerOptions
  */
@@ -64,7 +64,7 @@ const REFRESH_STYLE = 'refreshStyleOnFloorChange';
 const TYPE = 'type';
 
 /**
- * @param {Array.<ol.layer.Vector>} layers layers
+ * @param {Array<ol.layer.Vector>} layers layers
  * @protected
  */
 const setDefaultLayersProps = (layers) => {
@@ -93,7 +93,7 @@ const setDefaultLayersProps = (layers) => {
  * @param {boolean} showLabels whether show labels for MU objects
  * @param {boolean} showLocationCodes whether to show only location codes
  *
- * @return {Array.<ol.layer.Vector>} layers
+ * @return {Array<ol.layer.Vector>} layers
  */
 const getDefaultLayers = (lang, showLabels, showLocationCodes) => {
   const result = [];

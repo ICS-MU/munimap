@@ -34,11 +34,11 @@ import {isRoom as isRoomFeature} from '../feature/room.js';
 
 /**
  * @typedef {Object} LabelFunctionOptions
- * @property {ol.Map} map
- * @property {string} lang
- * @property {ol.source.Vector} markerSource
- * @property {LabelFunction} [markerLabel]
- * @property {boolean} [locationCodes]
+ * @property {ol.Map} map map
+ * @property {string} lang lang
+ * @property {ol.source.Vector} markerSource marker source
+ * @property {LabelFunction} [markerLabel] marker label
+ * @property {boolean} [locationCodes] whether to show location codes
  * }}
  */
 
@@ -49,6 +49,7 @@ import {isRoom as isRoomFeature} from '../feature/room.js';
  * @property {ol.Extent} extent extent
  * @property {boolean} locationCodes whether to show only location codes
  * @property {LabelFunction} [markerLabel] marker label function
+ * @property {Array<string>} activeFloorCodes active floor codes
  */
 
 /**
@@ -75,7 +76,7 @@ const TEXT_FILL = new Fill({
 
 /**
  * Styles corresponding different resolutions.
- * @type {Object.<number, Style|Array.<Style>>}
+ * @type {Object<number, Style|Array<Style>>}
  * @const
  */
 const WHITE_TO_GREY_CACHE = {};
@@ -248,7 +249,7 @@ const getPin = () => createPinFromGeometry(CENTER_GEOMETRY_FUNCTION);
  * @param {Feature|ol.render.Feature} feature feature
  * @param {number} resolution resolution
  * @param {StyleFunctionOptions} options options
- * @return {Array.<Style>} style
+ * @return {Array<Style>} style
  */
 const labelFunction = (feature, resolution, options) => {
   const {markers, markerLabel, lang, extent, locationCodes} = options;
@@ -344,12 +345,12 @@ const labelFunction = (feature, resolution, options) => {
  * @param {Feature|ol.render.Feature} feature feature
  * @param {number} resolution resolution
  * @param {StyleFunctionOptions} options options
- * @return {Array.<Style>} style
+ * @return {Array<Style>} style
  */
 export const styleFunction = (feature, resolution, options) => {
   munimap_asserts.assertInstanceof(feature, Feature);
 
-  let result = [];
+  const result = [];
   const isBuilding = munimap_building.isBuilding(feature);
 
   if (
@@ -365,7 +366,8 @@ export const styleFunction = (feature, resolution, options) => {
   if (isRoom /*|| isDoor*/) {
     const locCode = /**@type {string}*/ (feature.get('polohKod'));
     const inActiveFloor = options.activeFloorCodes.some((floorCode) =>
-      locCode.startsWith(floorCode));
+      locCode.startsWith(floorCode)
+    );
     const hasPointGeom = feature.getGeometry() instanceof Point;
     if (
       munimap_range.contains(munimap_floor.RESOLUTION, resolution) &&

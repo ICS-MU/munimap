@@ -12,20 +12,20 @@
 
 /**
  * @typedef {Object} FeatureClickHandlerOptions
- * @property {ol.Feature} feature
- * @property {ol.layer.Vector} layer
- * @property {ol.Map} map
- * @property {ol.pixel.Pixel} pixel
- * @property {number} resolution
+ * @property {ol.Feature} feature feature
+ * @property {ol.layer.Vector} layer layer
+ * @property {ol.Map} map map
+ * @property {ol.pixel.Pixel} pixel pixel
+ * @property {number} resolution resolution
  */
 
 /**
  * @typedef {Object} TypeOptions
- * @property {string} primaryKey
- * @property {string} serviceUrl
- * @property {ol.source.Vector} [store]
- * @property {number} layerId
- * @property {string} name
+ * @property {string} primaryKey pk
+ * @property {string} serviceUrl url
+ * @property {ol.source.Vector} [store] store
+ * @property {number} layerId layer id
+ * @property {string} name name
  */
 
 /**

@@ -10,9 +10,9 @@ import * as munimap_lang from '../lang/lang.js';
 
 /**
  * @typedef {Object} InvalidCodeOptions
- * @property {Array<string>} invalidCodes
- * @property {string} lang
- * @property {ol.Map} map
+ * @property {Array<string>} invalidCodes invalid codes
+ * @property {string} lang language
+ * @property {ol.Map} map map
  */
 
 /**
@@ -63,7 +63,7 @@ const createDragEl = (target) => {
  * @param {Element} target target element (e.g. munimapEl)
  * @param {Element} infoEl info element
  * @param {InvalidCodeOptions} options opts
- * @return {function} createError function
+ * @return {Function} createError function
  */
 const initInvalidCodesInfo = (target, infoEl, options) => {
   const {map, invalidCodes, lang} = options;
@@ -101,9 +101,9 @@ const initInvalidCodesInfo = (target, infoEl, options) => {
   }
 
   function createError() {
-    const canvas = /**@type {HTMLCanvasElement}*/ (target.getElementsByTagName(
-      'CANVAS'
-    )[0]);
+    const canvas = /**@type {HTMLCanvasElement}*/ (
+      target.getElementsByTagName('CANVAS')[0]
+    );
     const dragEl = document.getElementById(
       `munimap-error_${target.parentElement.id.toString()}`
     );
@@ -129,7 +129,7 @@ const initInvalidCodesInfo = (target, infoEl, options) => {
  * @param {ol.Map} map map
  * @param {Element} target target
  * @param {string} lang language
- * @return {function} fc
+ * @return {Function} fc
  */
 const limitScroll = (map, target, lang) => {
   // let dragEl = document.createElement('div');
@@ -144,9 +144,9 @@ const limitScroll = (map, target, lang) => {
   // target.appendChild(dragEl);
 
   function createError() {
-    const canvas = /**@type {HTMLCanvasElement}*/ (target.getElementsByTagName(
-      'CANVAS'
-    )[0]);
+    const canvas = /**@type {HTMLCanvasElement}*/ (
+      target.getElementsByTagName('CANVAS')[0]
+    );
     const dragEl = document.getElementById(
       `munimap-error_${target.parentElement.id.toString()}`
     );

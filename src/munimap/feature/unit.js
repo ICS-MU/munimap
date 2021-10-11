@@ -78,8 +78,8 @@ const getTitle = (unit, lang) => {
 };
 
 /**
- * @param {Array.<ol.Feature>} buildings bldgs
- * @return {Array.<ol.Feature>} units
+ * @param {Array<ol.Feature>} buildings bldgs
+ * @return {Array<ol.Feature>} units
  */
 const getUnitsOfBuildings = (buildings) => {
   return buildings.reduce((prev, building) => {
@@ -90,8 +90,8 @@ const getUnitsOfBuildings = (buildings) => {
 };
 
 /**
- * @param {Array.<ol.Feature>} buildings bldgs
- * @return {Array.<ol.Feature>} faculties
+ * @param {Array<ol.Feature>} buildings bldgs
+ * @return {Array<ol.Feature>} faculties
  */
 const getFacultiesOfBuildings = (buildings) => {
   return buildings.reduce((prev, building) => {
@@ -102,9 +102,9 @@ const getFacultiesOfBuildings = (buildings) => {
 };
 
 /**
- * @param {Array.<ol.Feature>} units units
+ * @param {Array<ol.Feature>} units units
  * @param {string} lang lang
- * @return {Array.<string>} title parts
+ * @return {Array<string>} title parts
  */
 const getTitleParts = (units, lang) => {
   const titleParts = [];

@@ -31,7 +31,7 @@ class AssertionError extends Error {
 
 /**
  * @param {*} assertion Assertion we expected to be truthy.
- * @param {string=} opt_msg optional message
+ * @param {string} [opt_msg] optional message
  * @return {boolean} assertion
  * @throws {AssertionError} AssertionError
  */
@@ -44,7 +44,7 @@ const assert = (assertion, opt_msg) => {
 
 /**
  * @param {*} val value
- * @param {string=} opt_msg optional message
+ * @param {string} [opt_msg] optional message
  * @return {string} asserted value
  */
 const assertString = (val, opt_msg) => {
@@ -60,7 +60,7 @@ const assertString = (val, opt_msg) => {
 
 /**
  * @param {*} val value
- * @param {string=} opt_msg optional message
+ * @param {string} [opt_msg] optional message
  * @return {Array} asserted value
  */
 const assertArray = (val, opt_msg) => {
@@ -76,7 +76,7 @@ const assertArray = (val, opt_msg) => {
 
 /**
  * @param {*} val value
- * @param {string=} opt_msg optional message
+ * @param {string} [opt_msg] optional message
  * @return {boolean} asserted value
  */
 const assertBoolean = (val, opt_msg) => {
@@ -93,7 +93,7 @@ const assertBoolean = (val, opt_msg) => {
 
 /**
  * @param {*} val value
- * @param {string=} opt_msg optional message
+ * @param {string} [opt_msg] optional message
  * @return {number} asserted value
  */
 const assertNumber = (val, opt_msg) => {
@@ -109,7 +109,7 @@ const assertNumber = (val, opt_msg) => {
 
 /**
  * @param {*} val value
- * @param {string=} opt_msg Error message.
+ * @param {string} [opt_msg] Error message.
  * @return {!Element} asserted value
  * @throws {AssertionError} When the value is not an Element.
  */
@@ -127,7 +127,7 @@ const assertElement = (val, opt_msg) => {
 /**
  * @param {*} val value
  * @param {Function} type type
- * @param {string=} opt_msg optional message
+ * @param {string} [opt_msg] optional message
  * @return {*} asserted value
  */
 const assertInstanceof = (val, type, opt_msg) => {
@@ -146,7 +146,7 @@ const assertInstanceof = (val, type, opt_msg) => {
 
 /**
  * @param {*} val value
- * @param {string=} opt_msg Error message.
+ * @param {string} [opt_msg] Error message.
  * @return {any} asserted value
  * @throws {AssertionError} When the value is not an Element.
  */
@@ -190,7 +190,7 @@ const zoom = (zoom) => {
 };
 
 /**
- * @param {Array.<string>|string|undefined} zoomTo zoomTo
+ * @param {Array<string>|string|undefined} zoomTo zoomTo
  */
 const zoomTo = (zoomTo) => {
   if (zoomTo !== undefined) {
@@ -243,7 +243,7 @@ const lang = (lang) => {
 };
 
 /**
- * @param {Array.<string>|Array.<ol.Feature>|undefined} markers markers
+ * @param {Array<string>|Array<ol.Feature>|undefined} markers markers
  */
 const markers = (markers) => {
   if (markers !== undefined) {

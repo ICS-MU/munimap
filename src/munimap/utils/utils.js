@@ -73,7 +73,7 @@ const isFunction = (value) => {
 };
 
 /**
- * @param {function} fn function
+ * @param {Function} fn function
  * @param {...*} partialArgs arguments
  * @return {any} function
  */

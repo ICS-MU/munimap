@@ -63,7 +63,7 @@ const getType = () => {
 
 /**
  * @param {number} id id
- * @param {Array.<ol.Feature>=} opt_features optional features
+ * @param {Array<ol.Feature>} [opt_features] optional features
  * @return {ol.Feature} building
  */
 const getById = (id, opt_features) => {

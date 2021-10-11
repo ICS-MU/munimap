@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * @module control/controls
  */
@@ -11,11 +12,11 @@ import createMapLinks from './maplinksview.js';
 
 /**
  * @typedef {Object} ToolbarOptions
- * @property {!HTMLElement} mapTools
- * @property {!HTMLElement} toolBar
- * @property {!HTMLElement} button
- * @property {!HTMLElement} icon
- * @property {string} lang
+ * @property {!HTMLElement} mapTools mapTools
+ * @property {!HTMLElement} toolBar toolBar
+ * @property {!HTMLElement} button button
+ * @property {!HTMLElement} icon icon
+ * @property {string} lang lang
  */
 
 /**
@@ -68,7 +69,7 @@ const MAP_TOOLS_STORE = [];
 
 /**
  * Creates element for Tool Bar
- * @returns {HTMLElement} element
+ * @return {HTMLElement} element
  */
 const createToolBarEl = () => {
   const toolBarEl = document.createElement('div');
@@ -79,7 +80,7 @@ const createToolBarEl = () => {
 
 /**
  * Creates element for Map Tools
- * @returns {HTMLElement} element
+ * @return {HTMLElement} element
  */
 const createMapToolsEl = () => {
   const mapToolsEl = document.createElement('div'); // arrows
@@ -221,7 +222,7 @@ const createTempControl = (map, store, target, lang) => {
  * Adds controls to the map and returns their total size
  * @param {ol.Map} map map
  * @param {Array<Control>} controls controls
- * @returns {number} total size
+ * @return {number} total size
  */
 const addControls = (map, controls) => {
   const controlSize = CONTROL_SIZE;
@@ -349,9 +350,9 @@ const toggleMapTools = (map, store, options) => {
  * @param {RequiredOptions} options opts
  */
 const toggleMapLinks = (map, options) => {
-  const mapLinkEl = /**@type {HTMLElement}*/ (map
-    .getTargetElement()
-    .getElementsByClassName('munimap-link')[0]);
+  const mapLinkEl = /**@type {HTMLElement}*/ (
+    map.getTargetElement().getElementsByClassName('munimap-link')[0]
+  );
   if (options.mapLinks && map.getSize()[1] < MAP_SIZE_LIMIT) {
     mapLinkEl.style.display = 'none';
     console.error('The map is too small. Map Links have to be hidden');
@@ -365,7 +366,7 @@ const toggleMapLinks = (map, options) => {
  * @param {ol.Map} map map
  * @param {number} remainingSpace remaining space
  * @param {number} sizeOfControls total size
- * @returns {boolean} whether needs to change
+ * @return {boolean} whether needs to change
  */
 const needToChange = (map, remainingSpace, sizeOfControls) => {
   const newRemainingSpace =

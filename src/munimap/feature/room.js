@@ -119,7 +119,8 @@ const assertCodeOrLikeExpr = (code) => {
     'Location code of building should consist of 3 letters and 2 digits, ' +
       "one of the letters 'N', 'M', 'P', 'S' or 'Z' " +
       'followed by 5 digits, and optionally 1 letter. ' +
-      'Any of these characters might be replaced with _ wildcard.');
+      'Any of these characters might be replaced with _ wildcard.'
+  );
 };
 
 // /**

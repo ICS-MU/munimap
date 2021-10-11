@@ -248,7 +248,7 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
  * @param {Feature} clusterFeature cluster feature
  * @param {Feature} feature feature
  * @param {number} resolution resolution
- * @return {Array.<Style>} style
+ * @return {Array<Style>} style
  * @protected
  */
 const pinFunction = (options, clusterFeature, feature, resolution) => {
@@ -328,7 +328,7 @@ const pinFunction = (options, clusterFeature, feature, resolution) => {
  * @param {StyleFunctionOptions} options opts
  * @param {Feature|ol.render.Feature} feature feature
  * @param {number} resolution resolution
- * @return {Array.<Style>!} style
+ * @return {Array<Style>} style
  * @protected
  */
 const multipleLabelFunction = (options, feature, resolution) => {
@@ -438,7 +438,7 @@ const multipleLabelFunction = (options, feature, resolution) => {
  * @param {Feature|ol.render.Feature} feature feature
  * @param {number} resolution resolution
  * @param {StyleFunctionOptions} options opts
- * @return {Style|Array.<Style>} style
+ * @return {Style|Array<Style>} style
  */
 const styleFunction = (feature, resolution, options) => {
   munimap_assert.assertInstanceof(feature, Feature);

@@ -39,9 +39,9 @@ import {getBufferValue} from './extent.js';
  * @return {Feature} feature
  */
 const featureExtentIntersect = (feature, extent, format) => {
-  const turfFeature = /**@type {TurfPolygon}*/ (format.writeFeatureObject(
-    feature
-  ));
+  const turfFeature = /**@type {TurfPolygon}*/ (
+    format.writeFeatureObject(feature)
+  );
   const turfBBox = turf_bboxPolygon(extent);
   const turfIntersect = turf_intersect(turfFeature, turfBBox);
   return munimap_utils.isDef(turfIntersect)
@@ -52,7 +52,7 @@ const featureExtentIntersect = (feature, extent, format) => {
 /**
  * @param {ol.geom.LinearRing} ring ring
  * @param {number} y y-coordinate (vertical coordinate)
- * @return {Array.<number>} x-coordinates of intersections
+ * @return {Array<number>} x-coordinates of intersections
  * @protected
  */
 const getLinearRingHorizontalIntersections = (ring, y) => {
@@ -98,7 +98,7 @@ const getLargestPolygon = (multipolygon) => {
 /**
  * @param {Polygon|MultiPolygon} polygon polygon
  * @param {number} y y coordinate (vertical coordinate)
- * @return {Array.<number>} x coordinates of intersections
+ * @return {Array<number>} x coordinates of intersections
  * @protected
  */
 const getHorizontalIntersections = (polygon, y) => {
@@ -149,7 +149,7 @@ const getBetterInteriorPoint = (polygon) => {
 
 /**
  * @param {Geometry} geometry geom
- * @param {boolean=} opt_useOlInteriorPoint use interior point
+ * @param {boolean} [opt_useOlInteriorPoint] use interior point
  * @return {Point} geom center
  */
 const getGeometryCenter = (geometry, opt_useOlInteriorPoint) => {
@@ -170,7 +170,7 @@ const getGeometryCenter = (geometry, opt_useOlInteriorPoint) => {
 
 /**
  *
- * @param {Array.<Feature>} features features
+ * @param {Array<Feature>} features features
  * @return {Point} center point
  */
 const getGeometryCenterOfFeatures = (features) => {

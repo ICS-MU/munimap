@@ -1037,8 +1037,8 @@ export const getSelectedLocationCode = createSelector(
  * @type {Reselect.OutputSelector<
  *    State,
  *    StyleFunction,
- *    function(string, string, ol.Extent, boolean, boolean, string):
- *      StyleFunction
+ *    function(string, string, ol.Extent, boolean, boolean,
+ *      string, Array<string>): StyleFunction
  * >}
  */
 export const getStyleForMarkerLayer = createSelector(

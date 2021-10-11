@@ -22,9 +22,9 @@ export const getUid = (feature) => {
   if (code) {
     uid = munimap_assert.assertString(code);
   } else {
-    const type = /**@type {TypeOptions}*/ (feature.get(
-      FEATURE_TYPE_PROPERTY_NAME
-    ));
+    const type = /**@type {TypeOptions}*/ (
+      feature.get(FEATURE_TYPE_PROPERTY_NAME)
+    );
     if (type) {
       const pk = feature.get(type.primaryKey);
       uid = type.name + ':' + pk;
@@ -36,8 +36,8 @@ export const getUid = (feature) => {
 /**
  *
  * @param {ol.source.Vector} store store
- * @param {Array.<ol.Feature>} features features
- * @return {Array.<ol.Feature>} not yet added features
+ * @param {Array<ol.Feature>} features features
+ * @return {Array<ol.Feature>} not yet added features
  */
 export const getNotYetAddedFeatures = (store, features) => {
   const storedFeatures = store.getFeatures();

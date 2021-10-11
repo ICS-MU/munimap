@@ -43,73 +43,73 @@ import {getStore as getUnitStore} from './source/unit.js';
 
 /**
  * @typedef {Object} FeaturesOptions
- * @property {ol.source.Vector} source
- * @property {TypeOptions} type
- * @property {string} [where]
- * @property {string} [method]
- * @property {boolean} [returnGeometry]
- * @property {Processor} [processor]
+ * @property {ol.source.Vector} source source
+ * @property {TypeOptions} type type
+ * @property {string} [where] where
+ * @property {string} [method] method
+ * @property {boolean} [returnGeometry] whether to return geometry
+ * @property {Processor} [processor] processor
  */
 
 /**
  * @typedef {Object} FeaturesByCodeOptions
- * @property {Array<string>} codes
- * @property {TypeOptions} type
- * @property {ol.source.Vector} source
- * @property {Array<string>} [likeExprs]
- * @property {Processor} [processor]
+ * @property {Array<string>} codes codes
+ * @property {TypeOptions} type type
+ * @property {ol.source.Vector} source source
+ * @property {Array<string>} [likeExprs] like expressions
+ * @property {Processor} [processor] processor
  */
 
 /**
  * @typedef {Object} BuildingsByCodeOptions
- * @property {Array<string>} codes
- * @property {Array<string>} likeExprs
+ * @property {Array<string>} codes codes
+ * @property {Array<string>} likeExprs like expressions
  */
 
 /**
  * @typedef {Object} RoomsByCodeOptions
- * @property {Array<string>} codes
- * @property {Array<string>} likeExprs
+ * @property {Array<string>} codes codes
+ * @property {Array<string>} likeExprs like expressions
  */
 
 /**
  * @typedef {Object} ComplexByIdsOptions
- * @property {Array<number>} ids
- * @property {Processor} [processor]
+ * @property {Array<number>} ids ids
+ * @property {Processor} [processor] processor
  */
 
 /**
  * @typedef {Object} FeaturesForMapOptions
- * @property {ol.source.Vector} source
- * @property {TypeOptions|function(): TypeOptions} type
- * @property {string} [where]
- * @property {string} [method]
- * @property {Processor} [processor]
- * @property {Function} [callback]
+ * @property {ol.source.Vector} source source
+ * @property {TypeOptions|function(): TypeOptions} type type
+ * @property {string} [where] where
+ * @property {string} [method] method
+ * @property {Processor} [processor] processor
+ * @property {Function} [callback] callback
  */
 
 /**
  * @typedef {Object} LoadActiveOptions
- * @property {Function} [callback]
- * @property {redux.Store} [store]
+ * @property {Function} [callback] callback
+ * @property {redux.Store} [store] store
  */
 
 /**
  * @typedef {Object} FeaturesFromUrlOptions
- * @property {ol.source.Vector} source
- * @property {TypeOptions} type
- * @property {string} url
- * @property {ol.proj.Projection} [projection]
- * @property {string} [method]
- * @property {FormData} [postContent]
- * @property {Processor} [processor]
- * @property {Array<ol.Feature>} [newProcessedFeatures]
+ * @property {ol.source.Vector} source source
+ * @property {TypeOptions} type type
+ * @property {string} url url
+ * @property {ol.proj.Projection} [projection] projection
+ * @property {string} [method] method
+ * @property {FormData} [postContent] post content
+ * @property {Processor} [processor] processor
+ * @property {Array<ol.Feature>} [newProcessedFeatures] new features
  */
 
 /**
  * @typedef {Object} WaitForNewProcessedFeaturesOptions
- * @property {ol.source.Vector} source
- * @property {Array<ol.Feature>} loadedNewProcessedFeatures
+ * @property {ol.source.Vector} source source
+ * @property {Array<ol.Feature>} loadedNewProcessedFeatures new features
  */
 
 /**
@@ -126,9 +126,9 @@ import {getStore as getUnitStore} from './source/unit.js';
  * existing: features that were loaded in this request and are already in the
  *   store
  * @typedef {Object} ProcessorOptions
- * @property {Array.<ol.Feature>} all
- * @property {Array.<ol.Feature>} new
- * @property {Array.<ol.Feature>} existing
+ * @property {Array<ol.Feature>} all all features
+ * @property {Array<ol.Feature>} new new features
+ * @property {Array<ol.Feature>} existing existing features
  */
 
 /**
@@ -162,7 +162,7 @@ const getNewProcessedFeatures = (type) => {
 
 /**
  * @param {ProcessorOptions} options opts
- * @protected
+ * @return {Promise<ProcessorOptions>} options
  */
 const defaultProcessor = async (options) => {
   return options;
@@ -176,9 +176,11 @@ const FORMAT = new EsriJSON();
 
 /**
  * @param {WaitForNewProcessedFeaturesOptions} options opts
+ * @return {Promise<Function|boolean>} result
  */
 const waitForNewProcessedFeatures = async (options) => {
-  const loadedNewProcessedFeatures = options.loadedNewProcessedFeatures.concat();
+  const loadedNewProcessedFeatures =
+    options.loadedNewProcessedFeatures.concat();
   if (!loadedNewProcessedFeatures.length) {
     return true;
   }
@@ -749,7 +751,7 @@ const featuresFromParam = async (paramValue) => {
       });
       munimap_utils.removeArrayDuplicates(buildingCodes);
       munimap_utils.removeArrayDuplicates(buildingLikeExprs);
-      const buildings = await buildingsByCode({
+      await buildingsByCode({
         codes: buildingCodes,
         likeExprs: buildingLikeExprs,
       });
@@ -763,7 +765,7 @@ const featuresFromParam = async (paramValue) => {
       });
       features.forEach((feature, index) => {
         if (!munimap_utils.isDefAndNotNull(feature.getGeometry())) {
-          const locCode = /**@type (string)*/ (feature.get('polohKod'));
+          const locCode = /**@type {string}*/ (feature.get('polohKod'));
           const building = munimap_building.getByCode(locCode);
           const bldgGeom = building.getGeometry();
           if (munimap_utils.isDef(bldgGeom)) {

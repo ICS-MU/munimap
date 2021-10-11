@@ -56,15 +56,15 @@ import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
 
 /**
  * @typedef {Object} AddLayersOptions
- * @property {Array<ol.Feature>} markers
- * @property {string} lang
- * @property {ol.AttributionLike} muAttrs
- * @property {boolean} [clusterFacultyAbbr]
- * @property {boolean} [showLabels]
- * @property {boolean} [locationCodes]
- * @property {MarkerLabelFunction} [markerLabel]
- * @property {boolean} [pubTran]
- * @property {ol.source.Vector} [markerSource]
+ * @property {Array<ol.Feature>} markers markers
+ * @property {string} lang language
+ * @property {ol.AttributionLike} muAttrs mu attributions
+ * @property {boolean} [clusterFacultyAbbr] whether to cluster faculty abbrs
+ * @property {boolean} [showLabels] whether to show labels
+ * @property {boolean} [locationCodes] whether to show location codes
+ * @property {MarkerLabelFunction} [markerLabel] marker label
+ * @property {boolean} [pubTran] public transportation
+ * @property {ol.source.Vector} [markerSource] marker source
  */
 
 /**

@@ -186,9 +186,9 @@ const featureClickHandler = (options) => {
  * @return {boolean} hasInnerGeom
  */
 const hasInnerGeometry = (building) => {
-  const hasInnerGeometry = /**@type {number}*/ (building.get(
-    'maVnitrniGeometrii'
-  ));
+  const hasInnerGeometry = /**@type {number}*/ (
+    building.get('maVnitrniGeometrii')
+  );
   let result;
   switch (hasInnerGeometry) {
     case 1:
@@ -238,8 +238,8 @@ const getUnits = (building) => {
 };
 
 /**
- * @param {Array.<Feature>} buildings bldgs
- * @return {Array.<Feature>} hedquaters
+ * @param {Array<Feature>} buildings bldgs
+ * @return {Array<Feature>} hedquaters
  */
 const filterHeadquaters = (buildings) => {
   return buildings.filter((bldg) => {
@@ -248,8 +248,8 @@ const filterHeadquaters = (buildings) => {
 };
 
 /**
- * @param {Array.<Feature>} buildings bldgs
- * @return {Array.<Feature>} faculty headquaters
+ * @param {Array<Feature>} buildings bldgs
+ * @return {Array<Feature>} faculty headquaters
  */
 const filterFacultyHeadquaters = (buildings) => {
   return buildings.filter((bldg) => {
@@ -262,17 +262,19 @@ const filterFacultyHeadquaters = (buildings) => {
 /**
  * @param {Feature} building bldg
  * @param {string} lang lang
- * @param {string=} opt_separator separator
+ * @param {string} [opt_separator] separator
  * @return {string} building title without organizational unit
  */
 const getTitleWithoutOrgUnit = (building, lang, opt_separator) => {
   let result;
-  const title = /**@type {string}*/ (building.get(
-    munimap_lang.getMsg(
-      munimap_lang.Translations.BUILDING_TITLE_FIELD_NAME,
-      lang
+  const title = /**@type {string}*/ (
+    building.get(
+      munimap_lang.getMsg(
+        munimap_lang.Translations.BUILDING_TITLE_FIELD_NAME,
+        lang
+      )
     )
-  ));
+  );
   result = title.split(', ');
   result.shift();
   result.reverse();

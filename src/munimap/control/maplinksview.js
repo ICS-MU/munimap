@@ -29,7 +29,7 @@ const GOOGLE_IMG_PATH = APP_PATH + 'img/google.png';
  * @param {string} path path
  * @param {ol.Map} map map
  * @param {redux.Store} store store
- * @param {Array.<string>|undefined} markers markers
+ * @param {Array<string>|undefined} markers markers
  * @param {Array<string>} pointCoordinates coords
  */
 const handleClick = (path, map, store, markers, pointCoordinates) => {
@@ -76,7 +76,7 @@ const handleClick = (path, map, store, markers, pointCoordinates) => {
  * @param {string} path path
  * @param {ol.Map} map map
  * @param {redux.Store} store store
- * @param {Array.<string>|undefined} markers markers
+ * @param {Array<string>|undefined} markers markers
  * @param {string} lang language
  * @return {Element} element
  */
@@ -107,7 +107,7 @@ const createItemElement = (path, map, store, markers, lang) => {
 /**
  * @param {ol.Map} map map
  * @param {redux.Store} store store
- * @param {Array.<string>|undefined} markers markers
+ * @param {Array<string>|undefined} markers markers
  * @param {string} lang language
  * @return {Control} control
  */

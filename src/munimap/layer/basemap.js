@@ -66,7 +66,7 @@ const getPairedBasemap = (id) => {
 
 /**
  * @param {string} basemapId basemap id
- * @param {string=} lang lang
+ * @param {string} [lang] lang
  * @return {TileLayer} layer
  */
 const createLayer = (basemapId, lang) => {

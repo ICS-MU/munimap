@@ -16,8 +16,8 @@ import {getStore as getFloorStore} from '../source/floor.js';
 
 /**
  * @typedef {Object} Options
- * @property {string} locationCode
- * @property {number} floorLayerId
+ * @property {string} locationCode location code
+ * @property {number} floorLayerId floor layer id
  */
 
 /**

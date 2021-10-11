@@ -30,38 +30,39 @@ import {
 
 /**
  *
- * @typedef {function(Feature, ?string, Array.<string>): boolean} FilterFunction
+ * @typedef {function(Feature, ?string, Array<string>): boolean} FilterFunction
  */
 
 /**
- * @typedef {function(StyleFunctionOptions, ol.FeatureLike, number): (Style|Array.<Style>)} StyleFunction
+ * @typedef {function(StyleFunctionOptions, ol.FeatureLike, number):
+ *    (Style|Array<Style>)} StyleFunction
  */
 
 /**
  * @typedef {Object} StyleFunctionOptions
- * @property {Array<Feature>}  [markers]
+ * @property {Array<Feature>}  [markers] markers
  * }}
  */
 
 /**
  * @typedef {Object} ResolutionColorObject
- * @property {number} resolution
- * @property {string} color
- * @property {number} opacity
+ * @property {number} resolution resolution
+ * @property {string} color color
+ * @property {number} opacity opacity
  */
 
 /**
  * @typedef {Object} LabelWithPinOptions
- * @property {Fill}  fill
- * @property {number}  [fontSize]
- * @property {GeometryFunction|ol.geom.Geometry|string}  geometry
- * @property {string}  [title]
- * @property {string}  [minorTitle]
- * @property {number}  [zIndex]
+ * @property {Fill}  fill fill
+ * @property {number}  [fontSize] font size
+ * @property {GeometryFunction|ol.geom.Geometry|string}  geometry geom
+ * @property {string}  [title] title
+ * @property {string}  [minorTitle] minor title
+ * @property {number}  [zIndex] z-index
  */
 
 /**
- * @type {Object.<string, Style|Array.<Style>>}
+ * @type {Object<string, Style|Array<Style>>}
  * @const
  */
 const LABEL_CACHE = {};
@@ -114,7 +115,7 @@ const PIN = new Style({
 });
 
 /**
- * @type {Array.<ResolutionColorObject>}
+ * @type {Array<ResolutionColorObject>}
  * @const
  */
 const RESOLUTION_COLOR = [
@@ -133,7 +134,7 @@ const RESOLUTION_COLOR = [
 const CHAR_HEIGHT_WIDTH_RATIO = 3 / 2;
 
 /**
- * @param {Array.<string>} parts parts
+ * @param {Array<string>} parts parts
  * @param {string} separator separator
  * @return {string} text
  */
@@ -210,7 +211,7 @@ const getLabelHeight = (title, fontSize) => {
 
 /**
  * @param {string|undefined} text text
- * @param {string=} char Character for newline (/n or </br>)
+ * @param {string} [char] Character for newline (/n or </br>)
  * @return {string|undefined} wrapped text
  */
 const wrapText = (text, char) => {
@@ -233,7 +234,7 @@ const wrapText = (text, char) => {
 
 /**
  * @param {LabelWithPinOptions} options opts
- * @return {Array.<Style>} style
+ * @return {Array<Style>} style
  */
 const getTextStyleWithOffsetY = (options) => {
   const fontSize = options.fontSize;
@@ -286,7 +287,7 @@ const getTextStyleWithOffsetY = (options) => {
 
 /**
  * @param {LabelWithPinOptions} options options
- * @return {Array.<Style>} style
+ * @return {Array<Style>} style
  */
 const getLabelWithPin = (options) => {
   const fill = options.fill;
