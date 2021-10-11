@@ -5,6 +5,7 @@ import * as munimap_cluster from '../cluster/cluster.js';
 import VectorLayer from 'ol/layer/Vector';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {createStore as createClusterStore} from '../source/cluster.js';
+import {isRoom} from '../feature/room.js';
 import {updateClusteredFeatures} from '../view/cluster.js';
 
 /**
@@ -37,18 +38,18 @@ const create = (map, options) => {
   const {markers, lang, showLabels, muAttrs} = options;
   const clusterFeatures = markers.concat();
   const markerClusterSrc = createClusterStore(clusterFeatures, muAttrs, lang);
-  const clusterResolution = munimap_cluster.BUILDING_RESOLUTION;
-  // if (
-  //   markers.length &&
-  //   (markers.some((el) => {
-  //     return munimap.room.isRoom(el);
-  //   }) ||
-  //     markers.some((el) => {
-  //       return munimap.door.isDoor(el);
-  //     })
-  // ) {
-  //   clusterResolution = munimap_cluster.ROOM_RESOLUTION;
-  // }
+  let clusterResolution = munimap_cluster.BUILDING_RESOLUTION;
+  if (
+    markers.length &&
+    (markers.some((el) => {
+      return isRoom(el);
+    }) /*||
+      markers.some((el) => {
+        return munimap.door.isDoor(el);
+      })*/
+  )) {
+    clusterResolution = munimap_cluster.ROOM_RESOLUTION;
+  }
 
   const markerClusterLayer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({

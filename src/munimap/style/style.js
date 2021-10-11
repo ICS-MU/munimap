@@ -10,6 +10,10 @@ import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
+import {
+  getDefaultLabel as getDefaultRoomLabel,
+  isRoom,
+} from '../feature/room.js';
 
 /**
  * @typedef {import("./marker").LabelFunction} MarkerLabelFunction
@@ -187,10 +191,9 @@ const getDefaultLabel = (feature, resolution, lang) => {
     munimap_assert.assertString(title);
   } else if (munimap_customMarker.isCustom(feature)) {
     return munimap_customMarker.getLabel(feature);
+  } else if (isRoom(feature)) {
+    title = getDefaultRoomLabel(feature, lang);
   }
-  // else if (munimap.room.isRoom(feature)) {
-  //   title = munimap.room.getDefaultLabel(feature, lang);
-  // }
   return title;
 };
 

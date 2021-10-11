@@ -17,6 +17,7 @@ import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {Circle, Fill, Stroke, Style, Text} from 'ol/style';
 import {getStore as getMarkerStore} from '../source/marker.js';
+import {isRoom} from '../feature/room.js';
 import {localeCompare} from '../utils/string.js';
 
 /**
@@ -163,9 +164,9 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
         munimap_lang.Translations.BUILDING,
         lang
       );
-      // } else if (markers.every((el) => munimap.room.isRoom(el))) {
-      //   markerType = munimap_lang.getMsg(munimap_lang.Translations.ROOM, lang);
-      // } else if (markers.every((el) => munimap.door.isDoor(el))) {
+    } else if (markers.every((el) => isRoom(el))) {
+      markerType = munimap_lang.getMsg(munimap_lang.Translations.ROOM, lang);
+      // else if (markers.every((el) => munimap.door.isDoor(el))) {
       //   markerType = munimap_lang.getMsg(munimap_lang.Translations.DOOR, lang);
     } else {
       markerType = munimap_lang.getMsg(
@@ -227,16 +228,15 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
             titleParts.push(cmTitle);
           }
           titleParts.sort(localeCompare);
+        } else if (isRoom(marker)) {
+          const showLocationCodes = options.locationCodes;
+          const roomTitle = showLocationCodes
+            ? /**@type {string}*/ (marker.get('polohKod'))
+            : munimap_style.getDefaultLabel(marker, resolution, lang);
+          if (munimap_utils.isDefAndNotNull(roomTitle)) {
+            titleParts.push(roomTitle);
+          }
         }
-        // else if (munimap.room.isRoom(marker)) {
-        //   const showLocationCodes = munimap.getProps(options.map).locationCodes;
-        //   const roomTitle = (showLocationCodes) ?
-        //     /**@type {string}*/ (marker.get('polohKod')) :
-        //     munimap_style.getDefaultLabel(marker, resolution, lang);
-        //   if (munimap_utils.isDefAndNotNull(roomTitle)) {
-        //     titleParts.push(roomTitle);
-        //   }
-        // }
       });
     }
   }

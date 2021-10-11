@@ -268,12 +268,7 @@ const largeScaleLabelFunction = (feature, resolution, extent, lang) => {
   let result;
   const title = munimap_building.getDefaultLabel(feature, resolution, lang);
 
-  const noInitialFloor =
-    !munimap_building.hasInnerGeometry(feature) ||
-    (munimap_building.hasInnerGeometry(feature) &&
-      !feature.get('vychoziPodlazi'));
-
-  if (munimap_utils.isDef(title) && noInitialFloor) {
+  if (munimap_utils.isDef(title)) {
     const geometryFunction = munimap_utils.partial(
       munimap_geom.INTERSECT_CENTER_GEOMETRY_FUNCTION,
       extent

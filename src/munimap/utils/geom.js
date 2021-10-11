@@ -224,6 +224,7 @@ const INTERSECT_CENTER_GEOMETRY_FUNCTION = (viewExt, feature) => {
 export {
   CENTER_GEOMETRY_FUNCTION,
   INTERSECT_CENTER_GEOMETRY_FUNCTION,
+  getGeometryCenter,
   getGeometryCenterOfFeatures,
   featureExtentIntersect,
 };

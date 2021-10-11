@@ -30,8 +30,8 @@ import {
 import {featureExtentIntersect} from '../utils/geom.js';
 import {
   getByCode as getBuildingByCode,
+  getType as getBuildingType,
   getSelectedFloorCode as getSelectedFloorCodeForBuilding,
-  getType,
   hasInnerGeometry,
   isBuilding,
   isCode as isBuildingCode,
@@ -41,6 +41,13 @@ import {getStore as getBuildingStore} from '../source/building.js';
 import {getStore as getFloorStore} from '../source/floor.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
+import {getStore as getRoomStore} from '../source/room.js';
+import {
+  getType as getRoomType,
+  isRoom,
+  isCode as isRoomCode,
+  isCodeOrLikeExpr as isRoomCodeOrLikeExpr,
+} from '../feature/room.js';
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
 import {labelFunction, styleFunction} from '../style/building.js';
 import {styleFunction as markerStyleFunction} from '../style/marker.js';
@@ -250,14 +257,21 @@ export const getInitMarkers = createSelector(
     if (requiredMarkerIds.length === 0) {
       return [];
     }
-    const type = getType();
+
+    const buildingType = getBuildingType();
     const buildings = getBuildingStore().getFeatures();
+    const roomType = getRoomType();
+    const rooms = getRoomStore().getFeatures();
     const result = requiredMarkerIds.map((initMarkerId) => {
       if (REQUIRED_CUSTOM_MARKERS[initMarkerId]) {
         return REQUIRED_CUSTOM_MARKERS[initMarkerId];
+      } else if (isRoomCodeOrLikeExpr(initMarkerId)) {
+        return rooms.find((room) => {
+          return room.get(roomType.primaryKey) === initMarkerId;
+        });
       } else {
         return buildings.find((building) => {
-          return building.get(type.primaryKey) === initMarkerId;
+          return building.get(buildingType.primaryKey) === initMarkerId;
         });
       }
     });
@@ -283,12 +297,20 @@ export const getInitZoomTo = createSelector(
     } else if (munimap_utils.isString(initZoomTo)) {
       initZoomTo = [/**@type {string}*/ (initZoomTo)];
     }
-    const type = getType();
+    const buildingType = getBuildingType();
     const buildings = getBuildingStore().getFeatures();
+    const roomType = getRoomType();
+    const rooms = getRoomStore().getFeatures();
     return /**@type {Array<string>}*/ (initZoomTo).map((initZoomTo) => {
-      return buildings.find((building) => {
-        return building.get(type.primaryKey) === initZoomTo;
-      });
+      if (isRoomCode(initZoomTo)) {
+        return rooms.find((room) => {
+          return room.get(roomType.primaryKey) === initZoomTo;
+        });
+      } else {
+        return buildings.find((building) => {
+          return building.get(buildingType.primaryKey) === initZoomTo;
+        });
+      }
     });
   }
 );
@@ -365,10 +387,15 @@ export const getInvalidCodes = createSelector(
       return [];
     }
 
-    const type = getType();
+    let type;
     const initMarkersCodes = [];
     initMarkers.forEach((marker) => {
       if (!isCustomMarker(marker)) {
+        if (isRoom(marker)) {
+          type = getRoomType();
+        } else {
+          type = getBuildingType();
+        }
         initMarkersCodes.push(marker.get(type.primaryKey));
       }
     });
@@ -970,9 +997,23 @@ export const getSelectedLocationCode = createSelector(
     if (!selectedFeature || !selectedInExtent) {
       if (inFloorResolutionRange) {
         //poi is not implemented yet
-        const lc = featureForComputingSelected
-          ? featureForComputingSelected.get('polohKod') || null
-          : null;
+        let lc;
+        if (featureForComputingSelected) {
+          if (isBuilding(featureForComputingSelected)) {
+            lc = featureForComputingSelected.get('polohKod') || null;
+          } else if (
+            isRoom(featureForComputingSelected)
+            /*||isDoor(featureForComputingSelected)*/
+          ) {
+            const locCode = /**@type {string}*/ (
+              featureForComputingSelected.get('polohKod')
+            );
+            lc = locCode.substr(0, 5);
+          } /*else {
+            lc = featureForComputingSelected.get('polohKodPodlazi') || null;
+          }*/
+        }
+
         if (activeFloorCodes.length > 0 && lc) {
           const afc = activeFloorCodes.find((activeFloorCode) =>
             activeFloorCode.startsWith(lc)
@@ -1008,6 +1049,7 @@ export const getStyleForMarkerLayer = createSelector(
     getRequiredLocationCodes,
     isInFloorResolutionRange,
     getSelectedFeature,
+    getActiveFloorCodes,
   ],
   (
     lang,
@@ -1015,7 +1057,8 @@ export const getStyleForMarkerLayer = createSelector(
     extent,
     locationCodes,
     inFloorResolutionRange,
-    selectedFeature //redrawOnFloorChange
+    selectedFeature, //redrawOnFloorChange
+    activeFloorCodes
   ) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - computing style for markers');
@@ -1027,6 +1070,7 @@ export const getStyleForMarkerLayer = createSelector(
       lang,
       extent,
       locationCodes,
+      activeFloorCodes,
     };
     const styleFce = (feature, res) => {
       if (
@@ -1099,10 +1143,11 @@ export const calculateSelectedFloor = createSelector(
       return selectedFeature;
     }
 
+    let floorCode;
     if (isBuildingCode(selectedFeature)) {
       const building = getBuildingByCode(selectedFeature);
       if (hasInnerGeometry(building)) {
-        const floorCode = activeFloorCodes.find(
+        floorCode = activeFloorCodes.find(
           (code) => code.substr(0, 5) === selectedFeature
         );
 
@@ -1113,13 +1158,6 @@ export const calculateSelectedFloor = createSelector(
         }
       }
     }
-    // else if (munimap.room.isRoom(feature) || munimap.door.isDoor(feature)) {
-    //   locCode = /**@type (string)*/ (feature.get('polohKod'));
-    //   building = munimap.building.getByCode(locCode);
-    //   floorCode = locCode.substr(0, 8);
-    // } else {
-    //   return /**@type {string}*/ (feature.get('polohKodPodlazi'));
-    // }
     return;
   }
 );

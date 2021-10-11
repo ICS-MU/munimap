@@ -363,6 +363,7 @@ const labelFunction = (feature, resolution, lang, showLocationCodes) => {
 };
 
 export {
+  FONT_SIZE,
   setCorridorStyle,
   alignRoomTitleToRows,
   defaultStyleFunction,

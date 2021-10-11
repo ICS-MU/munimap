@@ -7,6 +7,7 @@ import * as munimap_marker from '../feature/marker.js';
 import VectorLayer from 'ol/layer/Vector';
 import {getPattern} from '../style/marker.js';
 import {getStore} from '../source/marker.js';
+import {isRoom} from '../feature/room.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
@@ -41,18 +42,18 @@ const create = (map, options) => {
   markerSource.setAttributions(muAttrs);
   markerSource.addFeatures(markers);
 
-  const clusterResolution = munimap_cluster.BUILDING_RESOLUTION;
-  // if (
-  //   markers.length &&
-  //   (markers.some((el) => {
-  //     return munimap.room.isRoom(el);
-  //   }) ||
-  //     markers.some((el) => {
-  //       return munimap.door.isDoor(el);
-  //     })
-  // ) {
-  //   clusterResolution = munimap_cluster.ROOM_RESOLUTION;
-  // }
+  let clusterResolution = munimap_cluster.BUILDING_RESOLUTION;
+  if (
+    markers.length &&
+    (markers.some((el) => {
+      return isRoom(el);
+    }) /*||
+      markers.some((el) => {
+        return munimap.door.isDoor(el);
+      })*/
+  )) {
+    clusterResolution = munimap_cluster.ROOM_RESOLUTION;
+  }
   const markerLayer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: LAYER_ID,

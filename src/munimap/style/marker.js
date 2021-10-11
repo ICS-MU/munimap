@@ -17,6 +17,9 @@ import {
   INTERSECT_CENTER_GEOMETRY_FUNCTION,
 } from '../utils/geom.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
+import {Point} from 'ol/geom';
+import {FONT_SIZE as ROOM_FONT_SIZE} from '../style/room.js';
+import {isRoom as isRoomFeature} from '../feature/room.js';
 
 /**
  * @typedef {import("ol/render/Event").default} RenderEvent
@@ -257,7 +260,7 @@ const labelFunction = (feature, resolution, options) => {
   let styleArray = [];
   munimap_asserts.assertInstanceof(feature, Feature);
   const isBuilding = munimap_building.isBuilding(feature);
-  // var isRoom = munimap.room.isRoom(feature);
+  const isRoom = isRoomFeature(feature);
   // var isDoor = munimap.door.isDoor(feature);
   const isCustomMarker = munimap_markerCustom.isCustom(feature);
 
@@ -300,10 +303,9 @@ const labelFunction = (feature, resolution, options) => {
   }
 
   let fontSize;
-  // if (isRoom || isDoor) {
-  //   fontSize = munimap.room.style.FONT_SIZE;
-  // } else if (isBuilding &&
-  if (
+  if (isRoom /*|| isDoor*/) {
+    fontSize = ROOM_FONT_SIZE;
+  } else if (
     isBuilding &&
     munimap_range.contains(munimap_floor.RESOLUTION, resolution)
   ) {
@@ -357,35 +359,38 @@ export const styleFunction = (feature, resolution, options) => {
   ) {
     return result;
   }
-  // var isRoom = munimap.room.isRoom(feature);
+  const isRoom = isRoomFeature(feature);
   // var isDoor = munimap.door.isDoor(feature);
 
-  // if (isRoom || isDoor) {
-  //   var locCode = /**@type {string}*/ (feature.get('polohKod'));
-  //   var inActiveFloor = munimap.floor.getActiveFloors(options.map).some(
-  //     function(floorCode) {
-  //       return locCode.startsWith(floorCode);
-  //     }
-  //   );
-  //   var hasPointGeom = feature.getGeometry() instanceof ol.geom.Point;
-  //   if (munimap.range.contains(munimap.floor.RESOLUTION, resolution) &&
-  //     !inActiveFloor && !(hasPointGeom)) {
-  //     return null;
-  //   } else if (isRoom) {
-  //     var markedRoomResolution = munimap.range.createResolution(
-  //       munimap.floor.RESOLUTION.max,
-  //       munimap.cluster.ROOM_RESOLUTION.min
-  //     );
-  //     if (munimap.range.contains(markedRoomResolution, resolution) ||
-  //       hasPointGeom) {
-  //       result.push(munimap.marker.style.ROOM);
-  //     }
-  //   } else if (munimap.range.contains(munimap.door.RESOLUTION, resolution)) {
-  //     result.push(munimap.marker.style.DOOR);
-  //   }
-  // }
+  if (isRoom /*|| isDoor*/) {
+    const locCode = /**@type {string}*/ (feature.get('polohKod'));
+    const inActiveFloor = options.activeFloorCodes.some((floorCode) =>
+      locCode.startsWith(floorCode));
+    const hasPointGeom = feature.getGeometry() instanceof Point;
+    if (
+      munimap_range.contains(munimap_floor.RESOLUTION, resolution) &&
+      !inActiveFloor &&
+      !hasPointGeom
+    ) {
+      return null;
+    } else if (isRoom) {
+      const markedRoomResolution = munimap_range.createResolution(
+        munimap_floor.RESOLUTION.max,
+        munimap_cluster.ROOM_RESOLUTION.min
+      );
+      if (
+        munimap_range.contains(markedRoomResolution, resolution) ||
+        hasPointGeom
+      ) {
+        result.push(ROOM);
+      }
+    } /*else if (munimap_range.contains(munimap_door.RESOLUTION, resolution)) {
+      result.push(DOOR);
+    }*/
+  }
   if (
-    /*!(isRoom || isDoor) ||*/ isBuilding ||
+    !(isRoom /*|| isDoor*/) ||
+    isBuilding ||
     !munimap_range.contains(munimap_cluster.ROOM_RESOLUTION, resolution)
   ) {
     const textStyle = labelFunction(feature, resolution, options);

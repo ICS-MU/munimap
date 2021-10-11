@@ -11,7 +11,13 @@ import * as slctr from './redux/selector.js';
 import VectorSource from 'ol/source/Vector';
 import {EsriJSON} from 'ol/format';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
-import {ROOM_TYPES, getType as getRoomType} from './feature/room.js';
+import {
+  ROOM_TYPES,
+  getType as getRoomType,
+  isCode as isRoomCode,
+  isCodeOrLikeExpr as isRoomCodeOrLikeExpr,
+  isLikeExpr as isRoomLikeExpr,
+} from './feature/room.js';
 import {
   getActiveStore as getActiveRoomStore,
   getDefaultStore as getDefaultRoomStore,
@@ -21,6 +27,7 @@ import {getStore as getBuildingStore} from './source/building.js';
 import {getStore as getComplexStore} from './source/complex.js';
 import {getStore as getFloorStore} from './source/floor.js';
 import {getType as getFloorType} from './feature/floor.js';
+import {getGeometryCenter} from './utils/geom.js';
 import {getNotYetAddedFeatures} from './utils/store.js';
 import {getStore as getUnitStore} from './source/unit.js';
 
@@ -55,6 +62,12 @@ import {getStore as getUnitStore} from './source/unit.js';
 
 /**
  * @typedef {Object} BuildingsByCodeOptions
+ * @property {Array<string>} codes
+ * @property {Array<string>} likeExprs
+ */
+
+/**
+ * @typedef {Object} RoomsByCodeOptions
  * @property {Array<string>} codes
  * @property {Array<string>} likeExprs
  */
@@ -403,7 +416,10 @@ const features = async (options) => {
  */
 const featuresByCode = async (options) => {
   munimap_assert.assert(
-    JSON.stringify(options.type) == JSON.stringify(munimap_building.getType()),
+    JSON.stringify(options.type) ==
+      JSON.stringify(munimap_building.getType()) ||
+      JSON.stringify(options.type) == JSON.stringify(getRoomType()) /*||
+      JSON.stringify(options.type) == JSON.stringify(getDoorType())*/,
     'Feature type should be' + ' building, room or door type.'
   );
 
@@ -660,6 +676,20 @@ const buildingsByCode = async (options) => {
 };
 
 /**
+ * @param {RoomsByCodeOptions} options options
+ * @return {Promise<Array<ol.Feature>>} promise of features contained
+ * in server response
+ */
+const roomsByCode = async (options) => {
+  return featuresByCode({
+    codes: options.codes,
+    type: getRoomType(),
+    source: getRoomStore(),
+    likeExprs: options.likeExprs,
+  });
+};
+
+/**
  *
  * @param {string} where where
  * @return {Promise<Array<ol.Feature>>} promise of features contained
@@ -695,6 +725,54 @@ const featuresFromParam = async (paramValue) => {
         codes: codes,
         likeExprs: likeExprs,
       });
+    } else if (
+      isRoomCodeOrLikeExpr(firstParamValue) /*||
+        munimap.door.isCodeOrLikeExpr(firstParamValue)*/
+    ) {
+      // const codeFilterFunction = isRoomCodeOrLikeExpr(firstParamValue)
+      //   ? isRoomCode : isDoorCode;
+      const codeFilterFunction = isRoomCode;
+      // const likeExprFilterFunction = isRoomCodeOrLikeExpr(firstParamValue)
+      //   ? isRoomLikeExpr : isDoorLikeExpr;
+      const likeExprFilterFunction = isRoomLikeExpr;
+      codes = values.filter(codeFilterFunction);
+      likeExprs = values.filter(likeExprFilterFunction);
+      const buildingCodes = codes.map((code) => code.substr(0, 5));
+      const buildingLikeExprs = [];
+      likeExprs.forEach((expr) => {
+        expr = expr.substr(0, 5);
+        if (munimap_building.isCode(expr)) {
+          buildingCodes.push(expr);
+        } else if (munimap_building.isLikeExpr(expr)) {
+          buildingLikeExprs.push(expr);
+        }
+      });
+      munimap_utils.removeArrayDuplicates(buildingCodes);
+      munimap_utils.removeArrayDuplicates(buildingLikeExprs);
+      const buildings = await buildingsByCode({
+        codes: buildingCodes,
+        likeExprs: buildingLikeExprs,
+      });
+      // const loadFunction = isRoomCodeOrLikeExpr(firstParamValue)
+      //   ? roomsByCode
+      //   : doorsByCode;
+      const loadFunction = roomsByCode;
+      const features = await loadFunction({
+        codes: codes,
+        likeExprs: likeExprs,
+      });
+      features.forEach((feature, index) => {
+        if (!munimap_utils.isDefAndNotNull(feature.getGeometry())) {
+          const locCode = /**@type (string)*/ (feature.get('polohKod'));
+          const building = munimap_building.getByCode(locCode);
+          const bldgGeom = building.getGeometry();
+          if (munimap_utils.isDef(bldgGeom)) {
+            munimap_assert.assertExists(bldgGeom);
+            feature.setGeometry(getGeometryCenter(bldgGeom, true));
+          }
+        }
+      });
+      return features;
     }
   }
   return [];
