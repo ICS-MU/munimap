@@ -46,7 +46,6 @@ const create = (lang) => {
       updateWhileInteracting: true,
       refreshStyleOnFloorChange: false,
       clearSourceOnFloorChange: false,
-      redrawOnFloorChange: false,
       renderOrder: null,
     })
   );

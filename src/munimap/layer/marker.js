@@ -59,7 +59,6 @@ const create = (map, options) => {
       id: LAYER_ID,
       isFeatureClickable: munimap_marker.isClickable,
       featureClickHandler: munimap_marker.featureClickHandler,
-      redrawOnFloorChange: true,
       source: markerSource,
       maxResolution: clusterResolution.min,
       updateWhileAnimating: true,

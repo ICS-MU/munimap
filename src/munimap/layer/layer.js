@@ -22,7 +22,6 @@ import {
  * @property {string} id id
  * @property {(options: FeatureClickHandlerOptions) => boolean} [isFeatureClickable] whether is feature clickable
  * @property {(options: FeatureClickHandlerOptions) => void} [featureClickHandler] what to do if user clicked on feature
- * @property {boolean} [redrawOnFloorChange] redrawOnFloorChange
  *
  * @typedef {BaseLayerOptions & VectorLayerExtendedOptions} VectorLayerOptions
  */
@@ -38,24 +37,6 @@ const CLICK_HANDLER = 'featureClickHandler';
  * @const
  */
 const IS_CLICKABLE = 'isFeatureClickable';
-
-/**
- * @type {string}
- * @const
- */
-const CLEAR_SOURCE = 'clearSourceOnFloorChange';
-
-/**
- * @type {string}
- * @const
- */
-const REDRAW = 'redrawOnFloorChange';
-
-/**
- * @type {string}
- * @const
- */
-const REFRESH_STYLE = 'refreshStyleOnFloorChange';
 
 /**
  * @type {string}
@@ -123,12 +104,4 @@ const getDefaultLayers = (lang, showLabels, showLocationCodes) => {
   return result;
 };
 
-export {
-  CLICK_HANDLER,
-  IS_CLICKABLE,
-  CLEAR_SOURCE,
-  REDRAW,
-  REFRESH_STYLE,
-  TYPE,
-  getDefaultLayers,
-};
+export {CLICK_HANDLER, IS_CLICKABLE, TYPE, getDefaultLayers};
