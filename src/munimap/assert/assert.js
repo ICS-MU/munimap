@@ -8,7 +8,8 @@ import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {Abbr} from '../lang/lang.js';
 import {BASEMAPS} from '../layer/basemap.js';
-import {isCodeOrLikeExpr as building_isCodeOrLikeExpr} from '../feature/building.js';
+import {isCodeOrLikeExpr as isBldgCodeOrLikeExpr} from '../feature/building.js';
+import {isCodeOrLikeExpr as isRoomCodeOrLikeExpr} from '../feature/room.js';
 import {assertSuitable as marker_custom_assertSuitable} from '../feature/marker.custom.js';
 
 /**
@@ -198,20 +199,20 @@ const zoomTo = (zoomTo) => {
       'ZoomTo should be string or array of strings.'
     );
 
-    zoomTo = /**@type {Array.<string>}*/ (munimap_utils.isString(zoomTo)
-      ? [zoomTo]
-      : zoomTo);
+    zoomTo = /**@type {Array.<string>}*/ (
+      munimap_utils.isString(zoomTo) ? [zoomTo] : zoomTo
+    );
 
-    // const onlyBuildings = zoomTo.every(munimap_building.isCodeOrLikeExpr);
-    // if (!onlyBuildings) {
-    //   const onlyRooms = zoomTo.every(munimap_room.isCodeOrLikeExpr);
-    //   if (!onlyRooms) {
-    //     throw new AssertionError(
-    //       'ZoomTo should contain only building or only room' +
-    //         ' location codes or corresponding LIKE expressions.'
-    //     );
-    //   }
-    // }
+    const onlyBuildings = zoomTo.every(isBldgCodeOrLikeExpr);
+    if (!onlyBuildings) {
+      const onlyRooms = zoomTo.every(isRoomCodeOrLikeExpr);
+      if (!onlyRooms) {
+        throw new AssertionError(
+          'ZoomTo should contain only building or only room' +
+            ' location codes or corresponding LIKE expressions.'
+        );
+      }
+    }
   }
 };
 
@@ -252,7 +253,8 @@ const markers = (markers) => {
     markers.forEach((el) => {
       if (munimap_utils.isString(el)) {
         if (
-          !building_isCodeOrLikeExpr(el)
+          !isBldgCodeOrLikeExpr(el) &&
+          !isRoomCodeOrLikeExpr(el)
           /*!(building_isCodeOrLikeExpr(el)) &&
             !(munimap.room.isCodeOrLikeExpr(el)) &&
             !(munimap.door.isCodeOrLikeExpr(el)) &&
