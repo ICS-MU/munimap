@@ -11,6 +11,7 @@ import {alignRoomTitleToRows} from '../style/room.js';
 /**
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
  * @typedef {import("ol").Feature} ol.Feature
+ * @typedef {import("ol/render/Feature").default} ol.render.Feature
  */
 
 /**
@@ -61,7 +62,7 @@ const getType = () => {
 const isCode = (maybeCode) => !!maybeCode.match(CODE_REGEX);
 
 /**
- * @param {ol.Feature} feature feature
+ * @param {ol.Feature|ol.render.Feature} feature feature
  * @return {boolean} whether is room feature
  */
 const isRoom = (feature) => {
@@ -144,7 +145,7 @@ const assertCodeOrLikeExpr = (code) => {
 // };
 
 /**
- * @param {ol.Feature} feature feature
+ * @param {ol.Feature|ol.render.Feature} feature feature
  * @param {string} lang language
  * @return {string|undefined} name part
  * @protected
@@ -173,10 +174,18 @@ const getNamePart = (feature, lang) => {
 };
 
 /**
- * @param {ol.Feature} feature feature
+ * @param {ol.Feature|ol.render.Feature} feature feature
  * @param {string} lang language
  * @return {string|undefined} default label
  */
 const getDefaultLabel = (feature, lang) => getNamePart(feature, lang);
 
-export {ROOM_TYPES, getDefaultLabel, getType, isCode};
+export {
+  ROOM_TYPES,
+  getDefaultLabel,
+  getType,
+  isCode,
+  isCodeOrLikeExpr,
+  isLikeExpr,
+  isRoom,
+};
