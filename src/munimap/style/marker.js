@@ -16,6 +16,10 @@ import {
   CENTER_GEOMETRY_FUNCTION,
   INTERSECT_CENTER_GEOMETRY_FUNCTION,
 } from '../utils/geom.js';
+import {
+  RESOLUTION as DOOR_RESOLUTION,
+  isDoor as isDoorFeature,
+} from '../feature/door.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
 import {Point} from 'ol/geom';
 import {FONT_SIZE as ROOM_FONT_SIZE} from '../style/room.js';
@@ -262,7 +266,7 @@ const labelFunction = (feature, resolution, options) => {
   munimap_asserts.assertInstanceof(feature, Feature);
   const isBuilding = munimap_building.isBuilding(feature);
   const isRoom = isRoomFeature(feature);
-  // var isDoor = munimap.door.isDoor(feature);
+  const isDoor = isDoorFeature(feature);
   const isCustomMarker = munimap_markerCustom.isCustom(feature);
 
   let title;
@@ -283,7 +287,7 @@ const labelFunction = (feature, resolution, options) => {
       title = titleParts.join('\n');
     }
   }
-  if (!munimap_utils.isDefAndNotNull(title) /*&& !isDoor*/) {
+  if (!munimap_utils.isDefAndNotNull(title) && !isDoor) {
     const showLocationCodes = locationCodes;
     title = showLocationCodes
       ? /**@type {string}*/ (feature.get('polohKod'))
@@ -304,7 +308,7 @@ const labelFunction = (feature, resolution, options) => {
   }
 
   let fontSize;
-  if (isRoom /*|| isDoor*/) {
+  if (isRoom || isDoor) {
     fontSize = ROOM_FONT_SIZE;
   } else if (
     isBuilding &&
@@ -361,9 +365,9 @@ export const styleFunction = (feature, resolution, options) => {
     return result;
   }
   const isRoom = isRoomFeature(feature);
-  // var isDoor = munimap.door.isDoor(feature);
+  const isDoor = isDoorFeature(feature);
 
-  if (isRoom /*|| isDoor*/) {
+  if (isRoom || isDoor) {
     const locCode = /**@type {string}*/ (feature.get('polohKod'));
     const inActiveFloor = options.activeFloorCodes.some((floorCode) =>
       locCode.startsWith(floorCode)
@@ -386,13 +390,12 @@ export const styleFunction = (feature, resolution, options) => {
       ) {
         result.push(ROOM);
       }
-    } /*else if (munimap_range.contains(munimap_door.RESOLUTION, resolution)) {
+    } else if (munimap_range.contains(DOOR_RESOLUTION, resolution)) {
       result.push(DOOR);
-    }*/
+    }
   }
   if (
-    !(isRoom /*|| isDoor*/) ||
-    isBuilding ||
+    !(isRoom || isDoor) ||
     !munimap_range.contains(munimap_cluster.ROOM_RESOLUTION, resolution)
   ) {
     const textStyle = labelFunction(feature, resolution, options);

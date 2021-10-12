@@ -17,6 +17,7 @@ import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {Circle, Fill, Stroke, Style, Text} from 'ol/style';
 import {getStore as getMarkerStore} from '../source/marker.js';
+import {isDoor} from '../feature/door.js';
 import {isRoom} from '../feature/room.js';
 import {localeCompare} from '../utils/string.js';
 
@@ -166,8 +167,8 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
       );
     } else if (markers.every((el) => isRoom(el))) {
       markerType = munimap_lang.getMsg(munimap_lang.Translations.ROOM, lang);
-      // else if (markers.every((el) => munimap.door.isDoor(el))) {
-      //   markerType = munimap_lang.getMsg(munimap_lang.Translations.DOOR, lang);
+    } else if (markers.every((el) => isDoor(el))) {
+      markerType = munimap_lang.getMsg(munimap_lang.Translations.DOOR, lang);
     } else {
       markerType = munimap_lang.getMsg(
         munimap_lang.Translations.LOCATION,

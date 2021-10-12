@@ -12,11 +12,6 @@ import VectorSource from 'ol/source/Vector';
 import {EsriJSON} from 'ol/format';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
 import {
-  getActiveStore as getActiveDoorStore,
-  getStore as getDoorStore,
-} from './source/door.js';
-import {getType as getDoorType} from './feature/door.js';
-import {
   ROOM_TYPES,
   getType as getRoomType,
   isCode as isRoomCode,
@@ -24,12 +19,22 @@ import {
   isLikeExpr as isRoomLikeExpr,
 } from './feature/room.js';
 import {
+  getActiveStore as getActiveDoorStore,
+  getStore as getDoorStore,
+} from './source/door.js';
+import {
   getActiveStore as getActiveRoomStore,
   getDefaultStore as getDefaultRoomStore,
   getStore as getRoomStore,
 } from './source/room.js';
 import {getStore as getBuildingStore} from './source/building.js';
 import {getStore as getComplexStore} from './source/complex.js';
+import {
+  getType as getDoorType,
+  isCode as isDoorCode,
+  isCodeOrLikeExpr as isDoorCodeOrLikeExpr,
+  isLikeExpr as isDoorLikeExpr,
+} from './feature/door.js';
 import {getStore as getFloorStore} from './source/floor.js';
 import {getType as getFloorType} from './feature/floor.js';
 import {getGeometryCenter} from './utils/geom.js';
@@ -73,6 +78,12 @@ import {getStore as getUnitStore} from './source/unit.js';
 
 /**
  * @typedef {Object} RoomsByCodeOptions
+ * @property {Array<string>} codes codes
+ * @property {Array<string>} likeExprs like expressions
+ */
+
+/**
+ * @typedef {Object} DoorsByCodeOptions
  * @property {Array<string>} codes codes
  * @property {Array<string>} likeExprs like expressions
  */
@@ -425,8 +436,8 @@ const featuresByCode = async (options) => {
   munimap_assert.assert(
     JSON.stringify(options.type) ==
       JSON.stringify(munimap_building.getType()) ||
-      JSON.stringify(options.type) == JSON.stringify(getRoomType()) /*||
-      JSON.stringify(options.type) == JSON.stringify(getDoorType())*/,
+      JSON.stringify(options.type) == JSON.stringify(getRoomType()) ||
+      JSON.stringify(options.type) == JSON.stringify(getDoorType()),
     'Feature type should be' + ' building, room or door type.'
   );
 
@@ -697,6 +708,20 @@ const roomsByCode = async (options) => {
 };
 
 /**
+ * @param {DoorsByCodeOptions} options options
+ * @return {Promise<Array<ol.Feature>>} promise of features contained
+ * in server response
+ */
+const doorsByCode = async (options) => {
+  return featuresByCode({
+    codes: options.codes,
+    likeExprs: options.likeExprs,
+    type: getDoorType(),
+    source: getDoorStore(),
+  });
+};
+
+/**
  *
  * @param {string} where where
  * @return {Promise<Array<ol.Feature>>} promise of features contained
@@ -733,15 +758,15 @@ const featuresFromParam = async (paramValue) => {
         likeExprs: likeExprs,
       });
     } else if (
-      isRoomCodeOrLikeExpr(firstParamValue) /*||
-        munimap.door.isCodeOrLikeExpr(firstParamValue)*/
+      isRoomCodeOrLikeExpr(firstParamValue) ||
+      isDoorCodeOrLikeExpr(firstParamValue)
     ) {
-      // const codeFilterFunction = isRoomCodeOrLikeExpr(firstParamValue)
-      //   ? isRoomCode : isDoorCode;
-      const codeFilterFunction = isRoomCode;
-      // const likeExprFilterFunction = isRoomCodeOrLikeExpr(firstParamValue)
-      //   ? isRoomLikeExpr : isDoorLikeExpr;
-      const likeExprFilterFunction = isRoomLikeExpr;
+      const codeFilterFunction = isRoomCodeOrLikeExpr(firstParamValue)
+        ? isRoomCode
+        : isDoorCode;
+      const likeExprFilterFunction = isRoomCodeOrLikeExpr(firstParamValue)
+        ? isRoomLikeExpr
+        : isDoorLikeExpr;
       codes = values.filter(codeFilterFunction);
       likeExprs = values.filter(likeExprFilterFunction);
       const buildingCodes = codes.map((code) => code.substr(0, 5));
@@ -760,10 +785,9 @@ const featuresFromParam = async (paramValue) => {
         codes: buildingCodes,
         likeExprs: buildingLikeExprs,
       });
-      // const loadFunction = isRoomCodeOrLikeExpr(firstParamValue)
-      //   ? roomsByCode
-      //   : doorsByCode;
-      const loadFunction = roomsByCode;
+      const loadFunction = isRoomCodeOrLikeExpr(firstParamValue)
+        ? roomsByCode
+        : doorsByCode;
       const features = await loadFunction({
         codes: codes,
         likeExprs: likeExprs,

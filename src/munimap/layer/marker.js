@@ -7,6 +7,7 @@ import * as munimap_marker from '../feature/marker.js';
 import VectorLayer from 'ol/layer/Vector';
 import {getPattern} from '../style/marker.js';
 import {getStore} from '../source/marker.js';
+import {isDoor} from '../feature/door.js';
 import {isRoom} from '../feature/room.js';
 
 /**
@@ -45,13 +46,8 @@ const create = (map, options) => {
   let clusterResolution = munimap_cluster.BUILDING_RESOLUTION;
   if (
     markers.length &&
-    (markers.some((el) => {
-      return isRoom(el);
-    }) /*||
-      markers.some((el) => {
-        return munimap.door.isDoor(el);
-      })*/
-  )) {
+    (markers.some((el) => isRoom(el)) || markers.some((el) => isDoor(el)))
+  ) {
     clusterResolution = munimap_cluster.ROOM_RESOLUTION;
   }
   const markerLayer = new VectorLayer(

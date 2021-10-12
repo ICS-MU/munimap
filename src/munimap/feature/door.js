@@ -10,6 +10,7 @@ import {MUNIMAP_URL} from '../conf.js';
  * @typedef {import("../utils/range").RangeInterface} RangeInterface
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
  * @typedef {import("ol").Feature} ol.Feature
+ * @typedef {import("ol/render/Feature").default} ol.render.Feature
  */
 
 /**
@@ -57,7 +58,7 @@ const isCode = (maybeCode) => {
 };
 
 /**
- * @param {ol.Feature} feature feature
+ * @param {ol.Feature|ol.render.Feature} feature feature
  * @return {boolean} whether is door
  */
 const isDoor = (feature) => {

@@ -9,6 +9,7 @@ import Feature from 'ol/Feature';
 import {Abbr} from '../lang/lang.js';
 import {BASEMAPS} from '../layer/basemap.js';
 import {isCodeOrLikeExpr as isBldgCodeOrLikeExpr} from '../feature/building.js';
+import {isCodeOrLikeExpr as isDoorCodeOrLikeExpr} from '../feature/door.js';
 import {isCodeOrLikeExpr as isRoomCodeOrLikeExpr} from '../feature/room.js';
 import {assertSuitable as marker_custom_assertSuitable} from '../feature/marker.custom.js';
 
@@ -254,7 +255,8 @@ const markers = (markers) => {
       if (munimap_utils.isString(el)) {
         if (
           !isBldgCodeOrLikeExpr(el) &&
-          !isRoomCodeOrLikeExpr(el)
+          !isRoomCodeOrLikeExpr(el) &&
+          !isDoorCodeOrLikeExpr(el)
           /*!(building_isCodeOrLikeExpr(el)) &&
             !(munimap.room.isCodeOrLikeExpr(el)) &&
             !(munimap.door.isCodeOrLikeExpr(el)) &&

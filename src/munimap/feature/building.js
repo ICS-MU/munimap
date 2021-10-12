@@ -13,6 +13,7 @@ import Feature from 'ol/Feature';
 import {MUNIMAP_URL} from '../conf.js';
 import {getStore as getBuildingStore} from '../source/building.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
+import {isDoor} from './door.js';
 import {isRoom} from './room.js';
 
 /**
@@ -304,7 +305,7 @@ const getSelectedFloorCode = (building) => {
   const markedFeatures = markerSource.getFeatures();
   if (markedFeatures.length > 0) {
     const firstMarked = markedFeatures.find((marked) => {
-      if (isRoom(marked) /*|| munimap.door.isDoor(marked)*/) {
+      if (isRoom(marked) || isDoor(marked)) {
         const buildingLocCode = getLocationCode(building);
         const locationCode = /**@type {string}*/ (marked.get('polohKod'));
         return locationCode.substr(0, 5) === buildingLocCode;

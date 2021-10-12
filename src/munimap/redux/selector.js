@@ -38,6 +38,13 @@ import {
   isSelected,
 } from '../feature/building.js';
 import {getStore as getBuildingStore} from '../source/building.js';
+import {getStore as getDoorStore} from '../source/door.js';
+import {
+  getType as getDoorType,
+  isDoor,
+  isCode as isDoorCode,
+  isCodeOrLikeExpr as isDoorCodeOrLikeExpr,
+} from '../feature/door.js';
 import {getStore as getFloorStore} from '../source/floor.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
@@ -262,12 +269,18 @@ export const getInitMarkers = createSelector(
     const buildings = getBuildingStore().getFeatures();
     const roomType = getRoomType();
     const rooms = getRoomStore().getFeatures();
+    const doorType = getDoorType();
+    const doors = getDoorStore().getFeatures();
     const result = requiredMarkerIds.map((initMarkerId) => {
       if (REQUIRED_CUSTOM_MARKERS[initMarkerId]) {
         return REQUIRED_CUSTOM_MARKERS[initMarkerId];
       } else if (isRoomCodeOrLikeExpr(initMarkerId)) {
         return rooms.find((room) => {
           return room.get(roomType.primaryKey) === initMarkerId;
+        });
+      } else if (isDoorCodeOrLikeExpr(initMarkerId)) {
+        return doors.find((door) => {
+          return door.get(doorType.primaryKey) === initMarkerId;
         });
       } else {
         return buildings.find((building) => {
@@ -301,10 +314,16 @@ export const getInitZoomTo = createSelector(
     const buildings = getBuildingStore().getFeatures();
     const roomType = getRoomType();
     const rooms = getRoomStore().getFeatures();
+    const doorType = getDoorType();
+    const doors = getDoorStore().getFeatures();
     return /**@type {Array<string>}*/ (initZoomTo).map((initZoomTo) => {
       if (isRoomCode(initZoomTo)) {
         return rooms.find((room) => {
           return room.get(roomType.primaryKey) === initZoomTo;
+        });
+      } else if (isDoorCode(initZoomTo)) {
+        return doors.find((door) => {
+          return door.get(doorType.primaryKey) === initZoomTo;
         });
       } else {
         return buildings.find((building) => {
@@ -1002,8 +1021,8 @@ export const getSelectedLocationCode = createSelector(
           if (isBuilding(featureForComputingSelected)) {
             lc = featureForComputingSelected.get('polohKod') || null;
           } else if (
-            isRoom(featureForComputingSelected)
-            /*||isDoor(featureForComputingSelected)*/
+            isRoom(featureForComputingSelected) ||
+            isDoor(featureForComputingSelected)
           ) {
             const locCode = /**@type {string}*/ (
               featureForComputingSelected.get('polohKod')
