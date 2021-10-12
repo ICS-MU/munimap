@@ -12,6 +12,11 @@ import VectorSource from 'ol/source/Vector';
 import {EsriJSON} from 'ol/format';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
 import {
+  getActiveStore as getActiveDoorStore,
+  getStore as getDoorStore,
+} from './source/door.js';
+import {getType as getDoorType} from './feature/door.js';
+import {
   ROOM_TYPES,
   getType as getRoomType,
   isCode as isRoomCode,
@@ -844,6 +849,49 @@ const loadActiveRooms = async (
   }
 };
 
+/**
+ * @param {LoadActiveOptions} options options
+ * @param {ol.extent.Extent} extent extent
+ * @param {number} resolution resolution
+ * @param {ol.proj.Projection} projection projection
+ */
+const loadActiveDoors = async (
+  {store, callback},
+  extent,
+  resolution,
+  projection
+) => {
+  const activeFloorCodes = slctr.getActiveFloorCodes(store.getState());
+  let where;
+  if (activeFloorCodes.length > 0) {
+    const conditions = [];
+    activeFloorCodes.forEach((floor) =>
+      conditions.push(`polohKodPodlazi LIKE '${floor}%'`)
+    );
+    where = conditions.join(' OR ');
+    const opts = {
+      source: getDoorStore(),
+      type: getDoorType(),
+      where: where,
+      method: 'POST',
+    };
+    const doors = await featuresForMap(opts, extent, resolution, projection);
+    const activeStore = getActiveDoorStore();
+    const doorsFromActiveFloor = doors.filter((door) =>
+      activeFloorCodes.includes(door.get('polohKodPodlazi'))
+    );
+    const doorsToAdd = getNotYetAddedFeatures(
+      activeStore,
+      doorsFromActiveFloor
+    );
+    activeStore.addFeatures(doorsToAdd);
+
+    if (callback) {
+      callback(actions.doors_loaded);
+    }
+  }
+};
+
 export {
   buildingFeaturesForMap,
   buildingLoadProcessor,
@@ -854,4 +902,5 @@ export {
   pubtranFeaturesForMap,
   loadDefaultRooms,
   loadActiveRooms,
+  loadActiveDoors,
 };

@@ -4,6 +4,7 @@
 
 import * as munimap_layer_building from './building.js';
 import * as munimap_layer_complex from './complex.js';
+import {createActive as createActiveDoorLayer} from './door.js';
 import {
   createActive as createActiveRoomLayer,
   createLabel as createRoomLabelLayer,
@@ -49,16 +50,10 @@ const TYPE = 'type';
  * @protected
  */
 const setDefaultLayersProps = (layers) => {
-  // let activeRoomsStore;
-
   layers.forEach((layer) => {
     const layerId = layer.get('id');
 
     switch (layerId) {
-      // case munimap.door.ACTIVE_LAYER_ID:
-      //   var doorsStore = munimap.door.createActiveStore(map);
-      //   layer.setSource(doorsStore);
-      //   break;
       // case munimap.poi.ACTIVE_LAYER_ID:
       //   var poiStore = munimap.poi.createActiveStore(map);
       //   layer.setSource(poiStore);
@@ -81,7 +76,7 @@ const getDefaultLayers = (lang, showLabels, showLocationCodes) => {
   const buildings = munimap_layer_building.create();
   const rooms = createRoomLayer();
   const activeRooms = createActiveRoomLayer();
-  // const doors = munimap.door.layer.create();
+  const doors = createActiveDoorLayer();
   // const poi = munimap.poi.layer.create();
   const roomLabels = createRoomLabelLayer(showLocationCodes);
   const buildingLabels = munimap_layer_building.createLabel(lang, showLabels);
@@ -89,7 +84,7 @@ const getDefaultLayers = (lang, showLabels, showLocationCodes) => {
     buildings,
     rooms,
     activeRooms,
-    // doors,
+    doors,
     // poi,
     roomLabels,
     buildingLabels

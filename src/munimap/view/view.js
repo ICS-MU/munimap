@@ -9,6 +9,10 @@ import TileLayer from 'ol/layer/Tile';
 import createControls from '../control/mapcontrolsview.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {
+  createActiveStore as createActiveDoorStore,
+  createStore as createDoorStore,
+} from '../source/door.js';
+import {
   createActiveStore as createActiveRoomStore,
   createDefaultStore as createDefaultRoomStore,
   createStore as createRoomStore,
@@ -23,6 +27,7 @@ import {create as createPubtranLayer} from '../layer/pubtran.stop.js';
 import {createStore as createPubtranStore} from '../source/pubtran.stop.js';
 import {createStore as createUnitStore} from '../source/unit.js';
 import {getDefaultLayers} from '../layer/layer.js';
+import {refreshActiveStyle as refreshActiveDoorStyle} from './door.js';
 import {
   refreshActiveStyle as refreshActiveRoomStyle,
   refreshLabelStyle as refreshRoomLabelStyle,
@@ -235,6 +240,8 @@ const createFeatureStores = (reduxStore) => {
   createRoomStore();
   createDefaultRoomStore(callbackFn);
   createActiveRoomStore(reduxStore, callbackFn);
+  createDoorStore();
+  createActiveDoorStore(reduxStore, callbackFn);
 
   const state = reduxStore.getState();
   if (state.requiredOpts.pubTran) {
@@ -256,6 +263,7 @@ const refreshStyles = (state, layers) => {
   refreshRoomStyle(state, layers);
   refreshRoomLabelStyle(state, layers);
   refreshActiveRoomStyle(state, layers);
+  refreshActiveDoorStyle(state, layers);
 
   if (state.requiredOpts.pubTran) {
     refreshPubtranStyle(layers);

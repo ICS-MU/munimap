@@ -2,6 +2,7 @@
  * @module source/source
  */
 
+import {getActiveStore as getActiveDoorStore} from './door.js';
 import {getActiveStore as getActiveRoomStore} from './room.js';
 
 /**
@@ -9,6 +10,7 @@ import {getActiveStore as getActiveRoomStore} from './room.js';
  */
 const refreshFloorBasedStores = () => {
   getActiveRoomStore().refresh();
+  getActiveDoorStore().refresh();
 };
 
 /**
@@ -16,6 +18,7 @@ const refreshFloorBasedStores = () => {
  */
 const clearFloorBasedStores = () => {
   getActiveRoomStore().clear();
+  getActiveDoorStore().clear();
 };
 
 export {refreshFloorBasedStores, clearFloorBasedStores};

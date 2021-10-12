@@ -14,7 +14,7 @@
  * Whether to log selectors to console.
  * @type {boolean}
  */
-export const ENABLE_SELECTOR_LOGS = true;
+export const ENABLE_SELECTOR_LOGS = false;
 
 /**
  * @type {string}
@@ -71,6 +71,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {number} floorsTimestamp floors timestamp
  * @property {number} defaultRoomsTimestamp default rooms timestamp
  * @property {number} activeRoomsTimestamp active rooms timestamp
+ * @property {number} doorsTimestamp doors timestamp
  */
 
 /**
@@ -112,4 +113,5 @@ export const INITIAL_STATE = {
   floorsTimestamp: null,
   defaultRoomsTimestamp: null,
   activeRoomsTimestamp: null,
+  doorsTimestamp: null,
 };

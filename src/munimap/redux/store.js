@@ -177,6 +177,13 @@ const createReducer = (initialState) => {
         }
         return state;
 
+      //DOORS_LOADED
+      case actions.DOORS_LOADED:
+        return {
+          ...state,
+          doorsTimestamp: Date.now(),
+        };
+
       //NEW_FLOOR_SELECTED:
       case actions.NEW_FLOOR_SELECTED:
         newState = {
