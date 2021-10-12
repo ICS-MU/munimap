@@ -87,6 +87,7 @@ export default (env) => {
           express.static(path.resolve(__dirname, 'src', 'img'))
         );
       },
+      watchFiles: ['src/**/*.html'],
     },
     module: {
       rules: [
