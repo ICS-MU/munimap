@@ -236,13 +236,18 @@ export const createStore = (initialState) => {
   const reducer = createReducer(initialState);
   const w = /** @type any */ (window);
 
-  const store = redux.createStore(
-    reducer,
-    initialState,
-    redux.compose(
+  const reduxToolsExt =
+    w.__REDUX_DEVTOOLS_EXTENSION__ && w.__REDUX_DEVTOOLS_EXTENSION__();
+  let enhancer;
+  if (reduxToolsExt) {
+    enhancer = redux.compose(
       redux.applyMiddleware(asyncDispatchMiddleware),
       w.__REDUX_DEVTOOLS_EXTENSION__ && w.__REDUX_DEVTOOLS_EXTENSION__()
-    )
-  );
+    );
+  } else {
+    enhancer = redux.applyMiddleware(asyncDispatchMiddleware);
+  }
+
+  const store = redux.createStore(reducer, initialState, enhancer);
   return store;
 };
