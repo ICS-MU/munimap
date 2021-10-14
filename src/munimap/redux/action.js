@@ -91,6 +91,12 @@ export const DOORS_LOADED = 'DOORS_LOADED';
 export const NEW_FLOOR_SELECTED = 'NEW_FLOOR_SELECTED';
 
 /**
+ * @type {string}
+ * @const
+ */
+export const FLOOR_SELECT_CHANGED = 'FLOOR_SELECT_CHANGED';
+
+/**
  * @param {Array<ol.Feature|string>} markers markers
  * @return {redux.AnyAction} action
  */
@@ -226,5 +232,16 @@ export function new_floor_selected(newFloorCode) {
   return {
     type: NEW_FLOOR_SELECTED,
     payload: newFloorCode,
+  };
+}
+
+/**
+ * @param {string} newValue new floor code
+ * @return {redux.AnyAction} action
+ */
+export function floor_select_changed(newValue) {
+  return {
+    type: FLOOR_SELECT_CHANGED,
+    payload: newValue,
   };
 }

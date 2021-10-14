@@ -42,6 +42,11 @@ import {
   updateClusteredFeatures,
 } from './cluster.js';
 import {refreshStyle as refreshComplexStyle} from './complex.js';
+import {
+  refreshElementPosition,
+  refreshElementVisibility,
+  refreshFloorSelect,
+} from './info.js';
 import {refreshStyle as refreshMarkerStyle} from './marker.js';
 import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
 
@@ -222,6 +227,15 @@ const attachMapListeners = (map, options) => {
       })
     );
   });
+  // map.getView().on(['change:center', 'change:resolution'], () => {
+  //   store.dispatch(
+  //     actions.ol_map_view_change({
+  //       center: view.getCenter(),
+  //       resolution: view.getResolution(),
+  //       mapSize: map.getSize(),
+  //     })
+  //   );
+  // });
 };
 
 /**
@@ -293,6 +307,47 @@ const ensureClusterUpdate = (state, map) => {
   }
 };
 
+/**
+ * @param {HTMLDivElement} infoEl info element
+ */
+const initFloorSelect = (infoEl) => {
+  const complexEl = document.createElement('div');
+  const bldgEl = document.createElement('div');
+  const floorEl = document.createElement('div');
+  complexEl.className = 'munimap-complex';
+  bldgEl.className = 'munimap-building';
+  floorEl.className = 'munimap-floor';
+  infoEl.appendChild(complexEl);
+  infoEl.appendChild(bldgEl);
+  infoEl.appendChild(floorEl);
+
+  const customSelectEl = document.createElement('div');
+  customSelectEl.className = 'munimap-floor-select';
+  floorEl.appendChild(customSelectEl);
+};
+
+/**
+ * @param {ol.Map} map map
+ * @param {HTMLDivElement} infoEl info element
+ * @param {redux.Store} reduxStore redux store
+ */
+const refreshInfoElement = (map, infoEl, reduxStore) => {
+  const onClickItem = (actionCreator, opt_args) =>
+    reduxStore.dispatch(actionCreator(opt_args));
+  const state = reduxStore.getState();
+
+  //must be in this order - visibility, floor select, position
+  //position is computed from infoEl size that is influenced by vis+fl
+  refreshElementVisibility(infoEl, state);
+  refreshFloorSelect(
+    infoEl,
+    state.selectedFeature,
+    state.requiredOpts.lang,
+    onClickItem
+  );
+  refreshElementPosition(map, infoEl, state);
+};
+
 export {
   attachMapListeners,
   ensureBaseMap,
@@ -302,4 +357,6 @@ export {
   createFeatureStores,
   refreshStyles,
   ensureClusterUpdate,
+  initFloorSelect,
+  refreshInfoElement,
 };

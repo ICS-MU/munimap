@@ -18,6 +18,7 @@ import {
   isCode as isFloorCode,
 } from '../feature/floor.js';
 import {loadOrDecorateMarkers} from '../create.js';
+import {setBuildingTitle} from '../view/info.js';
 
 /**
  * @typedef {import("../conf.js").State} State
@@ -147,6 +148,10 @@ const createReducer = (initialState) => {
           if (locationCode !== null) {
             //set to state - it can be building/floor code
             newState.selectedFeature = locationCode;
+
+            const titleOpts = slctr.getBuildingTitle(newState);
+            setBuildingTitle(state.requiredOpts.target, titleOpts);
+
             const where = `polohKod LIKE '${locationCode.substring(0, 5)}%'`;
             loadFloors(where).then((floors) =>
               action.asyncDispatch(
@@ -156,6 +161,10 @@ const createReducer = (initialState) => {
           } else {
             //deselect feature from state
             newState.selectedFeature = null;
+
+            const titleOpts = slctr.getBuildingTitle(newState);
+            setBuildingTitle(state.requiredOpts.target, titleOpts);
+
             clearFloorBasedStores();
           }
         }
@@ -191,6 +200,25 @@ const createReducer = (initialState) => {
           selectedFeature: action.payload,
         };
         refreshFloorBasedStores();
+        return newState;
+
+      //FLOOR_SELECT_CHANGED:
+      case actions.FLOOR_SELECT_CHANGED:
+        const newValue = action.payload;
+        const selectedFeature = state.selectedFeature;
+        newState = {
+          ...state,
+        };
+        if (selectedFeature && selectedFeature !== newValue) {
+          newState.selectedFeature = newValue;
+          const where = `polohKod LIKE '${newValue.substring(0, 5)}%'`;
+          loadFloors(where).then((floors) =>
+            action.asyncDispatch(actions.floors_loaded(false))
+          );
+          // if (jpad.func.isDef(identifyCallback)) {
+          //   munimap.identify.refreshVisibility(map, newLocCode);
+          // }
+        }
         return newState;
 
       //DEAFULT

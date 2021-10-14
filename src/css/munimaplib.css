@@ -8,18 +8,34 @@
   border-radius: 6px;
   bottom: auto;
   min-width: 0;
+  -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+  border: 1px solid #cccccc;
+}
+.ol-popup:after, .ol-popup:before {
+  top: 100%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
 }
 .ol-popup:before {
   left: 19px;
   border-left-color: #cccccc;
   border-width: 6px; 
+  margin-left: -11px;
+  border-top-color: #cccccc;
 }
 .ol-popup:after {
   /*left positioning (+ margin) influences munimap.info.POPUP_TALE_INDENT constant*/
   left: 19px;
   border-left-color: white;
+  border-top-color: white;
   /*border-width influences munimap.info.POPUP_TALE_HEIGHT constant*/
   border-width: 5px;
+  margin-left: -10px;
 }
 
 .munimap-info-hide {
@@ -98,54 +114,99 @@
 .munimap-floor {
   margin-top: 3px;
 }
-.munimap-floor .goog-menu-button {
+
+.munimap-floor button {
   background: white;
-  line-height: 20px;
-  margin-left: 0;
-}
-.munimap-floor .goog-menu-button-outer-box,
-.munimap-floor .goog-menu-button-focused .goog-menu-button-outer-box {
   border: solid 1px #99a9c8;
+  color: #000;
+  cursor: pointer;
+  list-style: none;
+  margin: 2px 2px 2px 0px;
+  outline: 0;
+  text-decoration: none;
+  vertical-align: middle;
+  font-weight: 400;
+  line-height: 20px;
+  padding: 0px 0px 0px 0px;
+  font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
 }
-.munimap-floor .goog-menu-button-inner-box {
-  padding: 0;
+
+.munimap-floor button:hover {
+  border: solid 1px;
+  border-color: #9cf #69e #69e #7af;
 }
-.munimap-floor .goog-menu-button-focused .goog-menu-button-inner-box {
-  border-color: #99a9c8;
+
+.munimap-floor .munimap-floor-select-arrow {
+  display: inline-block;
+  background: 0 0;
+  margin: 3px 8px 3px 5px;
+  width: 10px;
+  height: 15px;
+  vertical-align: top;
 }
-.munimap-floor .goog-menu-button-caption {
-  border-right: solid 1px /*#99a9c8*/ #ccd3e3;
-  /*box-sizing: content-box;*/
-  font-weight: normal;
+
+.munimap-floor .munimap-floor-select-caption {
+  display: inline-block;
+  border-right: solid 1px #ccd3e3;
+  font-weight: 400;
   line-height: 20px;
   padding: 3px 2px 3px 10px;
   width: 50px;
+  text-align: left;
 }
-.munimap-floor .goog-menu-button-hover .goog-menu-button-caption {
-  border-right-color: #7af;
-}
-.munimap-floor .goog-menu-button-dropdown {
-  background: none;
-  margin: 3px 8px 3px 5px;
-  width: 10px;
-}
-.munimap-floor .goog-menu-button-dropdown:before {
-  /*box-sizing: content-box;*/
+
+.munimap-floor .munimap-floor-select-arrow:before {
   content: '\f107';
-  font-family: 'MunimapFont';
+  font-family: MunimapFont;
   font-size: 11px;
 }
-.munimap-floor-select-item.goog-menuitem {
+
+.munimap-floor button:hover .munimap-floor-select-caption {
+  border-right-color: #7af;
+}
+
+.munimap-floor button:hover .munimap-floor-select-caption {
+  border-right-color: #7af;
+}
+
+.munimap-floor .munimap-floor-select-menu {
+  background: #fff;
+  border-color: #ccc #666 #666 #ccc;
+  border-style: solid;
+  border-width: 1px;
+  cursor: default;
+  font: normal 13px Arial,sans-serif;
+  margin: -1px 0 0 1px;
+  outline: 0;
+  padding: 4px 0;
+  position: absolute;
+  z-index: 20000;
+  display: none;
+}
+
+.munimap-floor .munimap-floor-select-item {
   box-sizing: content-box;
   font-size: 12px;
   padding: 4px 6px;
   width: 50px;
-}
-.munimap-floor-select-item.goog-menuitem-highlight {
-  border: none;
+  color: #000;
+  font: normal 13px Arial,sans-serif;
+  list-style: none;
+  margin: 0;
+  white-space: nowrap;
 }
 
-.munimap-marker-floor .goog-menuitem-content {
+.munimap-floor .munimap-floor-select-item.hover {
+  background-color: #d6e9f8;
+  cursor: pointer;
+}
+
+.munimap-floor .munimap-floor-select-menu.show {
+  display: block;
+}
+
+.munimap-floor .munimap-marker-floor {
   color: #e51c23;
 }
   
@@ -338,37 +399,6 @@
   color: #fff;
   position: relative;
   top: 1px;
-}
-
-.munimap-temp-control {
-  float: left;
-  width: 27.09px;
-  border-radius: 4px;
-}
-
-.munimap-temp-control .munimap-temp-control-button {
-  background-color: #ff0000;
-  margin: 1px;
-  margin-bottom: 0px;
-  padding: 0;
-  line-height: 25.09px;
-  text-align: center;
-  height: 25.09px;
-  border-radius: 2px;
-}
-
-.munimap-temp-control-icon {
-  font-family: 'MunimapFont';
-  font-size: 1.14em;
-  font-style: normal;
-  color: #fff;
-  position: relative;
-  top: 1px;
-}
-
-.munimap-temp-control-button:hover { 
-  background-color: #000;
-  cursor: pointer;
 }
 
 .munimap-map-tools .munimap-home {

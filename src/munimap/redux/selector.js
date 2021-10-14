@@ -13,6 +13,7 @@ import View from 'ol/View';
 import {ENABLE_SELECTOR_LOGS} from '../conf.js';
 import {GeoJSON} from 'ol/format';
 import {MultiPolygon, Polygon} from 'ol/geom';
+import {POPUP_TALE_HEIGHT} from '../ui/info.js';
 import {REQUIRED_CUSTOM_MARKERS, REQUIRED_MARKER_LABEL} from '../create.js';
 import {styleFunction as clusterStyleFunction} from '../style//cluster.js';
 import {styleFunction as complexStyleFunction} from '../style/complex.js';
@@ -30,13 +31,17 @@ import {
 import {featureExtentIntersect} from '../utils/geom.js';
 import {
   getByCode as getBuildingByCode,
+  getNamePart as getBuildingNamePart,
+  getTitleWithoutOrgUnit as getBuildingTitleWithoutOrgUnit,
   getType as getBuildingType,
+  getComplex,
   getSelectedFloorCode as getSelectedFloorCodeForBuilding,
   hasInnerGeometry,
   isBuilding,
   isCode as isBuildingCode,
   isSelected,
 } from '../feature/building.js';
+import {getBuildingCount} from '../feature/complex.js';
 import {getStore as getBuildingStore} from '../source/building.js';
 import {getStore as getDoorStore} from '../source/door.js';
 import {
@@ -45,6 +50,7 @@ import {
   isCode as isDoorCode,
   isCodeOrLikeExpr as isDoorCodeOrLikeExpr,
 } from '../feature/door.js';
+import {getElementSize} from '../utils/dom.js';
 import {getStore as getFloorStore} from '../source/floor.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
@@ -72,6 +78,8 @@ import {styleFunction as markerStyleFunction} from '../style/marker.js';
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  * @typedef {import("ol/style/Style").default} ol.style.Style
  * @typedef {import("ol/style/Style").StyleFunction} StyleFunction
+ * @typedef {import("../view/info.js").BuildingTitleOptions} BuildingTitleOptions
+ * @typedef {import("../view/info.js").PopupPositionOptions} PopupPositionOptions
  */
 
 /**
@@ -1260,5 +1268,181 @@ export const getStyleForActiveRoomLayer = createSelector(
       return defaultRoomStyleFunction(feature, res);
     };
     return styleFce;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    BuildingTitleOptions,
+ *    function(string, string): BuildingTitleOptions
+ * >}
+ */
+export const getBuildingTitle = createSelector(
+  [getSelectedFeature, getLang],
+  (selectedFeature, lang) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing building title to info element');
+    }
+    if (!selectedFeature) {
+      return {title: '', complexTitle: ''};
+    }
+
+    let title = '';
+    let complexTitle = '';
+    const building = getBuildingByCode(selectedFeature);
+    if (building) {
+      title = /**@type {string}*/ (
+        building.get(
+          munimap_lang.getMsg(
+            munimap_lang.Translations.BUILDING_TITLE_FIELD_NAME,
+            lang
+          )
+        )
+      );
+      const complex = getComplex(building);
+      if (munimap_utils.isDefAndNotNull(complex)) {
+        complexTitle = /**@type {string}*/ (
+          complex.get(
+            munimap_lang.getMsg(
+              munimap_lang.Translations.COMPLEX_TITLE_FIELD_NAME,
+              lang
+            )
+          )
+        );
+        const buildingType = /**@type {string}*/ (
+          building.get(
+            munimap_lang.getMsg(
+              munimap_lang.Translations.BUILDING_TYPE_FIELD_NAME,
+              lang
+            )
+          )
+        );
+        const buildingTitle = /**@type {string}*/ (
+          building.get(
+            munimap_lang.getMsg(
+              munimap_lang.Translations.BUILDING_ABBR_FIELD_NAME,
+              lang
+            )
+          )
+        );
+        if (
+          munimap_utils.isDefAndNotNull(buildingType) &&
+          munimap_utils.isDefAndNotNull(buildingTitle)
+        ) {
+          title = buildingType + ' ' + buildingTitle;
+        } else {
+          if (getBuildingCount(complex) === 1) {
+            title = getBuildingNamePart(building, lang);
+          } else {
+            title = getBuildingTitleWithoutOrgUnit(building, lang);
+          }
+        }
+      } else {
+        title = getBuildingTitleWithoutOrgUnit(building, lang);
+      }
+    }
+    return {title, complexTitle};
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    PopupPositionOptions,
+ *    function(string, number, ol.Extent, string): PopupPositionOptions
+ * >}
+ */
+export const getInfoBoxPosition = createSelector(
+  [getTarget, getResolution, getExtent, getSelectedFeature],
+  (target, resolution, extent, selectedFeature) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing info element position and display');
+    }
+
+    if (!extent || !selectedFeature) {
+      return;
+    }
+
+    const targetEl = document.getElementById(target);
+    const infoEl = /**@type {HTMLDivElement}*/ (
+      targetEl.getElementsByClassName('ol-popup munimap-info')[0]
+    );
+    const building = getBuildingByCode(selectedFeature);
+    const topRight = ol_extent.getTopRight(extent);
+    const elSize = getElementSize(infoEl);
+    const extWidth = resolution * elSize.width;
+    const extHeight = resolution * (elSize.height + POPUP_TALE_HEIGHT);
+
+    const elExtent = /**@type {ol.Extent}*/ ([
+      topRight[0] - extWidth,
+      topRight[1] - extHeight,
+      topRight[0],
+      topRight[1],
+    ]);
+    const result = {};
+    const bldgGeom = building.getGeometry();
+    if (!bldgGeom.intersectsExtent(elExtent)) {
+      const bottomLeft = ol_extent.getBottomLeft(extent);
+      const reducedViewExt = /**@type {ol.Extent}*/ ([
+        bottomLeft[0],
+        bottomLeft[1],
+        topRight[0] - extWidth,
+        topRight[1] - extHeight,
+      ]);
+      const format = new GeoJSON();
+      let intersect = featureExtentIntersect(building, reducedViewExt, format);
+      if (
+        munimap_utils.isDefAndNotNull(intersect) &&
+        !!intersect.getGeometry()
+      ) {
+        const closestPoint = intersect.getGeometry().getClosestPoint(topRight);
+        result.coordinate = [closestPoint[0], closestPoint[1] + extHeight];
+        result.hideTale = false;
+      } else {
+        intersect = featureExtentIntersect(building, extent, format);
+        if (
+          munimap_utils.isDefAndNotNull(intersect) &&
+          !!intersect.getGeometry()
+        ) {
+          const bbox = intersect.getGeometry().getExtent();
+          const topLeft = ol_extent.getTopLeft(extent);
+          const upperExt = /**@type {ol.Extent}*/ ([
+            topLeft[0],
+            topLeft[1] - extHeight,
+            topRight[0],
+            topRight[1],
+          ]);
+          if (bldgGeom.intersectsExtent(upperExt)) {
+            result.coordinate = [bbox[2], topRight[1]];
+          } else {
+            result.coordinate = [topRight[0] - extWidth, bbox[3] + extHeight];
+          }
+        }
+        result.hideTale = true;
+      }
+    }
+
+    if (!result.coordinate) {
+      const parentEl = infoEl.parentElement;
+      result.position = [parentEl.offsetWidth - elSize.width, 0];
+      result.hideTale = true;
+    }
+
+    return result;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    boolean,
+ *    function(string, boolean): boolean
+ * >}
+ */
+export const showInfoEl = createSelector(
+  [getSelectedFeature, isInFloorResolutionRange],
+  (selectedFeature, inFloorResolutionRange) => {
+    return !!selectedFeature && inFloorResolutionRange;
   }
 );

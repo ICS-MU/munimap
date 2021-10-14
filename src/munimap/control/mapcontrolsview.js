@@ -182,43 +182,6 @@ const createInitExtentControl = (map, store, target, lang) => {
 };
 
 /**
- * @param {ol.Map} map map
- * @param {redux.Store} store store
- * @param {HTMLElement} target target
- * @param {string} lang language
- * @return {Control} control
- * */
-const createTempControl = (map, store, target, lang) => {
-  const divEl = document.createElement('div');
-  divEl.className += ' munimap-temp-control';
-  divEl.id = 'muni-temp-control';
-  divEl.title = munimap_lang.getMsg(
-    munimap_lang.Translations.INITIAL_EXTENT,
-    lang
-  );
-  const buttonEl = document.createElement('div');
-  buttonEl.className += ' munimap-temp-control-button';
-  buttonEl.title = munimap_lang.getMsg(
-    munimap_lang.Translations.INITIAL_EXTENT,
-    lang
-  );
-  const icon = document.createElement('i');
-  icon.className += ' munimap-temp-control-icon';
-  icon.innerHTML = 'F';
-  divEl.appendChild(buttonEl);
-  buttonEl.appendChild(icon);
-  const result = new Control({
-    element: divEl,
-    target: target,
-  });
-
-  divEl.addEventListener('click', () => {
-    store.dispatch(actions.new_floor_selected('BBA03N03'));
-  });
-  return result;
-};
-
-/**
  * Adds controls to the map and returns their total size
  * @param {ol.Map} map map
  * @param {Array<Control>} controls controls
@@ -438,10 +401,6 @@ export default (map, store, options) => {
       })
     );
     controlsToAdd.push(createInitExtentControl(map, store, toolBarEl, lang));
-
-    if (!PRODUCTION) {
-      controlsToAdd.push(createTempControl(map, store, toolBarEl, lang));
-    }
   };
 
   const addMapTools = () => {

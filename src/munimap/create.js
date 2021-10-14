@@ -262,12 +262,15 @@ export default (options) => {
       const target = document.getElementById(options.target);
 
       let munimapEl = target.getElementsByClassName('munimap')[0];
-      let infoEl = target.getElementsByClassName('ol-popup munimap-info')[0];
+      let infoEl = /**@type {HTMLDivElement}*/ (
+        target.getElementsByClassName('ol-popup munimap-info')[0]
+      );
       if (munimapEl === undefined) {
         munimapEl = document.createElement('div');
-        infoEl = document.createElement('div');
+        infoEl = /**@type {HTMLDivElement}*/ (document.createElement('div'));
         munimapEl.className = 'munimap';
         infoEl.className = 'ol-popup munimap-info';
+        infoEl.style.zIndex = '2';
         munimapEl.appendChild(infoEl);
         target.appendChild(munimapEl);
       }
@@ -340,11 +343,13 @@ export default (options) => {
               REQUIRED_MARKER_LABEL[state.requiredOpts.markerLabelId],
             pubTran: state.requiredOpts.pubTran,
           });
+          munimap_view.initFloorSelect(infoEl);
         }
 
         munimap_view.ensureClusterUpdate(state, map);
         munimap_view.ensureBaseMap(basemapLayer, map);
         munimap_view.refreshStyles(state, map.getLayers().getArray());
+        munimap_view.refreshInfoElement(map, infoEl, store);
       }
     };
 

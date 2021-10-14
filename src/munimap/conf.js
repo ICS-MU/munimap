@@ -14,7 +14,7 @@
  * Whether to log selectors to console.
  * @type {boolean}
  */
-export const ENABLE_SELECTOR_LOGS = false;
+export const ENABLE_SELECTOR_LOGS = true;
 
 /**
  * @type {string}

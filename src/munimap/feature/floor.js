@@ -33,6 +33,17 @@ const CODE_REGEX = /^[A-Z]{3}[0-9]{2}[NPMZS][0-9]{2}$/gi;
 export const RESOLUTION = munimap_range.createResolution(0, 0.3);
 
 /**
+ * Floor types.
+ * @enum {string}
+ */
+export const FloorTypes = {
+  UNDERGROUND: 'P',
+  UNDERGROUND_MEZZANINE: 'Z',
+  ABOVEGROUND: 'N',
+  MEZZANINE: 'M',
+};
+
+/**
  *
  * @type {TypeOptions}
  */
@@ -88,4 +99,72 @@ export const getFloorLayerIdByCode = (code) => {
     return;
   }
   return floor.get('vrstvaId');
+};
+
+/**
+ * Get floor from its store by building code.
+ * @param {string} code location code
+ * @return {Array<ol.Feature>} floor feature
+ */
+export const getFloorsByBuildingCode = (code) => {
+  const store = getFloorStore();
+  if (store) {
+    const features = store.getFeatures();
+    const floors = features.filter((floor) => {
+      const locationCode = floor.get('polohKod');
+      return locationCode.startsWith(code);
+    });
+    return floors || [];
+  }
+  return [];
+};
+
+/**
+ * Return ID for ordering.
+ * @param {string} floorCode floor code (full or 3-character).
+ * @return {number} ID for ordering.
+ */
+const getOrderId = (floorCode) => {
+  const prefix = floorCode.length > 3 ? 5 : 0;
+  const letter = floorCode[prefix + 0];
+  let num = parseInt(floorCode.substr(prefix + 1), 10);
+
+  switch (letter) {
+    case FloorTypes.UNDERGROUND:
+      num = num * -2;
+      break;
+    case FloorTypes.UNDERGROUND_MEZZANINE:
+      num = num * -2 + 1;
+      break;
+    case FloorTypes.ABOVEGROUND:
+      num = (num - 1) * 2;
+      break;
+    case FloorTypes.MEZZANINE:
+      num = (num - 1) * 2 + 1;
+      break;
+    default:
+      break;
+  }
+  return num;
+};
+
+/**
+ * Compare two floor codes by altitute, from lowest to highest.
+ * @param {string} a floor code.
+ * @param {string} b floor code.
+ * @return {number} num
+ */
+const compareCodesByAltitude = (a, b) => {
+  return getOrderId(a) - getOrderId(b);
+};
+
+/**
+ * @param {ol.Feature} a code
+ * @param {ol.Feature} b code
+ * @return {number} num
+ */
+export const sort = (a, b) => {
+  const aCode = /**@type {string}*/ (a.get('polohKod'));
+  const bCode = /**@type {string}*/ (b.get('polohKod'));
+  return compareCodesByAltitude(aCode, bCode);
 };

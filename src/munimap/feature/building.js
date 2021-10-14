@@ -455,4 +455,6 @@ export {
   getByCode,
   getLocationCode,
   getSelectedFloorCode,
+  getTitleWithoutOrgUnit,
+  getNamePart,
 };
