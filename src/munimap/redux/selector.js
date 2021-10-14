@@ -1040,7 +1040,7 @@ export const getSelectedLocationCode = createSelector(
           //returns floor code or building location code
           return afc || lc;
         } else {
-          return lc;
+          return lc || null;
         }
       } else {
         return null;
