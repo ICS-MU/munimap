@@ -19,6 +19,13 @@ import {
  */
 
 /**
+ * @typedef {Object} LoadedTypes
+ * @property {boolean} building building
+ * @property {boolean} room room
+ * @property {boolean} door door
+ */
+
+/**
  * @type {string}
  * @const
  */
@@ -98,21 +105,25 @@ export const FLOOR_SELECT_CHANGED = 'FLOOR_SELECT_CHANGED';
 
 /**
  * @param {Array<ol.Feature|string>} markers markers
+ * @param {LoadedTypes} loadedTypes loaded feature types
  * @return {redux.AnyAction} action
  */
-export function markers_loaded(markers) {
+export function markers_loaded(markers, loadedTypes) {
   sendEventForCustomMarker(markers);
   return {
     type: MARKERS_LOADED,
+    payload: loadedTypes,
   };
 }
 
 /**
+ * @param {LoadedTypes} loadedTypes loaded feature types
  * @return {redux.AnyAction} action
  */
-export function zoomTo_loaded() {
+export function zoomTo_loaded(loadedTypes) {
   return {
     type: ZOOMTO_LOADED,
+    payload: loadedTypes,
   };
 }
 

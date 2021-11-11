@@ -6,7 +6,8 @@ import * as munimap_assert from '../assert/assert.js';
 import * as munimap_utils from '../utils/utils.js';
 import * as redux from 'redux';
 import * as slctr from './selector.js';
-import {ROOM_TYPES} from '../feature/room.js';
+import {Feature} from 'ol';
+import {ROOM_TYPES, isRoom} from '../feature/room.js';
 import {asyncDispatchMiddleware} from './middleware.js';
 import {
   clearFloorBasedStores,
@@ -17,6 +18,8 @@ import {
   getFloorLayerIdByCode,
   isCode as isFloorCode,
 } from '../feature/floor.js';
+import {isBuilding} from '../feature/building.js';
+import {isDoor} from '../feature/door.js';
 import {loadOrDecorateMarkers} from '../create.js';
 import {setBuildingTitle} from '../view/info.js';
 
@@ -32,20 +35,37 @@ import {setBuildingTitle} from '../view/info.js';
 const createReducer = (initialState) => {
   return (state = initialState, action) => {
     let newState;
+    let loadedTypes;
 
     switch (action.type) {
       // MARKERS_LOADED
       case actions.MARKERS_LOADED:
+        loadedTypes = action.payload;
         return {
           ...state,
           markersTimestamp: Date.now(),
+          buildingsTimestamp: Object.values(loadedTypes).some((t) => t)
+            ? Date.now()
+            : state.buildingsTimestamp,
+          defaultRoomsTimestamp: loadedTypes.room
+            ? Date.now()
+            : state.defaultRoomsTimestamp,
+          doorsTimestamp: loadedTypes.door ? Date.now() : state.doorsTimestamp,
         };
 
       // ZOOMTO_LOADED
       case actions.ZOOMTO_LOADED:
+        loadedTypes = action.payload;
         return {
           ...state,
           zoomToTimestamp: Date.now(),
+          buildingsTimestamp: Object.values(loadedTypes).some((t) => t)
+            ? Date.now()
+            : state.buildingsTimestamp,
+          defaultRoomsTimestamp: loadedTypes.room
+            ? Date.now()
+            : state.defaultRoomsTimestamp,
+          doorsTimestamp: loadedTypes.door ? Date.now() : state.doorsTimestamp,
         };
 
       // MAP_INITIALIZED
@@ -71,7 +91,16 @@ const createReducer = (initialState) => {
           loadOrDecorateMarkers(markerStrings, state.requiredOpts).then(
             (res) => {
               munimap_assert.assertMarkerFeatures(res);
-              action.asyncDispatch(actions.markers_loaded(res));
+
+              const loadedTypes = {
+                building: res.some(
+                  (f) => f instanceof Feature && isBuilding(f)
+                ),
+                room: res.some((f) => f instanceof Feature && isRoom(f)),
+                door: res.some((f) => f instanceof Feature && isDoor(f)),
+              };
+
+              action.asyncDispatch(actions.markers_loaded(res, loadedTypes));
             }
           );
         }
@@ -88,7 +117,12 @@ const createReducer = (initialState) => {
             zoomToStrings = [];
           }
           featuresFromParam(zoomToStrings).then((res) => {
-            action.asyncDispatch(actions.zoomTo_loaded());
+            const loadedTypes = {
+              building: res.some((f) => f instanceof Feature && isBuilding(f)),
+              room: res.some((f) => f instanceof Feature && isRoom(f)),
+              door: res.some((f) => f instanceof Feature && isDoor(f)),
+            };
+            action.asyncDispatch(actions.zoomTo_loaded(loadedTypes));
           });
         }
         return {
