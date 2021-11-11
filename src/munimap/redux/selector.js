@@ -1463,7 +1463,7 @@ export const getClusterResolution = createSelector(
       console.log('computing cluster resolution');
     }
     if (!markersTimestamp || markersTimestamp === 0) {
-      return;
+      return BUILDING_RESOLUTION;
     }
     let clusterResolution = BUILDING_RESOLUTION;
     if (
