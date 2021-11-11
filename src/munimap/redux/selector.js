@@ -10,6 +10,7 @@ import * as munimap_utils from '../utils/utils.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
 import View from 'ol/View';
+import {BUILDING_RESOLUTION, ROOM_RESOLUTION} from '../cluster/cluster.js';
 import {ENABLE_SELECTOR_LOGS} from '../conf.js';
 import {GeoJSON} from 'ol/format';
 import {MultiPolygon, Polygon} from 'ol/geom';
@@ -80,6 +81,7 @@ import {styleFunction as markerStyleFunction} from '../style/marker.js';
  * @typedef {import("ol/style/Style").StyleFunction} StyleFunction
  * @typedef {import("../view/info.js").BuildingTitleOptions} BuildingTitleOptions
  * @typedef {import("../view/info.js").PopupPositionOptions} PopupPositionOptions
+ * @typedef {import("../utils/range.js").RangeInterface} RangeInterface
  */
 
 /**
@@ -1444,5 +1446,32 @@ export const showInfoEl = createSelector(
   [getSelectedFeature, isInFloorResolutionRange],
   (selectedFeature, inFloorResolutionRange) => {
     return !!selectedFeature && inFloorResolutionRange;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    RangeInterface,
+ *    function(number, Array<ol.Feature>): RangeInterface
+ * >}
+ */
+export const getClusterResolution = createSelector(
+  [getMarkersTimestamp, getInitMarkers],
+  (markersTimestamp, markers) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing cluster resolution');
+    }
+    if (!markersTimestamp || markersTimestamp === 0) {
+      return;
+    }
+    let clusterResolution = BUILDING_RESOLUTION;
+    if (
+      markers.length &&
+      (markers.some((el) => isRoom(el)) || markers.some((el) => isDoor(el)))
+    ) {
+      clusterResolution = ROOM_RESOLUTION;
+    }
+    return clusterResolution;
   }
 );

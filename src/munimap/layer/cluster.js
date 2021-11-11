@@ -36,16 +36,9 @@ const isLayer = (layer) => layer.get('id') === LAYER_ID;
  * @return {VectorLayer} marker cluster layer
  */
 const create = (map, options) => {
-  const {markers, lang, showLabels, muAttrs} = options;
+  const {markers, lang, showLabels, muAttrs, clusterResolution} = options;
   const clusterFeatures = markers.concat();
   const markerClusterSrc = createClusterStore(clusterFeatures, muAttrs, lang);
-  let clusterResolution = munimap_cluster.BUILDING_RESOLUTION;
-  if (
-    markers.length &&
-    (markers.some((el) => isRoom(el)) || markers.some((el) => isDoor(el)))
-  ) {
-    clusterResolution = munimap_cluster.ROOM_RESOLUTION;
-  }
 
   const markerClusterLayer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({

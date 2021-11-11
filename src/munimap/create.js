@@ -342,6 +342,7 @@ export default (options) => {
             markerLabel:
               REQUIRED_MARKER_LABEL[state.requiredOpts.markerLabelId],
             pubTran: state.requiredOpts.pubTran,
+            clusterResolution: slctr.getClusterResolution(state),
           });
           munimap_view.initFloorSelect(infoEl);
         }

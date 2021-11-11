@@ -62,6 +62,7 @@ import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
  * @typedef {import("redux").Store} redux.Store
  * @typedef {import("../conf.js").State} State
  * @typedef {import("../create").MapListenersOptions} MapListenersOptions
+ * @typedef {import("../utils/range.js").RangeInterface} RangeInterface
  */
 
 /**
@@ -75,6 +76,7 @@ import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
  * @property {MarkerLabelFunction} [markerLabel] marker label
  * @property {boolean} [pubTran] public transportation
  * @property {ol.source.Vector} [markerSource] marker source
+ * @property {RangeInterface} clusterResolution cluster resolution
  */
 
 /**
