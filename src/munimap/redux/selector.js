@@ -14,7 +14,6 @@ import {BUILDING_RESOLUTION, ROOM_RESOLUTION} from '../cluster/cluster.js';
 import {ENABLE_SELECTOR_LOGS} from '../conf.js';
 import {GeoJSON} from 'ol/format';
 import {MultiPolygon, Polygon} from 'ol/geom';
-import {POPUP_TALE_HEIGHT} from '../ui/info.js';
 import {REQUIRED_CUSTOM_MARKERS, REQUIRED_MARKER_LABEL} from '../create.js';
 import {styleFunction as clusterStyleFunction} from '../style//cluster.js';
 import {styleFunction as complexStyleFunction} from '../style/complex.js';
@@ -51,7 +50,6 @@ import {
   isCode as isDoorCode,
   isCodeOrLikeExpr as isDoorCodeOrLikeExpr,
 } from '../feature/door.js';
-import {getElementSize} from '../utils/dom.js';
 import {getStore as getFloorStore} from '../source/floor.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
@@ -80,7 +78,6 @@ import {styleFunction as markerStyleFunction} from '../style/marker.js';
  * @typedef {import("ol/style/Style").default} ol.style.Style
  * @typedef {import("ol/style/Style").StyleFunction} StyleFunction
  * @typedef {import("../view/info.js").BuildingTitleOptions} BuildingTitleOptions
- * @typedef {import("../view/info.js").PopupPositionOptions} PopupPositionOptions
  * @typedef {import("../utils/range.js").RangeInterface} RangeInterface
  */
 
@@ -222,14 +219,14 @@ const getRequiredTarget = (state) => state.requiredOpts.target;
  * @param {State} state state
  * @return {number} res
  */
-const getResolution = (state) => state.resolution;
+export const getResolution = (state) => state.resolution;
 
 /**
  * @type {Reselect.Selector<State, string>}
  * @param {State} state state
  * @return {string} selected floor
  */
-const getSelectedFeature = (state) => state.selectedFeature;
+export const getSelectedFeature = (state) => state.selectedFeature;
 
 /**
  * @type {Reselect.Selector<State, string>}
@@ -1345,93 +1342,6 @@ export const getBuildingTitle = createSelector(
       }
     }
     return {title, complexTitle};
-  }
-);
-
-/**
- * @type {Reselect.OutputSelector<
- *    State,
- *    PopupPositionOptions,
- *    function(string, number, ol.Extent, string): PopupPositionOptions
- * >}
- */
-export const getInfoBoxPosition = createSelector(
-  [getTarget, getResolution, getExtent, getSelectedFeature],
-  (target, resolution, extent, selectedFeature) => {
-    if (ENABLE_SELECTOR_LOGS) {
-      console.log('computing info element position and display');
-    }
-
-    if (!extent || !selectedFeature) {
-      return;
-    }
-
-    const targetEl = document.getElementById(target);
-    const infoEl = /**@type {HTMLDivElement}*/ (
-      targetEl.getElementsByClassName('ol-popup munimap-info')[0]
-    );
-    const building = getBuildingByCode(selectedFeature);
-    const topRight = ol_extent.getTopRight(extent);
-    const elSize = getElementSize(infoEl);
-    const extWidth = resolution * elSize.width;
-    const extHeight = resolution * (elSize.height + POPUP_TALE_HEIGHT);
-
-    const elExtent = /**@type {ol.Extent}*/ ([
-      topRight[0] - extWidth,
-      topRight[1] - extHeight,
-      topRight[0],
-      topRight[1],
-    ]);
-    const result = {};
-    const bldgGeom = building.getGeometry();
-    if (!bldgGeom.intersectsExtent(elExtent)) {
-      const bottomLeft = ol_extent.getBottomLeft(extent);
-      const reducedViewExt = /**@type {ol.Extent}*/ ([
-        bottomLeft[0],
-        bottomLeft[1],
-        topRight[0] - extWidth,
-        topRight[1] - extHeight,
-      ]);
-      const format = new GeoJSON();
-      let intersect = featureExtentIntersect(building, reducedViewExt, format);
-      if (
-        munimap_utils.isDefAndNotNull(intersect) &&
-        !!intersect.getGeometry()
-      ) {
-        const closestPoint = intersect.getGeometry().getClosestPoint(topRight);
-        result.coordinate = [closestPoint[0], closestPoint[1] + extHeight];
-        result.hideTale = false;
-      } else {
-        intersect = featureExtentIntersect(building, extent, format);
-        if (
-          munimap_utils.isDefAndNotNull(intersect) &&
-          !!intersect.getGeometry()
-        ) {
-          const bbox = intersect.getGeometry().getExtent();
-          const topLeft = ol_extent.getTopLeft(extent);
-          const upperExt = /**@type {ol.Extent}*/ ([
-            topLeft[0],
-            topLeft[1] - extHeight,
-            topRight[0],
-            topRight[1],
-          ]);
-          if (bldgGeom.intersectsExtent(upperExt)) {
-            result.coordinate = [bbox[2], topRight[1]];
-          } else {
-            result.coordinate = [topRight[0] - extWidth, bbox[3] + extHeight];
-          }
-        }
-        result.hideTale = true;
-      }
-    }
-
-    if (!result.coordinate) {
-      const parentEl = infoEl.parentElement;
-      result.position = [parentEl.offsetWidth - elSize.width, 0];
-      result.hideTale = true;
-    }
-
-    return result;
   }
 );
 

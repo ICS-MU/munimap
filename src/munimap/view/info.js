@@ -6,7 +6,7 @@ import * as actions from '../redux/action.js';
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_utils from '../utils/utils.js';
 import * as slctr from '../redux/selector.js';
-import {POPUP_TALE_INDENT} from '../ui/info.js';
+import {POPUP_TALE_INDENT, getInfoBoxPosition} from '../ui/info.js';
 import {findSelectedFloorItem, getLabel, getLabelAbbr} from '../ui/info.js';
 import {
   sort as floorSortFn,
@@ -185,7 +185,12 @@ const refreshFloorSelect = (infoEl, selectedFeature, lang, onClickItem) => {
  * @param {State} state state
  */
 const refreshElementPosition = (map, infoEl, state) => {
-  const positionInfo = slctr.getInfoBoxPosition(state);
+  const opts = {
+    extent: slctr.getExtent(state),
+    resolution: slctr.getResolution(state),
+    selectedFeature: slctr.getSelectedFeature(state),
+  };
+  const positionInfo = getInfoBoxPosition(infoEl, opts);
   if (positionInfo) {
     const position = positionInfo.coordinate
       ? map.getPixelFromCoordinate(positionInfo.coordinate)
