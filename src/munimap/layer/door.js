@@ -42,6 +42,9 @@ const getActiveLayer = (map) => {
   return /** @type {VectorLayer|undefined} */ (result);
 };
 
+/**
+ * @return {VectorLayer} layer
+ */
 const createActive = () => {
   const layer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({

@@ -81,6 +81,9 @@ const getActiveLayer = (map) => {
  */
 const isLabelLayer = (layer) => layer.get('id') === LABEL_LAYER_ID;
 
+/**
+ * @return {VectorLayer} layer
+ */
 const create = () => {
   const layer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
@@ -100,6 +103,9 @@ const create = () => {
   return layer;
 };
 
+/**
+ * @return {VectorLayer} layer
+ */
 const createActive = () => {
   const layer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
@@ -118,6 +124,10 @@ const createActive = () => {
   return layer;
 };
 
+/**
+ * @param {boolean} showLocationCodes whether to show only location codes
+ * @return {VectorLayer} layer
+ */
 const createLabel = (showLocationCodes) => {
   const maxResolution = showLocationCodes ? 0.13 : munimap_floor.RESOLUTION.max;
   return new VectorLayer(
