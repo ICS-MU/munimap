@@ -129,6 +129,12 @@ export const TARGET_BLURRED = 'TARGET_BLURRED';
 export const TARGET_FOCUSED = 'TARGET_FOCUSED';
 
 /**
+ * @type {string}
+ * @const
+ */
+export const POIS_LOADED = 'POIS_LOADED';
+
+/**
  * @param {Array<ol.Feature|string>} markers markers
  * @param {LoadedTypes} loadedTypes loaded feature types
  * @return {redux.AnyAction} action
@@ -323,5 +329,14 @@ export function target_blurred(errorMessageProps) {
   return {
     type: TARGET_BLURRED,
     payload: errorMessageProps,
+  };
+}
+
+/**
+ * @return {redux.AnyAction} action
+ */
+export function pois_loaded() {
+  return {
+    type: POIS_LOADED,
   };
 }

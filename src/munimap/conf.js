@@ -78,6 +78,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {number} defaultRoomsTimestamp default rooms timestamp
  * @property {number} activeRoomsTimestamp active rooms timestamp
  * @property {number} doorsTimestamp doors timestamp
+ * @property {number} poisTimestamp pois timestamp
  * @property {ErrorMessageState} errorMessage error message
  */
 
@@ -121,6 +122,7 @@ export const INITIAL_STATE = {
   defaultRoomsTimestamp: null,
   activeRoomsTimestamp: null,
   doorsTimestamp: null,
+  poisTimestamp: null,
   errorMessage: {
     render: null,
     withMessage: null,

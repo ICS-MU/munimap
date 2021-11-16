@@ -18,6 +18,10 @@ import {
   createStore as createDoorStore,
 } from '../source/door.js';
 import {
+  createActiveStore as createActivePoiStore,
+  createStore as createPoiStore,
+} from '../source/poi.js';
+import {
   createActiveStore as createActiveRoomStore,
   createDefaultStore as createDefaultRoomStore,
   createStore as createRoomStore,
@@ -33,6 +37,7 @@ import {createStore as createPubtranStore} from '../source/pubtran.stop.js';
 import {createStore as createUnitStore} from '../source/unit.js';
 import {getDefaultLayers} from '../layer/layer.js';
 import {refreshActiveStyle as refreshActiveDoorStyle} from './door.js';
+import {refreshActiveStyle as refreshActivePoiStyle} from './poi.js';
 import {
   refreshActiveStyle as refreshActiveRoomStyle,
   refreshLabelStyle as refreshRoomLabelStyle,
@@ -266,6 +271,8 @@ const createFeatureStores = (reduxStore) => {
   createActiveRoomStore(reduxStore, callbackFn);
   createDoorStore();
   createActiveDoorStore(reduxStore, callbackFn);
+  createPoiStore();
+  createActivePoiStore(reduxStore, callbackFn);
 
   const state = reduxStore.getState();
   if (state.requiredOpts.pubTran) {
@@ -288,6 +295,7 @@ const refreshStyles = (state, layers) => {
   refreshRoomLabelStyle(state, layers);
   refreshActiveRoomStyle(state, layers);
   refreshActiveDoorStyle(state, layers);
+  refreshActivePoiStyle(state, layers);
 
   if (state.requiredOpts.pubTran) {
     refreshPubtranStyle(layers);

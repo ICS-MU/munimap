@@ -3,6 +3,7 @@
  */
 
 import {getActiveStore as getActiveDoorStore} from './door.js';
+import {getActiveStore as getActivePoiStore} from './poi.js';
 import {getActiveStore as getActiveRoomStore} from './room.js';
 
 /**
@@ -11,6 +12,7 @@ import {getActiveStore as getActiveRoomStore} from './room.js';
 const refreshFloorBasedStores = () => {
   getActiveRoomStore().refresh();
   getActiveDoorStore().refresh();
+  getActivePoiStore().refresh();
 };
 
 /**

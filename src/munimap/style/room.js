@@ -6,7 +6,12 @@ import * as munimap_style from './style.js';
 import * as munimap_utils from '../utils/utils.js';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
-import {LABEL_CACHE as STYLE_LABEL_CACHE} from './style.js';
+import {
+  ICON_HEIGHT as POI_ICON_HEIGHT,
+  Resolutions as PoiResolutions,
+} from '../style/poi.js';
+import {PURPOSE as POI_PURPOSE} from '../feature/poi.js';
+import {LABEL_CACHE as STYLE_LABEL_CACHE, getLabelHeight} from './style.js';
 import {getDefaultLabel} from '../feature/room.js';
 import {
   getCorridor as getMarkerCorridorStyle,
@@ -42,6 +47,11 @@ let CORRIDOR = [];
  * @type {Array<Style>}
  */
 let STAIRCASE = [];
+
+/**
+ * @return {Array<Style>} style
+ */
+const getStaircase = () => STAIRCASE;
 
 /**
  * @type {Object<string, Style|Array<Style>>}
@@ -111,42 +121,38 @@ const PURPOSES_TO_OMIT = [
   'výtah', //shown due to ucel_gis
 ];
 
-// /**
-//  * @type {ol.style.Style}
-//  * @protected
-//  * @const
-//  */
-// munimap.room.style.STAIRCASE_BACKGROUND_ICON = new ol.style.Style({
-//   geometry: munimap.geom.CENTER_GEOMETRY_FUNCTION,
-//   text: new ol.style.Text({
-//     text: '\uf0c8',
-//     font: 'normal ' + munimap.poi.style.ICON_HEIGHT + 'px MunimapFont',
-//     fill: new ol.style.Fill({
-//       color: '#666'
-//     })
-//   }),
-//   zIndex: 5
-// });
+/**
+ * @type {Style}
+ */
+const STAIRCASE_BACKGROUND_ICON = new Style({
+  geometry: CENTER_GEOMETRY_FUNCTION,
+  text: new Text({
+    text: '\uf0c8',
+    font: `normal ${POI_ICON_HEIGHT}px MunimapFont`,
+    fill: new Fill({
+      color: '#666',
+    }),
+  }),
+  zIndex: 5,
+});
 
-// /**
-//  * @type {Array<ol.style.Style>}
-//  * @protected
-//  * @const
-//  */
-// munimap.room.style.STAIRCASE_ICON = [
-//   munimap.room.style.STAIRCASE_BACKGROUND_ICON,
-//   new ol.style.Style({
-//     geometry: munimap.geom.CENTER_GEOMETRY_FUNCTION,
-//     text: new ol.style.Text({
-//       text: '\ue806',
-//       font: 'normal 16px MunimapFont',
-//       fill: new ol.style.Fill({
-//         color: 'white'
-//       })
-//     }),
-//     zIndex: 5
-//   })
-// ];
+/**
+ * @type {Array<Style>}
+ */
+const STAIRCASE_ICON = [
+  STAIRCASE_BACKGROUND_ICON,
+  new Style({
+    geometry: CENTER_GEOMETRY_FUNCTION,
+    text: new Text({
+      text: '\ue806',
+      font: 'normal 16px MunimapFont',
+      fill: new Fill({
+        color: 'white',
+      }),
+    }),
+    zIndex: 5,
+  }),
+];
 
 /**
  * @param {RenderEvent} event event
@@ -207,41 +213,41 @@ const alignRoomTitleToRows = (title) => {
   return title;
 };
 
-// /**
-//  * @param {number} offsetY offset
-//  * @return {Array.<Style>} style
-//  * @protected
-//  */
-// const getClassroomIcon = (offsetY) => {
-//   const background = new Style({
-//     geometry: CENTER_GEOMETRY_FUNCTION,
-//     text: new Text({
-//       text: '\uf0c8',
-//       offsetY: offsetY,
-//       font: 'normal ' + munimap.poi.style.ICON_HEIGHT + 'px MunimapFont',
-//       fill: new Fill({
-//         color: '#666',
-//       }),
-//     }),
-//     zIndex: 5,
-//   });
-//   const style = [
-//     background,
-//     new Style({
-//       geometry: CENTER_GEOMETRY_FUNCTION,
-//       text: new Text({
-//         text: '\uf19d',
-//         offsetY: offsetY,
-//         font: 'normal 15px MunimapFont',
-//         fill: new Fill({
-//           color: 'white',
-//         })
-//       }),
-//       zIndex: 5,
-//     }),
-//   ];
-//   return style;
-// };
+/**
+ * @param {number} offsetY offset
+ * @return {Array<Style>} style
+ * @protected
+ */
+const getClassroomIcon = (offsetY) => {
+  const background = new Style({
+    geometry: CENTER_GEOMETRY_FUNCTION,
+    text: new Text({
+      text: '\uf0c8',
+      offsetY: offsetY,
+      font: `normal ${POI_ICON_HEIGHT}px MunimapFont`,
+      fill: new Fill({
+        color: '#666',
+      }),
+    }),
+    zIndex: 5,
+  });
+  const style = [
+    background,
+    new Style({
+      geometry: CENTER_GEOMETRY_FUNCTION,
+      text: new Text({
+        text: '\uf19d',
+        offsetY: offsetY,
+        font: 'normal 15px MunimapFont',
+        fill: new Fill({
+          color: 'white',
+        }),
+      }),
+      zIndex: 5,
+    }),
+  ];
+  return style;
+};
 
 /**
  * @param {ol.Feature} feature feature
@@ -290,7 +296,7 @@ const defaultStyleFunction = (feature, resolution) => {
  * @return {Style|Array<Style>} style
  */
 const labelFunction = (feature, resolution, lang, showLocationCodes) => {
-  const result = [];
+  let result = [];
   const marked = getMarkerStore().getFeatures().indexOf(feature) >= 0;
   const labelCache = munimap_range.contains(BIG_LABEL_RESOLUTION, resolution)
     ? LABEL_CACHE
@@ -312,32 +318,35 @@ const labelFunction = (feature, resolution, lang, showLocationCodes) => {
 
       if (showLocationCodes) {
         title = /**@type {string}*/ (feature.get('polohKod'));
-        // const purposeTitle = /**@type {string}*/ (feature.get('ucel_nazev'));
-        // if (munimap_utils.isDefAndNotNull(purposeGis) &&
-        //   (purposeGis === munimap.poi.Purpose.ELEVATOR ||
-        //     purposeGis === munimap.poi.Purpose.INFORMATION_POINT)) {
-        //   offset = munimap.poi.style.ICON_HEIGHT - 6;
-        // } else if (jpad.func.isDefAndNotNull(purposeTitle) &&
-        //   (purposeTitle === 'WC' || purposeTitle === 'schodiště')) {
-        //   offset = munimap.poi.style.ICON_HEIGHT - 6;
-        // }
+        const purposeTitle = /**@type {string}*/ (feature.get('ucel_nazev'));
+        if (
+          munimap_utils.isDefAndNotNull(purposeGis) &&
+          (purposeGis === POI_PURPOSE.ELEVATOR ||
+            purposeGis === POI_PURPOSE.INFORMATION_POINT)
+        ) {
+          offset = POI_ICON_HEIGHT - 6;
+        } else if (
+          munimap_utils.isDefAndNotNull(purposeTitle) &&
+          (purposeTitle === 'WC' || purposeTitle === 'schodiště')
+        ) {
+          offset = POI_ICON_HEIGHT - 6;
+        }
       } else {
         title = getDefaultLabel(feature, lang);
       }
       if (title) {
-        // if (munimap_utils.isDefAndNotNull(purposeGis) &&
-        //   purposeGis === munimap.poi.Purpose.CLASSROOM &&
-        //   munimap.range.contains(munimap.poi.style.Resolution.STAIRS,
-        //     resolution)) {
-        //   const labelHeight = munimap.style.getLabelHeight(title, fontSize);
-        //   const overallHeight =
-        //     labelHeight + munimap.poi.style.ICON_HEIGHT + 2;
-        //   const iconOffset =
-        //     -(overallHeight - munimap.poi.style.ICON_HEIGHT) / 2;
-        //   offset = (overallHeight - labelHeight) / 2;
-        //   goog.array.extend(
-        //     result, munimap.room.style.getClassroomIcon(iconOffset));
-        // }
+        if (
+          munimap_utils.isDefAndNotNull(purposeGis) &&
+          purposeGis === POI_PURPOSE.CLASSROOM &&
+          munimap_range.contains(PoiResolutions.STAIRS, resolution)
+        ) {
+          const labelHeight = getLabelHeight(title, fontSize);
+          const overallHeight = labelHeight + POI_ICON_HEIGHT + 2;
+          const iconOffset = -(overallHeight - POI_ICON_HEIGHT) / 2;
+          offset = (overallHeight - labelHeight) / 2;
+          const clasroomIcon = getClassroomIcon(iconOffset);
+          result = [...result, ...clasroomIcon];
+        }
 
         const textStyle = new Style({
           geometry: CENTER_GEOMETRY_FUNCTION,
@@ -364,8 +373,10 @@ const labelFunction = (feature, resolution, lang, showLocationCodes) => {
 
 export {
   FONT_SIZE,
+  STAIRCASE_ICON,
   setCorridorStyle,
   alignRoomTitleToRows,
   defaultStyleFunction,
   labelFunction,
+  getStaircase,
 };

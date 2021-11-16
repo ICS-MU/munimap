@@ -11,6 +11,7 @@ import * as slctr from './redux/selector.js';
 import VectorSource from 'ol/source/Vector';
 import {EsriJSON} from 'ol/format';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
+import {PURPOSE as POI_PURPOSE} from './feature/poi.js';
 import {
   ROOM_TYPES,
   getType as getRoomType,
@@ -22,6 +23,10 @@ import {
   getActiveStore as getActiveDoorStore,
   getStore as getDoorStore,
 } from './source/door.js';
+import {
+  getActiveStore as getActivePoiStore,
+  getStore as getPoiStore,
+} from './source/poi.js';
 import {
   getActiveStore as getActiveRoomStore,
   getDefaultStore as getDefaultRoomStore,
@@ -39,6 +44,7 @@ import {getStore as getFloorStore} from './source/floor.js';
 import {getType as getFloorType} from './feature/floor.js';
 import {getGeometryCenter} from './utils/geom.js';
 import {getNotYetAddedFeatures} from './utils/store.js';
+import {getType as getPoiType} from './feature/poi.js';
 import {getStore as getUnitStore} from './source/unit.js';
 
 /**
@@ -916,6 +922,50 @@ const loadActiveDoors = async (
   }
 };
 
+/**
+ * @param {LoadActiveOptions} options options
+ * @param {ol.extent.Extent} extent extent
+ * @param {number} resolution resolution
+ * @param {ol.proj.Projection} projection projection
+ */
+const loadActivePois = async (
+  {store, callback},
+  extent,
+  resolution,
+  projection
+) => {
+  const activeFloorCodes = slctr.getActiveFloorCodes(store.getState());
+
+  const entrances = [
+    POI_PURPOSE.BUILDING_ENTRANCE,
+    POI_PURPOSE.BUILDING_COMPLEX_ENTRANCE,
+    POI_PURPOSE.COMPLEX_ENTRANCE,
+  ];
+  let where = `typ IN ('${entrances.join("', '")}')`;
+  if (activeFloorCodes.length > 0) {
+    const conditions = [];
+    activeFloorCodes.forEach((floor) => {
+      conditions.push(`polohKodPodlazi LIKE '${floor}%'`);
+    });
+    where += ' OR ' + conditions.join(' OR ');
+  }
+  where = '(' + where + ') AND volitelny = 0';
+  const opts = {
+    type: getPoiType(),
+    source: getPoiStore(),
+    where: where,
+    method: 'POST',
+  };
+  const pois = await featuresForMap(opts, extent, resolution, projection);
+  const activeStore = getActivePoiStore();
+  const poisToAdd = getNotYetAddedFeatures(activeStore, pois);
+  activeStore.addFeatures(poisToAdd);
+
+  if (callback) {
+    callback(actions.pois_loaded);
+  }
+};
+
 export {
   buildingFeaturesForMap,
   buildingLoadProcessor,
@@ -927,4 +977,5 @@ export {
   loadDefaultRooms,
   loadActiveRooms,
   loadActiveDoors,
+  loadActivePois,
 };

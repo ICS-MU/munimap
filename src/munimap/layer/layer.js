@@ -5,6 +5,7 @@
 import * as munimap_layer_building from './building.js';
 import * as munimap_layer_complex from './complex.js';
 import {createActive as createActiveDoorLayer} from './door.js';
+import {createActive as createActivePoiLayer} from './poi.js';
 import {
   createActive as createActiveRoomLayer,
   createLabel as createRoomLabelLayer,
@@ -46,25 +47,6 @@ const IS_CLICKABLE = 'isFeatureClickable';
 const TYPE = 'type';
 
 /**
- * @param {Array<ol.layer.Vector>} layers layers
- * @protected
- */
-const setDefaultLayersProps = (layers) => {
-  layers.forEach((layer) => {
-    const layerId = layer.get('id');
-
-    switch (layerId) {
-      // case munimap.poi.ACTIVE_LAYER_ID:
-      //   var poiStore = munimap.poi.createActiveStore(map);
-      //   layer.setSource(poiStore);
-      //   break;
-      default:
-        break;
-    }
-  });
-};
-
-/**
  * @param {string} lang lang
  * @param {boolean} showLabels whether show labels for MU objects
  * @param {boolean} showLocationCodes whether to show only location codes
@@ -77,7 +59,7 @@ const getDefaultLayers = (lang, showLabels, showLocationCodes) => {
   const rooms = createRoomLayer();
   const activeRooms = createActiveRoomLayer();
   const doors = createActiveDoorLayer();
-  // const poi = munimap.poi.layer.create();
+  const poi = createActivePoiLayer();
   const roomLabels = createRoomLabelLayer(showLocationCodes);
   const buildingLabels = munimap_layer_building.createLabel(lang, showLabels);
   result.push(
@@ -85,7 +67,7 @@ const getDefaultLayers = (lang, showLabels, showLocationCodes) => {
     rooms,
     activeRooms,
     doors,
-    // poi,
+    poi,
     roomLabels,
     buildingLabels
   );
@@ -94,8 +76,6 @@ const getDefaultLayers = (lang, showLabels, showLocationCodes) => {
   }
   const complexes = munimap_layer_complex.create();
   result.push(complexes);
-
-  setDefaultLayersProps(result);
   return result;
 };
 

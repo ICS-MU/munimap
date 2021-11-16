@@ -272,6 +272,13 @@ const createReducer = (initialState) => {
           },
         };
 
+      //POIS_LOADED
+      case actions.POIS_LOADED:
+        return {
+          ...state,
+          poisTimestamp: Date.now(),
+        };
+
       //DEAFULT
       default:
         return state;

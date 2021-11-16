@@ -14,16 +14,25 @@ import {BUILDING_RESOLUTION, ROOM_RESOLUTION} from '../cluster/cluster.js';
 import {ENABLE_SELECTOR_LOGS} from '../conf.js';
 import {GeoJSON} from 'ol/format';
 import {MultiPolygon, Polygon} from 'ol/geom';
+import {PURPOSE as POI_PURPOSE} from '../feature/poi.js';
+import {Resolutions as PoiResolutions} from '../style/poi.js';
 import {REQUIRED_CUSTOM_MARKERS, REQUIRED_MARKER_LABEL} from '../create.js';
+import {
+  STAIRCASE_ICON,
+  defaultStyleFunction as defaultRoomStyleFunction,
+  getStaircase,
+  labelFunction as roomLabelStyleFunction,
+} from '../style/room.js';
+import {
+  activeStyleFunction as activePoiStyleFunction,
+  defaultStyleFunction as defaultPoiStyleFunction,
+  outdoorStyleFunction as outdoorPoiStyleFunction,
+} from '../style/poi.js';
 import {styleFunction as clusterStyleFunction} from '../style//cluster.js';
 import {styleFunction as complexStyleFunction} from '../style/complex.js';
 import {defaults as control_defaults} from 'ol/control';
 import {createLayer as createBasemapLayer} from '../layer/basemap.js';
 import {createSelector} from 'reselect';
-import {
-  defaultStyleFunction as defaultRoomStyleFunction,
-  labelFunction as roomLabelStyleFunction,
-} from '../style/room.js';
 import {
   ofFeatures as extentOfFeatures,
   getBufferValue,
@@ -1022,7 +1031,6 @@ export const getSelectedLocationCode = createSelector(
 
     if (!selectedFeature || !selectedInExtent) {
       if (inFloorResolutionRange) {
-        //poi is not implemented yet
         let lc;
         if (featureForComputingSelected) {
           if (isBuilding(featureForComputingSelected)) {
@@ -1035,9 +1043,9 @@ export const getSelectedLocationCode = createSelector(
               featureForComputingSelected.get('polohKod')
             );
             lc = locCode.substr(0, 5);
-          } /*else {
+          } else {
             lc = featureForComputingSelected.get('polohKodPodlazi') || null;
-          }*/
+          }
         }
 
         if (activeFloorCodes.length > 0 && lc) {
@@ -1264,7 +1272,14 @@ export const getStyleForActiveRoomLayer = createSelector(
     }
 
     const styleFce = (feature, res) => {
-      return defaultRoomStyleFunction(feature, res);
+      let result = defaultRoomStyleFunction(feature, res);
+      if (
+        munimap_range.contains(PoiResolutions.STAIRS, res) &&
+        result === getStaircase()
+      ) {
+        result = [...result, ...STAIRCASE_ICON];
+      }
+      return result;
     };
     return styleFce;
   }
@@ -1383,5 +1398,54 @@ export const getClusterResolution = createSelector(
       clusterResolution = ROOM_RESOLUTION;
     }
     return clusterResolution;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    StyleFunction,
+ *    function(Array<string>, string): StyleFunction
+ * >}
+ */
+export const getStyleForActivePoiLayer = createSelector(
+  [getActiveFloorCodes, getSelectedFeature],
+  (activeFloorCodes, selectedFeature) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('STYLE - computing style for pois');
+    }
+
+    const styleFce = (feature, res) => {
+      const locCode = /**@type {string}*/ (feature.get('polohKodPodlazi'));
+      if (locCode && activeFloorCodes.includes(locCode)) {
+        return activePoiStyleFunction(feature, res);
+      }
+
+      const poiType = feature.get('typ');
+      const entranceTypes = [
+        POI_PURPOSE.BUILDING_ENTRANCE,
+        POI_PURPOSE.BUILDING_COMPLEX_ENTRANCE,
+      ];
+      if (entranceTypes.includes(poiType)) {
+        const defaultFloor = feature.get('vychoziPodlazi');
+        munimap_assert.assertNumber(defaultFloor);
+        const locCode = /**@type {string}*/ (feature.get('polohKodPodlazi'));
+        if (
+          defaultFloor === 1 &&
+          activeFloorCodes.every(
+            (floor) => !locCode.startsWith(floor.substr(0, 5))
+          )
+        ) {
+          return defaultPoiStyleFunction(feature, res);
+        }
+      }
+
+      entranceTypes.push(POI_PURPOSE.COMPLEX_ENTRANCE);
+      if (entranceTypes.includes(poiType)) {
+        return outdoorPoiStyleFunction(feature, res, selectedFeature);
+      }
+      return null;
+    };
+    return styleFce;
   }
 );
