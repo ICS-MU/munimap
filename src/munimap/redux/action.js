@@ -16,6 +16,7 @@ import {
  * @typedef {import("ol/size").Size} ol.Size
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
  * @typedef {import("../matomo/matomo.js").Options} MatomoOptions
+ * @typedef {import("../conf.js").ErrorMessageState} ErrorMessageState
  */
 
 /**
@@ -102,6 +103,30 @@ export const NEW_FLOOR_SELECTED = 'NEW_FLOOR_SELECTED';
  * @const
  */
 export const FLOOR_SELECT_CHANGED = 'FLOOR_SELECT_CHANGED';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const TARGET_WHEELED = 'TARGET_WHEELED';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const TARGET_TOUCHMOVED = 'TARGET_TOUCHMOVED';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const TARGET_BLURRED = 'TARGET_BLURRED';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const TARGET_FOCUSED = 'TARGET_FOCUSED';
 
 /**
  * @param {Array<ol.Feature|string>} markers markers
@@ -254,5 +279,49 @@ export function floor_select_changed(newValue) {
   return {
     type: FLOOR_SELECT_CHANGED,
     payload: newValue,
+  };
+}
+
+/**
+ * @param {ErrorMessageState} errorMessageProps error message props
+ * @return {redux.AnyAction} action
+ */
+export function target_touchmoved(errorMessageProps) {
+  return {
+    type: TARGET_TOUCHMOVED,
+    payload: errorMessageProps,
+  };
+}
+
+/**
+ * @param {ErrorMessageState} errorMessageProps error message props
+ * @return {redux.AnyAction} action
+ */
+export function target_wheeled(errorMessageProps) {
+  return {
+    type: TARGET_WHEELED,
+    payload: errorMessageProps,
+  };
+}
+
+/**
+ * @param {ErrorMessageState} errorMessageProps error message props
+ * @return {redux.AnyAction} action
+ */
+export function target_focused(errorMessageProps) {
+  return {
+    type: TARGET_FOCUSED,
+    payload: errorMessageProps,
+  };
+}
+
+/**
+ * @param {ErrorMessageState} errorMessageProps error message props
+ * @return {redux.AnyAction} action
+ */
+export function target_blurred(errorMessageProps) {
+  return {
+    type: TARGET_BLURRED,
+    payload: errorMessageProps,
   };
 }

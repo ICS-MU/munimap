@@ -255,6 +255,23 @@ const createReducer = (initialState) => {
         }
         return newState;
 
+      //TARGET_WHEELED
+      //TARGET_TOUCHMOVED
+      //TARGET_BLURRED
+      //TARGET_FOCUSED
+      case actions.TARGET_WHEELED:
+      case actions.TARGET_TOUCHMOVED:
+      case actions.TARGET_BLURRED:
+      case actions.TARGET_FOCUSED:
+        return {
+          ...state,
+          errorMessage: {
+            ...state.errorMessage,
+            render: action.payload.render,
+            withMessage: action.payload.withMessage,
+          },
+        };
+
       //DEAFULT
       default:
         return state;

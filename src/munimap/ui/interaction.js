@@ -1,11 +1,13 @@
 /**
  * @module ui/interaction
  */
+import * as actions from '../redux/action.js';
 import * as munimap_lang from '../lang/lang.js';
 
 /**
  * @typedef {import("ol/Map").default} ol.Map
  * @typedef {import("ol/Feature").default} ol.Feature
+ * @typedef {import("../view/view.js").ErrorMessageOptions} ErrorMessageOptions
  */
 
 /**
@@ -16,197 +18,163 @@ import * as munimap_lang from '../lang/lang.js';
  */
 
 /**
- * @param {HTMLCanvasElement|null} canvas canvas
- * @param {string} message msg
- * @param {string} lang language abbr
+ * @param {HTMLDivElement} munimapEl munimapEl
+ * @return {string} id
  */
-const createCanvas = (canvas, message, lang) => {
-  const dpr = window.devicePixelRatio || 1;
-  const ctx = canvas.getContext('2d');
+const getId = (munimapEl) => {
+  return `munimap-error_${munimapEl.parentElement.id.toString()}`;
+};
 
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#fff';
-  ctx.textAlign = 'center';
-  let lineHeight;
+/**
+ * @param {HTMLDivElement} munimapEl target element
+ * @return {HTMLDivElement} error element
+ */
+const getErrorEl = (munimapEl) => {
+  return /** @type {HTMLDivElement}*/ (
+    document.getElementById(getId(munimapEl))
+  );
+};
+
+/**
+ * @param {HTMLDivElement} munimapEl target element (e.g. munimapEl)
+ * @return {HTMLDivElement} error element
+ */
+const createErrorEl = (munimapEl) => {
+  const errEl = document.createElement('div');
+  errEl.id = getId(munimapEl);
+  errEl.className = 'munimap-error';
+  return errEl;
+};
+
+/**
+ * @param {HTMLDivElement} munimapEl target element (e.g. munimapEl)
+ */
+const removeErrorEl = (munimapEl) => {
+  const errEl = getErrorEl(munimapEl);
+  if (errEl) {
+    errEl.remove();
+  }
+};
+
+const getErrorMessageStyle = (errEl) => {
+  const dpr = window.devicePixelRatio || 1;
   let size;
-  if (canvas.offsetWidth < 500) {
+  let lineHeight;
+  if (errEl.offsetWidth < 500) {
     size = 22 * dpr;
-    ctx.font = size + 'px Arial';
     lineHeight = 26 * dpr;
   } else {
     size = 30 * dpr;
-    ctx.font = size + 'px Arial';
     lineHeight = 35 * dpr;
   }
-
-  const text = munimap_lang.getMsg(message, lang);
-  const lines = text.split('\n');
-  lines.forEach((el, i) => {
-    ctx.fillText(el, canvas.width / 2, canvas.height / 2 + i * lineHeight);
-  });
+  return {size, lineHeight};
 };
 
 /**
- * @param {Element} target target element (e.g. munimapEl)
- * @return {Element} drag element
- */
-const createDragEl = (target) => {
-  const dragEl = document.createElement('div');
-  dragEl.id = `munimap-error_${target.parentElement.id.toString()}`;
-  dragEl.className = 'munimap-error';
-  target.appendChild(dragEl);
-  return dragEl;
-};
-
-/**
- * @param {Element} target target element (e.g. munimapEl)
- * @param {Element} infoEl info element
- * @param {InvalidCodeOptions} options opts
- * @return {Function} createError function
- */
-const initInvalidCodesInfo = (target, infoEl, options) => {
-  const {map, invalidCodes, lang} = options;
-  target.setAttribute('tabindex', '0');
-
-  window.document.addEventListener('blur', activeChange, true);
-  window.document.addEventListener('focus', activeChange, true);
-
-  createDragEl(target);
-  infoEl.classList.add('munimap-info-hide');
-
-  function activeChange(e) {
-    const dragEl = document.getElementById(
-      `munimap-error_${target.parentElement.id.toString()}`
-    );
-    const infoEl = target.getElementsByClassName('ol-popup munimap-info')[0];
-    if (target.contains(window.document.activeElement)) {
-      //user clicked on map (focus map div)
-      if (dragEl) {
-        dragEl.remove();
-        infoEl.classList.remove('munimap-info-hide');
-        map.render(); //remove error message from canvas
-      }
-    } else if (
-      !target.contains(window.document.activeElement) &&
-      dragEl === null
-    ) {
-      //message from canvas is removed and user blur map div
-      createDragEl(target);
-    } else {
-      dragEl.remove();
-      infoEl.classList.remove('munimap-info-hide');
-      createDragEl(target);
-    }
-  }
-
-  function createError() {
-    const canvas = /**@type {HTMLCanvasElement}*/ (
-      target.getElementsByTagName('CANVAS')[0]
-    );
-    const dragEl = document.getElementById(
-      `munimap-error_${target.parentElement.id.toString()}`
-    );
-
-    if (dragEl === null || canvas === undefined) {
-      return;
-    }
-    createCanvas(
-      canvas,
-      munimap_lang.getMsg(munimap_lang.Translations.ACTIVATE_MAP, lang) +
-        '\n' +
-        munimap_lang.getMsg(munimap_lang.Translations.NOT_FOUND, lang) +
-        ':\n' +
-        invalidCodes.join(', '),
-      lang
-    );
-  }
-
-  return createError;
-};
-
-/**
- * @param {ol.Map} map map
- * @param {Element} target target
+ * @param {Array<string>} invalidCodes invalid codes
+ * @param {boolean} simpleScroll simple scroll
  * @param {string} lang language
- * @return {Function} fc
+ * @return {string|undefined} message
  */
-const limitScroll = (map, target, lang) => {
-  // let dragEl = document.createElement('div');
-  // dragEl.className = 'munimap-drag';
-
-  createDragEl(target);
-
-  let hideError;
-  let error = false;
-
-  target.setAttribute('tabindex', '0');
-  // target.appendChild(dragEl);
-
-  function createError() {
-    const canvas = /**@type {HTMLCanvasElement}*/ (
-      target.getElementsByTagName('CANVAS')[0]
-    );
-    const dragEl = document.getElementById(
-      `munimap-error_${target.parentElement.id.toString()}`
-    );
-    if (dragEl === null || canvas === undefined) {
-      return;
-    }
-    createCanvas(
-      canvas,
-      munimap_lang.getMsg(munimap_lang.Translations.ACTIVATE_MAP, lang),
-      lang
-    );
+const createInnerText = (invalidCodes, simpleScroll, lang) => {
+  const hasInvalidCodes = invalidCodes && invalidCodes.length > 0;
+  const shouldBlockMap = !simpleScroll;
+  let msg;
+  if (hasInvalidCodes) {
+    msg =
+      munimap_lang.getMsg(munimap_lang.Translations.ACTIVATE_MAP, lang) +
+      '\n' +
+      munimap_lang.getMsg(munimap_lang.Translations.NOT_FOUND, lang) +
+      ':\n' +
+      invalidCodes.join(', ');
+  } else if (shouldBlockMap) {
+    msg = munimap_lang.getMsg(munimap_lang.Translations.ACTIVATE_MAP, lang);
   }
-
-  function hide() {
-    return setTimeout(() => {
-      error = false;
-      map.render();
-    }, 2000);
-  }
-
-  function onInteraction(e) {
-    if (!error) {
-      createError();
-      hideError = hide();
-    } else {
-      clearTimeout(hideError);
-      hideError = hide();
-    }
-    error = true;
-  }
-
-  function activeChange(e) {
-    const dragEl = document.getElementById(
-      `munimap-error_${target.parentElement.id.toString()}`
-    );
-    if (target.contains(window.document.activeElement)) {
-      dragEl.remove();
-      // dragEl = null;
-      error = false;
-      map.render();
-    } else if (
-      !target.contains(window.document.activeElement) &&
-      dragEl === null
-    ) {
-      createDragEl(target);
-    }
-  }
-
-  window.document.addEventListener('blur', activeChange, true);
-  window.document.addEventListener('focus', activeChange, true);
-
-  target.addEventListener('wheel', onInteraction, true);
-  target.addEventListener('touchmove', onInteraction, true);
-
-  function onPostCompose(e) {
-    clearTimeout(hideError);
-    error = false;
-  }
-
-  return onPostCompose;
+  return msg;
 };
 
-export {initInvalidCodesInfo, limitScroll};
+/**
+ * @param {ErrorMessageOptions} options options
+ */
+const addEmptyErrorEl = (options) => {
+  const {munimapEl, simpleScroll, invalidCodes, store} = options;
+  const hasInvalidCodes = invalidCodes && invalidCodes.length > 0;
+  const shouldBlockMap = !simpleScroll;
+  let errEl = getErrorEl(munimapEl);
+
+  if (errEl !== null) {
+    return;
+  }
+
+  errEl = createErrorEl(munimapEl);
+  munimapEl.setAttribute('tabindex', '0');
+  munimapEl.appendChild(errEl);
+
+  errEl.addEventListener(
+    'click',
+    (e) => {
+      munimapEl.focus();
+      store.dispatch(
+        actions.target_focused({render: false, withMessage: false})
+      );
+    },
+    false
+  );
+  munimapEl.addEventListener('blur', () => {
+    munimapEl.blur();
+    store.dispatch(
+      actions.target_blurred({
+        render: hasInvalidCodes && !shouldBlockMap ? false : true,
+        withMessage: false,
+      })
+    );
+  });
+
+  if (shouldBlockMap) {
+    munimapEl.addEventListener('wheel', () =>
+      store.dispatch(
+        actions.target_wheeled({
+          render: document.activeElement === munimapEl ? false : true,
+          withMessage: true,
+        })
+      )
+    );
+    munimapEl.addEventListener('touchmove', () =>
+      store.dispatch(
+        actions.target_touchmoved({
+          render: document.activeElement === munimapEl ? false : true,
+          withMessage: true,
+        })
+      )
+    );
+  }
+};
+
+/**
+ * @param {ErrorMessageOptions} options options
+ */
+const prependMessageToErrorEl = (options) => {
+  const {invalidCodes, simpleScroll, infoEl, lang, munimapEl} = options;
+  const hasInvalidCodes = invalidCodes && invalidCodes.length > 0;
+
+  const errEl = getErrorEl(munimapEl);
+  if (errEl === null || errEl.children.length > 0) {
+    return;
+  }
+
+  const msg = createInnerText(invalidCodes, simpleScroll, lang);
+  if (msg) {
+    if (hasInvalidCodes) {
+      infoEl.classList.add('munimap-info-hide');
+    }
+    const msgEl = document.createElement('div');
+    const {size, lineHeight} = getErrorMessageStyle(errEl);
+    msgEl.innerText = msg;
+    msgEl.style.lineHeight = `${lineHeight}px`;
+    msgEl.style.fontSize = `${size}px`;
+    errEl.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+    errEl.appendChild(msgEl);
+  }
+};
+
+export {addEmptyErrorEl, prependMessageToErrorEl, removeErrorEl};

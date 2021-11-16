@@ -241,6 +241,16 @@
   touch-action: auto;
 }
 
+.munimap-error > div {
+  text-align: center;
+  color: #fff;
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
 .munimap-info-bubble {
   left: auto;
   right: auto;

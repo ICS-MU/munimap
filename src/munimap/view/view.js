@@ -9,6 +9,11 @@ import TileLayer from 'ol/layer/Tile';
 import createControls from '../control/mapcontrolsview.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {
+  addEmptyErrorEl,
+  prependMessageToErrorEl,
+  removeErrorEl,
+} from '../ui/interaction.js';
+import {
   createActiveStore as createActiveDoorStore,
   createStore as createDoorStore,
 } from '../source/door.js';
@@ -61,6 +66,7 @@ import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
  * @typedef {import("../feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("redux").Store} redux.Store
  * @typedef {import("../conf.js").State} State
+ * @typedef {import("../conf.js").ErrorMessageState} ErrorMessageState
  * @typedef {import("../create").MapListenersOptions} MapListenersOptions
  * @typedef {import("../utils/range.js").RangeInterface} RangeInterface
  */
@@ -77,6 +83,17 @@ import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
  * @property {boolean} [pubTran] public transportation
  * @property {ol.source.Vector} [markerSource] marker source
  * @property {RangeInterface} clusterResolution cluster resolution
+ */
+
+/**
+ * @typedef {Object} ErrorMessageOptions
+ * @property {HTMLDivElement} munimapEl munimapEl
+ * @property {HTMLDivElement} infoEl infoEl
+ * @property {string} lang lang
+ * @property {boolean} simpleScroll simple scroll
+ * @property {Array<string>} invalidCodes invalid codes
+ * @property {redux.Store} store store
+ * @property {ErrorMessageState} errorMessage error message state
  */
 
 /**
@@ -205,18 +222,9 @@ const addLayers = (map, options) => {
  * @param {MapListenersOptions} options opts
  */
 const attachMapListeners = (map, options) => {
-  const {store, view, createInvalidCodesInfo, createLimitScrollInfo} = options;
-
-  map.on('rendercomplete', () => {
-    if (createInvalidCodesInfo) {
-      createInvalidCodesInfo();
-    }
-  });
+  const {store, view} = options;
 
   map.once('rendercomplete', () => {
-    if (createLimitScrollInfo) {
-      createLimitScrollInfo();
-    }
     store.dispatch(actions.map_initialized());
   });
 
@@ -350,6 +358,27 @@ const refreshInfoElement = (map, infoEl, reduxStore) => {
   refreshElementPosition(map, infoEl, state);
 };
 
+/**
+ * @param {ErrorMessageOptions} options options
+ */
+const refreshErrorMessage = (options) => {
+  const {invalidCodes, simpleScroll, errorMessage, munimapEl} = options;
+  const {render, withMessage} = errorMessage;
+  const hasInvalidCodes = invalidCodes && invalidCodes.length > 0;
+  const shouldBlockMap = !simpleScroll;
+
+  if (hasInvalidCodes || shouldBlockMap) {
+    if (render === false) {
+      removeErrorEl(munimapEl);
+    } else {
+      addEmptyErrorEl(options);
+      if (withMessage === true || (hasInvalidCodes && withMessage === null)) {
+        prependMessageToErrorEl(options);
+      }
+    }
+  }
+};
+
 export {
   attachMapListeners,
   ensureBaseMap,
@@ -361,4 +390,5 @@ export {
   ensureClusterUpdate,
   initFloorSelect,
   refreshInfoElement,
+  refreshErrorMessage,
 };

@@ -60,8 +60,6 @@ import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
  * @typedef {Object} MapListenersOptions
  * @property {redux.Store} store store
  * @property {ol.View} view view
- * @property {Function} createInvalidCodesInfo create invalid codes info
- * @property {Function} createLimitScrollInfo create limit scroll info
  */
 
 /**
@@ -259,14 +257,18 @@ export default (options) => {
     const render = () => {
       const state = /**@type {State}*/ (store.getState());
 
-      const target = document.getElementById(options.target);
+      const target = /** @type {HTMLDivElement}*/ (
+        document.getElementById(options.target)
+      );
 
-      let munimapEl = target.getElementsByClassName('munimap')[0];
+      let munimapEl = /**@type {HTMLDivElement}*/ (
+        target.getElementsByClassName('munimap')[0]
+      );
       let infoEl = /**@type {HTMLDivElement}*/ (
         target.getElementsByClassName('ol-popup munimap-info')[0]
       );
       if (munimapEl === undefined) {
-        munimapEl = document.createElement('div');
+        munimapEl = /**@type {HTMLDivElement}*/ (document.createElement('div'));
         infoEl = /**@type {HTMLDivElement}*/ (document.createElement('div'));
         munimapEl.className = 'munimap';
         infoEl.className = 'ol-popup munimap-info';
@@ -288,14 +290,12 @@ export default (options) => {
         const invalidCodes = slctr.getInvalidCodes(state);
         const basemapLayer = slctr.getBasemapLayer(state);
         if (map === undefined) {
-          let createInvalidCodesInfo;
-          let createLimitScrollInfo;
           const markers = slctr.getInitMarkers(state);
           const view = slctr.calculateView(state);
           const defaultControls = slctr.getDefaultControls(state);
           map = new Map({
             controls: defaultControls,
-            target: /**@type {HTMLElement}*/ (munimapEl),
+            target: munimapEl,
             layers: [basemapLayer],
             view,
           });
@@ -308,29 +308,7 @@ export default (options) => {
           CREATED_MAPS[state.requiredOpts.target] = map;
 
           munimap_view.addCustomControls(map, store, state.requiredOpts);
-
-          if (state.requiredOpts.simpleScroll) {
-            createLimitScrollInfo = munimap_interaction.limitScroll(
-              map,
-              munimapEl,
-              state.requiredOpts.lang
-            );
-          }
-          if (invalidCodes.length > 0) {
-            const opts = {map, invalidCodes, lang: state.requiredOpts.lang};
-            createInvalidCodesInfo = munimap_interaction.initInvalidCodesInfo(
-              munimapEl,
-              infoEl,
-              opts
-            );
-          }
-
-          munimap_view.attachMapListeners(map, {
-            store,
-            view,
-            createInvalidCodesInfo,
-            createLimitScrollInfo,
-          });
+          munimap_view.attachMapListeners(map, {store, view});
 
           munimap_view.addLayers(map, {
             markers,
@@ -346,6 +324,16 @@ export default (options) => {
           });
           munimap_view.initFloorSelect(infoEl);
         }
+
+        munimap_view.refreshErrorMessage({
+          invalidCodes,
+          lang: state.requiredOpts.lang,
+          simpleScroll: state.requiredOpts.simpleScroll,
+          munimapEl,
+          infoEl,
+          errorMessage: state.errorMessage,
+          store,
+        });
 
         munimap_view.ensureClusterUpdate(state, map);
         munimap_view.ensureBaseMap(basemapLayer, map);

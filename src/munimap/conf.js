@@ -14,7 +14,7 @@
  * Whether to log selectors to console.
  * @type {boolean}
  */
-export const ENABLE_SELECTOR_LOGS = true;
+export const ENABLE_SELECTOR_LOGS = false;
 
 /**
  * @type {string}
@@ -56,6 +56,12 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  */
 
 /**
+ * @typedef {Object} ErrorMessageState
+ * @property {boolean} render whether to rende error div
+ * @property {boolean} withMessage whether to render with message
+ */
+
+/**
  * @typedef {Object} State
  * @property {boolean} mapInitialized whther is map initialized
  * @property {ol.size.Size} mapSize map size
@@ -72,6 +78,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {number} defaultRoomsTimestamp default rooms timestamp
  * @property {number} activeRoomsTimestamp active rooms timestamp
  * @property {number} doorsTimestamp doors timestamp
+ * @property {ErrorMessageState} errorMessage error message
  */
 
 /**
@@ -114,4 +121,8 @@ export const INITIAL_STATE = {
   defaultRoomsTimestamp: null,
   activeRoomsTimestamp: null,
   doorsTimestamp: null,
+  errorMessage: {
+    render: null,
+    withMessage: null,
+  },
 };
