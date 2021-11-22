@@ -38,7 +38,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
 
 /**
  * @typedef {Object} RequiredOptions
- * @property {string} target target
+ * @property {string} targetId target id
  * @property {number} [zoom] zoom
  * @property {ol.coordinate.Coordinate} [center] center
  * @property {Array<string>|string} [zoomTo] zoom to
@@ -100,7 +100,7 @@ export const INITIAL_STATE = {
   resolution: null,
   rotation: 0,
   requiredOpts: {
-    target: null,
+    targetId: null,
     markerIds: [],
     lang: 'cs',
     baseMap: 'arcgis-bw',

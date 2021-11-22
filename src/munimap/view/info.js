@@ -7,6 +7,7 @@ import * as munimap_lang from '../lang/lang.js';
 import * as munimap_utils from '../utils/utils.js';
 import * as slctr from '../redux/selector.js';
 import {POPUP_TALE_INDENT, getInfoBoxPosition} from '../ui/info.js';
+import {TARGET_ELEMENTS_STORE} from '../create.js';
 import {findSelectedFloorItem, getLabel, getLabelAbbr} from '../ui/info.js';
 import {
   sort as floorSortFn,
@@ -218,8 +219,14 @@ const refreshElementVisibility = (infoEl, state) => {
   infoEl.style.display = slctr.showInfoEl(state) ? '' : 'none';
 };
 
-const setBuildingTitle = (target, {title, complexTitle}) => {
-  const targetEl = document.getElementById(target);
+/**
+ * @param {string} targetId target id
+ * @param {Object} options options
+ * @param {string} options.title title
+ * @param {string} options.complexTitle complex title
+ */
+const setBuildingTitle = (targetId, {title, complexTitle}) => {
+  const targetEl = TARGET_ELEMENTS_STORE[targetId];
   const infoEl = targetEl.getElementsByClassName('ol-popup munimap-info')[0];
   const complexEl = infoEl.getElementsByClassName('munimap-complex')[0];
   const bel = infoEl.getElementsByClassName('munimap-building')[0];

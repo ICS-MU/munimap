@@ -189,7 +189,7 @@ const createReducer = (initialState) => {
             newState.selectedFeature = locationCode;
 
             const titleOpts = slctr.getBuildingTitle(newState);
-            setBuildingTitle(state.requiredOpts.target, titleOpts);
+            setBuildingTitle(state.requiredOpts.targetId, titleOpts);
 
             const where = `polohKod LIKE '${locationCode.substring(0, 5)}%'`;
             loadFloors(where).then((floors) =>
@@ -202,7 +202,7 @@ const createReducer = (initialState) => {
             newState.selectedFeature = null;
 
             const titleOpts = slctr.getBuildingTitle(newState);
-            setBuildingTitle(state.requiredOpts.target, titleOpts);
+            setBuildingTitle(state.requiredOpts.targetId, titleOpts);
 
             clearFloorBasedStores();
           }

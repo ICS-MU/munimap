@@ -17,6 +17,7 @@ import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
 import {isCtgUid as isOptPoiCtgUid} from './feature/optpoi.js';
 import {isCode as isRoomCode} from './feature/room.js';
 import {markerLabel as optPoiMarkerLabel} from './style/optpoi.js';
+import {v4 as uuidv4} from 'uuid';
 
 /**
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
@@ -34,7 +35,7 @@ import {markerLabel as optPoiMarkerLabel} from './style/optpoi.js';
 
 /**
  * @typedef {Object} Options
- * @property {string} target target
+ * @property {string|HTMLElement} target target
  * @property {number} [zoom] zoom
  * @property {ol.coordinate.Coordinate} [center] center
  * @property {Array<string>|string} [zoomTo] zoom to
@@ -51,6 +52,14 @@ import {markerLabel as optPoiMarkerLabel} from './style/optpoi.js';
  * @property {boolean} [pubTran] public transportation stops
  * @property {Array<string>} [poiFilter] poi filter
  * @property {Array<string>} [markerFilter] marker filter
+ */
+
+/**
+ * @typedef {Object} LoadOrDecorateMarkersOptions
+ * @property {Array<string>} [poiFilter] poi filter
+ * @property {Array<string>} [markerFilter] marker filter
+ * @property {string} [lang] language
+ * @property {string} targetId target
  */
 
 /**
@@ -84,9 +93,14 @@ export const MARKER_LABEL_STORE = {};
 export const CREATED_MAPS = {};
 
 /**
+ * @type {Object<string, HTMLElement>}
+ */
+export const TARGET_ELEMENTS_STORE = {};
+
+/**
  * Load features by location codes or decorate custom markers.
  * @param {Array<string>|Array<Feature>|undefined} featuresLike featuresLike
- * @param {Options} options options
+ * @param {LoadOrDecorateMarkersOptions} options options
  * @return {Promise<Array<Feature|string>>} promise resolving with markers
  */
 export const loadOrDecorateMarkers = async (featuresLike, options) => {
@@ -141,7 +155,7 @@ export const loadOrDecorateMarkers = async (featuresLike, options) => {
               roomCodes = rooms.map((f) => f.get('polohKodLokace'));
 
               if (ctgIds.length === 1) {
-                MARKER_LABEL_STORE[`OPT_POI_MARKER_LABEL_${options.target}`] =
+                MARKER_LABEL_STORE[`OPT_POI_MARKER_LABEL_${options.targetId}`] =
                   optPoiMarkerLabel(ctgIds[0], roomCodes, lang);
               }
 
@@ -205,23 +219,39 @@ const assertOptions = (options) => {
 };
 
 /**
- *
+ * @param {Options} options options
+ * @return {string} id in store
+ */
+const addTargetElementToStore = (options) => {
+  const targetEl = munimap_utils.isElement(options.target)
+    ? /** @type {HTMLElement}*/ (options.target)
+    : document.getElementById(/** @type {string}*/ (options.target));
+  const targetId =
+    targetEl.id && targetEl.id.length > 0 ? targetEl.id : uuidv4();
+
+  TARGET_ELEMENTS_STORE[targetId] = targetEl;
+
+  return targetId;
+};
+
+/**
  * @param {Options} options Options
+ * @param {string} targetId id in store
  * @return {State} State
  */
-const getInitialState = (options) => {
+const getInitialState = (options, targetId) => {
   const initialState = {
     ...INITIAL_STATE,
     requiredOpts: {
       ...INITIAL_STATE.requiredOpts,
-      target: options.target,
+      targetId: targetId,
     },
   };
   if (options.markers !== undefined) {
     const reqMarkers = /** @type {Array<string>}*/ ([]);
     options.markers.forEach((marker, idx) => {
       if (marker instanceof Feature) {
-        const id = `CUSTOM_MARKER_${options.target}_${idx}`;
+        const id = `CUSTOM_MARKER_${targetId}_${idx}`;
         REQUIRED_CUSTOM_MARKERS[id] = marker;
         reqMarkers.push(id);
       } else {
@@ -259,7 +289,7 @@ const getInitialState = (options) => {
     initialState.requiredOpts.simpleScroll = options.simpleScroll;
   }
   if (options.markerLabel !== undefined) {
-    const id = `REQUIRED_MARKER_LABEL_${options.target}`;
+    const id = `REQUIRED_MARKER_LABEL_${targetId}`;
     MARKER_LABEL_STORE[id] = options.markerLabel;
     initialState.requiredOpts.markerLabelId = id;
   }
@@ -290,7 +320,8 @@ export default (options) => {
   return new Promise((resolve, reject) => {
     assertOptions(options);
 
-    const initialState = getInitialState(options);
+    const targetId = addTargetElementToStore(options);
+    const initialState = getInitialState(options, targetId);
     const store = createStore(initialState);
 
     munimap_view.createFeatureStores(store);
@@ -311,15 +342,15 @@ export default (options) => {
     const render = () => {
       const state = /**@type {State}*/ (store.getState());
 
-      const target = /** @type {HTMLDivElement}*/ (
-        document.getElementById(options.target)
+      const targetEl = /** @type {HTMLElement}*/ (
+        TARGET_ELEMENTS_STORE[state.requiredOpts.targetId]
       );
 
       let munimapEl = /**@type {HTMLDivElement}*/ (
-        target.getElementsByClassName('munimap')[0]
+        targetEl.getElementsByClassName('munimap')[0]
       );
       let infoEl = /**@type {HTMLDivElement}*/ (
-        target.getElementsByClassName('ol-popup munimap-info')[0]
+        targetEl.getElementsByClassName('ol-popup munimap-info')[0]
       );
       if (munimapEl === undefined) {
         munimapEl = /**@type {HTMLDivElement}*/ (document.createElement('div'));
@@ -328,7 +359,7 @@ export default (options) => {
         infoEl.className = 'ol-popup munimap-info';
         infoEl.style.zIndex = '2';
         munimapEl.appendChild(infoEl);
-        target.appendChild(munimapEl);
+        targetEl.appendChild(munimapEl);
       }
 
       const addMsg = slctr.toggleLoadingMessage(state);
@@ -359,7 +390,7 @@ export default (options) => {
             buildingsCount: slctr.getLoadedBuildingsCount(state),
           });
           map.set(MUNIMAP_PROPS_ID, mapProps);
-          CREATED_MAPS[state.requiredOpts.target] = map;
+          CREATED_MAPS[state.requiredOpts.targetId] = map;
 
           munimap_view.addCustomControls(map, store, state.requiredOpts);
           munimap_view.attachMapListeners(map, {store, view});

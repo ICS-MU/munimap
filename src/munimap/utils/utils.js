@@ -160,6 +160,14 @@ const insertSiblingAfter = (newNode, refNode) => {
   }
 };
 
+/**
+ * @param {*} maybeElement any
+ * @return {boolean} whether is param element
+ */
+const isElement = (maybeElement) => {
+  return maybeElement && maybeElement.nodeType === Node.ELEMENT_NODE;
+};
+
 export {
   removeArrayDuplicates,
   isString,
@@ -176,4 +184,5 @@ export {
   isUserAgentIE,
   inRange,
   insertSiblingAfter,
+  isElement,
 };

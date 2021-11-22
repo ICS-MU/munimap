@@ -13,7 +13,11 @@ import View from 'ol/View';
 import {BUILDING_RESOLUTION, ROOM_RESOLUTION} from '../cluster/cluster.js';
 import {ENABLE_SELECTOR_LOGS} from '../conf.js';
 import {GeoJSON} from 'ol/format';
-import {MARKER_LABEL_STORE, REQUIRED_CUSTOM_MARKERS} from '../create.js';
+import {
+  MARKER_LABEL_STORE,
+  REQUIRED_CUSTOM_MARKERS,
+  TARGET_ELEMENTS_STORE,
+} from '../create.js';
 import {MultiPolygon, Polygon} from 'ol/geom';
 import {
   Ids as OptPoiIds,
@@ -185,7 +189,7 @@ const getLang = (state) => state.requiredOpts.lang;
  * @param {State} state state
  * @return {string} target
  */
-const getTarget = (state) => state.requiredOpts.target;
+const getTargetId = (state) => state.requiredOpts.targetId;
 
 /**
  * @type {Reselect.Selector<State, ol.Coordinate>}
@@ -221,13 +225,6 @@ const getRequiredCenter = (state) => state.requiredOpts.center;
  * @return {number} center
  */
 const getRequiredZoom = (state) => state.requiredOpts.zoom;
-
-/**
- * @type {Reselect.Selector<State, string>}
- * @param {State} state state
- * @return {string} center
- */
-const getRequiredTarget = (state) => state.requiredOpts.target;
 
 /**
  * @type {Reselect.Selector<State, number>}
@@ -413,7 +410,7 @@ export const getBasemapLayerId = createSelector(
  * >}
  */
 export const getBasemapLayer = createSelector(
-  [getBasemapLayerId, getLang, getTarget],
+  [getBasemapLayerId, getLang, getTargetId],
   (basemapLayerId, lang, target) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing baseMapLayer');
@@ -600,17 +597,17 @@ export const getMuAttrs = createSelector([getLang], (lang) => {
  */
 export const calculateView = createSelector(
   [
-    getRequiredTarget,
+    getTargetId,
     getRequiredCenter,
     getRequiredZoom,
     getInitMarkers,
     getInitZoomTo,
   ],
-  (requiredTarget, requiredCenter, requiredZoom, markers, zoomTo) => {
+  (targetId, requiredCenter, requiredZoom, markers, zoomTo) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing view');
     }
-    const target = document.getElementById(requiredTarget);
+    const target = TARGET_ELEMENTS_STORE[targetId];
     const center = ol_proj.transform(
       requiredCenter || [16.605390495656977, 49.1986567194723],
       ol_proj.get('EPSG:4326'),
@@ -1098,9 +1095,9 @@ export const getSelectedLocationCode = createSelector(
  * >}
  */
 export const getMarkerLabel = createSelector(
-  [getTarget, getRequiredMarkerIds, getRequiredMarkerLabelId],
-  (target, requiredMarkerIds, requiredMarkerLabelId) => {
-    const optPoiFnId = `OPT_POI_MARKER_LABEL_${target}`;
+  [getTargetId, getRequiredMarkerIds, getRequiredMarkerLabelId],
+  (targetId, requiredMarkerIds, requiredMarkerLabelId) => {
+    const optPoiFnId = `OPT_POI_MARKER_LABEL_${targetId}`;
     if (requiredMarkerIds) {
       return requiredMarkerIds.some((el) => isOptPoiCtgUid(el))
         ? MARKER_LABEL_STORE[optPoiFnId]
