@@ -328,4 +328,5 @@ export {
   alignTextToRows,
   getDefaultLabel,
   getLabelHeight,
+  wrapText,
 };

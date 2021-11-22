@@ -13,10 +13,14 @@ import View from 'ol/View';
 import {BUILDING_RESOLUTION, ROOM_RESOLUTION} from '../cluster/cluster.js';
 import {ENABLE_SELECTOR_LOGS} from '../conf.js';
 import {GeoJSON} from 'ol/format';
+import {MARKER_LABEL_STORE, REQUIRED_CUSTOM_MARKERS} from '../create.js';
 import {MultiPolygon, Polygon} from 'ol/geom';
+import {
+  Ids as OptPoiIds,
+  isCtgUid as isOptPoiCtgUid,
+} from '../feature/optpoi.js';
 import {PURPOSE as POI_PURPOSE} from '../feature/poi.js';
 import {Resolutions as PoiResolutions} from '../style/poi.js';
-import {REQUIRED_CUSTOM_MARKERS, REQUIRED_MARKER_LABEL} from '../create.js';
 import {
   STAIRCASE_ICON,
   defaultStyleFunction as defaultRoomStyleFunction,
@@ -61,6 +65,7 @@ import {
 } from '../feature/door.js';
 import {getStore as getFloorStore} from '../source/floor.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
+import {getStore as getOptPoiStore} from '../source/optpoi.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
 import {getStore as getRoomStore} from '../source/room.js';
 import {
@@ -88,6 +93,7 @@ import {styleFunction as markerStyleFunction} from '../style/marker.js';
  * @typedef {import("ol/style/Style").StyleFunction} StyleFunction
  * @typedef {import("../view/info.js").BuildingTitleOptions} BuildingTitleOptions
  * @typedef {import("../utils/range.js").RangeInterface} RangeInterface
+ * @typedef {import("../feature/marker.js").LabelFunction} MarkerLabelFunction
  */
 
 /**
@@ -287,6 +293,7 @@ export const getInitMarkers = createSelector(
     const rooms = getRoomStore().getFeatures();
     const doorType = getDoorType();
     const doors = getDoorStore().getFeatures();
+    const optPois = getOptPoiStore().getFeatures();
     const result = requiredMarkerIds.map((initMarkerId) => {
       if (REQUIRED_CUSTOM_MARKERS[initMarkerId]) {
         return REQUIRED_CUSTOM_MARKERS[initMarkerId];
@@ -298,13 +305,23 @@ export const getInitMarkers = createSelector(
         return doors.find((door) => {
           return door.get(doorType.primaryKey) === initMarkerId;
         });
+      } else if (isOptPoiCtgUid(initMarkerId)) {
+        return optPois.map((optPoi) => {
+          const roomCode = optPoi.get('polohKodLokace');
+          if (roomCode) {
+            return rooms.find((room) => {
+              return room.get(roomType.primaryKey) === roomCode;
+            });
+          }
+          return;
+        });
       } else {
         return buildings.find((building) => {
           return building.get(buildingType.primaryKey) === initMarkerId;
         });
       }
     });
-    return result.filter((item) => item); //remove undefined (= invalid codes)
+    return result.flat().filter((item) => item); //remove undefined (= invalid codes)
   }
 );
 
@@ -428,6 +445,8 @@ export const getInvalidCodes = createSelector(
       if (!isCustomMarker(marker)) {
         if (isRoom(marker)) {
           type = getRoomType();
+        } else if (isDoor(marker)) {
+          type = getDoorType();
         } else {
           type = getBuildingType();
         }
@@ -437,6 +456,10 @@ export const getInvalidCodes = createSelector(
 
     const difference = /**@type {Array}*/ (requiredMarkerIds).filter(
       (markerString) => {
+        if (isOptPoiCtgUid(markerString)) {
+          return !Object.values(OptPoiIds).includes(markerString.split(':')[1]);
+        }
+
         return munimap_utils.isString(markerString) &&
           !REQUIRED_CUSTOM_MARKERS[markerString]
           ? !initMarkersCodes.includes(markerString)
@@ -1070,15 +1093,35 @@ export const getSelectedLocationCode = createSelector(
 /**
  * @type {Reselect.OutputSelector<
  *    State,
+ *    MarkerLabelFunction,
+ *    function(string, Array<string>, string): MarkerLabelFunction
+ * >}
+ */
+export const getMarkerLabel = createSelector(
+  [getTarget, getRequiredMarkerIds, getRequiredMarkerLabelId],
+  (target, requiredMarkerIds, requiredMarkerLabelId) => {
+    const optPoiFnId = `OPT_POI_MARKER_LABEL_${target}`;
+    if (requiredMarkerIds) {
+      return requiredMarkerIds.some((el) => isOptPoiCtgUid(el))
+        ? MARKER_LABEL_STORE[optPoiFnId]
+        : MARKER_LABEL_STORE[requiredMarkerLabelId];
+    }
+    return;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
  *    StyleFunction,
- *    function(string, string, ol.Extent, boolean, boolean,
+ *    function(string, MarkerLabelFunction, ol.Extent, boolean, boolean,
  *      string, Array<string>): StyleFunction
  * >}
  */
 export const getStyleForMarkerLayer = createSelector(
   [
     getLang,
-    getRequiredMarkerLabelId,
+    getMarkerLabel,
     getExtent,
     getRequiredLocationCodes,
     isInFloorResolutionRange,
@@ -1087,7 +1130,7 @@ export const getStyleForMarkerLayer = createSelector(
   ],
   (
     lang,
-    requiredMarkerLabelId,
+    markerLabel,
     extent,
     locationCodes,
     inFloorResolutionRange,
@@ -1100,7 +1143,7 @@ export const getStyleForMarkerLayer = createSelector(
 
     const options = {
       markers: getMarkerStore().getFeatures(),
-      markerLabel: REQUIRED_MARKER_LABEL[requiredMarkerLabelId],
+      markerLabel,
       lang,
       extent,
       locationCodes,
@@ -1126,7 +1169,7 @@ export const getStyleForMarkerLayer = createSelector(
  * @type {Reselect.OutputSelector<
  *    State,
  *    StyleFunction,
- *    function(string, boolean, string, boolean):
+ *    function(string, boolean, MarkerLabelFunction, boolean):
  *      StyleFunction
  * >}
  */
@@ -1134,10 +1177,10 @@ export const getStyleForClusterLayer = createSelector(
   [
     getLang,
     getRequiredLocationCodes,
-    getRequiredMarkerLabelId,
+    getMarkerLabel,
     getRequiredClusterFacultyAbbr,
   ],
-  (lang, locationCodes, requiredMarkerLabelId, clusterFacultyAbbr) => {
+  (lang, locationCodes, markerLabel, clusterFacultyAbbr) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - computing style for clusters');
     }
@@ -1145,7 +1188,7 @@ export const getStyleForClusterLayer = createSelector(
     const options = {
       lang,
       locationCodes,
-      markerLabel: REQUIRED_MARKER_LABEL[requiredMarkerLabelId],
+      markerLabel,
       clusterFacultyAbbr,
     };
     const styleFce = (feature, res) => {

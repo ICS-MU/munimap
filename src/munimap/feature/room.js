@@ -7,6 +7,7 @@ import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
 import {MUNIMAP_URL} from '../conf.js';
 import {alignRoomTitleToRows} from '../style/room.js';
+import {wrapText} from '../style/style.js';
 
 /**
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
@@ -181,8 +182,106 @@ const getNamePart = (feature, lang) => {
  */
 const getDefaultLabel = (feature, lang) => getNamePart(feature, lang);
 
+/**
+ * Add text detail for POI.
+ * @param {Array<ol.Feature>} rooms // rooms
+ * @param {Array<ol.Feature>} pois  // POIs
+ * @param {string} lang
+ * @return {Array<ol.Feature>} features with added properties
+ */
+
+const addPoiDetail = (rooms, pois, lang) => {
+  const result = [];
+  let text = '';
+  const noGeometry = [];
+  rooms.forEach((feature) => {
+    const featurePolKod = feature.get('polohKod');
+    const polKodBuilding = featurePolKod.substr(0, 5);
+    const isPoint = feature.getGeometry().getType() === 'Point';
+    let featureBuilding;
+    if (isPoint) {
+      featureBuilding = featurePolKod.substr(0, 5);
+    }
+    if (isPoint && noGeometry.indexOf(polKodBuilding) !== -1) {
+      return false;
+    }
+    if (isPoint) {
+      noGeometry.push(polKodBuilding); //??
+    }
+    let numberOfDetails = 0;
+    let pracoviste = undefined;
+    let nazev_cs = undefined;
+    let nazev_en = undefined;
+    let detail_text = undefined;
+    let poiPolKod;
+    let name = undefined;
+    let open, url;
+    pois.forEach((poi) => {
+      poiPolKod = poi.get('polohKodLokace');
+      if (
+        featurePolKod === poiPolKod ||
+        (isPoint && featureBuilding === poiPolKod.substr(0, 5))
+      ) {
+        pracoviste = poi.get('pracoviste');
+        nazev_cs = wrapText(poi.get('nazev_cs'));
+        nazev_en = wrapText(poi.get('nazev_en'));
+        if (lang === munimap_lang.Abbr.CZECH) {
+          name = poi.get('nazev_cs');
+          open = munimap_utils.isDefAndNotNull(poi.get('provozniDoba_cs'))
+            ? poi.get('provozniDoba_cs')
+            : '';
+        } else if (lang === munimap_lang.Abbr.ENGLISH) {
+          name = munimap_utils.isDefAndNotNull(poi.get('nazev_en'))
+            ? poi.get('nazev_en')
+            : poi.get('nazev_cs');
+          open = munimap_utils.isDefAndNotNull(poi.get('provozniDoba_en'))
+            ? poi.get('provozniDoba_en')
+            : '';
+        }
+        url = poi.get('url');
+        name = wrapText(name, '</br>');
+        if (url) {
+          name = `<a href="${url}" target="_blank">${name}</a>`;
+        }
+        open = open.replace(/,/g, '<br>');
+        name = `<div class="munimap-bubble-title">${name}</div>`;
+        open =
+          open === '' ? '' : `<div class="munimap-bubble-text">${open}</div>`;
+
+        if (detail_text === undefined) {
+          numberOfDetails += 1;
+          text = name + open;
+          detail_text = text;
+        } else {
+          if (detail_text.indexOf(name + open) < 0) {
+            numberOfDetails += 1;
+            text = detail_text + name + open;
+            detail_text = text;
+          }
+        }
+      }
+    });
+    result.push(feature);
+
+    if (nazev_cs !== undefined) {
+      const title = wrapText(feature.get('title'));
+
+      feature.setProperties({
+        'title': title,
+        'detail': detail_text,
+        'numberOfDetails': numberOfDetails,
+        'pracoviste': pracoviste,
+        'nazev_cs': nazev_cs,
+        'nazev_en': nazev_en,
+      });
+    }
+  });
+  return result;
+};
+
 export {
   ROOM_TYPES,
+  addPoiDetail,
   getDefaultLabel,
   getType,
   isCode,

@@ -10,6 +10,7 @@ import {Abbr} from '../lang/lang.js';
 import {BASEMAPS} from '../layer/basemap.js';
 import {isCodeOrLikeExpr as isBldgCodeOrLikeExpr} from '../feature/building.js';
 import {isCodeOrLikeExpr as isDoorCodeOrLikeExpr} from '../feature/door.js';
+import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.js';
 import {isCodeOrLikeExpr as isRoomCodeOrLikeExpr} from '../feature/room.js';
 import {assertSuitable as marker_custom_assertSuitable} from '../feature/marker.custom.js';
 
@@ -256,11 +257,8 @@ const markers = (markers) => {
         if (
           !isBldgCodeOrLikeExpr(el) &&
           !isRoomCodeOrLikeExpr(el) &&
-          !isDoorCodeOrLikeExpr(el)
-          /*!(building_isCodeOrLikeExpr(el)) &&
-            !(munimap.room.isCodeOrLikeExpr(el)) &&
-            !(munimap.door.isCodeOrLikeExpr(el)) &&
-            !(munimap.optpoi.isCtgUid(el))*/
+          !isDoorCodeOrLikeExpr(el) &&
+          !isOptPoiCtgUid(el)
         ) {
           console.log(
             'Markers should contain 1. building, room or ' +
@@ -278,17 +276,15 @@ const markers = (markers) => {
         );
       }
     });
-    // if (markers.some(function(el) {
-    //   return munimap.optpoi.isCtgUid(el);
-    // })) {
-    //   if (!(markers.every(function(el) {
-    //     return munimap.optpoi.isCtgUid(el);
-    //   }))) {
-    //     console.log('Markers should contain 1. building, room or ' +
-    //         'door location codes, or 2. corresponding LIKE expressions, or ' +
-    //         '3. POI categories.');
-    //   }
-    // }
+    if (markers.some((el) => isOptPoiCtgUid(el))) {
+      if (markers.some((el) => !isOptPoiCtgUid(el))) {
+        console.log(
+          'Markers should contain 1. building, room or ' +
+            'door location codes, or 2. corresponding LIKE expressions, or ' +
+            '3. POI categories.'
+        );
+      }
+    }
   }
 };
 
@@ -373,6 +369,30 @@ const pubTran = (pubTran) => {
   }
 };
 
+/**
+ * @param {Array<string>|undefined} filterArray filterArray
+ */
+const markerFilter = (filterArray) => {
+  if (filterArray !== undefined) {
+    assert(
+      munimap_utils.isArray(filterArray),
+      'Parameter markerFilter should be array of strings.'
+    );
+  }
+};
+
+/**
+ * @param {Array<string>|undefined} filterArray filterArray
+ */
+const poiFilter = (filterArray) => {
+  if (filterArray !== undefined) {
+    assert(
+      munimap_utils.isArray(filterArray),
+      'Parameter poiFilter should be array of strings.'
+    );
+  }
+};
+
 export {
   assert,
   assertArray,
@@ -392,4 +412,6 @@ export {
   labels,
   mapLinks,
   pubTran,
+  markerFilter,
+  poiFilter,
 };

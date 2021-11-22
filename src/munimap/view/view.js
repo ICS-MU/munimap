@@ -32,6 +32,7 @@ import {createStore as createComplexStore} from '../source/complex.js';
 import {createStore as createFloorStore} from '../source/floor.js';
 import {create as createMarkerLayer} from '../layer/marker.js';
 import {createStore as createMarkerStore} from '../source/marker.js';
+import {createStore as createOptPoiStore} from '../source/optpoi.js';
 import {create as createPubtranLayer} from '../layer/pubtran.stop.js';
 import {createStore as createPubtranStore} from '../source/pubtran.stop.js';
 import {createStore as createUnitStore} from '../source/unit.js';
@@ -273,6 +274,7 @@ const createFeatureStores = (reduxStore) => {
   createActiveDoorStore(reduxStore, callbackFn);
   createPoiStore();
   createActivePoiStore(reduxStore, callbackFn);
+  createOptPoiStore();
 
   const state = reduxStore.getState();
   if (state.requiredOpts.pubTran) {

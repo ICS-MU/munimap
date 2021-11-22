@@ -16,6 +16,7 @@ import {getStore as getMarkerStore} from '../source/marker.js';
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import("ol/source/Vector").default} ol.source.Vector
  * @typedef {import("ol/render/Event").default} ol.render.Event
+ * @typedef {import("ol/render/Feature").default} ol.render.Feature
  */
 
 /**
@@ -105,7 +106,7 @@ const getClusteredFeatures = (resolution) => {
 };
 
 /**
- * @param {Feature} feature feature
+ * @param {Feature|ol.render.Feature} feature feature
  * @return {boolean} whether is cluster
  */
 const isCluster = (feature) => {
@@ -130,7 +131,7 @@ const containsMarker = (cluster) => {
 };
 
 /**
- * @param {Feature} feature feature
+ * @param {Feature|ol.render.Feature} feature feature
  * @return {Array<Feature>} features
  */
 const getFeatures = (feature) => {

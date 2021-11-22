@@ -11,8 +11,12 @@ import * as slctr from './redux/selector.js';
 import Feature from 'ol/Feature';
 import {INITIAL_STATE, MUNIMAP_PROPS_ID} from './conf.js';
 import {Map} from 'ol';
+import {addPoiDetail} from './feature/room.js';
 import {createStore} from './redux/store.js';
 import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
+import {isCtgUid as isOptPoiCtgUid} from './feature/optpoi.js';
+import {isCode as isRoomCode} from './feature/room.js';
+import {markerLabel as optPoiMarkerLabel} from './style/optpoi.js';
 
 /**
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
@@ -45,6 +49,8 @@ import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
  * @property {boolean} [simpleScroll] simple scroll
  * @property {MarkerLabelFunction} [markerLabel] marker label function
  * @property {boolean} [pubTran] public transportation stops
+ * @property {Array<string>} [poiFilter] poi filter
+ * @property {Array<string>} [markerFilter] marker filter
  */
 
 /**
@@ -70,7 +76,7 @@ export const REQUIRED_CUSTOM_MARKERS = {};
 /**
  * @type {Object<string, MarkerLabelFunction>}
  */
-export const REQUIRED_MARKER_LABEL = {};
+export const MARKER_LABEL_STORE = {};
 
 /**
  * @type {Object<string, Map>}
@@ -86,12 +92,17 @@ export const CREATED_MAPS = {};
 export const loadOrDecorateMarkers = async (featuresLike, options) => {
   const lang = options.lang;
   const arrPromises = []; // array of promises of features
+  let workplaces = [];
+
+  if (options.markerFilter !== null) {
+    workplaces = options.markerFilter.map((el) => el);
+  }
 
   if (!Array.isArray(featuresLike)) {
     return [];
   } else {
     featuresLike.forEach((el) => {
-      if (true) {
+      if (!isOptPoiCtgUid(el)) {
         arrPromises.push(
           new Promise((resolve, reject) => {
             if (REQUIRED_CUSTOM_MARKERS[el]) {
@@ -105,7 +116,42 @@ export const loadOrDecorateMarkers = async (featuresLike, options) => {
           })
         );
       } else {
-        console.log('is optpoi');
+        const arrPoi = [el];
+        const ctgIds = arrPoi.map((ctguid) => ctguid.split(':')[1]);
+        let roomCodes = [];
+        arrPromises.push(
+          munimap_load
+            .loadOptPois({
+              ids: ctgIds,
+              workplaces: workplaces,
+              poiFilter: options.poiFilter,
+            })
+            .then((features) => {
+              const rooms = features.filter((f) => {
+                const lc = /**@type {string}*/ (f.get('polohKodLokace'));
+                munimap_assert.assertString(lc);
+
+                return !options.poiFilter
+                  ? isRoomCode(lc)
+                  : options.poiFilter.some(
+                      (poiFilter) =>
+                        isRoomCode(lc) && f.get('poznamka') === poiFilter
+                    );
+              });
+              roomCodes = rooms.map((f) => f.get('polohKodLokace'));
+
+              if (ctgIds.length === 1) {
+                MARKER_LABEL_STORE[`OPT_POI_MARKER_LABEL_${options.target}`] =
+                  optPoiMarkerLabel(ctgIds[0], roomCodes, lang);
+              }
+
+              return new Promise((resolve, reject) => {
+                munimap_load.featuresFromParam(roomCodes).then((values) => {
+                  resolve(addPoiDetail(values, features, lang));
+                });
+              });
+            })
+        );
       }
     });
 
@@ -144,6 +190,8 @@ const assertOptions = (options) => {
   munimap_assert.locationCodes(options.locationCodes);
   munimap_assert.mapLinks(options.mapLinks);
   munimap_assert.labels(options.labels);
+  munimap_assert.markerFilter(options.markerFilter);
+  munimap_assert.poiFilter(options.poiFilter);
   // munimap_assert.identifyTypes(options.identifyTypes);
   // munimap_assert.identifyCallback(options.identifyCallback);
   // if (
@@ -211,8 +259,8 @@ const getInitialState = (options) => {
     initialState.requiredOpts.simpleScroll = options.simpleScroll;
   }
   if (options.markerLabel !== undefined) {
-    const id = `MARKER_LABEL_${options.target}`;
-    REQUIRED_MARKER_LABEL[id] = options.markerLabel;
+    const id = `REQUIRED_MARKER_LABEL_${options.target}`;
+    MARKER_LABEL_STORE[id] = options.markerLabel;
     initialState.requiredOpts.markerLabelId = id;
   }
   if (options.pubTran !== undefined) {
@@ -223,6 +271,12 @@ const getInitialState = (options) => {
   }
   if (options.center !== undefined) {
     initialState.requiredOpts.center = options.center;
+  }
+  if (options.poiFilter !== undefined) {
+    initialState.requiredOpts.poiFilter = options.poiFilter;
+  }
+  if (options.markerFilter !== undefined) {
+    initialState.requiredOpts.markerFilter = options.markerFilter;
   }
 
   return initialState;
@@ -317,8 +371,7 @@ export default (options) => {
             clusterFacultyAbbr: state.requiredOpts.clusterFacultyAbbr,
             showLabels: state.requiredOpts.labels,
             locationCodes: state.requiredOpts.locationCodes,
-            markerLabel:
-              REQUIRED_MARKER_LABEL[state.requiredOpts.markerLabelId],
+            markerLabel: MARKER_LABEL_STORE[state.requiredOpts.markerLabelId],
             pubTran: state.requiredOpts.pubTran,
             clusterResolution: slctr.getClusterResolution(state),
           });

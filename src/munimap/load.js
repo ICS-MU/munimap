@@ -11,6 +11,11 @@ import * as slctr from './redux/selector.js';
 import VectorSource from 'ol/source/Vector';
 import {EsriJSON} from 'ol/format';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
+import {
+  Ids as OptPoiIds,
+  Labels as OptPoiLabels,
+  getType as getOptPoiType,
+} from './feature/optpoi.js';
 import {PURPOSE as POI_PURPOSE} from './feature/poi.js';
 import {
   ROOM_TYPES,
@@ -44,6 +49,7 @@ import {getStore as getFloorStore} from './source/floor.js';
 import {getType as getFloorType} from './feature/floor.js';
 import {getGeometryCenter} from './utils/geom.js';
 import {getNotYetAddedFeatures} from './utils/store.js';
+import {getStore as getOptPoiStore} from './source/optpoi.js';
 import {getType as getPoiType} from './feature/poi.js';
 import {getStore as getUnitStore} from './source/unit.js';
 
@@ -114,6 +120,14 @@ import {getStore as getUnitStore} from './source/unit.js';
  * @typedef {Object} LoadActiveOptions
  * @property {Function} [callback] callback
  * @property {redux.Store} [store] store
+ */
+
+/**
+ * @typedef {Object} OptPoiLoadOptions
+ * @property {Array<string>} [ids] ids
+ * @property {Array<string>} [labels] labels
+ * @property {Array<number>} [workplaces] workplaces
+ * @property {Array<string>} [poiFilter] poiFilter
  */
 
 /**
@@ -966,6 +980,39 @@ const loadActivePois = async (
   }
 };
 
+/**
+ * @param {OptPoiLoadOptions} options options
+ * @return {Promise<Array<ol.Feature>>} load function
+ */
+const loadOptPois = (options) => {
+  let labels = options.labels || [];
+  const workplaces = options.workplaces || [];
+  const poiFilter = options.poiFilter || [];
+  const ids = options.ids || [];
+  const idLabels = ids.map((id) => {
+    const key = Object.keys(OptPoiIds).find((k) => OptPoiIds[k] === id);
+    return OptPoiLabels[key];
+  });
+  labels = [...labels, ...idLabels];
+  munimap_utils.removeArrayDuplicates(labels);
+  let where = `typ IN ('${labels.join("', '")}')`;
+  where += ' AND volitelny=1';
+  if (workplaces.length > 0) {
+    where += ` AND pracoviste IN ('${workplaces.join("', '")}')`;
+  }
+  if (poiFilter.length > 0) {
+    where += ` AND poznamka IN ('${poiFilter.join("', '")}')`;
+  }
+  const opts = {
+    source: getOptPoiStore(),
+    type: getOptPoiType(),
+    where: where,
+    method: 'POST',
+    returnGeometry: false,
+  };
+  return features(opts);
+};
+
 export {
   buildingFeaturesForMap,
   buildingLoadProcessor,
@@ -978,4 +1025,5 @@ export {
   loadActiveRooms,
   loadActiveDoors,
   loadActivePois,
+  loadOptPois,
 };

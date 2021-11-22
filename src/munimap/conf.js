@@ -53,6 +53,8 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {boolean} [simpleScroll] whether to simple scrool or not
  * @property {string} [markerLabelId] marker label function id
  * @property {boolean} [pubTran] whethet to show public transportation stops
+ * @property {Array<string>} [poiFilter] poi filter
+ * @property {Array<string>} [markerFilter] marker filter
  */
 
 /**
@@ -79,6 +81,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {number} activeRoomsTimestamp active rooms timestamp
  * @property {number} doorsTimestamp doors timestamp
  * @property {number} poisTimestamp pois timestamp
+ * @property {number} optPoisTimestamp opt pois timestamp
  * @property {ErrorMessageState} errorMessage error message
  */
 
@@ -112,6 +115,8 @@ export const INITIAL_STATE = {
     pubTran: false,
     zoom: null,
     center: null,
+    poiFilter: null,
+    markerFilter: null,
   },
   markersTimestamp: null,
   zoomToTimestamp: null,
@@ -123,6 +128,7 @@ export const INITIAL_STATE = {
   activeRoomsTimestamp: null,
   doorsTimestamp: null,
   poisTimestamp: null,
+  optPoisTimestamp: null,
   errorMessage: {
     render: null,
     withMessage: null,

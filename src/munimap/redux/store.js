@@ -20,6 +20,7 @@ import {
 } from '../feature/floor.js';
 import {isBuilding} from '../feature/building.js';
 import {isDoor} from '../feature/door.js';
+import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.js';
 import {loadOrDecorateMarkers} from '../create.js';
 import {setBuildingTitle} from '../view/info.js';
 
@@ -51,6 +52,9 @@ const createReducer = (initialState) => {
             ? Date.now()
             : state.defaultRoomsTimestamp,
           doorsTimestamp: loadedTypes.door ? Date.now() : state.doorsTimestamp,
+          optPoisTimestamp: loadedTypes.optPoi
+            ? Date.now()
+            : state.optPoisTimestamp,
         };
 
       // ZOOMTO_LOADED
@@ -98,6 +102,7 @@ const createReducer = (initialState) => {
                 ),
                 room: res.some((f) => f instanceof Feature && isRoom(f)),
                 door: res.some((f) => f instanceof Feature && isDoor(f)),
+                optPoi: requiredMarkers.some((el) => isOptPoiCtgUid(el)),
               };
 
               action.asyncDispatch(actions.markers_loaded(res, loadedTypes));
