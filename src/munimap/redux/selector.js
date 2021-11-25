@@ -182,14 +182,14 @@ const getRequiredLabels = (state) => state.requiredOpts.labels;
  * @param {State} state state
  * @return {string} lang
  */
-const getLang = (state) => state.requiredOpts.lang;
+export const getLang = (state) => state.requiredOpts.lang;
 
 /**
  * @type {Reselect.Selector<State, string>}
  * @param {State} state state
  * @return {string} target
  */
-const getTargetId = (state) => state.requiredOpts.targetId;
+export const getTargetId = (state) => state.requiredOpts.targetId;
 
 /**
  * @type {Reselect.Selector<State, ol.Coordinate>}

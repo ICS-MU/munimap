@@ -18,6 +18,12 @@ import {isCtgUid as isOptPoiCtgUid} from './feature/optpoi.js';
 import {isCode as isRoomCode} from './feature/room.js';
 import {markerLabel as optPoiMarkerLabel} from './style/optpoi.js';
 import {v4 as uuidv4} from 'uuid';
+import React from 'react';
+import ReactDOM from "react-dom";
+import {hot} from 'react-hot-loader';
+import InfoBubbleComponent from './_components/infobubble.jsx';
+import MunimapComponent from './_components/munimap.jsx';
+import {Provider} from 'react-redux'
 
 /**
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
@@ -365,21 +371,11 @@ export default (options) => {
         targetEl.getElementsByClassName('ol-popup munimap-info')[0]
       );
       if (munimapEl === undefined) {
-        munimapEl = /**@type {HTMLDivElement}*/ (document.createElement('div'));
-        infoEl = /**@type {HTMLDivElement}*/ (document.createElement('div'));
-        munimapEl.className = 'munimap';
-        infoEl.className = 'ol-popup munimap-info';
-        infoEl.style.zIndex = '2';
-        munimapEl.appendChild(infoEl);
-        targetEl.appendChild(munimapEl);
-      }
-
-      const addMsg = slctr.toggleLoadingMessage(state);
-      if (addMsg !== null) {
-        munimap_view.toggleLoadingMessage(
-          addMsg,
-          munimapEl,
-          state.requiredOpts.lang
+        infoEl = <InfoBubbleComponent />;
+        munimapEl = <MunimapComponent>{infoEl}</MunimapComponent>;
+        ReactDOM.render(
+          <Provider store={store}>{munimapEl}</Provider>,
+          targetEl
         );
       }
 

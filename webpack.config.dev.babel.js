@@ -128,9 +128,14 @@ export default (env) => {
           },
         },
         {
-          test: /\.(js)$/,
+          test: /\.(js|jsx)$/,
           exclude: /node_modules/,
           use: 'babel-loader',
+        },
+        {
+          test: /\.(js|jsx)$/,
+          use: 'react-hot-loader/webpack',
+          include: /node_modules/,
         },
         {
           test: /\.(png|jpg|jpeg|svg|ico)/,

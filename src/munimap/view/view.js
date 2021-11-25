@@ -120,6 +120,7 @@ import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
  */
 const addLoadingMessage = (target, lang) => {
   const messageDiv = document.createElement('div');
+  console.log(target)
   messageDiv.id = 'message_' + target.id.toString();
   messageDiv.className = 'loading-message';
   messageDiv.style.cssText =
