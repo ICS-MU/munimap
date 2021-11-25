@@ -6,7 +6,9 @@ import * as munimap_assert from '../assert/assert.js';
 import VectorLayer from 'ol/layer/Vector';
 import {
   RESOLUTION as POI_RESOLUTION,
+  featureClickHandler,
   getType as getPoiType,
+  isClickable,
 } from '../feature/poi.js';
 import {getActiveStore as getActivePoiStore} from '../source/poi.js';
 
@@ -50,6 +52,8 @@ const createActive = () => {
   const layer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: ACTIVE_LAYER_ID,
+      isFeatureClickable: isClickable,
+      featureClickHandler: featureClickHandler,
       type: getPoiType(),
       maxResolution: POI_RESOLUTION.max,
       source: getActivePoiStore(),

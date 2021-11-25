@@ -89,7 +89,7 @@ const createDropdown = (floors, element, lang, onClickItem) => {
       const selectItem = /**@type {HTMLDivElement}*/ (e.target);
       const value = selectItem.getAttribute('data-lc');
       selectItem.parentElement.classList.remove('show');
-      onClickItem(actions.floor_select_changed, value);
+      onClickItem(actions.selected_feature_changed, value);
     });
 
     innerDiv.appendChild(floorDivEl);

@@ -36,6 +36,7 @@ import {setBuildingTitle} from '../view/info.js';
 const createReducer = (initialState) => {
   return (state = initialState, action) => {
     let newState;
+    let locationCode;
     let loadedTypes;
 
     switch (action.type) {
@@ -181,7 +182,7 @@ const createReducer = (initialState) => {
           resolution: action.payload.view.resolution,
           mapSize: action.payload.view.mapSize,
         };
-        const locationCode = slctr.getSelectedLocationCode(newState);
+        locationCode = slctr.getSelectedLocationCode(newState);
         if (locationCode !== undefined) {
           //null is valid value
           if (locationCode !== null) {
@@ -232,17 +233,8 @@ const createReducer = (initialState) => {
           doorsTimestamp: Date.now(),
         };
 
-      //NEW_FLOOR_SELECTED:
-      case actions.NEW_FLOOR_SELECTED:
-        newState = {
-          ...state,
-          selectedFeature: action.payload,
-        };
-        refreshFloorBasedStores();
-        return newState;
-
-      //FLOOR_SELECT_CHANGED:
-      case actions.FLOOR_SELECT_CHANGED:
+      //SELECTED_FEATURE_CHANGED:
+      case actions.SELECTED_FEATURE_CHANGED:
         const newValue = action.payload;
         const selectedFeature = state.selectedFeature;
         newState = {
@@ -282,6 +274,19 @@ const createReducer = (initialState) => {
         return {
           ...state,
           poisTimestamp: Date.now(),
+        };
+
+      //VIEW_ANIMATION_REQUESTED
+      case actions.VIEW_ANIMATION_REQUESTED:
+        return {
+          ...state,
+          animationRequest: {
+            ...state.animationRequest,
+            center: action.payload.center,
+            resolution: action.payload.resolution,
+            duration: action.payload.duration,
+            extent: action.payload.extent,
+          },
         };
 
       //DEAFULT

@@ -17,6 +17,7 @@ import {
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
  * @typedef {import("../matomo/matomo.js").Options} MatomoOptions
  * @typedef {import("../conf.js").ErrorMessageState} ErrorMessageState
+ * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
  */
 
 /**
@@ -96,13 +97,7 @@ export const DOORS_LOADED = 'DOORS_LOADED';
  * @type {string}
  * @const
  */
-export const NEW_FLOOR_SELECTED = 'NEW_FLOOR_SELECTED';
-
-/**
- * @type {string}
- * @const
- */
-export const FLOOR_SELECT_CHANGED = 'FLOOR_SELECT_CHANGED';
+export const SELECTED_FEATURE_CHANGED = 'SELECTED_FEATURE_CHANGED';
 
 /**
  * @type {string}
@@ -133,6 +128,12 @@ export const TARGET_FOCUSED = 'TARGET_FOCUSED';
  * @const
  */
 export const POIS_LOADED = 'POIS_LOADED';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const VIEW_ANIMATION_REQUESTED = 'VIEW_ANIMATION_REQUESTED';
 
 /**
  * @param {Array<ol.Feature|string>} markers markers
@@ -267,24 +268,13 @@ export function doors_loaded() {
 }
 
 /**
- * @param {string} newFloorCode new floor code
+ * @param {string} code new code (bldg, floor)
  * @return {redux.AnyAction} action
  */
-export function new_floor_selected(newFloorCode) {
+export function selected_feature_changed(code) {
   return {
-    type: NEW_FLOOR_SELECTED,
-    payload: newFloorCode,
-  };
-}
-
-/**
- * @param {string} newValue new floor code
- * @return {redux.AnyAction} action
- */
-export function floor_select_changed(newValue) {
-  return {
-    type: FLOOR_SELECT_CHANGED,
-    payload: newValue,
+    type: SELECTED_FEATURE_CHANGED,
+    payload: code,
   };
 }
 
@@ -338,5 +328,16 @@ export function target_blurred(errorMessageProps) {
 export function pois_loaded() {
   return {
     type: POIS_LOADED,
+  };
+}
+
+/**
+ * @param {AnimationRequestOptions} object object
+ * @return {redux.AnyAction} action
+ */
+export function view_animation_requested(object) {
+  return {
+    type: VIEW_ANIMATION_REQUESTED,
+    payload: object,
   };
 }

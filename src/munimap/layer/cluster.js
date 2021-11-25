@@ -1,12 +1,11 @@
 /**
  * @module layer/cluster
  */
+import * as munimap_assert from '../assert/assert.js';
 import * as munimap_cluster from '../cluster/cluster.js';
 import VectorLayer from 'ol/layer/Vector';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {createStore as createClusterStore} from '../source/cluster.js';
-import {isDoor} from '../feature/door.js';
-import {isRoom} from '../feature/room.js';
 import {updateClusteredFeatures} from '../view/cluster.js';
 
 /**
@@ -29,6 +28,19 @@ const LAYER_ID = 'markercluster';
  * @return {boolean} whether is layer
  */
 const isLayer = (layer) => layer.get('id') === LAYER_ID;
+
+/**
+ * @param {ol.Map} map map
+ * @return {VectorLayer} layer
+ */
+const getLayer = (map) => {
+  const layers = map.getLayers().getArray();
+  const result = layers.find(isLayer);
+  if (result) {
+    munimap_assert.assertInstanceof(result, VectorLayer);
+  }
+  return /** @type {VectorLayer|undefined} */ (result);
+};
 
 /**
  * @param {ol.Map} map map
@@ -68,4 +80,4 @@ const create = (map, options) => {
   return markerClusterLayer;
 };
 
-export {create, isLayer};
+export {create, getLayer, isLayer};

@@ -16,6 +16,7 @@ import {assertSuitable as marker_custom_assertSuitable} from '../feature/marker.
 
 /**
  * @typedef {import("ol/Feature").default} ol.Feature
+ * @typedef {import("../feature/feature.js").getMainFeatureAtPixelFunction} getMainFeatureAtPixelFunction
  */
 
 /**
@@ -153,7 +154,24 @@ const assertInstanceof = (val, type, opt_msg) => {
  * @throws {AssertionError} When the value is not an Element.
  */
 const assertExists = (val, opt_msg) => {
-  if (!munimap_utils.isDefAndNotNull) {
+  if (!munimap_utils.isDefAndNotNull(val)) {
+    let m = `Expected to exist: ${val}.`;
+    if (opt_msg) {
+      m += ` ${opt_msg}`;
+    }
+    throw new AssertionError(m);
+  }
+  return /** @type {any}*/ (val);
+};
+
+/**
+ * @param {*} val value
+ * @param {string} [opt_msg] Error message.
+ * @return {any} asserted value
+ * @throws {AssertionError} When the value is not a Function.
+ */
+const assertFunction = (val, opt_msg) => {
+  if (!munimap_utils.isFunction(val)) {
     let m = `Expected to exist: ${val}.`;
     if (opt_msg) {
       m += ` ${opt_msg}`;
@@ -393,10 +411,24 @@ const poiFilter = (filterArray) => {
   }
 };
 
+/**
+ * @param {getMainFeatureAtPixelFunction|undefined} fn function
+ */
+const getMainFeatureAtPixel = (fn) => {
+  if (munimap_utils.isDef(fn)) {
+    assertFunction(
+      fn,
+      'Parameter getMainFeatureAtPixel ' +
+        'should be a function of type "getMainFeatureAtPixelFunction".'
+    );
+  }
+};
+
 export {
   assert,
   assertArray,
   assertBoolean,
+  assertFunction,
   assertString,
   assertNumber,
   assertInstanceof,
@@ -414,4 +446,5 @@ export {
   pubTran,
   markerFilter,
   poiFilter,
+  getMainFeatureAtPixel,
 };

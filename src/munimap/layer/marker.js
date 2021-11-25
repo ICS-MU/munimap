@@ -1,14 +1,11 @@
 /**
  * @module layer/marker
  */
-
-import * as munimap_cluster from '../cluster/cluster.js';
+import * as munimap_assert from '../assert/assert.js';
 import * as munimap_marker from '../feature/marker.js';
 import VectorLayer from 'ol/layer/Vector';
 import {getPattern} from '../style/marker.js';
 import {getStore} from '../source/marker.js';
-import {isDoor} from '../feature/door.js';
-import {isRoom} from '../feature/room.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
@@ -29,6 +26,19 @@ const LAYER_ID = 'marker';
  */
 const isLayer = (layer) => {
   return layer.get('id') === LAYER_ID;
+};
+
+/**
+ * @param {ol.Map} map map
+ * @return {VectorLayer} layer
+ */
+const getLayer = (map) => {
+  const layers = map.getLayers().getArray();
+  const result = layers.find(isLayer);
+  if (result) {
+    munimap_assert.assertInstanceof(result, VectorLayer);
+  }
+  return /** @type {VectorLayer|undefined} */ (result);
 };
 
 /**
@@ -60,4 +70,4 @@ const create = (map, options) => {
   return markerLayer;
 };
 
-export {LAYER_ID, create, isLayer};
+export {LAYER_ID, create, getLayer, isLayer};

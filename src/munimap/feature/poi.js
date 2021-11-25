@@ -6,12 +6,16 @@ import * as munimap_range from '../utils/range.js';
 import {FEATURE_TYPE_PROPERTY_NAME} from '../feature/feature.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from './floor.js';
 import {MUNIMAP_URL} from '../conf.js';
+import {getAnimationRequestParams} from '../utils/animation.js';
 
 /**
  * @typedef {import('../utils/range.js').RangeInterface} RangeInterface
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
+ * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
+ * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
+ * @typedef {import("ol/geom").Point} ol.geom.Point
  */
 
 /**
@@ -68,42 +72,41 @@ const isPoi = (feature) => {
   return type === getType();
 };
 
-// /**
-//  * @param {munimap.feature.clickHandlerOptions} options options
-//  * @return {boolean} whether is clickable
-//  */
-// const isClickable = (options) => {
-//   const feature = options.feature;
-//   const resolution = options.resolution;
+/**
+ * @param {FeatureClickHandlerOptions} options options
+ * @return {boolean} whether is clickable
+ */
+const isClickable = (options) => {
+  const {feature, map} = options;
+  const view = map.getView();
+  const resolution = view.getResolution();
 
-//   if (!munimap_range.contains(FLOOR_RESOLUTION, resolution)) {
-//     const poiType = feature.get('typ');
-//     return (
-//       poiType === PURPOSE.BUILDING_ENTRANCE ||
-//       poiType === PURPOSE.BUILDING_COMPLEX_ENTRANCE
-//     );
-//   }
-//   return false;
-// };
+  if (!munimap_range.contains(FLOOR_RESOLUTION, resolution)) {
+    const poiType = feature.get('typ');
+    return (
+      poiType === PURPOSE.BUILDING_ENTRANCE ||
+      poiType === PURPOSE.BUILDING_COMPLEX_ENTRANCE
+    );
+  }
+  return false;
+};
 
-// /**
-//  * @param {munimap.feature.clickHandlerOptions} options options
-//  */
-// const featureClickHandler = (options) => {
-//   const feature = options.feature;
-//   const map = options.map;
-//   const resolution = options.resolution;
+/**
+ * @param {FeatureClickHandlerOptions} options options
+ * @return {AnimationRequestOptions} result
+ */
+const featureClickHandler = (options) => {
+  const {feature, map} = options;
+  const view = map.getView();
+  const resolution = view.getResolution();
 
-//   const isVisible = munimap_range.contains(FLOOR_RESOLUTION, resolution);
-//   if (!isVisible) {
-//     const point = /**@type {ol.geom.Point}*/ (feature.getGeometry());
-//     const coors = point.getCoordinates();
-//     munimap.map.zoomToPoint(map, coors, FLOOR_RESOLUTION.max);
-//   }
-//   munimap.changeFloor(map, feature);
-//   if (isVisible) {
-//     munimap.info.refreshVisibility(map);
-//   }
-// };
+  const isVisible = munimap_range.contains(FLOOR_RESOLUTION, resolution);
+  if (!isVisible) {
+    const point = /**@type {ol.geom.Point}*/ (feature.getGeometry());
+    const coors = point.getCoordinates();
+    return getAnimationRequestParams(map, coors, FLOOR_RESOLUTION.max);
+  }
+  return null;
+};
 
-export {PURPOSE, RESOLUTION, getType};
+export {PURPOSE, RESOLUTION, getType, isClickable, featureClickHandler};

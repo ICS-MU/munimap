@@ -1,17 +1,32 @@
 /**
  * @module cluster/cluster
  */
+import * as munimap_assert from '../assert/assert.js';
 import * as munimap_building from '../feature/building.js';
 import * as munimap_marker from '../feature/marker.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
+import {RESOLUTION as DOOR_RESOLUTION} from '../feature/door.js';
+import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.js';
 import {Feature} from 'ol';
+import {containsExtent, getCenter, getForViewAndSize} from 'ol/extent';
+import {
+  ofFeature as extentOfFeature,
+  ofFeatures as extentOfFeatures,
+} from '../utils/extent.js';
+import {
+  getAnimationDuration,
+  getAnimationRequestParams,
+} from '../utils/animation.js';
 import {getStore as getBuildingStore} from '../source/building.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
+import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
+import {isDoor} from '../feature/door.js';
 
 /**
  * @typedef {import("../utils/range").RangeInterface} RangeInterface
  * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
+ * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import("ol/source/Vector").default} ol.source.Vector
@@ -164,77 +179,75 @@ const getMinorFeatures = (feature) => {
 
 /**
  * @param {FeatureClickHandlerOptions} options options
+ * @return {AnimationRequestOptions} results
  */
 const featureClickHandler = (options) => {
-  console.error('Not implemented yet!');
-  // const feature = options.feature;
-  // const map = options.map;
-  // const resolution = options.resolution;
-  // const view = map.getView();
-  // const size = map.getSize() || null;
-  // const viewExtent = view.calculateExtent(size);
+  const {feature, map, clusterFacultyAbbr} = options;
+  const view = map.getView();
+  const size = map.getSize() || null;
+  const resolution = view.getResolution();
+  const viewExtent = view.calculateExtent(size);
 
-  // let clusteredFeatures = getMainFeatures(map, feature);
-  // const clusterFacultyAbbr = munimap.getProps(map).options.clusterFacultyAbbr;
+  let clusteredFeatures = getMainFeatures(feature);
+  if (clusterFacultyAbbr) {
+    const minorFeatures = getMinorFeatures(feature);
+    clusteredFeatures = clusteredFeatures.concat(minorFeatures);
+  }
 
-  // if (clusterFacultyAbbr) {
-  //   const minorFeatures = getMinorFeatures(map, feature);
-  //   clusteredFeatures = clusteredFeatures.concat(minorFeatures);
-  // }
-
-  // const firstFeature = clusteredFeatures[0];
-  // goog.asserts.assertInstanceof(firstFeature, Feature);
-  // const resolutionRange = (munimap.door.isDoor(firstFeature)) ?
-  //   munimap.door.RESOLUTION : munimap.floor.RESOLUTION;
-  // let extent;
-  // if (clusteredFeatures.length === 1) {
-  //   let center;
-  //   const detail = /** @type {string} */(firstFeature.get('detail'));
-  //   if (detail) {
-  //     munimap.bubble.show(firstFeature, map, detail, 0, 20);
-  //   }
-  //   if (munimap.marker.custom.isCustom(firstFeature)) {
-  //     extent = munimap.extent.ofFeature(firstFeature);
-  //     center = ol.extent.getCenter(extent);
-  //     munimap.map.zoomToPoint(map, center, resolutionRange.max);
-  //   } else {
-  //     const isVisible = munimap.range.contains(resolutionRange, resolution);
-  //     if (!isVisible) {
-  //       extent = munimap.extent.ofFeature(firstFeature);
-  //       center = ol.extent.getCenter(extent);
-  //       munimap.map.zoomToPoint(map, center, resolutionRange.max);
-  //     }
-  //     munimap.changeFloor(map, firstFeature);
-  //     if (isVisible) {
-  //       munimap.info.refreshVisibility(map);
-  //     }
-  //   }
-  // } else {
-  //   const showOneBuilding = false;
-  //   let duration;
-  //   if (showOneBuilding) {
-  //     extent = munimap.extent.ofFeatures(clusteredFeatures);
-  //     goog.asserts.assertArray(size);
-  //     const bldgExtent = ol.extent.getForViewAndSize(
-  //       ol.extent.getCenter(extent), resolutionRange.max,
-  //       view.getRotation(), size);
-  //     if (ol.extent.containsExtent(bldgExtent, extent)) {
-  //       extent = bldgExtent;
-  //     }
-  //     duration = munimap.move.getAnimationDuration(viewExtent, extent);
-  //     view.fit(extent, {
-  //       duration: duration
-  //     });
-  //   } else {
-  //     extent = munimap.extent.ofFeatures(clusteredFeatures);
-  //     goog.asserts.assertArray(size);
-  //     duration = munimap.move.getAnimationDuration(viewExtent, extent);
-  //     view.fit(extent, {
-  //       duration: duration
-  //     });
-  //   }
-  //   map.renderSync();
-  // }
+  const firstFeature = clusteredFeatures[0];
+  munimap_assert.assertInstanceof(firstFeature, Feature);
+  const resolutionRange = isDoor(firstFeature)
+    ? DOOR_RESOLUTION
+    : FLOOR_RESOLUTION;
+  let extent;
+  if (clusteredFeatures.length === 1) {
+    let center;
+    // const detail = /** @type {string} */(firstFeature.get('detail'));
+    // if (detail) {
+    //   munimap.bubble.show(firstFeature, map, detail, 0, 20);
+    // }
+    if (isCustomMarker(firstFeature)) {
+      extent = extentOfFeature(firstFeature);
+      center = getCenter(extent);
+      return getAnimationRequestParams(map, center, resolutionRange.max);
+    } else {
+      const isVisible = munimap_range.contains(resolutionRange, resolution);
+      if (!isVisible) {
+        extent = extentOfFeature(firstFeature);
+        center = getCenter(extent);
+        return getAnimationRequestParams(map, center, resolutionRange.max);
+      }
+    }
+  } else {
+    const showOneBuilding = false;
+    let duration;
+    if (showOneBuilding) {
+      extent = extentOfFeatures(clusteredFeatures);
+      munimap_assert.assertArray(size);
+      const bldgExtent = getForViewAndSize(
+        getCenter(extent),
+        resolutionRange.max,
+        view.getRotation(),
+        size
+      );
+      if (containsExtent(bldgExtent, extent)) {
+        extent = bldgExtent;
+      }
+      duration = getAnimationDuration(viewExtent, extent);
+      return {
+        extent,
+        duration,
+      };
+    } else {
+      extent = extentOfFeatures(clusteredFeatures);
+      munimap_assert.assertArray(size);
+      duration = getAnimationDuration(viewExtent, extent);
+      return {
+        extent,
+        duration,
+      };
+    }
+  }
 };
 
 export {

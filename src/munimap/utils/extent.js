@@ -3,9 +3,11 @@
  */
 
 import * as ol_extent from 'ol/extent';
+import {Feature} from 'ol';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature
+ * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("ol/extent").Extent} ol.Extent
  */
 
@@ -25,6 +27,23 @@ export const getBufferValue = (extent) => {
   const height = ol_extent.getHeight(extent);
   const shorterSide = width <= height ? width : height;
   return -((1 - EXTENT_RATIO) * shorterSide);
+};
+
+/**
+ * @param {ol.Feature|ol.render.Feature} feature feature
+ * @return {ol.Extent} extent
+ */
+export const ofFeature = (feature) => {
+  if (feature instanceof Feature) {
+    const geom = feature.getGeometry();
+    if (geom) {
+      return geom.getExtent();
+    } else {
+      return ol_extent.createEmpty();
+    }
+  } else {
+    return feature.getExtent();
+  }
 };
 
 /**

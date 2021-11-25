@@ -2,12 +2,18 @@
  * @module view/view
  */
 import * as actions from '../redux/action.js';
+import * as munimap_assert from '../assert/assert.js';
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_utils from '../utils/utils.js';
 import * as slctr from '../redux/selector.js';
 import TileLayer from 'ol/layer/Tile';
 import createControls from '../control/mapcontrolsview.js';
+import {
+  GET_MAIN_FEATURE_AT_PIXEL_STORE,
+  TARGET_ELEMENTS_STORE,
+} from '../create.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
+import {Point} from 'ol/geom';
 import {
   addEmptyErrorEl,
   prependMessageToErrorEl,
@@ -37,6 +43,7 @@ import {create as createPubtranLayer} from '../layer/pubtran.stop.js';
 import {createStore as createPubtranStore} from '../source/pubtran.stop.js';
 import {createStore as createUnitStore} from '../source/unit.js';
 import {getDefaultLayers} from '../layer/layer.js';
+import {getMainFeatureAtPixel} from '../feature/feature.js';
 import {refreshActiveStyle as refreshActiveDoorStyle} from './door.js';
 import {refreshActiveStyle as refreshActivePoiStyle} from './poi.js';
 import {
@@ -73,8 +80,13 @@ import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
  * @typedef {import("redux").Store} redux.Store
  * @typedef {import("../conf.js").State} State
  * @typedef {import("../conf.js").ErrorMessageState} ErrorMessageState
+ * @typedef {import("../conf.js").AnimationRequestState} AnimationRequestState
  * @typedef {import("../create").MapListenersOptions} MapListenersOptions
  * @typedef {import("../utils/range.js").RangeInterface} RangeInterface
+ * @typedef {import("ol").MapBrowserEvent} MapBrowserEvent
+ * @typedef {import("../feature/feature.js").isClickableFunction} isClickableFunction
+ * @typedef {import("../feature/feature.js").featureClickHandlerFunction} featureClickHandlerFunction
+ * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
  */
 
 /**
@@ -223,6 +235,141 @@ const addLayers = (map, options) => {
 };
 
 /**
+ * @param {MapBrowserEvent} evt event
+ * @param {redux.Store} store store
+ */
+const handleMapClick = (evt, store) => {
+  const {map, pixel} = evt;
+  const state = /**@type {State}*/ (store.getState());
+  const getMainFeatureAtPixelFn = state.requiredOpts.getMainFeatureAtPixelId
+    ? GET_MAIN_FEATURE_AT_PIXEL_STORE[
+        state.requiredOpts.getMainFeatureAtPixelId
+      ]
+    : getMainFeatureAtPixel;
+
+  let result;
+  const featureWithLayer = getMainFeatureAtPixelFn(map, pixel);
+  if (featureWithLayer) {
+    const layer = featureWithLayer.layer;
+    const isClickable = /** @type {isClickableFunction}*/ (
+      layer.get('isFeatureClickable')
+    );
+    if (isClickable) {
+      munimap_assert.assertFunction(isClickable);
+
+      const handlerOpts = {
+        feature: featureWithLayer.feature,
+        map: map,
+        pixel: pixel,
+        selectedFeature: state.selectedFeature,
+        clusterFacultyAbbr: state.requiredOpts.clusterFacultyAbbr,
+      };
+      if (isClickable(handlerOpts)) {
+        const featureClickHandler = /** @type {featureClickHandlerFunction} */ (
+          layer.get('featureClickHandler')
+        );
+        if (featureClickHandler) {
+          munimap_assert.assertFunction(featureClickHandler);
+          result = featureClickHandler(handlerOpts);
+        }
+      }
+    }
+  }
+  if (result) {
+    munimap_utils.isString(result)
+      ? store.dispatch(
+          actions.selected_feature_changed(/** @type {string}*/ (result))
+        )
+      : store.dispatch(
+          actions.view_animation_requested(
+            /** @type {AnimationRequestOptions}*/ (result)
+          )
+        );
+  }
+};
+
+/**
+ * @param {MapBrowserEvent} evt event
+ * @param {redux.Store} store store
+ */
+const handlePointerMove = (evt, store) => {
+  if (evt.dragging) {
+    return;
+  }
+
+  const map = evt.map;
+  const state = store.getState();
+  const targetEl = TARGET_ELEMENTS_STORE[state.requiredOpts.targetId];
+  const pixel = map.getEventPixel(evt.originalEvent);
+  const getMainFeatureAtPixelFn = state.requiredOpts.getMainFeatureAtPixel
+    ? GET_MAIN_FEATURE_AT_PIXEL_STORE[
+        state.requiredOpts.getMainFeatureAtPixelId
+      ]
+    : getMainFeatureAtPixel;
+
+  const featureWithLayer = getMainFeatureAtPixelFn(map, pixel);
+  const elAtPixel = evt.originalEvent.target;
+  if (featureWithLayer) {
+    const feature = featureWithLayer.feature;
+    // let title = /**@type {string|undefined}*/ (feature.get('typ'));
+    // const purposeTitle = /**@type {string|undefined}*/ (
+    //   feature.get('ucel_nazev')
+    // );
+    // const purposeGis = /**@type {string|undefined}*/ (
+    //   feature.get('ucel_gis')
+    // );
+    // if (tooltipsShown
+    //   && munimap.tooltips.inTooltipResolutionRange(map, title)) {
+    //   if (!!title && Object.values(munimap.poi.Purpose).includes(title)) {
+    //     timing = munimap.tooltips.toggleTooltip(map, pixel, title);
+    //   } else if (Object.values(munimap.tooltips.RoomTypes).includes(
+    //     purposeTitle)) {
+    //     title = purposeTitle;
+    //     timing = munimap.tooltips.toggleTooltipPolygon(
+    //       map, feature, pixel, title);
+    //   } else if (!!purposeGis &&
+    //     munimap.tooltips.RoomPoiTypes.includes(purposeGis)) {
+    //     title = purposeGis;
+    //     timing = munimap.tooltips.toggleTooltipPolygon(
+    //       map, feature, pixel, title);
+    //   } else {
+    //     munimap.tooltips.setTooltipShown(map, false);
+    //   }
+    // }
+    const layer = featureWithLayer.layer;
+    const isClickable = /** @type {isClickableFunction}*/ (
+      layer.get('isFeatureClickable')
+    );
+    if (isClickable) {
+      munimap_assert.assertFunction(isClickable);
+      const handlerOpts = {
+        feature: feature,
+        map: map,
+        pixel: pixel,
+        selectedFeature: state.selectedFeature,
+        clusterFacultyAbbr: state.requiredOpts.clusterFacultyAbbr,
+      };
+      if (isClickable(handlerOpts)) {
+        //const popupEl = munimap.bubble.OVERLAY.getElement();
+        const popupEl = undefined;
+        !munimap_utils.isDef(popupEl) || popupEl !== elAtPixel
+          ? (targetEl.style.cursor = 'pointer')
+          : (targetEl.style.cursor = '');
+      } else {
+        targetEl.style.cursor = '';
+      }
+    } else {
+      targetEl.style.cursor = '';
+    }
+  } else {
+    targetEl.style.cursor = '';
+    // if (options.tooltips) {
+    //   munimap.tooltips.setTooltipShown(map, false);
+    // }
+  }
+};
+
+/**
  * Attach listeners to Map.
  * @param {ol.Map} map map
  * @param {MapListenersOptions} options opts
@@ -243,15 +390,9 @@ const attachMapListeners = (map, options) => {
       })
     );
   });
-  // map.getView().on(['change:center', 'change:resolution'], () => {
-  //   store.dispatch(
-  //     actions.ol_map_view_change({
-  //       center: view.getCenter(),
-  //       resolution: view.getResolution(),
-  //       mapSize: map.getSize(),
-  //     })
-  //   );
-  // });
+
+  map.on('click', (evt) => handleMapClick(evt, store));
+  map.on('pointermove', (evt) => handlePointerMove(evt, store));
 };
 
 /**
@@ -389,6 +530,39 @@ const refreshErrorMessage = (options) => {
   }
 };
 
+/**
+ *
+ * @param {ol.Map} map map
+ * @param {AnimationRequestState} animationRequest requested view state
+ */
+const animate = (map, animationRequest) => {
+  if (Object.values(animationRequest).every((i) => i === null)) {
+    return;
+  }
+
+  const {center, resolution, duration, extent} = animationRequest;
+  const view = map.getView();
+
+  const previous = map.get(MUNIMAP_PROPS_ID).animationRequest;
+  const condition =
+    !previous ||
+    previous.center !== center ||
+    previous.extent !== extent ||
+    previous.resolution !== resolution ||
+    previous.duration !== duration;
+
+  if (condition) {
+    map.get(MUNIMAP_PROPS_ID).animationRequest = animationRequest;
+    if (extent) {
+      view.fit(extent, {duration, nearest: true});
+    } else {
+      const _center =
+        center instanceof Point ? center.getCoordinates() : center;
+      view.animate({center: _center, resolution, duration});
+    }
+  }
+};
+
 export {
   attachMapListeners,
   ensureBaseMap,
@@ -401,4 +575,5 @@ export {
   initFloorSelect,
   refreshInfoElement,
   refreshErrorMessage,
+  animate,
 };

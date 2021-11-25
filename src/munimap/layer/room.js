@@ -5,10 +5,14 @@ import * as munimap_assert from '../assert/assert.js';
 import * as munimap_floor from '../feature/floor.js';
 import VectorLayer from 'ol/layer/Vector';
 import {
+  featureClickHandler,
+  getType as getRoomType,
+  isClickable,
+} from '../feature/room.js';
+import {
   getActiveStore as getActiveRoomStore,
   getDefaultStore as getDefaultRoomStore,
 } from '../source/room.js';
-import {getType as getRoomType} from '../feature/room.js';
 import {setCorridorStyle} from '../style/room.js';
 
 /**
@@ -110,9 +114,9 @@ const createActive = () => {
   const layer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: ACTIVE_LAYER_ID,
+      isFeatureClickable: isClickable,
+      featureClickHandler: featureClickHandler,
       type: getRoomType(),
-      // clearSourceOnFloorChange: true,
-      // refreshStyleOnFloorChange: true,
       maxResolution: munimap_floor.RESOLUTION.max,
       source: getActiveRoomStore(),
       updateWhileAnimating: true,
@@ -148,6 +152,7 @@ export {
   create,
   createActive,
   createLabel,
+  getDefaultLayer,
   isActiveLayer,
   isDefaultLayer,
   isLabelLayer,

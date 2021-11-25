@@ -13,6 +13,8 @@ import {wrapText} from '../style/style.js';
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
+ * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
+ * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
  */
 
 /**
@@ -72,6 +74,17 @@ const isRoom = (feature) => {
 };
 
 /**
+ * @param {ol.Feature} room room
+ * @param {string} selectedFeature selected feature
+ * @return {boolean} whether is room in selected floor
+ */
+const isInSelectedFloor = (room, selectedFeature) => {
+  munimap_assert.assert(isRoom(room));
+  const locCode = /**@type {string}*/ (room.get('polohKod'));
+  return selectedFeature ? locCode.startsWith(selectedFeature) : false;
+};
+
+/**
  * @param {string} code code
  */
 const assertCode = (code) => {
@@ -124,27 +137,24 @@ const assertCodeOrLikeExpr = (code) => {
   );
 };
 
-// /**
-//  * @param {munimap.feature.clickHandlerOptions} options
-//  * @return {boolean}
-//  */
-// munimap.room.isClickable = function(options) {
-//   var feature = options.feature;
-//   var map = options.map;
+/**
+ * @param {FeatureClickHandlerOptions} options options
+ * @return {boolean} whether is clickable
+ */
+const isClickable = (options) => {
+  const {feature, selectedFeature} = options;
+  return !isInSelectedFloor(feature, selectedFeature);
+};
 
-//   return !munimap.room.isInSelectedFloor(feature, map);
-// };
-
-// /**
-//  * @param {munimap.feature.clickHandlerOptions} options
-//  */
-// munimap.room.featureClickHandler = function(options) {
-//   var feature = options.feature;
-//   var map = options.map;
-
-//   munimap.changeFloor(map, feature);
-//   munimap.info.refreshVisibility(map);
-// };
+/**
+ * @param {FeatureClickHandlerOptions} options options
+ * @return {AnimationRequestOptions} results
+ */
+const featureClickHandler = (options) => {
+  const {feature} = options;
+  const locationCode = feature.get('polohKod');
+  return locationCode ? locationCode.substr(0, 8) : null;
+};
 
 /**
  * @param {ol.Feature|ol.render.Feature} feature feature
@@ -282,10 +292,13 @@ const addPoiDetail = (rooms, pois, lang) => {
 export {
   ROOM_TYPES,
   addPoiDetail,
+  featureClickHandler,
   getDefaultLabel,
   getType,
   isCode,
   isCodeOrLikeExpr,
+  isClickable,
+  isInSelectedFloor,
   isLikeExpr,
   isRoom,
 };

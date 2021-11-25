@@ -11,7 +11,9 @@ import * as munimap_unit from './unit.js';
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {MUNIMAP_URL} from '../conf.js';
+import {getAnimationRequestParams} from '../utils/animation.js';
 import {getStore as getBuildingStore} from '../source/building.js';
+import {getClosestPointToPixel} from '../feature/feature.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {isDoor} from './door.js';
 import {isRoom} from './room.js';
@@ -19,6 +21,7 @@ import {isRoom} from './room.js';
 /**
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
  * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
+ * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
  * @typedef {import("ol/source").Vector} ol.source.Vector
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/proj/Projection").default} ol.proj.Projection
@@ -143,43 +146,16 @@ const isBuilding = (feature) => {
 };
 
 /**
- * @param {FeatureClickHandlerOptions} options options
- * @return {boolean} isClickable
+ * @param {Feature|ol.render.Feature} building building
+ * @return {string} location code
  */
-const isClickable = (options) => {
-  // const feature = options.feature;
-  // const map = options.map;
-  // const resolution = options.resolution;
-
-  // if (range.contains(floor.RESOLUTION, resolution)) {
-  //   return !isSelected(feature, map) && hasInnerGeometry(feature);
-  // } else if (hasInnerGeometry(feature)) {
-  //   var markers = marker.getStore(map).getFeatures();
-  //   return markers.indexOf(feature) >= 0 || resolution < complex.RESOLUTION.max;
-  // }
-  return false;
-};
-
-/**
- * @param {FeatureClickHandlerOptions} options options
- */
-const featureClickHandler = (options) => {
-  console.log('Yot implemented yet');
-  // var feature = options.feature;
-  // var map = options.map;
-  // var pixel = options.pixel;
-  // var resolution = options.resolution;
-  // var identifyCallback = getProps(map).options.identifyCallback;
-
-  // var isVisible = range.contains(floor.RESOLUTION, resolution);
-  // if (!isVisible && !munimap_utils.isDef(identifyCallback)) {
-  //   var point = feature.getClosestPointToPixel(map, feature, pixel);
-  //   munimap_map.zoomToPoint(map, point, floor.RESOLUTION.max);
-  // }
-  // changeFloor(map, feature);
-  // if (isVisible) {
-  //   info.refreshVisibility(map);
-  // }
+const getLocationCode = (building) => {
+  const result = building.get(LOCATION_CODE_FIELD_NAME);
+  munimap_assert.assertString(
+    result,
+    'Something is wrong! Location code of building should be a string!'
+  );
+  return /** @type {string}*/ (result);
 };
 
 /**
@@ -202,6 +178,60 @@ const hasInnerGeometry = (building) => {
 };
 
 /**
+ * @param {Feature|ol.render.Feature} building building
+ * @param {string} selectedFeature selected feature
+ * @return {boolean} whereas is selected
+ */
+const isSelected = (building, selectedFeature) => {
+  munimap_assert.assert(isBuilding(building));
+  const locCode = getLocationCode(building);
+  //selectedFeature doesn't have to be only building
+  return selectedFeature ? locCode === selectedFeature.substring(0, 5) : false;
+};
+
+/**
+ * @param {FeatureClickHandlerOptions} options options
+ * @return {boolean} isClickable
+ */
+const isClickable = (options) => {
+  const {feature, map, selectedFeature} = options;
+  const view = map.getView();
+  const resolution = view.getResolution();
+
+  if (munimap_range.contains(munimap_floor.RESOLUTION, resolution)) {
+    return !isSelected(feature, selectedFeature) && hasInnerGeometry(feature);
+  } else if (hasInnerGeometry(feature)) {
+    const markers = getMarkerStore().getFeatures();
+    return (
+      markers.indexOf(feature) >= 0 ||
+      resolution < munimap_complex.RESOLUTION.max
+    );
+  }
+  return false;
+};
+
+/**
+ * @param {FeatureClickHandlerOptions} options options
+ * @return {AnimationRequestOptions|string} result
+ */
+const featureClickHandler = (options) => {
+  const {feature, map, pixel} = options;
+  // var identifyCallback = getProps(map).options.identifyCallback;
+
+  const view = map.getView();
+  const resolution = view.getResolution();
+  const isVisible = munimap_range.contains(
+    munimap_floor.RESOLUTION,
+    resolution
+  );
+  if (!isVisible /*&& !munimap_utils.isDef(identifyCallback)*/) {
+    const point = getClosestPointToPixel(map, feature, pixel);
+    return getAnimationRequestParams(map, point, munimap_floor.RESOLUTION.max);
+  }
+  return feature.get('vychoziPodlazi') || feature.get('polohKod');
+};
+
+/**
  * @param {string} code code
  * @return {Feature} building
  */
@@ -213,19 +243,6 @@ const getByCode = (code) => {
     return feature.get(idProperty) === code;
   });
   return building || null;
-};
-
-/**
- * @param {Feature|ol.render.Feature} building building
- * @return {string} location code
- */
-const getLocationCode = (building) => {
-  const result = building.get(LOCATION_CODE_FIELD_NAME);
-  munimap_assert.assertString(
-    result,
-    'Something is wrong! Location code of building should be a string!'
-  );
-  return /** @type {string}*/ (result);
 };
 
 /**
@@ -281,18 +298,6 @@ const getTitleWithoutOrgUnit = (building, lang, opt_separator) => {
   result.reverse();
   result = result.join(opt_separator || ', ');
   return result;
-};
-
-/**
- * @param {Feature|ol.render.Feature} building building
- * @param {string} selectedFeature selected feature
- * @return {boolean} whereas is selected
- */
-const isSelected = (building, selectedFeature) => {
-  munimap_assert.assert(isBuilding(building));
-  const locCode = getLocationCode(building);
-  //selectedFeature doesn't have to be only building
-  return selectedFeature ? locCode === selectedFeature.substring(0, 5) : false;
 };
 
 /**

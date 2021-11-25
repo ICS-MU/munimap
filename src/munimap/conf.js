@@ -8,6 +8,8 @@
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/size").Size} ol.size.Size
  * @typedef {import("./feature/floor.js").Options} FloorOptions
+ * @typedef {import("ol/extent").Extent} ol.extent.Extent
+ * @typedef {import("ol/geom").Point} ol.geom.Point
  */
 
 /**
@@ -55,12 +57,21 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {boolean} [pubTran] whethet to show public transportation stops
  * @property {Array<string>} [poiFilter] poi filter
  * @property {Array<string>} [markerFilter] marker filter
+ * @property {string} getMainFeatureAtPixelId getMainFeatureAtPixel id
  */
 
 /**
  * @typedef {Object} ErrorMessageState
  * @property {boolean} render whether to rende error div
  * @property {boolean} withMessage whether to render with message
+ */
+
+/**
+ * @typedef {Object} AnimationRequestState
+ * @property {ol.geom.Point|ol.coordinate.Coordinate} [center] center
+ * @property {number} [resolution] resolution
+ * @property {number} [duration] duration
+ * @property {ol.extent.Extent} [extent] extent
  */
 
 /**
@@ -83,6 +94,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {number} poisTimestamp pois timestamp
  * @property {number} optPoisTimestamp opt pois timestamp
  * @property {ErrorMessageState} errorMessage error message
+ * @property {AnimationRequestState} animationRequest requested view
  */
 
 /**
@@ -117,6 +129,7 @@ export const INITIAL_STATE = {
     center: null,
     poiFilter: null,
     markerFilter: null,
+    getMainFeatureAtPixelId: null,
   },
   markersTimestamp: null,
   zoomToTimestamp: null,
@@ -132,5 +145,11 @@ export const INITIAL_STATE = {
   errorMessage: {
     render: null,
     withMessage: null,
+  },
+  animationRequest: {
+    center: null,
+    resolution: null,
+    duration: null,
+    extent: null,
   },
 };

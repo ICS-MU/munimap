@@ -31,6 +31,7 @@ import {v4 as uuidv4} from 'uuid';
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  * @typedef {import("redux").Store} redux.Store
  * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
+ * @typedef {import("./feature/feature.js").getMainFeatureAtPixelFunction} getMainFeatureAtPixelFunction
  */
 
 /**
@@ -52,6 +53,7 @@ import {v4 as uuidv4} from 'uuid';
  * @property {boolean} [pubTran] public transportation stops
  * @property {Array<string>} [poiFilter] poi filter
  * @property {Array<string>} [markerFilter] marker filter
+ * @property {getMainFeatureAtPixelFunction} [getMainFeatureAtPixel] getMainFeatureAtPixel function
  */
 
 /**
@@ -96,6 +98,11 @@ export const CREATED_MAPS = {};
  * @type {Object<string, HTMLElement>}
  */
 export const TARGET_ELEMENTS_STORE = {};
+
+/**
+ * @type {Object<string, getMainFeatureAtPixelFunction>}
+ */
+export const GET_MAIN_FEATURE_AT_PIXEL_STORE = {};
 
 /**
  * Load features by location codes or decorate custom markers.
@@ -195,7 +202,7 @@ const assertOptions = (options) => {
   );
   munimap_assert.zoom(options.zoom);
   munimap_assert.zoomTo(options.zoomTo);
-  // munimap_assert.getMainFeatureAtPixel(options.getMainFeatureAtPixel);
+  munimap_assert.getMainFeatureAtPixel(options.getMainFeatureAtPixel);
   munimap_assert.markers(options.markers);
   // munimap_assert.layers(options.layers);
   munimap_assert.lang(options.lang);
@@ -307,6 +314,11 @@ const getInitialState = (options, targetId) => {
   }
   if (options.markerFilter !== undefined) {
     initialState.requiredOpts.markerFilter = options.markerFilter;
+  }
+  if (options.getMainFeatureAtPixel !== undefined) {
+    const id = `GET_MAIN_FEATURE_AT_PIXEL_${targetId}`;
+    GET_MAIN_FEATURE_AT_PIXEL_STORE[id] = options.getMainFeatureAtPixel;
+    initialState.requiredOpts.getMainFeatureAtPixelId = id;
   }
 
   return initialState;
@@ -423,6 +435,7 @@ export default (options) => {
         munimap_view.ensureBaseMap(basemapLayer, map);
         munimap_view.refreshStyles(state, map.getLayers().getArray());
         munimap_view.refreshInfoElement(map, infoEl, store);
+        munimap_view.animate(map, state.animationRequest);
       }
     };
 
