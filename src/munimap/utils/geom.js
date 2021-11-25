@@ -226,5 +226,6 @@ export {
   INTERSECT_CENTER_GEOMETRY_FUNCTION,
   getGeometryCenter,
   getGeometryCenterOfFeatures,
+  getLargestPolygon,
   featureExtentIntersect,
 };

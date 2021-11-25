@@ -16,6 +16,7 @@ import * as munimap_unit from '../feature/unit.js';
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {Circle, Fill, Stroke, Style, Text} from 'ol/style';
+import {MultiPolygon} from 'ol/geom';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {isDoor} from '../feature/door.js';
 import {isRoom} from '../feature/room.js';
@@ -257,7 +258,10 @@ const pinFunction = (options, clusterFeature, feature, resolution) => {
 
   const color = /**@type {string}*/ (feature.get('color'));
   const isMarked = munimap_marker.isMarker(feature);
-  const geometry = feature.getGeometry();
+  let geometry = feature.getGeometry();
+  if (geometry instanceof MultiPolygon) {
+    geometry = munimap_geom.getLargestPolygon(geometry);
+  }
   munimap_assert.assert(!!geometry);
 
   let styleArray = [];
