@@ -643,7 +643,8 @@ export const calculateView = createSelector(
             initExtentOpts.extent = extent;
             initExtentOpts.size = [target.offsetWidth, target.offsetHeight];
           }
-          /** constrainResolution not exists in OL6, should be all removed */
+          /** constrainResolution not exists in OL6, */
+          /** use view.getConstrainedResolution(resolution), */
           /** https://github.com/openlayers/openlayers/pull/9137 */
           // if (munimap.marker.custom.isCustom(zoomTo[0])) {
           //   if (view.getResolution() < munimap.floor.RESOLUTION.max) {
