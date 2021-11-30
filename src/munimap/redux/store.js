@@ -22,7 +22,6 @@ import {isBuilding} from '../feature/building.js';
 import {isDoor} from '../feature/door.js';
 import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.js';
 import {loadOrDecorateMarkers} from '../create.js';
-import {setBuildingTitle} from '../view/info.js';
 
 /**
  * @typedef {import("../conf.js").State} State
@@ -188,10 +187,6 @@ const createReducer = (initialState) => {
           if (locationCode !== null) {
             //set to state - it can be building/floor code
             newState.selectedFeature = locationCode;
-
-            const titleOpts = slctr.getBuildingTitle(newState);
-            setBuildingTitle(state.requiredOpts.targetId, titleOpts);
-
             const where = `polohKod LIKE '${locationCode.substring(0, 5)}%'`;
             loadFloors(where).then((floors) =>
               action.asyncDispatch(
@@ -201,10 +196,6 @@ const createReducer = (initialState) => {
           } else {
             //deselect feature from state
             newState.selectedFeature = null;
-
-            const titleOpts = slctr.getBuildingTitle(newState);
-            setBuildingTitle(state.requiredOpts.targetId, titleOpts);
-
             clearFloorBasedStores();
           }
         }

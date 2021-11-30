@@ -84,6 +84,9 @@ import {styleFunction as markerStyleFunction} from '../style/marker.js';
 
 /**
  * @typedef {import("../conf.js").State} State
+ * @typedef {import("../conf.js").RequiredOptions} RequiredOptions
+ * @typedef {import("../conf.js").AnimationRequestState} AnimationRequestState
+ * @typedef {import("../conf.js").ErrorMessageState} ErrorMessageState
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/size").Size} ol.Size
  * @typedef {import("ol/extent").Extent} ol.Extent
@@ -99,6 +102,20 @@ import {styleFunction as markerStyleFunction} from '../style/marker.js';
  * @typedef {import("../utils/range.js").RangeInterface} RangeInterface
  * @typedef {import("../feature/marker.js").LabelFunction} MarkerLabelFunction
  */
+
+/**
+ * @type {Reselect.Selector<State, boolean>}
+ * @param {State} state state
+ * @return {boolean} whether is initialized
+ */
+export const isMapInitialized = (state) => state.mapInitialized;
+
+/**
+ * @type {Reselect.Selector<State, RequiredOptions>}
+ * @param {State} state state
+ * @return {RequiredOptions} opts
+ */
+export const getRequiredOpts = (state) => state.requiredOpts;
 
 /**
  * @type {Reselect.Selector<State, boolean>}
@@ -175,7 +192,7 @@ const getRequiredBaseMap = (state) => state.requiredOpts.baseMap;
  * @param {State} state state
  * @return {boolean} basemap
  */
-const getRequiredLabels = (state) => state.requiredOpts.labels;
+export const getRequiredLabels = (state) => state.requiredOpts.labels;
 
 /**
  * @type {Reselect.Selector<State, string>}
@@ -263,6 +280,28 @@ const getRequiredClusterFacultyAbbr = (state) =>
   state.requiredOpts.clusterFacultyAbbr;
 
 /**
+ * @type {Reselect.Selector<State, AnimationRequestState>}
+ * @param {State} state state
+ * @return {AnimationRequestState} animation request state
+ */
+export const getAnimationRequest = (state) => state.animationRequest;
+
+/**
+ * @type {Reselect.Selector<State, boolean>}
+ * @param {State} state state
+ * @return {boolean} whether to simple scroll
+ */
+export const getRequiredSimpleScroll = (state) =>
+  state.requiredOpts.simpleScroll;
+
+/**
+ * @type {Reselect.Selector<State, ErrorMessageState>}
+ * @param {State} state state
+ * @return {ErrorMessageState} error message state
+ */
+export const getErrorMessageState = (state) => state.errorMessage;
+
+/**
  * createSelector return type Reselect.OutputSelector<S, T, (res: R1) => T>
  *    S: State (for Selector functions above)
  *    T: Returned type (must be same as returned type below)
@@ -271,16 +310,16 @@ const getRequiredClusterFacultyAbbr = (state) =>
  * @type {Reselect.OutputSelector<
  *    State,
  *    Array<ol.Feature>,
- *    function(Array<string>): Array<ol.Feature>
+ *    function(Array<string>, number): Array<ol.Feature>
  * >}
  */
 export const getInitMarkers = createSelector(
-  [getRequiredMarkerIds],
-  (requiredMarkerIds) => {
+  [getRequiredMarkerIds, getMarkersTimestamp],
+  (requiredMarkerIds, markersTimestamp) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing init markers');
     }
-    if (requiredMarkerIds.length === 0) {
+    if (requiredMarkerIds.length === 0 || markersTimestamp <= 0) {
       return [];
     }
 
@@ -1340,14 +1379,14 @@ export const getBuildingTitle = createSelector(
       console.log('computing building title to info element');
     }
     if (!selectedFeature) {
-      return {title: '', complexTitle: ''};
+      return {bldgTitle: '', complexTitle: ''};
     }
 
-    let title = '';
+    let bldgTitle = '';
     let complexTitle = '';
     const building = getBuildingByCode(selectedFeature);
     if (building) {
-      title = /**@type {string}*/ (
+      bldgTitle = /**@type {string}*/ (
         building.get(
           munimap_lang.getMsg(
             munimap_lang.Translations.BUILDING_TITLE_FIELD_NAME,
@@ -1385,19 +1424,19 @@ export const getBuildingTitle = createSelector(
           munimap_utils.isDefAndNotNull(buildingType) &&
           munimap_utils.isDefAndNotNull(buildingTitle)
         ) {
-          title = buildingType + ' ' + buildingTitle;
+          bldgTitle = buildingType + ' ' + buildingTitle;
         } else {
           if (getBuildingCount(complex) === 1) {
-            title = getBuildingNamePart(building, lang);
+            bldgTitle = getBuildingNamePart(building, lang);
           } else {
-            title = getBuildingTitleWithoutOrgUnit(building, lang);
+            bldgTitle = getBuildingTitleWithoutOrgUnit(building, lang);
           }
         }
       } else {
-        title = getBuildingTitleWithoutOrgUnit(building, lang);
+        bldgTitle = getBuildingTitleWithoutOrgUnit(building, lang);
       }
     }
-    return {title, complexTitle};
+    return {bldgTitle, complexTitle};
   }
 );
 
@@ -1488,5 +1527,31 @@ export const getStyleForActivePoiLayer = createSelector(
       return null;
     };
     return styleFce;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    Array<ol.Feature>,
+ *    function(number, string): Array<ol.Feature>
+ * >}
+ */
+export const getFloorsByBuildingCode = createSelector(
+  [getFloorsTimestamp, getSelectedFeature],
+  (floorsTimestamp, selectedFeature) => {
+    if (!floorsTimestamp || !selectedFeature) {
+      return [];
+    }
+    const store = getFloorStore();
+    if (store) {
+      const features = store.getFeatures();
+      const floors = features.filter((floor) => {
+        const locationCode = floor.get('polohKod');
+        return locationCode.startsWith(selectedFeature.substr(0, 5));
+      });
+      return floors || [];
+    }
+    return [];
   }
 );

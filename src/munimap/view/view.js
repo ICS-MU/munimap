@@ -3,9 +3,7 @@
  */
 import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
-import * as munimap_lang from '../lang/lang.js';
 import * as munimap_utils from '../utils/utils.js';
-import * as slctr from '../redux/selector.js';
 import TileLayer from 'ol/layer/Tile';
 import createControls from '../control/mapcontrolsview.js';
 import {
@@ -14,11 +12,6 @@ import {
 } from '../create.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {Point} from 'ol/geom';
-import {
-  addEmptyErrorEl,
-  prependMessageToErrorEl,
-  removeErrorEl,
-} from '../ui/interaction.js';
 import {
   createActiveStore as createActiveDoorStore,
   createStore as createDoorStore,
@@ -60,11 +53,6 @@ import {
   updateClusteredFeatures,
 } from './cluster.js';
 import {refreshStyle as refreshComplexStyle} from './complex.js';
-import {
-  refreshElementPosition,
-  refreshElementVisibility,
-  refreshFloorSelect,
-} from './info.js';
 import {refreshStyle as refreshMarkerStyle} from './marker.js';
 import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
 
@@ -78,6 +66,7 @@ import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  * @typedef {import("../feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("redux").Store} redux.Store
+ * @typedef {import("redux").Dispatch} redux.Dispatch
  * @typedef {import("../conf.js").State} State
  * @typedef {import("../conf.js").ErrorMessageState} ErrorMessageState
  * @typedef {import("../conf.js").AnimationRequestState} AnimationRequestState
@@ -90,17 +79,12 @@ import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
  */
 
 /**
- * @typedef {Object} AddLayersOptions
+ * @typedef {Object} AddLayersExtendedOptions
  * @property {Array<ol.Feature>} markers markers
- * @property {string} lang language
  * @property {ol.AttributionLike} muAttrs mu attributions
- * @property {boolean} [clusterFacultyAbbr] whether to cluster faculty abbrs
- * @property {boolean} [showLabels] whether to show labels
- * @property {boolean} [locationCodes] whether to show location codes
- * @property {MarkerLabelFunction} [markerLabel] marker label
- * @property {boolean} [pubTran] public transportation
- * @property {ol.source.Vector} [markerSource] marker source
  * @property {RangeInterface} clusterResolution cluster resolution
+ *
+ * @typedef {RequiredOptions & AddLayersExtendedOptions} AddLayersOptions
  */
 
 /**
@@ -115,78 +99,12 @@ import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
  */
 
 /**
- * @param {Element} target target
- * @param {string} lang language
- */
-const addLoadingMessage = (target, lang) => {
-  const messageDiv = document.createElement('div');
-  console.log(target)
-  messageDiv.id = 'message_' + target.id.toString();
-  messageDiv.className = 'loading-message';
-  messageDiv.style.cssText =
-    'color: #999; font-size: 30px;' +
-    ' font-weight: bold; vertical-align: middle; ' +
-    ' font-family: Arial, Helvetica, sans-serif; ' +
-    ' position: absolute; top: 0; left: 0; width: 100%;' +
-    ' height: 100%; text-align: center;';
-
-  const innerDiv = document.createElement('div');
-  innerDiv.className = 'inner';
-  innerDiv.style.cssText =
-    'display:inline-block; vertical-align: middle; position: relative;';
-
-  const message = document.createElement('p');
-  message.className = 'text';
-  message.appendChild(
-    document.createTextNode(
-      munimap_lang.getMsg(munimap_lang.Translations.LOADING_MAP, lang)
-    )
-  );
-
-  const styleElInnerHTML =
-    `#message_${target.id.toString()}` +
-    `:before {box-sizing: inherit; content: \'\'; display: inline-block; ` +
-    `height: 100%; vertical-align: middle; margin-right: -0.25em;}`;
-
-  const styleEl = document.createElement('style');
-  styleEl.id = 'message_' + target.id.toString() + '_style';
-  styleEl.appendChild(document.createTextNode(styleElInnerHTML));
-
-  messageDiv.appendChild(innerDiv);
-  innerDiv.appendChild(message);
-  target.appendChild(styleEl);
-  target.appendChild(messageDiv);
-};
-
-/**
- * @param {Element} target target element
- */
-const removeLoadingMessage = (target) => {
-  const id = target.id.toString();
-  const messageEl = document.getElementById(`message_${id}`);
-
-  if (messageEl) {
-    document.getElementById(`message_${id}`).remove();
-    document.getElementById(`message_${id}_style`).remove();
-  }
-};
-
-/**
- * @param {boolean} add whether to add or remove
- * @param {Element} target target element
- * @param {string} lang language
- */
-const toggleLoadingMessage = (add, target, lang) => {
-  add ? addLoadingMessage(target, lang) : removeLoadingMessage(target);
-};
-
-/**
  * Ensure basemap and change it if necessary.
- * @param {TileLayer} basemapLayer basemap
  * @param {ol.Map} map map
+ * @param {TileLayer} basemapLayer basemap
  */
-const ensureBaseMap = (basemapLayer, map) => {
-  if (map === undefined) {
+const ensureBaseMap = (map, basemapLayer) => {
+  if (!map) {
     return;
   }
   const layers = map.getLayers();
@@ -205,11 +123,11 @@ const ensureBaseMap = (basemapLayer, map) => {
 /**
  * Add controls to map.
  * @param {ol.Map} map map
- * @param {redux.Store} store store
+ * @param {redux.Dispatch} dispatch dispatch
  * @param {RequiredOptions} requiredOpts opts
  */
-const addCustomControls = (map, store, requiredOpts) => {
-  createControls(map, store, requiredOpts);
+const addCustomControls = (map, dispatch, requiredOpts) => {
+  createControls(map, dispatch, requiredOpts);
 };
 
 /**
@@ -218,12 +136,10 @@ const addCustomControls = (map, store, requiredOpts) => {
  * @param {AddLayersOptions} options opts
  */
 const addLayers = (map, options) => {
-  const {lang, showLabels, locationCodes} = options;
+  const {lang, labels, locationCodes} = options;
   const markerLayer = createMarkerLayer(map, options);
-  options.markerSource = markerLayer.getSource();
-
   const markerClusterLayer = createClusterLayer(map, options);
-  const layers = getDefaultLayers(lang, showLabels, locationCodes);
+  const layers = getDefaultLayers(lang, labels, locationCodes);
   layers.forEach((layer) => map.addLayer(layer));
 
   if (options.pubTran) {
@@ -237,15 +153,16 @@ const addLayers = (map, options) => {
 
 /**
  * @param {MapBrowserEvent} evt event
- * @param {redux.Store} store store
+ * @param {redux.Dispatch} dispatch dispatch
+ * @param {MapListenersOptions} options options
  */
-const handleMapClick = (evt, store) => {
+const handleMapClick = (evt, dispatch, options) => {
+  const {getMainFeatureAtPixelId, selectedFeature, clusterFacultyAbbr} =
+    options;
   const {map, pixel} = evt;
-  const state = /**@type {State}*/ (store.getState());
-  const getMainFeatureAtPixelFn = state.requiredOpts.getMainFeatureAtPixelId
-    ? GET_MAIN_FEATURE_AT_PIXEL_STORE[
-        state.requiredOpts.getMainFeatureAtPixelId
-      ]
+
+  const getMainFeatureAtPixelFn = getMainFeatureAtPixelId
+    ? GET_MAIN_FEATURE_AT_PIXEL_STORE[getMainFeatureAtPixelId]
     : getMainFeatureAtPixel;
 
   let result;
@@ -262,8 +179,8 @@ const handleMapClick = (evt, store) => {
         feature: featureWithLayer.feature,
         map: map,
         pixel: pixel,
-        selectedFeature: state.selectedFeature,
-        clusterFacultyAbbr: state.requiredOpts.clusterFacultyAbbr,
+        selectedFeature: selectedFeature,
+        clusterFacultyAbbr: clusterFacultyAbbr,
       };
       if (isClickable(handlerOpts)) {
         const featureClickHandler = /** @type {featureClickHandlerFunction} */ (
@@ -278,10 +195,10 @@ const handleMapClick = (evt, store) => {
   }
   if (result) {
     munimap_utils.isString(result)
-      ? store.dispatch(
+      ? dispatch(
           actions.selected_feature_changed(/** @type {string}*/ (result))
         )
-      : store.dispatch(
+      : dispatch(
           actions.view_animation_requested(
             /** @type {AnimationRequestOptions}*/ (result)
           )
@@ -291,21 +208,24 @@ const handleMapClick = (evt, store) => {
 
 /**
  * @param {MapBrowserEvent} evt event
- * @param {redux.Store} store store
+ * @param {MapListenersOptions} options options
  */
-const handlePointerMove = (evt, store) => {
+const handlePointerMove = (evt, options) => {
   if (evt.dragging) {
     return;
   }
 
+  const {
+    targetId,
+    getMainFeatureAtPixelId,
+    selectedFeature,
+    clusterFacultyAbbr,
+  } = options;
   const map = evt.map;
-  const state = store.getState();
-  const targetEl = TARGET_ELEMENTS_STORE[state.requiredOpts.targetId];
+  const targetEl = TARGET_ELEMENTS_STORE[targetId];
   const pixel = map.getEventPixel(evt.originalEvent);
-  const getMainFeatureAtPixelFn = state.requiredOpts.getMainFeatureAtPixel
-    ? GET_MAIN_FEATURE_AT_PIXEL_STORE[
-        state.requiredOpts.getMainFeatureAtPixelId
-      ]
+  const getMainFeatureAtPixelFn = getMainFeatureAtPixelId
+    ? GET_MAIN_FEATURE_AT_PIXEL_STORE[getMainFeatureAtPixelId]
     : getMainFeatureAtPixel;
 
   const featureWithLayer = getMainFeatureAtPixelFn(map, pixel);
@@ -347,8 +267,8 @@ const handlePointerMove = (evt, store) => {
         feature: feature,
         map: map,
         pixel: pixel,
-        selectedFeature: state.selectedFeature,
-        clusterFacultyAbbr: state.requiredOpts.clusterFacultyAbbr,
+        selectedFeature: selectedFeature,
+        clusterFacultyAbbr: clusterFacultyAbbr,
       };
       if (isClickable(handlerOpts)) {
         //const popupEl = munimap.bubble.OVERLAY.getElement();
@@ -373,27 +293,26 @@ const handlePointerMove = (evt, store) => {
 /**
  * Attach listeners to Map.
  * @param {ol.Map} map map
+ * @param {redux.Dispatch} dispatch dispatch
  * @param {MapListenersOptions} options opts
  */
-const attachMapListeners = (map, options) => {
-  const {store, view} = options;
-
+const attachMapListeners = (map, dispatch, options) => {
   map.once('rendercomplete', () => {
-    store.dispatch(actions.map_initialized());
+    dispatch(actions.map_initialized());
   });
 
   map.on('moveend', () => {
-    store.dispatch(
+    dispatch(
       actions.ol_map_view_change({
-        center: view.getCenter(),
-        resolution: view.getResolution(),
+        center: map.getView().getCenter(),
+        resolution: map.getView().getResolution(),
         mapSize: map.getSize(),
       })
     );
   });
 
-  map.on('click', (evt) => handleMapClick(evt, store));
-  map.on('pointermove', (evt) => handlePointerMove(evt, store));
+  map.on('click', (evt) => handleMapClick(evt, dispatch, options));
+  map.on('pointermove', (evt) => handlePointerMove(evt, options));
 };
 
 /**
@@ -448,85 +367,24 @@ const refreshStyles = (state, layers) => {
 
 /**
  * Ensure update clusters in map.
- * @param {State} state state
  * @param {ol.Map} map map
+ * @param {Object} options options
+ * @param {boolean} options.labels labels
+ * @param {number} options.bldgsCount buildings count
  */
-const ensureClusterUpdate = (state, map) => {
+const ensureClusterUpdate = (map, {labels, bldgsCount}) => {
   if (!map) {
     return;
   }
 
   const oldBuildingsCount = map.get(MUNIMAP_PROPS_ID).buildingsCount;
-  const newBuildingsCount = slctr.getLoadedBuildingsCount(state);
+  const newBuildingsCount = bldgsCount;
 
   if (newBuildingsCount !== oldBuildingsCount) {
-    const requiredLabels = state.requiredOpts.labels;
     map.get(MUNIMAP_PROPS_ID).buildingsCount = newBuildingsCount;
-    if (requiredLabels !== false) {
+    if (labels !== false) {
       const resolution = map.getView().getResolution();
-      updateClusteredFeatures(resolution, requiredLabels);
-    }
-  }
-};
-
-/**
- * @param {HTMLDivElement} infoEl info element
- */
-const initFloorSelect = (infoEl) => {
-  const complexEl = document.createElement('div');
-  const bldgEl = document.createElement('div');
-  const floorEl = document.createElement('div');
-  complexEl.className = 'munimap-complex';
-  bldgEl.className = 'munimap-building';
-  floorEl.className = 'munimap-floor';
-  infoEl.appendChild(complexEl);
-  infoEl.appendChild(bldgEl);
-  infoEl.appendChild(floorEl);
-
-  const customSelectEl = document.createElement('div');
-  customSelectEl.className = 'munimap-floor-select';
-  floorEl.appendChild(customSelectEl);
-};
-
-/**
- * @param {ol.Map} map map
- * @param {HTMLDivElement} infoEl info element
- * @param {redux.Store} reduxStore redux store
- */
-const refreshInfoElement = (map, infoEl, reduxStore) => {
-  const onClickItem = (actionCreator, opt_args) =>
-    reduxStore.dispatch(actionCreator(opt_args));
-  const state = reduxStore.getState();
-
-  //must be in this order - visibility, floor select, position
-  //position is computed from infoEl size that is influenced by vis+fl
-  refreshElementVisibility(infoEl, state);
-  refreshFloorSelect(
-    infoEl,
-    state.selectedFeature,
-    state.requiredOpts.lang,
-    onClickItem
-  );
-  refreshElementPosition(map, infoEl, state);
-};
-
-/**
- * @param {ErrorMessageOptions} options options
- */
-const refreshErrorMessage = (options) => {
-  const {invalidCodes, simpleScroll, errorMessage, munimapEl} = options;
-  const {render, withMessage} = errorMessage;
-  const hasInvalidCodes = invalidCodes && invalidCodes.length > 0;
-  const shouldBlockMap = !simpleScroll;
-
-  if (hasInvalidCodes || shouldBlockMap) {
-    if (render === false) {
-      removeErrorEl(munimapEl);
-    } else {
-      addEmptyErrorEl(options);
-      if (withMessage === true || (hasInvalidCodes && withMessage === null)) {
-        prependMessageToErrorEl(options);
-      }
+      updateClusteredFeatures(resolution, labels);
     }
   }
 };
@@ -569,12 +427,8 @@ export {
   ensureBaseMap,
   addCustomControls,
   addLayers,
-  toggleLoadingMessage,
   createFeatureStores,
   refreshStyles,
   ensureClusterUpdate,
-  initFloorSelect,
-  refreshInfoElement,
-  refreshErrorMessage,
   animate,
 };

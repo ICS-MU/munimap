@@ -31,6 +31,7 @@ import createMapLinks from './maplinksview.js';
  * @typedef {import("../conf.js").RequiredOptions} RequiredOptions
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("redux").Store} redux.Store
+ * @typedef {import("redux").Dispatch} redux.Dispatch
  */
 
 /**
@@ -90,13 +91,13 @@ const createMapToolsEl = () => {
 };
 
 /**
- * @param {redux.Store} store store
+ * @param {redux.Dispatch} dispatch dispatch
  * @param {Element} parentEl parent element
  */
-const addMatomoClickEvent = (store, parentEl) => {
+const addMatomoClickEvent = (dispatch, parentEl) => {
   const el = parentEl.getElementsByClassName('ol-full-screen')[0];
   el.addEventListener('click', () => {
-    store.dispatch(
+    dispatch(
       actions.log_action_happened({
         category: 'full-screen',
         action: 'click',
@@ -140,12 +141,12 @@ const zoomToInitExtent = (map) => {
 
 /**
  * @param {ol.Map} map map
- * @param {redux.Store} store store
+ * @param {redux.Dispatch} dispatch dispatch
  * @param {HTMLElement} target target
  * @param {string} lang language
  * @return {Control} control
  * */
-const createInitExtentControl = (map, store, target, lang) => {
+const createInitExtentControl = (map, dispatch, target, lang) => {
   const divEl = document.createElement('div');
   divEl.className += ' munimap-initial-extent';
   divEl.id = 'muni-init-extent';
@@ -171,7 +172,7 @@ const createInitExtentControl = (map, store, target, lang) => {
 
   divEl.addEventListener('click', () => {
     zoomToInitExtent(map);
-    store.dispatch(
+    dispatch(
       actions.log_action_happened({
         category: 'initExtent',
         action: 'click',
@@ -229,10 +230,10 @@ const toggleMapToolBar = (options) => {
 /**
  * Toggles Tool Bar into Map Tools
  * @param {ol.Map} map map
- * @param {redux.Store} store store
+ * @param {redux.Dispatch} dispatch dispatch
  * @param {MapToolsOptions} options opts
  */
-const toggleMapTools = (map, store, options) => {
+const toggleMapTools = (map, dispatch, options) => {
   const {toolBarEl, mapToolsEl, lang, sizeOfControls} = options;
   const remainingSpace = map.getSize()[1] - sizeOfControls - ZOOM_IN_OUT_SIZE;
   if (remainingSpace >= 0) {
@@ -282,7 +283,7 @@ const toggleMapTools = (map, store, options) => {
       lang: lang,
     });
 
-    store.dispatch(
+    dispatch(
       actions.log_action_happened({
         category: 'mapTools',
         action: 'create',
@@ -290,7 +291,7 @@ const toggleMapTools = (map, store, options) => {
     );
     buttonEl.addEventListener('click', () => {
       toggleMapToolBar(toolBarOptions);
-      store.dispatch(
+      dispatch(
         actions.log_action_happened({
           category: 'mapTools',
           action: 'click',
@@ -362,22 +363,22 @@ const removeControls = (map) => {
 /**
  * Create additional map tools
  * @param {ol.Map} map map
- * @param {redux.Store} store store
+ * @param {redux.Dispatch} dispatch dispatch
  * @param {RequiredOptions} options opts
  */
-export default (map, store, options) => {
+export default (map, dispatch, options) => {
   const lang = options.lang;
 
   // if (jpad.func.isDef(options.identifyCallback)) {
   //   map.addControl(munimap.identify.createControl(map));
   // }
   if (options.mapLinks) {
-    map.addControl(createMapLinks(map, store, options.markerIds, lang));
+    map.addControl(createMapLinks(map, dispatch, options.markerIds, lang));
   }
   if (window.location.protocol === 'https:' || !PRODUCTION) {
-    map.addControl(createGeolocation(map, store, lang));
+    map.addControl(createGeolocation(map, dispatch, lang));
   } else {
-    store.dispatch(
+    dispatch(
       actions.log_action_happened({
         category: 'geolocation',
         action: 'http_hidden',
@@ -400,7 +401,7 @@ export default (map, store, options) => {
         target: toolBarEl,
       })
     );
-    controlsToAdd.push(createInitExtentControl(map, store, toolBarEl, lang));
+    controlsToAdd.push(createInitExtentControl(map, dispatch, toolBarEl, lang));
   };
 
   const addMapTools = () => {
@@ -408,11 +409,16 @@ export default (map, store, options) => {
     storeControls(controlsToAdd);
     sizeOfControls += addControls(map, controlsToAdd);
     remainingSpace = map.getSize()[1] - sizeOfControls - ZOOM_IN_OUT_SIZE;
-    toggleMapTools(map, store, {toolBarEl, mapToolsEl, lang, sizeOfControls});
+    toggleMapTools(map, dispatch, {
+      toolBarEl,
+      mapToolsEl,
+      lang,
+      sizeOfControls,
+    });
   };
 
   addMapTools();
-  addMatomoClickEvent(store, toolBarEl);
+  addMatomoClickEvent(dispatch, toolBarEl);
   toggleMapLinks(map, options);
 
   map.on('change:size', () => {
@@ -422,7 +428,7 @@ export default (map, store, options) => {
       toolBarEl = createToolBarEl();
       mapToolsEl = createMapToolsEl();
       addMapTools();
-      addMatomoClickEvent(store, toolBarEl);
+      addMatomoClickEvent(dispatch, toolBarEl);
     }
     toggleMapLinks(map, options);
   });

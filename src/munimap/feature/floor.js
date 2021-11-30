@@ -3,7 +3,6 @@
  */
 
 import * as munimap_range from '../utils/range.js';
-import * as munimap_utils from '../utils/utils.js';
 import {MUNIMAP_URL} from '../conf.js';
 import {getStore as getFloorStore} from '../source/floor.js';
 
@@ -99,24 +98,6 @@ export const getFloorLayerIdByCode = (code) => {
     return;
   }
   return floor.get('vrstvaId');
-};
-
-/**
- * Get floor from its store by building code.
- * @param {string} code location code
- * @return {Array<ol.Feature>} floor feature
- */
-export const getFloorsByBuildingCode = (code) => {
-  const store = getFloorStore();
-  if (store) {
-    const features = store.getFeatures();
-    const floors = features.filter((floor) => {
-      const locationCode = floor.get('polohKod');
-      return locationCode.startsWith(code);
-    });
-    return floors || [];
-  }
-  return [];
 };
 
 /**

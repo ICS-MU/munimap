@@ -48,7 +48,7 @@ const getLayer = (map) => {
  * @return {VectorLayer} marker cluster layer
  */
 const create = (map, options) => {
-  const {markers, lang, showLabels, muAttrs, clusterResolution} = options;
+  const {markers, lang, labels, muAttrs, clusterResolution} = options;
   const clusterFeatures = markers.concat();
   const markerClusterSrc = createClusterStore(clusterFeatures, muAttrs, lang);
 
@@ -72,7 +72,7 @@ const create = (map, options) => {
     const range = munimap_cluster.getResolutionRange(res);
 
     if (range !== oldRange) {
-      updateClusteredFeatures(res, showLabels);
+      updateClusteredFeatures(res, labels);
     }
 
     mapProps.currentRes = res;

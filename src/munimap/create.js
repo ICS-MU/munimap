@@ -3,14 +3,15 @@
  */
 import * as actions from './redux/action.js';
 import * as munimap_assert from './assert/assert.js';
-import * as munimap_interaction from './ui/interaction.js';
 import * as munimap_load from './load.js';
 import * as munimap_utils from './utils/utils.js';
 import * as munimap_view from './view/view.js';
-import * as slctr from './redux/selector.js';
 import Feature from 'ol/Feature';
-import {INITIAL_STATE, MUNIMAP_PROPS_ID} from './conf.js';
-import {Map} from 'ol';
+import MunimapComponent from './_components/munimap.jsx';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {INITIAL_STATE} from './conf.js';
+import {Provider} from 'react-redux';
 import {addPoiDetail} from './feature/room.js';
 import {createStore} from './redux/store.js';
 import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
@@ -18,24 +19,21 @@ import {isCtgUid as isOptPoiCtgUid} from './feature/optpoi.js';
 import {isCode as isRoomCode} from './feature/room.js';
 import {markerLabel as optPoiMarkerLabel} from './style/optpoi.js';
 import {v4 as uuidv4} from 'uuid';
-import React from 'react';
-import ReactDOM from "react-dom";
-import {hot} from 'react-hot-loader';
-import InfoBubbleComponent from './_components/infobubble.jsx';
-import MunimapComponent from './_components/munimap.jsx';
-import {Provider} from 'react-redux'
 
 /**
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
  * @typedef {import("ol/layer").Vector} ol.layer.Vector
  * @typedef {import("ol/layer/Base").default} ol.layer.BaseLayer
  * @typedef {import("ol").View} ol.View
+ * @typedef {import("ol").Map} ol.Map
  * @typedef {import("ol/size").Size} ol.size.Size
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("./conf.js").State} State
  * @typedef {import("./conf.js").MapProps} MapProps
+ * @typedef {import("./conf.js").RequiredOptions} RequiredOptions
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  * @typedef {import("redux").Store} redux.Store
+ * @typedef {import("redux").Dispatch} redux.Dispatch
  * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("./feature/feature.js").getMainFeatureAtPixelFunction} getMainFeatureAtPixelFunction
  */
@@ -80,9 +78,10 @@ import {Provider} from 'react-redux'
  */
 
 /**
- * @typedef {Object} MapListenersOptions
- * @property {redux.Store} store store
- * @property {ol.View} view view
+ * @typedef {Object} MapListenersExtendedOptions
+ * @property {string} selectedFeature selected feature
+ *
+ * @typedef {MapListenersExtendedOptions & RequiredOptions} MapListenersOptions
  */
 
 /**
@@ -96,7 +95,7 @@ export const REQUIRED_CUSTOM_MARKERS = {};
 export const MARKER_LABEL_STORE = {};
 
 /**
- * @type {Object<string, Map>}
+ * @type {Object<string, ol.Map>}
  */
 export const CREATED_MAPS = {};
 
@@ -353,97 +352,11 @@ export default (options) => {
       })
     );
 
-    let unsubscribeInit;
-    let map;
-
-    /*------------ create redux render function and subscribtion -------------*/
-    const render = () => {
-      const state = /**@type {State}*/ (store.getState());
-
-      const targetEl = /** @type {HTMLElement}*/ (
-        TARGET_ELEMENTS_STORE[state.requiredOpts.targetId]
-      );
-
-      let munimapEl = /**@type {HTMLDivElement}*/ (
-        targetEl.getElementsByClassName('munimap')[0]
-      );
-      let infoEl = /**@type {HTMLDivElement}*/ (
-        targetEl.getElementsByClassName('ol-popup munimap-info')[0]
-      );
-      if (munimapEl === undefined) {
-        infoEl = <InfoBubbleComponent />;
-        munimapEl = <MunimapComponent>{infoEl}</MunimapComponent>;
-        ReactDOM.render(
-          <Provider store={store}>{munimapEl}</Provider>,
-          targetEl
-        );
-      }
-
-      if (slctr.areMarkersLoaded(state) && slctr.areZoomToLoaded(state)) {
-        const invalidCodes = slctr.getInvalidCodes(state);
-        const basemapLayer = slctr.getBasemapLayer(state);
-        if (map === undefined) {
-          const markers = slctr.getInitMarkers(state);
-          const view = slctr.calculateView(state);
-          const defaultControls = slctr.getDefaultControls(state);
-          map = new Map({
-            controls: defaultControls,
-            target: munimapEl,
-            layers: [basemapLayer],
-            view,
-          });
-
-          const mapProps = /**@type {MapProps}*/ ({
-            currentRes: view.getResolution(),
-            buildingsCount: slctr.getLoadedBuildingsCount(state),
-          });
-          map.set(MUNIMAP_PROPS_ID, mapProps);
-          CREATED_MAPS[state.requiredOpts.targetId] = map;
-
-          munimap_view.addCustomControls(map, store, state.requiredOpts);
-          munimap_view.attachMapListeners(map, {store, view});
-
-          munimap_view.addLayers(map, {
-            markers,
-            lang: state.requiredOpts.lang,
-            muAttrs: slctr.getMuAttrs(state),
-            clusterFacultyAbbr: state.requiredOpts.clusterFacultyAbbr,
-            showLabels: state.requiredOpts.labels,
-            locationCodes: state.requiredOpts.locationCodes,
-            markerLabel: MARKER_LABEL_STORE[state.requiredOpts.markerLabelId],
-            pubTran: state.requiredOpts.pubTran,
-            clusterResolution: slctr.getClusterResolution(state),
-          });
-          munimap_view.initFloorSelect(infoEl);
-        }
-
-        munimap_view.refreshErrorMessage({
-          invalidCodes,
-          lang: state.requiredOpts.lang,
-          simpleScroll: state.requiredOpts.simpleScroll,
-          munimapEl,
-          infoEl,
-          errorMessage: state.errorMessage,
-          store,
-        });
-
-        munimap_view.ensureClusterUpdate(state, map);
-        munimap_view.ensureBaseMap(basemapLayer, map);
-        munimap_view.refreshStyles(state, map.getLayers().getArray());
-        munimap_view.refreshInfoElement(map, infoEl, store);
-        munimap_view.animate(map, state.animationRequest);
-      }
-    };
-
-    const returnFunction = () => {
-      const state = store.getState();
-      if (state.mapInitialized === true) {
-        unsubscribeInit();
-        resolve(map);
-      }
-    };
-    render();
-    store.subscribe(render);
-    unsubscribeInit = store.subscribe(returnFunction);
+    ReactDOM.render(
+      <Provider store={store}>
+        <MunimapComponent afterInit={(map) => resolve(map)} />
+      </Provider>,
+      TARGET_ELEMENTS_STORE[targetId]
+    );
   });
 };

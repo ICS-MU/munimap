@@ -11,6 +11,7 @@ import {get as getProjection, transform} from 'ol/proj';
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("redux").Store} redux.Store
+ * @typedef {import("redux").Dispatch} redux.Dispatch
  */
 
 /**
@@ -28,11 +29,11 @@ const GOOGLE_IMG_PATH = APP_PATH + 'img/google.png';
 /**
  * @param {string} path path
  * @param {ol.Map} map map
- * @param {redux.Store} store store
+ * @param {redux.Dispatch} dispatch dispatch
  * @param {Array<string>|undefined} markers markers
  * @param {Array<string>} pointCoordinates coords
  */
-const handleClick = (path, map, store, markers, pointCoordinates) => {
+const handleClick = (path, map, dispatch, markers, pointCoordinates) => {
   const zoomLevel = map.getView().getZoom().toString();
   const center = transform(
     map.getView().getCenter() || null,
@@ -64,7 +65,7 @@ const handleClick = (path, map, store, markers, pointCoordinates) => {
       window.open(`http://www.google.com/maps/@${x},${y},${zoomLevel}z`);
     }
   }
-  store.dispatch(
+  dispatch(
     actions.log_action_happened({
       category: 'mapLinks',
       action: matomoAction,
@@ -75,12 +76,12 @@ const handleClick = (path, map, store, markers, pointCoordinates) => {
 /**
  * @param {string} path path
  * @param {ol.Map} map map
- * @param {redux.Store} store store
+ * @param {redux.Dispatch} dispatch dispatch
  * @param {Array<string>|undefined} markers markers
  * @param {string} lang language
  * @return {Element} element
  */
-const createItemElement = (path, map, store, markers, lang) => {
+const createItemElement = (path, map, dispatch, markers, lang) => {
   const pointCenter = transform(
     map.getView().getCenter() || null,
     getProjection('EPSG:3857'),
@@ -94,7 +95,7 @@ const createItemElement = (path, map, store, markers, lang) => {
   const el = document.createElement('div');
   el.className += ' munimap-link-item';
   el.addEventListener('click', () => {
-    handleClick(path, map, store, markers, pointCoordinates);
+    handleClick(path, map, dispatch, markers, pointCoordinates);
   });
   el.style.backgroundImage = 'url(' + path + ')';
   el.title =
@@ -106,19 +107,19 @@ const createItemElement = (path, map, store, markers, lang) => {
 
 /**
  * @param {ol.Map} map map
- * @param {redux.Store} store store
+ * @param {redux.Dispatch} dispatch dispatch
  * @param {Array<string>|undefined} markers markers
  * @param {string} lang language
  * @return {Control} control
  */
-export default (map, store, markers, lang) => {
+export default (map, dispatch, markers, lang) => {
   const main = document.createElement('div');
   main.className += ' munimap-link';
   main.appendChild(
-    createItemElement(SEZNAM_IMG_PATH, map, store, markers, lang)
+    createItemElement(SEZNAM_IMG_PATH, map, dispatch, markers, lang)
   );
   main.appendChild(
-    createItemElement(GOOGLE_IMG_PATH, map, store, markers, lang)
+    createItemElement(GOOGLE_IMG_PATH, map, dispatch, markers, lang)
   );
   const result = new Control({
     element: main,

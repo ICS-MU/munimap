@@ -20,6 +20,7 @@ import {getAnimationDuration} from '../utils/animation.js';
 /**
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("redux").Store} redux.Store
+ * @typedef {import("redux").Dispatch} redux.Dispatch
  */
 
 /**
@@ -66,11 +67,11 @@ const animate = (map, geolocation) => {
 
 /**
  * @param {ol.Map} map map
- * @param {redux.Store} store store
+ * @param {redux.Dispatch} dispatch dispatch
  * @param {Geolocation} geolocation geolocation
  */
-const handleClick = (map, store, geolocation) => {
-  store.dispatch(
+const handleClick = (map, dispatch, geolocation) => {
+  dispatch(
     actions.log_action_happened({
       category: 'geolocation',
       action: 'click',
@@ -98,11 +99,11 @@ const handlePositionChange = (geolocation, positionFeature) => {
 
 /**
  * @param {ol.Map} map map
- * @param {redux.Store} store store
+ * @param {redux.Dispatch} dispatch dispatch
  * @param {string} lang language
  * @return {Control} control
  */
-export default (map, store, lang) => {
+export default (map, dispatch, lang) => {
   const geolocation = new Geolocation({
     projection: map.getView().getProjection(),
   });
@@ -119,7 +120,7 @@ export default (map, store, lang) => {
     element: main,
   });
 
-  main.addEventListener('click', () => handleClick(map, store, geolocation));
+  main.addEventListener('click', () => handleClick(map, dispatch, geolocation));
 
   const positionFeature = new Feature();
   positionFeature.setStyle(
