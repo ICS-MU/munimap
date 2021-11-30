@@ -2,19 +2,19 @@
  * @module view/poi
  */
 import VectorLayer from 'ol/layer/Vector';
-import {getStyleForActivePoiLayer} from '../redux/selector.js';
 import {isActiveLayer} from '../layer/poi.js';
 
 /**
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import("../conf.js").State} State
+ * @typedef {import("../redux/selector.js").AllStyleFunctionsResult} AllStyleFunctionsResult
  */
 
 /**
- * @param {State} state state
  * @param {Array<ol.layer.Base>} layers layers
+ * @param {AllStyleFunctionsResult} styles styles
  */
-const refreshActiveStyle = (state, layers) => {
+const refreshActiveStyle = (layers, styles) => {
   if (!Array.isArray(layers) || layers.length === 0) {
     return;
   }
@@ -22,7 +22,7 @@ const refreshActiveStyle = (state, layers) => {
     layers.length === 1 ? layers[0] : layers.find((l) => isActiveLayer(l));
 
   if (lyr && lyr instanceof VectorLayer) {
-    const style = getStyleForActivePoiLayer(state);
+    const style = styles.styleForPoiActiveLayer;
     if (style !== lyr.getStyle()) {
       lyr.setStyle(style);
     }

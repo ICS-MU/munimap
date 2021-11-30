@@ -77,6 +77,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
 /**
  * @typedef {Object} State
  * @property {boolean} mapInitialized whther is map initialized
+ * @property {boolean} initialLayersAdded whther initial layers are added
  * @property {ol.size.Size} mapSize map size
  * @property {ol.coordinate.Coordinate} center center
  * @property {number} resolution resolution
@@ -107,6 +108,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  */
 export const INITIAL_STATE = {
   mapInitialized: false,
+  initialLayersAdded: false,
   mapSize: null,
   center: null,
   resolution: null,

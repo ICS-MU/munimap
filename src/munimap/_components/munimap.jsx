@@ -5,12 +5,13 @@ import ErrorMessage from './errormessage.jsx';
 import InfoBubbleComponent from './infobubble.jsx';
 import LoadingMessage from './loadingmessage.jsx';
 import PropTypes from 'prop-types';
-import React, {useLayoutEffect, useRef} from 'react';
+import React, {useEffect, useLayoutEffect, useRef} from 'react';
 import {CREATED_MAPS} from '../create.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {Map} from 'ol';
 import {hot} from 'react-hot-loader';
-import {useDispatch, useSelector, useStore} from 'react-redux';
+import {unlistenByKey} from 'ol/events';
+import {useDispatch, useSelector} from 'react-redux';
 
 /**
  * @typedef {import("../conf.js").MapProps} MapProps
@@ -33,15 +34,77 @@ const MunimapComponent = (props) => {
   const mapInitialized = useSelector(slctr.isMapInitialized);
   const invalidCodes = useSelector(slctr.getInvalidCodes);
   const simpleScroll = useSelector(slctr.getRequiredSimpleScroll);
+  const areInitialLayersAdded = useSelector(slctr.areInitialLayersAdded);
+  const allStyleFunctions = useSelector(slctr.getAllStyleFunctions);
 
   const hasInvalidCodes = invalidCodes && invalidCodes.length > 0;
   const shouldBlockMap = !simpleScroll;
 
   const dispatch = useDispatch();
-  const store = useStore();
 
   const munimapElRef = useRef(null);
   const mapRef = useRef(null);
+
+  useEffect(() => {
+    munimap_view.ensureClusterUpdate(mapRef.current, {
+      labels: requiredOpts.labels,
+      buildingsCount,
+    });
+  }, [requiredOpts, buildingsCount]);
+
+  useEffect(() => {
+    munimap_view.ensureBaseMap(mapRef.current, basemapLayer);
+  }, [basemapLayer]);
+
+  useEffect(() => {
+    munimap_view.refreshStyles(
+      mapRef.current,
+      allStyleFunctions,
+      requiredOpts.pubTran
+    );
+  }, [allStyleFunctions, requiredOpts]);
+
+  useEffect(() => {
+    if (mapInitialized) {
+      afterInit(mapRef.current);
+    }
+  }, [mapInitialized]);
+
+  useEffect(() => {
+    munimap_view.animate(mapRef.current, animationRequest);
+  }, [animationRequest]);
+
+  useEffect(() => {
+    const eventKeys = munimap_view.attachDependentMapListeners(
+      mapRef.current,
+      dispatch,
+      {
+        requiredOpts,
+        selectedFeature,
+      }
+    );
+    return () => eventKeys.forEach((k) => unlistenByKey(k));
+  }, [requiredOpts, selectedFeature]);
+
+  useEffect(() => {
+    if (areMarkersLoaded && areZoomToLoaded && !areInitialLayersAdded) {
+      munimap_view.addLayers(mapRef.current, dispatch, {
+        markers,
+        muAttrs,
+        clusterResolution,
+        requiredOpts,
+      });
+    }
+  }, [
+    markers,
+    muAttrs,
+    clusterResolution,
+    requiredOpts,
+    dispatch,
+    areInitialLayersAdded,
+    areMarkersLoaded,
+    areZoomToLoaded,
+  ]);
 
   useLayoutEffect(() => {
     if (areMarkersLoaded && areZoomToLoaded) {
@@ -62,41 +125,20 @@ const MunimapComponent = (props) => {
         CREATED_MAPS[requiredOpts.targetId] = _map;
 
         munimap_view.addCustomControls(_map, dispatch, requiredOpts);
-        munimap_view.attachMapListeners(_map, dispatch, {
-          requiredOpts,
-          selectedFeature,
-        });
-        munimap_view.addLayers(_map, {
-          markers,
-          muAttrs,
-          clusterResolution,
-          requiredOpts,
-        });
-      }
-      munimap_view.ensureClusterUpdate(mapRef.current, {
-        labels: requiredOpts.labels,
-        buildingsCount,
-      });
-      munimap_view.ensureBaseMap(mapRef.current, basemapLayer);
-      munimap_view.refreshStyles(
-        store.getState(), //pozor, neprekresli se pri zmene
-        mapRef.current.getLayers().getArray()
-      );
-      munimap_view.animate(mapRef.current, animationRequest);
-
-      if (mapInitialized) {
-        afterInit(mapRef.current);
+        munimap_view.attachIndependentMapListeners(_map, dispatch);
       }
     }
-  });
+  }, [areMarkersLoaded, areZoomToLoaded]);
 
   const onErrorClick = () => {
-    munimapElRef.current.focus();
-    dispatch(actions.target_focused({render: false, withMessage: false}));
+    if (munimapElRef.current) {
+      munimapElRef.current.focus();
+      dispatch(actions.target_focused({render: false, withMessage: false}));
+    }
   };
 
   const onBlur = () => {
-    if (hasInvalidCodes || shouldBlockMap) {
+    if ((hasInvalidCodes || shouldBlockMap) && munimapElRef.current) {
       munimapElRef.current.blur();
       dispatch(
         actions.target_blurred({

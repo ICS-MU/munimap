@@ -280,6 +280,13 @@ const createReducer = (initialState) => {
           },
         };
 
+      //INITIAL_LAYERS_ADDED
+      case actions.INITIAL_LAYERS_ADDED:
+        return {
+          ...state,
+          initialLayersAdded: true,
+        };
+
       //DEAFULT
       default:
         return state;

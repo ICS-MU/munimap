@@ -76,6 +76,9 @@ import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
  * @typedef {import("../feature/feature.js").isClickableFunction} isClickableFunction
  * @typedef {import("../feature/feature.js").featureClickHandlerFunction} featureClickHandlerFunction
  * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
+ * @typedef {import("ol/style/Style").StyleFunction} StyleFunction
+ * @typedef {import("../redux/selector.js").AllStyleFunctionsResult} AllStyleFunctionsResult
+ * @typedef {import("ol/events.js").EventsKey} EventsKey
  */
 
 /**
@@ -132,9 +135,13 @@ const addCustomControls = (map, dispatch, requiredOpts) => {
 /**
  * Add layers to map.
  * @param {ol.Map} map map
+ * @param {redux.Dispatch} dispatch dispatch
  * @param {AddLayersOptions} options opts
  */
-const addLayers = (map, options) => {
+const addLayers = (map, dispatch, options) => {
+  if (!map) {
+    return;
+  }
   const {lang, labels, locationCodes, pubTran} = options.requiredOpts;
   const markerLayer = createMarkerLayer(map, options);
   const markerClusterLayer = createClusterLayer(map, options);
@@ -148,6 +155,7 @@ const addLayers = (map, options) => {
 
   map.addLayer(markerClusterLayer);
   map.addLayer(markerLayer);
+  dispatch(actions.initialLayersAdded());
 };
 
 /**
@@ -290,9 +298,11 @@ const handlePointerMove = (evt, options) => {
  * Attach listeners to Map.
  * @param {ol.Map} map map
  * @param {redux.Dispatch} dispatch dispatch
- * @param {MapListenersOptions} options opts
  */
-const attachMapListeners = (map, dispatch, options) => {
+const attachIndependentMapListeners = (map, dispatch) => {
+  if (!map) {
+    return;
+  }
   map.once('rendercomplete', () => {
     dispatch(actions.map_initialized());
   });
@@ -306,9 +316,22 @@ const attachMapListeners = (map, dispatch, options) => {
       })
     );
   });
+};
 
-  map.on('click', (evt) => handleMapClick(evt, dispatch, options));
-  map.on('pointermove', (evt) => handlePointerMove(evt, options));
+/**
+ * Attach listeners to Map.
+ * @param {ol.Map} map map
+ * @param {redux.Dispatch} dispatch dispatch
+ * @param {MapListenersOptions} options opts
+ * @return {Array<EventsKey>} ol event keys
+ */
+const attachDependentMapListeners = (map, dispatch, options) => {
+  if (!map) {
+    return [];
+  }
+  const k1 = map.on('click', (evt) => handleMapClick(evt, dispatch, options));
+  const k2 = map.on('pointermove', (evt) => handlePointerMove(evt, options));
+  return [k1, k2];
 };
 
 /**
@@ -341,22 +364,28 @@ const createFeatureStores = (reduxStore) => {
 
 /**
  * Refresh styles for layers.
- * @param {State} state state
- * @param {Array<ol.layer.Base>} layers layers
+ * @param {ol.Map} map map
+ * @param {AllStyleFunctionsResult} styleFunctions style functions
+ * @param {boolean} pubTran pubtran
  */
-const refreshStyles = (state, layers) => {
-  refreshBuildingStyle(state, layers);
-  refreshBuildingLabelStyle(state, layers);
-  refreshComplexStyle(state, layers);
-  refreshMarkerStyle(state, layers);
-  refreshClusterStyle(state, layers);
-  refreshRoomStyle(state, layers);
-  refreshRoomLabelStyle(state, layers);
-  refreshActiveRoomStyle(state, layers);
-  refreshActiveDoorStyle(state, layers);
-  refreshActivePoiStyle(state, layers);
+const refreshStyles = (map, styleFunctions, pubTran) => {
+  if (!map) {
+    return;
+  }
 
-  if (state.requiredOpts.pubTran) {
+  const layers = map.getLayers().getArray();
+  refreshBuildingStyle(layers, styleFunctions);
+  refreshBuildingLabelStyle(layers, styleFunctions);
+  refreshComplexStyle(layers, styleFunctions);
+  refreshMarkerStyle(layers, styleFunctions);
+  refreshClusterStyle(layers, styleFunctions);
+  refreshRoomStyle(layers, styleFunctions);
+  refreshRoomLabelStyle(layers, styleFunctions);
+  refreshActiveRoomStyle(layers, styleFunctions);
+  refreshActiveDoorStyle(layers);
+  refreshActivePoiStyle(layers, styleFunctions);
+
+  if (pubTran) {
     refreshPubtranStyle(layers);
   }
 };
@@ -397,29 +426,17 @@ const animate = (map, animationRequest) => {
 
   const {center, resolution, duration, extent} = animationRequest;
   const view = map.getView();
-
-  const previous = map.get(MUNIMAP_PROPS_ID).animationRequest;
-  const condition =
-    !previous ||
-    previous.center !== center ||
-    previous.extent !== extent ||
-    previous.resolution !== resolution ||
-    previous.duration !== duration;
-
-  if (condition) {
-    map.get(MUNIMAP_PROPS_ID).animationRequest = animationRequest;
-    if (extent) {
-      view.fit(extent, {duration, nearest: true});
-    } else {
-      const _center =
-        center instanceof Point ? center.getCoordinates() : center;
-      view.animate({center: _center, resolution, duration});
-    }
+  if (extent) {
+    view.fit(extent, {duration, nearest: true});
+  } else {
+    const _center = center instanceof Point ? center.getCoordinates() : center;
+    view.animate({center: _center, resolution, duration});
   }
 };
 
 export {
-  attachMapListeners,
+  attachIndependentMapListeners,
+  attachDependentMapListeners,
   ensureBaseMap,
   addCustomControls,
   addLayers,

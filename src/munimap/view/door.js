@@ -11,10 +11,9 @@ import {isActiveLayer} from '../layer/door.js';
  */
 
 /**
- * @param {State} state state
  * @param {Array<ol.layer.Base>} layers layers
  */
-const refreshActiveStyle = (state, layers) => {
+const refreshActiveStyle = (layers) => {
   if (!Array.isArray(layers) || layers.length === 0) {
     return;
   }

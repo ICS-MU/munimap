@@ -104,6 +104,19 @@ import {styleFunction as markerStyleFunction} from '../style/marker.js';
  */
 
 /**
+ * @typedef {Object} AllStyleFunctionsResult
+ * @property {StyleFunction} styleForBuildingLayer style function
+ * @property {StyleFunction} styleForBuildingLabelLayer style function
+ * @property {StyleFunction} styleForComplexLayer style function
+ * @property {StyleFunction} styleForMarkerLayer style function
+ * @property {StyleFunction} styleForClusterLayer style function
+ * @property {StyleFunction} styleForRoomLayer style function
+ * @property {StyleFunction} styleForRoomLabelLayer style function
+ * @property {StyleFunction} styleForRoomActiveLayer style function
+ * @property {StyleFunction} styleForPoiActiveLayer style function
+ */
+
+/**
  * @type {Reselect.Selector<State, boolean>}
  * @param {State} state state
  * @return {boolean} whether is initialized
@@ -300,6 +313,13 @@ export const getRequiredSimpleScroll = (state) =>
  * @return {ErrorMessageState} error message state
  */
 export const getErrorMessageState = (state) => state.errorMessage;
+
+/**
+ * @type {Reselect.Selector<State, boolean>}
+ * @param {State} state state
+ * @return {boolean} whether are init layers added
+ */
+export const areInitialLayersAdded = (state) => state.initialLayersAdded;
 
 /**
  * createSelector return type Reselect.OutputSelector<S, T, (res: R1) => T>
@@ -1553,5 +1573,61 @@ export const getFloorsByBuildingCode = createSelector(
       return floors || [];
     }
     return [];
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    AllStyleFunctionsResult,
+ *    function(
+ *      StyleFunction,
+ *      StyleFunction,
+ *      StyleFunction,
+ *      StyleFunction,
+ *      StyleFunction,
+ *      StyleFunction,
+ *      StyleFunction,
+ *      StyleFunction,
+ *      StyleFunction): AllStyleFunctionsResult
+ * >}
+ */
+export const getAllStyleFunctions = createSelector(
+  [
+    getStyleForBuildingLayer,
+    getStyleForBuildingLabelLayer,
+    getStyleForComplexLayer,
+    getStyleForMarkerLayer,
+    getStyleForClusterLayer,
+    getStyleForRoomLayer,
+    getStyleForRoomLabelLayer,
+    getStyleForActiveRoomLayer,
+    getStyleForActivePoiLayer,
+  ],
+  (
+    styleForBuildingLayer,
+    styleForBuildingLabelLayer,
+    styleForComplexLayer,
+    styleForMarkerLayer,
+    styleForClusterLayer,
+    styleForRoomLayer,
+    styleForRoomLabelLayer,
+    styleForRoomActiveLayer,
+    styleForPoiActiveLayer
+  ) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('STYLE - get all style functions');
+    }
+    return {
+      styleForBuildingLayer,
+      styleForBuildingLabelLayer,
+      styleForComplexLayer,
+      styleForMarkerLayer,
+      styleForClusterLayer,
+      styleForRoomLayer,
+      styleForRoomLabelLayer,
+      styleForRoomActiveLayer,
+      styleForPoiActiveLayer,
+    };
   }
 );

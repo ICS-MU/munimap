@@ -136,6 +136,12 @@ export const POIS_LOADED = 'POIS_LOADED';
 export const VIEW_ANIMATION_REQUESTED = 'VIEW_ANIMATION_REQUESTED';
 
 /**
+ * @type {string}
+ * @const
+ */
+export const INITIAL_LAYERS_ADDED = 'INITIAL_LAYERS_ADDED';
+
+/**
  * @param {Array<ol.Feature|string>} markers markers
  * @param {LoadedTypes} loadedTypes loaded feature types
  * @return {redux.AnyAction} action
@@ -339,5 +345,14 @@ export function view_animation_requested(object) {
   return {
     type: VIEW_ANIMATION_REQUESTED,
     payload: object,
+  };
+}
+
+/**
+ * @return {redux.AnyAction} action
+ */
+export function initialLayersAdded() {
+  return {
+    type: INITIAL_LAYERS_ADDED,
   };
 }
