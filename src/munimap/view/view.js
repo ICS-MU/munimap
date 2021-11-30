@@ -79,12 +79,11 @@ import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
  */
 
 /**
- * @typedef {Object} AddLayersExtendedOptions
+ * @typedef {Object} AddLayersOptions
  * @property {Array<ol.Feature>} markers markers
  * @property {ol.AttributionLike} muAttrs mu attributions
  * @property {RangeInterface} clusterResolution cluster resolution
- *
- * @typedef {RequiredOptions & AddLayersExtendedOptions} AddLayersOptions
+ * @property {RequiredOptions} requiredOpts required options
  */
 
 /**
@@ -136,13 +135,13 @@ const addCustomControls = (map, dispatch, requiredOpts) => {
  * @param {AddLayersOptions} options opts
  */
 const addLayers = (map, options) => {
-  const {lang, labels, locationCodes} = options;
+  const {lang, labels, locationCodes, pubTran} = options.requiredOpts;
   const markerLayer = createMarkerLayer(map, options);
   const markerClusterLayer = createClusterLayer(map, options);
   const layers = getDefaultLayers(lang, labels, locationCodes);
   layers.forEach((layer) => map.addLayer(layer));
 
-  if (options.pubTran) {
+  if (pubTran) {
     const pubTranLayer = createPubtranLayer(lang);
     map.addLayer(pubTranLayer);
   }
@@ -157,8 +156,8 @@ const addLayers = (map, options) => {
  * @param {MapListenersOptions} options options
  */
 const handleMapClick = (evt, dispatch, options) => {
-  const {getMainFeatureAtPixelId, selectedFeature, clusterFacultyAbbr} =
-    options;
+  const {selectedFeature} = options;
+  const {getMainFeatureAtPixelId, clusterFacultyAbbr} = options.requiredOpts;
   const {map, pixel} = evt;
 
   const getMainFeatureAtPixelFn = getMainFeatureAtPixelId
@@ -215,12 +214,9 @@ const handlePointerMove = (evt, options) => {
     return;
   }
 
-  const {
-    targetId,
-    getMainFeatureAtPixelId,
-    selectedFeature,
-    clusterFacultyAbbr,
-  } = options;
+  const {selectedFeature} = options;
+  const {targetId, getMainFeatureAtPixelId, clusterFacultyAbbr} =
+    options.requiredOpts;
   const map = evt.map;
   const targetEl = TARGET_ELEMENTS_STORE[targetId];
   const pixel = map.getEventPixel(evt.originalEvent);

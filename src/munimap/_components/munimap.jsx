@@ -64,14 +64,14 @@ const MunimapComponent = (props) => {
 
         munimap_view.addCustomControls(_map, dispatch, requiredOpts);
         munimap_view.attachMapListeners(_map, dispatch, {
-          ...requiredOpts,
+          requiredOpts,
           selectedFeature,
         });
         munimap_view.addLayers(_map, {
           markers,
           muAttrs,
           clusterResolution,
-          ...requiredOpts,
+          requiredOpts,
         });
       }
       munimap_view.ensureClusterUpdate(mapRef.current, {

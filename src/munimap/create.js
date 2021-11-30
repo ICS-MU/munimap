@@ -78,10 +78,9 @@ import {v4 as uuidv4} from 'uuid';
  */
 
 /**
- * @typedef {Object} MapListenersExtendedOptions
+ * @typedef {Object} MapListenersOptions
  * @property {string} selectedFeature selected feature
- *
- * @typedef {MapListenersExtendedOptions & RequiredOptions} MapListenersOptions
+ * @property {RequiredOptions} requiredOpts options
  */
 
 /**
