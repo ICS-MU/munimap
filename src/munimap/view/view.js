@@ -366,15 +366,15 @@ const refreshStyles = (state, layers) => {
  * @param {ol.Map} map map
  * @param {Object} options options
  * @param {boolean} options.labels labels
- * @param {number} options.bldgsCount buildings count
+ * @param {number} options.buildingsCount buildings count
  */
-const ensureClusterUpdate = (map, {labels, bldgsCount}) => {
+const ensureClusterUpdate = (map, {labels, buildingsCount}) => {
   if (!map) {
     return;
   }
 
   const oldBuildingsCount = map.get(MUNIMAP_PROPS_ID).buildingsCount;
-  const newBuildingsCount = bldgsCount;
+  const newBuildingsCount = buildingsCount;
 
   if (newBuildingsCount !== oldBuildingsCount) {
     map.get(MUNIMAP_PROPS_ID).buildingsCount = newBuildingsCount;

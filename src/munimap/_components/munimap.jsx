@@ -30,7 +30,6 @@ const MunimapComponent = (props) => {
   const muAttrs = useSelector(slctr.getMuAttrs);
   const selectedFeature = useSelector(slctr.getSelectedFeature);
   const animationRequest = useSelector(slctr.getAnimationRequest);
-  const bldgsCount = useSelector(slctr.getLoadedBuildingsCount);
   const mapInitialized = useSelector(slctr.isMapInitialized);
   const invalidCodes = useSelector(slctr.getInvalidCodes);
   const simpleScroll = useSelector(slctr.getRequiredSimpleScroll);
@@ -76,7 +75,7 @@ const MunimapComponent = (props) => {
       }
       munimap_view.ensureClusterUpdate(mapRef.current, {
         labels: requiredOpts.labels,
-        bldgsCount,
+        buildingsCount,
       });
       munimap_view.ensureBaseMap(mapRef.current, basemapLayer);
       munimap_view.refreshStyles(
