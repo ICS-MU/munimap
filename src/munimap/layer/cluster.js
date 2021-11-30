@@ -48,7 +48,6 @@ const getLayer = (map) => {
  * @return {VectorLayer} marker cluster layer
  */
 const create = (map, options) => {
-  console.log(options)
   const {markers, muAttrs, clusterResolution} = options;
   const {lang, labels} = options.requiredOpts;
   const clusterFeatures = markers.concat();
