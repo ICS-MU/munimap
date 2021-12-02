@@ -46,13 +46,13 @@ const ErrorMessageComponent = (props) => {
     }
   };
 
+  const msg = createInnerText(invalidCodes, simpleScroll, lang);
   useLayoutEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## ERRORMSG-useLayoutEffect');
     }
     if (areMarkersLoaded && areZoomToLoaded) {
       if (withMessage === true || (hasInvalidCodes && withMessage === null)) {
-        const msg = createInnerText(invalidCodes, simpleScroll, lang);
         if (msg) {
           const {size, lineHeight} = getErrorMessageStyle(errElRef.current);
           msgElRef.current.innerText = msg;
@@ -62,7 +62,7 @@ const ErrorMessageComponent = (props) => {
         }
       }
     }
-  });
+  }, [areMarkersLoaded, areZoomToLoaded, withMessage, hasInvalidCodes, msg]);
 
   if (ENABLE_RENDER_LOGS) {
     console.log('########## ERRORMSG-render');
