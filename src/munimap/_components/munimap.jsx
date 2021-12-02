@@ -83,7 +83,6 @@ const MunimapComponent = (props) => {
     muAttrs,
     clusterResolution,
     requiredOpts,
-    dispatch,
     areInitialLayersAdded,
     areMarkersLoaded,
     areZoomToLoaded,
