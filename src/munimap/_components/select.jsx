@@ -4,6 +4,7 @@ import * as slctr from '../redux/selector.js';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Select from 'react-select';
+import {ENABLE_RENDER_LOGS} from '../conf.js';
 import {Feature} from 'ol';
 import {getLabelAbbr} from '../ui/info.js';
 import {hot} from 'react-hot-loader';
@@ -112,6 +113,10 @@ const SelectComponent = (props) => {
       value: locCode,
     };
   });
+
+  if (ENABLE_RENDER_LOGS) {
+    console.log('########## SELECT-render');
+  }
 
   return (
     <Select

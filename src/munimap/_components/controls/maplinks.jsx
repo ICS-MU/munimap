@@ -3,6 +3,7 @@ import * as munimap_lang from '../../lang/lang.js';
 import * as slctr from '../../redux/selector.js';
 import React, {useContext, useEffect, useRef} from 'react';
 import {Control} from 'ol/control';
+import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
 import {MyContext} from '../../_contexts/context.jsx';
 import {get as getProjection, transform} from 'ol/proj';
 import {useDispatch, useSelector} from 'react-redux';
@@ -81,6 +82,9 @@ const MapLinksComponent = (props) => {
   );
 
   useEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## MAPLINKS-useEffect-control');
+    }
     let control;
     if (mapLinks && mapLinksRef.current && map) {
       // rendered by react => not added to map
@@ -94,6 +98,9 @@ const MapLinksComponent = (props) => {
   }, [mapLinks, map]);
 
   useEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## MAPLINKS-useEffect-display');
+    }
     if (mapLinks && map && map.getSize()[1] < MAP_SIZE_LIMIT) {
       mapLinksRef.current.style.display = 'none';
       // eslint-disable-next-line no-console
@@ -102,6 +109,10 @@ const MapLinksComponent = (props) => {
       mapLinksRef.current.style.display = '';
     }
   }, [mapLinks, map]);
+
+  if (ENABLE_RENDER_LOGS) {
+    console.log('########## MAPLINKS-render');
+  }
 
   if (mapLinks) {
     return (

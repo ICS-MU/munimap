@@ -2,6 +2,7 @@ import * as actions from '../redux/action.js';
 import * as slctr from '../redux/selector.js';
 import PropTypes from 'prop-types';
 import React, {useLayoutEffect, useRef} from 'react';
+import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {createInnerText, getErrorMessageStyle} from '../ui/interaction.js';
 import {hot} from 'react-hot-loader';
 import {useDispatch, useSelector} from 'react-redux';
@@ -46,6 +47,9 @@ const ErrorMessageComponent = (props) => {
   };
 
   useLayoutEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## ERRORMSG-useLayoutEffect');
+    }
     if (areMarkersLoaded && areZoomToLoaded) {
       if (withMessage === true || (hasInvalidCodes && withMessage === null)) {
         const msg = createInnerText(invalidCodes, simpleScroll, lang);
@@ -59,6 +63,10 @@ const ErrorMessageComponent = (props) => {
       }
     }
   });
+
+  if (ENABLE_RENDER_LOGS) {
+    console.log('########## ERRORMSG-render');
+  }
 
   if (areMarkersLoaded && areZoomToLoaded) {
     if ((hasInvalidCodes || shouldBlockMap) && render !== false) {

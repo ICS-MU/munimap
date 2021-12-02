@@ -1,6 +1,7 @@
 import * as munimap_lang from '../lang/lang.js';
 import * as slctr from '../redux/selector.js';
 import React, {useEffect, useRef} from 'react';
+import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {hot} from 'react-hot-loader';
 import {useSelector} from 'react-redux';
 
@@ -13,6 +14,9 @@ const LoadingMessageComponent = (props) => {
   const innerEl = useRef(null);
 
   useEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## LOADINGMESSAGE-useEffect-depListeners');
+    }
     if (msgEl.current) {
       msgEl.current.setAttribute(
         'style',
@@ -31,6 +35,10 @@ const LoadingMessageComponent = (props) => {
       );
     }
   }, []);
+
+  if (ENABLE_RENDER_LOGS) {
+    console.log('########## LOADINGMESSAGE-render');
+  }
 
   if (addMsg) {
     return (

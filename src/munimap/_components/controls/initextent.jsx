@@ -3,6 +3,7 @@ import * as munimap_lang from '../../lang/lang.js';
 import * as slctr from '../../redux/selector.js';
 import React, {forwardRef, useContext, useEffect, useRef} from 'react';
 import {Control} from 'ol/control';
+import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
 import {MyContext} from '../../_contexts/context.jsx';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -61,6 +62,9 @@ const InitExtentComponent = forwardRef((props, ref) => {
   }, [map]);
 
   useEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## INITEXTENT-useEffect-control');
+    }
     let initExtentControl;
     if (map && initExtentElRef && initExtentElRef.current) {
       // initialize Control - render should be done by React not by
@@ -77,6 +81,10 @@ const InitExtentComponent = forwardRef((props, ref) => {
       };
     }
   }, [map, parentEl]);
+
+  if (ENABLE_RENDER_LOGS) {
+    console.log('########## INITEXTENT-render');
+  }
 
   return (
     <>

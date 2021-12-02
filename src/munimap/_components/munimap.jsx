@@ -8,6 +8,7 @@ import LoadingMessage from './loadingmessage.jsx';
 import PropTypes from 'prop-types';
 import React, {useEffect, useLayoutEffect, useRef} from 'react';
 import {CREATED_MAPS} from '../create.js';
+import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {Map} from 'ol';
 import {MyContext} from '../_contexts/context.jsx';
@@ -51,35 +52,9 @@ const MunimapComponent = (props) => {
   const mapRef = useRef(null);
 
   useEffect(() => {
-    munimap_view.ensureClusterUpdate(mapRef.current, {
-      labels: requiredOpts.labels,
-      buildingsCount,
-    });
-  }, [requiredOpts, buildingsCount]);
-
-  useEffect(() => {
-    munimap_view.ensureBaseMap(mapRef.current, basemapLayer);
-  }, [basemapLayer]);
-
-  useEffect(() => {
-    munimap_view.refreshStyles(
-      mapRef.current,
-      allStyleFunctions,
-      requiredOpts.pubTran
-    );
-  }, [allStyleFunctions, requiredOpts]);
-
-  useEffect(() => {
-    if (mapInitialized) {
-      afterInit(mapRef.current);
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## MUNIMAP-useEffect-depListeners');
     }
-  }, [mapInitialized]);
-
-  useEffect(() => {
-    munimap_view.animate(mapRef.current, animationRequest);
-  }, [animationRequest]);
-
-  useEffect(() => {
     const eventKeys = munimap_view.attachDependentMapListeners(
       mapRef.current,
       dispatch,
@@ -92,6 +67,9 @@ const MunimapComponent = (props) => {
   }, [requiredOpts, selectedFeature]);
 
   useEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## MUNIMAP-useEffect-addLayers');
+    }
     if (areMarkersLoaded && areZoomToLoaded && !areInitialLayersAdded) {
       munimap_view.addLayers(mapRef.current, dispatch, {
         markers,
@@ -111,7 +89,55 @@ const MunimapComponent = (props) => {
     areZoomToLoaded,
   ]);
 
+  useEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## MUNIMAP-useEffect-clusterUpdate');
+    }
+    munimap_view.ensureClusterUpdate(mapRef.current, {
+      labels: requiredOpts.labels,
+      buildingsCount,
+    });
+  }, [requiredOpts, buildingsCount]);
+
+  useEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## MUNIMAP-useEffect-ensureBasemap');
+    }
+    munimap_view.ensureBaseMap(mapRef.current, basemapLayer);
+  }, [basemapLayer]);
+
+  useEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## MUNIMAP-useEffect-refreshStyles');
+    }
+    munimap_view.refreshStyles(
+      mapRef.current,
+      allStyleFunctions,
+      requiredOpts.pubTran
+    );
+  }, [allStyleFunctions, requiredOpts]);
+
+  useEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## MUNIMAP-useEffect-animate');
+    }
+    munimap_view.animate(mapRef.current, animationRequest);
+  }, [animationRequest]);
+
+  useEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## MUNIMAP-useEffect-afterInit');
+    }
+    if (mapInitialized) {
+      afterInit(mapRef.current);
+    }
+  }, [mapInitialized]);
+
   useLayoutEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## MUNIMAP-useLayoutEffect');
+    }
+
     if (areMarkersLoaded && areZoomToLoaded) {
       if (!mapRef.current) {
         const _map = new Map({
@@ -151,6 +177,10 @@ const MunimapComponent = (props) => {
       );
     }
   };
+
+  if (ENABLE_RENDER_LOGS) {
+    console.log('########## MUNIMAP-render');
+  }
 
   return (
     <>

@@ -1,6 +1,7 @@
 import * as actions from '../../redux/action.js';
 import * as munimap_lang from '../../lang/lang.js';
 import * as slctr from '../../redux/selector.js';
+import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
 import {FullScreen} from 'ol/control';
 import {MyContext} from '../../_contexts/context.jsx';
 import {forwardRef, useContext, useEffect} from 'react';
@@ -21,6 +22,9 @@ const FullscreenComponent = forwardRef((props, ref) => {
     .current;
 
   useEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## FULLSCREEN-useEffect-control');
+    }
     const onClick = () => {
       dispatch(
         actions.log_action_happened({
@@ -45,6 +49,10 @@ const FullscreenComponent = forwardRef((props, ref) => {
       };
     }
   }, [map, parentEl]);
+
+  if (ENABLE_RENDER_LOGS) {
+    console.log('########## FULLSCREEN-render');
+  }
 
   return null;
 });

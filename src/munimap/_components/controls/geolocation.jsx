@@ -7,6 +7,7 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import {Circle, Fill, Stroke, Style} from 'ol/style';
 import {Control} from 'ol/control';
+import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
 import {Feature, Geolocation} from 'ol';
 import {MyContext} from '../../_contexts/context.jsx';
 import {Point} from 'ol/geom';
@@ -62,6 +63,9 @@ const GeolocationComponent = (props) => {
   const geolocRef = useRef(null);
 
   useEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## GEOLOCATION-useEffect-log');
+    }
     if (!(window.location.protocol === 'https:' || !PRODUCTION)) {
       dispatch(
         actions.log_action_happened({
@@ -73,6 +77,9 @@ const GeolocationComponent = (props) => {
   }, []);
 
   useEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## GEOLOCATION-useEffect-geolocation');
+    }
     let control;
     if (map && geolocElRef.current) {
       const geolocation = new Geolocation({
@@ -105,6 +112,9 @@ const GeolocationComponent = (props) => {
   }, [map]);
 
   useEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## GEOLOCATION-useEffect-layer');
+    }
     let layer;
     if ((window.location.protocol === 'https:' || !PRODUCTION) && map) {
       const positionFeature = new Feature();
@@ -163,6 +173,10 @@ const GeolocationComponent = (props) => {
       callback();
     }
   }, [map]);
+
+  if (ENABLE_RENDER_LOGS) {
+    console.log('########## GEOLOCATION-render');
+  }
 
   if (window.location.protocol === 'https:' || !PRODUCTION) {
     return (

@@ -2,6 +2,7 @@ import * as slctr from '../redux/selector.js';
 import PropTypes from 'prop-types';
 import React, {useEffect, useRef} from 'react';
 import Select from './select.jsx';
+import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {POPUP_TALE_INDENT, getInfoBoxPosition} from '../ui/info.js';
 import {sort as floorSortFn} from '../feature/floor.js';
 import {useSelector} from 'react-redux';
@@ -20,6 +21,9 @@ const InfoBubbleComponent = (props) => {
 
   const bubbleRef = useRef(null);
   useEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## INFOBUBBLE-useEffect');
+    }
     if (bubbleRef.current && props.getPixelFromCoordinate) {
       const opts = {extent, resolution, selectedFeature};
       const positionInfo = getInfoBoxPosition(bubbleRef.current, opts);
@@ -43,6 +47,10 @@ const InfoBubbleComponent = (props) => {
       bubbleRef.current.style.display = showInfoEl ? '' : 'none';
     }
   });
+
+  if (ENABLE_RENDER_LOGS) {
+    console.log('########## INFOBUBBLE-render');
+  }
 
   return (
     <div
