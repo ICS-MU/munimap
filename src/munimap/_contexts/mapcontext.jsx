@@ -7,4 +7,6 @@ import {createContext} from 'react';
 /**
  * @type {React.Context<React.MutableRefObject<ol.Map>>}
  */
-export const MyContext = createContext(null);
+const MapContext = createContext(null);
+
+export default MapContext;

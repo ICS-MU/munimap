@@ -5,13 +5,13 @@ import Controls from './controls/controls.jsx';
 import ErrorMessage from './errormessage.jsx';
 import InfoBubbleComponent from './infobubble.jsx';
 import LoadingMessage from './loadingmessage.jsx';
+import MapContext from '../_contexts/mapcontext.jsx';
 import PropTypes from 'prop-types';
 import React, {useEffect, useLayoutEffect, useRef} from 'react';
 import {CREATED_MAPS} from '../create.js';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {Map} from 'ol';
-import {MyContext} from '../_contexts/context.jsx';
 import {hot} from 'react-hot-loader';
 import {unlistenByKey} from 'ol/events';
 import {useDispatch, useSelector} from 'react-redux';
@@ -188,7 +188,7 @@ const MunimapComponent = (props) => {
 
   return (
     <>
-      <MyContext.Provider value={mapRef}>
+      <MapContext.Provider value={mapRef}>
         <LoadingMessage />
         <div className="munimap">
           <div
@@ -201,7 +201,7 @@ const MunimapComponent = (props) => {
           <Controls />
         </div>
         <ErrorMessage onClick={onErrorClick} />
-      </MyContext.Provider>
+      </MapContext.Provider>
     </>
   );
 };

@@ -1,12 +1,11 @@
 import * as munimap_utils from '../utils/utils.js';
 import * as ol_extent from 'ol/extent';
 import * as slctr from '../redux/selector.js';
-import PropTypes from 'prop-types';
+import MapContext from '../_contexts/mapcontext.jsx';
 import React, {useContext, useLayoutEffect, useRef} from 'react';
 import Select from './select.jsx';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {GeoJSON} from 'ol/format';
-import {MyContext} from '../_contexts/context.jsx';
 import {featureExtentIntersect} from '../utils/geom.js';
 import {sort as floorSortFn} from '../feature/floor.js';
 import {getByCode as getBuildingByCode} from '../feature/building.js';
@@ -126,7 +125,7 @@ const InfoBubbleComponent = (props) => {
   const selectedFeature = useSelector(slctr.getSelectedFeature);
   const {bldgTitle, complexTitle} = useSelector(slctr.getBuildingTitle);
 
-  const mapRef = useContext(MyContext);
+  const mapRef = useContext(MapContext);
   const map = mapRef && mapRef.current;
 
   if (floors.length > 0) {

@@ -1,10 +1,10 @@
 import * as actions from '../../redux/action.js';
 import * as munimap_lang from '../../lang/lang.js';
 import * as slctr from '../../redux/selector.js';
+import MapContext from '../../_contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useRef} from 'react';
 import {Control} from 'ol/control';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
-import {MyContext} from '../../_contexts/context.jsx';
 import {get as getProjection, transform} from 'ol/proj';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -39,7 +39,7 @@ const MapLinksComponent = (props) => {
   const {mapLinks, markerIds} = useSelector(slctr.getRequiredOpts);
   const dispatch = useDispatch();
 
-  const mapRef = useContext(MyContext);
+  const mapRef = useContext(MapContext);
   const map = mapRef && mapRef.current;
 
   const mapLinksRef = useRef(null);

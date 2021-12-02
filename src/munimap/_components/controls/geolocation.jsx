@@ -2,6 +2,7 @@ import * as actions from '../../redux/action.js';
 import * as munimap_lang from '../../lang/lang.js';
 import * as ol_extent from 'ol/extent';
 import * as slctr from '../../redux/selector.js';
+import MapContext from '../../_contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useRef} from 'react';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
@@ -9,7 +10,6 @@ import {Circle, Fill, Stroke, Style} from 'ol/style';
 import {Control} from 'ol/control';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
 import {Feature, Geolocation} from 'ol';
-import {MyContext} from '../../_contexts/context.jsx';
 import {Point} from 'ol/geom';
 import {getAnimationDuration} from '../../utils/animation.js';
 import {useDispatch, useSelector} from 'react-redux';
@@ -61,7 +61,7 @@ const GeolocationComponent = (props) => {
 
   const dispatch = useDispatch();
 
-  const mapRef = useContext(MyContext);
+  const mapRef = useContext(MapContext);
   const map = mapRef && mapRef.current;
 
   const geolocElRef = useRef(null);

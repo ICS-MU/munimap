@@ -1,10 +1,10 @@
 import FullScreenComponent from './fullscreen.jsx';
 import InitExtentComponent from './initextent.jsx';
+import MapContext from '../../_contexts/mapcontext.jsx';
 import PropTypes from 'prop-types';
 import React, {forwardRef, useContext, useEffect} from 'react';
 import {Control} from 'ol/control';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
-import {MyContext} from '../../_contexts/context.jsx';
 
 /**
  * @type {React.ForwardRefExoticComponent<
@@ -14,7 +14,7 @@ import {MyContext} from '../../_contexts/context.jsx';
 const ToolbarComponent = forwardRef((props, ref) => {
   const {visible, horizontal} = props;
 
-  const mapRef = useContext(MyContext);
+  const mapRef = useContext(MapContext);
   const map = mapRef && mapRef.current;
   //ForwardRefRenderFunction<T, P>
   const toolBarEl =

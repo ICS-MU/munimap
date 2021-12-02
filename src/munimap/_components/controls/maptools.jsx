@@ -1,11 +1,11 @@
 import * as actions from '../../redux/action.js';
 import * as munimap_lang from '../../lang/lang.js';
 import * as slctr from '../../redux/selector.js';
+import MapContext from '../../_contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import ToolbarComponent from './toolbar.jsx';
 import {Control} from 'ol/control';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
-import {MyContext} from '../../_contexts/context.jsx';
 import {hot} from 'react-hot-loader';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -39,7 +39,7 @@ const MapToolsComponent = (props) => {
   const lang = useSelector(slctr.getLang);
   const {mapLinks} = useSelector(slctr.getRequiredOpts);
 
-  const mapRef = useContext(MyContext);
+  const mapRef = useContext(MapContext);
   const map = mapRef && mapRef.current;
 
   const toolBarElRef = useRef(null);
