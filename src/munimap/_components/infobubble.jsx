@@ -1,11 +1,117 @@
+import * as munimap_utils from '../utils/utils.js';
+import * as ol_extent from 'ol/extent';
 import * as slctr from '../redux/selector.js';
 import PropTypes from 'prop-types';
-import React, {useEffect, useRef} from 'react';
+import React, {useContext, useLayoutEffect, useRef} from 'react';
 import Select from './select.jsx';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
-import {POPUP_TALE_INDENT, getInfoBoxPosition} from '../ui/info.js';
+import {GeoJSON} from 'ol/format';
+import {MyContext} from '../_contexts/context.jsx';
+import {featureExtentIntersect} from '../utils/geom.js';
 import {sort as floorSortFn} from '../feature/floor.js';
+import {getByCode as getBuildingByCode} from '../feature/building.js';
+import {getElementSize} from '../utils/dom.js';
 import {useSelector} from 'react-redux';
+
+/**
+ * @typedef {import("ol/Feature").default} ol.Feature
+ * @typedef {import("ol/extent").Extent} ol.extent.Extent
+ * @typedef {import("../view/info.js").PopupPositionOptions} PopupPositionOptions
+ * @typedef {import("../conf.js").State} State
+ */
+
+/**
+ * @typedef {Object} InfoPositionOptions
+ * @property {ol.extent.Extent} [extent] extent
+ * @property {number} [resolution] resolution
+ * @property {string} [selectedFeature] selectedFeature
+ */
+
+/**
+ * Equal to 2 * border-width of ol.popup:after.
+ * @type {number}
+ * @const
+ */
+const POPUP_TALE_HEIGHT = 10;
+
+/**
+ * Equal to left positioning (- 11px of margin) of ol.popup:after.
+ * @type {number}
+ * @const
+ */
+const POPUP_TALE_INDENT = 8;
+
+/**
+ * Get infobox position.
+ * @param {HTMLElement} infoEl info element
+ * @param {InfoPositionOptions} options options
+ * @return {PopupPositionOptions} position
+ */
+const getInfoBoxPosition = (infoEl, options) => {
+  const {extent, resolution, selectedFeature} = options;
+  if (!extent || !selectedFeature || !resolution) {
+    return;
+  }
+  const building = getBuildingByCode(selectedFeature);
+  const topRight = ol_extent.getTopRight(extent);
+  const elSize = getElementSize(infoEl);
+  const extWidth = resolution * elSize.width;
+  const extHeight = resolution * (elSize.height + POPUP_TALE_HEIGHT);
+
+  const elExtent = /**@type {ol.extent.Extent}*/ ([
+    topRight[0] - extWidth,
+    topRight[1] - extHeight,
+    topRight[0],
+    topRight[1],
+  ]);
+  const result = {};
+  const bldgGeom = building.getGeometry();
+  if (!bldgGeom.intersectsExtent(elExtent)) {
+    const bottomLeft = ol_extent.getBottomLeft(extent);
+    const reducedViewExt = /**@type {ol.extent.Extent}*/ ([
+      bottomLeft[0],
+      bottomLeft[1],
+      topRight[0] - extWidth,
+      topRight[1] - extHeight,
+    ]);
+    const format = new GeoJSON();
+    let intersect = featureExtentIntersect(building, reducedViewExt, format);
+    if (munimap_utils.isDefAndNotNull(intersect) && !!intersect.getGeometry()) {
+      const closestPoint = intersect.getGeometry().getClosestPoint(topRight);
+      result.coordinate = [closestPoint[0], closestPoint[1] + extHeight];
+      result.hideTale = false;
+    } else {
+      intersect = featureExtentIntersect(building, extent, format);
+      if (
+        munimap_utils.isDefAndNotNull(intersect) &&
+        !!intersect.getGeometry()
+      ) {
+        const bbox = intersect.getGeometry().getExtent();
+        const topLeft = ol_extent.getTopLeft(extent);
+        const upperExt = /**@type {ol.extent.Extent}*/ ([
+          topLeft[0],
+          topLeft[1] - extHeight,
+          topRight[0],
+          topRight[1],
+        ]);
+        if (bldgGeom.intersectsExtent(upperExt)) {
+          result.coordinate = [bbox[2], topRight[1]];
+        } else {
+          result.coordinate = [topRight[0] - extWidth, bbox[3] + extHeight];
+        }
+      }
+      result.hideTale = true;
+    }
+  }
+
+  if (!result.coordinate) {
+    const parentEl = infoEl.parentElement;
+    result.position = [parentEl.offsetWidth - elSize.width, 0];
+    result.hideTale = true;
+  }
+
+  return result;
+};
 
 const InfoBubbleComponent = (props) => {
   const showInfoEl = useSelector(slctr.showInfoEl);
@@ -15,21 +121,24 @@ const InfoBubbleComponent = (props) => {
   const selectedFeature = useSelector(slctr.getSelectedFeature);
   const {bldgTitle, complexTitle} = useSelector(slctr.getBuildingTitle);
 
+  const mapRef = useContext(MyContext);
+  const map = mapRef && mapRef.current;
+
   if (floors.length > 0) {
     floors.sort(floorSortFn);
   }
 
   const bubbleRef = useRef(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
-      console.log('########## INFOBUBBLE-useEffect');
+      console.log('########## INFOBUBBLE-useEffect-position');
     }
-    if (bubbleRef.current && props.getPixelFromCoordinate) {
+    if (map && bubbleRef.current) {
       const opts = {extent, resolution, selectedFeature};
       const positionInfo = getInfoBoxPosition(bubbleRef.current, opts);
       if (positionInfo) {
         const position = positionInfo.coordinate
-          ? props.getPixelFromCoordinate(positionInfo.coordinate)
+          ? map.getPixelFromCoordinate(positionInfo.coordinate)
           : positionInfo.position;
 
         if (position && position.length > 0) {
@@ -44,9 +153,8 @@ const InfoBubbleComponent = (props) => {
             : bubbleRef.current.classList.remove('munimap-hide-tale');
         }
       }
-      bubbleRef.current.style.display = showInfoEl ? '' : 'none';
     }
-  });
+  }, [map, extent, resolution, selectedFeature]);
 
   if (ENABLE_RENDER_LOGS) {
     console.log('########## INFOBUBBLE-render');
@@ -55,7 +163,7 @@ const InfoBubbleComponent = (props) => {
   return (
     <div
       className="ol-popup munimap-info"
-      style={{zIndex: '2', display: 'none'}}
+      style={{zIndex: '2', display: showInfoEl ? '' : 'none'}}
       ref={bubbleRef}
     >
       <div className="munimap-complex">{complexTitle}</div>
@@ -70,8 +178,5 @@ const InfoBubbleComponent = (props) => {
 };
 
 InfoBubbleComponent.displayName = 'InfoBubbleComponent';
-InfoBubbleComponent.propTypes = {
-  getPixelFromCoordinate: PropTypes.func,
-};
 
 export default InfoBubbleComponent;

@@ -6,7 +6,7 @@ import React from 'react';
 import Select from 'react-select';
 import {ENABLE_RENDER_LOGS} from '../conf.js';
 import {Feature} from 'ol';
-import {getLabelAbbr} from '../ui/info.js';
+import {FloorTypes} from '../feature/floor.js';
 import {hot} from 'react-hot-loader';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -93,6 +93,144 @@ const customStyles = {
         : undefined,
     };
   },
+};
+
+/**
+ * Get abbreviated label of given floor code.
+ * @param {string} floorCode 3 characters long floor code
+ * @param {string} lang language
+ * @return {string} abbreviated floor label
+ */
+const getLabelAbbr = (floorCode, lang) => {
+  const letter = floorCode.substr(0, 1);
+  const num = parseInt(floorCode.substr(1), 10);
+  let numLabel = '';
+  let mezzanineNumLabel = '';
+  if (lang === munimap_lang.Abbr.ENGLISH) {
+    numLabel = (
+      letter === FloorTypes.UNDERGROUND_MEZZANINE ? num - 1 : num
+    ).toString();
+    mezzanineNumLabel = '.5';
+  } else if (lang === munimap_lang.Abbr.CZECH) {
+    numLabel = (
+      letter === FloorTypes.UNDERGROUND_MEZZANINE ? num - 1 : num
+    ).toString();
+    mezzanineNumLabel = ',5';
+  }
+  let label;
+  let floorTypeString;
+  switch (letter) {
+    case FloorTypes.UNDERGROUND:
+      floorTypeString = munimap_lang.getMsg(
+        munimap_lang.Translations.FLOOR_UNDER_ABBR,
+        lang
+      );
+      label =
+        lang === munimap_lang.Abbr.ENGLISH
+          ? floorTypeString + numLabel
+          : numLabel + '. ' + floorTypeString;
+      break;
+    case FloorTypes.UNDERGROUND_MEZZANINE:
+      floorTypeString = munimap_lang.getMsg(
+        munimap_lang.Translations.FLOOR_MEZZANINE_UNDER_ABBR,
+        lang
+      );
+      label =
+        lang === munimap_lang.Abbr.ENGLISH
+          ? floorTypeString + numLabel + mezzanineNumLabel
+          : numLabel + mezzanineNumLabel + '. ' + floorTypeString;
+      break;
+    case FloorTypes.MEZZANINE:
+      floorTypeString = munimap_lang.getMsg(
+        munimap_lang.Translations.FLOOR_MEZZANINE_ABBR,
+        lang
+      );
+      label =
+        lang === munimap_lang.Abbr.ENGLISH
+          ? floorTypeString + numLabel + mezzanineNumLabel
+          : numLabel + mezzanineNumLabel + '. ' + floorTypeString;
+      break;
+    case FloorTypes.ABOVEGROUND:
+      floorTypeString = munimap_lang.getMsg(
+        munimap_lang.Translations.FLOOR_ABOVE_ABBR,
+        lang
+      );
+      label =
+        lang === munimap_lang.Abbr.ENGLISH
+          ? floorTypeString + numLabel
+          : numLabel + '. ' + floorTypeString;
+      break;
+    default:
+      label = floorCode;
+      break;
+  }
+  return label;
+};
+
+/**
+ * Get label of given floor code.
+ * @param {string} floorCode 3 characters long floor code
+ * @param {string} lang language
+ * @return {string} floor label
+ */
+const getLabel = (floorCode, lang) => {
+  const letter = floorCode.substr(0, 1);
+  const num = parseInt(floorCode.substr(1), 10);
+  let numLabel = '';
+  if (lang === munimap_lang.Abbr.ENGLISH) {
+    switch (num) {
+      case 1:
+        numLabel = num + 'st ';
+        break;
+      case 2:
+        numLabel = num + 'nd ';
+        break;
+      case 3:
+        numLabel = num + 'rd ';
+        break;
+      default:
+        numLabel = num + 'th ';
+        break;
+    }
+  } else if (lang === munimap_lang.Abbr.CZECH) {
+    numLabel = num + '. ';
+  }
+  let label;
+  let floorTypeString;
+  switch (letter) {
+    case FloorTypes.UNDERGROUND:
+      floorTypeString = munimap_lang.getMsg(
+        munimap_lang.Translations.FLOOR_UNDER,
+        lang
+      );
+      label = numLabel + floorTypeString;
+      break;
+    case FloorTypes.UNDERGROUND_MEZZANINE:
+      floorTypeString = munimap_lang.getMsg(
+        munimap_lang.Translations.FLOOR_MEZZANINE_UNDER,
+        lang
+      );
+      label = floorTypeString;
+      break;
+    case FloorTypes.MEZZANINE:
+      floorTypeString = munimap_lang.getMsg(
+        munimap_lang.Translations.FLOOR_MEZZANINE,
+        lang
+      );
+      label = floorTypeString;
+      break;
+    case FloorTypes.ABOVEGROUND:
+      floorTypeString = munimap_lang.getMsg(
+        munimap_lang.Translations.FLOOR_ABOVE,
+        lang
+      );
+      label = numLabel + floorTypeString;
+      break;
+    default:
+      label = floorCode;
+      break;
+  }
+  return label;
 };
 
 const SelectComponent = (props) => {
