@@ -53,6 +53,7 @@ const MunimapComponent = (props) => {
 
   const dispatch = useDispatch();
 
+  const munimapTargetElRef = useRef(null);
   const munimapElRef = useRef(null);
   const mapRef = useRef(null);
 
@@ -146,7 +147,7 @@ const MunimapComponent = (props) => {
       if (!mapRef.current) {
         const _map = new Map({
           controls: defaultControls,
-          target: munimapElRef.current,
+          target: munimapTargetElRef.current,
           layers: [basemapLayer],
           view,
         });
@@ -170,15 +171,24 @@ const MunimapComponent = (props) => {
     }
   };
 
-  const onBlur = () => {
-    if ((hasInvalidCodes || shouldBlockMap) && munimapElRef.current) {
-      munimapElRef.current.blur();
-      dispatch(
-        actions.target_blurred({
-          render: hasInvalidCodes && !shouldBlockMap ? false : true,
-          withMessage: false,
-        })
-      );
+  const onBlur = (e) => {
+    if (
+      (hasInvalidCodes || shouldBlockMap) &&
+      munimapTargetElRef.current &&
+      munimapElRef.current
+    ) {
+      //fullscreen not working
+      if (munimapTargetElRef.current.contains(e.relatedTarget)) {
+        e.stopPropagation();
+      } else {
+        munimapElRef.current.blur();
+        dispatch(
+          actions.target_blurred({
+            render: hasInvalidCodes && !shouldBlockMap ? false : true,
+            withMessage: false,
+          })
+        );
+      }
     }
   };
 
@@ -190,14 +200,15 @@ const MunimapComponent = (props) => {
     <>
       <MapContext.Provider value={mapRef}>
         <LoadingMessage />
-        <div className="munimap">
-          <div
-            onBlur={onBlur}
-            tabIndex={hasInvalidCodes || shouldBlockMap ? 0 : undefined}
-            ref={munimapElRef}
-            className="map-target"
-          ></div>
-          <InfoBubbleComponent />
+        <div
+          className="munimap"
+          onBlur={onBlur}
+          tabIndex={hasInvalidCodes || shouldBlockMap ? 0 : undefined}
+          ref={munimapElRef}
+        >
+          <div ref={munimapTargetElRef} className="map-target">
+            <InfoBubbleComponent />
+          </div>
           <Controls />
         </div>
         <ErrorMessage onClick={onErrorClick} />
