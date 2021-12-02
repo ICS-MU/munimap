@@ -185,12 +185,13 @@ const MunimapComponent = (props) => {
     <>
       <MyContext.Provider value={mapRef}>
         <LoadingMessage />
-        <div
-          className="munimap"
-          onBlur={onBlur}
-          tabIndex={hasInvalidCodes || shouldBlockMap ? 0 : undefined}
-        >
-          <div ref={munimapElRef} className="map-target"></div>
+        <div className="munimap">
+          <div
+            onBlur={onBlur}
+            tabIndex={hasInvalidCodes || shouldBlockMap ? 0 : undefined}
+            ref={munimapElRef}
+            className="map-target"
+          ></div>
           <InfoBubbleComponent
             getPixelFromCoordinate={
               mapRef &&
