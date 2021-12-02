@@ -27,6 +27,11 @@ const GOOGLE_IMG_PATH = APP_PATH + 'img/google.png';
  */
 const MAP_SIZE_LIMIT = 'ontouchstart' in window ? 205 : 170;
 
+/**
+ * @type {React.FC}
+ * @param {React.PropsWithChildren<{}>} props props
+ * @return {React.ReactElement} React element
+ */
 const MapLinksComponent = (props) => {
   const lang = useSelector(slctr.getLang);
   const resolution = useSelector(slctr.getResolution);

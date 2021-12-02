@@ -113,6 +113,11 @@ const getInfoBoxPosition = (infoEl, options) => {
   return result;
 };
 
+/**
+ * @type {React.FC}
+ * @param {React.PropsWithChildren<{}>} props props
+ * @return {React.ReactElement} React element
+ */
 const InfoBubbleComponent = (props) => {
   const showInfoEl = useSelector(slctr.showInfoEl);
   const floors = useSelector(slctr.getFloorsByBuildingCode);

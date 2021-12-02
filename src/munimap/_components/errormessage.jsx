@@ -7,6 +7,15 @@ import {createInnerText, getErrorMessageStyle} from '../ui/interaction.js';
 import {hot} from 'react-hot-loader';
 import {useDispatch, useSelector} from 'react-redux';
 
+/**
+ * @type {React.FC<{
+ *  onClick: React.MouseEventHandler<HTMLDivElement>
+ * }>}
+ * @param {React.PropsWithChildren<{
+ *  onClick: React.MouseEventHandler<HTMLDivElement>
+ * }>} props props
+ * @return {React.ReactElement} React element
+ */
 const ErrorMessageComponent = (props) => {
   const targetId = useSelector(slctr.getTargetId);
   const areMarkersLoaded = useSelector(slctr.areMarkersLoaded);

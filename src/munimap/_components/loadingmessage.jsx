@@ -5,6 +5,11 @@ import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {hot} from 'react-hot-loader';
 import {useSelector} from 'react-redux';
 
+/**
+ * @type {React.FC}
+ * @param {React.PropsWithChildren<{}>} props props
+ * @return {React.ReactElement} React element
+ */
 const LoadingMessageComponent = (props) => {
   const targetId = useSelector(slctr.getTargetId);
   const lang = useSelector(slctr.getLang);

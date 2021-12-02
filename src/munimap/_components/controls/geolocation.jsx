@@ -51,6 +51,11 @@ const createAnimationRequest = (map, position) => {
   }
 };
 
+/**
+ * @type {React.FC}
+ * @param {React.PropsWithChildren<{}>} props props
+ * @return {React.ReactElement} React element
+ */
 const GeolocationComponent = (props) => {
   const lang = useSelector(slctr.getLang);
 

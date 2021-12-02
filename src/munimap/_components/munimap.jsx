@@ -23,6 +23,11 @@ import {useDispatch, useSelector} from 'react-redux';
  * @typedef {Array<MapRefObject, MapStateAction>} MapRefUseState
  */
 
+/**
+ * @type {React.FC<{afterInit: Function}>}
+ * @param {React.PropsWithChildren<{afterInit: Function}>} props props
+ * @return {React.ReactElement} React element
+ */
 const MunimapComponent = (props) => {
   const {afterInit} = props;
   const areMarkersLoaded = useSelector(slctr.areMarkersLoaded);
@@ -192,13 +197,7 @@ const MunimapComponent = (props) => {
             ref={munimapElRef}
             className="map-target"
           ></div>
-          <InfoBubbleComponent
-            getPixelFromCoordinate={
-              mapRef &&
-              mapRef.current &&
-              mapRef.current.getPixelFromCoordinate.bind(mapRef.current)
-            }
-          />
+          <InfoBubbleComponent />
           <Controls />
         </div>
         <ErrorMessage onClick={onErrorClick} />

@@ -233,6 +233,11 @@ const getLabel = (floorCode, lang) => {
   return label;
 };
 
+/**
+ * @type {React.FC<{floors: Array<Feature>}>}
+ * @param {React.PropsWithChildren<{floors: Array<Feature>}>} props props
+ * @return {React.ReactElement} React element
+ */
 const SelectComponent = (props) => {
   const lang = useSelector(slctr.getLang);
   const selectedFloor = useSelector(slctr.getSelectedFloorCode);

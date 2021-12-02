@@ -30,6 +30,11 @@ const ZOOM_IN_OUT_SIZE = 'ontouchstart' in window ? 83 : 70;
  */
 const MAP_LINKS_SIZE = 'ontouchstart' in window ? 83 : 70;
 
+/**
+ * @type {React.FC}
+ * @param {React.PropsWithChildren<{}>} props props
+ * @return {React.ReactElement} React element
+ */
 const MapToolsComponent = (props) => {
   const lang = useSelector(slctr.getLang);
   const {mapLinks} = useSelector(slctr.getRequiredOpts);
