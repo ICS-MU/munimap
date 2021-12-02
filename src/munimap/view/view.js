@@ -5,7 +5,6 @@ import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_utils from '../utils/utils.js';
 import TileLayer from 'ol/layer/Tile';
-import createControls from '../control/mapcontrolsview.js';
 import {
   GET_MAIN_FEATURE_AT_PIXEL_STORE,
   TARGET_ELEMENTS_STORE,
@@ -120,16 +119,6 @@ const ensureBaseMap = (map, basemapLayer) => {
   if (currentId !== newId) {
     layers.setAt(currentIndex, basemapLayer);
   }
-};
-
-/**
- * Add controls to map.
- * @param {ol.Map} map map
- * @param {redux.Dispatch} dispatch dispatch
- * @param {RequiredOptions} requiredOpts opts
- */
-const addCustomControls = (map, dispatch, requiredOpts) => {
-  createControls(map, dispatch, requiredOpts);
 };
 
 /**
@@ -438,7 +427,6 @@ export {
   attachIndependentMapListeners,
   attachDependentMapListeners,
   ensureBaseMap,
-  addCustomControls,
   addLayers,
   createFeatureStores,
   refreshStyles,

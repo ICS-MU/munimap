@@ -1,6 +1,7 @@
 import * as actions from '../redux/action.js';
 import * as munimap_view from '../view/view.js';
 import * as slctr from '../redux/selector.js';
+import Controls from './controls/controls.jsx';
 import ErrorMessage from './errormessage.jsx';
 import InfoBubbleComponent from './infobubble.jsx';
 import LoadingMessage from './loadingmessage.jsx';
@@ -9,12 +10,16 @@ import React, {useEffect, useLayoutEffect, useRef} from 'react';
 import {CREATED_MAPS} from '../create.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {Map} from 'ol';
+import {MyContext} from '../_contexts/context.jsx';
 import {hot} from 'react-hot-loader';
 import {unlistenByKey} from 'ol/events';
 import {useDispatch, useSelector} from 'react-redux';
 
 /**
  * @typedef {import("../conf.js").MapProps} MapProps
+ * @typedef {import("react").MutableRefObject<Map>} MapRefObject
+ * @typedef {import("react").Dispatch<import("react").SetStateAction<Map>>} MapStateAction
+ * @typedef {Array<MapRefObject, MapStateAction>} MapRefUseState
  */
 
 const MunimapComponent = (props) => {
@@ -123,8 +128,6 @@ const MunimapComponent = (props) => {
         });
         _map.set(MUNIMAP_PROPS_ID, mapProps);
         CREATED_MAPS[requiredOpts.targetId] = _map;
-
-        munimap_view.addCustomControls(_map, dispatch, requiredOpts);
         munimap_view.attachIndependentMapListeners(_map, dispatch);
       }
     }
@@ -151,21 +154,25 @@ const MunimapComponent = (props) => {
 
   return (
     <>
-      <LoadingMessage />
-      <div
-        className="munimap"
-        ref={munimapElRef}
-        onBlur={onBlur}
-        tabIndex={hasInvalidCodes || shouldBlockMap ? 0 : undefined}
-      >
-        <InfoBubbleComponent
-          getPixelFromCoordinate={
-            mapRef.current &&
-            mapRef.current.getPixelFromCoordinate.bind(mapRef.current)
-          }
-        />
-      </div>
-      <ErrorMessage onClick={onErrorClick} />
+      <MyContext.Provider value={mapRef}>
+        <LoadingMessage />
+        <div
+          className="munimap"
+          onBlur={onBlur}
+          tabIndex={hasInvalidCodes || shouldBlockMap ? 0 : undefined}
+        >
+          <div ref={munimapElRef} className="map-target"></div>
+          <InfoBubbleComponent
+            getPixelFromCoordinate={
+              mapRef &&
+              mapRef.current &&
+              mapRef.current.getPixelFromCoordinate.bind(mapRef.current)
+            }
+          />
+          <Controls />
+        </div>
+        <ErrorMessage onClick={onErrorClick} />
+      </MyContext.Provider>
     </>
   );
 };

@@ -226,7 +226,7 @@ export const getTargetId = (state) => state.requiredOpts.targetId;
  * @param {State} state state
  * @return {ol.Coordinate} center
  */
-const getCenter = (state) => state.center;
+export const getCenter = (state) => state.center;
 
 /**
  * @type {Reselect.Selector<State, number>}
