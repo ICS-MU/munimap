@@ -62,7 +62,7 @@ const MapLinksComponent = (props) => {
               `id=${y}%2C${x}`
           );
         } else {
-          window.open(`https://mapy.cz/zakladni?x=${zoomLevel}&y=${x}&z=${y}`);
+          window.open(`https://mapy.cz/zakladni?x=${y}&y=${x}&z=${zoomLevel}`);
         }
       } else {
         matomoAction = 'maps.google.com';
@@ -83,7 +83,7 @@ const MapLinksComponent = (props) => {
         })
       );
     },
-    [map]
+    [map, resolution, center, markerIds]
   );
 
   useEffect(() => {
