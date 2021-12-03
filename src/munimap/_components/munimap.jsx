@@ -172,13 +172,8 @@ const MunimapComponent = (props) => {
   };
 
   const onBlur = (e) => {
-    if (
-      (hasInvalidCodes || shouldBlockMap) &&
-      munimapTargetElRef.current &&
-      munimapElRef.current
-    ) {
-      //fullscreen not working
-      if (munimapTargetElRef.current.contains(e.relatedTarget)) {
+    if ((hasInvalidCodes || shouldBlockMap) && munimapElRef.current) {
+      if (munimapElRef.current.contains(e.relatedTarget)) {
         e.stopPropagation();
       } else {
         munimapElRef.current.blur();
@@ -208,8 +203,8 @@ const MunimapComponent = (props) => {
         >
           <div ref={munimapTargetElRef} className="map-target">
             <InfoBubbleComponent />
+            <Controls />
           </div>
-          <Controls />
         </div>
         <ErrorMessage onClick={onErrorClick} />
       </MapContext.Provider>
