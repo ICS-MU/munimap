@@ -212,13 +212,16 @@
   
 .munimap {
   box-sizing: content-box;
-  height: 100%;
-  position: relative;
-  width: 100%;
 }
 
 .munimap a {
   text-decoration: underline;
+}
+
+.munimap > .map-target {
+  position: absolute;
+  height: 100%;
+  width: 100%;
 }
 
 .munimap-drag {
