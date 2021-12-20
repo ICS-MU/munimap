@@ -126,7 +126,7 @@ import {getStore as getUnitStore} from './source/unit.js';
  * @typedef {Object} OptPoiLoadOptions
  * @property {Array<string>} [ids] ids
  * @property {Array<string>} [labels] labels
- * @property {Array<number>} [workplaces] workplaces
+ * @property {Array<string>} [workplaces] workplaces
  * @property {Array<string>} [poiFilter] poiFilter
  */
 

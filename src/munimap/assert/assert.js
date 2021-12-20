@@ -301,6 +301,8 @@ const markers = (markers) => {
             'door location codes, or 2. corresponding LIKE expressions, or ' +
             '3. POI categories.'
         );
+      } else if (markers.length > 1) {
+        throw new AssertionError('Only one POI category is allowed.');
       }
     }
   }

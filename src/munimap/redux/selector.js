@@ -180,6 +180,13 @@ const getDefaultRoomsTimestamp = (state) => state.defaultRoomsTimestamp;
 const getActiveRoomsTimestamp = (state) => state.activeRoomsTimestamp;
 
 /**
+ * @type {Reselect.Selector<State, number?>}
+ * @param {State} state state
+ * @return {number|null} timestamp
+ */
+const getOptPoisTimestamp = (state) => state.optPoisTimestamp;
+
+/**
  * @type {Reselect.Selector<State, Array<string>>}
  * @param {State} state state
  * @return {Array<string>} required markers
@@ -596,6 +603,27 @@ export const areZoomToLoaded = createSelector(
     return (
       (requiredZoomTo.length > 0 && zoomToTimestamp > 0) ||
       requiredZoomTo.length === 0
+    );
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    boolean,
+ *    function(Array<string>, number?): boolean
+ * >}
+ */
+export const areOptPoiLoaded = createSelector(
+  [getRequiredMarkerIds, getOptPoisTimestamp],
+  (requiredMarkerIds, optPoisTimestamp) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing if opt pois are loaded');
+    }
+    return (
+      (requiredMarkerIds.some((el) => isOptPoiCtgUid(el)) &&
+        optPoisTimestamp > 0) ||
+      !requiredMarkerIds.some((el) => isOptPoiCtgUid(el))
     );
   }
 );
@@ -1151,17 +1179,24 @@ export const getSelectedLocationCode = createSelector(
  * @type {Reselect.OutputSelector<
  *    State,
  *    MarkerLabelFunction,
- *    function(string, Array<string>, string): MarkerLabelFunction
+ *    function(string, Array<string>, string, boolean): MarkerLabelFunction
  * >}
  */
 export const getMarkerLabel = createSelector(
-  [getTargetId, getRequiredMarkerIds, getRequiredMarkerLabelId],
-  (targetId, requiredMarkerIds, requiredMarkerLabelId) => {
+  [
+    getTargetId,
+    getRequiredMarkerIds,
+    getRequiredMarkerLabelId,
+    areOptPoiLoaded,
+  ],
+  (targetId, requiredMarkerIds, requiredMarkerLabelId, optPoiLoaded) => {
     const optPoiFnId = `OPT_POI_MARKER_LABEL_${targetId}`;
     if (requiredMarkerIds) {
-      return requiredMarkerIds.some((el) => isOptPoiCtgUid(el))
-        ? MARKER_LABEL_STORE[optPoiFnId]
-        : MARKER_LABEL_STORE[requiredMarkerLabelId];
+      if (requiredMarkerIds.some((el) => isOptPoiCtgUid(el)) && optPoiLoaded) {
+        return MARKER_LABEL_STORE[optPoiFnId];
+      } else {
+        return MARKER_LABEL_STORE[requiredMarkerLabelId];
+      }
     }
     return;
   }

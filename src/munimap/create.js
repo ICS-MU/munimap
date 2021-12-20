@@ -117,11 +117,6 @@ export const GET_MAIN_FEATURE_AT_PIXEL_STORE = {};
 export const loadOrDecorateMarkers = async (featuresLike, options) => {
   const lang = options.lang;
   const arrPromises = []; // array of promises of features
-  let workplaces = [];
-
-  if (options.markerFilter !== null) {
-    workplaces = options.markerFilter.map((el) => el);
-  }
 
   if (!Array.isArray(featuresLike)) {
     return [];
@@ -141,9 +136,10 @@ export const loadOrDecorateMarkers = async (featuresLike, options) => {
           })
         );
       } else {
-        const arrPoi = [el];
-        const ctgIds = arrPoi.map((ctguid) => ctguid.split(':')[1]);
-        let roomCodes = [];
+        const workplaces = //HS
+          options.markerFilter !== null ? [...options.markerFilter] : [];
+        const ctgIds = [el.split(':')[1]];
+
         arrPromises.push(
           munimap_load
             .loadOptPois({
@@ -152,27 +148,18 @@ export const loadOrDecorateMarkers = async (featuresLike, options) => {
               poiFilter: options.poiFilter,
             })
             .then((features) => {
-              const rooms = features.filter((f) => {
+              const roomOptPois = features.filter((f) => {
                 const lc = /**@type {string}*/ (f.get('polohKodLokace'));
                 munimap_assert.assertString(lc);
-
-                return !options.poiFilter
-                  ? isRoomCode(lc)
-                  : options.poiFilter.some(
-                      (poiFilter) =>
-                        isRoomCode(lc) && f.get('poznamka') === poiFilter
-                    );
+                return isRoomCode(lc);
               });
-              roomCodes = rooms.map((f) => f.get('polohKodLokace'));
-
-              if (ctgIds.length === 1) {
-                MARKER_LABEL_STORE[`OPT_POI_MARKER_LABEL_${options.targetId}`] =
-                  optPoiMarkerLabel(ctgIds[0], roomCodes, lang);
-              }
+              const roomCodes = roomOptPois.map((f) => f.get('polohKodLokace'));
+              MARKER_LABEL_STORE[`OPT_POI_MARKER_LABEL_${options.targetId}`] =
+                optPoiMarkerLabel(ctgIds[0], roomCodes, lang);
 
               return new Promise((resolve, reject) => {
-                munimap_load.featuresFromParam(roomCodes).then((values) => {
-                  resolve(addPoiDetail(values, features, lang));
+                munimap_load.featuresFromParam(roomCodes).then((rooms) => {
+                  resolve(addPoiDetail(rooms, features, lang));
                 });
               });
             })
