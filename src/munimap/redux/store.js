@@ -25,7 +25,32 @@ import {loadOrDecorateMarkers} from '../create.js';
 
 /**
  * @typedef {import("../conf.js").State} State
+ * @typedef {import("./action.js").LoadedTypes} LoadedTypes
  */
+
+/**
+ * @typedef {Object} FeatureTimestampOptions
+ * @property {number} buildingsTimestamp timestamp
+ * @property {number} defaultRoomsTimestamp timestamp
+ * @property {number} doorsTimestamp timestamp
+ */
+
+/**
+ * @param {State} state state
+ * @param {LoadedTypes} loadedTypes loaded types
+ * @return {FeatureTimestampOptions} timestamps
+ */
+const getFeaturesTimestamps = (state, loadedTypes) => {
+  return {
+    buildingsTimestamp: Object.values(loadedTypes).some((t) => t)
+      ? Date.now()
+      : state.buildingsTimestamp,
+    defaultRoomsTimestamp: loadedTypes.room
+      ? Date.now()
+      : state.defaultRoomsTimestamp,
+    doorsTimestamp: loadedTypes.door ? Date.now() : state.doorsTimestamp,
+  };
+};
 
 /**
  *
@@ -37,21 +62,17 @@ const createReducer = (initialState) => {
     let newState;
     let locationCode;
     let loadedTypes;
+    let featuresTimestamps;
 
     switch (action.type) {
       // MARKERS_LOADED
       case actions.MARKERS_LOADED:
         loadedTypes = action.payload;
+        featuresTimestamps = getFeaturesTimestamps(state, loadedTypes);
         return {
           ...state,
+          ...featuresTimestamps,
           markersTimestamp: Date.now(),
-          buildingsTimestamp: Object.values(loadedTypes).some((t) => t)
-            ? Date.now()
-            : state.buildingsTimestamp,
-          defaultRoomsTimestamp: loadedTypes.room
-            ? Date.now()
-            : state.defaultRoomsTimestamp,
-          doorsTimestamp: loadedTypes.door ? Date.now() : state.doorsTimestamp,
           optPoisTimestamp: loadedTypes.optPoi
             ? Date.now()
             : state.optPoisTimestamp,
@@ -60,16 +81,11 @@ const createReducer = (initialState) => {
       // ZOOMTO_LOADED
       case actions.ZOOMTO_LOADED:
         loadedTypes = action.payload;
+        featuresTimestamps = getFeaturesTimestamps(state, loadedTypes);
         return {
           ...state,
+          ...featuresTimestamps,
           zoomToTimestamp: Date.now(),
-          buildingsTimestamp: Object.values(loadedTypes).some((t) => t)
-            ? Date.now()
-            : state.buildingsTimestamp,
-          defaultRoomsTimestamp: loadedTypes.room
-            ? Date.now()
-            : state.defaultRoomsTimestamp,
-          doorsTimestamp: loadedTypes.door ? Date.now() : state.doorsTimestamp,
         };
 
       // MAP_INITIALIZED
