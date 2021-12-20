@@ -18,8 +18,7 @@ const refreshActiveStyle = (layers, styles) => {
   if (!Array.isArray(layers) || layers.length === 0) {
     return;
   }
-  const lyr =
-    layers.length === 1 ? layers[0] : layers.find((l) => isActiveLayer(l));
+  const lyr = layers.find((l) => isActiveLayer(l));
 
   if (lyr && lyr instanceof VectorLayer) {
     const style = styles.styleForPoiActiveLayer;

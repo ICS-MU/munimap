@@ -16,7 +16,7 @@ const refreshStyle = (layers) => {
   if (!Array.isArray(layers) || layers.length === 0) {
     return;
   }
-  const lyr = layers.length === 1 ? layers[0] : layers.find((l) => isLayer(l));
+  const lyr = layers.find((l) => isLayer(l));
 
   if (lyr && lyr instanceof VectorLayer && styleFunction !== lyr.getStyle()) {
     lyr.setStyle(styleFunction);

@@ -18,8 +18,7 @@ const refreshStyle = (layers, styles) => {
   if (!Array.isArray(layers) || layers.length === 0) {
     return;
   }
-  const lyr =
-    layers.length === 1 ? layers[0] : layers.find((l) => isDefaultLayer(l));
+  const lyr = layers.find((l) => isDefaultLayer(l));
 
   if (lyr && lyr instanceof VectorLayer) {
     const style = styles.styleForRoomLayer;
@@ -37,8 +36,7 @@ const refreshLabelStyle = (layers, styles) => {
   if (!Array.isArray(layers) || layers.length === 0) {
     return;
   }
-  const lyr =
-    layers.length === 1 ? layers[0] : layers.find((l) => isLabelLayer(l));
+  const lyr = layers.find((l) => isLabelLayer(l));
 
   if (lyr && lyr instanceof VectorLayer) {
     const style = styles.styleForRoomLabelLayer;
@@ -56,8 +54,7 @@ const refreshActiveStyle = (layers, styles) => {
   if (!Array.isArray(layers) || layers.length === 0) {
     return;
   }
-  const lyr =
-    layers.length === 1 ? layers[0] : layers.find((l) => isActiveLayer(l));
+  const lyr = layers.find((l) => isActiveLayer(l));
 
   if (lyr && lyr instanceof VectorLayer) {
     const style = styles.styleForRoomActiveLayer;
