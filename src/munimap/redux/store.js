@@ -260,19 +260,49 @@ const createReducer = (initialState) => {
         return newState;
 
       //TARGET_WHEELED
-      //TARGET_TOUCHMOVED
-      //TARGET_BLURRED
-      //TARGET_FOCUSED
       case actions.TARGET_WHEELED:
+        return {
+          ...state,
+          errorMessage: {
+            ...state.errorMessage,
+            render: action.payload,
+            withMessage: true,
+          },
+        };
+
+      //TARGET_TOUCHMOVED
       case actions.TARGET_TOUCHMOVED:
+        return {
+          ...state,
+          errorMessage: {
+            ...state.errorMessage,
+            render: action.payload,
+            withMessage: true,
+          },
+        };
+
+      //TARGET_BLURRED
       case actions.TARGET_BLURRED:
+        const invalidCodes = slctr.getInvalidCodes(state);
+        const hasInvalidCodes = invalidCodes && invalidCodes.length > 0;
+        const shouldBlockMap = !state.requiredOpts.simpleScroll;
+        return {
+          ...state,
+          errorMessage: {
+            ...state.errorMessage,
+            render: hasInvalidCodes && !shouldBlockMap ? false : true,
+            withMessage: false,
+          },
+        };
+
+      //TARGET_FOCUSED
       case actions.TARGET_FOCUSED:
         return {
           ...state,
           errorMessage: {
             ...state.errorMessage,
-            render: action.payload.render,
-            withMessage: action.payload.withMessage,
+            render: false,
+            withMessage: false,
           },
         };
 

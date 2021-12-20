@@ -88,10 +88,7 @@ const ErrorMessageComponent = (props) => {
   const onWheel = () => {
     if (shouldBlockMap && render !== false) {
       dispatch(
-        actions.target_wheeled({
-          render: document.activeElement === errElRef.current ? false : true,
-          withMessage: true,
-        })
+        actions.target_wheeled(document.activeElement !== errElRef.current)
       );
     }
   };
@@ -99,10 +96,7 @@ const ErrorMessageComponent = (props) => {
   const onTouchMove = () => {
     if (shouldBlockMap && render !== false) {
       dispatch(
-        actions.target_touchmoved({
-          render: document.activeElement === errElRef.current ? false : true,
-          withMessage: true,
-        })
+        actions.target_touchmoved(document.activeElement !== errElRef.current)
       );
     }
   };

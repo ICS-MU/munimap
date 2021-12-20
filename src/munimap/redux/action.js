@@ -16,7 +16,6 @@ import {
  * @typedef {import("ol/size").Size} ol.Size
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
  * @typedef {import("../matomo/matomo.js").Options} MatomoOptions
- * @typedef {import("../conf.js").ErrorMessageState} ErrorMessageState
  * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
  */
 
@@ -285,46 +284,42 @@ export function selected_feature_changed(code) {
 }
 
 /**
- * @param {ErrorMessageState} errorMessageProps error message props
+ * @param {boolean} isMunimapActive whether is munimap el active in document
  * @return {redux.AnyAction} action
  */
-export function target_touchmoved(errorMessageProps) {
+export function target_touchmoved(isMunimapActive) {
   return {
     type: TARGET_TOUCHMOVED,
-    payload: errorMessageProps,
+    payload: isMunimapActive,
   };
 }
 
 /**
- * @param {ErrorMessageState} errorMessageProps error message props
+ * @param {boolean} isMunimapActive whether is munimap el active in document
  * @return {redux.AnyAction} action
  */
-export function target_wheeled(errorMessageProps) {
+export function target_wheeled(isMunimapActive) {
   return {
     type: TARGET_WHEELED,
-    payload: errorMessageProps,
+    payload: isMunimapActive,
   };
 }
 
 /**
- * @param {ErrorMessageState} errorMessageProps error message props
  * @return {redux.AnyAction} action
  */
-export function target_focused(errorMessageProps) {
+export function target_focused() {
   return {
     type: TARGET_FOCUSED,
-    payload: errorMessageProps,
   };
 }
 
 /**
- * @param {ErrorMessageState} errorMessageProps error message props
  * @return {redux.AnyAction} action
  */
-export function target_blurred(errorMessageProps) {
+export function target_blurred() {
   return {
     type: TARGET_BLURRED,
-    payload: errorMessageProps,
   };
 }
 

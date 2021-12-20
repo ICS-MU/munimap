@@ -167,7 +167,7 @@ const MunimapComponent = (props) => {
   const onErrorClick = () => {
     if (munimapElRef.current) {
       munimapElRef.current.focus();
-      dispatch(actions.target_focused({render: false, withMessage: false}));
+      dispatch(actions.target_focused());
     }
   };
 
@@ -177,12 +177,7 @@ const MunimapComponent = (props) => {
         e.stopPropagation();
       } else {
         munimapElRef.current.blur();
-        dispatch(
-          actions.target_blurred({
-            render: hasInvalidCodes && !shouldBlockMap ? false : true,
-            withMessage: false,
-          })
-        );
+        dispatch(actions.target_blurred());
       }
     }
   };
