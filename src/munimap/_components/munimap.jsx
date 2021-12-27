@@ -56,28 +56,25 @@ const MunimapComponent = (props) => {
   const munimapTargetElRef = useRef(null);
   const munimapElRef = useRef(null);
   const mapRef = useRef(null);
+  const map = mapRef && mapRef.current;
 
   useEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## MUNIMAP-useEffect-depListeners');
     }
-    const eventKeys = munimap_view.attachDependentMapListeners(
-      mapRef.current,
-      dispatch,
-      {
-        requiredOpts,
-        selectedFeature,
-      }
-    );
+    const eventKeys = munimap_view.attachDependentMapListeners(map, dispatch, {
+      requiredOpts,
+      selectedFeature,
+    });
     return () => eventKeys.forEach((k) => unlistenByKey(k));
-  }, [requiredOpts, selectedFeature]);
+  }, [map, requiredOpts, selectedFeature]);
 
   useEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## MUNIMAP-useEffect-addLayers');
     }
     if (areMarkersLoaded && areZoomToLoaded && !areInitialLayersAdded) {
-      munimap_view.addLayers(mapRef.current, dispatch, {
+      munimap_view.addLayers(map, dispatch, {
         markers,
         muAttrs,
         clusterResolution,
@@ -85,6 +82,7 @@ const MunimapComponent = (props) => {
       });
     }
   }, [
+    map,
     markers,
     muAttrs,
     clusterResolution,
@@ -98,45 +96,41 @@ const MunimapComponent = (props) => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## MUNIMAP-useEffect-clusterUpdate');
     }
-    munimap_view.ensureClusterUpdate(mapRef.current, {
+    munimap_view.ensureClusterUpdate(map, {
       labels: requiredOpts.labels,
       buildingsCount,
     });
-  }, [requiredOpts, buildingsCount]);
+  }, [map, requiredOpts, buildingsCount]);
 
   useEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## MUNIMAP-useEffect-ensureBasemap');
     }
-    munimap_view.ensureBaseMap(mapRef.current, basemapLayer);
-  }, [basemapLayer]);
+    munimap_view.ensureBaseMap(map, basemapLayer);
+  }, [map, basemapLayer]);
 
   useEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## MUNIMAP-useEffect-refreshStyles');
     }
-    munimap_view.refreshStyles(
-      mapRef.current,
-      allStyleFunctions,
-      requiredOpts.pubTran
-    );
-  }, [allStyleFunctions, requiredOpts]);
+    munimap_view.refreshStyles(map, allStyleFunctions, requiredOpts.pubTran);
+  }, [map, allStyleFunctions, requiredOpts]);
 
   useEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## MUNIMAP-useEffect-animate');
     }
-    munimap_view.animate(mapRef.current, animationRequest);
-  }, [animationRequest]);
+    munimap_view.animate(map, animationRequest);
+  }, [map, animationRequest]);
 
   useEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## MUNIMAP-useEffect-afterInit');
     }
     if (mapInitialized) {
-      afterInit(mapRef.current);
+      afterInit(map);
     }
-  }, [mapInitialized]);
+  }, [map, mapInitialized]);
 
   useLayoutEffect(() => {
     if (ENABLE_EFFECT_LOGS) {

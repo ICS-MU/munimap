@@ -1,37 +1,26 @@
 /**
  * @module cluster/cluster
  */
-import * as munimap_assert from '../assert/assert.js';
+import * as actions from '../redux/action.js';
 import * as munimap_building from '../feature/building.js';
 import * as munimap_marker from '../feature/marker.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
-import {RESOLUTION as DOOR_RESOLUTION} from '../feature/door.js';
-import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.js';
 import {Feature} from 'ol';
-import {containsExtent, getCenter, getForViewAndSize} from 'ol/extent';
-import {
-  ofFeature as extentOfFeature,
-  ofFeatures as extentOfFeatures,
-} from '../utils/extent.js';
-import {
-  getAnimationDuration,
-  getAnimationRequestParams,
-} from '../utils/animation.js';
 import {getStore as getBuildingStore} from '../source/building.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
-import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
-import {isDoor} from '../feature/door.js';
 
 /**
  * @typedef {import("../utils/range").RangeInterface} RangeInterface
  * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
+ * @typedef {import("../feature/feature.js").IsClickableOptions} IsClickableOptions
  * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import("ol/source/Vector").default} ol.source.Vector
  * @typedef {import("ol/render/Event").default} ol.render.Event
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
+ * @typedef {import("redux").Dispatch} redux.Dispatch
  */
 
 /**
@@ -53,11 +42,19 @@ const BUILDING_RESOLUTION = munimap_range.createResolution(
 );
 
 /**
- * @param {FeatureClickHandlerOptions} options options
+ * @param {IsClickableOptions} options options
  * @return {boolean} whether is clackable
  */
 const isClickable = (options) => {
   return true;
+};
+
+/**
+ * @param {redux.Dispatch} dispatch dispatch
+ * @param {FeatureClickHandlerOptions} options options
+ */
+const featureClickHandler = (dispatch, options) => {
+  dispatch(actions.clusterClicked(options));
 };
 
 /**
@@ -175,79 +172,6 @@ const getMinorFeatures = (feature) => {
   let result = getFeatures(feature);
   result = result.filter((f) => !munimap_marker.isMarker(f));
   return result;
-};
-
-/**
- * @param {FeatureClickHandlerOptions} options options
- * @return {AnimationRequestOptions} results
- */
-const featureClickHandler = (options) => {
-  const {feature, map, clusterFacultyAbbr} = options;
-  const view = map.getView();
-  const size = map.getSize() || null;
-  const resolution = view.getResolution();
-  const viewExtent = view.calculateExtent(size);
-
-  let clusteredFeatures = getMainFeatures(feature);
-  if (clusterFacultyAbbr) {
-    const minorFeatures = getMinorFeatures(feature);
-    clusteredFeatures = clusteredFeatures.concat(minorFeatures);
-  }
-
-  const firstFeature = clusteredFeatures[0];
-  munimap_assert.assertInstanceof(firstFeature, Feature);
-  const resolutionRange = isDoor(firstFeature)
-    ? DOOR_RESOLUTION
-    : FLOOR_RESOLUTION;
-  let extent;
-  if (clusteredFeatures.length === 1) {
-    let center;
-    // const detail = /** @type {string} */(firstFeature.get('detail'));
-    // if (detail) {
-    //   munimap.bubble.show(firstFeature, map, detail, 0, 20);
-    // }
-    if (isCustomMarker(firstFeature)) {
-      extent = extentOfFeature(firstFeature);
-      center = getCenter(extent);
-      return getAnimationRequestParams(map, center, resolutionRange.max);
-    } else {
-      const isVisible = munimap_range.contains(resolutionRange, resolution);
-      if (!isVisible) {
-        extent = extentOfFeature(firstFeature);
-        center = getCenter(extent);
-        return getAnimationRequestParams(map, center, resolutionRange.max);
-      }
-    }
-  } else {
-    const showOneBuilding = false;
-    let duration;
-    if (showOneBuilding) {
-      extent = extentOfFeatures(clusteredFeatures);
-      munimap_assert.assertArray(size);
-      const bldgExtent = getForViewAndSize(
-        getCenter(extent),
-        resolutionRange.max,
-        view.getRotation(),
-        size
-      );
-      if (containsExtent(bldgExtent, extent)) {
-        extent = bldgExtent;
-      }
-      duration = getAnimationDuration(viewExtent, extent);
-      return {
-        extent,
-        duration,
-      };
-    } else {
-      extent = extentOfFeatures(clusteredFeatures);
-      munimap_assert.assertArray(size);
-      duration = getAnimationDuration(viewExtent, extent);
-      return {
-        extent,
-        duration,
-      };
-    }
-  }
 };
 
 export {

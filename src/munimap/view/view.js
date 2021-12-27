@@ -5,6 +5,7 @@ import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_utils from '../utils/utils.js';
 import TileLayer from 'ol/layer/Tile';
+import {CLICK_HANDLER, IS_CLICKABLE} from '../layer/layer.js';
 import {
   GET_MAIN_FEATURE_AT_PIXEL_STORE,
   TARGET_ELEMENTS_STORE,
@@ -36,6 +37,7 @@ import {createStore as createPubtranStore} from '../source/pubtran.stop.js';
 import {createStore as createUnitStore} from '../source/unit.js';
 import {getDefaultLayers} from '../layer/layer.js';
 import {getMainFeatureAtPixel} from '../feature/feature.js';
+import {getUid} from 'ol';
 import {refreshActiveStyle as refreshActiveDoorStyle} from './door.js';
 import {refreshActiveStyle as refreshActivePoiStyle} from './poi.js';
 import {
@@ -161,44 +163,34 @@ const handleMapClick = (evt, dispatch, options) => {
     ? GET_MAIN_FEATURE_AT_PIXEL_STORE[getMainFeatureAtPixelId]
     : getMainFeatureAtPixel;
 
-  let result;
   const featureWithLayer = getMainFeatureAtPixelFn(map, pixel);
   if (featureWithLayer) {
     const layer = featureWithLayer.layer;
     const isClickable = /** @type {isClickableFunction}*/ (
-      layer.get('isFeatureClickable')
+      layer.get(IS_CLICKABLE)
     );
     if (isClickable) {
       munimap_assert.assertFunction(isClickable);
 
       const handlerOpts = {
         feature: featureWithLayer.feature,
-        map: map,
-        pixel: pixel,
-        selectedFeature: selectedFeature,
-        clusterFacultyAbbr: clusterFacultyAbbr,
+        resolution: map.getView().getResolution(),
+        selectedFeature,
+        clusterFacultyAbbr,
       };
       if (isClickable(handlerOpts)) {
         const featureClickHandler = /** @type {featureClickHandlerFunction} */ (
-          layer.get('featureClickHandler')
+          layer.get(CLICK_HANDLER)
         );
         if (featureClickHandler) {
           munimap_assert.assertFunction(featureClickHandler);
-          result = featureClickHandler(handlerOpts);
+          featureClickHandler(dispatch, {
+            featureUid: getUid(featureWithLayer.feature),
+            pixelInCoords: map.getCoordinateFromPixel(pixel),
+          });
         }
       }
     }
-  }
-  if (result) {
-    munimap_utils.isString(result)
-      ? dispatch(
-          actions.selected_feature_changed(/** @type {string}*/ (result))
-        )
-      : dispatch(
-          actions.view_animation_requested(
-            /** @type {AnimationRequestOptions}*/ (result)
-          )
-        );
   }
 };
 
@@ -419,7 +411,8 @@ const animate = (map, animationRequest) => {
     view.fit(extent, {duration, nearest: true});
   } else {
     const _center = center instanceof Point ? center.getCoordinates() : center;
-    view.animate({center: _center, resolution, duration});
+    const _resolution = view.getConstrainedResolution(resolution);
+    view.animate({center: _center, resolution: _resolution, duration});
   }
 };
 

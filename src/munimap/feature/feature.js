@@ -21,15 +21,21 @@ import {getLayer as getMarkerLayer} from '../layer/marker.js';
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
  * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
+ * @typedef {import("redux").Dispatch} redux.Dispatch
  */
 
 /**
  * @typedef {Object} FeatureClickHandlerOptions
+ * @property {string} featureUid feature uid
+ * @property {ol.Coordinate} pixelInCoords feature uid
+ */
+
+/**
+ * @typedef {Object} IsClickableOptions
  * @property {ol.Feature} feature feature
- * @property {ol.Map} map map
- * @property {ol.pixel.Pixel} pixel pixel
- * @property {string} selectedFeature selected feature
- * @property {boolean} clusterFacultyAbbr whethet to cluster faculty abbrs
+ * @property {number} [resolution] resolution
+ * @property {string} [selectedFeature] selected feature
+ * @property {boolean} [clusterFacultyAbbr] cluster faculty abbreviation
  */
 
 /**
@@ -52,11 +58,11 @@ import {getLayer as getMarkerLayer} from '../layer/marker.js';
  */
 
 /**
- * @typedef {function(FeatureClickHandlerOptions): boolean} isClickableFunction
+ * @typedef {function(IsClickableOptions): boolean} isClickableFunction
  */
 
 /**
- * @typedef {function(FeatureClickHandlerOptions): AnimationRequestOptions|string} featureClickHandlerFunction
+ * @typedef {function(redux.Dispatch, FeatureClickHandlerOptions): void} featureClickHandlerFunction
  */
 
 /**
@@ -109,27 +115,25 @@ const getMainFeatureAtPixel = (map, pixel) => {
 };
 
 /**
- * @param {ol.Map} map map
  * @param {ol.Feature} feature feature
- * @param {ol.pixel.Pixel} pixel pixel
+ * @param {ol.Coordinate} pixelCoord coord
+ * @param {ol.extent.Extent} extent extent
  * @return {ol.Coordinate} coord
  */
-const getClosestPointToPixel = (map, feature, pixel) => {
-  const coordinate = map.getCoordinateFromPixel(pixel);
-  const point = new Feature(new Point(coordinate));
+const getClosestPointToPixel = (feature, pixelCoord, extent) => {
+  const point = new Feature(new Point(pixelCoord));
   const format = new GeoJSON();
   const turfPoint = /**@type {any}*/ (format.writeFeatureObject(point));
   const turfFeature = /**@type {any}*/ (format.writeFeatureObject(feature));
 
   if (turf_booleanPointInPolygon(turfPoint, turfFeature)) {
-    return coordinate;
+    return pixelCoord;
   } else {
     //e.g. corridor marker out of boundaries
-    const viewExtent = map.getView().calculateExtent(map.getSize() || null);
-    const intersect = featureExtentIntersect(feature, viewExtent, format);
+    const intersect = featureExtentIntersect(feature, extent, format);
     let closestPoint;
     if (munimap_utils.isDefAndNotNull(intersect)) {
-      closestPoint = intersect.getGeometry().getClosestPoint(coordinate);
+      closestPoint = intersect.getGeometry().getClosestPoint(pixelCoord);
     }
     return closestPoint || null;
   }

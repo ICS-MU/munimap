@@ -1,6 +1,7 @@
 /**
  * @module feature/building
  */
+import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_complex from './complex.js';
 import * as munimap_floor from './floor.js';
@@ -11,9 +12,7 @@ import * as munimap_unit from './unit.js';
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {MUNIMAP_URL} from '../conf.js';
-import {getAnimationRequestParams} from '../utils/animation.js';
 import {getStore as getBuildingStore} from '../source/building.js';
-import {getClosestPointToPixel} from '../feature/feature.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {isDoor} from './door.js';
 import {isRoom} from './room.js';
@@ -21,6 +20,7 @@ import {isRoom} from './room.js';
 /**
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
  * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
+ * @typedef {import("./feature.js").IsClickableOptions} IsClickableOptions
  * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
  * @typedef {import("ol/source").Vector} ol.source.Vector
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
@@ -33,6 +33,7 @@ import {isRoom} from './room.js';
  * @typedef {import("ol/featureloader")} ol.FeatureLoader
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("../feature/floor.js").Options} FloorOptions
+ * @typedef {import("redux").Dispatch} redux.Dispatch
  */
 
 /**
@@ -190,13 +191,11 @@ const isSelected = (building, selectedFeature) => {
 };
 
 /**
- * @param {FeatureClickHandlerOptions} options options
+ * @param {IsClickableOptions} options options
  * @return {boolean} isClickable
  */
 const isClickable = (options) => {
-  const {feature, map, selectedFeature} = options;
-  const view = map.getView();
-  const resolution = view.getResolution();
+  const {feature, resolution, selectedFeature} = options;
 
   if (munimap_range.contains(munimap_floor.RESOLUTION, resolution)) {
     return !isSelected(feature, selectedFeature) && hasInnerGeometry(feature);
@@ -211,24 +210,11 @@ const isClickable = (options) => {
 };
 
 /**
+ * @param {redux.Dispatch} dispatch dispatch
  * @param {FeatureClickHandlerOptions} options options
- * @return {AnimationRequestOptions|string} result
  */
-const featureClickHandler = (options) => {
-  const {feature, map, pixel} = options;
-  // var identifyCallback = getProps(map).options.identifyCallback;
-
-  const view = map.getView();
-  const resolution = view.getResolution();
-  const isVisible = munimap_range.contains(
-    munimap_floor.RESOLUTION,
-    resolution
-  );
-  if (!isVisible /*&& !munimap_utils.isDef(identifyCallback)*/) {
-    const point = getClosestPointToPixel(map, feature, pixel);
-    return getAnimationRequestParams(map, point, munimap_floor.RESOLUTION.max);
-  }
-  return feature.get('vychoziPodlazi') || feature.get('polohKod');
+const featureClickHandler = (dispatch, options) => {
+  dispatch(actions.buildingClicked(options));
 };
 
 /**

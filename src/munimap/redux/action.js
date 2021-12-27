@@ -11,12 +11,22 @@ import {
 /**
  * @typedef {import("../create.js").Options} CreateOptions
  * @typedef {import("../feature/floor.js").Options} FloorOptions
+ * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  * @typedef {import("ol/Feature").default} ol.Feature
- * @typedef {import("redux").AnyAction} redux.AnyAction
+ * @typedef {import("redux").Dispatch} redux.Dispatch
+ * @typedef {import("redux").Action} redux.Action
  * @typedef {import("ol/size").Size} ol.Size
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
  * @typedef {import("../matomo/matomo.js").Options} MatomoOptions
  * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
+ */
+
+/**
+ * @typedef {Object} PayloadPropObj
+ * @property {*} [payload] payload
+ * @property {redux.Dispatch} [asyncDispatch] dispatch
+ *
+ * @typedef {redux.Action & PayloadPropObj} PayloadAsyncAction
  */
 
 /**
@@ -132,18 +142,60 @@ export const POIS_LOADED = 'POIS_LOADED';
  * @type {string}
  * @const
  */
-export const VIEW_ANIMATION_REQUESTED = 'VIEW_ANIMATION_REQUESTED';
+export const INITIAL_LAYERS_ADDED = 'INITIAL_LAYERS_ADDED';
 
 /**
  * @type {string}
  * @const
  */
-export const INITIAL_LAYERS_ADDED = 'INITIAL_LAYERS_ADDED';
+export const BUILDING_CLICKED = 'BUILDING_CLICKED';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const COMPLEX_CLICKED = 'COMPLEX_CLICKED';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const CLUSTER_CLICKED = 'CLUSTER_CLICKED';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const MARKER_CLICKED = 'MARKER_CLICKED';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const POI_CLICKED = 'POI_CLICKED';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const PUBTRAN_CLICKED = 'PUBTRAN_CLICKED';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const ROOM_CLICKED = 'ROOM_CLICKED';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const GEOLOCATION_CLICKED = 'GEOLOCATION_CLICKED';
 
 /**
  * @param {Array<ol.Feature|string>} markers markers
  * @param {LoadedTypes} loadedTypes loaded feature types
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
 export function markers_loaded(markers, loadedTypes) {
   sendEventForCustomMarker(markers);
@@ -155,7 +207,7 @@ export function markers_loaded(markers, loadedTypes) {
 
 /**
  * @param {LoadedTypes} loadedTypes loaded feature types
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
 export function zoomTo_loaded(loadedTypes) {
   return {
@@ -168,7 +220,7 @@ export function zoomTo_loaded(loadedTypes) {
  * Inital for creating munimap. At first, action sends info to matomo and
  * after that creates and returns action object.
  * @param {MatomoOptions} options options
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
 export function create_munimap(options) {
   sendEvent('map', 'create');
@@ -180,7 +232,7 @@ export function create_munimap(options) {
 }
 
 /**
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
 export function map_initialized() {
   return {
@@ -190,7 +242,7 @@ export function map_initialized() {
 
 /**
  * @param {{resolution: number}} object action object
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
 export function map_precomposed(object) {
   return {
@@ -207,7 +259,7 @@ export function map_precomposed(object) {
  *    resolution: number,
  *    mapSize: ol.Size
  * }} object action object
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
 export function ol_map_view_change(object) {
   return {
@@ -223,7 +275,7 @@ export function ol_map_view_change(object) {
  *    category: string,
  *    action: string
  * }} object action object
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
 export function log_action_happened(object) {
   sendEvent(object.category, object.action);
@@ -233,7 +285,7 @@ export function log_action_happened(object) {
 }
 
 /**
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
 export function buildings_loaded() {
   return {
@@ -243,7 +295,7 @@ export function buildings_loaded() {
 
 /**
  * @param {boolean} newSelectedIsActive newSelectedIsActive
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
 export function floors_loaded(newSelectedIsActive) {
   return {
@@ -254,7 +306,7 @@ export function floors_loaded(newSelectedIsActive) {
 
 /**
  * @param {string} roomType loaded room type
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
 export function rooms_loaded(roomType) {
   return {
@@ -264,7 +316,7 @@ export function rooms_loaded(roomType) {
 }
 
 /**
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
 export function doors_loaded() {
   return {
@@ -274,7 +326,7 @@ export function doors_loaded() {
 
 /**
  * @param {string} code new code (bldg, floor)
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
 export function selected_feature_changed(code) {
   return {
@@ -285,7 +337,7 @@ export function selected_feature_changed(code) {
 
 /**
  * @param {boolean} isMunimapActive whether is munimap el active in document
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
 export function target_touchmoved(isMunimapActive) {
   return {
@@ -296,7 +348,7 @@ export function target_touchmoved(isMunimapActive) {
 
 /**
  * @param {boolean} isMunimapActive whether is munimap el active in document
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
 export function target_wheeled(isMunimapActive) {
   return {
@@ -306,7 +358,7 @@ export function target_wheeled(isMunimapActive) {
 }
 
 /**
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
 export function target_focused() {
   return {
@@ -315,7 +367,7 @@ export function target_focused() {
 }
 
 /**
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
 export function target_blurred() {
   return {
@@ -324,7 +376,7 @@ export function target_blurred() {
 }
 
 /**
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
 export function pois_loaded() {
   return {
@@ -333,21 +385,98 @@ export function pois_loaded() {
 }
 
 /**
- * @param {AnimationRequestOptions} object object
- * @return {redux.AnyAction} action
+ * @return {PayloadAsyncAction} action
  */
-export function view_animation_requested(object) {
+export function initialLayersAdded() {
   return {
-    type: VIEW_ANIMATION_REQUESTED,
+    type: INITIAL_LAYERS_ADDED,
+  };
+}
+
+/**
+ * @param {FeatureClickHandlerOptions} object object
+ * @return {PayloadAsyncAction} action
+ */
+export function buildingClicked(object) {
+  return {
+    type: BUILDING_CLICKED,
     payload: object,
   };
 }
 
 /**
- * @return {redux.AnyAction} action
+ * @param {FeatureClickHandlerOptions} object object
+ * @return {PayloadAsyncAction} action
  */
-export function initialLayersAdded() {
+export function complexClicked(object) {
   return {
-    type: INITIAL_LAYERS_ADDED,
+    type: COMPLEX_CLICKED,
+    payload: object,
+  };
+}
+
+/**
+ * @param {FeatureClickHandlerOptions} object object
+ * @return {PayloadAsyncAction} action
+ */
+export function clusterClicked(object) {
+  return {
+    type: CLUSTER_CLICKED,
+    payload: object,
+  };
+}
+
+/**
+ * @param {FeatureClickHandlerOptions} object object
+ * @return {PayloadAsyncAction} action
+ */
+export function markerClicked(object) {
+  return {
+    type: MARKER_CLICKED,
+    payload: object,
+  };
+}
+
+/**
+ * @param {FeatureClickHandlerOptions} object object
+ * @return {PayloadAsyncAction} action
+ */
+export function poiClicked(object) {
+  return {
+    type: POI_CLICKED,
+    payload: object,
+  };
+}
+
+/**
+ * @param {FeatureClickHandlerOptions} object object
+ * @return {PayloadAsyncAction} action
+ */
+export function pubtranClicked(object) {
+  return {
+    type: PUBTRAN_CLICKED,
+    payload: object,
+  };
+}
+
+/**
+ * @param {FeatureClickHandlerOptions} object object
+ * @return {PayloadAsyncAction} action
+ */
+export function roomClicked(object) {
+  return {
+    type: ROOM_CLICKED,
+    payload: object,
+  };
+}
+
+/**
+ * @param {AnimationRequestOptions} object object
+ * @return {PayloadAsyncAction} action
+ */
+export function geolocationClicked(object) {
+  return {
+    type: GEOLOCATION_CLICKED,
+    payload: object,
   };
 }

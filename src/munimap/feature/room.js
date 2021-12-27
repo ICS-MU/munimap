@@ -1,9 +1,9 @@
 /**
  * @module feature/room
  */
+import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_lang from '../lang/lang.js';
-import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
 import {MUNIMAP_URL} from '../conf.js';
 import {alignRoomTitleToRows} from '../style/room.js';
@@ -14,7 +14,9 @@ import {wrapText} from '../style/style.js';
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
+ * @typedef {import("./feature.js").IsClickableOptions} IsClickableOptions
  * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
+ * @typedef {import("redux").Dispatch} redux.Dispatch
  */
 
 /**
@@ -138,7 +140,7 @@ const assertCodeOrLikeExpr = (code) => {
 };
 
 /**
- * @param {FeatureClickHandlerOptions} options options
+ * @param {IsClickableOptions} options options
  * @return {boolean} whether is clickable
  */
 const isClickable = (options) => {
@@ -147,13 +149,11 @@ const isClickable = (options) => {
 };
 
 /**
+ * @param {redux.Dispatch} dispatch dispatch
  * @param {FeatureClickHandlerOptions} options options
- * @return {AnimationRequestOptions} results
  */
-const featureClickHandler = (options) => {
-  const {feature} = options;
-  const locationCode = feature.get('polohKod');
-  return locationCode ? locationCode.substr(0, 8) : null;
+const featureClickHandler = (dispatch, options) => {
+  dispatch(actions.roomClicked(options));
 };
 
 /**

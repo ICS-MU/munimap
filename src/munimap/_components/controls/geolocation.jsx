@@ -167,7 +167,7 @@ const GeolocationComponent = (props) => {
     const callback = () => {
       const position = geolocRef.current.getPosition();
       dispatch(
-        actions.view_animation_requested(createAnimationRequest(map, position))
+        actions.geolocationClicked(createAnimationRequest(map, position))
       );
     };
 

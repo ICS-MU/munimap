@@ -2,16 +2,11 @@
  * @module feature/complex
  */
 
+import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_range from '../utils/range.js';
-import * as munimap_utils from '../utils/utils.js';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature.js';
-import {RESOLUTION as FLOOR_RESOLUTION} from './floor.js';
 import {MUNIMAP_URL} from '../conf.js';
-import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
-import {getAnimationDuration} from '../utils/animation.js';
-import {getStore as getBuildingStore} from '../source/building.js';
-import {getCenter, getForViewAndSize} from 'ol/extent';
 import {getStore as getComplexStore} from '../source/complex.js';
 
 /**
@@ -21,7 +16,9 @@ import {getStore as getComplexStore} from '../source/complex.js';
  * @typedef {import("../load.js").ProcessorOptions} ProcessorOptions
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
+ * @typedef {import("./feature.js").IsClickableOptions} IsClickableOptions
  * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
+ * @typedef {import("redux").Dispatch} redux.Dispatch
  */
 
 /**
@@ -102,52 +99,19 @@ const getBuildingCount = (complex) => {
 };
 
 /**
- * @param {FeatureClickHandlerOptions} options opts
+ * @param {IsClickableOptions} options opts
  * @return {boolean} whether is clickable
  */
 const isClickable = (options) => {
-  const view = options.map.getView();
-  const resolution = view.getResolution();
-  return munimap_range.contains(RESOLUTION, resolution);
+  return munimap_range.contains(RESOLUTION, options.resolution);
 };
 
 /**
- * @param {FeatureClickHandlerOptions} options opts
- * @return {AnimationRequestOptions} result
+ * @param {redux.Dispatch} dispatch dispatch
+ * @param {FeatureClickHandlerOptions} options options
  */
-const featureClickHandler = (options) => {
-  const {feature, map} = options;
-
-  const complexId = /**@type {number}*/ (feature.get(ID_FIELD_NAME));
-  const complexBldgs = getBuildingStore()
-    .getFeatures()
-    .filter((bldg) => {
-      const cId = bldg.get('arealId');
-      if (munimap_utils.isDefAndNotNull(cId)) {
-        munimap_assert.assertNumber(cId);
-        if (complexId === cId) {
-          return true;
-        }
-      }
-      return false;
-    });
-  const extent = extentOfFeatures(complexBldgs);
-  const view = map.getView();
-  const size = map.getSize() || null;
-  const futureRes =
-    complexBldgs.length === 1 ? FLOOR_RESOLUTION.max / 2 : RESOLUTION.min / 2;
-
-  const futureExtent = getForViewAndSize(
-    getCenter(extent),
-    futureRes,
-    view.getRotation(),
-    size
-  );
-  const duration = getAnimationDuration(view.calculateExtent(size), extent);
-  return {
-    extent: futureExtent,
-    duration,
-  };
+const featureClickHandler = (dispatch, options) => {
+  dispatch(actions.complexClicked(options));
 };
 
 /**

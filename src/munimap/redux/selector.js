@@ -240,14 +240,14 @@ export const getCenter = (state) => state.center;
  * @param {State} state state
  * @return {number} rotation
  */
-const getRotation = (state) => state.rotation;
+export const getRotation = (state) => state.rotation;
 
 /**
  * @type {Reselect.Selector<State, ol.Size>}
  * @param {State} state state
  * @return {ol.Size} map size
  */
-const getSize = (state) => state.mapSize;
+export const getSize = (state) => state.mapSize;
 
 /**
  * @type {Reselect.Selector<State, ol.Coordinate>}
@@ -296,7 +296,7 @@ const getRequiredLocationCodes = (state) => state.requiredOpts.locationCodes;
  * @param {State} state state
  * @return {boolean} whether to cluster faculty abbreviations
  */
-const getRequiredClusterFacultyAbbr = (state) =>
+export const getRequiredClusterFacultyAbbr = (state) =>
   state.requiredOpts.clusterFacultyAbbr;
 
 /**
@@ -1206,13 +1206,14 @@ export const getMarkerLabel = createSelector(
  * @type {Reselect.OutputSelector<
  *    State,
  *    StyleFunction,
- *    function(string, MarkerLabelFunction, ol.Extent, boolean, boolean,
- *      string, Array<string>): StyleFunction
+ *    function(string, Array<ol.Feature>, MarkerLabelFunction, ol.Extent,
+ *      boolean, boolean, string, Array<string>): StyleFunction
  * >}
  */
 export const getStyleForMarkerLayer = createSelector(
   [
     getLang,
+    getInitMarkers,
     getMarkerLabel,
     getExtent,
     getRequiredLocationCodes,
@@ -1222,6 +1223,7 @@ export const getStyleForMarkerLayer = createSelector(
   ],
   (
     lang,
+    initMarkers,
     markerLabel,
     extent,
     locationCodes,
@@ -1234,7 +1236,7 @@ export const getStyleForMarkerLayer = createSelector(
     }
 
     const options = {
-      markers: getMarkerStore().getFeatures(),
+      markers: initMarkers,
       markerLabel,
       lang,
       extent,

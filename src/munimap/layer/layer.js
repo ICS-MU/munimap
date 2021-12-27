@@ -16,14 +16,15 @@ import {
  * @typedef {import("ol/layer/BaseVector").Options} BaseLayerOptions
  * @typedef {import("ol/layer/Vector").default} ol.layer.Vector
  * @typedef {import("ol").Map} ol.Map
- * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
+ * @typedef {import("../feature/feature.js").featureClickHandlerFunction} FeatureClickHandlerFunction
+ * @typedef {import("../feature/feature.js").isClickableFunction} IsClickableFunction
  */
 
 /**
  * @typedef {Object} VectorLayerExtendedOptions
  * @property {string} id id
- * @property {(options: FeatureClickHandlerOptions) => boolean} [isFeatureClickable] whether is feature clickable
- * @property {(options: FeatureClickHandlerOptions) => void} [featureClickHandler] what to do if user clicked on feature
+ * @property {IsClickableFunction} [isFeatureClickable] whether is feature clickable
+ * @property {FeatureClickHandlerFunction} [featureClickHandler] what to do if user clicked on feature
  *
  * @typedef {BaseLayerOptions & VectorLayerExtendedOptions} VectorLayerOptions
  */

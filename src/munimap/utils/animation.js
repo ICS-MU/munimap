@@ -9,15 +9,23 @@ import {getArea, getEnlargedArea, getForViewAndSize} from 'ol/extent';
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
  * @typedef {import("ol/geom").Point} ol.geom.Point
+ * @typedef {import("ol/size").Size} ol.Size
  */
 
 /**
  * @typedef {Object} AnimationRequestOptions
- * @property {string} [selectedFeature] selected feature
  * @property {ol.geom.Point|ol.Coordinate} [center] center
  * @property {number} [resolution] resolution
  * @property {number} [duration] duration
  * @property {ol.Extent} [extent] extent
+ */
+
+/**
+ * @typedef {Object} ViewOptions
+ * @property {number} resolution resolution
+ * @property {number} rotation rotation
+ * @property {ol.Size} size size
+ * @property {ol.Extent} extent extent
  */
 
 /**
@@ -39,26 +47,17 @@ const getAnimationDuration = (ext1, ext2) => {
 };
 
 /**
- * @param {ol.Map} map map
  * @param {ol.Coordinate} point point
- * @param {number} resolution resolution
+ * @param {ViewOptions} options options
  * @return {AnimationRequestOptions} result
  */
-const getAnimationRequestParams = (map, point, resolution) => {
-  const view = map.getView();
-  const size = map.getSize() || null;
-  const viewExtent = view.calculateExtent(size);
-  const futureExtent = getForViewAndSize(
-    point,
-    view.getConstrainedResolution(resolution),
-    view.getRotation(),
-    size
-  );
-  const duration = getAnimationDuration(viewExtent, futureExtent);
+const getAnimationRequestParams = (point, options) => {
+  const {resolution, rotation, size, extent} = options;
+  const futureExtent = getForViewAndSize(point, resolution, rotation, size);
   return {
     center: point,
-    duration: duration,
-    resolution: view.getConstrainedResolution(resolution),
+    duration: getAnimationDuration(extent, futureExtent),
+    resolution,
   };
 };
 

@@ -2,14 +2,11 @@
  * @module feature/marker
  */
 
+import * as actions from '../redux/action.js';
 import * as munimap_building from './building.js';
 import * as munimap_range from '../utils/range.js';
 import {RESOLUTION as DOOR_RESOLUTION, isDoor} from './door.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from './floor.js';
-import {ofFeature as extentOfFeature} from '../utils/extent.js';
-import {getAnimationRequestParams} from '../utils/animation.js';
-import {getCenter} from 'ol/extent';
-import {getClosestPointToPixel} from './feature.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {isCustom as isCustomMarker} from './marker.custom.js';
 import {isRoom, isInSelectedFloor as isRoomInSelectedFloor} from './room.js';
@@ -22,7 +19,9 @@ import {isRoom, isInSelectedFloor as isRoomInSelectedFloor} from './room.js';
  * @typedef {import("ol/source/Vector").default} ol.source.Vector
  * @typedef {import("../utils/range").RangeInterface} RangeInterface
  * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
+ * @typedef {import("./feature.js").IsClickableOptions} IsClickableOptions
  * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
+ * @typedef {import("redux").Dispatch} redux.Dispatch
  */
 
 /**
@@ -45,13 +44,11 @@ const isMarker = (feature) => {
 };
 
 /**
- * @param {FeatureClickHandlerOptions} options opts
+ * @param {IsClickableOptions} options opts
  * @return {boolean} whether is clickable
  */
 const isClickable = (options) => {
-  const {feature, map, selectedFeature} = options;
-  const view = map.getView();
-  const resolution = view.getResolution();
+  const {feature, resolution, selectedFeature} = options;
 
   if (isCustomMarker(feature) || feature.get('detail')) {
     return true;
@@ -73,32 +70,11 @@ const isClickable = (options) => {
 };
 
 /**
- * @param {FeatureClickHandlerOptions} options opts
- * @return {AnimationRequestOptions} result
+ * @param {redux.Dispatch} dispatch dispatch
+ * @param {FeatureClickHandlerOptions} options options
  */
-const featureClickHandler = (options) => {
-  const {feature, map, pixel} = options;
-  const view = map.getView();
-  const resolution = view.getResolution();
-  const resolutionRange = isDoor(feature) ? DOOR_RESOLUTION : FLOOR_RESOLUTION;
-  const isVisible = munimap_range.contains(resolutionRange, resolution);
-  // var identifyCallback = munimap.getProps(map).options.identifyCallback;
-
-  if (!isVisible /*&& !jpad.func.isDef(identifyCallback)*/) {
-    let point;
-    if (isRoom(feature) || isDoor(feature) || isCustomMarker(feature)) {
-      const extent = extentOfFeature(feature);
-      point = getCenter(extent);
-    } else {
-      point = getClosestPointToPixel(map, feature, pixel);
-    }
-    return getAnimationRequestParams(map, point, resolutionRange.max);
-  }
-  return null;
-  // const detail = /** @type {string} */ (feature.get('detail'));
-  // if (detail) {
-  //   munimap.bubble.show(feature, map, detail, 0, 20, undefined, true);
-  // }
+const featureClickHandler = (dispatch, options) => {
+  dispatch(actions.markerClicked(options));
 };
 
 export {isClickable, featureClickHandler, isMarker};
