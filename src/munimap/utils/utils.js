@@ -11,6 +11,12 @@ const removeArrayDuplicates = (arr) => {
 };
 
 /**
+ * @param {Array} arr array
+ * @return {Array} flattened array
+ */
+const flat = (arr) => [].concat(...arr);
+
+/**
  * @param {?} value value
  * @return {boolean} isString
  */
@@ -169,20 +175,21 @@ const isElement = (maybeElement) => {
 };
 
 export {
+  arrayEquals,
+  flat,
+  partial,
   removeArrayDuplicates,
-  isString,
-  isNumber,
-  isDef,
-  isDefAndNotNull,
+  typeOf,
   isArray,
   isBoolean,
-  isFunction,
-  partial,
-  arrayEquals,
-  typeOf,
-  isObject,
-  isUserAgentIE,
-  inRange,
-  insertSiblingAfter,
+  isDef,
+  isDefAndNotNull,
   isElement,
+  isFunction,
+  isNumber,
+  isObject,
+  inRange,
+  isString,
+  isUserAgentIE,
+  insertSiblingAfter,
 };

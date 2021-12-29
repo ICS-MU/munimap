@@ -388,7 +388,8 @@ export const getInitMarkers = createSelector(
         });
       }
     });
-    return result.flat().filter((item) => item); //remove undefined (= invalid codes)
+    //remove undefined (= invalid codes)
+    return munimap_utils.flat(result).filter((item) => item);
   }
 );
 
