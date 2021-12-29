@@ -70,8 +70,6 @@ const createInnerText = (invalidCodes, simpleScroll, lang) => {
  */
 const ErrorMessageComponent = (props) => {
   const targetId = useSelector(slctr.getTargetId);
-  const areMarkersLoaded = useSelector(slctr.areMarkersLoaded);
-  const areZoomToLoaded = useSelector(slctr.areZoomToLoaded);
   const invalidCodes = useSelector(slctr.getInvalidCodes);
   const simpleScroll = useSelector(slctr.getRequiredSimpleScroll);
   const errorMessage = useSelector(slctr.getErrorMessageState);
@@ -106,38 +104,34 @@ const ErrorMessageComponent = (props) => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## ERRORMSG-useLayoutEffect');
     }
-    if (areMarkersLoaded && areZoomToLoaded) {
-      if (withMessage === true || (hasInvalidCodes && withMessage === null)) {
-        if (msg) {
-          const {size, lineHeight} = getErrorMessageStyle(errElRef.current);
-          msgElRef.current.innerText = msg;
-          msgElRef.current.style.lineHeight = `${lineHeight}px`;
-          msgElRef.current.style.fontSize = `${size}px`;
-          errElRef.current.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
-        }
+    if (withMessage === true || (hasInvalidCodes && withMessage === null)) {
+      if (msg) {
+        const {size, lineHeight} = getErrorMessageStyle(errElRef.current);
+        msgElRef.current.innerText = msg;
+        msgElRef.current.style.lineHeight = `${lineHeight}px`;
+        msgElRef.current.style.fontSize = `${size}px`;
+        errElRef.current.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
       }
     }
-  }, [areMarkersLoaded, areZoomToLoaded, withMessage, hasInvalidCodes, msg]);
+  }, [withMessage, hasInvalidCodes, msg]);
 
   if (ENABLE_RENDER_LOGS) {
     console.log('########## ERRORMSG-render');
   }
 
-  if (areMarkersLoaded && areZoomToLoaded) {
-    if ((hasInvalidCodes || shouldBlockMap) && render !== false) {
-      return (
-        <div
-          id={`munimap-error_${targetId}`}
-          className="munimap-error"
-          onClick={props.onClick}
-          ref={errElRef}
-          onWheel={onWheel}
-          onTouchMove={onTouchMove}
-        >
-          <div ref={msgElRef}></div>
-        </div>
-      );
-    }
+  if ((hasInvalidCodes || shouldBlockMap) && render !== false) {
+    return (
+      <div
+        id={`munimap-error_${targetId}`}
+        className="munimap-error"
+        onClick={props.onClick}
+        ref={errElRef}
+        onWheel={onWheel}
+        onTouchMove={onTouchMove}
+      >
+        <div ref={msgElRef}></div>
+      </div>
+    );
   }
   return null;
 };

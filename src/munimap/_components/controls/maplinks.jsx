@@ -36,7 +36,7 @@ const MapLinksComponent = (props) => {
   const lang = useSelector(slctr.getLang);
   const resolution = useSelector(slctr.getResolution);
   const center = useSelector(slctr.getCenter);
-  const {mapLinks, markerIds} = useSelector(slctr.getRequiredOpts);
+  const {markerIds} = useSelector(slctr.getRequiredOpts);
   const dispatch = useDispatch();
 
   const mapRef = useContext(MapContext);
@@ -91,7 +91,7 @@ const MapLinksComponent = (props) => {
       console.log('########## MAPLINKS-useEffect-control');
     }
     let control;
-    if (mapLinks && mapLinksRef.current && map) {
+    if (mapLinksRef.current && map) {
       // rendered by react => not added to map
       control = new Control({element: mapLinksRef.current});
     }
@@ -100,50 +100,41 @@ const MapLinksComponent = (props) => {
         control = undefined;
       }
     };
-  }, [mapLinks, map]);
+  }, [map]);
 
   useEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## MAPLINKS-useEffect-display');
     }
-    if (mapLinks && map && map.getSize()[1] < MAP_SIZE_LIMIT) {
+    if (map && map.getSize()[1] < MAP_SIZE_LIMIT) {
       mapLinksRef.current.style.display = 'none';
       // eslint-disable-next-line no-console
       console.error('The map is too small. Map Links have to be hidden');
-    } else if (mapLinks && map) {
+    } else if (map) {
       mapLinksRef.current.style.display = '';
     }
-  }, [mapLinks, map]);
+  }, [map]);
 
   if (ENABLE_RENDER_LOGS) {
     console.log('########## MAPLINKS-render');
   }
 
-  if (mapLinks) {
-    return (
-      <div ref={mapLinksRef} className="munimap-link">
-        <div
-          className="munimap-link-item"
-          style={{backgroundImage: `url(${SEZNAM_IMG_PATH})`}}
-          title={munimap_lang.getMsg(
-            munimap_lang.Translations.SEZNAM_MAP,
-            lang
-          )}
-          onClick={() => onClick(SEZNAM_IMG_PATH)}
-        ></div>
-        <div
-          className="munimap-link-item"
-          style={{backgroundImage: `url(${GOOGLE_IMG_PATH})`}}
-          title={munimap_lang.getMsg(
-            munimap_lang.Translations.GOOGLE_MAP,
-            lang
-          )}
-          onClick={() => onClick(GOOGLE_IMG_PATH)}
-        ></div>
-      </div>
-    );
-  }
-  return null;
+  return (
+    <div ref={mapLinksRef} className="munimap-link">
+      <div
+        className="munimap-link-item"
+        style={{backgroundImage: `url(${SEZNAM_IMG_PATH})`}}
+        title={munimap_lang.getMsg(munimap_lang.Translations.SEZNAM_MAP, lang)}
+        onClick={() => onClick(SEZNAM_IMG_PATH)}
+      ></div>
+      <div
+        className="munimap-link-item"
+        style={{backgroundImage: `url(${GOOGLE_IMG_PATH})`}}
+        title={munimap_lang.getMsg(munimap_lang.Translations.GOOGLE_MAP, lang)}
+        onClick={() => onClick(GOOGLE_IMG_PATH)}
+      ></div>
+    </div>
+  );
 };
 
 MapLinksComponent.displayName = 'MapLinksComponent';

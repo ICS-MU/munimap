@@ -219,6 +219,13 @@ const getRequiredBaseMap = (state) => state.requiredOpts.baseMap;
 export const getRequiredLabels = (state) => state.requiredOpts.labels;
 
 /**
+ * @type {Reselect.Selector<State, boolean>}
+ * @param {State} state state
+ * @return {boolean} basemap
+ */
+export const getRequiredMapLinks = (state) => state.requiredOpts.mapLinks;
+
+/**
  * @type {Reselect.Selector<State, string>}
  * @param {State} state state
  * @return {string} lang

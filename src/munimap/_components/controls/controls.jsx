@@ -1,10 +1,11 @@
+import * as slctr from '../../redux/selector.js';
 import GeolocationComponent from './geolocation.jsx';
-import MapContext from '../../_contexts/mapcontext.jsx';
 import MapLinks from './maplinks.jsx';
 import MapToolsComponent from './maptools.jsx';
-import React, {useContext} from 'react';
+import React from 'react';
 import {ENABLE_RENDER_LOGS} from '../../conf.js';
 import {hot} from 'react-hot-loader';
+import {useSelector} from 'react-redux';
 
 /**
  * @type {React.FC}
@@ -12,23 +13,19 @@ import {hot} from 'react-hot-loader';
  * @return {React.ReactElement} React element
  */
 const ControlsComponent = (props) => {
+  const mapLinks = useSelector(slctr.getRequiredMapLinks);
+
   if (ENABLE_RENDER_LOGS) {
     console.log('########## CONTROLS-render');
   }
 
-  const mapRef = useContext(MapContext);
-  const map = mapRef && mapRef.current;
-
-  if (map) {
-    return (
-      <>
-        <MapLinks />
-        <GeolocationComponent />
-        <MapToolsComponent />
-      </>
-    );
-  }
-  return null;
+  return (
+    <>
+      {mapLinks && <MapLinks />}
+      <GeolocationComponent />
+      <MapToolsComponent />
+    </>
+  );
 };
 
 export default hot(module)(ControlsComponent);

@@ -3,7 +3,7 @@ import * as munimap_view from '../view/view.js';
 import * as slctr from '../redux/selector.js';
 import Controls from './controls/controls.jsx';
 import ErrorMessage from './errormessage.jsx';
-import InfoBubbleComponent from './infobubble.jsx';
+import InfoBubble from './infobubble.jsx';
 import LoadingMessage from './loadingmessage.jsx';
 import MapContext from '../_contexts/mapcontext.jsx';
 import PropTypes from 'prop-types';
@@ -30,6 +30,7 @@ import {useDispatch, useSelector} from 'react-redux';
  */
 const MunimapComponent = (props) => {
   const {afterInit} = props;
+  const addMsg = useSelector(slctr.toggleLoadingMessage);
   const areMarkersLoaded = useSelector(slctr.areMarkersLoaded);
   const areZoomToLoaded = useSelector(slctr.areZoomToLoaded);
   const basemapLayer = useSelector(slctr.getBasemapLayer);
@@ -181,7 +182,7 @@ const MunimapComponent = (props) => {
   return (
     <>
       <MapContext.Provider value={mapRef}>
-        <LoadingMessage />
+        {addMsg && <LoadingMessage />}
         <div
           className="munimap"
           onBlur={onBlur}
@@ -189,11 +190,13 @@ const MunimapComponent = (props) => {
           ref={munimapElRef}
         >
           <div ref={munimapTargetElRef} className="map-target">
-            <InfoBubbleComponent />
-            <Controls />
+            <InfoBubble />
+            {map && <Controls />}
           </div>
         </div>
-        <ErrorMessage onClick={onErrorClick} />
+        {areMarkersLoaded && areZoomToLoaded && (
+          <ErrorMessage onClick={onErrorClick} />
+        )}
       </MapContext.Provider>
     </>
   );

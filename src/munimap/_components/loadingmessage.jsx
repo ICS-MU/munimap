@@ -13,7 +13,6 @@ import {useSelector} from 'react-redux';
 const LoadingMessageComponent = (props) => {
   const targetId = useSelector(slctr.getTargetId);
   const lang = useSelector(slctr.getLang);
-  const addMsg = useSelector(slctr.toggleLoadingMessage);
 
   const msgEl = useRef(null);
   const innerEl = useRef(null);
@@ -45,26 +44,23 @@ const LoadingMessageComponent = (props) => {
     console.log('########## LOADINGMESSAGE-render');
   }
 
-  if (addMsg) {
-    return (
-      <>
-        <style id={`message_${targetId}_style`}>
-          {`#message_${targetId}` +
-            `:before {box-sizing: inherit; content: \'\'; ` +
-            `display: inline-block; height: 100%; vertical-align: middle; ` +
-            `margin-right: -0.25em;}`}
-        </style>
-        <div id={`message_${targetId}`} className="loading-message" ref={msgEl}>
-          <div className="inner" ref={innerEl}>
-            <p className="text">
-              {munimap_lang.getMsg(munimap_lang.Translations.LOADING_MAP, lang)}
-            </p>
-          </div>
+  return (
+    <>
+      <style id={`message_${targetId}_style`}>
+        {`#message_${targetId}` +
+          `:before {box-sizing: inherit; content: \'\'; ` +
+          `display: inline-block; height: 100%; vertical-align: middle; ` +
+          `margin-right: -0.25em;}`}
+      </style>
+      <div id={`message_${targetId}`} className="loading-message" ref={msgEl}>
+        <div className="inner" ref={innerEl}>
+          <p className="text">
+            {munimap_lang.getMsg(munimap_lang.Translations.LOADING_MAP, lang)}
+          </p>
         </div>
-      </>
-    );
-  }
-  return null;
+      </div>
+    </>
+  );
 };
 
 export default hot(module)(LoadingMessageComponent);
