@@ -239,11 +239,10 @@ const handlePointerMove = (evt, options) => {
     if (isClickable) {
       munimap_assert.assertFunction(isClickable);
       const handlerOpts = {
-        feature: feature,
-        map: map,
-        pixel: pixel,
-        selectedFeature: selectedFeature,
-        clusterFacultyAbbr: clusterFacultyAbbr,
+        feature,
+        resolution: map.getView().getResolution(),
+        selectedFeature,
+        clusterFacultyAbbr,
       };
       if (isClickable(handlerOpts)) {
         //const popupEl = munimap.bubble.OVERLAY.getElement();
