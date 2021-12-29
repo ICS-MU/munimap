@@ -20,7 +20,6 @@ import {getLayer as getMarkerLayer} from '../layer/marker.js';
  * @typedef {import("ol/pixel").Pixel} ol.pixel.Pixel
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
- * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
  * @typedef {import("redux").Dispatch} redux.Dispatch
  */
 

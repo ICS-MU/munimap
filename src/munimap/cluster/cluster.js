@@ -14,7 +14,6 @@ import {getStore as getMarkerStore} from '../source/marker.js';
  * @typedef {import("../utils/range").RangeInterface} RangeInterface
  * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  * @typedef {import("../feature/feature.js").IsClickableOptions} IsClickableOptions
- * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import("ol/source/Vector").default} ol.source.Vector

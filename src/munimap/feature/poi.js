@@ -14,7 +14,6 @@ import {MUNIMAP_URL} from '../conf.js';
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  * @typedef {import("./feature.js").IsClickableOptions} IsClickableOptions
- * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
  * @typedef {import("ol/geom").Point} ol.geom.Point
  * @typedef {import("redux").Dispatch} redux.Dispatch
  */

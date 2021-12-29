@@ -17,7 +17,6 @@ import {getStore as getComplexStore} from '../source/complex.js';
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  * @typedef {import("./feature.js").IsClickableOptions} IsClickableOptions
- * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
  * @typedef {import("redux").Dispatch} redux.Dispatch
  */
 

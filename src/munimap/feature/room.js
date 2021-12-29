@@ -15,7 +15,6 @@ import {wrapText} from '../style/style.js';
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  * @typedef {import("./feature.js").IsClickableOptions} IsClickableOptions
- * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
  * @typedef {import("redux").Dispatch} redux.Dispatch
  */
 

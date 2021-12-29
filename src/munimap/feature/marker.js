@@ -20,7 +20,6 @@ import {isRoom, isInSelectedFloor as isRoomInSelectedFloor} from './room.js';
  * @typedef {import("../utils/range").RangeInterface} RangeInterface
  * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  * @typedef {import("./feature.js").IsClickableOptions} IsClickableOptions
- * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
  * @typedef {import("redux").Dispatch} redux.Dispatch
  */
 

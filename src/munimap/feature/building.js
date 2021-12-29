@@ -21,7 +21,6 @@ import {isRoom} from './room.js';
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
  * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  * @typedef {import("./feature.js").IsClickableOptions} IsClickableOptions
- * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
  * @typedef {import("ol/source").Vector} ol.source.Vector
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/proj/Projection").default} ol.proj.Projection
