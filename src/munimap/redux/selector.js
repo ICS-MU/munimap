@@ -10,7 +10,13 @@ import * as munimap_utils from '../utils/utils.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
 import View from 'ol/View';
+import {
+  LABEL_LAYER_ID as BUILDING_LABEL_LAYER_ID,
+  LAYER_ID as BUILDING_LAYER_ID,
+} from '../layer/building.js';
 import {BUILDING_RESOLUTION, ROOM_RESOLUTION} from '../cluster/cluster.js';
+import {LAYER_ID as CLUSTER_LAYER_ID} from '../layer/cluster.js';
+import {LAYER_ID as COMPLEX_LAYER_ID} from '../layer/complex.js';
 import {ENABLE_SELECTOR_LOGS} from '../conf.js';
 import {GeoJSON} from 'ol/format';
 import {
@@ -18,13 +24,20 @@ import {
   REQUIRED_CUSTOM_MARKERS,
   TARGET_ELEMENTS_STORE,
 } from '../create.js';
+import {LAYER_ID as MARKER_LAYER_ID} from '../layer/marker.js';
 import {MultiPolygon, Polygon} from 'ol/geom';
 import {
   Ids as OptPoiIds,
   isCtgUid as isOptPoiCtgUid,
 } from '../feature/optpoi.js';
+import {ACTIVE_LAYER_ID as POI_ACTIVE_LAYER_ID} from '../layer/poi.js';
 import {PURPOSE as POI_PURPOSE} from '../feature/poi.js';
 import {Resolutions as PoiResolutions} from '../style/poi.js';
+import {
+  ACTIVE_LAYER_ID as ROOM_ACTIVE_LAYER_ID,
+  LABEL_LAYER_ID as ROOM_LABEL_LAYER_ID,
+  DEFAULT_LAYER_ID as ROOM_LAYER_ID,
+} from '../layer/room.js';
 import {
   STAIRCASE_ICON,
   defaultStyleFunction as defaultRoomStyleFunction,
@@ -36,7 +49,7 @@ import {
   defaultStyleFunction as defaultPoiStyleFunction,
   outdoorStyleFunction as outdoorPoiStyleFunction,
 } from '../style/poi.js';
-import {styleFunction as clusterStyleFunction} from '../style//cluster.js';
+import {styleFunction as clusterStyleFunction} from '../style/cluster.js';
 import {styleFunction as complexStyleFunction} from '../style/complex.js';
 import {defaults as control_defaults} from 'ol/control';
 import {createLayer as createBasemapLayer} from '../layer/basemap.js';
@@ -104,16 +117,7 @@ import {styleFunction as markerStyleFunction} from '../style/marker.js';
  */
 
 /**
- * @typedef {Object} AllStyleFunctionsResult
- * @property {StyleFunction} styleForBuildingLayer style function
- * @property {StyleFunction} styleForBuildingLabelLayer style function
- * @property {StyleFunction} styleForComplexLayer style function
- * @property {StyleFunction} styleForMarkerLayer style function
- * @property {StyleFunction} styleForClusterLayer style function
- * @property {StyleFunction} styleForRoomLayer style function
- * @property {StyleFunction} styleForRoomLabelLayer style function
- * @property {StyleFunction} styleForRoomActiveLayer style function
- * @property {StyleFunction} styleForPoiActiveLayer style function
+ * @typedef {Object<string, StyleFunction>} AllStyleFunctionsResult
  */
 
 /**
@@ -1649,15 +1653,15 @@ export const getAllStyleFunctions = createSelector(
       console.log('STYLE - get all style functions');
     }
     return {
-      styleForBuildingLayer,
-      styleForBuildingLabelLayer,
-      styleForComplexLayer,
-      styleForMarkerLayer,
-      styleForClusterLayer,
-      styleForRoomLayer,
-      styleForRoomLabelLayer,
-      styleForRoomActiveLayer,
-      styleForPoiActiveLayer,
+      [BUILDING_LAYER_ID]: styleForBuildingLayer,
+      [BUILDING_LABEL_LAYER_ID]: styleForBuildingLabelLayer,
+      [COMPLEX_LAYER_ID]: styleForComplexLayer,
+      [MARKER_LAYER_ID]: styleForMarkerLayer,
+      [CLUSTER_LAYER_ID]: styleForClusterLayer,
+      [ROOM_LAYER_ID]: styleForRoomLayer,
+      [ROOM_LABEL_LAYER_ID]: styleForRoomLabelLayer,
+      [ROOM_ACTIVE_LAYER_ID]: styleForRoomActiveLayer,
+      [POI_ACTIVE_LAYER_ID]: styleForPoiActiveLayer,
     };
   }
 );

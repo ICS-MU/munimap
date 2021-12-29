@@ -149,6 +149,9 @@ const createLabel = (showLocationCodes) => {
 };
 
 export {
+  ACTIVE_LAYER_ID,
+  DEFAULT_LAYER_ID,
+  LABEL_LAYER_ID,
   create,
   createActive,
   createLabel,

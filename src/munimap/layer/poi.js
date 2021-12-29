@@ -65,4 +65,4 @@ const createActive = () => {
   return layer;
 };
 
-export {createActive, isActiveLayer};
+export {ACTIVE_LAYER_ID, createActive, isActiveLayer};

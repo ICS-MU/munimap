@@ -5,6 +5,7 @@ import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_utils from '../utils/utils.js';
 import TileLayer from 'ol/layer/Tile';
+import VectorLayer from 'ol/layer/Vector';
 import {CLICK_HANDLER, IS_CLICKABLE} from '../layer/layer.js';
 import {
   GET_MAIN_FEATURE_AT_PIXEL_STORE,
@@ -40,23 +41,8 @@ import {getDefaultLayers} from '../layer/layer.js';
 import {getMainFeatureAtPixel} from '../feature/feature.js';
 import {getUid} from 'ol';
 import {refreshActiveStyle as refreshActiveDoorStyle} from './door.js';
-import {refreshActiveStyle as refreshActivePoiStyle} from './poi.js';
-import {
-  refreshActiveStyle as refreshActiveRoomStyle,
-  refreshLabelStyle as refreshRoomLabelStyle,
-  refreshStyle as refreshRoomStyle,
-} from './room.js';
-import {
-  refreshLabelStyle as refreshBuildingLabelStyle,
-  refreshStyle as refreshBuildingStyle,
-} from './building.js';
-import {
-  refreshStyle as refreshClusterStyle,
-  updateClusteredFeatures,
-} from './cluster.js';
-import {refreshStyle as refreshComplexStyle} from './complex.js';
-import {refreshStyle as refreshMarkerStyle} from './marker.js';
 import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
+import {updateClusteredFeatures} from './cluster.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
@@ -359,17 +345,21 @@ const refreshStyles = (map, styleFunctions, pubTran) => {
   }
 
   const layers = map.getLayers().getArray();
-  refreshBuildingStyle(layers, styleFunctions);
-  refreshBuildingLabelStyle(layers, styleFunctions);
-  refreshComplexStyle(layers, styleFunctions);
-  refreshMarkerStyle(layers, styleFunctions);
-  refreshClusterStyle(layers, styleFunctions);
-  refreshRoomStyle(layers, styleFunctions);
-  refreshRoomLabelStyle(layers, styleFunctions);
-  refreshActiveRoomStyle(layers, styleFunctions);
-  refreshActiveDoorStyle(layers);
-  refreshActivePoiStyle(layers, styleFunctions);
+  if (!Array.isArray(layers) || layers.length === 0) {
+    return;
+  }
 
+  Object.entries(styleFunctions).forEach(([id, styleFn]) => {
+    const lyr = layers.find((l) => l.get('id') === id);
+    if (lyr && lyr instanceof VectorLayer) {
+      if (styleFn !== lyr.getStyle()) {
+        lyr.setStyle(styleFn);
+      }
+    }
+  });
+
+  //styles not derived from state
+  refreshActiveDoorStyle(layers);
   if (pubTran) {
     refreshPubtranStyle(layers);
   }

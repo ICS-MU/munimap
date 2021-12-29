@@ -2,10 +2,8 @@
  * @module view/cluster
  */
 
-import VectorLayer from 'ol/layer/Vector';
 import {getClusteredFeatures} from '../cluster/cluster.js';
 import {getVectorStore} from '../source/cluster.js';
-import {isLayer} from '../layer/cluster.js';
 
 /**
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
@@ -34,22 +32,4 @@ const updateClusteredFeatures = (resolution, showLabels) => {
   }
 };
 
-/**
- * @param {Array<ol.layer.Base>} layers layers
- * @param {AllStyleFunctionsResult} styles styles
- */
-const refreshStyle = (layers, styles) => {
-  if (!Array.isArray(layers) || layers.length === 0) {
-    return;
-  }
-  const lyr = layers.find((l) => isLayer(l));
-
-  if (lyr && lyr instanceof VectorLayer) {
-    const style = styles.styleForClusterLayer;
-    if (style !== lyr.getStyle()) {
-      lyr.setStyle(style);
-    }
-  }
-};
-
-export {refreshStyle, updateClusteredFeatures};
+export {updateClusteredFeatures};

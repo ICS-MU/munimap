@@ -81,4 +81,4 @@ const create = (map, options) => {
   return markerClusterLayer;
 };
 
-export {create, getLayer, isLayer};
+export {LAYER_ID, create, getLayer, isLayer};
