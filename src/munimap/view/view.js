@@ -29,6 +29,7 @@ import {createStore as createBuildingStore} from '../source/building.js';
 import {create as createClusterLayer} from '../layer/cluster.js';
 import {createStore as createComplexStore} from '../source/complex.js';
 import {createStore as createFloorStore} from '../source/floor.js';
+import {create as createGeolocationLayer} from '../layer/geolocation.js';
 import {create as createMarkerLayer} from '../layer/marker.js';
 import {createStore as createMarkerStore} from '../source/marker.js';
 import {createStore as createOptPoiStore} from '../source/optpoi.js';
@@ -126,11 +127,10 @@ const ensureBaseMap = (map, basemapLayer) => {
 /**
  * Add layers to map.
  * @param {ol.Map} map map
- * @param {redux.Dispatch} dispatch dispatch
  * @param {AddLayersOptions} options opts
  */
-const addLayers = (map, dispatch, options) => {
-  if (!map) {
+const ensureLayers = (map, options) => {
+  if (!map || map.getLayers().getLength() > 1) {
     return;
   }
   const {lang, labels, locationCodes, pubTran} = options.requiredOpts;
@@ -146,7 +146,11 @@ const addLayers = (map, dispatch, options) => {
 
   map.addLayer(markerClusterLayer);
   map.addLayer(markerLayer);
-  dispatch(actions.initialLayersAdded());
+
+  if (window.location.protocol === 'https:' || !PRODUCTION) {
+    const geolocationLayer = createGeolocationLayer();
+    map.addLayer(geolocationLayer);
+  }
 };
 
 /**
@@ -420,7 +424,7 @@ export {
   attachIndependentMapListeners,
   attachDependentMapListeners,
   ensureBaseMap,
-  addLayers,
+  ensureLayers,
   createFeatureStores,
   refreshStyles,
   ensureClusterUpdate,

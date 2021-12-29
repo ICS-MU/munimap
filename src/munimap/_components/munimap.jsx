@@ -45,7 +45,6 @@ const MunimapComponent = (props) => {
   const mapInitialized = useSelector(slctr.isMapInitialized);
   const invalidCodes = useSelector(slctr.getInvalidCodes);
   const simpleScroll = useSelector(slctr.getRequiredSimpleScroll);
-  const areInitialLayersAdded = useSelector(slctr.areInitialLayersAdded);
   const allStyleFunctions = useSelector(slctr.getAllStyleFunctions);
 
   const hasInvalidCodes = invalidCodes && invalidCodes.length > 0;
@@ -73,8 +72,8 @@ const MunimapComponent = (props) => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## MUNIMAP-useEffect-addLayers');
     }
-    if (areMarkersLoaded && areZoomToLoaded && !areInitialLayersAdded) {
-      munimap_view.addLayers(map, dispatch, {
+    if (areMarkersLoaded && areZoomToLoaded) {
+      munimap_view.ensureLayers(map, {
         markers,
         muAttrs,
         clusterResolution,
@@ -87,7 +86,6 @@ const MunimapComponent = (props) => {
     muAttrs,
     clusterResolution,
     requiredOpts,
-    areInitialLayersAdded,
     areMarkersLoaded,
     areZoomToLoaded,
   ]);

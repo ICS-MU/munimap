@@ -4,19 +4,18 @@ import * as ol_extent from 'ol/extent';
 import * as slctr from '../../redux/selector.js';
 import MapContext from '../../_contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useRef} from 'react';
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
-import {Circle, Fill, Stroke, Style} from 'ol/style';
 import {Control} from 'ol/control';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
-import {Feature, Geolocation} from 'ol';
+import {Geolocation} from 'ol';
 import {Point} from 'ol/geom';
 import {getAnimationDuration} from '../../utils/animation.js';
+import {isLayer} from '../../layer/geolocation.js';
 import {useDispatch, useSelector} from 'react-redux';
 
 /**
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
+ * @typedef {import("ol/layer").Vector} ol.layer.Vector
  * @typedef {import("redux").Store} redux.Store
  * @typedef {import("redux").Dispatch} redux.Dispatch
  * @typedef {import("../../conf.js").AnimationRequestState} AnimationRequestState
@@ -92,11 +91,11 @@ const GeolocationComponent = (props) => {
       });
       geolocation.on('change:position', () => {
         const coordinates = geolocation.getPosition();
-        const positionLayer = /** @type {VectorLayer}*/ (
+        const positionLayer = /** @type {ol.layer.Vector}*/ (
           map
             .getLayers()
             .getArray()
-            .find((l) => l.get('id') === 'geolocate')
+            .find((l) => isLayer(l))
         );
 
         if (positionLayer) {
@@ -112,46 +111,6 @@ const GeolocationComponent = (props) => {
     return () => {
       if (control) {
         control = undefined;
-      }
-    };
-  }, [map]);
-
-  useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## GEOLOCATION-useEffect-layer');
-    }
-    let layer;
-    if ((window.location.protocol === 'https:' || !PRODUCTION) && map) {
-      const positionFeature = new Feature();
-      positionFeature.setStyle(
-        new Style({
-          image: new Circle({
-            radius: 6,
-            fill: new Fill({
-              color: '#0000dc',
-            }),
-            stroke: new Stroke({
-              color: 'rgba(0,39,118,0.25)',
-              width: 30,
-            }),
-          }),
-        })
-      );
-
-      layer = new VectorLayer({
-        source: new VectorSource({
-          features: [positionFeature],
-        }),
-      });
-      layer.set('id', 'geolocate');
-
-      map.addLayer(layer);
-    }
-    return () => {
-      if (map && layer) {
-        geolocRef.current.setTracking(false);
-        map.removeLayer(layer);
-        layer = undefined;
       }
     };
   }, [map]);

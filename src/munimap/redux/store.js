@@ -357,13 +357,6 @@ const createReducer = (initialState) => {
           },
         };
 
-      //INITIAL_LAYERS_ADDED
-      case actions.INITIAL_LAYERS_ADDED:
-        return {
-          ...state,
-          initialLayersAdded: true,
-        };
-
       //BUILDING_CLICKED
       case actions.BUILDING_CLICKED:
         featureUid = action.payload.featureUid;

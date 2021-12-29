@@ -322,13 +322,6 @@ export const getRequiredSimpleScroll = (state) =>
 export const getErrorMessageState = (state) => state.errorMessage;
 
 /**
- * @type {Reselect.Selector<State, boolean>}
- * @param {State} state state
- * @return {boolean} whether are init layers added
- */
-export const areInitialLayersAdded = (state) => state.initialLayersAdded;
-
-/**
  * createSelector return type Reselect.OutputSelector<S, T, (res: R1) => T>
  *    S: State (for Selector functions above)
  *    T: Returned type (must be same as returned type below)

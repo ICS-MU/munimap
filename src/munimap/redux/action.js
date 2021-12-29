@@ -142,12 +142,6 @@ export const POIS_LOADED = 'POIS_LOADED';
  * @type {string}
  * @const
  */
-export const INITIAL_LAYERS_ADDED = 'INITIAL_LAYERS_ADDED';
-
-/**
- * @type {string}
- * @const
- */
 export const BUILDING_CLICKED = 'BUILDING_CLICKED';
 
 /**
@@ -381,15 +375,6 @@ export function target_blurred() {
 export function pois_loaded() {
   return {
     type: POIS_LOADED,
-  };
-}
-
-/**
- * @return {PayloadAsyncAction} action
- */
-export function initialLayersAdded() {
-  return {
-    type: INITIAL_LAYERS_ADDED,
   };
 }
 
