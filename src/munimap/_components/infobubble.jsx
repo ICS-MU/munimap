@@ -10,6 +10,7 @@ import {featureExtentIntersect} from '../utils/geom.js';
 import {sort as floorSortFn} from '../feature/floor.js';
 import {getByCode as getBuildingByCode} from '../feature/building.js';
 import {getElementSize} from '../utils/dom.js';
+import {getPixelFromCoordinate} from '../utils/map.js';
 import {useSelector} from 'react-redux';
 
 /**
@@ -122,6 +123,9 @@ const InfoBubbleComponent = (props) => {
   const floors = useSelector(slctr.getFloorsByBuildingCode);
   const extent = useSelector(slctr.getExtent);
   const resolution = useSelector(slctr.getResolution);
+  const rotation = useSelector(slctr.getRotation);
+  const size = useSelector(slctr.getSize);
+  const center = useSelector(slctr.getCenter);
   const selectedFeature = useSelector(slctr.getSelectedFeature);
   const {bldgTitle, complexTitle} = useSelector(slctr.getBuildingTitle);
 
@@ -142,7 +146,12 @@ const InfoBubbleComponent = (props) => {
       const positionInfo = getInfoBoxPosition(bubbleRef.current, opts);
       if (positionInfo) {
         const position = positionInfo.coordinate
-          ? map.getPixelFromCoordinate(positionInfo.coordinate)
+          ? getPixelFromCoordinate(positionInfo.coordinate, {
+              size,
+              resolution,
+              rotation,
+              center,
+            })
           : positionInfo.position;
 
         if (position && position.length > 0) {
@@ -158,7 +167,7 @@ const InfoBubbleComponent = (props) => {
         }
       }
     }
-  }, [map, extent, resolution, selectedFeature]);
+  }, [map, extent, resolution, selectedFeature, size, rotation, center]);
 
   if (ENABLE_RENDER_LOGS) {
     console.log('########## INFOBUBBLE-render');
