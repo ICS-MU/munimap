@@ -79,11 +79,13 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  */
 
 /**
- * @typedef {Object} AnimationRequestState
- * @property {ol.geom.Point|ol.coordinate.Coordinate} [center] center
- * @property {number} [resolution] resolution
- * @property {number} [duration] duration
- * @property {ol.extent.Extent} [extent] extent
+ * @typedef {Object} AnimationRequestOptions
+ * @property {ol.geom.Point|ol.coordinate.Coordinate} center center
+ * @property {number} resolution resolution
+ * @property {number} duration duration
+ * @property {ol.extent.Extent} extent extent
+ *
+ * @typedef {Array<AnimationRequestOptions|Array<AnimationRequestOptions>>} AnimationRequestState
  */
 
 /**
@@ -158,10 +160,12 @@ export const INITIAL_STATE = {
     render: null,
     withMessage: null,
   },
-  animationRequest: {
-    center: null,
-    resolution: null,
-    duration: null,
-    extent: null,
-  },
+  animationRequest: [
+    {
+      center: null,
+      resolution: null,
+      duration: null,
+      extent: null,
+    },
+  ],
 };

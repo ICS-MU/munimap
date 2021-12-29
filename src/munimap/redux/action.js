@@ -18,7 +18,7 @@ import {
  * @typedef {import("ol/size").Size} ol.Size
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
  * @typedef {import("../matomo/matomo.js").Options} MatomoOptions
- * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
+ * @typedef {import("../conf.js").AnimationRequestOptions} AnimationRequestOptions
  */
 
 /**

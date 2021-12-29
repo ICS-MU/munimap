@@ -1,6 +1,5 @@
 import * as actions from '../../redux/action.js';
 import * as munimap_lang from '../../lang/lang.js';
-import * as ol_extent from 'ol/extent';
 import * as slctr from '../../redux/selector.js';
 import MapContext from '../../_contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useRef} from 'react';
@@ -8,7 +7,6 @@ import {Control} from 'ol/control';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
 import {Geolocation} from 'ol';
 import {Point} from 'ol/geom';
-import {getAnimationDuration} from '../../utils/animation.js';
 import {isLayer} from '../../layer/geolocation.js';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -18,37 +16,7 @@ import {useDispatch, useSelector} from 'react-redux';
  * @typedef {import("ol/layer").Vector} ol.layer.Vector
  * @typedef {import("redux").Store} redux.Store
  * @typedef {import("redux").Dispatch} redux.Dispatch
- * @typedef {import("../../conf.js").AnimationRequestState} AnimationRequestState
  */
-
-/**
- * @param {ol.Map} map map
- * @param {ol.coordinate.Coordinate} position center
- * @return {AnimationRequestState} request state
- */
-const createAnimationRequest = (map, position) => {
-  const center = position || null;
-  const view = map.getView();
-  const currExt = view.calculateExtent(map.getSize());
-  const res = view.getResolution();
-  const buffExt = ol_extent.buffer(currExt, res * 100, currExt);
-  const extent = ol_extent.boundingExtent([center, view.getCenter()]);
-  const targetExtent = ol_extent.boundingExtent([center]);
-  const duration = getAnimationDuration(currExt, targetExtent);
-  const resolution = view.getResolutionForExtent(extent);
-
-  //TODO: multiple request
-
-  if (ol_extent.intersects(buffExt, targetExtent)) {
-    return {center, duration, resolution};
-  } else {
-    return {
-      center,
-      duration,
-      resolution: view.getResolutionForZoom(18),
-    };
-  }
-};
 
 /**
  * @type {React.FC}
@@ -125,9 +93,7 @@ const GeolocationComponent = (props) => {
 
     const callback = () => {
       const position = geolocRef.current.getPosition();
-      dispatch(
-        actions.geolocationClicked(createAnimationRequest(map, position))
-      );
+      dispatch(actions.geolocationClicked(position));
     };
 
     if (geolocRef.current && !geolocRef.current.getTracking()) {
@@ -157,7 +123,5 @@ const GeolocationComponent = (props) => {
   }
   return null;
 };
-
-GeolocationComponent.displayName = 'GeolocationComponent';
 
 export default GeolocationComponent;

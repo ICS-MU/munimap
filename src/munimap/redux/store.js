@@ -5,6 +5,7 @@ import * as actions from './action.js';
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
+import * as ol_extent from 'ol/extent';
 import * as redux from 'redux';
 import * as slctr from './selector.js';
 import {
@@ -34,7 +35,6 @@ import {getActiveStore as getActiveRoomStore} from '../source/room.js';
 import {getAnimationDuration} from '../utils/animation.js';
 import {getAnimationRequestParams} from '../utils/animation.js';
 import {getStore as getBuildingStore} from '../source/building.js';
-import {getCenter, getForViewAndSize} from 'ol/extent';
 import {getClosestPointToPixel} from '../feature/feature.js';
 import {getStore as getClusterStore} from '../source/cluster.js';
 import {getStore as getComplexStore} from '../source/complex.js';
@@ -47,6 +47,7 @@ import {loadOrDecorateMarkers} from '../create.js';
 
 /**
  * @typedef {import("../conf.js").State} State
+ * @typedef {import("../conf.js").AnimationRequestOptions} AnimationRequestOptions
  * @typedef {import("./action.js").LoadedTypes} LoadedTypes
  * @typedef {import("./action.js").PayloadAsyncAction} PayloadAsyncAction
  * @typedef {import("ol/geom").Point} ol.geom.Point
@@ -346,16 +347,61 @@ const createReducer = (initialState) => {
 
       //GEOLOCATION_CLICKED
       case actions.GEOLOCATION_CLICKED:
-        return {
-          ...state,
-          animationRequest: {
-            ...initialState.animationRequest,
-            center: action.payload.center,
-            resolution: action.payload.resolution,
-            duration: action.payload.duration,
-            extent: action.payload.extent,
-          },
-        };
+        const center = action.payload || null;
+        const buffExt = ol_extent.buffer(
+          slctr.getExtent(state),
+          state.resolution * 100
+        );
+        const ext = ol_extent.boundingExtent([center, slctr.getCenter(state)]);
+        const duration = getAnimationDuration(
+          buffExt,
+          ol_extent.boundingExtent([center])
+        );
+        const size = slctr.getSize(state);
+        const extResolution = Math.max(
+          ol_extent.getWidth(ext) / size[0],
+          ol_extent.getHeight(ext) / size[1]
+        );
+
+        const initialAnimationRequest = /**@type {AnimationRequestOptions}*/ (
+          initialState.animationRequest[0]
+        );
+        if (ol_extent.containsCoordinate(buffExt, center)) {
+          return {
+            ...state,
+            animationRequest: [
+              {
+                ...initialAnimationRequest,
+                center,
+                duration: duration,
+                resolution: 0.59, //zoom 18
+              },
+            ],
+          };
+        } else {
+          return {
+            ...state,
+            animationRequest: [
+              [
+                {
+                  ...initialAnimationRequest,
+                  resolution: Math.max(extResolution, 1.19), //zoom 17
+                  duration: duration / 2,
+                },
+                {
+                  ...initialAnimationRequest,
+                  resolution: 0.59, //zoom 18
+                  duration: duration / 2,
+                },
+              ],
+              {
+                ...initialAnimationRequest,
+                center: center,
+                duration: duration,
+              },
+            ],
+          };
+        }
 
       //BUILDING_CLICKED
       case actions.BUILDING_CLICKED:
@@ -375,10 +421,12 @@ const createReducer = (initialState) => {
           });
           return {
             ...state,
-            animationRequest: {
-              ...initialState.animationRequest,
-              ...animationRequest,
-            },
+            animationRequest: [
+              {
+                ...initialState.animationRequest[0],
+                ...animationRequest,
+              },
+            ],
           };
         } else {
           result = feature.get('vychoziPodlazi') || feature.get('polohKod');
@@ -418,30 +466,30 @@ const createReducer = (initialState) => {
             return false;
           });
         featuresExtent = extentOfFeatures(complexBldgs);
-        const size = slctr.getSize(state);
         const futureRes =
           complexBldgs.length === 1
             ? FLOOR_RESOLUTION.max / 2
             : COMPLEX_RESOLUTION.min / 2;
 
-        const futureExtent = getForViewAndSize(
-          getCenter(featuresExtent),
+        const futureExtent = ol_extent.getForViewAndSize(
+          ol_extent.getCenter(featuresExtent),
           futureRes,
           slctr.getRotation(state),
-          size
-        );
-        const duration = getAnimationDuration(
-          slctr.getExtent(state),
-          featuresExtent
+          slctr.getSize(state)
         );
 
         return {
           ...state,
-          animationRequest: {
-            ...initialState.animationRequest,
-            extent: futureExtent,
-            duration,
-          },
+          animationRequest: [
+            {
+              ...initialState.animationRequest[0],
+              extent: futureExtent,
+              duration: getAnimationDuration(
+                slctr.getExtent(state),
+                featuresExtent
+              ),
+            },
+          ],
         };
 
       //CLUSTER_CLICKED
@@ -475,7 +523,7 @@ const createReducer = (initialState) => {
 
           if (isCustomMarker(firstFeature)) {
             featuresExtent = extentOfFeature(firstFeature);
-            center = getCenter(featuresExtent);
+            center = ol_extent.getCenter(featuresExtent);
             animationRequest = getAnimationRequestParams(center, opts);
           } else {
             isVisible = munimap_range.contains(
@@ -484,7 +532,7 @@ const createReducer = (initialState) => {
             );
             if (!isVisible) {
               featuresExtent = extentOfFeature(firstFeature);
-              center = getCenter(featuresExtent);
+              center = ol_extent.getCenter(featuresExtent);
               animationRequest = getAnimationRequestParams(center, opts);
             }
           }
@@ -502,10 +550,12 @@ const createReducer = (initialState) => {
         if (animationRequest) {
           return {
             ...state,
-            animationRequest: {
-              ...initialState.animationRequest,
-              ...animationRequest,
-            },
+            animationRequest: [
+              {
+                ...initialState.animationRequest[0],
+                ...animationRequest,
+              },
+            ],
           };
         }
         return {
@@ -525,7 +575,7 @@ const createReducer = (initialState) => {
         if (!isVisible /*&& !jpad.func.isDef(identifyCallback)*/) {
           let point;
           if (isRoom(feature) || isDoor(feature) || isCustomMarker(feature)) {
-            point = getCenter(extentOfFeature(feature));
+            point = ol_extent.getCenter(extentOfFeature(feature));
           } else {
             point = getClosestPointToPixel(
               feature,
@@ -548,10 +598,12 @@ const createReducer = (initialState) => {
         if (animationRequest) {
           return {
             ...state,
-            animationRequest: {
-              ...initialState.animationRequest,
-              ...animationRequest,
-            },
+            animationRequest: [
+              {
+                ...initialState.animationRequest[0],
+                ...animationRequest,
+              },
+            ],
           };
         }
         return {
@@ -579,10 +631,12 @@ const createReducer = (initialState) => {
         if (animationRequest) {
           return {
             ...state,
-            animationRequest: {
-              ...initialState.animationRequest,
-              ...animationRequest,
-            },
+            animationRequest: [
+              {
+                ...initialState.animationRequest[0],
+                ...animationRequest,
+              },
+            ],
           };
         }
         return {

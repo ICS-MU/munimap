@@ -46,6 +46,7 @@ import {updateClusteredFeatures} from './cluster.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
+ * @typedef {import("ol").View} ol.View
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("ol/source/Vector").default} ol.source.Vector
  * @typedef {import("ol/layer/Vector").default} ol.layer.Vector
@@ -63,10 +64,11 @@ import {updateClusteredFeatures} from './cluster.js';
  * @typedef {import("ol").MapBrowserEvent} MapBrowserEvent
  * @typedef {import("../feature/feature.js").isClickableFunction} isClickableFunction
  * @typedef {import("../feature/feature.js").featureClickHandlerFunction} featureClickHandlerFunction
- * @typedef {import("../utils/animation.js").AnimationRequestOptions} AnimationRequestOptions
+ * @typedef {import("../conf.js").AnimationRequestOptions} AnimationRequestOptions
  * @typedef {import("ol/style/Style").StyleFunction} StyleFunction
  * @typedef {import("../redux/selector.js").AllStyleFunctionsResult} AllStyleFunctionsResult
  * @typedef {import("ol/events.js").EventsKey} EventsKey
+ * @typedef {import("ol/view.js").AnimationOptions} AnimationOptions
  */
 
 /**
@@ -390,32 +392,53 @@ const ensureClusterUpdate = (map, {labels, buildingsCount}) => {
 
 /**
  *
+ * @param {ol.View} view view
+ * @param {AnimationRequestOptions} options options
+ * @return {AnimationOptions} options
+ */
+const createAnimationOptions_ = (view, options) => {
+  const {center, resolution, duration} = options;
+  const _center = center instanceof Point ? center.getCoordinates() : center;
+  const _resolution = view.getConstrainedResolution(resolution);
+  return {
+    center: _center,
+    resolution: _resolution,
+    duration,
+  };
+};
+
+/**
+ *
  * @param {ol.Map} map map
  * @param {AnimationRequestState} animationRequest requested view state
  */
 const animate = (map, animationRequest) => {
-  if (Object.values(animationRequest).every((i) => i === null)) {
+  if (Object.values(animationRequest[0]).every((i) => i === null)) {
     return;
   }
 
-  const {center, resolution, duration, extent} = animationRequest;
   const view = map.getView();
-  if (extent) {
-    view.fit(extent, {duration, nearest: true});
-  } else {
-    const _center = center instanceof Point ? center.getCoordinates() : center;
-    const _resolution = view.getConstrainedResolution(resolution);
-    view.animate({center: _center, resolution: _resolution, duration});
-  }
+  animationRequest.forEach((animationReqItem) => {
+    if (Array.isArray(animationReqItem)) {
+      view.animate(
+        ...animationReqItem.map((item) => createAnimationOptions_(view, item))
+      );
+    } else {
+      const {extent, duration} = animationReqItem;
+      extent
+        ? view.fit(extent, {duration, nearest: true})
+        : view.animate(createAnimationOptions_(view, animationReqItem));
+    }
+  });
 };
 
 export {
+  animate,
   attachIndependentMapListeners,
   attachDependentMapListeners,
-  ensureBaseMap,
-  ensureLayers,
   createFeatureStores,
-  refreshStyles,
+  ensureBaseMap,
   ensureClusterUpdate,
-  animate,
+  ensureLayers,
+  refreshStyles,
 };

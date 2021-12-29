@@ -10,14 +10,7 @@ import {getArea, getEnlargedArea, getForViewAndSize} from 'ol/extent';
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
  * @typedef {import("ol/geom").Point} ol.geom.Point
  * @typedef {import("ol/size").Size} ol.Size
- */
-
-/**
- * @typedef {Object} AnimationRequestOptions
- * @property {ol.geom.Point|ol.Coordinate} [center] center
- * @property {number} [resolution] resolution
- * @property {number} [duration] duration
- * @property {ol.Extent} [extent] extent
+ * @typedef {import("../conf.js").AnimationRequestOptions} AnimationRequestOptions
  */
 
 /**
@@ -58,6 +51,7 @@ const getAnimationRequestParams = (point, options) => {
     center: point,
     duration: getAnimationDuration(extent, futureExtent),
     resolution,
+    extent: null,
   };
 };
 
