@@ -6,6 +6,7 @@ import ErrorMessage from './errormessage.jsx';
 import InfoBubble from './infobubble.jsx';
 import LoadingMessage from './loadingmessage.jsx';
 import MapContext from '../_contexts/mapcontext.jsx';
+import Popup from './popup.jsx';
 import PropTypes from 'prop-types';
 import React, {useEffect, useLayoutEffect, useRef} from 'react';
 import {CREATED_MAPS} from '../create.js';
@@ -191,6 +192,7 @@ const MunimapComponent = (props) => {
         >
           <div ref={munimapTargetElRef} className="map-target">
             <InfoBubble />
+            <Popup />
             {map && <Controls />}
           </div>
         </div>

@@ -11,6 +11,18 @@ const removeArrayDuplicates = (arr) => {
 };
 
 /**
+ * Remove object duplicates from Array based on key.
+ * @param {Array} array array
+ * @param {string} key key
+ * @return {Array} filtered array
+ */
+const removeObjectDuplicatesFromArray = (array, key) => {
+  return array.filter(
+    (val, i, arr) => arr.findIndex((t) => t[key] === val[key]) === i
+  );
+};
+
+/**
  * @param {Array} arr array
  * @return {Array} flattened array
  */
@@ -179,6 +191,7 @@ export {
   flat,
   partial,
   removeArrayDuplicates,
+  removeObjectDuplicatesFromArray,
   typeOf,
   isArray,
   isBoolean,

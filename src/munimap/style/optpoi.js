@@ -32,34 +32,27 @@ const markerLabel = (ctgId, roomCodes, lang) => (feature, resolution) => {
   let label;
   let clusteredNumber;
   if (clustered.length === 1) {
-    clusteredNumber = clustered[0].get('numberOfDetails');
-    if (clusteredNumber > 1) {
-      ctgLabel = munimap_lang.getMsg(ctgId, lang);
-
-      label = clusteredNumber + 'x ' + ctgLabel;
-    } else {
-      label = ctgLabel;
-    }
+    clusteredNumber =
+      clustered[0].get('popupDetails') &&
+      clustered[0].get('popupDetails').length;
+    label =
+      clusteredNumber > 1
+        ? `${clusteredNumber}x ${munimap_lang.getMsg(ctgId, lang)}`
+        : ctgLabel;
   } else if (clustered.length > 1) {
     ctgLabel = munimap_lang.getMsg(ctgId, lang);
     if (ctgLabel === ' ') {
       ctgLabel = '';
     }
-    const sameValueArray = [];
-    clustered.forEach((el) =>
-      sameValueArray.push({
-        name: el.get(munimap_lang.getMsg(fieldName, lang)),
-        building: el.get('polohKod').substr(0, 5),
-      })
-    );
+
+    let count = clustered.length;
     clustered.forEach((el) => {
-      for (let i = 1; i < el.get('numberOfDetails'); i++) {
-        sameValueArray.push('anotherDetailInsideOneFeature');
+      const detailsCount = el.get('popupDetails');
+      if (detailsCount && detailsCount.length > 1) {
+        count += detailsCount.length - 1;
       }
     });
-
-    clusteredNumber = sameValueArray.length;
-    label = clusteredNumber + 'x ' + ctgLabel;
+    label = `${count}x ${ctgLabel}`;
   }
   return label;
 };

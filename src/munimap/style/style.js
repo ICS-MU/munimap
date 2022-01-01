@@ -211,13 +211,14 @@ const getLabelHeight = (title, fontSize) => {
 
 /**
  * @param {string|undefined} text text
- * @param {string} [char] Character for newline (/n or </br>)
+ * @param {string} [opt_char] Character for newline (/n or </br>)
  * @return {string|undefined} wrapped text
  */
-const wrapText = (text, char) => {
+const wrapText = (text, opt_char) => {
   if (!text) {
     return text;
   }
+  let char = opt_char;
   if (!char) {
     char = '\n';
   }

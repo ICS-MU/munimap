@@ -266,6 +266,11 @@
   font-weight: 600;
   text-align: center;
   margin: 5px 0;
+  white-space: pre-line;
+}
+
+.munimap-bubble-text {
+  white-space: pre-line;
 }
 
 .munimap-bubble-title:last-child {

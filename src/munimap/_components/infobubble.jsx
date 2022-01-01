@@ -4,7 +4,12 @@ import * as slctr from '../redux/selector.js';
 import MapContext from '../_contexts/mapcontext.jsx';
 import React, {useContext, useLayoutEffect, useRef} from 'react';
 import Select from './select.jsx';
-import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
+import {
+  ENABLE_EFFECT_LOGS,
+  ENABLE_RENDER_LOGS,
+  POPUP_TALE_HEIGHT,
+  POPUP_TALE_INDENT,
+} from '../conf.js';
 import {GeoJSON} from 'ol/format';
 import {featureExtentIntersect} from '../utils/geom.js';
 import {sort as floorSortFn} from '../feature/floor.js';
@@ -26,20 +31,6 @@ import {useSelector} from 'react-redux';
  * @property {number} [resolution] resolution
  * @property {string} [selectedFeature] selectedFeature
  */
-
-/**
- * Equal to 2 * border-width of ol.popup:after.
- * @type {number}
- * @const
- */
-const POPUP_TALE_HEIGHT = 10;
-
-/**
- * Equal to left positioning (- 11px of margin) of ol.popup:after.
- * @type {number}
- * @const
- */
-const POPUP_TALE_INDENT = 8;
 
 /**
  * Get infobox position.

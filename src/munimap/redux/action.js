@@ -187,6 +187,12 @@ export const ROOM_CLICKED = 'ROOM_CLICKED';
 export const GEOLOCATION_CLICKED = 'GEOLOCATION_CLICKED';
 
 /**
+ * @type {string}
+ * @const
+ */
+export const POPUP_CLOSED = 'POPUP_CLOSED';
+
+/**
  * @param {Array<ol.Feature|string>} markers markers
  * @param {LoadedTypes} loadedTypes loaded feature types
  * @return {PayloadAsyncAction} action
@@ -463,5 +469,14 @@ export function geolocationClicked(object) {
   return {
     type: GEOLOCATION_CLICKED,
     payload: object,
+  };
+}
+
+/**
+ * @return {PayloadAsyncAction} action
+ */
+export function popupClosed() {
+  return {
+    type: POPUP_CLOSED,
   };
 }

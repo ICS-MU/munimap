@@ -2,12 +2,15 @@
  * @module conf
  */
 
+import {RESOLUTION as MARKER_RESOLUTION} from './feature/marker.js';
+
 /**
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
  * @typedef {import("ol/layer").Vector} ol.layer.Vector
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/size").Size} ol.size.Size
  * @typedef {import("./feature/floor.js").Options} FloorOptions
+ * @typedef {import("./utils/range.js").RangeInterface} RangeInterface
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/geom").Point} ol.geom.Point
  */
@@ -46,6 +49,25 @@ export const MUNIMAP_PUBTRAN_URL = PRODUCTION
 
 /**
  * @type {string}
+ */
+export const IDOS_URL = 'https://idos.idnes.cz/idsjmk/spojeni/';
+
+/**
+ * Equal to 2 * border-width of ol.popup:after.
+ * @type {number}
+ * @const
+ */
+export const POPUP_TALE_HEIGHT = 10;
+
+/**
+ * Equal to left positioning (- 11px of margin) of ol.popup:after.
+ * @type {number}
+ * @const
+ */
+export const POPUP_TALE_INDENT = 8;
+
+/**
+ * @type {string}
  * @const
  */
 export const MUNIMAP_PROPS_ID = 'munimapProps';
@@ -69,13 +91,31 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {boolean} [pubTran] whethet to show public transportation stops
  * @property {Array<string>} [poiFilter] poi filter
  * @property {Array<string>} [markerFilter] marker filter
- * @property {string} getMainFeatureAtPixelId getMainFeatureAtPixel id
+ * @property {string} [getMainFeatureAtPixelId] getMainFeatureAtPixel id
  */
 
 /**
  * @typedef {Object} ErrorMessageState
  * @property {boolean} render whether to rende error div
  * @property {boolean} withMessage whether to render with message
+ */
+
+/**
+ * @typedef {Object} PopupContentOptions
+ * @property {string} [name] name
+ * @property {string} [open] open
+ * @property {string} [url] url
+ * @property {string} [pubTran] pubtran
+ */
+
+/**
+ * @typedef {Object} PopupState
+ * @property {ol.coordinate.Coordinate} positionInCoords positionInCoords
+ * @property {number} offsetX offsetx
+ * @property {number} offsetY offsety
+ * @property {Array<PopupContentOptions>} content content
+ * @property {RangeInterface} hideResolution resolution for hide
+ * @property {boolean} visible visible
  */
 
 /**
@@ -109,6 +149,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {number} optPoisTimestamp opt pois timestamp
  * @property {ErrorMessageState} errorMessage error message
  * @property {AnimationRequestState} animationRequest requested view
+ * @property {PopupState} popup popup
  */
 
 /**
@@ -168,4 +209,12 @@ export const INITIAL_STATE = {
       extent: null,
     },
   ],
+  popup: {
+    positionInCoords: null,
+    content: null,
+    offsetX: 0,
+    offsetY: 20,
+    hideResolution: MARKER_RESOLUTION,
+    visible: false,
+  },
 };

@@ -100,6 +100,7 @@ import {styleFunction as markerStyleFunction} from '../style/marker.js';
  * @typedef {import("../conf.js").RequiredOptions} RequiredOptions
  * @typedef {import("../conf.js").AnimationRequestState} AnimationRequestState
  * @typedef {import("../conf.js").ErrorMessageState} ErrorMessageState
+ * @typedef {import("../conf.js").PopupState} PopupState
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/size").Size} ol.Size
  * @typedef {import("ol/extent").Extent} ol.Extent
@@ -333,6 +334,13 @@ export const getRequiredSimpleScroll = (state) =>
 export const getErrorMessageState = (state) => state.errorMessage;
 
 /**
+ * @type {Reselect.Selector<State, PopupState>}
+ * @param {State} state state
+ * @return {PopupState} popup state
+ */
+export const getPopup = (state) => state.popup;
+
+/**
  * createSelector return type Reselect.OutputSelector<S, T, (res: R1) => T>
  *    S: State (for Selector functions above)
  *    T: Returned type (must be same as returned type below)
@@ -377,7 +385,8 @@ export const getInitMarkers = createSelector(
           const roomCode = optPoi.get('polohKodLokace');
           if (roomCode) {
             return rooms.find((room) => {
-              return room.get(roomType.primaryKey) === roomCode;
+              const isValid = !room.get('detailsMoved');
+              return isValid && room.get(roomType.primaryKey) === roomCode;
             });
           }
           return;

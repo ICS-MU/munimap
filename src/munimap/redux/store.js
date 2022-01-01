@@ -19,6 +19,8 @@ import {
   isCode as isFloorCode,
 } from '../feature/floor.js';
 import {Feature} from 'ol';
+import {MultiPolygon, Polygon} from 'ol/geom';
+import {RESOLUTION as PUBTRAN_RESOLUTION} from '../feature/pubtran.stop.js';
 import {ROOM_TYPES, isRoom} from '../feature/room.js';
 import {asyncDispatchMiddleware} from './middleware.js';
 import {
@@ -34,12 +36,14 @@ import {getActiveStore as getActivePoiStore} from '../source/poi.js';
 import {getActiveStore as getActiveRoomStore} from '../source/room.js';
 import {getAnimationDuration} from '../utils/animation.js';
 import {getAnimationRequestParams} from '../utils/animation.js';
+import {getBetterInteriorPoint} from '../utils/geom.js';
 import {getStore as getBuildingStore} from '../source/building.js';
 import {getClosestPointToPixel} from '../feature/feature.js';
 import {getStore as getClusterStore} from '../source/cluster.js';
 import {getStore as getComplexStore} from '../source/complex.js';
 import {getMainFeatures, getMinorFeatures} from '../cluster/cluster.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
+import {getStore as getPubTranStore} from '../source/pubtran.stop.js';
 import {isBuilding} from '../feature/building.js';
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
 import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.js';
@@ -48,6 +52,7 @@ import {loadOrDecorateMarkers} from '../create.js';
 /**
  * @typedef {import("../conf.js").State} State
  * @typedef {import("../conf.js").AnimationRequestOptions} AnimationRequestOptions
+ * @typedef {import("../conf.js").PopupState} PopupState
  * @typedef {import("./action.js").LoadedTypes} LoadedTypes
  * @typedef {import("./action.js").PayloadAsyncAction} PayloadAsyncAction
  * @typedef {import("ol/geom").Point} ol.geom.Point
@@ -84,6 +89,7 @@ const getFeaturesTimestamps = (state, loadedTypes) => {
  */
 const createReducer = (initialState) => {
   return (state = initialState, action) => {
+    const popupOpts = /**@type {PopupState}*/ ({});
     let newState;
     let locationCode;
     let loadedTypes;
@@ -200,7 +206,6 @@ const createReducer = (initialState) => {
         if (floorCode) {
           result = floorCode;
           flId = getFloorLayerIdByCode(floorCode);
-
           if (!newSelectedIsActive) {
             const where = 'vrstvaId = ' + flId;
             loadFloors(where).then((floors) => {
@@ -215,10 +220,22 @@ const createReducer = (initialState) => {
           result = state.selectedFeature;
         }
 
+        if (
+          result &&
+          state.selectedFeature &&
+          result.slice(0, 5) !== state.selectedFeature.slice(0, 5)
+        ) {
+          popupOpts.visible = false;
+        }
+
         return {
           ...state,
           floorsTimestamp: Date.now(),
           selectedFeature: result,
+          popup: {
+            ...state.popup,
+            ...popupOpts,
+          },
         };
 
       // OL_MAP_VIEW_CHANGE
@@ -278,9 +295,13 @@ const createReducer = (initialState) => {
         const selectedFeature = state.selectedFeature;
         newState = {
           ...state,
+          popup: {
+            ...state.popup,
+          },
         };
         if (selectedFeature && selectedFeature !== newValue) {
           newState.selectedFeature = newValue;
+          newState.popup.visible = false;
           const where = `polohKod LIKE '${newValue.substring(0, 5)}%'`;
           loadFloors(where).then((floors) =>
             action.asyncDispatch(actions.floors_loaded(false))
@@ -510,10 +531,16 @@ const createReducer = (initialState) => {
           : FLOOR_RESOLUTION;
         if (clusteredFeatures.length === 1) {
           let center;
-          // const detail = /** @type {string} */(firstFeature.get('detail'));
-          // if (detail) {
-          //   munimap.bubble.show(firstFeature, map, detail, 0, 20);
-          // }
+
+          if (firstFeature.get('popupDetails')) {
+            const geometry = firstFeature.getGeometry();
+            popupOpts.positionInCoords = ol_extent.getCenter(
+              geometry.getExtent()
+            );
+            popupOpts.content = firstFeature.get('popupDetails');
+            popupOpts.visible = true;
+          }
+
           const opts = {
             resolution: resolutionRange.max,
             rotation: slctr.getRotation(state),
@@ -556,10 +583,18 @@ const createReducer = (initialState) => {
                 ...animationRequest,
               },
             ],
+            popup: {
+              ...initialState.popup,
+              ...popupOpts,
+            },
           };
         }
         return {
           ...state,
+          popup: {
+            ...initialState.popup,
+            ...popupOpts,
+          },
         };
 
       //MARKER_CLICKED
@@ -590,24 +625,63 @@ const createReducer = (initialState) => {
             extent: slctr.getExtent(state),
           });
         }
-        // const detail = /** @type {string} */ (feature.get('detail'));
-        // if (detail) {
-        //   munimap.bubble.show(feature, map, detail, 0, 20, undefined, true);
-        // }
+
+        if (feature.get('popupDetails')) {
+          const geometry = feature.getGeometry();
+          let centroid = ol_extent.getCenter(geometry.getExtent());
+          if (
+            !geometry.intersectsCoordinate(centroid) &&
+            (geometry instanceof MultiPolygon || geometry instanceof Polygon)
+          ) {
+            centroid = getBetterInteriorPoint(geometry).getCoordinates();
+          }
+          popupOpts.positionInCoords = centroid;
+          popupOpts.content = feature.get('popupDetails');
+          popupOpts.visible = true;
+        }
+
+        if (!isCustomMarker(feature)) {
+          const markerLocationCode = feature.get('polohKod');
+          locationCode = markerLocationCode
+            ? markerLocationCode.slice(0, 8)
+            : null;
+          if (locationCode) {
+            const where = `polohKod LIKE '${locationCode.substring(0, 5)}%'`;
+            const activeFloorCodes = slctr.getActiveFloorCodes(state);
+            loadFloors(where).then((floors) =>
+              action.asyncDispatch(
+                actions.floors_loaded(activeFloorCodes.includes(locationCode))
+              )
+            );
+            // if (jpad.func.isDef(identifyCallback)) {
+            //   munimap.identify.refreshVisibility(map, newLocCode);
+            // }
+          }
+        }
 
         if (animationRequest) {
           return {
             ...state,
+            selectedFeature: locationCode || state.selectedFeature,
             animationRequest: [
               {
                 ...initialState.animationRequest[0],
                 ...animationRequest,
               },
             ],
+            popup: {
+              ...initialState.popup,
+              ...popupOpts,
+            },
           };
         }
         return {
           ...state,
+          selectedFeature: locationCode || state.selectedFeature,
+          popup: {
+            ...initialState.popup,
+            ...popupOpts,
+          },
         };
 
       //POI_CLICKED
@@ -645,44 +719,41 @@ const createReducer = (initialState) => {
 
       //PUBTRAN_CLICKED
       case actions.PUBTRAN_CLICKED:
-        console.error('Not implemented yet!');
-        // var feature = options.feature;
-        // var map = options.map;
-        // var lang = map.get(munimap.PROPS_NAME).lang;
-        // var title = /**@type {string}*/ (feature.get('nazev'));
-        // var link = 'https://idos.idnes.cz/idsjmk/spojeni/?';
-        // var linkToAttributes = {
-        //   href: encodeURI(link + 't=' + title),
-        //   target: '_blank'
-        // };
-        // var linkFromAttributes = {
-        //   href: encodeURI(link + 'f=' + title),
-        //   target: '_blank'
-        // };
+        featureUid = action.payload.featureUid;
+        feature = getPubTranStore().getFeatureByUid(featureUid);
 
-        // var main = goog.dom.createDom('div', 'munimap-title',
-        //   goog.dom.createTextNode(title));
-        // var linkToEl = goog.dom.createDom('a', linkToAttributes,
-        //   goog.dom.createTextNode(
-        //     munimap.lang.getMsg(munimap.lang.Translations.CONNECTION_TO, lang)));
-        // var linkFromEl = goog.dom.createDom('a', linkFromAttributes,
-        //   goog.dom.createTextNode(
-        //     munimap.lang.getMsg(munimap.lang.Translations.CONNECTION_FROM, lang)));
-        // var linkEl = goog.dom.createDom('div', null, goog.dom.createTextNode(
-        //   munimap.lang.getMsg(munimap.lang.Translations.FIND_CONNECTION, lang)
-        //   + ': '));
+        const point = /**@type {ol.geom.Point}*/ (feature.getGeometry());
+        const coords = point.getCoordinates();
+        animationRequest = getAnimationRequestParams(coords, {
+          resolution: slctr.getResolution(state),
+          rotation: slctr.getRotation(state),
+          size: slctr.getSize(state),
+          extent: slctr.getExtent(state),
+        });
 
-        // var mainText = goog.dom.getOuterHtml(main);
-        // var linkToElText = goog.dom.getOuterHtml(linkToEl);
-        // var linkFromElText = goog.dom.getOuterHtml(linkFromEl);
-        // var linkElText = linkEl.innerHTML;
-        // var detail = mainText + '<div>' + linkElText + linkToElText + ' / ' +
-        //     linkFromElText + '</div>';
-        // munimap.bubble.show(feature, map, detail, 0, 0,
-        //   munimap.pubtran.stop.RESOLUTION, true);
-
+        const title = /**@type {string}*/ (feature.get('nazev'));
+        if (title) {
+          const geometry = feature.getGeometry();
+          popupOpts.positionInCoords = ol_extent.getCenter(
+            geometry.getExtent()
+          );
+          popupOpts.content = [{pubTran: title}];
+          popupOpts.offsetY = 0;
+          popupOpts.hideResolution = PUBTRAN_RESOLUTION;
+          popupOpts.visible = true;
+        }
         return {
           ...state,
+          animationRequest: [
+            {
+              ...initialState.animationRequest[0],
+              ...animationRequest,
+            },
+          ],
+          popup: {
+            ...initialState.popup,
+            ...popupOpts,
+          },
         };
 
       //ROOM_CLICKED
@@ -692,6 +763,12 @@ const createReducer = (initialState) => {
         locationCode = feature.get('polohKod');
         result = locationCode ? locationCode.substr(0, 8) : null;
         if (result) {
+          if (
+            state.selectedFeature &&
+            result.slice(0, 5) !== state.selectedFeature.slice(0, 5)
+          ) {
+            popupOpts.visible = false;
+          }
           const where = `polohKod LIKE '${result.substring(0, 5)}%'`;
           loadFloors(where).then((floors) =>
             action.asyncDispatch(actions.floors_loaded(true))
@@ -703,6 +780,20 @@ const createReducer = (initialState) => {
         return {
           ...state,
           selectedFeature: result,
+          popup: {
+            ...state.popup,
+            ...popupOpts,
+          },
+        };
+
+      //POPUP_CLOSED
+      case actions.POPUP_CLOSED:
+        return {
+          ...state,
+          popup: {
+            ...state.popup,
+            visible: false,
+          },
         };
 
       //DEAFULT

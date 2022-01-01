@@ -48,8 +48,10 @@ const isMarker = (feature) => {
  */
 const isClickable = (options) => {
   const {feature, resolution, selectedFeature} = options;
+  const hasPoiDetail =
+    feature.get('popupDetails') && feature.get('popupDetails').length > 0;
 
-  if (isCustomMarker(feature) || feature.get('detail')) {
+  if (isCustomMarker(feature) || hasPoiDetail) {
     return true;
   } else if (munimap_building.isBuilding(feature)) {
     return (
@@ -76,4 +78,4 @@ const featureClickHandler = (dispatch, options) => {
   dispatch(actions.markerClicked(options));
 };
 
-export {isClickable, featureClickHandler, isMarker};
+export {RESOLUTION, isClickable, featureClickHandler, isMarker};
