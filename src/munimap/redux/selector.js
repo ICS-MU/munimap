@@ -1682,3 +1682,28 @@ export const getAllStyleFunctions = createSelector(
     };
   }
 );
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    Array<string>,
+ *    function(Array<ol.Feature>, string): Array<string>
+ * >}
+ */
+export const getFloorCodesWithMarkers = createSelector(
+  [getInitMarkers, getSelectedFeature],
+  (initMarkers, selectedFeature) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing floor codes with markers');
+    }
+    if (!initMarkers || !selectedFeature) {
+      return [];
+    }
+    const result = initMarkers.map((marker) => {
+      const pk = /** @type {string}*/ (marker.get('polohKod'));
+      const inSelectedBuilding = pk.startsWith(selectedFeature.slice(0, 5));
+      return pk && inSelectedBuilding && pk.length >= 8 && pk.slice(0, 8);
+    });
+    return result.filter((item) => item);
+  }
+);

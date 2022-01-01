@@ -10,89 +10,89 @@ import {FloorTypes} from '../feature/floor.js';
 import {hot} from 'react-hot-loader';
 import {useDispatch, useSelector} from 'react-redux';
 
-const customStyles = {
-  menu: (styles) => {
-    return {
-      ...styles,
-      width: 'auto',
-      borderRadius: 0,
-      marginTop: '2px',
-    };
-  },
+const customStyles = (floorsWithMarkers) => {
+  return {
+    menu: (styles) => {
+      return {
+        ...styles,
+        width: 'auto',
+        borderRadius: 0,
+        marginTop: '2px',
+        minWidth: '60px',
+      };
+    },
 
-  control: (styles, {isDisabled, isFocused}) => {
-    return {
-      ...styles,
-      backgroundColor: 'white',
-      borderRadius: 0,
-      borderColor: isDisabled
-        ? styles.borderColor
-        : isFocused
-        ? 'hsl(0, 0%, 80%)'
-        : 'hsl(0, 0%, 80%)',
-      boxShadow: 0,
-      minWidth: '90px',
-      minHeight: '28px',
-      lineHeight: '20px',
-      padding: '3px 2px 3px 10px',
-      ':hover': {
-        ...styles[':hover'],
-        cursor: 'pointer',
-        borderColor: 'hsl(0, 0%, 50%)',
+    control: (styles, {isDisabled, isFocused}) => {
+      return {
+        ...styles,
+        backgroundColor: 'white',
+        borderRadius: 0,
+        borderColor: isDisabled
+          ? styles.borderColor
+          : isFocused
+          ? 'hsl(0, 0%, 80%)'
+          : 'hsl(0, 0%, 80%)',
         boxShadow: 0,
-      },
-    };
-  },
+        minWidth: '90px',
+        minHeight: '28px',
+        lineHeight: '20px',
+        padding: '3px 2px 3px 10px',
+        ':hover': {
+          ...styles[':hover'],
+          cursor: 'pointer',
+          borderColor: 'hsl(0, 0%, 50%)',
+          boxShadow: 0,
+        },
+      };
+    },
 
-  input: (styles) => {
-    return {
-      ...styles,
-      margin: 0,
-      padding: 0,
-    };
-  },
+    input: (styles) => {
+      return {
+        ...styles,
+        margin: 0,
+        padding: 0,
+      };
+    },
 
-  dropdownIndicator: (styles) => {
-    return {
-      ...styles,
-      margin: 0,
-      padding: '0px 2px 0px 2px',
-    };
-  },
+    dropdownIndicator: (styles) => {
+      return {
+        ...styles,
+        margin: 0,
+        padding: '0px 2px 0px 2px',
+      };
+    },
 
-  valueContainer: (styles) => {
-    return {
-      ...styles,
-      padding: '0',
-    };
-  },
+    valueContainer: (styles) => {
+      return {
+        ...styles,
+        padding: '0',
+      };
+    },
 
-  indicatorSeparator: (styles) => {
-    return {
-      ...styles,
-      margin: '0',
-    };
-  },
+    indicatorSeparator: (styles) => {
+      return {
+        ...styles,
+        margin: '0',
+      };
+    },
 
-  option: (styles, {isDisabled, isFocused, isSelected}) => {
-    return {
-      ...styles,
-      backgroundColor: isDisabled
-        ? undefined
-        : isSelected
-        ? '#d6e9f8'
-        : isFocused
-        ? '#d6e9f8'
-        : undefined,
-      color: isDisabled
-        ? styles.color
-        : isSelected
-        ? 'inherit'
-        : isFocused
-        ? 'inherit'
-        : undefined,
-    };
-  },
+    option: (styles, {isDisabled, isFocused, isSelected, data}) => {
+      const withMarker = floorsWithMarkers.includes(data.value);
+      return {
+        ...styles,
+        padding: '2px 6px',
+        fontSize: '13px',
+        color: isDisabled ? styles.color : withMarker ? '#e51c23' : '#000',
+        backgroundColor: isDisabled
+          ? undefined
+          : isSelected
+          ? '#d6e9f8'
+          : isFocused
+          ? '#d6e9f8'
+          : undefined,
+      };
+    },
+  };
 };
 
 /**
@@ -241,6 +241,7 @@ const getLabel = (floorCode, lang) => {
 const SelectComponent = (props) => {
   const lang = useSelector(slctr.getLang);
   const selectedFloor = useSelector(slctr.getSelectedFloorCode);
+  const floorsWithMarkers = useSelector(slctr.getFloorCodesWithMarkers);
   const dispatch = useDispatch();
 
   const handleChange = (selectedOption) => {
@@ -250,7 +251,7 @@ const SelectComponent = (props) => {
   const floors = props.floors;
   const options = floors.map((floor) => {
     const locCode = /**@type {string}*/ (floor.get('polohKod'));
-    const floorCode = locCode.substr(5, 8);
+    const floorCode = locCode.slice(5, 8);
     return {
       label: getLabelAbbr(floorCode, lang),
       value: locCode,
@@ -272,7 +273,7 @@ const SelectComponent = (props) => {
         munimap_lang.Translations.INFOBOX_CHOOSE,
         lang
       )}
-      styles={customStyles}
+      styles={customStyles(floorsWithMarkers)}
       noOptionsMessage={() => 'Žádné podlaží'}
       isSearchable={false}
     />
