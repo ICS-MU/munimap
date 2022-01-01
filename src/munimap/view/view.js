@@ -413,7 +413,7 @@ const createAnimationOptions_ = (view, options) => {
  * @param {AnimationRequestState} animationRequest requested view state
  */
 const animate = (map, animationRequest) => {
-  if (Object.values(animationRequest[0]).every((i) => i === null)) {
+  if (!map || Object.values(animationRequest[0]).every((i) => i === null)) {
     return;
   }
 
@@ -426,7 +426,7 @@ const animate = (map, animationRequest) => {
     } else {
       const {extent, duration} = animationReqItem;
       extent
-        ? view.fit(extent, {duration, nearest: true})
+        ? view.fit(extent, {duration})
         : view.animate(createAnimationOptions_(view, animationReqItem));
     }
   });
