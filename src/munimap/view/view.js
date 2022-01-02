@@ -31,6 +31,11 @@ import {create as createClusterLayer} from '../layer/cluster.js';
 import {createStore as createComplexStore} from '../source/complex.js';
 import {createStore as createFloorStore} from '../source/floor.js';
 import {create as createGeolocationLayer} from '../layer/geolocation.js';
+import {
+  createLayer as createIdentifyLayer,
+  refreshVisibility as refreshIdentifyLayerVisibility,
+} from '../layer/identify.js';
+import {createStore as createIdentifyStore} from '../source/identify.js';
 import {create as createMarkerLayer} from '../layer/marker.js';
 import {createStore as createMarkerStore} from '../source/marker.js';
 import {createStore as createOptPoiStore} from '../source/optpoi.js';
@@ -77,6 +82,13 @@ import {updateClusteredFeatures} from './cluster.js';
  * @property {ol.AttributionLike} muAttrs mu attributions
  * @property {RangeInterface} clusterResolution cluster resolution
  * @property {RequiredOptions} requiredOpts required options
+ * @property {boolean} isIdentifyEnabled isIdentifyEnabled
+ */
+
+/**
+ * @typedef {Object} VisibilityOptions
+ * @property {boolean} isIdentifyEnabled isIdentifyEnabled
+ * @property {boolean} identifyVisibled identifyVisibled
  */
 
 /**
@@ -122,6 +134,7 @@ const ensureLayers = (map, options) => {
     return;
   }
   const {lang, labels, locationCodes, pubTran} = options.requiredOpts;
+  const {isIdentifyEnabled} = options;
   const markerLayer = createMarkerLayer(map, options);
   const markerClusterLayer = createClusterLayer(map, options);
   const layers = getDefaultLayers(lang, labels, locationCodes);
@@ -139,6 +152,11 @@ const ensureLayers = (map, options) => {
     const geolocationLayer = createGeolocationLayer();
     map.addLayer(geolocationLayer);
   }
+
+  if (isIdentifyEnabled) {
+    const identifyLayer = createIdentifyLayer();
+    map.addLayer(identifyLayer);
+  }
 };
 
 /**
@@ -147,8 +165,9 @@ const ensureLayers = (map, options) => {
  * @param {MapListenersOptions} options options
  */
 const handleMapClick = (evt, dispatch, options) => {
-  const {selectedFeature} = options;
-  const {getMainFeatureAtPixelId, clusterFacultyAbbr} = options.requiredOpts;
+  const {selectedFeature, isIdentifyEnabled} = options;
+  const {getMainFeatureAtPixelId, clusterFacultyAbbr, identifyTypes} =
+    options.requiredOpts;
   const {map, pixel} = evt;
 
   const getMainFeatureAtPixelFn = getMainFeatureAtPixelId
@@ -169,6 +188,8 @@ const handleMapClick = (evt, dispatch, options) => {
         resolution: map.getView().getResolution(),
         selectedFeature,
         clusterFacultyAbbr,
+        identifyTypes,
+        isIdentifyEnabled,
       };
       if (isClickable(handlerOpts)) {
         const featureClickHandler = /** @type {featureClickHandlerFunction} */ (
@@ -195,8 +216,8 @@ const handlePointerMove = (evt, options) => {
     return;
   }
 
-  const {selectedFeature} = options;
-  const {targetId, getMainFeatureAtPixelId, clusterFacultyAbbr} =
+  const {selectedFeature, isIdentifyEnabled} = options;
+  const {targetId, getMainFeatureAtPixelId, clusterFacultyAbbr, identifyTypes} =
     options.requiredOpts;
   const map = evt.map;
   const targetEl = TARGET_ELEMENTS_STORE[targetId];
@@ -245,6 +266,8 @@ const handlePointerMove = (evt, options) => {
         resolution: map.getView().getResolution(),
         selectedFeature,
         clusterFacultyAbbr,
+        identifyTypes,
+        isIdentifyEnabled,
       };
       if (isClickable(handlerOpts)) {
         //const popupEl = munimap.bubble.OVERLAY.getElement();
@@ -331,6 +354,9 @@ const createFeatureStores = (reduxStore) => {
   const state = reduxStore.getState();
   if (state.requiredOpts.pubTran) {
     createPubtranStore();
+  }
+  if (state.requiredOpts.identifyCallbackId) {
+    createIdentifyStore();
   }
 };
 
@@ -432,6 +458,21 @@ const animate = (map, animationRequest) => {
   });
 };
 
+/**
+ * @param {ol.Map} map map
+ * @param {VisibilityOptions} options options
+ */
+const refreshVisibility = (map, options) => {
+  if (!map) {
+    return;
+  }
+
+  const {isIdentifyEnabled, identifyVisibled} = options;
+  if (isIdentifyEnabled) {
+    refreshIdentifyLayerVisibility(map, identifyVisibled);
+  }
+};
+
 export {
   animate,
   attachIndependentMapListeners,
@@ -441,4 +482,5 @@ export {
   ensureClusterUpdate,
   ensureLayers,
   refreshStyles,
+  refreshVisibility,
 };

@@ -184,6 +184,12 @@ export const ROOM_CLICKED = 'ROOM_CLICKED';
  * @type {string}
  * @const
  */
+export const DOOR_CLICKED = 'DOOR_CLICKED';
+
+/**
+ * @type {string}
+ * @const
+ */
 export const GEOLOCATION_CLICKED = 'GEOLOCATION_CLICKED';
 
 /**
@@ -191,6 +197,12 @@ export const GEOLOCATION_CLICKED = 'GEOLOCATION_CLICKED';
  * @const
  */
 export const POPUP_CLOSED = 'POPUP_CLOSED';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const IDENTIFY_RESETED = 'IDENTIFY_RESETED';
 
 /**
  * @param {Array<ol.Feature|string>} markers markers
@@ -462,6 +474,17 @@ export function roomClicked(object) {
 }
 
 /**
+ * @param {FeatureClickHandlerOptions} object object
+ * @return {PayloadAsyncAction} action
+ */
+export function doorClicked(object) {
+  return {
+    type: DOOR_CLICKED,
+    payload: object,
+  };
+}
+
+/**
  * @param {AnimationRequestOptions} object object
  * @return {PayloadAsyncAction} action
  */
@@ -478,5 +501,15 @@ export function geolocationClicked(object) {
 export function popupClosed() {
   return {
     type: POPUP_CLOSED,
+  };
+}
+
+/**
+ * @return {PayloadAsyncAction} action
+ */
+export function identifyReseted() {
+  sendEvent('identify-reset', 'click');
+  return {
+    type: IDENTIFY_RESETED,
   };
 }

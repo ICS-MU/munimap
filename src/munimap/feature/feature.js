@@ -7,7 +7,6 @@ import GeoJSON from 'ol/format/GeoJSON';
 import turf_booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import {Point} from 'ol/geom';
 import {featureExtentIntersect} from '../utils/geom.js';
-import {getActiveLayer as getActiveDoorLayer} from '../layer/door.js';
 import {getLayer as getClusterLayer} from '../layer/cluster.js';
 import {getDefaultLayer as getDefaultRoomLayer} from '../layer/room.js';
 import {getLayer as getMarkerLayer} from '../layer/marker.js';
@@ -35,6 +34,8 @@ import {getLayer as getMarkerLayer} from '../layer/marker.js';
  * @property {number} [resolution] resolution
  * @property {string} [selectedFeature] selected feature
  * @property {boolean} [clusterFacultyAbbr] cluster faculty abbreviation
+ * @property {boolean} [isIdentifyEnabled] isIdentifyEnabled
+ * @property {Array<string>} [identifyTypes] identifyTypes
  */
 
 /**
@@ -80,11 +81,10 @@ const getMainFeatureAtPixel = (map, pixel) => {
   let mainFeature;
   const featuresWithLayers = [];
   const rooms = getDefaultRoomLayer(map);
-  const doors = getActiveDoorLayer(map);
   const markerClusterLayer = getClusterLayer(map);
   const markerLayer = getMarkerLayer(map);
   map.forEachFeatureAtPixel(pixel, (feature, layer) => {
-    if (layer === doors || layer === rooms) {
+    if (layer === rooms) {
       return false;
     }
     if (layer === markerLayer) {
@@ -101,7 +101,7 @@ const getMainFeatureAtPixel = (map, pixel) => {
       };
       return true;
     }
-    // other than doors, rooms, markers, clusters => bldg, active rooms, pois...
+    // other than rooms, markers, clusters => bldg, doors, active rooms, pois...
     featuresWithLayers.push({
       feature: feature,
       layer: layer,

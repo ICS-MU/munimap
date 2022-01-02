@@ -2,6 +2,7 @@
  * @module conf
  */
 
+import {Types as IdentifyTypes} from './identify/identify.js';
 import {RESOLUTION as MARKER_RESOLUTION} from './feature/marker.js';
 
 /**
@@ -92,6 +93,8 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {Array<string>} [poiFilter] poi filter
  * @property {Array<string>} [markerFilter] marker filter
  * @property {string} [getMainFeatureAtPixelId] getMainFeatureAtPixel id
+ * @property {Array<string>} [identifyTypes] identifyTypes
+ * @property {string} [identifyCallbackId] identifyCallbackId id
  */
 
 /**
@@ -115,6 +118,12 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {number} offsetY offsety
  * @property {Array<PopupContentOptions>} content content
  * @property {RangeInterface} hideResolution resolution for hide
+ * @property {boolean} visible visible
+ */
+
+/**
+ * @typedef {Object} IdentifyState
+ * @property {boolean} controlEnabled resetEnabled
  * @property {boolean} visible visible
  */
 
@@ -150,6 +159,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {ErrorMessageState} errorMessage error message
  * @property {AnimationRequestState} animationRequest requested view
  * @property {PopupState} popup popup
+ * @property {IdentifyState} identify identify
  */
 
 /**
@@ -185,6 +195,8 @@ export const INITIAL_STATE = {
     poiFilter: null,
     markerFilter: null,
     getMainFeatureAtPixelId: null,
+    identifyTypes: Object.values(IdentifyTypes),
+    identifyCallbackId: null,
   },
   markersTimestamp: null,
   zoomToTimestamp: null,
@@ -215,6 +227,10 @@ export const INITIAL_STATE = {
     offsetX: 0,
     offsetY: 20,
     hideResolution: MARKER_RESOLUTION,
+    visible: false,
+  },
+  identify: {
+    controlEnabled: false,
     visible: false,
   },
 };

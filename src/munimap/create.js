@@ -36,6 +36,7 @@ import {v4 as uuidv4} from 'uuid';
  * @typedef {import("redux").Dispatch} redux.Dispatch
  * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("./feature/feature.js").getMainFeatureAtPixelFunction} getMainFeatureAtPixelFunction
+ * @typedef {import("./identify/identify.js").CallbackFunction} IdentifyCallbackFunction
  */
 
 /**
@@ -58,6 +59,8 @@ import {v4 as uuidv4} from 'uuid';
  * @property {Array<string>} [poiFilter] poi filter
  * @property {Array<string>} [markerFilter] marker filter
  * @property {getMainFeatureAtPixelFunction} [getMainFeatureAtPixel] getMainFeatureAtPixel function
+ * @property {Array<string>} [identifyTypes] identifyTypes
+ * @property {IdentifyCallbackFunction} [identifyCallback] identifyCallback function
  */
 
 /**
@@ -81,6 +84,7 @@ import {v4 as uuidv4} from 'uuid';
  * @typedef {Object} MapListenersOptions
  * @property {string} selectedFeature selected feature
  * @property {RequiredOptions} requiredOpts options
+ * @property {boolean} isIdentifyEnabled isIdentifyEnabled
  */
 
 /**
@@ -107,6 +111,11 @@ export const TARGET_ELEMENTS_STORE = {};
  * @type {Object<string, getMainFeatureAtPixelFunction>}
  */
 export const GET_MAIN_FEATURE_AT_PIXEL_STORE = {};
+
+/**
+ * @type {Object<string, IdentifyCallbackFunction>}
+ */
+export const IDENTIFY_CALLBACK_STORE = {};
 
 /**
  * Load features by location codes or decorate custom markers.
@@ -204,16 +213,16 @@ const assertOptions = (options) => {
   munimap_assert.labels(options.labels);
   munimap_assert.markerFilter(options.markerFilter);
   munimap_assert.poiFilter(options.poiFilter);
-  // munimap_assert.identifyTypes(options.identifyTypes);
-  // munimap_assert.identifyCallback(options.identifyCallback);
-  // if (
-  //   munimap_utils.isDef(options.identifyTypes) &&
-  //   !munimap_utils.isDef(options.identifyCallback)
-  // ) {
-  //   goog.asserts.fail(
-  //     'IdentifyTypes must be defined together with identifyCallback.'
-  //   );
-  // }
+  munimap_assert.identifyTypes(options.identifyTypes);
+  munimap_assert.identifyCallback(options.identifyCallback);
+  if (
+    munimap_utils.isDef(options.identifyTypes) &&
+    !munimap_utils.isDef(options.identifyCallback)
+  ) {
+    throw new munimap_assert.AssertionError(
+      'IdentifyTypes must be defined together with identifyCallback.'
+    );
+  }
 };
 
 /**
@@ -311,6 +320,14 @@ const getInitialState = (options, targetId) => {
     GET_MAIN_FEATURE_AT_PIXEL_STORE[id] = options.getMainFeatureAtPixel;
     initialState.requiredOpts.getMainFeatureAtPixelId = id;
   }
+  if (options.identifyTypes !== undefined) {
+    initialState.requiredOpts.identifyTypes = options.identifyTypes;
+  }
+  if (options.identifyCallback !== undefined) {
+    const id = `IDENTIFY_CALLBACK_${targetId}`;
+    IDENTIFY_CALLBACK_STORE[id] = options.identifyCallback;
+    initialState.requiredOpts.identifyCallbackId = id;
+  }
 
   return initialState;
 };
@@ -333,8 +350,8 @@ export default (options) => {
         mapLinks: options.mapLinks,
         pubTran: options.pubTran,
         baseMap: options.baseMap,
-        // identifyTypes: options.identifyTypes,
-        // identifyCallback: options.identifyCallback
+        identifyTypes: options.identifyTypes,
+        identifyCallback: options.identifyCallback,
       })
     );
 

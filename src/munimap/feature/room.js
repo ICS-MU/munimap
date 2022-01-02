@@ -7,6 +7,7 @@ import * as munimap_lang from '../lang/lang.js';
 import * as munimap_utils from '../utils/utils.js';
 import {MUNIMAP_URL} from '../conf.js';
 import {alignRoomTitleToRows} from '../style/room.js';
+import {isAllowed} from '../identify/identify.js';
 import {wrapText} from '../style/style.js';
 
 /**
@@ -143,8 +144,12 @@ const assertCodeOrLikeExpr = (code) => {
  * @return {boolean} whether is clickable
  */
 const isClickable = (options) => {
-  const {feature, selectedFeature} = options;
-  return !isInSelectedFloor(feature, selectedFeature);
+  const {feature, selectedFeature, isIdentifyEnabled, identifyTypes} = options;
+  const result = !isInSelectedFloor(feature, selectedFeature);
+  if (isIdentifyEnabled && isAllowed(feature, identifyTypes)) {
+    return true;
+  }
+  return result;
 };
 
 /**

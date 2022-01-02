@@ -48,6 +48,8 @@ const MunimapComponent = (props) => {
   const invalidCodes = useSelector(slctr.getInvalidCodes);
   const simpleScroll = useSelector(slctr.getRequiredSimpleScroll);
   const allStyleFunctions = useSelector(slctr.getAllStyleFunctions);
+  const identifyVisibled = useSelector(slctr.isIdentifyVisible);
+  const isIdentifyEnabled = useSelector(slctr.isIdentifyEnabled);
 
   const hasInvalidCodes = invalidCodes && invalidCodes.length > 0;
   const shouldBlockMap = !simpleScroll;
@@ -66,9 +68,10 @@ const MunimapComponent = (props) => {
     const eventKeys = munimap_view.attachDependentMapListeners(map, dispatch, {
       requiredOpts,
       selectedFeature,
+      isIdentifyEnabled,
     });
     return () => eventKeys.forEach((k) => unlistenByKey(k));
-  }, [map, requiredOpts, selectedFeature]);
+  }, [map, requiredOpts, selectedFeature, isIdentifyEnabled]);
 
   useEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
@@ -80,6 +83,7 @@ const MunimapComponent = (props) => {
         muAttrs,
         clusterResolution,
         requiredOpts,
+        isIdentifyEnabled,
       });
     }
   }, [
@@ -90,6 +94,7 @@ const MunimapComponent = (props) => {
     requiredOpts,
     areMarkersLoaded,
     areZoomToLoaded,
+    isIdentifyEnabled,
   ]);
 
   useEffect(() => {
@@ -115,6 +120,16 @@ const MunimapComponent = (props) => {
     }
     munimap_view.refreshStyles(map, allStyleFunctions, requiredOpts.pubTran);
   }, [map, allStyleFunctions, requiredOpts]);
+
+  useEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## MUNIMAP-useEffect-refreshVisibility');
+    }
+    munimap_view.refreshVisibility(map, {
+      isIdentifyEnabled,
+      identifyVisibled,
+    });
+  }, [map, isIdentifyEnabled, identifyVisibled]);
 
   useEffect(() => {
     if (ENABLE_EFFECT_LOGS) {

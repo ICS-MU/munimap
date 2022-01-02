@@ -8,6 +8,7 @@ import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {Abbr} from '../lang/lang.js';
 import {BASEMAPS} from '../layer/basemap.js';
+import {Types as IdentifyTypes} from '../identify/identify.js';
 import {isCodeOrLikeExpr as isBldgCodeOrLikeExpr} from '../feature/building.js';
 import {isCodeOrLikeExpr as isDoorCodeOrLikeExpr} from '../feature/door.js';
 import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.js';
@@ -17,6 +18,7 @@ import {assertSuitable as marker_custom_assertSuitable} from '../feature/marker.
 /**
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("../feature/feature.js").getMainFeatureAtPixelFunction} getMainFeatureAtPixelFunction
+ * @typedef {import("../identify/identify.js").CallbackFunction} IdentifyCallbackFunction
  */
 
 /**
@@ -426,7 +428,40 @@ const getMainFeatureAtPixel = (fn) => {
   }
 };
 
+/**
+ * @param {Array<string>|undefined} types types
+ */
+const identifyTypes = (types) => {
+  if (types !== undefined) {
+    assert(Array.isArray(types), 'Identify types should be an array.');
+
+    types.forEach((type) => {
+      if (munimap_utils.isString(type)) {
+        const identifyTypes = Object.values(IdentifyTypes);
+        if (!identifyTypes.includes(type)) {
+          throw new AssertionError(
+            'Parameter identifyTypes contains unknown value. ' +
+              `List of possible values: ${identifyTypes.join(', ')}.`
+          );
+        }
+      } else {
+        throw new AssertionError('Identify type should be string.');
+      }
+    });
+  }
+};
+
+/**
+ * @param {IdentifyCallbackFunction|undefined} fce fce
+ */
+const identifyCallback = (fce) => {
+  if (munimap_utils.isDef(fce)) {
+    assertFunction(fce, 'Parameter identifyCallback should be function.');
+  }
+};
+
 export {
+  AssertionError,
   assert,
   assertArray,
   assertBoolean,
@@ -442,6 +477,8 @@ export {
   markers,
   assertMarkerFeatures,
   baseMap,
+  identifyTypes,
+  identifyCallback,
   locationCodes,
   labels,
   mapLinks,

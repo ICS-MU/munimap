@@ -98,4 +98,12 @@ const createLabel = (lang, showLabels) => {
   );
 };
 
-export {LAYER_ID, LABEL_LAYER_ID, create, createLabel, isLayer, isLabelLayer};
+export {
+  LAYER_ID,
+  LABEL_LAYER_ID,
+  create,
+  createLabel,
+  getLayer,
+  isLayer,
+  isLabelLayer,
+};

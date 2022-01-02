@@ -5,7 +5,9 @@ import * as munimap_assert from '../assert/assert.js';
 import VectorLayer from 'ol/layer/Vector';
 import {
   RESOLUTION as DOOR_RESOLUTION,
+  featureClickHandler,
   getType as getDoorType,
+  isClickable,
 } from '../feature/door.js';
 import {getActiveStore as getActiveDoorStore} from '../source/door.js';
 
@@ -49,6 +51,8 @@ const createActive = () => {
   const layer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: ACTIVE_LAYER_ID,
+      isFeatureClickable: isClickable,
+      featureClickHandler: featureClickHandler,
       type: getDoorType(),
       maxResolution: DOOR_RESOLUTION.max,
       source: getActiveDoorStore(),

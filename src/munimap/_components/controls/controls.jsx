@@ -1,5 +1,6 @@
 import * as slctr from '../../redux/selector.js';
 import GeolocationComponent from './geolocation.jsx';
+import IdentifyComponent from './identify.jsx';
 import MapLinks from './maplinks.jsx';
 import MapToolsComponent from './maptools.jsx';
 import React from 'react';
@@ -14,6 +15,7 @@ import {useSelector} from 'react-redux';
  */
 const ControlsComponent = (props) => {
   const mapLinks = useSelector(slctr.getRequiredMapLinks);
+  const identifyCallbackId = useSelector(slctr.getRequiredIdentifyCallbackId);
 
   if (ENABLE_RENDER_LOGS) {
     console.log('########## CONTROLS-render');
@@ -22,6 +24,7 @@ const ControlsComponent = (props) => {
   return (
     <>
       {mapLinks && <MapLinks />}
+      {identifyCallbackId && <IdentifyComponent />}
       <GeolocationComponent />
       <MapToolsComponent />
     </>

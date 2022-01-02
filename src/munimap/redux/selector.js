@@ -20,10 +20,12 @@ import {LAYER_ID as COMPLEX_LAYER_ID} from '../layer/complex.js';
 import {ENABLE_SELECTOR_LOGS} from '../conf.js';
 import {GeoJSON} from 'ol/format';
 import {
+  IDENTIFY_CALLBACK_STORE,
   MARKER_LABEL_STORE,
   REQUIRED_CUSTOM_MARKERS,
   TARGET_ELEMENTS_STORE,
 } from '../create.js';
+import {LAYER_ID as IDENTIFY_LAYER_ID} from '../layer/identify.js';
 import {LAYER_ID as MARKER_LAYER_ID} from '../layer/marker.js';
 import {MultiPolygon, Polygon} from 'ol/geom';
 import {
@@ -91,6 +93,7 @@ import {
   isCode as isRoomCode,
   isCodeOrLikeExpr as isRoomCodeOrLikeExpr,
 } from '../feature/room.js';
+import {styleFunction as identifyStyleFunction} from '../style/identify.js';
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
 import {labelFunction, styleFunction} from '../style/building.js';
 import {styleFunction as markerStyleFunction} from '../style/marker.js';
@@ -115,6 +118,7 @@ import {styleFunction as markerStyleFunction} from '../style/marker.js';
  * @typedef {import("../view/info.js").BuildingTitleOptions} BuildingTitleOptions
  * @typedef {import("../utils/range.js").RangeInterface} RangeInterface
  * @typedef {import("../feature/marker.js").LabelFunction} MarkerLabelFunction
+ * @typedef {import("../identify/identify.js").CallbackFunction} IdentifyCallbackFunction
  */
 
 /**
@@ -339,6 +343,28 @@ export const getErrorMessageState = (state) => state.errorMessage;
  * @return {PopupState} popup state
  */
 export const getPopup = (state) => state.popup;
+
+/**
+ * @type {Reselect.Selector<State, string>}
+ * @param {State} state state
+ * @return {string} id
+ */
+export const getRequiredIdentifyCallbackId = (state) =>
+  state.requiredOpts.identifyCallbackId;
+
+/**
+ * @type {Reselect.Selector<State, boolean>}
+ * @param {State} state state
+ * @return {boolean} whether is visible
+ */
+export const isIdentifyVisible = (state) => state.identify.visible;
+
+/**
+ * @type {Reselect.Selector<State, boolean>}
+ * @param {State} state state
+ * @return {boolean} whether is visible
+ */
+export const isIdentifyControlEnabled = (state) => state.identify.controlEnabled;
 
 /**
  * createSelector return type Reselect.OutputSelector<S, T, (res: R1) => T>
@@ -1630,8 +1656,38 @@ export const getFloorsByBuildingCode = createSelector(
 /**
  * @type {Reselect.OutputSelector<
  *    State,
+ *    StyleFunction,
+ *    function(string, MarkerLabelFunction, boolean, ol.Extent): StyleFunction
+ * >}
+ */
+export const getStyleForIdentifyLayer = createSelector(
+  [getLang, getMarkerLabel, getRequiredLocationCodes, getExtent],
+  (lang, markerLabel, locationCodes, extent) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('STYLE - computing style for identify');
+    }
+
+    const styleFce = (feature, res) => {
+      const opts = {
+        lang,
+        markerLabel,
+        locationCodes,
+        extent,
+      };
+      const style = identifyStyleFunction(feature, res, opts);
+      return style;
+    };
+
+    return styleFce;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
  *    AllStyleFunctionsResult,
  *    function(
+ *      StyleFunction,
  *      StyleFunction,
  *      StyleFunction,
  *      StyleFunction,
@@ -1654,6 +1710,7 @@ export const getAllStyleFunctions = createSelector(
     getStyleForRoomLabelLayer,
     getStyleForActiveRoomLayer,
     getStyleForActivePoiLayer,
+    getStyleForIdentifyLayer,
   ],
   (
     styleForBuildingLayer,
@@ -1664,7 +1721,8 @@ export const getAllStyleFunctions = createSelector(
     styleForRoomLayer,
     styleForRoomLabelLayer,
     styleForRoomActiveLayer,
-    styleForPoiActiveLayer
+    styleForPoiActiveLayer,
+    styleForIdentifyLayer
   ) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - get all style functions');
@@ -1679,6 +1737,7 @@ export const getAllStyleFunctions = createSelector(
       [ROOM_LABEL_LAYER_ID]: styleForRoomLabelLayer,
       [ROOM_ACTIVE_LAYER_ID]: styleForRoomActiveLayer,
       [POI_ACTIVE_LAYER_ID]: styleForPoiActiveLayer,
+      [IDENTIFY_LAYER_ID]: styleForIdentifyLayer,
     };
   }
 );
@@ -1705,5 +1764,36 @@ export const getFloorCodesWithMarkers = createSelector(
       return pk && inSelectedBuilding && pk.length >= 8 && pk.slice(0, 8);
     });
     return result.filter((item) => item);
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    boolean,
+ *    function(string): boolean
+ * >}
+ */
+export const isIdentifyEnabled = createSelector(
+  [getRequiredIdentifyCallbackId],
+  (identifyCallbackId) => {
+    return !!identifyCallbackId;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    IdentifyCallbackFunction,
+ *    function(string): IdentifyCallbackFunction
+ * >}
+ */
+export const getIdentifyCallback = createSelector(
+  [getRequiredIdentifyCallbackId],
+  (identifyCallbackId) => {
+    if (!identifyCallbackId) {
+      return null;
+    }
+    return IDENTIFY_CALLBACK_STORE[identifyCallbackId];
   }
 );

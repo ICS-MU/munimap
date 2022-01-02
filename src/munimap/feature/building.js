@@ -194,11 +194,13 @@ const isSelected = (building, selectedFeature) => {
  * @return {boolean} isClickable
  */
 const isClickable = (options) => {
-  const {feature, resolution, selectedFeature} = options;
+  const {feature, resolution, selectedFeature, isIdentifyEnabled} = options;
 
   if (munimap_range.contains(munimap_floor.RESOLUTION, resolution)) {
-    return !isSelected(feature, selectedFeature) && hasInnerGeometry(feature);
-  } else if (hasInnerGeometry(feature)) {
+    return isIdentifyEnabled
+      ? !isSelected(feature, selectedFeature)
+      : !isSelected(feature, selectedFeature) && hasInnerGeometry(feature);
+  } else if (hasInnerGeometry(feature) || isIdentifyEnabled) {
     const markers = getMarkerStore().getFeatures();
     return (
       markers.indexOf(feature) >= 0 ||

@@ -3,6 +3,7 @@
  */
 import * as actions from './action.js';
 import * as munimap_assert from '../assert/assert.js';
+import * as munimap_identify from '../identify/identify.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
 import * as ol_extent from 'ol/extent';
@@ -32,6 +33,7 @@ import {
   ofFeatures as extentOfFeatures,
 } from '../utils/extent.js';
 import {featuresFromParam, loadFloors} from '../load.js';
+import {getActiveStore as getActiveDoorStore} from '../source/door.js';
 import {getActiveStore as getActivePoiStore} from '../source/poi.js';
 import {getActiveStore as getActiveRoomStore} from '../source/room.js';
 import {getAnimationDuration} from '../utils/animation.js';
@@ -41,6 +43,7 @@ import {getStore as getBuildingStore} from '../source/building.js';
 import {getClosestPointToPixel} from '../feature/feature.js';
 import {getStore as getClusterStore} from '../source/cluster.js';
 import {getStore as getComplexStore} from '../source/complex.js';
+import {getStore as getIdentifyStore} from '../source/identify.js';
 import {getMainFeatures, getMinorFeatures} from '../cluster/cluster.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {getStore as getPubTranStore} from '../source/pubtran.stop.js';
@@ -101,6 +104,7 @@ const createReducer = (initialState) => {
     let resolutionRange;
     let isVisible;
     let pixelInCoords;
+    let isIdentifyAllowed;
 
     switch (action.type) {
       // MARKERS_LOADED
@@ -306,9 +310,18 @@ const createReducer = (initialState) => {
           loadFloors(where).then((floors) =>
             action.asyncDispatch(actions.floors_loaded(false))
           );
-          // if (jpad.func.isDef(identifyCallback)) {
-          //   munimap.identify.refreshVisibility(map, newLocCode);
-          // }
+
+          if (slctr.isIdentifyEnabled(state)) {
+            const features = getIdentifyStore().getFeatures();
+            if (features && features.length > 0) {
+              const pointFeature = features[0];
+              const code = munimap_identify.getLocationCode(pointFeature);
+              if (code && code.length > 5) {
+                newState.identify.visible =
+                  code.substring(5, 8) === newValue.substring(5, 8);
+              }
+            }
+          }
         }
         return newState;
 
@@ -431,8 +444,11 @@ const createReducer = (initialState) => {
         const extent = slctr.getExtent(state);
         feature = getBuildingStore().getFeatureByUid(featureUid);
         isVisible = munimap_range.contains(FLOOR_RESOLUTION, state.resolution);
+        isIdentifyAllowed =
+          slctr.isIdentifyEnabled(state) &&
+          munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
 
-        if (!isVisible /*&& !munimap_utils.isDef(identifyCallback)*/) {
+        if (!isVisible && !isIdentifyAllowed) {
           const point = getClosestPointToPixel(feature, pixelInCoords, extent);
           animationRequest = getAnimationRequestParams(point, {
             resolution: FLOOR_RESOLUTION.max,
@@ -449,6 +465,19 @@ const createReducer = (initialState) => {
               },
             ],
           };
+        } else if (isIdentifyAllowed) {
+          munimap_identify.handleCallback(slctr.getIdentifyCallback(state), {
+            feature,
+            pixelInCoords,
+          });
+          return {
+            ...state,
+            identify: {
+              ...state.identify,
+              controlEnabled: isIdentifyAllowed || false,
+              visible: isIdentifyAllowed || false,
+            },
+          };
         } else {
           result = feature.get('vychoziPodlazi') || feature.get('polohKod');
           if (result) {
@@ -456,9 +485,6 @@ const createReducer = (initialState) => {
             loadFloors(where).then((floors) =>
               action.asyncDispatch(actions.floors_loaded(false))
             );
-            // if (jpad.func.isDef(identifyCallback)) {
-            //   munimap.identify.refreshVisibility(map, newLocCode);
-            // }
           }
           return {
             ...state,
@@ -604,10 +630,12 @@ const createReducer = (initialState) => {
         feature = getMarkerStore().getFeatureByUid(featureUid);
         resolutionRange = isDoor(feature) ? DOOR_RESOLUTION : FLOOR_RESOLUTION;
         isVisible = munimap_range.contains(resolutionRange, state.resolution);
-        // var identifyCallback = munimap.getProps(map).options.identifyCallback;
+        isIdentifyAllowed =
+          slctr.isIdentifyEnabled(state) &&
+          munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
 
         animationRequest = null;
-        if (!isVisible /*&& !jpad.func.isDef(identifyCallback)*/) {
+        if (!isVisible && !isIdentifyAllowed) {
           let point;
           if (isRoom(feature) || isDoor(feature) || isCustomMarker(feature)) {
             point = ol_extent.getCenter(extentOfFeature(feature));
@@ -653,9 +681,15 @@ const createReducer = (initialState) => {
                 actions.floors_loaded(activeFloorCodes.includes(locationCode))
               )
             );
-            // if (jpad.func.isDef(identifyCallback)) {
-            //   munimap.identify.refreshVisibility(map, newLocCode);
-            // }
+            if (isIdentifyAllowed) {
+              munimap_identify.handleCallback(
+                slctr.getIdentifyCallback(state),
+                {
+                  feature,
+                  pixelInCoords,
+                }
+              );
+            }
           }
         }
 
@@ -681,6 +715,11 @@ const createReducer = (initialState) => {
           popup: {
             ...initialState.popup,
             ...popupOpts,
+          },
+          identify: {
+            ...state.identify,
+            controlEnabled: isIdentifyAllowed || false,
+            visible: isIdentifyAllowed || false,
           },
         };
 
@@ -759,9 +798,14 @@ const createReducer = (initialState) => {
       //ROOM_CLICKED
       case actions.ROOM_CLICKED:
         featureUid = action.payload.featureUid;
+        pixelInCoords = action.payload.pixelInCoords;
         feature = getActiveRoomStore().getFeatureByUid(featureUid);
         locationCode = feature.get('polohKod');
         result = locationCode ? locationCode.substr(0, 8) : null;
+        isIdentifyAllowed =
+          slctr.isIdentifyEnabled(state) &&
+          munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
+
         if (result) {
           if (
             state.selectedFeature &&
@@ -773,9 +817,13 @@ const createReducer = (initialState) => {
           loadFloors(where).then((floors) =>
             action.asyncDispatch(actions.floors_loaded(true))
           );
-          // if (jpad.func.isDef(identifyCallback)) {
-          //   munimap.identify.refreshVisibility(map, newLocCode);
-          // }
+
+          if (isIdentifyAllowed) {
+            munimap_identify.handleCallback(slctr.getIdentifyCallback(state), {
+              feature,
+              pixelInCoords,
+            });
+          }
         }
         return {
           ...state,
@@ -783,6 +831,35 @@ const createReducer = (initialState) => {
           popup: {
             ...state.popup,
             ...popupOpts,
+          },
+          identify: {
+            ...state.identify,
+            controlEnabled: isIdentifyAllowed || false,
+            visible: isIdentifyAllowed || false,
+          },
+        };
+
+      // DOOR_CLICKED
+      case actions.DOOR_CLICKED:
+        featureUid = action.payload.featureUid;
+        pixelInCoords = action.payload.pixelInCoords;
+        feature = getActiveDoorStore().getFeatureByUid(featureUid);
+        isIdentifyAllowed =
+          slctr.isIdentifyEnabled(state) &&
+          munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
+
+        if (isIdentifyAllowed) {
+          munimap_identify.handleCallback(slctr.getIdentifyCallback(state), {
+            feature,
+            pixelInCoords,
+          });
+        }
+        return {
+          ...state,
+          identify: {
+            ...state.identify,
+            controlEnabled: isIdentifyAllowed || false,
+            visible: isIdentifyAllowed || false,
           },
         };
 
@@ -792,6 +869,21 @@ const createReducer = (initialState) => {
           ...state,
           popup: {
             ...state.popup,
+            visible: false,
+          },
+        };
+
+      //IDENTIFY_RESET
+      case actions.IDENTIFY_RESETED:
+        munimap_identify.handleCallback(
+          slctr.getIdentifyCallback(state),
+          undefined
+        );
+        return {
+          ...state,
+          identify: {
+            ...state.identify,
+            controlEnabled: false,
             visible: false,
           },
         };

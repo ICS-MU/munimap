@@ -9,6 +9,8 @@ import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
  * @property {boolean} [mapLinks] maplinks
  * @property {boolean} [pubTran] pubtran
  * @property {string} [baseMap] basemap
+ * @property {Array<string>} [identifyTypes] identify types
+ * @property {Function} [identifyCallback] identify callback
  */
 
 /**
@@ -75,21 +77,18 @@ export const sendEventForCustomMarker = (markers) => {
  */
 export const sendEventForOptions = (options) => {
   if (String(options.mapLinks) !== 'undefined') {
-    console.log('send_maplinks');
     sendEvent('mapLinks', String(options.mapLinks));
   }
   if (String(options.pubTran) !== 'undefined') {
     sendEvent('pubTran', String(options.pubTran));
   }
   if (String(options.baseMap) !== 'undefined') {
-    console.log('send_basemap');
     sendEvent('baseMap', String(options.baseMap));
   }
-
-  // if (String(options.identifyTypes) !== 'undefined') {
-  //   sendEvent('identifyTypes', 'true');
-  // }
-  // if (String(options.identifyCallback) !== 'undefined') {
-  //   sendEvent('identifyCallback', 'true');
-  // }
+  if (String(options.identifyTypes) !== 'undefined') {
+    sendEvent('identifyTypes', 'true');
+  }
+  if (String(options.identifyCallback) !== 'undefined') {
+    sendEvent('identifyCallback', 'true');
+  }
 };
