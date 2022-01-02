@@ -80,10 +80,20 @@ const STYLE = new Style({
  * @type {Style}
  * @const
  */
-const NO_GEOMETRY = new Style({
-  fill: munimap_style.NO_GEOMETRY_FILL,
-  stroke: STROKE,
-});
+let NO_GEOMETRY;
+
+/**
+ * @return {Style} style
+ */
+const getNoGeometryStyle = () => {
+  if (!NO_GEOMETRY) {
+    NO_GEOMETRY = new Style({
+      fill: munimap_style.NO_GEOMETRY_FILL,
+      stroke: STROKE,
+    });
+  }
+  return NO_GEOMETRY;
+};
 
 /**
  * @type {number}
@@ -126,7 +136,7 @@ const styleFunction = (feature, resolution, showSelected) => {
           munimap_markerStyle.WHITE_TO_GREY_CACHE[resColor.resolution] = result;
         }
       } else {
-        result = munimap_markerStyle.NO_GEOMETRY_BUILDING;
+        result = getNoGeometryStyle();
       }
     } else {
       result = STYLE;
@@ -145,7 +155,7 @@ const styleFunction = (feature, resolution, showSelected) => {
         WHITE_TO_GREY_CACHE[resColor.resolution] = result;
       }
     } else {
-      result = NO_GEOMETRY;
+      result = getNoGeometryStyle();
     }
   }
 
@@ -346,4 +356,4 @@ const labelFunction = (labelOptions, feature, resolution) => {
   return result;
 };
 
-export {FONT_SIZE, BIG_FONT_SIZE, styleFunction, labelFunction};
+export {BIG_FONT_SIZE, FONT_SIZE, labelFunction, styleFunction};

@@ -112,15 +112,6 @@ const BUILDING = new Style({
 });
 
 /**
- * @type {Style}
- * @const
- */
-const NO_GEOMETRY_BUILDING = new Style({
-  fill: munimap_style.NO_GEOMETRY_FILL,
-  stroke: BUILDING_STROKE,
-});
-
-/**
  * @type {Fill}
  * @const
  */
@@ -407,15 +398,14 @@ export const styleFunction = (feature, resolution, options) => {
 };
 
 export {
-  FILL,
   BUILDING,
-  DOOR,
-  getCorridor,
-  getRoom,
-  WHITE_TO_GREY_CACHE,
-  NO_GEOMETRY_BUILDING,
   BUILDING_STROKE,
+  FILL,
+  DOOR,
   TEXT_FILL,
-  getPattern,
+  WHITE_TO_GREY_CACHE,
   createPinFromGeometry,
+  getCorridor,
+  getPattern,
+  getRoom,
 };
