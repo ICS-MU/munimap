@@ -269,15 +269,7 @@ const handlePointerMove = (evt, options) => {
         identifyTypes,
         isIdentifyEnabled,
       };
-      if (isClickable(handlerOpts)) {
-        //const popupEl = munimap.bubble.OVERLAY.getElement();
-        const popupEl = undefined;
-        !munimap_utils.isDef(popupEl) || popupEl !== elAtPixel
-          ? (targetEl.style.cursor = 'pointer')
-          : (targetEl.style.cursor = '');
-      } else {
-        targetEl.style.cursor = '';
-      }
+      targetEl.style.cursor = isClickable(handlerOpts) ? 'pointer' : '';
     } else {
       targetEl.style.cursor = '';
     }

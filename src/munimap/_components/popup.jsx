@@ -126,8 +126,8 @@ const PopupComponent = (props) => {
       <div className="munimap-close-button" onClick={closePopup}></div>
       <div className="munimap-content">
         {content &&
-          content.map(({name, open, url, pubTran}, idx) => {
-            const title = pubTran ? pubTran : name && wrapText(name);
+          content.map(({title, text, textUrl, titleUrl, pubTran}, idx) => {
+            const _title = pubTran ? pubTran : title && wrapText(title);
             let textComp;
             if (pubTran) {
               const fromQuery = new URLSearchParams(`?t=${pubTran}`);
@@ -162,22 +162,29 @@ const PopupComponent = (props) => {
                 </div>
               );
             } else {
-              textComp = open && open.length > 0 && (
+              const _text = text.replace(/(?:\s)?,(?:\s)?/g, '\n');
+              textComp = text && text.length > 0 && (
                 <div className="munimap-bubble-text">
-                  {open.replace(/(?:\s)?,(?:\s)?/g, '\n')}
+                  {textUrl ? (
+                    <a href={textUrl} rel="noreferrer" target="_blank">
+                      {_text}
+                    </a>
+                  ) : (
+                    _text
+                  )}
                 </div>
               );
             }
-            const titleComp = title && title.length > 0 && (
+            const titleComp = _title && _title.length > 0 && (
               <div
                 className={pubTran ? 'munimap-title' : 'munimap-bubble-title'}
               >
-                {url ? (
-                  <a href={url} rel="noreferrer" target="_blank">
-                    {title}
+                {titleUrl ? (
+                  <a href={titleUrl} rel="noreferrer" target="_blank">
+                    {_title}
                   </a>
                 ) : (
-                  title
+                  _title
                 )}
               </div>
             );

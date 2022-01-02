@@ -12,6 +12,7 @@ import {wrapText} from '../style/style.js';
 
 /**
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
+ * @typedef {import("../conf.js").PopupContentOptions} PopupContentOptions
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
@@ -233,7 +234,7 @@ const addPoiDetail = (rooms, pois, lang) => {
     let pracoviste;
     let nazev_cs;
     let nazev_en;
-    const popupDetails = [];
+    const popupDetails = /** @type {Array<PopupContentOptions>}*/ ([]);
     filteredPois.forEach((poi) => {
       const url = poi.get('url');
       let name;
@@ -251,7 +252,7 @@ const addPoiDetail = (rooms, pois, lang) => {
       }
 
       if (munimap_utils.isDefAndNotNull(name)) {
-        popupDetails.push({name, open, url});
+        popupDetails.push({title: name, text: open, titleUrl: url});
       }
     });
 
@@ -260,7 +261,7 @@ const addPoiDetail = (rooms, pois, lang) => {
         'title': wrapText(room.get('title')),
         'popupDetails': munimap_utils.removeObjectDuplicatesFromArray(
           popupDetails,
-          'name'
+          'title'
         ),
         'pracoviste': pracoviste,
         'nazev_cs': nazev_cs,
