@@ -9,6 +9,7 @@ import MapContext from '../_contexts/mapcontext.jsx';
 import Popup from './popup.jsx';
 import PropTypes from 'prop-types';
 import React, {useEffect, useLayoutEffect, useRef} from 'react';
+import Tooltip from './tooltip.jsx';
 import {CREATED_MAPS} from '../create.js';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
@@ -50,6 +51,7 @@ const MunimapComponent = (props) => {
   const allStyleFunctions = useSelector(slctr.getAllStyleFunctions);
   const identifyVisibled = useSelector(slctr.isIdentifyVisible);
   const isIdentifyEnabled = useSelector(slctr.isIdentifyEnabled);
+  const isTooltipShown = useSelector(slctr.isTooltipShown);
 
   const hasInvalidCodes = invalidCodes && invalidCodes.length > 0;
   const shouldBlockMap = !simpleScroll;
@@ -69,9 +71,10 @@ const MunimapComponent = (props) => {
       requiredOpts,
       selectedFeature,
       isIdentifyEnabled,
+      isTooltipShown,
     });
     return () => eventKeys.forEach((k) => unlistenByKey(k));
-  }, [map, requiredOpts, selectedFeature, isIdentifyEnabled]);
+  }, [map, requiredOpts, selectedFeature, isIdentifyEnabled, isTooltipShown]);
 
   useEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
@@ -206,6 +209,7 @@ const MunimapComponent = (props) => {
           ref={munimapElRef}
         >
           <div ref={munimapTargetElRef} className="map-target">
+            <Tooltip />
             <InfoBubble />
             <Popup />
             {map && <Controls />}

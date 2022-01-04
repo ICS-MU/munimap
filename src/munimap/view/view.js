@@ -3,7 +3,6 @@
  */
 import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
-import * as munimap_utils from '../utils/utils.js';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import {CLICK_HANDLER, IS_CLICKABLE} from '../layer/layer.js';
@@ -45,6 +44,7 @@ import {createStore as createUnitStore} from '../source/unit.js';
 import {getDefaultLayers} from '../layer/layer.js';
 import {getMainFeatureAtPixel} from '../feature/feature.js';
 import {getUid} from 'ol';
+import {inTooltipResolutionRange, isSuitableForTooltip} from './tooltip.js';
 import {refreshActiveStyle as refreshActiveDoorStyle} from './door.js';
 import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
 import {updateClusteredFeatures} from './cluster.js';
@@ -58,13 +58,13 @@ import {updateClusteredFeatures} from './cluster.js';
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import('../conf.js').RequiredOptions} RequiredOptions
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
+ * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
  * @typedef {import("../feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("redux").Store} redux.Store
  * @typedef {import("redux").Dispatch} redux.Dispatch
  * @typedef {import("../conf.js").State} State
  * @typedef {import("../conf.js").ErrorMessageState} ErrorMessageState
  * @typedef {import("../conf.js").AnimationRequestState} AnimationRequestState
- * @typedef {import("../create").MapListenersOptions} MapListenersOptions
  * @typedef {import("../utils/range.js").RangeInterface} RangeInterface
  * @typedef {import("ol").MapBrowserEvent} MapBrowserEvent
  * @typedef {import("../feature/feature.js").isClickableFunction} isClickableFunction
@@ -74,6 +74,14 @@ import {updateClusteredFeatures} from './cluster.js';
  * @typedef {import("../redux/selector.js").AllStyleFunctionsResult} AllStyleFunctionsResult
  * @typedef {import("ol/events.js").EventsKey} EventsKey
  * @typedef {import("ol/view.js").AnimationOptions} AnimationOptions
+ */
+
+/**
+ * @typedef {Object} MapListenersOptions
+ * @property {string} selectedFeature selected feature
+ * @property {RequiredOptions} requiredOpts options
+ * @property {boolean} isIdentifyEnabled isIdentifyEnabled
+ * @property {boolean} isTooltipShown isTooltipShown
  */
 
 /**
@@ -101,6 +109,20 @@ import {updateClusteredFeatures} from './cluster.js';
  * @property {redux.Store} store store
  * @property {ErrorMessageState} errorMessage error message state
  */
+
+/**
+ * @typedef {Object} PointerMoveTimeoutOptions
+ * @property {string} title title
+ * @property {string} featureUid featureUid
+ * @property {ol.coordinate.Coordinate} pixelInCoords pixelInCoords
+ * @property {string} purposeTitle purposeTitle
+ * @property {string} purposeGis purposeGis
+ */
+
+/**
+ * @type {Object<string, number>}
+ */
+const TIMEOUT_STORE = {};
 
 /**
  * Ensure basemap and change it if necessary.
@@ -209,17 +231,24 @@ const handleMapClick = (evt, dispatch, options) => {
 
 /**
  * @param {MapBrowserEvent} evt event
+ * @param {redux.Dispatch} dispatch dispatch
  * @param {MapListenersOptions} options options
  */
-const handlePointerMove = (evt, options) => {
+const handlePointerMove = (evt, dispatch, options) => {
   if (evt.dragging) {
     return;
   }
 
-  const {selectedFeature, isIdentifyEnabled} = options;
-  const {targetId, getMainFeatureAtPixelId, clusterFacultyAbbr, identifyTypes} =
-    options.requiredOpts;
+  const {selectedFeature, isIdentifyEnabled, isTooltipShown} = options;
+  const {
+    targetId,
+    getMainFeatureAtPixelId,
+    clusterFacultyAbbr,
+    identifyTypes,
+    tooltips: tooltipsEnabled,
+  } = options.requiredOpts;
   const map = evt.map;
+  const resolution = map.getView().getResolution(); //from map or state?
   const targetEl = TARGET_ELEMENTS_STORE[targetId];
   const pixel = map.getEventPixel(evt.originalEvent);
   const getMainFeatureAtPixelFn = getMainFeatureAtPixelId
@@ -227,34 +256,8 @@ const handlePointerMove = (evt, options) => {
     : getMainFeatureAtPixel;
 
   const featureWithLayer = getMainFeatureAtPixelFn(map, pixel);
-  const elAtPixel = evt.originalEvent.target;
   if (featureWithLayer) {
     const feature = featureWithLayer.feature;
-    // let title = /**@type {string|undefined}*/ (feature.get('typ'));
-    // const purposeTitle = /**@type {string|undefined}*/ (
-    //   feature.get('ucel_nazev')
-    // );
-    // const purposeGis = /**@type {string|undefined}*/ (
-    //   feature.get('ucel_gis')
-    // );
-    // if (tooltipsShown
-    //   && munimap.tooltips.inTooltipResolutionRange(map, title)) {
-    //   if (!!title && Object.values(munimap.poi.Purpose).includes(title)) {
-    //     timing = munimap.tooltips.toggleTooltip(map, pixel, title);
-    //   } else if (Object.values(munimap.tooltips.RoomTypes).includes(
-    //     purposeTitle)) {
-    //     title = purposeTitle;
-    //     timing = munimap.tooltips.toggleTooltipPolygon(
-    //       map, feature, pixel, title);
-    //   } else if (!!purposeGis &&
-    //     munimap.tooltips.RoomPoiTypes.includes(purposeGis)) {
-    //     title = purposeGis;
-    //     timing = munimap.tooltips.toggleTooltipPolygon(
-    //       map, feature, pixel, title);
-    //   } else {
-    //     munimap.tooltips.setTooltipShown(map, false);
-    //   }
-    // }
     const layer = featureWithLayer.layer;
     const isClickable = /** @type {isClickableFunction}*/ (
       layer.get('isFeatureClickable')
@@ -273,11 +276,40 @@ const handlePointerMove = (evt, options) => {
     } else {
       targetEl.style.cursor = '';
     }
+
+    if (
+      tooltipsEnabled &&
+      inTooltipResolutionRange(feature, resolution, selectedFeature)
+    ) {
+      if (TIMEOUT_STORE[targetId]) {
+        clearTimeout(TIMEOUT_STORE[targetId]);
+        delete TIMEOUT_STORE[targetId];
+        if (isTooltipShown) {
+          dispatch(actions.tooltipCancelled());
+        }
+      }
+
+      if (isSuitableForTooltip(feature)) {
+        const opts = {
+          title: feature.get('typ'),
+          featureUid: getUid(feature),
+          pixelInCoords: map.getCoordinateFromPixel(pixel),
+          purposeTitle: feature.get('ucel_nazev'),
+          purposeGis: feature.get('ucel_gis'),
+        };
+        TIMEOUT_STORE[targetId] = setTimeout(
+          () => dispatch(actions.pointerMoveTimeoutExpired(opts)),
+          750
+        );
+      } else if (isTooltipShown) {
+        dispatch(actions.tooltipCancelled());
+      }
+    }
   } else {
     targetEl.style.cursor = '';
-    // if (options.tooltips) {
-    //   munimap.tooltips.setTooltipShown(map, false);
-    // }
+    if (isTooltipShown) {
+      dispatch(actions.tooltipCancelled());
+    }
   }
 };
 
@@ -317,7 +349,9 @@ const attachDependentMapListeners = (map, dispatch, options) => {
     return [];
   }
   const k1 = map.on('click', (evt) => handleMapClick(evt, dispatch, options));
-  const k2 = map.on('pointermove', (evt) => handlePointerMove(evt, options));
+  const k2 = map.on('pointermove', (evt) =>
+    handlePointerMove(evt, dispatch, options)
+  );
   return [k1, k2];
 };
 

@@ -22,18 +22,9 @@ import {v4 as uuidv4} from 'uuid';
 
 /**
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
- * @typedef {import("ol/layer").Vector} ol.layer.Vector
- * @typedef {import("ol/layer/Base").default} ol.layer.BaseLayer
- * @typedef {import("ol").View} ol.View
  * @typedef {import("ol").Map} ol.Map
- * @typedef {import("ol/size").Size} ol.size.Size
- * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("./conf.js").State} State
- * @typedef {import("./conf.js").MapProps} MapProps
- * @typedef {import("./conf.js").RequiredOptions} RequiredOptions
- * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  * @typedef {import("redux").Store} redux.Store
- * @typedef {import("redux").Dispatch} redux.Dispatch
  * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("./feature/feature.js").getMainFeatureAtPixelFunction} getMainFeatureAtPixelFunction
  * @typedef {import("./identify/identify.js").CallbackFunction} IdentifyCallbackFunction
@@ -61,6 +52,7 @@ import {v4 as uuidv4} from 'uuid';
  * @property {getMainFeatureAtPixelFunction} [getMainFeatureAtPixel] getMainFeatureAtPixel function
  * @property {Array<string>} [identifyTypes] identifyTypes
  * @property {IdentifyCallbackFunction} [identifyCallback] identifyCallback function
+ * @property {boolean} [tooltips] tooltips
  */
 
 /**
@@ -69,22 +61,6 @@ import {v4 as uuidv4} from 'uuid';
  * @property {Array<string>} [markerFilter] marker filter
  * @property {string} [lang] language
  * @property {string} targetId target
- */
-
-/**
- * @typedef {Object} InitExtentOptions
- * @property {ol.extent.Extent|undefined} extent extent
- * @property {ol.size.Size} size size
- * @property {ol.coordinate.Coordinate|undefined} center center
- * @property {number|undefined} zoom zoom
- * @property {number|undefined} resolution resolution
- */
-
-/**
- * @typedef {Object} MapListenersOptions
- * @property {string} selectedFeature selected feature
- * @property {RequiredOptions} requiredOpts options
- * @property {boolean} isIdentifyEnabled isIdentifyEnabled
  */
 
 /**
@@ -327,6 +303,9 @@ const getInitialState = (options, targetId) => {
     const id = `IDENTIFY_CALLBACK_${targetId}`;
     IDENTIFY_CALLBACK_STORE[id] = options.identifyCallback;
     initialState.requiredOpts.identifyCallbackId = id;
+  }
+  if (options.tooltips !== undefined) {
+    initialState.requiredOpts.tooltips = options.tooltips;
   }
 
   return initialState;

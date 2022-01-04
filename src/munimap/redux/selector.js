@@ -104,10 +104,10 @@ import {styleFunction as markerStyleFunction} from '../style/marker.js';
  * @typedef {import("../conf.js").AnimationRequestState} AnimationRequestState
  * @typedef {import("../conf.js").ErrorMessageState} ErrorMessageState
  * @typedef {import("../conf.js").PopupState} PopupState
+ * @typedef {import("../conf.js").TooltipState} TooltipState
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/size").Size} ol.Size
  * @typedef {import("ol/extent").Extent} ol.Extent
- * @typedef {import("../create.js").InitExtentOptions} InitExtentOptions
  * @typedef {import("../feature/floor.js").Options} FloorOptions
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
  * @typedef {import("ol/control/Control").default} ol.control.Control
@@ -123,6 +123,15 @@ import {styleFunction as markerStyleFunction} from '../style/marker.js';
 
 /**
  * @typedef {Object<string, StyleFunction>} AllStyleFunctionsResult
+ */
+
+/**
+ * @typedef {Object} InitExtentOptions
+ * @property {ol.Extent|undefined} extent extent
+ * @property {ol.Size} size size
+ * @property {ol.Coordinate|undefined} center center
+ * @property {number|undefined} zoom zoom
+ * @property {number|undefined} resolution resolution
  */
 
 /**
@@ -345,6 +354,13 @@ export const getErrorMessageState = (state) => state.errorMessage;
 export const getPopup = (state) => state.popup;
 
 /**
+ * @type {Reselect.Selector<State, TooltipState>}
+ * @param {State} state state
+ * @return {TooltipState} tooltip state
+ */
+export const getTooltip = (state) => state.tooltip;
+
+/**
  * @type {Reselect.Selector<State, string>}
  * @param {State} state state
  * @return {string} id
@@ -364,7 +380,8 @@ export const isIdentifyVisible = (state) => state.identify.visible;
  * @param {State} state state
  * @return {boolean} whether is visible
  */
-export const isIdentifyControlEnabled = (state) => state.identify.controlEnabled;
+export const isIdentifyControlEnabled = (state) =>
+  state.identify.controlEnabled;
 
 /**
  * createSelector return type Reselect.OutputSelector<S, T, (res: R1) => T>
@@ -1796,4 +1813,16 @@ export const getIdentifyCallback = createSelector(
     }
     return IDENTIFY_CALLBACK_STORE[identifyCallbackId];
   }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    boolean,
+ *    function(TooltipState): boolean
+ * >}
+ */
+export const isTooltipShown = createSelector(
+  [getTooltip],
+  (tooltip) => !!tooltip.positionInCoords
 );

@@ -10,6 +10,7 @@ import {
 
 /**
  * @typedef {import("../create.js").Options} CreateOptions
+ * @typedef {import("../view/view.js").PointerMoveTimeoutOptions} PointerMoveTimeoutOptions
  * @typedef {import("../feature/floor.js").Options} FloorOptions
  * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  * @typedef {import("ol/Feature").default} ol.Feature
@@ -203,6 +204,18 @@ export const POPUP_CLOSED = 'POPUP_CLOSED';
  * @const
  */
 export const IDENTIFY_RESETED = 'IDENTIFY_RESETED';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const POINTERMOVE_TIMEOUT_EXPIRED = 'POINTERMOVE_TIMEOUT_EXPIRED';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const TOOLTIP_CANCELLED = 'TOOLTIP_CANCELLED';
 
 /**
  * @param {Array<ol.Feature|string>} markers markers
@@ -511,5 +524,27 @@ export function identifyReseted() {
   sendEvent('identify-reset', 'click');
   return {
     type: IDENTIFY_RESETED,
+  };
+}
+
+/**
+ * @param {PointerMoveTimeoutOptions} object object
+ * @return {PayloadAsyncAction} action
+ */
+export function pointerMoveTimeoutExpired(object) {
+  return {
+    type: POINTERMOVE_TIMEOUT_EXPIRED,
+    payload: object,
+  };
+}
+
+/**
+ * @param {PointerMoveTimeoutOptions} [object] object
+ * @return {PayloadAsyncAction} action
+ */
+export function tooltipCancelled(object) {
+  return {
+    type: TOOLTIP_CANCELLED,
+    payload: object,
   };
 }

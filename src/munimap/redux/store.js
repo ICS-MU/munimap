@@ -25,6 +25,9 @@ import {RESOLUTION as PUBTRAN_RESOLUTION} from '../feature/pubtran.stop.js';
 import {ROOM_TYPES, isRoom} from '../feature/room.js';
 import {asyncDispatchMiddleware} from './middleware.js';
 import {
+  calculateParameters as calculateTooltipParameters
+} from '../view/tooltip.js';
+import {
   clearFloorBasedStores,
   refreshFloorBasedStores,
 } from '../source/source.js';
@@ -105,6 +108,7 @@ const createReducer = (initialState) => {
     let isVisible;
     let pixelInCoords;
     let isIdentifyAllowed;
+    let title;
 
     switch (action.type) {
       // MARKERS_LOADED
@@ -770,7 +774,7 @@ const createReducer = (initialState) => {
           extent: slctr.getExtent(state),
         });
 
-        const title = /**@type {string}*/ (feature.get('nazev'));
+        title = /**@type {string}*/ (feature.get('nazev'));
         if (title) {
           const geometry = feature.getGeometry();
           popupOpts.positionInCoords = ol_extent.getCenter(
@@ -885,6 +889,32 @@ const createReducer = (initialState) => {
             ...state.identify,
             controlEnabled: false,
             visible: false,
+          },
+        };
+
+      //POINTERMOVE_TIMEOUT_EXPIRED
+      case actions.POINTERMOVE_TIMEOUT_EXPIRED:
+        const params = calculateTooltipParameters({
+          ...action.payload,
+          resolution: slctr.getResolution(state),
+          lang: slctr.getLang(state),
+          locationCodes: state.requiredOpts.locationCodes,
+        });
+
+        return {
+          ...state,
+          tooltip: {
+            ...state.tooltip,
+            ...params,
+          },
+        };
+
+      //TOOLTIP_CANCELLED
+      case actions.TOOLTIP_CANCELLED:
+        return {
+          ...state,
+          tooltip: {
+            ...initialState.tooltip,
           },
         };
 

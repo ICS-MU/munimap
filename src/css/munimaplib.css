@@ -495,11 +495,12 @@
 .munimap-tooltip {
   font-size: 12px;
   color: blue;
-  display: absolute;
+  position: absolute;
   line-height: 14px;
   background-color: white;
   padding: 4px;
   border: 1px solid blue;
+  z-index: 2;
 }
 
 .ol-touch .munimap-identify {

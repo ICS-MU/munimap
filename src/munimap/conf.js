@@ -95,6 +95,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {string} [getMainFeatureAtPixelId] getMainFeatureAtPixel id
  * @property {Array<string>} [identifyTypes] identifyTypes
  * @property {string} [identifyCallbackId] identifyCallbackId id
+ * @property {boolean} [tooltips] whether to show poi tooltips
  */
 
 /**
@@ -126,6 +127,12 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @typedef {Object} IdentifyState
  * @property {boolean} controlEnabled resetEnabled
  * @property {boolean} visible visible
+ */
+
+/**
+ * @typedef {Object} TooltipState
+ * @property {string} title title
+ * @property {ol.coordinate.Coordinate} positionInCoords positionInCoords
  */
 
 /**
@@ -161,6 +168,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {AnimationRequestState} animationRequest requested view
  * @property {PopupState} popup popup
  * @property {IdentifyState} identify identify
+ * @property {TooltipState} tooltip tooltip
  */
 
 /**
@@ -198,6 +206,7 @@ export const INITIAL_STATE = {
     getMainFeatureAtPixelId: null,
     identifyTypes: Object.values(IdentifyTypes),
     identifyCallbackId: null,
+    tooltips: true,
   },
   markersTimestamp: null,
   zoomToTimestamp: null,
@@ -233,5 +242,9 @@ export const INITIAL_STATE = {
   identify: {
     controlEnabled: false,
     visible: false,
+  },
+  tooltip: {
+    title: null,
+    positionInCoords: null,
   },
 };
