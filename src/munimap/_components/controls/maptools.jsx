@@ -2,7 +2,7 @@ import * as actions from '../../redux/action.js';
 import * as munimap_lang from '../../lang/lang.js';
 import * as slctr from '../../redux/selector.js';
 import MapContext from '../../_contexts/mapcontext.jsx';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import ToolbarComponent from './toolbar.jsx';
 import {Control} from 'ol/control';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
@@ -37,6 +37,7 @@ const MAP_LINKS_SIZE = 'ontouchstart' in window ? 83 : 70;
  */
 const MapToolsComponent = (props) => {
   const lang = useSelector(slctr.getLang);
+  const size = useSelector(slctr.getSize);
   const {mapLinks} = useSelector(slctr.getRequiredOpts);
 
   const mapRef = useContext(MapContext);
@@ -55,7 +56,7 @@ const MapToolsComponent = (props) => {
     if (mapLinks) {
       totalSize += MAP_LINKS_SIZE;
     }
-    const remainingSpace = map.getSize()[1] - totalSize - ZOOM_IN_OUT_SIZE;
+    const remainingSpace = size[1] - totalSize - ZOOM_IN_OUT_SIZE;
     collapsed = remainingSpace < 0;
   }
 
