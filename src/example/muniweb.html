@@ -184,8 +184,11 @@
     munimap.create({
         target: 'map-ukb',
         zoom: '17',
-        markers: [new ol.Feature({
-            geometry: new ol.geom.Point([16.569055658303 ,49.177133037659175 ]),
+        markers: [new munimap.ol.Feature({
+            geometry: new munimap.ol.geom.Point([
+                16.569055658303,
+                49.177133037659175
+            ]),
             label: 'Správa Univerzitního kampusu Bohunice',
             detail: '<p>Správa Univerzitního kampusu Bohunice</p>'
         }),],
