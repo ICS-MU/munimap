@@ -114,7 +114,6 @@ const getMinorTitleParts = (minorFeatures, isMarked, lang) => {
 };
 
 /**
- * Clustered features are buildings only.
  * @param {Feature} feature feature
  * @param {number} resolution resoltuion
  * @param {string} lang language
@@ -125,7 +124,15 @@ const getUnmarkedDefaultLabel = (feature, resolution, lang) => {
   munimap_assert.assertInstanceof(feature, Feature);
   let titleParts = [];
   let units;
-  const clusteredBuildings = munimap_cluster.getFeatures(feature);
+
+  const clusteredFeatures = munimap_cluster.getFeatures(feature);
+  const clusteredBuildings =
+    clusteredFeatures &&
+    clusteredFeatures.filter((f) => munimap_building.isBuilding(f));
+
+  if (!clusteredBuildings || clusteredBuildings.length < 1) {
+    return null;
+  }
 
   const range = munimap_cluster.getResolutionRange(resolution);
   if (range === munimap_cluster.Resolutions.MARKERS_AND_FACULTIES) {

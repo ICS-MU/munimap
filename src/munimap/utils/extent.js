@@ -4,6 +4,9 @@
 
 import * as ol_extent from 'ol/extent';
 import {Feature} from 'ol';
+import { isRoom } from '../feature/room';
+import { Point } from 'ol/geom';
+import { getByCode as getBuildingByCode} from '../feature/building';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature
@@ -54,8 +57,18 @@ export const ofFeatures = (features) => {
   const extent = ol_extent.createEmpty();
   features.forEach((feature) => {
     const geom = feature.getGeometry();
+    let ext;
     if (geom) {
-      const ext = geom.getExtent();
+      if (isRoom(feature) && geom instanceof Point) {
+        const locCode = /**@type {string}*/ (feature.get('polohKod'));
+        const building = getBuildingByCode(locCode);
+        ext = building.getGeometry().getExtent();
+      } else {
+        ext = geom.getExtent();
+      }
+    }
+
+    if (ext) {
       ol_extent.extend(extent, ext);
     }
   });

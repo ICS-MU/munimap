@@ -46,14 +46,19 @@ import {getStore as getBuildingStore} from '../source/building.js';
 import {getClosestPointToPixel} from '../feature/feature.js';
 import {getStore as getClusterStore} from '../source/cluster.js';
 import {getStore as getComplexStore} from '../source/complex.js';
-import {getStore as getIdentifyStore} from '../source/identify.js';
+import {
+  createStore as createIdentifyStore,
+  getStore as getIdentifyStore,
+} from '../source/identify.js';
 import {getMainFeatures, getMinorFeatures} from '../cluster/cluster.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {getStore as getPubTranStore} from '../source/pubtran.stop.js';
 import {isBuilding} from '../feature/building.js';
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
 import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.js';
-import {loadOrDecorateMarkers} from '../create.js';
+import {IDENTIFY_CALLBACK_STORE, loadOrDecorateMarkers} from '../create.js';
+import { INITIAL_STATE } from '../conf.js';
+import { getStore as getOptPoiStore} from '../source/optpoi.js';
 
 /**
  * @typedef {import("../conf.js").State} State
@@ -86,6 +91,18 @@ const getFeaturesTimestamps = (state, loadedTypes) => {
       : state.defaultRoomsTimestamp,
     doorsTimestamp: loadedTypes.door ? Date.now() : state.doorsTimestamp,
   };
+};
+
+const getLoadedTypes = (features, opt_requiredMarkers) => {
+  const result = {
+    building: features.some((f) => f instanceof Feature && isBuilding(f)),
+    room: features.some((f) => f instanceof Feature && isRoom(f)),
+    door: features.some((f) => f instanceof Feature && isDoor(f)),
+  };
+  if (opt_requiredMarkers) {
+    result.optPoi = opt_requiredMarkers.some((el) => isOptPoiCtgUid(el));
+  }
+  return result
 };
 
 /**
@@ -157,16 +174,7 @@ const createReducer = (initialState) => {
           loadOrDecorateMarkers(markerStrings, state.requiredOpts).then(
             (res) => {
               munimap_assert.assertMarkerFeatures(res);
-
-              const loadedTypes = {
-                building: res.some(
-                  (f) => f instanceof Feature && isBuilding(f)
-                ),
-                room: res.some((f) => f instanceof Feature && isRoom(f)),
-                door: res.some((f) => f instanceof Feature && isDoor(f)),
-                optPoi: requiredMarkers.some((el) => isOptPoiCtgUid(el)),
-              };
-
+              const loadedTypes = getLoadedTypes(res);
               action.asyncDispatch(actions.markers_loaded(res, loadedTypes));
             }
           );
@@ -184,11 +192,7 @@ const createReducer = (initialState) => {
             zoomToStrings = [];
           }
           featuresFromParam(zoomToStrings).then((res) => {
-            const loadedTypes = {
-              building: res.some((f) => f instanceof Feature && isBuilding(f)),
-              room: res.some((f) => f instanceof Feature && isRoom(f)),
-              door: res.some((f) => f instanceof Feature && isDoor(f)),
-            };
+            const loadedTypes = getLoadedTypes(res);
             action.asyncDispatch(actions.zoomTo_loaded(loadedTypes));
           });
         }
@@ -917,6 +921,138 @@ const createReducer = (initialState) => {
             ...initialState.tooltip,
           },
         };
+
+      //RESET_MUNIMAP
+      case actions.RESET_MUNIMAP:
+        const markerIdsEquals =
+          action.payload.markerIds &&
+          munimap_utils.arrayEquals(
+            action.payload.markerIds,
+            state.requiredOpts.markerIds
+          );
+        newState = /** @type {State}*/ ({
+          ...state,
+          requiredOpts: {
+            ...state.requiredOpts,
+            zoom: action.payload.zoom || INITIAL_STATE.requiredOpts.zoom,
+            center: action.payload.center || INITIAL_STATE.requiredOpts.center,
+            markerIds: markerIdsEquals
+              ? action.payload.markerIds
+              : INITIAL_STATE.requiredOpts.markerIds,
+            zoomTo: INITIAL_STATE.requiredOpts.zoomTo,
+            markerFilter:
+              action.payload.markerFilter ||
+              INITIAL_STATE.requiredOpts.markerFilter,
+            poiFilter:
+              action.payload.poiFilter || INITIAL_STATE.requiredOpts.poiFilter,
+            identifyTypes:
+              action.payload.identifyTypes ||
+              INITIAL_STATE.requiredOpts.identifyTypes,
+            identifyCallbackId:
+              action.payload.identifyCallbackId ||
+              INITIAL_STATE.requiredOpts.identifyCallbackId,
+          },
+        });
+
+        //clear stores and load markers
+        if (
+          action.payload.markerIds &&
+          (!markerIdsEquals ||
+            !!action.payload.markerFilter ||
+            !!action.payload.poiFilter)
+        ) {
+          const requiredMarkers = action.payload.markerIds;
+          newState.requiredOpts.markerIds = requiredMarkers;
+          newState.markersTimestamp = 0;
+          newState.optPoisTimestamp = 0;
+          getMarkerStore().clear();
+          getOptPoiStore().clear();
+          getClusterStore().clear();
+
+          let markerStrings;
+          if (requiredMarkers.length) {
+            munimap_assert.assertArray(requiredMarkers);
+            munimap_utils.removeArrayDuplicates(requiredMarkers);
+            markerStrings = /** @type {Array<string>} */ (requiredMarkers);
+          } else {
+            markerStrings = /** @type {Array<string>} */ ([]);
+          }
+
+          loadOrDecorateMarkers(markerStrings, newState.requiredOpts).then(
+            (res) => {
+              munimap_assert.assertMarkerFeatures(res);
+              const loadedTypes = getLoadedTypes(res, requiredMarkers);
+              getMarkerStore().addFeatures(res);
+              action.asyncDispatch(actions.markers_loaded(res, loadedTypes));
+            }
+          );
+        } else if (
+          !action.payload.markerIds &&
+          state.requiredOpts.markerIds.length > 0
+        ) {
+          getMarkerStore().clear();
+        }
+
+        //load zoomTo
+        if (action.payload.zoomTo) {
+          let zoomToStrings;
+          newState.requiredOpts.zoomTo = action.payload.zoomTo;
+          newState.zoomToTimestamp = 0;
+
+          if (action.payload.zoomTo.length) {
+            zoomToStrings = /**@type {Array<string>}*/ (
+              munimap_utils.isString(action.payload.zoomTo)
+                ? [action.payload.zoomTo]
+                : action.payload.zoomTo
+            );
+          } else {
+            zoomToStrings = [];
+          }
+          featuresFromParam(zoomToStrings).then((res) => {
+            const loadedTypes = getLoadedTypes(res);
+            action.asyncDispatch(actions.zoomTo_loaded(loadedTypes));
+          });
+        }
+
+        //manage identify callback
+        if (action.payload.identifyCallbackId) {
+          //new callback in munimap.reset
+          const store = getIdentifyStore();
+          store ? getIdentifyStore().clear() : createIdentifyStore();
+          newState.identify.controlEnabled = false;
+          newState.identify.visible = true;
+        } else if (slctr.isIdentifyEnabled(state)) {
+          //same callback as in munimap.create => handle with undefined
+          munimap_identify.handleCallback(
+            slctr.getIdentifyCallback(state),
+            undefined
+          );
+          newState.requiredOpts.identifyCallbackId =
+            state.requiredOpts.identifyCallbackId;
+          newState.identify.controlEnabled = false;
+          newState.identify.visible = true;
+        }
+
+        return newState;
+
+      //REQUIRED_VIEW_CHANGED
+      case actions.REQUIRED_VIEW_CHANGED:
+        if (action.payload.extent) {
+          animationRequest = {
+            extent: action.payload.extent,
+            duration: action.payload.duration,
+          };
+          return {
+            ...state,
+            animationRequest: [
+              {
+                ...INITIAL_STATE.animationRequest[0],
+                ...animationRequest,
+              },
+            ],
+          };
+        }
+        return {...state};
 
       //DEAFULT
       default:

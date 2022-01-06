@@ -94,10 +94,15 @@ export const GET_MAIN_FEATURE_AT_PIXEL_STORE = {};
 export const IDENTIFY_CALLBACK_STORE = {};
 
 /**
+ * @type {Object<string, redux.Store>}
+ */
+const STORES = {};
+
+/**
  * Load features by location codes or decorate custom markers.
  * @param {Array<string>|Array<Feature>|undefined} featuresLike featuresLike
  * @param {LoadOrDecorateMarkersOptions} options options
- * @return {Promise<Array<Feature|string>>} promise resolving with markers
+ * @return {Promise<Array<Feature>>} promise resolving with markers
  */
 export const loadOrDecorateMarkers = async (featuresLike, options) => {
   const lang = options.lang;
@@ -312,6 +317,12 @@ const getInitialState = (options, targetId) => {
 };
 
 /**
+ * @param {string} id id
+ * @return {redux.Store} store
+ */
+const getStoreByTargetId = (id) => STORES[id];
+
+/**
  * @param {Options} options Options
  * @return {Promise<Map>} initialized map
  */
@@ -322,6 +333,7 @@ export default (options) => {
     const targetId = addTargetElementToStore(options);
     const initialState = getInitialState(options, targetId);
     const store = createStore(initialState);
+    STORES[targetId] = store;
 
     munimap_view.createFeatureStores(store);
     store.dispatch(
@@ -342,3 +354,5 @@ export default (options) => {
     );
   });
 };
+
+export {getStoreByTargetId};

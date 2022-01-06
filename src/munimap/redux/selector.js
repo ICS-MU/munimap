@@ -449,16 +449,16 @@ export const getInitMarkers = createSelector(
  * @type {Reselect.OutputSelector<
  *    State,
  *    Array<ol.Feature>,
- *    function(Array<string>|string): Array<ol.Feature>
+ *    function(Array<string>|string, number): Array<ol.Feature>
  * >}
  */
 export const getInitZoomTo = createSelector(
-  [getRequiredZoomTo],
-  (initZoomTo) => {
+  [getRequiredZoomTo, getZoomToTimestamp],
+  (initZoomTo, zoomToTimestamp) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing init zoomTo');
     }
-    if (initZoomTo.length === 0) {
+    if (initZoomTo.length === 0 || zoomToTimestamp <= 0) {
       return [];
     } else if (munimap_utils.isString(initZoomTo)) {
       initZoomTo = [/**@type {string}*/ (initZoomTo)];

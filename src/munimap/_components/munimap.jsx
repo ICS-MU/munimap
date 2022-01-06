@@ -14,12 +14,15 @@ import {CREATED_MAPS} from '../create.js';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {Map} from 'ol';
+import {getAnimationDuration} from '../utils/animation.js';
 import {hot} from 'react-hot-loader';
+import {intersects} from 'ol/extent';
 import {unlistenByKey} from 'ol/events';
 import {useDispatch, useSelector} from 'react-redux';
 
 /**
  * @typedef {import("../conf.js").MapProps} MapProps
+ * @typedef {import("ol").Map} ol.Map
  * @typedef {import("react").MutableRefObject<Map>} MapRefObject
  * @typedef {import("react").Dispatch<import("react").SetStateAction<Map>>} MapStateAction
  * @typedef {Array<MapRefObject, MapStateAction>} MapRefUseState
@@ -37,7 +40,7 @@ const MunimapComponent = (props) => {
   const areZoomToLoaded = useSelector(slctr.areZoomToLoaded);
   const basemapLayer = useSelector(slctr.getBasemapLayer);
   const markers = useSelector(slctr.getInitMarkers);
-  const view = useSelector(slctr.calculateView);
+  const requiredView = useSelector(slctr.calculateView);
   const defaultControls = useSelector(slctr.getDefaultControls);
   const buildingsCount = useSelector(slctr.getLoadedBuildingsCount);
   const requiredOpts = useSelector(slctr.getRequiredOpts);
@@ -61,7 +64,7 @@ const MunimapComponent = (props) => {
   const munimapTargetElRef = useRef(null);
   const munimapElRef = useRef(null);
   const mapRef = useRef(null);
-  const map = mapRef && mapRef.current;
+  const map = /** @type {ol.Map}*/ (mapRef && mapRef.current);
 
   useEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
@@ -161,20 +164,29 @@ const MunimapComponent = (props) => {
           controls: defaultControls,
           target: munimapTargetElRef.current,
           layers: [basemapLayer],
-          view,
+          view: requiredView,
         });
         mapRef.current = _map;
 
         const mapProps = /**@type {MapProps}*/ ({
-          currentRes: view.getResolution(),
+          currentRes: requiredView.getResolution(),
           buildingsCount,
         });
         _map.set(MUNIMAP_PROPS_ID, mapProps);
         CREATED_MAPS[requiredOpts.targetId] = _map;
         munimap_view.attachIndependentMapListeners(_map, dispatch);
+      } else {
+        //munimap.reset
+        const ext = requiredView.calculateExtent(map.getSize());
+        const currentExt = map.getView().calculateExtent();
+        let duration = 0;
+        if (intersects(currentExt, ext)) {
+          duration = getAnimationDuration(currentExt, ext);
+        }
+        dispatch(actions.requiredViewChanged({extent: ext, duration}));
       }
     }
-  }, [areMarkersLoaded, areZoomToLoaded]);
+  }, [areMarkersLoaded, areZoomToLoaded, requiredView]);
 
   const onErrorClick = () => {
     if (munimapElRef.current) {
@@ -201,7 +213,7 @@ const MunimapComponent = (props) => {
   return (
     <>
       <MapContext.Provider value={mapRef}>
-        {addMsg && <LoadingMessage />}
+        {addMsg && !map && <LoadingMessage />}
         <div
           className="munimap"
           onBlur={onBlur}

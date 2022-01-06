@@ -26,12 +26,16 @@ import {
   createStore as createRoomStore,
 } from '../source/room.js';
 import {createStore as createBuildingStore} from '../source/building.js';
-import {create as createClusterLayer} from '../layer/cluster.js';
+import {
+  create as createClusterLayer,
+  getLayer as getClusterLayer,
+} from '../layer/cluster.js';
 import {createStore as createComplexStore} from '../source/complex.js';
 import {createStore as createFloorStore} from '../source/floor.js';
 import {create as createGeolocationLayer} from '../layer/geolocation.js';
 import {
   createLayer as createIdentifyLayer,
+  getLayer as getIdentifyLayer,
   refreshVisibility as refreshIdentifyLayerVisibility,
 } from '../layer/identify.js';
 import {createStore as createIdentifyStore} from '../source/identify.js';
@@ -152,11 +156,25 @@ const ensureBaseMap = (map, basemapLayer) => {
  * @param {AddLayersOptions} options opts
  */
 const ensureLayers = (map, options) => {
-  if (!map || map.getLayers().getLength() > 1) {
+  if (!map) {
     return;
   }
-  const {lang, labels, locationCodes, pubTran} = options.requiredOpts;
+
   const {isIdentifyEnabled} = options;
+  const hasLayers = map.getLayers().getLength() > 1; //more than basemap
+  const identifyLayer = getIdentifyLayer(map);
+
+  if (hasLayers) {
+    if (isIdentifyEnabled && !identifyLayer) {
+      //munimap.reset
+      map.addLayer(createIdentifyLayer());
+    } else if (!isIdentifyEnabled && identifyLayer) {
+      map.removeLayer(getIdentifyLayer(map));
+    }
+    return;
+  }
+
+  const {lang, labels, locationCodes, pubTran} = options.requiredOpts;
   const markerLayer = createMarkerLayer(map, options);
   const markerClusterLayer = createClusterLayer(map, options);
   const layers = getDefaultLayers(lang, labels, locationCodes);
@@ -176,8 +194,7 @@ const ensureLayers = (map, options) => {
   }
 
   if (isIdentifyEnabled) {
-    const identifyLayer = createIdentifyLayer();
-    map.addLayer(identifyLayer);
+    map.addLayer(createIdentifyLayer());
   }
 };
 
@@ -432,8 +449,11 @@ const ensureClusterUpdate = (map, {labels, buildingsCount}) => {
 
   const oldBuildingsCount = map.get(MUNIMAP_PROPS_ID).buildingsCount;
   const newBuildingsCount = buildingsCount;
+  const clusterLayer = getClusterLayer(map);
+  const isSourceEmpty =
+    clusterLayer && clusterLayer.getSource().getFeatures().length === 0;
 
-  if (newBuildingsCount !== oldBuildingsCount) {
+  if (newBuildingsCount !== oldBuildingsCount || isSourceEmpty) {
     map.get(MUNIMAP_PROPS_ID).buildingsCount = newBuildingsCount;
     if (labels !== false) {
       const resolution = map.getView().getResolution();

@@ -18,8 +18,10 @@ import {
  * @typedef {import("redux").Action} redux.Action
  * @typedef {import("ol/size").Size} ol.Size
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
+ * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("../matomo/matomo.js").Options} MatomoOptions
  * @typedef {import("../conf.js").AnimationRequestOptions} AnimationRequestOptions
+ * @typedef {import("../conf.js").RequiredOptions} RequiredOptions
  */
 
 /**
@@ -216,6 +218,18 @@ export const POINTERMOVE_TIMEOUT_EXPIRED = 'POINTERMOVE_TIMEOUT_EXPIRED';
  * @const
  */
 export const TOOLTIP_CANCELLED = 'TOOLTIP_CANCELLED';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const RESET_MUNIMAP = 'RESET_MUNIMAP';
+
+/**
+ * @type {string}
+ * @const
+ */
+export const REQUIRED_VIEW_CHANGED = 'REQUIRED_VIEW_CHANGED';
 
 /**
  * @param {Array<ol.Feature|string>} markers markers
@@ -545,6 +559,32 @@ export function pointerMoveTimeoutExpired(object) {
 export function tooltipCancelled(object) {
   return {
     type: TOOLTIP_CANCELLED,
+    payload: object,
+  };
+}
+
+/**
+ * @param {RequiredOptions} object object
+ * @return {PayloadAsyncAction} action
+ */
+export function resetMunimap(object) {
+  sendEvent('map', 'reset');
+  return {
+    type: RESET_MUNIMAP,
+    payload: object,
+  };
+}
+
+/**
+ * @param {{
+ *    extent: ol.extent.Extent,
+ *    duration: number
+ * }} object object
+ * @return {PayloadAsyncAction} action
+ */
+export function requiredViewChanged(object) {
+  return {
+    type: REQUIRED_VIEW_CHANGED,
     payload: object,
   };
 }

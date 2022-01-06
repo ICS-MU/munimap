@@ -72,4 +72,4 @@ const refreshVisibility = (map, visible) => {
   }
 };
 
-export {LAYER_ID, createLayer, refreshVisibility};
+export {LAYER_ID, createLayer, getLayer, refreshVisibility};
