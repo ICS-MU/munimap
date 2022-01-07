@@ -67,7 +67,7 @@ const TooltipComponent = (props) => {
       });
       updatePosition(tooltipElRef.current, centroidAsPixel);
     }
-  }, [map, positionInCoords]);
+  }, [map, positionInCoords, size, resolution, rotation, center]);
 
   if (ENABLE_RENDER_LOGS) {
     console.log('########## TOOLTIP-render');

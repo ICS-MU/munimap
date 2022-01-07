@@ -279,6 +279,8 @@ const handlePointerMove = (evt, dispatch, options) => {
     const isClickable = /** @type {isClickableFunction}*/ (
       layer.get('isFeatureClickable')
     );
+
+    //pointer
     if (isClickable) {
       munimap_assert.assertFunction(isClickable);
       const handlerOpts = {
@@ -294,10 +296,13 @@ const handlePointerMove = (evt, dispatch, options) => {
       targetEl.style.cursor = '';
     }
 
-    if (
-      tooltipsEnabled &&
-      inTooltipResolutionRange(feature, resolution, selectedFeature)
-    ) {
+    //tooltips
+    const inTooltipResolutionRange_ = inTooltipResolutionRange(
+      feature,
+      resolution,
+      selectedFeature
+    );
+    if (tooltipsEnabled && inTooltipResolutionRange_) {
       if (TIMEOUT_STORE[targetId]) {
         clearTimeout(TIMEOUT_STORE[targetId]);
         delete TIMEOUT_STORE[targetId];
@@ -318,12 +323,17 @@ const handlePointerMove = (evt, dispatch, options) => {
           () => dispatch(actions.pointerMoveTimeoutExpired(opts)),
           750
         );
-      } else if (isTooltipShown) {
-        dispatch(actions.tooltipCancelled());
       }
+    } else if (!inTooltipResolutionRange_ && isTooltipShown) {
+      dispatch(actions.tooltipCancelled());
     }
   } else {
+    //pointer + tooltips
     targetEl.style.cursor = '';
+    if (TIMEOUT_STORE[targetId]) {
+      clearTimeout(TIMEOUT_STORE[targetId]);
+      delete TIMEOUT_STORE[targetId];
+    }
     if (isTooltipShown) {
       dispatch(actions.tooltipCancelled());
     }
