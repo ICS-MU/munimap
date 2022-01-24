@@ -9,6 +9,9 @@ import create from './create.js';
 import reset from './reset.js';
 import {Map, View, Feature} from 'ol';
 import {Point} from 'ol/geom';
+import {Tile} from 'ol/layer';
+import {Vector} from 'ol/layer';
+import {Attribution, Control, FullScreen, Zoom} from 'ol/control';
 
 import '../img/google.png';
 import '../img/seznam.png';
@@ -25,6 +28,16 @@ const ol = {
   Feature,
   geom: {
     Point,
+  },
+  layer: {
+    Tile,
+    Vector,
+  },
+  control: {
+    Attribution,
+    Control,
+    FullScreen,
+    Zoom,
   },
 };
 
