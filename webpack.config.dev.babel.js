@@ -72,7 +72,7 @@ export default (env) => {
         publicPath: APP_PATH,
         writeToDisk: false,
       },
-      onAfterSetupMiddleware: (devServer) => {
+      setupMiddlewares: (middlewares, devServer) => {
         if (!devServer) {
           throw new Error('webpack-dev-server is not defined');
         }
@@ -86,6 +86,8 @@ export default (env) => {
           /\/munimap\/testing\/img/,
           express.static(path.resolve(__dirname, 'src', 'img'))
         );
+
+        return middlewares;
       },
       watchFiles: ['src/**/*.html'],
     },
