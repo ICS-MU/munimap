@@ -1,4 +1,16 @@
 {
-  "presets": ["@babel/preset-env", "@babel/preset-react"],
-  "plugins": ["react-hot-loader/babel"]
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "corejs": { "version": 3.20 },
+        "useBuiltIns": "usage"
+      }
+    ],
+    "@babel/preset-react"
+  ],
+  "plugins": [
+    ["@babel/plugin-proposal-decorators", {"decoratorsBeforeExport": true}],
+    "react-hot-loader/babel"
+  ]
 }

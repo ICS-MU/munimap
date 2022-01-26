@@ -24,16 +24,22 @@
     "url": "https://github.com/jirik/munimap-dev-stack/issues"
   },
   "homepage": "https://github.com/jirik/munimap-dev-stack#readme",
+  "browserslist": [
+    "last 2 versions",
+    "> 1%",
+    "IE 11"
+  ],
   "devDependencies": {
-    "@babel/core": "^7.15.8",
-    "@babel/preset-env": "^7.15.8",
-    "@babel/preset-react": "^7.16.0",
-    "@babel/register": "^7.15.3",
+    "@babel/core": "^7.16.12",
+    "@babel/plugin-proposal-decorators": "^7.16.7",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/register": "^7.16.9",
     "@openlayers/eslint-plugin": "^4.0.0",
     "@types/ol": "^6.5.0",
     "@types/uuid": "^8.3.4",
     "@types/webpack-env": "^1.16.3",
-    "babel-loader": "^8.2.2",
+    "babel-loader": "^8.2.3",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^8.1.1",
     "css-loader": "^5.2.7",
@@ -58,6 +64,7 @@
     "@turf/boolean-point-in-polygon": "^6.5.0",
     "@turf/intersect": "^4.7.3",
     "@types/react-dom": "^17.0.11",
+    "core-js": "^3.20.3",
     "ol": "^6.5.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
@@ -66,7 +73,8 @@
     "react-select": "^5.2.1",
     "redux": "^4.0.5",
     "reselect": "^4.0.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "whatwg-fetch": "^3.6.2"
   },
   "eslintConfig": {
     "globals": {

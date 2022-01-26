@@ -2,6 +2,10 @@
 /**
  * @module index
  */
+
+//polyfills for IE11
+import 'whatwg-fetch';
+
 import 'ol/ol.css';
 import '../css/munimaplib.css'; //must be after ol.css => rewrite some rules
 import * as munimap_matomo from './matomo/matomo.js';
