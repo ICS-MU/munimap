@@ -1,0 +1,115 @@
+code {
+  background-color: lightgrey;
+  border: none;
+  color: black;
+  font-family: monospace;
+}
+
+h3 {
+  margin-top: 10px;
+}
+table {
+  border: 1px solid black;
+  border-collapse: collapse;
+  font-size: 80%;
+}
+th {
+  border: solid 2px #fff;
+  background-color: #0000dc;
+  color: #fff;
+}
+th:first-child {
+  border-left: 1px solid black;
+} 
+th:last-child {
+  border-right: 1px solid black;
+}
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  max-width: 800px;
+  padding: 8px;
+}
+td.param-type, th.param-type {
+  max-width: 350px;
+}
+td.param-type a, th.param-type a {
+  font-weight: bold;
+}
+td.param-desc, th.param-desc {
+  max-width: 750px;
+}
+
+.content {
+  overflow: visible;
+}
+
+p.specification {
+  text-align: left;
+}
+.specification a {
+  font-weight: bold;
+}
+
+.experimental, .warning {
+  color: #e51c23;
+}
+.mandatory {
+  color: green;
+  font-weight: bold;
+}
+
+div.hint, div.experimental, div.warning {
+  padding-left: 10px;
+  position: relative;
+}
+div.hint:before, div.experimental:before, div.warning:before {
+  font-weight: bold;
+  position: absolute;
+}
+div.hint:before, div.experimental:before{
+  color: #0000dc;
+  font-size: 9px;
+  top: 4px;
+}
+div.hint:before {
+  content: 'TIP';
+  left: 10px;
+}
+div.experimental:before {
+  content: 'TEST';
+  left: 5px;
+}
+div.warning:before {
+  content: '!';
+  left: 14px;
+}
+div.hint p, div.experimental p , div.warning p {
+  display: inline-block;
+  margin: 0;
+  padding-left: 20px;
+  text-align: left;
+}
+
+span.command {
+  font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+  font-size: 13px;
+}
+span.command span.value {
+  color: #080;
+}
+
+.inner-table {
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+.inner-table th {
+  border: 1px solid #000;
+}
+
+.inner-table td {
+  padding: 5px;
+}

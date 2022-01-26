@@ -34,6 +34,16 @@ export default (env) => {
       ...opts,
     });
   });
+  const docPageNames = glob
+    .sync('./src/doc/*.html')
+    .map((item) => path.basename(item, '.html'));
+  const docHtmlPlugins = docPageNames.map((name) => {
+    return new HtmlWebpackPlugin({
+      template: `./src/doc/${name}.html`,
+      filename: `./doc/${name}.html`,
+      ...opts,
+    });
+  });
 
   const preprocessor = (content) => {
     const newContent = (content) => {
@@ -109,6 +119,7 @@ export default (env) => {
           test: /\.css$/,
           exclude: [
             path.resolve(__dirname, 'src', 'css', 'example'),
+            path.resolve(__dirname, 'src', 'css', 'doc'),
             path.join(__dirname, 'src', 'css', 'munimap.css'),
           ],
           use: ['style-loader', 'css-loader'],
@@ -127,6 +138,14 @@ export default (env) => {
           type: 'asset/resource',
           generator: {
             filename: 'css/example/[name][ext][query]',
+          },
+        },
+        {
+          test: /\.css/,
+          include: [path.resolve(__dirname, 'src', 'css', 'doc')],
+          type: 'asset/resource',
+          generator: {
+            filename: 'css/doc/[name][ext][query]',
           },
         },
         {
@@ -180,6 +199,7 @@ export default (env) => {
         ...opts,
       }),
       ...exampleHtmlPlugins,
+      ...docHtmlPlugins,
     ],
   };
 };
