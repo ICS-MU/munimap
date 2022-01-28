@@ -58,5 +58,8 @@
   "include": [
     "src/**/*.js",
     "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/munimapext.js",
   ]
 }

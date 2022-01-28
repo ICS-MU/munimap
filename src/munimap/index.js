@@ -8,14 +8,23 @@ import 'whatwg-fetch';
 
 import 'ol/ol.css';
 import '../css/munimaplib.css'; //must be after ol.css => rewrite some rules
+
 import * as munimap_matomo from './matomo/matomo.js';
+import VectorSource from 'ol/source/Vector';
 import create from './create.js';
 import reset from './reset.js';
-import {Map, View, Feature} from 'ol';
+import {Attribution, Control, FullScreen, Zoom} from 'ol/control';
+import {Feature, Map, View} from 'ol';
 import {Point} from 'ol/geom';
+import {Stroke, Style} from 'ol/style';
 import {Tile} from 'ol/layer';
 import {Vector} from 'ol/layer';
-import {Attribution, Control, FullScreen, Zoom} from 'ol/control';
+import {createSelector} from 'reselect';
+import {createXYZ} from 'ol/tilegrid';
+import {featuresForMap} from './load.js';
+import {getActiveFloorCodes, getSelectedFloorCode} from './redux/selector.js';
+import {getNotYetAddedFeatures} from './utils/store.js';
+import {tile} from 'ol/loadingstrategy';
 
 import '../img/google.png';
 import '../img/seznam.png';
@@ -43,6 +52,33 @@ const ol = {
     FullScreen,
     Zoom,
   },
+  source: {
+    Vector: VectorSource,
+  },
+  loadingstrategy: {
+    tile,
+  },
+  tilegrid: {
+    createXYZ,
+  },
+  style: {
+    Stroke,
+    Style,
+  },
 };
 
-export {create, reset, ol};
+const slctr = {
+  createSelector,
+  getActiveFloorCodes,
+  getSelectedFloorCode,
+};
+
+const load = {
+  featuresForMap,
+};
+
+const store = {
+  getNotYetAddedFeatures,
+};
+
+export {create, reset, ol, slctr, load, store};
