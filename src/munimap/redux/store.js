@@ -19,18 +19,19 @@ import {
   getFloorLayerIdByCode,
   isCode as isFloorCode,
 } from '../feature/floor.js';
-import {Feature} from 'ol';
-import {MultiPolygon, Polygon} from 'ol/geom';
-import {RESOLUTION as PUBTRAN_RESOLUTION} from '../feature/pubtran.stop.js';
+import {Feature, getUid} from 'ol';
+import {INITIAL_STATE} from '../conf.js';
 import {ROOM_TYPES, isRoom} from '../feature/room.js';
 import {asyncDispatchMiddleware} from './middleware.js';
-import {
-  calculateParameters as calculateTooltipParameters
-} from '../view/tooltip.js';
+import {calculateParameters as calculateTooltipParameters} from '../view/tooltip.js';
 import {
   clearFloorBasedStores,
   refreshFloorBasedStores,
 } from '../source/source.js';
+import {
+  createStore as createIdentifyStore,
+  getStore as getIdentifyStore,
+} from '../source/identify.js';
 import {
   ofFeature as extentOfFeature,
   ofFeatures as extentOfFeatures,
@@ -41,24 +42,18 @@ import {getActiveStore as getActivePoiStore} from '../source/poi.js';
 import {getActiveStore as getActiveRoomStore} from '../source/room.js';
 import {getAnimationDuration} from '../utils/animation.js';
 import {getAnimationRequestParams} from '../utils/animation.js';
-import {getBetterInteriorPoint} from '../utils/geom.js';
 import {getStore as getBuildingStore} from '../source/building.js';
 import {getClosestPointToPixel} from '../feature/feature.js';
 import {getStore as getClusterStore} from '../source/cluster.js';
 import {getStore as getComplexStore} from '../source/complex.js';
-import {
-  createStore as createIdentifyStore,
-  getStore as getIdentifyStore,
-} from '../source/identify.js';
 import {getMainFeatures, getMinorFeatures} from '../cluster/cluster.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
+import {getStore as getOptPoiStore} from '../source/optpoi.js';
 import {getStore as getPubTranStore} from '../source/pubtran.stop.js';
 import {isBuilding} from '../feature/building.js';
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
 import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.js';
-import {IDENTIFY_CALLBACK_STORE, loadOrDecorateMarkers} from '../create.js';
-import { INITIAL_STATE } from '../conf.js';
-import { getStore as getOptPoiStore} from '../source/optpoi.js';
+import {loadOrDecorateMarkers} from '../create.js';
 
 /**
  * @typedef {import("../conf.js").State} State
@@ -102,7 +97,7 @@ const getLoadedTypes = (features, opt_requiredMarkers) => {
   if (opt_requiredMarkers) {
     result.optPoi = opt_requiredMarkers.some((el) => isOptPoiCtgUid(el));
   }
-  return result
+  return result;
 };
 
 /**
@@ -237,7 +232,7 @@ const createReducer = (initialState) => {
           state.selectedFeature &&
           result.slice(0, 5) !== state.selectedFeature.slice(0, 5)
         ) {
-          popupOpts.visible = false;
+          popupOpts.uid = null;
         }
 
         return {
@@ -313,7 +308,7 @@ const createReducer = (initialState) => {
         };
         if (selectedFeature && selectedFeature !== newValue) {
           newState.selectedFeature = newValue;
-          newState.popup.visible = false;
+          newState.popup.uid = null;
           const where = `polohKod LIKE '${newValue.substring(0, 5)}%'`;
           loadFloors(where).then((floors) =>
             action.asyncDispatch(actions.floors_loaded(false))
@@ -472,6 +467,10 @@ const createReducer = (initialState) => {
                 ...animationRequest,
               },
             ],
+            popup: {
+              ...state.popup,
+              uid: null,
+            },
           };
         } else if (isIdentifyAllowed) {
           munimap_identify.handleCallback(slctr.getIdentifyCallback(state), {
@@ -485,6 +484,10 @@ const createReducer = (initialState) => {
               controlEnabled: isIdentifyAllowed || false,
               visible: isIdentifyAllowed || false,
             },
+            popup: {
+              ...state.popup,
+              uid: null,
+            },
           };
         } else {
           result = feature.get('vychoziPodlazi') || feature.get('polohKod');
@@ -497,6 +500,10 @@ const createReducer = (initialState) => {
           return {
             ...state,
             selectedFeature: result || null,
+            popup: {
+              ...state.popup,
+              uid: null,
+            },
           };
         }
 
@@ -567,12 +574,7 @@ const createReducer = (initialState) => {
           let center;
 
           if (firstFeature.get('popupDetails')) {
-            const geometry = firstFeature.getGeometry();
-            popupOpts.positionInCoords = ol_extent.getCenter(
-              geometry.getExtent()
-            );
-            popupOpts.content = firstFeature.get('popupDetails');
-            popupOpts.visible = true;
+            popupOpts.uid = getUid(firstFeature);
           }
 
           const opts = {
@@ -663,17 +665,7 @@ const createReducer = (initialState) => {
         }
 
         if (feature.get('popupDetails')) {
-          const geometry = feature.getGeometry();
-          let centroid = ol_extent.getCenter(geometry.getExtent());
-          if (
-            !geometry.intersectsCoordinate(centroid) &&
-            (geometry instanceof MultiPolygon || geometry instanceof Polygon)
-          ) {
-            centroid = getBetterInteriorPoint(geometry).getCoordinates();
-          }
-          popupOpts.positionInCoords = centroid;
-          popupOpts.content = feature.get('popupDetails');
-          popupOpts.visible = true;
+          popupOpts.uid = getUid(feature);
         }
 
         if (!isCustomMarker(feature)) {
@@ -780,15 +772,9 @@ const createReducer = (initialState) => {
 
         title = /**@type {string}*/ (feature.get('nazev'));
         if (title) {
-          const geometry = feature.getGeometry();
-          popupOpts.positionInCoords = ol_extent.getCenter(
-            geometry.getExtent()
-          );
-          popupOpts.content = [{pubTran: title}];
-          popupOpts.offsetY = 0;
-          popupOpts.hideResolution = PUBTRAN_RESOLUTION;
-          popupOpts.visible = true;
+          popupOpts.uid = getUid(feature);
         }
+
         return {
           ...state,
           animationRequest: [
@@ -819,7 +805,7 @@ const createReducer = (initialState) => {
             state.selectedFeature &&
             result.slice(0, 5) !== state.selectedFeature.slice(0, 5)
           ) {
-            popupOpts.visible = false;
+            popupOpts.uid = null;
           }
           const where = `polohKod LIKE '${result.substring(0, 5)}%'`;
           loadFloors(where).then((floors) =>
@@ -877,7 +863,7 @@ const createReducer = (initialState) => {
           ...state,
           popup: {
             ...state.popup,
-            visible: false,
+            uid: null,
           },
         };
 

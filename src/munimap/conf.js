@@ -3,7 +3,6 @@
  */
 
 import {Types as IdentifyTypes} from './identify/identify.js';
-import {RESOLUTION as MARKER_RESOLUTION} from './feature/marker.js';
 
 /**
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
@@ -115,12 +114,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
 
 /**
  * @typedef {Object} PopupState
- * @property {ol.coordinate.Coordinate} positionInCoords positionInCoords
- * @property {number} offsetX offsetx
- * @property {number} offsetY offsety
- * @property {Array<PopupContentOptions>} content content
- * @property {RangeInterface} hideResolution resolution for hide
- * @property {boolean} visible visible
+ * @property {string} uid unique identifier from vector source
  */
 
 /**
@@ -232,12 +226,7 @@ export const INITIAL_STATE = {
     },
   ],
   popup: {
-    positionInCoords: null,
-    content: null,
-    offsetX: 0,
-    offsetY: 20,
-    hideResolution: MARKER_RESOLUTION,
-    visible: false,
+    uid: null,
   },
   identify: {
     controlEnabled: false,

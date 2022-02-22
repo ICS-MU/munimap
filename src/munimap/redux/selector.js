@@ -18,6 +18,7 @@ import {BUILDING_RESOLUTION, ROOM_RESOLUTION} from '../cluster/cluster.js';
 import {LAYER_ID as CLUSTER_LAYER_ID} from '../layer/cluster.js';
 import {LAYER_ID as COMPLEX_LAYER_ID} from '../layer/complex.js';
 import {ENABLE_SELECTOR_LOGS} from '../conf.js';
+import {FEATURE_TYPE_PROPERTY_NAME} from '../feature/feature.js';
 import {GeoJSON} from 'ol/format';
 import {
   IDENTIFY_CALLBACK_STORE,
@@ -27,6 +28,7 @@ import {
 } from '../create.js';
 import {LAYER_ID as IDENTIFY_LAYER_ID} from '../layer/identify.js';
 import {LAYER_ID as MARKER_LAYER_ID} from '../layer/marker.js';
+import {RESOLUTION as MARKER_RESOLUTION} from '../feature/marker.js';
 import {MultiPolygon, Polygon} from 'ol/geom';
 import {
   Ids as OptPoiIds,
@@ -34,6 +36,10 @@ import {
 } from '../feature/optpoi.js';
 import {ACTIVE_LAYER_ID as POI_ACTIVE_LAYER_ID} from '../layer/poi.js';
 import {PURPOSE as POI_PURPOSE} from '../feature/poi.js';
+import {
+  RESOLUTION as PUBTRAN_RESOLUTION,
+  getType as getPubtranType,
+} from '../feature/pubtran.stop.js';
 import {Resolutions as PoiResolutions} from '../style/poi.js';
 import {
   ACTIVE_LAYER_ID as ROOM_ACTIVE_LAYER_ID,
@@ -60,7 +66,7 @@ import {
   ofFeatures as extentOfFeatures,
   getBufferValue,
 } from '../utils/extent.js';
-import {featureExtentIntersect} from '../utils/geom.js';
+import {featureExtentIntersect, getBetterInteriorPoint} from '../utils/geom.js';
 import {
   getByCode as getBuildingByCode,
   getNamePart as getBuildingNamePart,
@@ -86,6 +92,7 @@ import {getStore as getFloorStore} from '../source/floor.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {getStore as getOptPoiStore} from '../source/optpoi.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
+import {getStore as getPubtranStore} from '../source/pubtran.stop.js';
 import {getStore as getRoomStore} from '../source/room.js';
 import {
   getType as getRoomType,
@@ -93,6 +100,7 @@ import {
   isCode as isRoomCode,
   isCodeOrLikeExpr as isRoomCodeOrLikeExpr,
 } from '../feature/room.js';
+import {getUid} from 'ol';
 import {styleFunction as identifyStyleFunction} from '../style/identify.js';
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
 import {labelFunction, styleFunction} from '../style/building.js';
@@ -119,6 +127,7 @@ import {styleFunction as markerStyleFunction} from '../style/marker.js';
  * @typedef {import("../utils/range.js").RangeInterface} RangeInterface
  * @typedef {import("../feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("../identify/identify.js").CallbackFunction} IdentifyCallbackFunction
+ * @typedef {import("../conf.js").PopupContentOptions} PopupContentOptions
  */
 
 /**
@@ -347,13 +356,6 @@ export const getRequiredSimpleScroll = (state) =>
 export const getErrorMessageState = (state) => state.errorMessage;
 
 /**
- * @type {Reselect.Selector<State, PopupState>}
- * @param {State} state state
- * @return {PopupState} popup state
- */
-export const getPopup = (state) => state.popup;
-
-/**
  * @type {Reselect.Selector<State, TooltipState>}
  * @param {State} state state
  * @return {TooltipState} tooltip state
@@ -367,6 +369,13 @@ export const getTooltip = (state) => state.tooltip;
  */
 export const getRequiredIdentifyCallbackId = (state) =>
   state.requiredOpts.identifyCallbackId;
+
+/**
+ * @type {Reselect.Selector<State, string>}
+ * @param {State} state state
+ * @return {string} uid
+ */
+export const getPopupFeatureUid = (state) => state.popup.uid;
 
 /**
  * @type {Reselect.Selector<State, boolean>}
@@ -1777,7 +1786,8 @@ export const getFloorCodesWithMarkers = createSelector(
     }
     const result = initMarkers.map((marker) => {
       const pk = /** @type {string}*/ (marker.get('polohKod'));
-      const inSelectedBuilding = pk.startsWith(selectedFeature.slice(0, 5));
+      const inSelectedBuilding =
+        pk && pk.startsWith(selectedFeature.slice(0, 5));
       return pk && inSelectedBuilding && pk.length >= 8 && pk.slice(0, 8);
     });
     return result.filter((item) => item);
@@ -1825,4 +1835,165 @@ export const getIdentifyCallback = createSelector(
 export const isTooltipShown = createSelector(
   [getTooltip],
   (tooltip) => !!tooltip.positionInCoords
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    ol.Feature,
+ *    function(string, string): ol.Feature
+ * >}
+ */
+export const getFeatureForPopup = createSelector(
+  [getPopupFeatureUid, getTargetId],
+  (uid, targetId) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('get feature for popup');
+    }
+
+    if (!munimap_utils.isDefAndNotNull(uid)) {
+      return null;
+    }
+
+    const suitableStores = [
+      getBuildingStore(),
+      getRoomStore(),
+      getDoorStore(),
+      getPubtranStore(),
+    ];
+
+    let feature = null;
+    suitableStores.every((store) => {
+      feature = store ? store.getFeatureByUid(uid) : null;
+      return !munimap_utils.isDefAndNotNull(feature);
+    });
+
+    //check custom markers
+    if (feature === null) {
+      const k = `CUSTOM_MARKER_${targetId}`;
+      Object.entries(REQUIRED_CUSTOM_MARKERS).every(([key, feat]) => {
+        feature = key.startsWith(k) && getUid(feat) === uid ? feat : null;
+        return !munimap_utils.isDefAndNotNull(feature);
+      });
+    }
+    return feature;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    RangeInterface,
+ *    function(ol.Feature): RangeInterface
+ * >}
+ */
+export const getHideResolutionForPopup = createSelector(
+  [getFeatureForPopup],
+  (feature) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('get hide resolution fo popup');
+    }
+
+    if (!feature) {
+      return MARKER_RESOLUTION;
+    }
+
+    const ft = feature.get(FEATURE_TYPE_PROPERTY_NAME);
+    return ft && ft.layerId === getPubtranType().layerId
+      ? PUBTRAN_RESOLUTION
+      : MARKER_RESOLUTION;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    boolean,
+ *    function(string): boolean
+ * >}
+ */
+export const isPopupVisible = createSelector([getPopupFeatureUid], (uid) => {
+  if (ENABLE_SELECTOR_LOGS) {
+    console.log('computing whether popup is visible');
+  }
+
+  return munimap_utils.isDefAndNotNull(uid);
+});
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    Array<PopupContentOptions>,
+ *    function(ol.Feature): Array<PopupContentOptions>
+ * >}
+ */
+export const getPopupContent = createSelector(
+  [getFeatureForPopup],
+  (feature) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('get popup content');
+    }
+
+    if (!feature) {
+      return null;
+    }
+    const ft = feature.get(FEATURE_TYPE_PROPERTY_NAME);
+    return ft && ft.layerId === getPubtranType().layerId
+      ? [{pubTran: feature.get('nazev')}]
+      : feature.get('popupDetails');
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    ol.Coordinate,
+ *    function(ol.Feature): ol.Coordinate
+ * >}
+ */
+export const getPopupPositionInCoords = createSelector(
+  [getFeatureForPopup],
+  (feature) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing popup position');
+    }
+
+    if (!feature) {
+      return null;
+    }
+
+    const geometry = feature.getGeometry();
+    let centroid = ol_extent.getCenter(geometry.getExtent());
+    if (
+      !geometry.intersectsCoordinate(centroid) &&
+      (geometry instanceof MultiPolygon || geometry instanceof Polygon)
+    ) {
+      centroid = getBetterInteriorPoint(geometry).getCoordinates();
+    }
+
+    return centroid;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    Array<number>,
+ *    function(ol.Feature): Array<number>
+ * >}
+ */
+export const getOffsetForPopup = createSelector(
+  [getFeatureForPopup],
+  (feature) => {
+    const defaultOffset = [0, 20];
+
+    if (!feature) {
+      return defaultOffset;
+    }
+
+    const ft = feature.get(FEATURE_TYPE_PROPERTY_NAME);
+    return ft && ft.layerId === getPubtranType().layerId
+      ? [0, 0]
+      : defaultOffset;
+  }
 );

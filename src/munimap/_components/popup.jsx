@@ -1,6 +1,7 @@
 import * as actions from '../redux/action.js';
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_range from '../utils/range.js';
+import * as slctr from '../redux/selector.js';
 import MapContext from '../_contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useLayoutEffect, useRef} from 'react';
 import {
@@ -10,14 +11,6 @@ import {
   POPUP_TALE_HEIGHT,
   POPUP_TALE_INDENT,
 } from '../conf.js';
-import {
-  getCenter,
-  getLang,
-  getPopup,
-  getResolution,
-  getRotation,
-  getSize,
-} from '../redux/selector.js';
 import {getElementSize} from '../utils/dom.js';
 import {getPixelFromCoordinate} from '../utils/map.js';
 import {hot} from 'react-hot-loader';
@@ -58,14 +51,18 @@ const updatePosition = (element, centroidAsPixel, offsetX, offsetY) => {
  * @return {React.ReactElement} React element
  */
 const PopupComponent = (props) => {
-  const {positionInCoords, offsetX, offsetY, content, hideResolution, visible} =
-    useSelector(getPopup);
-  const resolution = useSelector(getResolution);
-  const size = useSelector(getSize);
-  const rotation = useSelector(getRotation);
-  const center = useSelector(getCenter);
-  const lang = useSelector(getLang);
+  const resolution = useSelector(slctr.getResolution);
+  const size = useSelector(slctr.getSize);
+  const rotation = useSelector(slctr.getRotation);
+  const center = useSelector(slctr.getCenter);
+  const lang = useSelector(slctr.getLang);
   const dispatch = useDispatch();
+
+  const positionInCoords = useSelector(slctr.getPopupPositionInCoords);
+  const content = useSelector(slctr.getPopupContent);
+  const hideResolution = useSelector(slctr.getHideResolutionForPopup);
+  const visible = useSelector(slctr.isPopupVisible);
+  const [offsetX, offsetY] = useSelector(slctr.getOffsetForPopup);
 
   const popupElRef = useRef(null);
   const mapRef = useContext(MapContext);
