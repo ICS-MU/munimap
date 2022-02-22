@@ -1,7 +1,7 @@
 /**
  * @module identify/identify
  */
-
+import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_utils from '../utils/utils.js';
 import {Feature} from 'ol';
@@ -148,9 +148,10 @@ const createParamForCallback = (opt_options) => {
 
 /**
  * @param {CallbackFunction} callback callback
+ * @param {Function} asyncDispatch asyncDispatch
  * @param {HandleCallbackOptions} [opt_options] opts
  */
-const handleCallback = (callback, opt_options) => {
+const handleCallback = (callback, asyncDispatch, opt_options) => {
   if (!callback) {
     return;
   }
@@ -174,13 +175,20 @@ const handleCallback = (callback, opt_options) => {
 
     if (callbackResult) {
       const store = getStore();
+      store.once('addfeature', () =>
+        asyncDispatch(actions.identifyFeatureChanged())
+      );
+
       store.clear();
       store.addFeature(pointFeature);
     }
   } else {
     const params = createParamForCallback();
+    const store = getStore();
     callback(params);
-    getStore().clear();
+
+    store.once('clear', () => asyncDispatch(actions.identifyFeatureChanged()));
+    store.clear();
   }
 };
 

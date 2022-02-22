@@ -4,6 +4,7 @@
  */
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_floor from '../feature/floor.js';
+import * as munimap_identify from '../identify/identify.js';
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
@@ -89,6 +90,7 @@ import {
   isCodeOrLikeExpr as isDoorCodeOrLikeExpr,
 } from '../feature/door.js';
 import {getStore as getFloorStore} from '../source/floor.js';
+import {getStore as getIdentifyStore} from '../source/identify.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {getStore as getOptPoiStore} from '../source/optpoi.js';
 import {getPairedBasemap, isArcGISBasemap} from '../layer/basemap.js';
@@ -378,19 +380,11 @@ export const getRequiredIdentifyCallbackId = (state) =>
 export const getPopupFeatureUid = (state) => state.popup.uid;
 
 /**
- * @type {Reselect.Selector<State, boolean>}
+ * @type {Reselect.Selector<State, number>}
  * @param {State} state state
- * @return {boolean} whether is visible
+ * @return {number} timestamp
  */
-export const isIdentifyVisible = (state) => state.identify.visible;
-
-/**
- * @type {Reselect.Selector<State, boolean>}
- * @param {State} state state
- * @return {boolean} whether is visible
- */
-export const isIdentifyControlEnabled = (state) =>
-  state.identify.controlEnabled;
+export const getIdentifyTimestamp = (state) => state.identifyTimestamp;
 
 /**
  * createSelector return type Reselect.OutputSelector<S, T, (res: R1) => T>
@@ -1805,6 +1799,50 @@ export const isIdentifyEnabled = createSelector(
   [getRequiredIdentifyCallbackId],
   (identifyCallbackId) => {
     return !!identifyCallbackId;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    boolean,
+ *    function(number): boolean
+ * >}
+ */
+export const isIdentifyControlEnabled = createSelector(
+  [getIdentifyTimestamp],
+  (identifyTimestamp) => {
+    if (!munimap_utils.isDefAndNotNull(identifyTimestamp)) {
+      return false;
+    }
+    const features = getIdentifyStore().getFeatures();
+    return Array.isArray(features) ? features.length > 0 : !!features;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    boolean,
+ *    function(boolean, number, string): boolean
+ * >}
+ */
+export const isIdentifyLayerVisible = createSelector(
+  [isIdentifyEnabled, getIdentifyTimestamp, getSelectedFeature],
+  (identifyEnabled, identifyTimestamp, selectedFeature) => {
+    if (!munimap_utils.isDefAndNotNull(identifyTimestamp) || !identifyEnabled) {
+      return false;
+    }
+
+    const features = getIdentifyStore().getFeatures();
+    if (features && features.length > 0) {
+      const pointFeature = features[0];
+      const code = munimap_identify.getLocationCode(pointFeature);
+      if (code && code.length > 5) {
+        return code.substring(5, 8) === selectedFeature.substring(5, 8);
+      }
+    }
+    return true;
   }
 );
 

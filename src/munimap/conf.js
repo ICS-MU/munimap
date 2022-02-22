@@ -118,12 +118,6 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  */
 
 /**
- * @typedef {Object} IdentifyState
- * @property {boolean} controlEnabled resetEnabled
- * @property {boolean} visible visible
- */
-
-/**
  * @typedef {Object} TooltipState
  * @property {string} title title
  * @property {ol.coordinate.Coordinate} positionInCoords positionInCoords
@@ -158,10 +152,10 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {number} doorsTimestamp doors timestamp
  * @property {number} poisTimestamp pois timestamp
  * @property {number} optPoisTimestamp opt pois timestamp
+ * @property {number} identifyTimestamp identify timestamp
  * @property {ErrorMessageState} errorMessage error message
  * @property {AnimationRequestState} animationRequest requested view
  * @property {PopupState} popup popup
- * @property {IdentifyState} identify identify
  * @property {TooltipState} tooltip tooltip
  */
 
@@ -213,6 +207,7 @@ export const INITIAL_STATE = {
   doorsTimestamp: null,
   poisTimestamp: null,
   optPoisTimestamp: null,
+  identifyTimestamp: null,
   errorMessage: {
     render: null,
     withMessage: null,
@@ -227,10 +222,6 @@ export const INITIAL_STATE = {
   ],
   popup: {
     uid: null,
-  },
-  identify: {
-    controlEnabled: false,
-    visible: false,
   },
   tooltip: {
     title: null,

@@ -313,18 +313,6 @@ const createReducer = (initialState) => {
           loadFloors(where).then((floors) =>
             action.asyncDispatch(actions.floors_loaded(false))
           );
-
-          if (slctr.isIdentifyEnabled(state)) {
-            const features = getIdentifyStore().getFeatures();
-            if (features && features.length > 0) {
-              const pointFeature = features[0];
-              const code = munimap_identify.getLocationCode(pointFeature);
-              if (code && code.length > 5) {
-                newState.identify.visible =
-                  code.substring(5, 8) === newValue.substring(5, 8);
-              }
-            }
-          }
         }
         return newState;
 
@@ -473,17 +461,13 @@ const createReducer = (initialState) => {
             },
           };
         } else if (isIdentifyAllowed) {
-          munimap_identify.handleCallback(slctr.getIdentifyCallback(state), {
-            feature,
-            pixelInCoords,
-          });
+          munimap_identify.handleCallback(
+            slctr.getIdentifyCallback(state),
+            action.asyncDispatch,
+            {feature, pixelInCoords}
+          );
           return {
             ...state,
-            identify: {
-              ...state.identify,
-              controlEnabled: isIdentifyAllowed || false,
-              visible: isIdentifyAllowed || false,
-            },
             popup: {
               ...state.popup,
               uid: null,
@@ -684,10 +668,8 @@ const createReducer = (initialState) => {
             if (isIdentifyAllowed) {
               munimap_identify.handleCallback(
                 slctr.getIdentifyCallback(state),
-                {
-                  feature,
-                  pixelInCoords,
-                }
+                action.asyncDispatch,
+                {feature, pixelInCoords}
               );
             }
           }
@@ -715,11 +697,6 @@ const createReducer = (initialState) => {
           popup: {
             ...initialState.popup,
             ...popupOpts,
-          },
-          identify: {
-            ...state.identify,
-            controlEnabled: isIdentifyAllowed || false,
-            visible: isIdentifyAllowed || false,
           },
         };
 
@@ -813,10 +790,11 @@ const createReducer = (initialState) => {
           );
 
           if (isIdentifyAllowed) {
-            munimap_identify.handleCallback(slctr.getIdentifyCallback(state), {
-              feature,
-              pixelInCoords,
-            });
+            munimap_identify.handleCallback(
+              slctr.getIdentifyCallback(state),
+              action.asyncDispatch,
+              {feature, pixelInCoords}
+            );
           }
         }
         return {
@@ -825,11 +803,6 @@ const createReducer = (initialState) => {
           popup: {
             ...state.popup,
             ...popupOpts,
-          },
-          identify: {
-            ...state.identify,
-            controlEnabled: isIdentifyAllowed || false,
-            visible: isIdentifyAllowed || false,
           },
         };
 
@@ -843,18 +816,14 @@ const createReducer = (initialState) => {
           munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
 
         if (isIdentifyAllowed) {
-          munimap_identify.handleCallback(slctr.getIdentifyCallback(state), {
-            feature,
-            pixelInCoords,
-          });
+          munimap_identify.handleCallback(
+            slctr.getIdentifyCallback(state),
+            action.asyncDispatch,
+            {feature, pixelInCoords}
+          );
         }
         return {
           ...state,
-          identify: {
-            ...state.identify,
-            controlEnabled: isIdentifyAllowed || false,
-            visible: isIdentifyAllowed || false,
-          },
         };
 
       //POPUP_CLOSED
@@ -871,15 +840,10 @@ const createReducer = (initialState) => {
       case actions.IDENTIFY_RESETED:
         munimap_identify.handleCallback(
           slctr.getIdentifyCallback(state),
-          undefined
+          action.asyncDispatch
         );
         return {
           ...state,
-          identify: {
-            ...state.identify,
-            controlEnabled: false,
-            visible: false,
-          },
         };
 
       //POINTERMOVE_TIMEOUT_EXPIRED
@@ -1004,19 +968,22 @@ const createReducer = (initialState) => {
         if (action.payload.identifyCallbackId) {
           //new callback in munimap.reset
           const store = getIdentifyStore();
-          store ? getIdentifyStore().clear() : createIdentifyStore();
-          newState.identify.controlEnabled = false;
-          newState.identify.visible = true;
+          if (store) {
+            store.once('clear', () =>
+              action.asyncDispatch(actions.identifyFeatureChanged())
+            );
+            store.clear();
+          } else {
+            createIdentifyStore();
+          }
         } else if (slctr.isIdentifyEnabled(state)) {
           //same callback as in munimap.create => handle with undefined
           munimap_identify.handleCallback(
             slctr.getIdentifyCallback(state),
-            undefined
+            action.asyncDispatch
           );
           newState.requiredOpts.identifyCallbackId =
             state.requiredOpts.identifyCallbackId;
-          newState.identify.controlEnabled = false;
-          newState.identify.visible = true;
         }
 
         return newState;
@@ -1039,6 +1006,13 @@ const createReducer = (initialState) => {
           };
         }
         return {...state};
+
+      //IDENTIFY_FEATURE_CHANGED
+      case actions.IDENTIFY_FEATURE_CHANGED:
+        return {
+          ...state,
+          identifyTimestamp: Date.now(),
+        };
 
       //DEAFULT
       default:

@@ -231,6 +231,8 @@ export const RESET_MUNIMAP = 'RESET_MUNIMAP';
  */
 export const REQUIRED_VIEW_CHANGED = 'REQUIRED_VIEW_CHANGED';
 
+export const IDENTIFY_FEATURE_CHANGED = 'IDENTIFY_FEATURE_CHANGED';
+
 /**
  * @param {Array<ol.Feature|string>} markers markers
  * @param {LoadedTypes} loadedTypes loaded feature types
@@ -586,5 +588,14 @@ export function requiredViewChanged(object) {
   return {
     type: REQUIRED_VIEW_CHANGED,
     payload: object,
+  };
+}
+
+/**
+ * @return {PayloadAsyncAction} action
+ */
+export function identifyFeatureChanged() {
+  return {
+    type: IDENTIFY_FEATURE_CHANGED,
   };
 }

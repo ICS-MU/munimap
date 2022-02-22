@@ -64,7 +64,7 @@ const IdentifyComponent = (props) => {
         lang
       )}
       ref={resetElRef}
-      onClick={onReset}
+      onClick={enabled ? onReset : undefined}
     >
       <i
         id="munimap-reset-icon"

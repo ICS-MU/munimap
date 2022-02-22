@@ -52,7 +52,7 @@ const MunimapComponent = (props) => {
   const invalidCodes = useSelector(slctr.getInvalidCodes);
   const simpleScroll = useSelector(slctr.getRequiredSimpleScroll);
   const allStyleFunctions = useSelector(slctr.getAllStyleFunctions);
-  const identifyVisibled = useSelector(slctr.isIdentifyVisible);
+  const identifyVisibled = useSelector(slctr.isIdentifyLayerVisible);
   const isIdentifyEnabled = useSelector(slctr.isIdentifyEnabled);
   const isTooltipShown = useSelector(slctr.isTooltipShown);
 
