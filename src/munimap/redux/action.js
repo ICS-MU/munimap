@@ -211,26 +211,12 @@ export const IDENTIFY_RESETED = 'IDENTIFY_RESETED';
  * @type {string}
  * @const
  */
-export const POINTERMOVE_TIMEOUT_EXPIRED = 'POINTERMOVE_TIMEOUT_EXPIRED';
-
-/**
- * @type {string}
- * @const
- */
-export const TOOLTIP_CANCELLED = 'TOOLTIP_CANCELLED';
-
-/**
- * @type {string}
- * @const
- */
 export const RESET_MUNIMAP = 'RESET_MUNIMAP';
 
 /**
  * @type {string}
  * @const
  */
-export const REQUIRED_VIEW_CHANGED = 'REQUIRED_VIEW_CHANGED';
-
 export const IDENTIFY_FEATURE_CHANGED = 'IDENTIFY_FEATURE_CHANGED';
 
 /**
@@ -544,28 +530,6 @@ export function identifyReseted() {
 }
 
 /**
- * @param {PointerMoveTimeoutOptions} object object
- * @return {PayloadAsyncAction} action
- */
-export function pointerMoveTimeoutExpired(object) {
-  return {
-    type: POINTERMOVE_TIMEOUT_EXPIRED,
-    payload: object,
-  };
-}
-
-/**
- * @param {PointerMoveTimeoutOptions} [object] object
- * @return {PayloadAsyncAction} action
- */
-export function tooltipCancelled(object) {
-  return {
-    type: TOOLTIP_CANCELLED,
-    payload: object,
-  };
-}
-
-/**
  * @param {RequiredOptions} object object
  * @return {PayloadAsyncAction} action
  */
@@ -573,20 +537,6 @@ export function resetMunimap(object) {
   sendEvent('map', 'reset');
   return {
     type: RESET_MUNIMAP,
-    payload: object,
-  };
-}
-
-/**
- * @param {{
- *    extent: ol.extent.Extent,
- *    duration: number
- * }} object object
- * @return {PayloadAsyncAction} action
- */
-export function requiredViewChanged(object) {
-  return {
-    type: REQUIRED_VIEW_CHANGED,
     payload: object,
   };
 }

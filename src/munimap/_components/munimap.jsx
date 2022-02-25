@@ -14,9 +14,7 @@ import {CREATED_MAPS} from '../create.js';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {Map} from 'ol';
-import {getAnimationDuration} from '../utils/animation.js';
 import {hot} from 'react-hot-loader';
-import {intersects} from 'ol/extent';
 import {unlistenByKey} from 'ol/events';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -196,15 +194,6 @@ const MunimapComponent = (props) => {
         _map.set(MUNIMAP_PROPS_ID, mapProps);
         CREATED_MAPS[requiredOpts.targetId] = _map;
         munimap_view.attachIndependentMapListeners(_map, dispatch);
-      } else {
-        //munimap.reset
-        const ext = requiredView.calculateExtent(map.getSize());
-        const currentExt = map.getView().calculateExtent();
-        let duration = 0;
-        if (intersects(currentExt, ext)) {
-          duration = getAnimationDuration(currentExt, ext);
-        }
-        dispatch(actions.requiredViewChanged({extent: ext, duration}));
       }
     }
   }, [areMarkersLoaded, areZoomToLoaded, requiredView]);

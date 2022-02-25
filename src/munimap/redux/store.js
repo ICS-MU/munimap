@@ -23,7 +23,6 @@ import {Feature, getUid} from 'ol';
 import {INITIAL_STATE} from '../conf.js';
 import {ROOM_TYPES, isRoom} from '../feature/room.js';
 import {asyncDispatchMiddleware} from './middleware.js';
-import {calculateParameters as calculateTooltipParameters} from '../view/tooltip.js';
 import {
   clearFloorBasedStores,
   refreshFloorBasedStores,
@@ -127,7 +126,8 @@ const createReducer = (initialState) => {
       case actions.MARKERS_LOADED:
         loadedTypes = action.payload;
         featuresTimestamps = getFeaturesTimestamps(state, loadedTypes);
-        return {
+
+        newState = {
           ...state,
           ...featuresTimestamps,
           markersTimestamp: Date.now(),
@@ -136,15 +136,31 @@ const createReducer = (initialState) => {
             : state.optPoisTimestamp,
         };
 
+        if (slctr.areZoomToLoaded(newState)) {
+          animationRequest = slctr.calculateAnimationRequest(newState);
+          if (animationRequest) {
+            newState.animationRequest = animationRequest;
+          }
+        }
+        return newState;
+
       // ZOOMTO_LOADED
       case actions.ZOOMTO_LOADED:
         loadedTypes = action.payload;
         featuresTimestamps = getFeaturesTimestamps(state, loadedTypes);
-        return {
+        newState = {
           ...state,
           ...featuresTimestamps,
           zoomToTimestamp: Date.now(),
         };
+
+        if (slctr.areMarkersLoaded(newState)) {
+          animationRequest = slctr.calculateAnimationRequest(newState);
+          if (animationRequest) {
+            newState.animationRequest = animationRequest;
+          }
+        }
+        return newState;
 
       // MAP_INITIALIZED
       case actions.MAP_INITIALIZED:
@@ -960,26 +976,16 @@ const createReducer = (initialState) => {
             state.requiredOpts.identifyCallbackId;
         }
 
-        return newState;
-
-      //REQUIRED_VIEW_CHANGED
-      case actions.REQUIRED_VIEW_CHANGED:
-        if (action.payload.extent) {
-          animationRequest = {
-            extent: action.payload.extent,
-            duration: action.payload.duration,
-          };
-          return {
-            ...state,
-            animationRequest: [
-              {
-                ...INITIAL_STATE.animationRequest[0],
-                ...animationRequest,
-              },
-            ],
-          };
+        if (
+          slctr.areMarkersLoaded(newState) &&
+          slctr.areZoomToLoaded(newState)
+        ) {
+          animationRequest = slctr.calculateAnimationRequest(newState);
+          if (animationRequest) {
+            newState.animationRequest = animationRequest;
+          }
         }
-        return {...state};
+        return newState;
 
       //IDENTIFY_FEATURE_CHANGED
       case actions.IDENTIFY_FEATURE_CHANGED:

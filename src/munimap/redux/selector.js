@@ -18,7 +18,7 @@ import {
 import {BUILDING_RESOLUTION, ROOM_RESOLUTION} from '../cluster/cluster.js';
 import {LAYER_ID as CLUSTER_LAYER_ID} from '../layer/cluster.js';
 import {LAYER_ID as COMPLEX_LAYER_ID} from '../layer/complex.js';
-import {ENABLE_SELECTOR_LOGS} from '../conf.js';
+import {ENABLE_SELECTOR_LOGS, INITIAL_STATE} from '../conf.js';
 import {FEATURE_TYPE_PROPERTY_NAME} from '../feature/feature.js';
 import {GeoJSON} from 'ol/format';
 import {
@@ -69,6 +69,7 @@ import {
   getBufferValue,
 } from '../utils/extent.js';
 import {featureExtentIntersect, getBetterInteriorPoint} from '../utils/geom.js';
+import {getAnimationDuration} from '../utils/animation.js';
 import {
   getByCode as getBuildingByCode,
   getNamePart as getBuildingNamePart,
@@ -2015,5 +2016,39 @@ export const getOffsetForPopup = createSelector(
     return ft && ft.layerId === getPubtranType().layerId
       ? [0, 0]
       : defaultOffset;
+  }
+);
+
+/**
+ * @type {Reselect.OutputSelector<
+ *    State,
+ *    AnimationRequestState,
+ *    function(ol.Size, ol.Extent, View): AnimationRequestState
+ * >}
+ */
+export const calculateAnimationRequest = createSelector(
+  [getSize, getExtent, calculateView],
+  (size, extent, view) => {
+    const newExt = view.calculateExtent(size);
+    let duration = 0;
+
+    if (extent && newExt) {
+      if (ol_extent.intersects(extent, newExt)) {
+        duration = getAnimationDuration(extent, newExt);
+      }
+
+      const animationRequest = {
+        extent: newExt,
+        duration,
+      };
+      return [
+        {
+          ...INITIAL_STATE.animationRequest[0],
+          ...animationRequest,
+        },
+      ];
+    } else {
+      return null;
+    }
   }
 );
