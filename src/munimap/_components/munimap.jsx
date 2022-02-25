@@ -8,7 +8,7 @@ import LoadingMessage from './loadingmessage.jsx';
 import MapContext from '../_contexts/mapcontext.jsx';
 import Popup from './popup.jsx';
 import PropTypes from 'prop-types';
-import React, {useEffect, useLayoutEffect, useRef} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import Tooltip from './tooltip.jsx';
 import {CREATED_MAPS} from '../create.js';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
@@ -54,7 +54,9 @@ const MunimapComponent = (props) => {
   const allStyleFunctions = useSelector(slctr.getAllStyleFunctions);
   const identifyVisibled = useSelector(slctr.isIdentifyLayerVisible);
   const isIdentifyEnabled = useSelector(slctr.isIdentifyEnabled);
-  const isTooltipShown = useSelector(slctr.isTooltipShown);
+  const lang = useSelector(slctr.getLang);
+
+  const [tooltipProps, setTooltipProps] = useState(null);
 
   const hasInvalidCodes = invalidCodes && invalidCodes.length > 0;
   const shouldBlockMap = !simpleScroll;
@@ -74,10 +76,9 @@ const MunimapComponent = (props) => {
       requiredOpts,
       selectedFeature,
       isIdentifyEnabled,
-      isTooltipShown,
     });
     return () => eventKeys.forEach((k) => unlistenByKey(k));
-  }, [map, requiredOpts, selectedFeature, isIdentifyEnabled, isTooltipShown]);
+  }, [map, requiredOpts, selectedFeature, isIdentifyEnabled]);
 
   useEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
@@ -153,6 +154,26 @@ const MunimapComponent = (props) => {
     }
   }, [map, mapInitialized]);
 
+  useEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## MUNIMAP-tooltip');
+    }
+
+    if (map) {
+      const key = map.on('pointermove', (evt) => {
+        munimap_view.ensureTooltip(evt, {
+          selectedFeature,
+          lang,
+          tooltipProps,
+          setTooltipProps,
+          requiredOpts,
+        });
+      });
+
+      return () => unlistenByKey(key);
+    }
+  }, [map, tooltipProps, selectedFeature, requiredOpts]);
+
   useLayoutEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## MUNIMAP-useLayoutEffect');
@@ -221,7 +242,12 @@ const MunimapComponent = (props) => {
           ref={munimapElRef}
         >
           <div ref={munimapTargetElRef} className="map-target">
-            <Tooltip />
+            {tooltipProps && (
+              <Tooltip
+                title={tooltipProps.title}
+                positionInCoords={tooltipProps.positionInCoords}
+              />
+            )}
             <InfoBubble />
             <Popup />
             {map && <Controls />}

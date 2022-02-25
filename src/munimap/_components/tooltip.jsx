@@ -1,4 +1,5 @@
 import MapContext from '../_contexts/mapcontext.jsx';
+import PropTypes from 'prop-types';
 import React, {useContext, useLayoutEffect, useRef} from 'react';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {
@@ -6,7 +7,6 @@ import {
   getResolution,
   getRotation,
   getSize,
-  getTooltip,
 } from '../redux/selector.js';
 import {getElementSize} from '../utils/dom.js';
 import {getPixelFromCoordinate} from '../utils/map.js';
@@ -15,6 +15,8 @@ import {useSelector} from 'react-redux';
 
 /**
  * @typedef {import("ol/pixel").Pixel} ol.pixel.Pixel
+ * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
+ * @typedef {import("../view/tooltip.js").TooltipParams} TooltipParams
  */
 
 /**
@@ -39,8 +41,8 @@ const updatePosition = (element, centroidAsPixel, offsetX = 0, offsetY = 2) => {
 };
 
 /**
- * @type {React.FC}
- * @param {React.PropsWithChildren<{}>} props props
+ * @type {React.FC<TooltipParams>}
+ * @param {React.PropsWithChildren<TooltipParams>} props props
  * @return {React.ReactElement} React element
  */
 const TooltipComponent = (props) => {
@@ -48,7 +50,8 @@ const TooltipComponent = (props) => {
   const size = useSelector(getSize);
   const rotation = useSelector(getRotation);
   const center = useSelector(getCenter);
-  const {title, positionInCoords} = useSelector(getTooltip);
+
+  const {title, positionInCoords} = props;
 
   const tooltipElRef = useRef(null);
   const mapRef = useContext(MapContext);
@@ -82,6 +85,11 @@ const TooltipComponent = (props) => {
       <div className="munimap-tooltip-text">{title}</div>
     </div>
   );
+};
+
+TooltipComponent.propTypes = {
+  title: PropTypes.string.isRequired,
+  positionInCoords: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 
 export default hot(module)(TooltipComponent);

@@ -13,6 +13,11 @@ import {
 import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {Point} from 'ol/geom';
 import {
+  calculateParameters,
+  inTooltipResolutionRange,
+  isSuitableForTooltip,
+} from './tooltip.js';
+import {
   createActiveStore as createActiveDoorStore,
   createStore as createDoorStore,
 } from '../source/door.js';
@@ -48,7 +53,6 @@ import {createStore as createUnitStore} from '../source/unit.js';
 import {getDefaultLayers} from '../layer/layer.js';
 import {getMainFeatureAtPixel} from '../feature/feature.js';
 import {getUid} from 'ol';
-import {inTooltipResolutionRange, isSuitableForTooltip} from './tooltip.js';
 import {refreshActiveStyle as refreshActiveDoorStyle} from './door.js';
 import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
 import {updateClusteredFeatures} from './cluster.js';
@@ -78,6 +82,8 @@ import {updateClusteredFeatures} from './cluster.js';
  * @typedef {import("../redux/selector.js").AllStyleFunctionsResult} AllStyleFunctionsResult
  * @typedef {import("ol/events.js").EventsKey} EventsKey
  * @typedef {import("ol/view.js").AnimationOptions} AnimationOptions
+ * @typedef {import("../view/tooltip.js").TooltipParams} TooltipParams
+ * @typedef {import("react").Dispatch<TooltipParams>} DispatchTooltipParams
  */
 
 /**
@@ -85,7 +91,15 @@ import {updateClusteredFeatures} from './cluster.js';
  * @property {string} selectedFeature selected feature
  * @property {RequiredOptions} requiredOpts options
  * @property {boolean} isIdentifyEnabled isIdentifyEnabled
- * @property {boolean} isTooltipShown isTooltipShown
+ */
+
+/**
+ * @typedef {Object} EnsureTooltipOptions
+ * @property {string} selectedFeature selected feature
+ * @property {string} lang language
+ * @property {string} tooltipProps selected feature
+ * @property {DispatchTooltipParams} setTooltipProps selected feature
+ * @property {RequiredOptions} requiredOpts options
  */
 
 /**
@@ -248,24 +262,17 @@ const handleMapClick = (evt, dispatch, options) => {
 
 /**
  * @param {MapBrowserEvent} evt event
- * @param {redux.Dispatch} dispatch dispatch
  * @param {MapListenersOptions} options options
  */
-const handlePointerMove = (evt, dispatch, options) => {
+const handlePointerMove = (evt, options) => {
   if (evt.dragging) {
     return;
   }
 
-  const {selectedFeature, isIdentifyEnabled, isTooltipShown} = options;
-  const {
-    targetId,
-    getMainFeatureAtPixelId,
-    clusterFacultyAbbr,
-    identifyTypes,
-    tooltips: tooltipsEnabled,
-  } = options.requiredOpts;
+  const {selectedFeature, isIdentifyEnabled} = options;
+  const {targetId, getMainFeatureAtPixelId, clusterFacultyAbbr, identifyTypes} =
+    options.requiredOpts;
   const map = evt.map;
-  const resolution = map.getView().getResolution(); //from map or state?
   const targetEl = TARGET_ELEMENTS_STORE[targetId];
   const pixel = map.getEventPixel(evt.originalEvent);
   const getMainFeatureAtPixelFn = getMainFeatureAtPixelId
@@ -280,7 +287,6 @@ const handlePointerMove = (evt, dispatch, options) => {
       layer.get('isFeatureClickable')
     );
 
-    //pointer
     if (isClickable) {
       munimap_assert.assertFunction(isClickable);
       const handlerOpts = {
@@ -295,8 +301,33 @@ const handlePointerMove = (evt, dispatch, options) => {
     } else {
       targetEl.style.cursor = '';
     }
+  } else {
+    targetEl.style.cursor = '';
+  }
+};
 
-    //tooltips
+/**
+ * @param {MapBrowserEvent} evt event
+ * @param {EnsureTooltipOptions} options options
+ */
+const ensureTooltip = (evt, options) => {
+  const {selectedFeature, lang, tooltipProps, setTooltipProps} = options;
+  const {
+    targetId,
+    getMainFeatureAtPixelId,
+    tooltips: tooltipsEnabled,
+    locationCodes,
+  } = options.requiredOpts;
+  const map = evt.map;
+  const resolution = map.getView().getResolution();
+  const pixel = map.getEventPixel(evt.originalEvent);
+  const getMainFeatureAtPixelFn = getMainFeatureAtPixelId
+    ? GET_MAIN_FEATURE_AT_PIXEL_STORE[getMainFeatureAtPixelId]
+    : getMainFeatureAtPixel;
+
+  const featureWithLayer = getMainFeatureAtPixelFn(map, pixel);
+  if (featureWithLayer) {
+    const feature = featureWithLayer.feature;
     const inTooltipResolutionRange_ = inTooltipResolutionRange(
       feature,
       resolution,
@@ -306,8 +337,8 @@ const handlePointerMove = (evt, dispatch, options) => {
       if (TIMEOUT_STORE[targetId]) {
         clearTimeout(TIMEOUT_STORE[targetId]);
         delete TIMEOUT_STORE[targetId];
-        if (isTooltipShown) {
-          dispatch(actions.tooltipCancelled());
+        if (tooltipProps) {
+          setTooltipProps(null);
         }
       }
 
@@ -318,24 +349,25 @@ const handlePointerMove = (evt, dispatch, options) => {
           pixelInCoords: map.getCoordinateFromPixel(pixel),
           purposeTitle: feature.get('ucel_nazev'),
           purposeGis: feature.get('ucel_gis'),
+          resolution,
+          lang,
+          locationCodes,
         };
         TIMEOUT_STORE[targetId] = setTimeout(
-          () => dispatch(actions.pointerMoveTimeoutExpired(opts)),
+          () => setTooltipProps(calculateParameters(opts)),
           750
         );
       }
-    } else if (!inTooltipResolutionRange_ && isTooltipShown) {
-      dispatch(actions.tooltipCancelled());
+    } else if (!inTooltipResolutionRange_ && tooltipProps) {
+      setTooltipProps(null);
     }
   } else {
-    //pointer + tooltips
-    targetEl.style.cursor = '';
     if (TIMEOUT_STORE[targetId]) {
       clearTimeout(TIMEOUT_STORE[targetId]);
       delete TIMEOUT_STORE[targetId];
     }
-    if (isTooltipShown) {
-      dispatch(actions.tooltipCancelled());
+    if (tooltipProps) {
+      setTooltipProps(null);
     }
   }
 };
@@ -376,9 +408,7 @@ const attachDependentMapListeners = (map, dispatch, options) => {
     return [];
   }
   const k1 = map.on('click', (evt) => handleMapClick(evt, dispatch, options));
-  const k2 = map.on('pointermove', (evt) =>
-    handlePointerMove(evt, dispatch, options)
-  );
+  const k2 = map.on('pointermove', (evt) => handlePointerMove(evt, options));
   return [k1, k2];
 };
 
@@ -537,6 +567,7 @@ export {
   ensureBaseMap,
   ensureClusterUpdate,
   ensureLayers,
+  ensureTooltip,
   refreshStyles,
   refreshVisibility,
 };

@@ -846,32 +846,6 @@ const createReducer = (initialState) => {
           ...state,
         };
 
-      //POINTERMOVE_TIMEOUT_EXPIRED
-      case actions.POINTERMOVE_TIMEOUT_EXPIRED:
-        const params = calculateTooltipParameters({
-          ...action.payload,
-          resolution: slctr.getResolution(state),
-          lang: slctr.getLang(state),
-          locationCodes: state.requiredOpts.locationCodes,
-        });
-
-        return {
-          ...state,
-          tooltip: {
-            ...state.tooltip,
-            ...params,
-          },
-        };
-
-      //TOOLTIP_CANCELLED
-      case actions.TOOLTIP_CANCELLED:
-        return {
-          ...state,
-          tooltip: {
-            ...initialState.tooltip,
-          },
-        };
-
       //RESET_MUNIMAP
       case actions.RESET_MUNIMAP:
         const markerIdsEquals =

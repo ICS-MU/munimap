@@ -220,8 +220,4 @@ export const INITIAL_STATE = {
   popup: {
     uid: null,
   },
-  tooltip: {
-    title: null,
-    positionInCoords: null,
-  },
 };

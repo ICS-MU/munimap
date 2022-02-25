@@ -359,13 +359,6 @@ export const getRequiredSimpleScroll = (state) =>
 export const getErrorMessageState = (state) => state.errorMessage;
 
 /**
- * @type {Reselect.Selector<State, TooltipState>}
- * @param {State} state state
- * @return {TooltipState} tooltip state
- */
-export const getTooltip = (state) => state.tooltip;
-
-/**
  * @type {Reselect.Selector<State, string>}
  * @param {State} state state
  * @return {string} id
@@ -1862,18 +1855,6 @@ export const getIdentifyCallback = createSelector(
     }
     return IDENTIFY_CALLBACK_STORE[identifyCallbackId];
   }
-);
-
-/**
- * @type {Reselect.OutputSelector<
- *    State,
- *    boolean,
- *    function(TooltipState): boolean
- * >}
- */
-export const isTooltipShown = createSelector(
-  [getTooltip],
-  (tooltip) => !!tooltip.positionInCoords
 );
 
 /**
