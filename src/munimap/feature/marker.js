@@ -49,7 +49,7 @@ const isMarker = (feature) => {
 const isClickable = (options) => {
   const {feature, resolution, selectedFeature} = options;
   const hasPoiDetail =
-    feature.get('popupDetails') && feature.get('popupDetails').length > 0;
+    feature.get('detail') && feature.get('detail').length > 0;
 
   if (isCustomMarker(feature) || hasPoiDetail) {
     return true;

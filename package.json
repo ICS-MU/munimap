@@ -37,6 +37,7 @@
     "@babel/register": "^7.16.9",
     "@openlayers/eslint-plugin": "^4.0.0",
     "@types/ol": "^6.5.0",
+    "@types/sanitize-html": "^2.6.2",
     "@types/uuid": "^8.3.4",
     "@types/webpack-env": "^1.16.3",
     "babel-loader": "^8.2.3",
@@ -73,6 +74,7 @@
     "react-select": "^5.2.1",
     "redux": "^4.0.5",
     "reselect": "^4.0.0",
+    "sanitize-html": "^2.7.0",
     "uuid": "^8.3.2",
     "whatwg-fetch": "^3.6.2"
   },

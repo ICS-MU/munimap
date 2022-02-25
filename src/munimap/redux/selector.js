@@ -39,6 +39,7 @@ import {ACTIVE_LAYER_ID as POI_ACTIVE_LAYER_ID} from '../layer/poi.js';
 import {PURPOSE as POI_PURPOSE} from '../feature/poi.js';
 import {
   RESOLUTION as PUBTRAN_RESOLUTION,
+  getDetailHtml,
   getType as getPubtranType,
 } from '../feature/pubtran.stop.js';
 import {Resolutions as PoiResolutions} from '../style/poi.js';
@@ -1961,13 +1962,13 @@ export const isPopupVisible = createSelector([getPopupFeatureUid], (uid) => {
 /**
  * @type {Reselect.OutputSelector<
  *    State,
- *    Array<PopupContentOptions>,
- *    function(ol.Feature): Array<PopupContentOptions>
+ *    string,
+ *    function(ol.Feature, string): string
  * >}
  */
 export const getPopupContent = createSelector(
-  [getFeatureForPopup],
-  (feature) => {
+  [getFeatureForPopup, getLang],
+  (feature, lang) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('get popup content');
     }
@@ -1977,8 +1978,8 @@ export const getPopupContent = createSelector(
     }
     const ft = feature.get(FEATURE_TYPE_PROPERTY_NAME);
     return ft && ft.layerId === getPubtranType().layerId
-      ? [{pubTran: feature.get('nazev')}]
-      : feature.get('popupDetails');
+      ? getDetailHtml(feature.get('nazev'), lang)
+      : feature.get('detail');
   }
 );
 

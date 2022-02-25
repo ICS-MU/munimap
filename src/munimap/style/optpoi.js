@@ -32,9 +32,7 @@ const markerLabel = (ctgId, roomCodes, lang) => (feature, resolution) => {
   let label;
   let clusteredNumber;
   if (clustered.length === 1) {
-    clusteredNumber =
-      clustered[0].get('popupDetails') &&
-      clustered[0].get('popupDetails').length;
+    clusteredNumber = clustered[0].get('numberOfDetails');
     label =
       clusteredNumber > 1
         ? `${clusteredNumber}x ${munimap_lang.getMsg(ctgId, lang)}`
@@ -47,9 +45,9 @@ const markerLabel = (ctgId, roomCodes, lang) => (feature, resolution) => {
 
     let count = clustered.length;
     clustered.forEach((el) => {
-      const detailsCount = el.get('popupDetails');
-      if (detailsCount && detailsCount.length > 1) {
-        count += detailsCount.length - 1;
+      const detailsCount = el.get('numberOfDetails');
+      if (detailsCount && detailsCount > 1) {
+        count += detailsCount - 1;
       }
     });
     label = `${count}x ${ctgLabel}`;

@@ -105,11 +105,8 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
 
 /**
  * @typedef {Object} PopupContentOptions
- * @property {string} [title] title
- * @property {string} [text] text
- * @property {string} [titleUrl] url
- * @property {string} [textUrl] url
- * @property {string} [pubTran] pubtran
+ * @property {string} [name] title
+ * @property {string} [open] text
  */
 
 /**

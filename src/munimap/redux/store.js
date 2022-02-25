@@ -557,7 +557,7 @@ const createReducer = (initialState) => {
         if (clusteredFeatures.length === 1) {
           let center;
 
-          if (firstFeature.get('popupDetails')) {
+          if (firstFeature.get('detail')) {
             popupOpts.uid = getUid(firstFeature);
           }
 
@@ -648,7 +648,7 @@ const createReducer = (initialState) => {
           });
         }
 
-        if (feature.get('popupDetails')) {
+        if (feature.get('detail')) {
           popupOpts.uid = getUid(feature);
         }
 

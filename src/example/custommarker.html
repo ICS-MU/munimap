@@ -61,7 +61,7 @@
         <b>label</b> - textový popis, který se zobrazí u "špendlíku" v mapě
       </li>
       <li>
-        <b>popupDetails</b> - popis, který se zobrazí po kliknutí na "špendlík" - nepovinný parametr
+        <b>detail</b> - popis, který se zobrazí po kliknutí na "špendlík" - nepovinný parametr
       </li>
       <li>
         <b>color</b> - nastaví vlastní barvu (hexadecimální zápis #RRGGBB) špendlíku a popisku - nepovinný parametr
@@ -76,14 +76,7 @@
           new munimap.ol.Feature({
             geometry: new munimap.ol.geom.Point([16.612802, 49.190582]),
             label: 'Brno hlavní nádraží',
-            popupDetails: [
-              {
-                title: 'Hlavní nádraží',
-                text: 'www.cd.cz',
-                titleUrl: undefined,
-                textUrl: 'https://www.cd.cz',
-              }
-            ],
+            detail: '&lt;h4&gt;Hlavní nádraží&lt;/h4&gt;&lt;a href="https://www.cd.cz" target="_blank"&gt;www.cd.cz&lt;/a&gt;',
             color: '#009900'
           }),
           new munimap.ol.Feature({
@@ -141,13 +134,7 @@
         new munimap.ol.Feature({
           geometry: new munimap.ol.geom.Point([16.612802, 49.190582]),
           label: 'Brno hlavní nádraží',
-          popupDetails: [
-            {
-              title: 'Hlavní nádraží',
-              text: 'www.cd.cz',
-              textUrl: 'https://www.cd.cz'
-            }
-          ],
+          detail: '<h4>Hlavní nádraží</h4><a href="https://www.cd.cz" target="_blank">www.cd.cz</a>',
           color: '#009900'
         }),
         new munimap.ol.Feature({

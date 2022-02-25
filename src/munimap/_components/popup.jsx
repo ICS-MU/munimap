@@ -1,13 +1,12 @@
 import * as actions from '../redux/action.js';
-import * as munimap_lang from '../lang/lang.js';
 import * as munimap_range from '../utils/range.js';
 import * as slctr from '../redux/selector.js';
 import MapContext from '../_contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useLayoutEffect, useRef} from 'react';
+import sanitizeHtml from 'sanitize-html';
 import {
   ENABLE_EFFECT_LOGS,
   ENABLE_RENDER_LOGS,
-  IDOS_URL,
   POPUP_TALE_HEIGHT,
   POPUP_TALE_INDENT,
 } from '../conf.js';
@@ -16,7 +15,6 @@ import {getPixelFromCoordinate} from '../utils/map.js';
 import {hot} from 'react-hot-loader';
 import {unlistenByKey} from 'ol/events';
 import {useDispatch, useSelector} from 'react-redux';
-import {wrapText} from '../style/style.js';
 
 /**
  * @typedef {import("ol/pixel").Pixel} ol.pixel.Pixel
@@ -55,7 +53,6 @@ const PopupComponent = (props) => {
   const size = useSelector(slctr.getSize);
   const rotation = useSelector(slctr.getRotation);
   const center = useSelector(slctr.getCenter);
-  const lang = useSelector(slctr.getLang);
   const dispatch = useDispatch();
 
   const positionInCoords = useSelector(slctr.getPopupPositionInCoords);
@@ -65,6 +62,7 @@ const PopupComponent = (props) => {
   const [offsetX, offsetY] = useSelector(slctr.getOffsetForPopup);
 
   const popupElRef = useRef(null);
+  const popupContentElRef = useRef(null);
   const mapRef = useContext(MapContext);
   const map = mapRef && mapRef.current;
 
@@ -82,6 +80,23 @@ const PopupComponent = (props) => {
       }
     }
   }, [hideResolution, resolution]);
+
+  useLayoutEffect(() => {
+    if (ENABLE_EFFECT_LOGS) {
+      console.log('########## POPUP-useEffect-content');
+    }
+    if (map && popupContentElRef.current) {
+      popupContentElRef.current.innerHTML = sanitizeHtml(content, {
+        allowedAttributes: {
+          ...sanitizeHtml.defaults.allowedAttributes,
+          '*': ['id', 'class', 'style'],
+        },
+      });
+      return () => {
+        popupContentElRef.current.innerHTML = '';
+      };
+    }
+  }, [map, content]);
 
   useLayoutEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
@@ -121,79 +136,7 @@ const PopupComponent = (props) => {
       }}
     >
       <div className="munimap-close-button" onClick={closePopup}></div>
-      <div className="munimap-content">
-        {content &&
-          content.map(({title, text, textUrl, titleUrl, pubTran}, idx) => {
-            const _title = pubTran ? pubTran : title && wrapText(title);
-            let textComp;
-            if (pubTran) {
-              const fromQuery = new URLSearchParams(`?t=${pubTran}`);
-              const toQuery = new URLSearchParams(`?f=${pubTran}`);
-              textComp = (
-                <div>
-                  {`${munimap_lang.getMsg(
-                    munimap_lang.Translations.FIND_CONNECTION,
-                    lang
-                  )}: `}
-                  <a
-                    href={`${IDOS_URL}?${fromQuery.toString()}`}
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    {munimap_lang.getMsg(
-                      munimap_lang.Translations.CONNECTION_TO,
-                      lang
-                    )}
-                  </a>
-                  {' / '}
-                  <a
-                    href={`${IDOS_URL}?${toQuery.toString()}`}
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    {munimap_lang.getMsg(
-                      munimap_lang.Translations.CONNECTION_FROM,
-                      lang
-                    )}
-                  </a>
-                </div>
-              );
-            } else {
-              const _text = text.replace(/(?:\s)?,(?:\s)?/g, '\n');
-              textComp = text && text.length > 0 && (
-                <div className="munimap-bubble-text">
-                  {textUrl ? (
-                    <a href={textUrl} rel="noreferrer" target="_blank">
-                      {_text}
-                    </a>
-                  ) : (
-                    _text
-                  )}
-                </div>
-              );
-            }
-            const titleComp = _title && _title.length > 0 && (
-              <div
-                className={pubTran ? 'munimap-title' : 'munimap-bubble-title'}
-              >
-                {titleUrl ? (
-                  <a href={titleUrl} rel="noreferrer" target="_blank">
-                    {_title}
-                  </a>
-                ) : (
-                  _title
-                )}
-              </div>
-            );
-
-            return (
-              <React.Fragment key={idx}>
-                {titleComp}
-                {textComp}
-              </React.Fragment>
-            );
-          })}
-      </div>
+      <div className="munimap-content" ref={popupContentElRef}></div>
     </div>
   );
 };

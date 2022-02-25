@@ -231,17 +231,19 @@ const addPoiDetail = (rooms, pois, lang) => {
         : poiCode === roomCode;
     });
 
-    let pracoviste;
-    let nazev_cs;
-    let nazev_en;
     const popupDetails = /** @type {Array<PopupContentOptions>}*/ ([]);
+    let workplace;
+    let title;
+    let titleEn;
+    let detailHtml = '';
+    let numberOfDetails = 0;
     filteredPois.forEach((poi) => {
       const url = poi.get('url');
       let name;
       let open;
-      pracoviste = poi.get('pracoviste');
-      nazev_cs = wrapText(poi.get('nazev_cs'));
-      nazev_en = wrapText(poi.get('nazev_en'));
+      workplace = poi.get('pracoviste');
+      title = wrapText(poi.get('nazev_cs'));
+      titleEn = wrapText(poi.get('nazev_en'));
 
       if (lang === munimap_lang.Abbr.CZECH) {
         name = poi.get('nazev_cs');
@@ -252,20 +254,37 @@ const addPoiDetail = (rooms, pois, lang) => {
       }
 
       if (munimap_utils.isDefAndNotNull(name)) {
-        popupDetails.push({title: name, text: open, titleUrl: url});
+        name = wrapText(name, '</br>');
+        if (url) {
+          name = `<a href="${url}" target="_blank">${name}</a>`;
+        }
+        open = open.replace(/,/g, '<br>');
+        name = `<div class="munimap-bubble-title">${name}</div>`;
+        open =
+          open === '' ? '' : `<div class="munimap-bubble-text">${open}</div>`;
+
+        popupDetails.push({name, open});
+        numberOfDetails += 1;
       }
     });
 
-    if (munimap_utils.isDefAndNotNull(nazev_cs)) {
+    if (munimap_utils.isDefAndNotNull(title)) {
+      const popupDetailsCleaned = munimap_utils.removeObjectDuplicatesFromArray(
+        popupDetails,
+        'name'
+      );
+      const duplicatesCount = popupDetails.length - popupDetailsCleaned.length;
+      popupDetailsCleaned.forEach(
+        (opts) => (detailHtml += `${opts.name}${opts.open}`)
+      );
+
       room.setProperties({
         'title': wrapText(room.get('title')),
-        'popupDetails': munimap_utils.removeObjectDuplicatesFromArray(
-          popupDetails,
-          'title'
-        ),
-        'pracoviste': pracoviste,
-        'nazev_cs': nazev_cs,
-        'nazev_en': nazev_en,
+        'detail': detailHtml !== '' ? detailHtml : undefined,
+        'numberOfDetails': numberOfDetails - duplicatesCount,
+        'pracoviste': workplace,
+        'nazev_cs': title,
+        'nazev_en': titleEn,
       });
     }
     result.push(room);
