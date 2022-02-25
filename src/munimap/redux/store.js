@@ -169,7 +169,7 @@ const createReducer = (initialState) => {
           loadOrDecorateMarkers(markerStrings, state.requiredOpts).then(
             (res) => {
               munimap_assert.assertMarkerFeatures(res);
-              const loadedTypes = getLoadedTypes(res);
+              const loadedTypes = getLoadedTypes(res, requiredMarkers);
               action.asyncDispatch(actions.markers_loaded(res, loadedTypes));
             }
           );
