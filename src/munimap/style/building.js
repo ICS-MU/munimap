@@ -27,6 +27,7 @@ import {getStore as getMarkerStore} from '../source/marker.js';
 
 /**
  * @typedef {Object} LabelOptions
+ * @property {string} targetId targetId
  * @property {string} lang lang
  * @property {boolean} showLabels wherther to show labels for MU objects
  * @property {ol.Extent} extent map extent based on current state
@@ -109,16 +110,17 @@ const BIG_FONT_SIZE = 15;
  *
  * @param {ol.Feature} feature feature
  * @param {number} resolution resolution
+ * @param {string} targetId targetId
  * @param {boolean} showSelected whether tho show building as selected
  * @return {Style|Array<Style>} style
  */
-const styleFunction = (feature, resolution, showSelected) => {
+const styleFunction = (feature, resolution, targetId, showSelected) => {
   const resColor = munimap_style.RESOLUTION_COLOR.find((obj, i, arr) => {
     return resolution > obj.resolution || i === arr.length - 1;
   });
 
   let result;
-  const marked = getMarkerStore().getFeatures().indexOf(feature) >= 0;
+  const marked = getMarkerStore(targetId).getFeatures().indexOf(feature) >= 0;
   if (marked) {
     if (
       !munimap_range.contains(munimap_cluster.BUILDING_RESOLUTION, resolution)
@@ -322,14 +324,14 @@ const largeScaleLabelFunction = (feature, resolution, extent, lang) => {
  * @return {Style|Array<Style>} style
  */
 const labelFunction = (labelOptions, feature, resolution) => {
-  const {lang, showLabels, extent} = labelOptions;
+  const {lang, showLabels, extent, targetId} = labelOptions;
 
   if (!extent) {
     return null;
   }
 
   let result = null;
-  const marked = getMarkerStore().getFeatures().indexOf(feature) >= 0;
+  const marked = getMarkerStore(targetId).getFeatures().indexOf(feature) >= 0;
   if (!marked && resolution < munimap_complex.RESOLUTION.max) {
     if (!munimap_range.contains(munimap_floor.RESOLUTION, resolution)) {
       result = smallScaleLabelFunction(feature, resolution, extent, lang);

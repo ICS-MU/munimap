@@ -86,18 +86,19 @@ const getResolutionRange = (resolution) => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {number|RangeInterface} resolution resolution
  * @return {Array<Feature>} features
  * @protected
  */
-const getClusteredFeatures = (resolution) => {
+const getClusteredFeatures = (targetId, resolution) => {
   const range = munimap_utils.isNumber(resolution)
     ? getResolutionRange(/** @type {number}*/ (resolution))
     : resolution;
   const ranges = Resolutions;
   let result;
-  const markers = getMarkerStore().getFeatures().concat();
-  const bldgs = getBuildingStore().getFeatures();
+  const markers = getMarkerStore(targetId).getFeatures().concat();
+  const bldgs = getBuildingStore(targetId).getFeatures();
   switch (range) {
     case ranges.MARKERS_ONLY:
       result = markers;
@@ -129,11 +130,12 @@ const isCluster = (feature) => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {Feature} cluster cluster
  * @return {boolean} whether contains marker
  */
-const containsMarker = (cluster) => {
-  const markers = getMarkerStore().getFeatures();
+const containsMarker = (targetId, cluster) => {
+  const markers = getMarkerStore(targetId).getFeatures();
   const clusteredFeatures = cluster.get('features');
   if (clusteredFeatures) {
     return clusteredFeatures.some((feat) => markers.includes(feat));
@@ -152,24 +154,26 @@ const getFeatures = (feature) => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {Feature} feature feature
  * @return {Array<Feature>} main features
  */
-const getMainFeatures = (feature) => {
+const getMainFeatures = (targetId, feature) => {
   let result = getFeatures(feature);
-  if (containsMarker(feature)) {
-    result = result.filter(munimap_marker.isMarker);
+  if (containsMarker(targetId, feature)) {
+    result = result.filter((f) => munimap_marker.isMarker(targetId, f));
   }
   return result;
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {Feature} feature feature
  * @return {Array<Feature>} minor features
  */
-const getMinorFeatures = (feature) => {
+const getMinorFeatures = (targetId, feature) => {
   let result = getFeatures(feature);
-  result = result.filter((f) => !munimap_marker.isMarker(f));
+  result = result.filter((f) => !munimap_marker.isMarker(targetId, f));
   return result;
 };
 

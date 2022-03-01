@@ -4,25 +4,27 @@
 import VectorSource from 'ol/source/Vector';
 
 /**
- * @type {VectorSource}
+ * @type {Object<string, VectorSource>}
  */
-let FLOOR_STORE;
+const FLOOR_STORES = {};
 
 /**
  * Create store for complexes.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const createStore = () => {
-  FLOOR_STORE = new VectorSource();
-  return FLOOR_STORE;
+const createStore = (targetId) => {
+  FLOOR_STORES[targetId] = new VectorSource();
+  return FLOOR_STORES[targetId];
 };
 
 /**
  * Get building store.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const getStore = () => {
-  return FLOOR_STORE;
+const getStore = (targetId) => {
+  return FLOOR_STORES[targetId];
 };
 
 export {createStore, getStore};

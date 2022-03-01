@@ -31,6 +31,7 @@ import {getLayer as getMarkerLayer} from '../layer/marker.js';
 /**
  * @typedef {Object} IsClickableOptions
  * @property {ol.Feature} feature feature
+ * @property {string} [targetId] targetId
  * @property {number} [resolution] resolution
  * @property {string} [selectedFeature] selected feature
  * @property {boolean} [clusterFacultyAbbr] cluster faculty abbreviation

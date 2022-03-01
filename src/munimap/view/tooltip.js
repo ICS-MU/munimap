@@ -27,6 +27,7 @@ import {getLabelHeight} from '../style/style.js';
  * @typedef {Object} TooltipExtendedProps
  * @property {number} resolution resolution
  * @property {string} lang lang
+ * @property {string} targetId targetId
  * @property {boolean} locationCodes locationCodes
  *
  * @typedef {PointerMoveTimeoutOptions & TooltipExtendedProps} TooltipOptions
@@ -109,14 +110,15 @@ const getPolygonOffset = (feature, lang, locationCodes) => {
  * @return {boolean} result
  */
 const isPoiPixel = (options) => {
-  const {featureUid, pixelInCoords, resolution, lang, locationCodes} = options;
+  const {featureUid, pixelInCoords, resolution, lang, locationCodes, targetId} =
+    options;
   const format = new GeoJSON();
   const turfPoint = /** @type {any} */ (
     format.writeFeatureObject(new Feature(new Point(pixelInCoords)))
   );
 
   //feature is always room
-  const room = getActiveRoomStore().getFeatureByUid(featureUid);
+  const room = getActiveRoomStore(targetId).getFeatureByUid(featureUid);
   const center = CENTER_GEOMETRY_FUNCTION(room).getCoordinates();
   const circle = new Circle(center, ((ICON_HEIGHT + 1) / 2) * resolution);
   const polygon = fromCircle(circle, 4);

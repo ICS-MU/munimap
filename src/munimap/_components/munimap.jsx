@@ -107,6 +107,7 @@ const MunimapComponent = (props) => {
       console.log('########## MUNIMAP-useEffect-clusterUpdate');
     }
     munimap_view.ensureClusterUpdate(map, {
+      targetId: requiredOpts.targetId,
       labels: requiredOpts.labels,
       buildingsCount,
     });

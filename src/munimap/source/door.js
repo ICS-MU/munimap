@@ -12,32 +12,34 @@ import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
  */
 
 /**
- * @type {VectorSource}
+ * @type {Object<string, VectorSource>}
  */
-let DOOR_STORE;
+const DOOR_STORES = {};
 
 /**
- * @type {VectorSource}
+ * @type {Object<string, VectorSource>}
  */
-let ACTIVE_DOOR_STORE;
+const ACTIVE_DOOR_STORES = {};
 
 /**
  * Create store for doors.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const createStore = () => {
-  DOOR_STORE = new VectorSource();
-  return DOOR_STORE;
+const createStore = (targetId) => {
+  DOOR_STORES[targetId] = new VectorSource();
+  return DOOR_STORES[targetId];
 };
 
 /**
  * Create store for active doors.
  * @param {redux.Store} store store
+ * @param {string} targetId targetId
  * @param {Function} callback callback
  * @return {VectorSource} store
  */
-const createActiveStore = (store, callback) => {
-  ACTIVE_DOOR_STORE = new VectorSource({
+const createActiveStore = (store, targetId, callback) => {
+  const activeStore = new VectorSource({
     strategy: tileLoadingStrategy(
       createTilegridXYZ({
         tileSize: 512,
@@ -45,23 +47,26 @@ const createActiveStore = (store, callback) => {
     ),
     loader: munimap_utils.partial(loadActiveDoors, {store, callback}),
   });
-  return ACTIVE_DOOR_STORE;
+  ACTIVE_DOOR_STORES[targetId] = activeStore;
+  return activeStore;
 };
 
 /**
  * Get door store.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const getStore = () => {
-  return DOOR_STORE;
+const getStore = (targetId) => {
+  return DOOR_STORES[targetId];
 };
 
 /**
  * Get active door store.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const getActiveStore = () => {
-  return ACTIVE_DOOR_STORE;
+const getActiveStore = (targetId) => {
+  return ACTIVE_DOOR_STORES[targetId];
 };
 
 export {createActiveStore, createStore, getActiveStore, getStore};

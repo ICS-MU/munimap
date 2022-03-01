@@ -5,25 +5,27 @@
 import VectorSource from 'ol/source/Vector';
 
 /**
- * @type {VectorSource}
+ * @type {Object<string, VectorSource>}
  */
-let IDENTIFY_STORE;
+const IDENTIFY_STORES = {};
 
 /**
  * Create store for identify.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const createStore = () => {
-  IDENTIFY_STORE = new VectorSource();
-  return IDENTIFY_STORE;
+const createStore = (targetId) => {
+  IDENTIFY_STORES[targetId] = new VectorSource();
+  return IDENTIFY_STORES[targetId];
 };
 
 /**
  * Get identify store.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const getStore = () => {
-  return IDENTIFY_STORE;
+const getStore = (targetId) => {
+  return IDENTIFY_STORES[targetId];
 };
 
 export {createStore, getStore};

@@ -34,11 +34,12 @@ import {isRoom, isInSelectedFloor as isRoomInSelectedFloor} from './room.js';
 const RESOLUTION = munimap_range.createResolution(0, 2.39);
 
 /**
+ * @param {string} targetId targetId
  * @param {ol.Feature} feature feature
  * @return {boolean} whether is marker feature
  */
-const isMarker = (feature) => {
-  const result = getMarkerStore().getFeatures().indexOf(feature) >= 0;
+const isMarker = (targetId, feature) => {
+  const result = getMarkerStore(targetId).getFeatures().indexOf(feature) >= 0;
   return result;
 };
 

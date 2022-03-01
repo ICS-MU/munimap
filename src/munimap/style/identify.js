@@ -31,6 +31,7 @@ import {isRoom} from '../feature/room.js';
 
 /**
  * @typedef {Object} StyleFunctionOptions
+ * @property {string} targetId targetId
  * @property {string} lang language
  * @property {boolean} [locationCodes] whether to show only location codes
  * @property {LabelFunction} [markerLabel] marker label function
@@ -52,8 +53,8 @@ const IDENTIFY_FILL = new Fill({
  * @return {ol.style.Style|Array<ol.style.Style>} style
  */
 const styleFunction = (feature, resolution, options) => {
-  const {lang, markerLabel, locationCodes, extent} = options;
-  const markers = getMarkerStore().getFeatures();
+  const {lang, markerLabel, locationCodes, extent, targetId} = options;
+  const markers = getMarkerStore(targetId).getFeatures();
 
   const identifiedFeature = getIdentifiedFeature(feature);
   const locCode = getLocationCode(feature);

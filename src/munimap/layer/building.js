@@ -60,16 +60,17 @@ const getLayer = (map) => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @return {VectorLayer} layer
  */
-const create = () => {
+const create = (targetId) => {
   return new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: LAYER_ID,
       isFeatureClickable: munimap_building.isClickable,
       featureClickHandler: munimap_building.featureClickHandler,
       type: munimap_building.getType(),
-      source: getBuildingStore(),
+      source: getBuildingStore(targetId),
       maxResolution: munimap_complex.RESOLUTION.max,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
@@ -79,18 +80,17 @@ const create = () => {
 };
 
 /**
- * @param {string} lang language
- * @param {boolean} showLabels wherther to show labels for MU objects
+ * @param {string} targetId targetId
  * @return {VectorLayer} layer
  */
-const createLabel = (lang, showLabels) => {
+const createLabel = (targetId) => {
   return new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: LABEL_LAYER_ID,
       isFeatureClickable: munimap_building.isClickable,
       featureClickHandler: munimap_building.featureClickHandler,
       type: munimap_building.getType(),
-      source: getBuildingStore(),
+      source: getBuildingStore(targetId),
       updateWhileAnimating: true,
       updateWhileInteracting: false,
       renderOrder: null,

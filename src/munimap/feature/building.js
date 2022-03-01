@@ -194,14 +194,15 @@ const isSelected = (building, selectedFeature) => {
  * @return {boolean} isClickable
  */
 const isClickable = (options) => {
-  const {feature, resolution, selectedFeature, isIdentifyEnabled} = options;
+  const {feature, resolution, selectedFeature, isIdentifyEnabled, targetId} =
+    options;
 
   if (munimap_range.contains(munimap_floor.RESOLUTION, resolution)) {
     return isIdentifyEnabled
       ? !isSelected(feature, selectedFeature)
       : !isSelected(feature, selectedFeature) && hasInnerGeometry(feature);
   } else if (hasInnerGeometry(feature) || isIdentifyEnabled) {
-    const markers = getMarkerStore().getFeatures();
+    const markers = getMarkerStore(targetId).getFeatures();
     return (
       markers.indexOf(feature) >= 0 ||
       resolution < munimap_complex.RESOLUTION.max
@@ -219,12 +220,13 @@ const featureClickHandler = (dispatch, options) => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {string} code code
  * @return {Feature} building
  */
-const getByCode = (code) => {
+const getByCode = (targetId, code) => {
   code = code.substr(0, 5);
-  const features = getBuildingStore().getFeatures();
+  const features = getBuildingStore(targetId).getFeatures();
   const building = features.find((feature) => {
     const idProperty = TYPE.primaryKey;
     return feature.get(idProperty) === code;
@@ -288,12 +290,13 @@ const getTitleWithoutOrgUnit = (building, lang, opt_separator) => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {Feature} building building
  * @return {string} floor code
  */
-const getSelectedFloorCode = (building) => {
+const getSelectedFloorCode = (targetId, building) => {
   let floorCode;
-  const markerSource = getMarkerStore();
+  const markerSource = getMarkerStore(targetId);
   const markedFeatures = markerSource.getFeatures();
   if (markedFeatures.length > 0) {
     const firstMarked = markedFeatures.find((marked) => {

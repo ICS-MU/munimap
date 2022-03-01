@@ -8,19 +8,21 @@ import {getActiveStore as getActiveRoomStore} from './room.js';
 
 /**
  * Refresh means clear and reload data.
+ * @param {string} targetId targetId
  */
-const refreshFloorBasedStores = () => {
-  getActiveRoomStore().refresh();
-  getActiveDoorStore().refresh();
-  getActivePoiStore().refresh();
+const refreshFloorBasedStores = (targetId) => {
+  getActiveRoomStore(targetId).refresh();
+  getActiveDoorStore(targetId).refresh();
+  getActivePoiStore(targetId).refresh();
 };
 
 /**
  * Clear make source empty - but no reload is started.
+ * @param {string} targetId targetId
  */
-const clearFloorBasedStores = () => {
-  getActiveRoomStore().clear();
-  getActiveDoorStore().clear();
+const clearFloorBasedStores = (targetId) => {
+  getActiveRoomStore(targetId).clear();
+  getActiveDoorStore(targetId).clear();
 };
 
 export {refreshFloorBasedStores, clearFloorBasedStores};

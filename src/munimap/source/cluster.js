@@ -90,14 +90,15 @@ class EnhancedClusterSource extends ClusterSource {
 }
 
 /**
+ * @param {string} targetId targetId
  * @param {string} lang language
  * @param {Feature} f1 feature1
  * @param {Feature} f2 feature2
  * @return {number} comparation number
  */
-const clusterCompareFn = (lang, f1, f2) => {
-  const m1 = isMarker(f1) ? 1 : 0;
-  const m2 = isMarker(f2) ? 1 : 0;
+const clusterCompareFn = (targetId, lang, f1, f2) => {
+  const m1 = isMarker(targetId, f1) ? 1 : 0;
+  const m2 = isMarker(targetId, f2) ? 1 : 0;
   let result = m2 - m1;
   if (!result) {
     const n1 =
@@ -116,24 +117,25 @@ const clusterCompareFn = (lang, f1, f2) => {
 };
 
 /**
- * @type {EnhancedClusterSource}
+ * @type {Object<string, EnhancedClusterSource>}
  */
-let CLUSTER_STORE;
+const CLUSTER_STORES = {};
 
 /**
  * Create store for clusters.
  * @param {Array<ol.Feature>} clusterFeatures features
+ * @param {string} targetId targetId
  * @param {ol.AttributionLike} muAttrs attributions
  * @param {string} lang language
  * @return {EnhancedClusterSource} store
  */
-const createStore = (clusterFeatures, muAttrs, lang) => {
-  CLUSTER_STORE = new EnhancedClusterSource({
+const createStore = (clusterFeatures, targetId, muAttrs, lang) => {
+  const clusterStore = new EnhancedClusterSource({
     attributions: muAttrs,
     source: new VectorSource({
       features: clusterFeatures,
     }),
-    compareFn: munimap_utils.partial(clusterCompareFn, lang),
+    compareFn: munimap_utils.partial(clusterCompareFn, targetId, lang),
     geometryFunction: (feature) => {
       let result = null;
       const geom = feature.getGeometry();
@@ -146,24 +148,27 @@ const createStore = (clusterFeatures, muAttrs, lang) => {
     },
     distance: 80,
   });
-  return CLUSTER_STORE;
+  CLUSTER_STORES[targetId] = clusterStore;
+  return clusterStore;
 };
 
 /**
  * Get cluster source.
+ * @param {string} targetId targetId
  * @return {EnhancedClusterSource} store
  */
-const getStore = () => {
-  return CLUSTER_STORE;
+const getStore = (targetId) => {
+  return CLUSTER_STORES[targetId];
 };
 
 /**
  * Get vector source from cluster. ClusterSource/EnhancedClusterSource has
  * this.source_ where VectorSource and features are stored.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const getVectorStore = () => {
-  return CLUSTER_STORE.getSource();
+const getVectorStore = (targetId) => {
+  return CLUSTER_STORES[targetId].getSource();
 };
 
 export {

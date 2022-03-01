@@ -26,10 +26,11 @@ const isLayer = (layer) => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {string} lang language
  * @return {VectorLayer} pubtran layer
  */
-const create = (lang) => {
+const create = (targetId, lang) => {
   const pubTranAttribution = munimap_lang.getMsg(
     munimap_lang.Translations.PUBTRAN_ATTRIBUTION_HTML,
     lang
@@ -41,7 +42,7 @@ const create = (lang) => {
       isFeatureClickable: munimap_pubtran_stop.isClickable,
       featureClickHandler: munimap_pubtran_stop.featureClickHandler,
       maxResolution: munimap_pubtran_stop.RESOLUTION.max,
-      source: getPubtranStore(),
+      source: getPubtranStore(targetId),
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       refreshStyleOnFloorChange: false,

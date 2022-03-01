@@ -175,13 +175,14 @@ const ensureLayers = (map, options) => {
   }
 
   const {isIdentifyEnabled} = options;
+  const {targetId} = options.requiredOpts;
   const hasLayers = map.getLayers().getLength() > 1; //more than basemap
   const identifyLayer = getIdentifyLayer(map);
 
   if (hasLayers) {
     if (isIdentifyEnabled && !identifyLayer) {
       //munimap.reset
-      map.addLayer(createIdentifyLayer());
+      map.addLayer(createIdentifyLayer(targetId));
     } else if (!isIdentifyEnabled && identifyLayer) {
       map.removeLayer(getIdentifyLayer(map));
     }
@@ -189,13 +190,13 @@ const ensureLayers = (map, options) => {
   }
 
   const {lang, labels, locationCodes, pubTran} = options.requiredOpts;
-  const markerLayer = createMarkerLayer(map, options);
+  const markerLayer = createMarkerLayer(options);
   const markerClusterLayer = createClusterLayer(map, options);
-  const layers = getDefaultLayers(lang, labels, locationCodes);
+  const layers = getDefaultLayers(targetId, labels, locationCodes);
   layers.forEach((layer) => map.addLayer(layer));
 
   if (pubTran) {
-    const pubTranLayer = createPubtranLayer(lang);
+    const pubTranLayer = createPubtranLayer(targetId, lang);
     map.addLayer(pubTranLayer);
   }
 
@@ -208,7 +209,7 @@ const ensureLayers = (map, options) => {
   }
 
   if (isIdentifyEnabled) {
-    map.addLayer(createIdentifyLayer());
+    map.addLayer(createIdentifyLayer(targetId));
   }
 };
 
@@ -219,7 +220,7 @@ const ensureLayers = (map, options) => {
  */
 const handleMapClick = (evt, dispatch, options) => {
   const {selectedFeature, isIdentifyEnabled} = options;
-  const {getMainFeatureAtPixelId, clusterFacultyAbbr, identifyTypes} =
+  const {getMainFeatureAtPixelId, clusterFacultyAbbr, identifyTypes, targetId} =
     options.requiredOpts;
   const {map, pixel} = evt;
 
@@ -243,6 +244,7 @@ const handleMapClick = (evt, dispatch, options) => {
         clusterFacultyAbbr,
         identifyTypes,
         isIdentifyEnabled,
+        targetId,
       };
       if (isClickable(handlerOpts)) {
         const featureClickHandler = /** @type {featureClickHandlerFunction} */ (
@@ -296,6 +298,7 @@ const handlePointerMove = (evt, options) => {
         clusterFacultyAbbr,
         identifyTypes,
         isIdentifyEnabled,
+        targetId,
       };
       targetEl.style.cursor = isClickable(handlerOpts) ? 'pointer' : '';
     } else {
@@ -352,6 +355,7 @@ const ensureTooltip = (evt, options) => {
           resolution,
           lang,
           locationCodes,
+          targetId,
         };
         TIMEOUT_STORE[targetId] = setTimeout(
           () => setTooltipProps(calculateParameters(opts)),
@@ -417,29 +421,30 @@ const attachDependentMapListeners = (map, dispatch, options) => {
  * @param {redux.Store} reduxStore store
  */
 const createFeatureStores = (reduxStore) => {
+  const state = reduxStore.getState();
+  const targetId = state.requiredOpts.targetId;
   const callbackFn = (actionCreator, opt_args) =>
     reduxStore.dispatch(actionCreator(opt_args));
 
-  createBuildingStore(callbackFn);
-  createMarkerStore();
-  createComplexStore();
-  createUnitStore();
-  createFloorStore();
-  createRoomStore();
-  createDefaultRoomStore(callbackFn);
-  createActiveRoomStore(reduxStore, callbackFn);
-  createDoorStore();
-  createActiveDoorStore(reduxStore, callbackFn);
-  createPoiStore();
-  createActivePoiStore(reduxStore, callbackFn);
-  createOptPoiStore();
+  createBuildingStore(targetId, callbackFn);
+  createMarkerStore(targetId);
+  createComplexStore(targetId);
+  createUnitStore(targetId);
+  createFloorStore(targetId);
+  createRoomStore(targetId);
+  createDefaultRoomStore(targetId, callbackFn);
+  createActiveRoomStore(reduxStore, targetId, callbackFn);
+  createDoorStore(targetId);
+  createActiveDoorStore(reduxStore, targetId, callbackFn);
+  createPoiStore(targetId);
+  createActivePoiStore(reduxStore, targetId, callbackFn);
+  createOptPoiStore(targetId);
 
-  const state = reduxStore.getState();
   if (state.requiredOpts.pubTran) {
-    createPubtranStore();
+    createPubtranStore(targetId);
   }
   if (state.requiredOpts.identifyCallbackId) {
-    createIdentifyStore();
+    createIdentifyStore(targetId);
   }
 };
 
@@ -480,9 +485,10 @@ const refreshStyles = (map, styleFunctions, pubTran) => {
  * @param {ol.Map} map map
  * @param {Object} options options
  * @param {boolean} options.labels labels
+ * @param {string} options.targetId targetId
  * @param {number} options.buildingsCount buildings count
  */
-const ensureClusterUpdate = (map, {labels, buildingsCount}) => {
+const ensureClusterUpdate = (map, {targetId, labels, buildingsCount}) => {
   if (!map) {
     return;
   }
@@ -497,7 +503,7 @@ const ensureClusterUpdate = (map, {labels, buildingsCount}) => {
     map.get(MUNIMAP_PROPS_ID).buildingsCount = newBuildingsCount;
     if (labels !== false) {
       const resolution = map.getView().getResolution();
-      updateClusteredFeatures(resolution, labels);
+      updateClusteredFeatures(targetId, resolution, labels);
     }
   }
 };

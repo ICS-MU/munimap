@@ -63,7 +63,7 @@ import {styleFunction as clusterStyleFunction} from '../style/cluster.js';
 import {styleFunction as complexStyleFunction} from '../style/complex.js';
 import {defaults as control_defaults} from 'ol/control';
 import {createLayer as createBasemapLayer} from '../layer/basemap.js';
-import {createSelector} from 'reselect';
+import {createSelector as createReselectSelector} from 'reselect';
 import {
   ofFeatures as extentOfFeatures,
   getBufferValue,
@@ -148,189 +148,151 @@ import {styleFunction as markerStyleFunction} from '../style/marker.js';
  */
 
 /**
- * @type {Reselect.Selector<State, boolean>}
  * @param {State} state state
  * @return {boolean} whether is initialized
  */
 export const isMapInitialized = (state) => state.mapInitialized;
 
 /**
- * @type {Reselect.Selector<State, RequiredOptions>}
  * @param {State} state state
  * @return {RequiredOptions} opts
  */
 export const getRequiredOpts = (state) => state.requiredOpts;
 
 /**
- * @type {Reselect.Selector<State, boolean>}
  * @param {State} state state
  * @return {boolean} msg
  */
 const getRequiredLoadingMessage = (state) => state.requiredOpts.loadingMessage;
 
 /**
- * @type {Reselect.Selector<State, number?>}
  * @param {State} state state
  * @return {number|null} timestamp
  */
 const getMarkersTimestamp = (state) => state.markersTimestamp;
 
 /**
- * @type {Reselect.Selector<State, number?>}
  * @param {State} state state
  * @return {number|null} timestamp
  */
 const getZoomToTimestamp = (state) => state.zoomToTimestamp;
 
 /**
- * @type {Reselect.Selector<State, number?>}
  * @param {State} state state
  * @return {number|null} timestamp
  */
 const getBuildingsTimestamp = (state) => state.buildingsTimestamp;
 
 /**
- * @type {Reselect.Selector<State, number?>}
  * @param {State} state state
  * @return {number|null} timestamp
  */
 const getFloorsTimestamp = (state) => state.floorsTimestamp;
 
 /**
- * @type {Reselect.Selector<State, number?>}
- * @param {State} state state
- * @return {number|null} timestamp
- */
-const getDefaultRoomsTimestamp = (state) => state.defaultRoomsTimestamp;
-
-/**
- * @type {Reselect.Selector<State, number?>}
- * @param {State} state state
- * @return {number|null} timestamp
- */
-const getActiveRoomsTimestamp = (state) => state.activeRoomsTimestamp;
-
-/**
- * @type {Reselect.Selector<State, number?>}
  * @param {State} state state
  * @return {number|null} timestamp
  */
 const getOptPoisTimestamp = (state) => state.optPoisTimestamp;
 
 /**
- * @type {Reselect.Selector<State, Array<string>>}
+ * @type {import("reselect").Selector<State, Array<string>>}
  * @param {State} state state
  * @return {Array<string>} required markers
  */
 const getRequiredMarkerIds = (state) => state.requiredOpts.markerIds;
 
 /**
- * @type {Reselect.Selector<State, string|Array<string>>}
  * @param {State} state state
  * @return {string|Array<string>} zoomTo
  */
 const getRequiredZoomTo = (state) => state.requiredOpts.zoomTo;
 
 /**
- * @type {Reselect.Selector<State, string>}
  * @param {State} state state
  * @return {string} basemap
  */
 const getRequiredBaseMap = (state) => state.requiredOpts.baseMap;
 
 /**
- * @type {Reselect.Selector<State, boolean>}
  * @param {State} state state
  * @return {boolean} basemap
  */
 export const getRequiredLabels = (state) => state.requiredOpts.labels;
 
 /**
- * @type {Reselect.Selector<State, boolean>}
  * @param {State} state state
  * @return {boolean} basemap
  */
 export const getRequiredMapLinks = (state) => state.requiredOpts.mapLinks;
 
 /**
- * @type {Reselect.Selector<State, string>}
  * @param {State} state state
  * @return {string} lang
  */
 export const getLang = (state) => state.requiredOpts.lang;
 
 /**
- * @type {Reselect.Selector<State, string>}
  * @param {State} state state
  * @return {string} target
  */
 export const getTargetId = (state) => state.requiredOpts.targetId;
 
 /**
- * @type {Reselect.Selector<State, ol.Coordinate>}
  * @param {State} state state
  * @return {ol.Coordinate} center
  */
 export const getCenter = (state) => state.center;
 
 /**
- * @type {Reselect.Selector<State, number>}
  * @param {State} state state
  * @return {number} rotation
  */
 export const getRotation = (state) => state.rotation;
 
 /**
- * @type {Reselect.Selector<State, ol.Size>}
  * @param {State} state state
  * @return {ol.Size} map size
  */
 export const getSize = (state) => state.mapSize;
 
 /**
- * @type {Reselect.Selector<State, ol.Coordinate>}
  * @param {State} state state
  * @return {ol.Coordinate} center
  */
 const getRequiredCenter = (state) => state.requiredOpts.center;
 
 /**
- * @type {Reselect.Selector<State, number>}
  * @param {State} state state
  * @return {number} center
  */
 const getRequiredZoom = (state) => state.requiredOpts.zoom;
 
 /**
- * @type {Reselect.Selector<State, number>}
  * @param {State} state state
  * @return {number} res
  */
 export const getResolution = (state) => state.resolution;
 
 /**
- * @type {Reselect.Selector<State, string>}
  * @param {State} state state
  * @return {string} selected floor
  */
 export const getSelectedFeature = (state) => state.selectedFeature;
 
 /**
- * @type {Reselect.Selector<State, string>}
  * @param {State} state state
  * @return {string} marker label function id
  */
 const getRequiredMarkerLabelId = (state) => state.requiredOpts.markerLabelId;
 
 /**
- * @type {Reselect.Selector<State, boolean>}
  * @param {State} state state
  * @return {boolean} whether to show only location codes
  */
 const getRequiredLocationCodes = (state) => state.requiredOpts.locationCodes;
 
 /**
- * @type {Reselect.Selector<State, boolean>}
  * @param {State} state state
  * @return {boolean} whether to cluster faculty abbreviations
  */
@@ -338,14 +300,12 @@ export const getRequiredClusterFacultyAbbr = (state) =>
   state.requiredOpts.clusterFacultyAbbr;
 
 /**
- * @type {Reselect.Selector<State, AnimationRequestState>}
  * @param {State} state state
  * @return {AnimationRequestState} animation request state
  */
 export const getAnimationRequest = (state) => state.animationRequest;
 
 /**
- * @type {Reselect.Selector<State, boolean>}
  * @param {State} state state
  * @return {boolean} whether to simple scroll
  */
@@ -353,14 +313,12 @@ export const getRequiredSimpleScroll = (state) =>
   state.requiredOpts.simpleScroll;
 
 /**
- * @type {Reselect.Selector<State, ErrorMessageState>}
  * @param {State} state state
  * @return {ErrorMessageState} error message state
  */
 export const getErrorMessageState = (state) => state.errorMessage;
 
 /**
- * @type {Reselect.Selector<State, string>}
  * @param {State} state state
  * @return {string} id
  */
@@ -368,18 +326,26 @@ export const getRequiredIdentifyCallbackId = (state) =>
   state.requiredOpts.identifyCallbackId;
 
 /**
- * @type {Reselect.Selector<State, string>}
  * @param {State} state state
  * @return {string} uid
  */
 export const getPopupFeatureUid = (state) => state.popup.uid;
 
 /**
- * @type {Reselect.Selector<State, number>}
  * @param {State} state state
  * @return {number} timestamp
  */
 export const getIdentifyTimestamp = (state) => state.identifyTimestamp;
+
+// Create selector with memoize options.
+const createSelector = (selectors, fn) => {
+  const slctr = createReselectSelector(...selectors, fn, {
+    memoizeOptions: {
+      maxSize: 2,
+    },
+  });
+  return slctr;
+};
 
 /**
  * createSelector return type Reselect.OutputSelector<S, T, (res: R1) => T>
@@ -387,15 +353,15 @@ export const getIdentifyTimestamp = (state) => state.identifyTimestamp;
  *    T: Returned type (must be same as returned type below)
  *    arg2: Function where arguments are returned types from Selector and
  *          return type is the same as T.
- * @type {Reselect.OutputSelector<
- *    State,
+ * @type {import("reselect").OutputSelector<
+ *    import("reselect").SelectorArray,
  *    Array<ol.Feature>,
- *    function(Array<string>, number): Array<ol.Feature>
+ *    function(Array<string>, number, string): Array<ol.Feature>
  * >}
  */
 export const getInitMarkers = createSelector(
-  [getRequiredMarkerIds, getMarkersTimestamp],
-  (requiredMarkerIds, markersTimestamp) => {
+  [getRequiredMarkerIds, getMarkersTimestamp, getTargetId],
+  (requiredMarkerIds, markersTimestamp, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing init markers');
     }
@@ -404,12 +370,12 @@ export const getInitMarkers = createSelector(
     }
 
     const buildingType = getBuildingType();
-    const buildings = getBuildingStore().getFeatures();
+    const buildings = getBuildingStore(targetId).getFeatures();
     const roomType = getRoomType();
-    const rooms = getRoomStore().getFeatures();
+    const rooms = getRoomStore(targetId).getFeatures();
     const doorType = getDoorType();
-    const doors = getDoorStore().getFeatures();
-    const optPois = getOptPoiStore().getFeatures();
+    const doors = getDoorStore(targetId).getFeatures();
+    const optPois = getOptPoiStore(targetId).getFeatures();
     const result = requiredMarkerIds.map((initMarkerId) => {
       if (REQUIRED_CUSTOM_MARKERS[initMarkerId]) {
         return REQUIRED_CUSTOM_MARKERS[initMarkerId];
@@ -444,15 +410,15 @@ export const getInitMarkers = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    Array<ol.Feature>,
  *    function(Array<string>|string, number): Array<ol.Feature>
  * >}
  */
 export const getInitZoomTo = createSelector(
-  [getRequiredZoomTo, getZoomToTimestamp],
-  (initZoomTo, zoomToTimestamp) => {
+  [getRequiredZoomTo, getZoomToTimestamp, getTargetId],
+  (initZoomTo, zoomToTimestamp, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing init zoomTo');
     }
@@ -462,11 +428,11 @@ export const getInitZoomTo = createSelector(
       initZoomTo = [/**@type {string}*/ (initZoomTo)];
     }
     const buildingType = getBuildingType();
-    const buildings = getBuildingStore().getFeatures();
+    const buildings = getBuildingStore(targetId).getFeatures();
     const roomType = getRoomType();
-    const rooms = getRoomStore().getFeatures();
+    const rooms = getRoomStore(targetId).getFeatures();
     const doorType = getDoorType();
-    const doors = getDoorStore().getFeatures();
+    const doors = getDoorStore(targetId).getFeatures();
     return /**@type {Array<string>}*/ (initZoomTo).map((initZoomTo) => {
       if (isRoomCode(initZoomTo)) {
         return rooms.find((room) => {
@@ -486,7 +452,7 @@ export const getInitZoomTo = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    string,
  *    function(ol.Coordinate, number, string): string
@@ -524,7 +490,7 @@ export const getBasemapLayerId = createSelector(
  * Get basemap layer. There must be target param, otherwise
  * multiple maps would share a single tile layer.
  *
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    ol.layer.Tile,
  *    function(string, string, string): ol.layer.Tile
@@ -532,16 +498,20 @@ export const getBasemapLayerId = createSelector(
  */
 export const getBasemapLayer = createSelector(
   [getBasemapLayerId, getLang, getTargetId],
-  (basemapLayerId, lang, target) => {
+  (basemapLayerId, lang, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing baseMapLayer');
+    }
+    // targetId is important for multiple maps on screen
+    if (!targetId) {
+      return null;
     }
     return createBasemapLayer(basemapLayerId, lang);
   }
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    Array<string>,
  *    function(Array<string>, Array<ol.Feature>): Array<string>
@@ -589,7 +559,7 @@ export const getInvalidCodes = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    boolean,
  *    function(Array<string>, number?): boolean
@@ -606,7 +576,7 @@ export const loadMarkers = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    boolean,
  *    function(Array<string>|string, number?): boolean
@@ -623,7 +593,7 @@ export const loadZoomTo = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    boolean,
  *    function(Array<string>, number?): boolean
@@ -643,7 +613,7 @@ export const areMarkersLoaded = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    boolean,
  *    function(Array<string>|string, number?): boolean
@@ -663,7 +633,7 @@ export const areZoomToLoaded = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    boolean,
  *    function(Array<string>, number?): boolean
@@ -684,7 +654,7 @@ export const areOptPoiLoaded = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    boolean?,
  *    function(boolean?, boolean, boolean): boolean
@@ -709,7 +679,7 @@ export const toggleLoadingMessage = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    ol.AttributionLike,
  *    function(string): ol.AttributionLike
@@ -731,7 +701,7 @@ export const getMuAttrs = createSelector([getLang], (lang) => {
 });
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    View,
  *    function(string, ol.Coordinate, number, Array<ol.Feature>, Array<ol.Feature>): View
@@ -768,7 +738,7 @@ export const calculateView = createSelector(
       zoomTo = zoomTo.length ? zoomTo : markers;
       if (zoomTo.length) {
         let res;
-        const extent = extentOfFeatures(zoomTo);
+        const extent = extentOfFeatures(zoomTo, targetId);
         if (requiredZoom === null && requiredCenter === null) {
           if (target.offsetWidth === 0 || target.offsetHeight === 0) {
             view.fit(extent);
@@ -814,47 +784,56 @@ export const calculateView = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    import("ol/Collection").default<ol.control.Control>,
  *    function(string): import("ol/Collection").default<ol.control.Control>
  * >}
  */
-export const getDefaultControls = createSelector([getLang], (lang) => {
-  if (ENABLE_SELECTOR_LOGS) {
-    console.log('computing default controls');
+export const getDefaultControls = createSelector(
+  [getLang, getTargetId],
+  (lang, targetId) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing default controls');
+    }
+
+    //targetId is important for multiple maps
+    //each of them must have their own controls
+    if (!targetId) {
+      return null;
+    }
+    return control_defaults({
+      attributionOptions: {
+        tipLabel: munimap_lang.getMsg(
+          munimap_lang.Translations.ATTRIBUTIONS,
+          lang
+        ),
+      },
+      rotate: false,
+      zoomOptions: {
+        zoomInTipLabel: munimap_lang.getMsg(
+          munimap_lang.Translations.ZOOM_IN,
+          lang
+        ),
+        zoomOutTipLabel: munimap_lang.getMsg(
+          munimap_lang.Translations.ZOOM_OUT,
+          lang
+        ),
+      },
+    });
   }
-  return control_defaults({
-    attributionOptions: {
-      tipLabel: munimap_lang.getMsg(
-        munimap_lang.Translations.ATTRIBUTIONS,
-        lang
-      ),
-    },
-    rotate: false,
-    zoomOptions: {
-      zoomInTipLabel: munimap_lang.getMsg(
-        munimap_lang.Translations.ZOOM_IN,
-        lang
-      ),
-      zoomOutTipLabel: munimap_lang.getMsg(
-        munimap_lang.Translations.ZOOM_OUT,
-        lang
-      ),
-    },
-  });
-});
+);
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    number,
  *    function(number): number
  * >}
  */
 export const getLoadedBuildingsCount = createSelector(
-  [getBuildingsTimestamp],
-  (buildingsTimestamp) => {
+  [getBuildingsTimestamp, getTargetId],
+  (buildingsTimestamp, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('calculate buildings count');
     }
@@ -862,12 +841,12 @@ export const getLoadedBuildingsCount = createSelector(
     if (buildingsTimestamp === null) {
       return 0;
     }
-    return getBuildingStore().getFeatures().length;
+    return getBuildingStore(targetId).getFeatures().length;
   }
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    string,
  *    function(string): string
@@ -885,15 +864,15 @@ export const getSelectedFloorCode = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    Array<string>,
  *    function(string, number): Array<string>
  * >}
  */
 export const getActiveFloorCodes = createSelector(
-  [getSelectedFeature, getFloorsTimestamp],
-  (selectedFeature, floorsTimestamp) => {
+  [getSelectedFeature, getFloorsTimestamp, getTargetId],
+  (selectedFeature, floorsTimestamp, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing active floors');
     }
@@ -905,9 +884,11 @@ export const getActiveFloorCodes = createSelector(
       return [];
     }
 
-    const floors = getFloorStore().getFeatures();
-    const activeFloorLayerId =
-      munimap_floor.getFloorLayerIdByCode(selectedFeature);
+    const floors = getFloorStore(targetId).getFeatures();
+    const activeFloorLayerId = munimap_floor.getFloorLayerIdByCode(
+      targetId,
+      selectedFeature
+    );
     const active = floors.filter(
       (floor) => floor.get('vrstvaId') === activeFloorLayerId
     );
@@ -919,46 +900,44 @@ export const getActiveFloorCodes = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    boolean,
  *    function(number): boolean
  * >}
  */
-export const isIndoorResolution = createSelector(
+const isInFloorResolutionRange = createSelector(
   [getResolution],
   (resolution) => {
     if (ENABLE_SELECTOR_LOGS) {
-      console.log('computing whether is indoor resolution');
+      console.log('computing whether is resolution in floor resolution. range');
     }
     return (
       munimap_utils.isDef(resolution) &&
-      munimap_range.contains(
-        munimap_floor.RESOLUTION,
-        /**@type {number}*/ (resolution)
-      )
+      munimap_range.contains(munimap_floor.RESOLUTION, resolution)
     );
   }
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    StyleFunction,
  *    function(boolean, string): StyleFunction
  * >}
  */
 export const getStyleForBuildingLayer = createSelector(
-  [isIndoorResolution, getSelectedFloorCode],
-  (showIndoor, selectedFloorCode) => {
+  [isInFloorResolutionRange, getSelectedFloorCode, getTargetId],
+  (inFloorResolutionRange, selectedFloorCode, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - computing style for building');
     }
 
-    const selectedFloor = showIndoor ? selectedFloorCode : null;
+    const selectedFloor = inFloorResolutionRange ? selectedFloorCode : null;
     const styleFce = (feature, res) => {
-      const showSelected = showIndoor && isSelected(feature, selectedFloor);
-      const style = styleFunction(feature, res, showSelected);
+      const showSelected =
+        inFloorResolutionRange && isSelected(feature, selectedFloor);
+      const style = styleFunction(feature, res, targetId, showSelected);
       return style;
     };
 
@@ -967,7 +946,7 @@ export const getStyleForBuildingLayer = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    ol.Extent,
  *    function(number, ol.Coordinate, number, ol.Size): ol.Extent
@@ -988,38 +967,44 @@ export const getExtent = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    StyleFunction,
  *    function(ol.Extent, string, boolean): StyleFunction
  * >}
  */
 export const getBuildingLabelFunction = createSelector(
-  [getExtent, getLang, getRequiredLabels],
-  (extent, lang, requiredLabels) => {
+  [getExtent, getLang, getRequiredLabels, getTargetId],
+  (extent, lang, requiredLabels, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - computing building label function');
     }
-    return munimap_utils.partial(labelFunction, {lang, requiredLabels, extent});
+    return munimap_utils.partial(labelFunction, {
+      lang,
+      requiredLabels,
+      extent,
+      targetId,
+    });
   }
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    StyleFunction,
  *    function(boolean, string, StyleFunction): StyleFunction
  * >}
  */
 export const getStyleForBuildingLabelLayer = createSelector(
-  [isIndoorResolution, getSelectedFloorCode, getBuildingLabelFunction],
-  (showIndoor, selectedFloorCode, buildingLabelFunction) => {
+  [isInFloorResolutionRange, getSelectedFloorCode, getBuildingLabelFunction],
+  (inFloorResolutionRange, selectedFloorCode, buildingLabelFunction) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - computing style for building label');
     }
-    const selectedFloor = showIndoor ? selectedFloorCode : null;
+    const selectedFloor = inFloorResolutionRange ? selectedFloorCode : null;
     const styleFce = (feature, res) => {
-      const showSelected = showIndoor && isSelected(feature, selectedFloor);
+      const showSelected =
+        inFloorResolutionRange && isSelected(feature, selectedFloor);
       if (showSelected) {
         return null;
       } else {
@@ -1033,29 +1018,32 @@ export const getStyleForBuildingLabelLayer = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    StyleFunction,
  *    function(string): StyleFunction
  * >}
  */
-export const getStyleForComplexLayer = createSelector([getLang], (lang) => {
-  if (ENABLE_SELECTOR_LOGS) {
-    console.log('STYLE - computing style for complexes');
+export const getStyleForComplexLayer = createSelector(
+  [getLang, getTargetId],
+  (lang, targetId) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('STYLE - computing style for complexes');
+    }
+
+    //asi nemusi byt selector, protoze se bere z funkce
+    const markers = getMarkerStore(targetId).getFeatures();
+    const styleFce = (feature, res) => {
+      const style = complexStyleFunction(feature, res, markers, lang);
+      return style;
+    };
+
+    return styleFce;
   }
-
-  //asi nemusi byt selector, protoze se bere z funkce
-  const markers = getMarkerStore().getFeatures();
-  const styleFce = (feature, res) => {
-    const style = complexStyleFunction(feature, res, markers, lang);
-    return style;
-  };
-
-  return styleFce;
-});
+);
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    ol.Extent,
  *    function(ol.Extent): ol.Extent
@@ -1069,21 +1057,22 @@ export const getReferenceExtent = createSelector([getExtent], (extent) => {
 });
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    boolean,
  *    function(ol.Extent, string): boolean
  * >}
  */
 export const isSelectedInExtent = createSelector(
-  [getReferenceExtent, getSelectedFeature],
-  (refExtent, selectedBuilding) => {
+  [getReferenceExtent, getSelectedFeature, getTargetId],
+  (refExtent, selectedBuilding, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing whether is selected building in extent');
     }
     if (munimap_utils.isDefAndNotNull(selectedBuilding)) {
       munimap_assert.assertString(selectedBuilding);
       const building = getBuildingByCode(
+        targetId,
         /**@type {string}*/ (/**@type {unknown}*/ (selectedBuilding))
       );
       const geom = building.getGeometry();
@@ -1094,40 +1083,23 @@ export const isSelectedInExtent = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
- *    State,
- *    boolean,
- *    function(number): boolean
- * >}
- */
-const isInFloorResolutionRange = createSelector(
-  [getResolution],
-  (resolution) => {
-    if (ENABLE_SELECTOR_LOGS) {
-      console.log('computing whether is resolution in floor resolution. range');
-    }
-    return munimap_range.contains(munimap_floor.RESOLUTION, resolution);
-  }
-);
-
-/**
  * Returns feature from which the selected feature will be computed to state.
  *
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    ol.Feature,
  *    function(ol.Extent, number, number): ol.Feature
  * >}
  */
 const getFeatureForComputingSelected = createSelector(
-  [getReferenceExtent, getBuildingsTimestamp, getMarkersTimestamp],
-  (refExt, buildingsTimestamp, markersTimestamp) => {
+  [getReferenceExtent, getBuildingsTimestamp, getMarkersTimestamp, getTargetId],
+  (refExt, buildingsTimestamp, markersTimestamp, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing feature for creating selected');
     }
     let marker = null; //munimap.getProps(map).selectedMarker;
     if (!marker) {
-      const markers = getMarkerStore().getFeatures();
+      const markers = getMarkerStore(targetId).getFeatures();
       marker = markers.find((f) =>
         f.getGeometry() ? f.getGeometry().intersectsExtent(refExt) : null
       );
@@ -1138,7 +1110,7 @@ const getFeatureForComputingSelected = createSelector(
       let selectFeature;
       let maxArea;
       const format = new GeoJSON();
-      const buildingStore = getBuildingStore();
+      const buildingStore = getBuildingStore(targetId);
       buildingStore.forEachFeatureIntersectingExtent(refExt, (building) => {
         if (hasInnerGeometry(building)) {
           const intersect = featureExtentIntersect(building, refExt, format);
@@ -1161,7 +1133,7 @@ const getFeatureForComputingSelected = createSelector(
  * Get selected location code. Returns location code if some should be selected,
  * null if no one shloud be selected (deselect), undefined if nothing to change.
  *
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    (string|undefined),
  *    function(ol.Size, string, ol.Feature, boolean, boolean, Array<string>):
@@ -1231,7 +1203,7 @@ export const getSelectedLocationCode = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    MarkerLabelFunction,
  *    function(string, Array<string>, string, boolean): MarkerLabelFunction
@@ -1258,7 +1230,7 @@ export const getMarkerLabel = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    StyleFunction,
  *    function(string, Array<ol.Feature>, MarkerLabelFunction, ol.Extent,
@@ -1275,6 +1247,7 @@ export const getStyleForMarkerLayer = createSelector(
     isInFloorResolutionRange,
     getSelectedFeature,
     getActiveFloorCodes,
+    getTargetId,
   ],
   (
     lang,
@@ -1284,7 +1257,8 @@ export const getStyleForMarkerLayer = createSelector(
     locationCodes,
     inFloorResolutionRange,
     selectedFeature, //redrawOnFloorChange
-    activeFloorCodes
+    activeFloorCodes,
+    targetId
   ) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - computing style for markers');
@@ -1297,6 +1271,7 @@ export const getStyleForMarkerLayer = createSelector(
       extent,
       locationCodes,
       activeFloorCodes,
+      targetId,
     };
     const styleFce = (feature, res) => {
       if (
@@ -1315,7 +1290,7 @@ export const getStyleForMarkerLayer = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    StyleFunction,
  *    function(string, boolean, MarkerLabelFunction, boolean):
@@ -1328,8 +1303,9 @@ export const getStyleForClusterLayer = createSelector(
     getRequiredLocationCodes,
     getMarkerLabel,
     getRequiredClusterFacultyAbbr,
+    getTargetId,
   ],
-  (lang, locationCodes, markerLabel, clusterFacultyAbbr) => {
+  (lang, locationCodes, markerLabel, clusterFacultyAbbr, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - computing style for clusters');
     }
@@ -1339,6 +1315,7 @@ export const getStyleForClusterLayer = createSelector(
       locationCodes,
       markerLabel,
       clusterFacultyAbbr,
+      targetId,
     };
     const styleFce = (feature, res) => {
       const style = clusterStyleFunction(feature, res, options);
@@ -1350,15 +1327,15 @@ export const getStyleForClusterLayer = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    string,
  *    function(string, Array<string>): string
  * >}
  */
 export const calculateSelectedFloor = createSelector(
-  [getSelectedFeature, getActiveFloorCodes],
-  (selectedFeature, activeFloorCodes) => {
+  [getSelectedFeature, getActiveFloorCodes, getTargetId],
+  (selectedFeature, activeFloorCodes, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing selected floor');
     }
@@ -1371,7 +1348,7 @@ export const calculateSelectedFloor = createSelector(
 
     let floorCode;
     if (isBuildingCode(selectedFeature)) {
-      const building = getBuildingByCode(selectedFeature);
+      const building = getBuildingByCode(targetId, selectedFeature);
       if (hasInnerGeometry(building)) {
         floorCode = activeFloorCodes.find(
           (code) => code.substr(0, 5) === selectedFeature
@@ -1380,7 +1357,7 @@ export const calculateSelectedFloor = createSelector(
         if (floorCode) {
           return floorCode;
         } else {
-          return getSelectedFloorCodeForBuilding(building);
+          return getSelectedFloorCodeForBuilding(targetId, building);
         }
       }
     }
@@ -1389,7 +1366,7 @@ export const calculateSelectedFloor = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    StyleFunction,
  *    function(string, boolean, string):
@@ -1397,8 +1374,8 @@ export const calculateSelectedFloor = createSelector(
  * >}
  */
 export const getStyleForRoomLabelLayer = createSelector(
-  [getLang, getRequiredLocationCodes, getSelectedFloorCode],
-  (lang, requiredLocationCodes, selectedFloorCode) => {
+  [getLang, getRequiredLocationCodes, getSelectedFloorCode, getTargetId],
+  (lang, requiredLocationCodes, selectedFloorCode, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - computing style for room labels');
     }
@@ -1411,6 +1388,7 @@ export const getStyleForRoomLabelLayer = createSelector(
         return roomLabelStyleFunction(
           feature,
           res,
+          targetId,
           lang,
           requiredLocationCodes
         );
@@ -1422,15 +1400,15 @@ export const getStyleForRoomLabelLayer = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    StyleFunction,
  *    function(Array<string>): StyleFunction
  * >}
  */
 export const getStyleForRoomLayer = createSelector(
-  [getActiveFloorCodes],
-  (activeFloorCodes) => {
+  [getActiveFloorCodes, getTargetId],
+  (activeFloorCodes, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - computing style for rooms');
     }
@@ -1441,7 +1419,7 @@ export const getStyleForRoomLayer = createSelector(
         locCode.startsWith(code.substr(0, 5))
       );
       if (isDefault) {
-        return defaultRoomStyleFunction(feature, res);
+        return defaultRoomStyleFunction(feature, res, targetId);
       }
       return null;
     };
@@ -1450,21 +1428,21 @@ export const getStyleForRoomLayer = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    StyleFunction,
  *    function(Array<string>): StyleFunction
  * >}
  */
 export const getStyleForActiveRoomLayer = createSelector(
-  [getActiveFloorCodes],
-  (activeFloorCodes) => {
+  [getActiveFloorCodes, getTargetId],
+  (activeFloorCodes, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - computing style for active rooms');
     }
 
     const styleFce = (feature, res) => {
-      let result = defaultRoomStyleFunction(feature, res);
+      let result = defaultRoomStyleFunction(feature, res, targetId);
       if (
         munimap_range.contains(PoiResolutions.STAIRS, res) &&
         result === getStaircase()
@@ -1478,15 +1456,15 @@ export const getStyleForActiveRoomLayer = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    BuildingTitleOptions,
  *    function(string, string): BuildingTitleOptions
  * >}
  */
 export const getBuildingTitle = createSelector(
-  [getSelectedFeature, getLang],
-  (selectedFeature, lang) => {
+  [getSelectedFeature, getLang, getTargetId],
+  (selectedFeature, lang, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing building title to info element');
     }
@@ -1496,7 +1474,7 @@ export const getBuildingTitle = createSelector(
 
     let bldgTitle = '';
     let complexTitle = '';
-    const building = getBuildingByCode(selectedFeature);
+    const building = getBuildingByCode(targetId, selectedFeature);
     if (building) {
       bldgTitle = /**@type {string}*/ (
         building.get(
@@ -1553,7 +1531,7 @@ export const getBuildingTitle = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    boolean,
  *    function(string, boolean): boolean
@@ -1567,7 +1545,7 @@ export const showInfoEl = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    RangeInterface,
  *    function(number, Array<ol.Feature>): RangeInterface
@@ -1594,15 +1572,15 @@ export const getClusterResolution = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    StyleFunction,
  *    function(Array<string>, string): StyleFunction
  * >}
  */
 export const getStyleForActivePoiLayer = createSelector(
-  [getActiveFloorCodes, getSelectedFeature],
-  (activeFloorCodes, selectedFeature) => {
+  [getActiveFloorCodes, getSelectedFeature, getTargetId],
+  (activeFloorCodes, selectedFeature, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - computing style for pois');
     }
@@ -1634,7 +1612,7 @@ export const getStyleForActivePoiLayer = createSelector(
 
       entranceTypes.push(POI_PURPOSE.COMPLEX_ENTRANCE);
       if (entranceTypes.includes(poiType)) {
-        return outdoorPoiStyleFunction(feature, res, selectedFeature);
+        return outdoorPoiStyleFunction(feature, res, selectedFeature, targetId);
       }
       return null;
     };
@@ -1643,19 +1621,19 @@ export const getStyleForActivePoiLayer = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    Array<ol.Feature>,
  *    function(number, string): Array<ol.Feature>
  * >}
  */
 export const getFloorsByBuildingCode = createSelector(
-  [getFloorsTimestamp, getSelectedFeature],
-  (floorsTimestamp, selectedFeature) => {
+  [getFloorsTimestamp, getSelectedFeature, getTargetId],
+  (floorsTimestamp, selectedFeature, targetId) => {
     if (!floorsTimestamp || !selectedFeature) {
       return [];
     }
-    const store = getFloorStore();
+    const store = getFloorStore(targetId);
     if (store) {
       const features = store.getFeatures();
       const floors = features.filter((floor) => {
@@ -1669,15 +1647,15 @@ export const getFloorsByBuildingCode = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    StyleFunction,
  *    function(string, MarkerLabelFunction, boolean, ol.Extent): StyleFunction
  * >}
  */
 export const getStyleForIdentifyLayer = createSelector(
-  [getLang, getMarkerLabel, getRequiredLocationCodes, getExtent],
-  (lang, markerLabel, locationCodes, extent) => {
+  [getLang, getMarkerLabel, getRequiredLocationCodes, getExtent, getTargetId],
+  (lang, markerLabel, locationCodes, extent, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - computing style for identify');
     }
@@ -1688,6 +1666,7 @@ export const getStyleForIdentifyLayer = createSelector(
         markerLabel,
         locationCodes,
         extent,
+        targetId,
       };
       const style = identifyStyleFunction(feature, res, opts);
       return style;
@@ -1698,7 +1677,7 @@ export const getStyleForIdentifyLayer = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    AllStyleFunctionsResult,
  *    function(
@@ -1758,7 +1737,7 @@ export const getAllStyleFunctions = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    Array<string>,
  *    function(Array<ol.Feature>, string): Array<string>
@@ -1784,7 +1763,7 @@ export const getFloorCodesWithMarkers = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    boolean,
  *    function(string): boolean
@@ -1798,38 +1777,38 @@ export const isIdentifyEnabled = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    boolean,
  *    function(number): boolean
  * >}
  */
 export const isIdentifyControlEnabled = createSelector(
-  [getIdentifyTimestamp],
-  (identifyTimestamp) => {
+  [getIdentifyTimestamp, getTargetId],
+  (identifyTimestamp, targetId) => {
     if (!munimap_utils.isDefAndNotNull(identifyTimestamp)) {
       return false;
     }
-    const features = getIdentifyStore().getFeatures();
+    const features = getIdentifyStore(targetId).getFeatures();
     return Array.isArray(features) ? features.length > 0 : !!features;
   }
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    boolean,
  *    function(boolean, number, string): boolean
  * >}
  */
 export const isIdentifyLayerVisible = createSelector(
-  [isIdentifyEnabled, getIdentifyTimestamp, getSelectedFeature],
-  (identifyEnabled, identifyTimestamp, selectedFeature) => {
+  [isIdentifyEnabled, getIdentifyTimestamp, getSelectedFeature, getTargetId],
+  (identifyEnabled, identifyTimestamp, selectedFeature, targetId) => {
     if (!munimap_utils.isDefAndNotNull(identifyTimestamp) || !identifyEnabled) {
       return false;
     }
 
-    const features = getIdentifyStore().getFeatures();
+    const features = getIdentifyStore(targetId).getFeatures();
     if (features && features.length > 0) {
       const pointFeature = features[0];
       const code = munimap_identify.getLocationCode(pointFeature);
@@ -1842,7 +1821,7 @@ export const isIdentifyLayerVisible = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    IdentifyCallbackFunction,
  *    function(string): IdentifyCallbackFunction
@@ -1859,7 +1838,7 @@ export const getIdentifyCallback = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    ol.Feature,
  *    function(string, string): ol.Feature
@@ -1877,10 +1856,10 @@ export const getFeatureForPopup = createSelector(
     }
 
     const suitableStores = [
-      getBuildingStore(),
-      getRoomStore(),
-      getDoorStore(),
-      getPubtranStore(),
+      getBuildingStore(targetId),
+      getRoomStore(targetId),
+      getDoorStore(targetId),
+      getPubtranStore(targetId),
     ];
 
     let feature = null;
@@ -1902,7 +1881,7 @@ export const getFeatureForPopup = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    RangeInterface,
  *    function(ol.Feature): RangeInterface
@@ -1927,7 +1906,7 @@ export const getHideResolutionForPopup = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    boolean,
  *    function(string): boolean
@@ -1942,7 +1921,7 @@ export const isPopupVisible = createSelector([getPopupFeatureUid], (uid) => {
 });
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    string,
  *    function(ol.Feature, string): string
@@ -1966,7 +1945,7 @@ export const getPopupContent = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    ol.Coordinate,
  *    function(ol.Feature): ol.Coordinate
@@ -1997,7 +1976,7 @@ export const getPopupPositionInCoords = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    Array<number>,
  *    function(ol.Feature): Array<number>
@@ -2006,6 +1985,9 @@ export const getPopupPositionInCoords = createSelector(
 export const getOffsetForPopup = createSelector(
   [getFeatureForPopup],
   (feature) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('get popup offset');
+    }
     const defaultOffset = [0, 20];
 
     if (!feature) {
@@ -2020,7 +2002,7 @@ export const getOffsetForPopup = createSelector(
 );
 
 /**
- * @type {Reselect.OutputSelector<
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    AnimationRequestState,
  *    function(ol.Size, ol.Extent, View): AnimationRequestState
@@ -2029,6 +2011,9 @@ export const getOffsetForPopup = createSelector(
 export const calculateAnimationRequest = createSelector(
   [getSize, getExtent, calculateView],
   (size, extent, view) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('calculate animation request');
+    }
     const newExt = view.calculateExtent(size);
     let duration = 0;
 

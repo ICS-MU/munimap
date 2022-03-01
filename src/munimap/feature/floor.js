@@ -73,11 +73,12 @@ export const isCode = (maybeCode) => {
 
 /**
  * Get floor from its store by floor code.
+ * @param {string} targetId targetId
  * @param {string} code location code
  * @return {ol.Feature} floor feature
  */
-export const getFloorByCode = (code) => {
-  const store = getFloorStore();
+export const getFloorByCode = (targetId, code) => {
+  const store = getFloorStore(targetId);
   if (store) {
     return (
       store.getFeatures().find((floor) => floor.get('polohKod') === code) ||
@@ -89,11 +90,12 @@ export const getFloorByCode = (code) => {
 
 /**
  * Get floor layer id by floor code.
+ * @param {string} targetId targetId
  * @param {string} code location code
  * @return {number} floor lazer id
  */
-export const getFloorLayerIdByCode = (code) => {
-  const floor = getFloorByCode(code);
+export const getFloorLayerIdByCode = (targetId, code) => {
+  const floor = getFloorByCode(targetId, code);
   if (!floor) {
     return;
   }

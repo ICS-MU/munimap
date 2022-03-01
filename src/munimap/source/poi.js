@@ -12,32 +12,34 @@ import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
  */
 
 /**
- * @type {VectorSource}
+ * @type {Object<string, VectorSource>}
  */
-let POI_STORE;
+const POI_STORES = {};
 
 /**
- * @type {VectorSource}
+ * @type {Object<string, VectorSource>}
  */
-let ACTIVE_POI_STORE;
+const ACTIVE_POI_STORES = {};
 
 /**
  * Create store for pois.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const createStore = () => {
-  POI_STORE = new VectorSource();
-  return POI_STORE;
+const createStore = (targetId) => {
+  POI_STORES[targetId] = new VectorSource();
+  return POI_STORES[targetId];
 };
 
 /**
  * Create store for active pois.
  * @param {redux.Store} store store
+ * @param {string} targetId targetId
  * @param {Function} callback callback
  * @return {VectorSource} store
  */
-const createActiveStore = (store, callback) => {
-  ACTIVE_POI_STORE = new VectorSource({
+const createActiveStore = (store, targetId, callback) => {
+  const poiStore = new VectorSource({
     strategy: tileLoadingStrategy(
       createTilegridXYZ({
         tileSize: 512,
@@ -45,23 +47,26 @@ const createActiveStore = (store, callback) => {
     ),
     loader: munimap_utils.partial(loadActivePois, {store, callback}),
   });
-  return ACTIVE_POI_STORE;
+  ACTIVE_POI_STORES[targetId] = poiStore;
+  return poiStore;
 };
 
 /**
  * Get poi store.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const getStore = () => {
-  return POI_STORE;
+const getStore = (targetId) => {
+  return POI_STORES[targetId];
 };
 
 /**
  * Get active poi store.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const getActiveStore = () => {
-  return ACTIVE_POI_STORE;
+const getActiveStore = (targetId) => {
+  return ACTIVE_POI_STORES[targetId];
 };
 
 export {createActiveStore, createStore, getActiveStore, getStore};

@@ -12,16 +12,17 @@ import {getVectorStore} from '../source/cluster.js';
  */
 
 /**
+ * @param {string} targetId targetId
  * @param {number} resolution resolution
  * @param {boolean} showLabels whether to show labels for MU objects
  */
-const updateClusteredFeatures = (resolution, showLabels) => {
+const updateClusteredFeatures = (targetId, resolution, showLabels) => {
   if (showLabels === false) {
     return;
   }
-  const source = getVectorStore();
+  const source = getVectorStore(targetId);
   const oldFeatures = source.getFeatures();
-  const newFeatures = getClusteredFeatures(resolution);
+  const newFeatures = getClusteredFeatures(targetId, resolution);
 
   const featuresToRemove = oldFeatures.filter((x) => !newFeatures.includes(x));
   const featuresToAdd = newFeatures.filter((x) => !oldFeatures.includes(x));

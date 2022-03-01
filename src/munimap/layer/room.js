@@ -86,9 +86,10 @@ const getActiveLayer = (map) => {
 const isLabelLayer = (layer) => layer.get('id') === LABEL_LAYER_ID;
 
 /**
+ * @param {string} targetId targetId
  * @return {VectorLayer} layer
  */
-const create = () => {
+const create = (targetId) => {
   const layer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: DEFAULT_LAYER_ID,
@@ -96,7 +97,7 @@ const create = () => {
       // refreshStyleOnFloorChange: true,
       maxResolution: munimap_floor.RESOLUTION.max,
       opacity: 0.4,
-      source: getDefaultRoomStore(),
+      source: getDefaultRoomStore(targetId),
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       renderOrder: null,
@@ -108,9 +109,10 @@ const create = () => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @return {VectorLayer} layer
  */
-const createActive = () => {
+const createActive = (targetId) => {
   const layer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: ACTIVE_LAYER_ID,
@@ -118,7 +120,7 @@ const createActive = () => {
       featureClickHandler: featureClickHandler,
       type: getRoomType(),
       maxResolution: munimap_floor.RESOLUTION.max,
-      source: getActiveRoomStore(),
+      source: getActiveRoomStore(targetId),
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       renderOrder: null,
@@ -129,10 +131,11 @@ const createActive = () => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {boolean} showLocationCodes whether to show only location codes
  * @return {VectorLayer} layer
  */
-const createLabel = (showLocationCodes) => {
+const createLabel = (targetId, showLocationCodes) => {
   const maxResolution = showLocationCodes ? 0.13 : munimap_floor.RESOLUTION.max;
   return new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
@@ -142,7 +145,7 @@ const createLabel = (showLocationCodes) => {
       isFeatureClickable: isClickable,
       featureClickHandler: featureClickHandler,
       maxResolution: maxResolution,
-      source: getActiveRoomStore(),
+      source: getActiveRoomStore(targetId),
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       renderOrder: null,

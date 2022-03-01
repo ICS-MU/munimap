@@ -29,6 +29,7 @@ import {localeCompare} from '../utils/string.js';
 
 /**
  * @typedef {Object} StyleFunctionOptions
+ * @property {string} targetId targetId
  * @property {string} lang language
  * @property {boolean} [locationCodes] whether to show only location codes
  * @property {LabelFunction} [markerLabel] marker label function
@@ -261,10 +262,10 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
  * @protected
  */
 const pinFunction = (options, clusterFeature, feature, resolution) => {
-  const {lang, locationCodes, clusterFacultyAbbr} = options;
+  const {lang, locationCodes, clusterFacultyAbbr, targetId} = options;
 
   const color = /**@type {string}*/ (feature.get('color'));
-  const isMarked = munimap_marker.isMarker(feature);
+  const isMarked = munimap_marker.isMarker(targetId, feature);
   let geometry = feature.getGeometry();
   if (geometry instanceof MultiPolygon) {
     geometry = munimap_geom.getLargestPolygon(geometry);
@@ -286,7 +287,7 @@ const pinFunction = (options, clusterFeature, feature, resolution) => {
 
   if (!munimap_utils.isDefAndNotNull(title)) {
     if (isMarked) {
-      const allMarkers = getMarkerStore().getFeatures();
+      const allMarkers = getMarkerStore(targetId).getFeatures();
       title = getMarkedDefaultLabel(
         options,
         allMarkers,
@@ -309,7 +310,10 @@ const pinFunction = (options, clusterFeature, feature, resolution) => {
   }
 
   if (clusterFacultyAbbr) {
-    const minorFeatures = munimap_cluster.getMinorFeatures(clusterFeature);
+    const minorFeatures = munimap_cluster.getMinorFeatures(
+      targetId,
+      clusterFeature
+    );
     minorTitle = getMinorTitleParts(minorFeatures, isMarked, lang);
   }
 
@@ -345,15 +349,17 @@ const pinFunction = (options, clusterFeature, feature, resolution) => {
  */
 const multipleLabelFunction = (options, feature, resolution) => {
   munimap_assert.assertInstanceof(feature, Feature);
-  const {lang, clusterFacultyAbbr} = options;
+  const {lang, clusterFacultyAbbr, targetId} = options;
 
   const features = munimap_cluster.getMainFeatures(
+    targetId,
     /**@type {Feature}*/ (feature)
   );
   const minorFeatures = munimap_cluster.getMinorFeatures(
+    targetId,
     /**@type {Feature}*/ (feature)
   );
-  const marked = munimap_marker.isMarker(features[0]);
+  const marked = munimap_marker.isMarker(targetId, features[0]);
   const textStyle = [];
 
   let allMarkers;
@@ -361,7 +367,7 @@ const multipleLabelFunction = (options, feature, resolution) => {
   let minorTitle;
 
   if (marked) {
-    allMarkers = getMarkerStore().getFeatures();
+    allMarkers = getMarkerStore(targetId).getFeatures();
   }
 
   if (munimap_utils.isDefAndNotNull(options.markerLabel)) {
@@ -456,10 +462,11 @@ const styleFunction = (feature, resolution, options) => {
   munimap_assert.assertInstanceof(feature, Feature);
   let result;
   const features = munimap_cluster.getMainFeatures(
+    options.targetId,
     /** @type {Feature}*/ (feature)
   );
   const firstFeature = features[0];
-  const marked = munimap_marker.isMarker(firstFeature);
+  const marked = munimap_marker.isMarker(options.targetId, firstFeature);
   if (features.length === 1) {
     result = pinFunction(
       options,

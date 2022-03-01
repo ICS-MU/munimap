@@ -46,9 +46,10 @@ const getActiveLayer = function (map) {
 };
 
 /**
+ * @param {string} targetId targetId
  * @return {VectorLayer} layer
  */
-const createActive = () => {
+const createActive = (targetId) => {
   const layer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: ACTIVE_LAYER_ID,
@@ -56,7 +57,7 @@ const createActive = () => {
       featureClickHandler: featureClickHandler,
       type: getPoiType(),
       maxResolution: POI_RESOLUTION.max,
-      source: getActivePoiStore(),
+      source: getActivePoiStore(targetId),
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       renderOrder: null,

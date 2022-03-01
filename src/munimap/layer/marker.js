@@ -42,14 +42,14 @@ const getLayer = (map) => {
 };
 
 /**
- * @param {ol.Map} map map
  * @param {AddLayersOptions} options opts
  * @return {VectorLayer} lyr
  */
-const create = (map, options) => {
+const create = (options) => {
   const {markers, muAttrs, clusterResolution} = options;
+  const {targetId} = options.requiredOpts;
 
-  const markerSource = getStore();
+  const markerSource = getStore(targetId);
   markerSource.setAttributions(muAttrs);
   markerSource.addFeatures(markers);
 

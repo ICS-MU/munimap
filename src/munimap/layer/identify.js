@@ -44,13 +44,14 @@ const getLayer = (map) => {
 
 /**
  * Create layer.
+ * @param {string} targetId targetId
  * @return {VectorLayer} layer
  */
-const createLayer = () => {
+const createLayer = (targetId) => {
   const identifyLayer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: LAYER_ID,
-      source: getIdentifyStore(),
+      source: getIdentifyStore(targetId),
       visible: false,
       renderOrder: null,
     })

@@ -281,23 +281,31 @@ const getStyle = (feature, marked) => {
 /**
  * @param {ol.Feature} feature feature
  * @param {number} resolution resolution
+ * @param {string} targetId targetId
  * @return {Style|Array<Style>} style
  */
-const defaultStyleFunction = (feature, resolution) => {
-  const marked = getMarkerStore().getFeatures().indexOf(feature) >= 0;
+const defaultStyleFunction = (feature, resolution, targetId) => {
+  const marked = getMarkerStore(targetId).getFeatures().indexOf(feature) >= 0;
   return getStyle(feature, marked);
 };
 
 /**
  * @param {ol.Feature} feature feature
  * @param {number} resolution resolution
+ * @param {string} targetId targetId
  * @param {string} lang language
  * @param {boolean} showLocationCodes whether to show location codes
  * @return {Style|Array<Style>} style
  */
-const labelFunction = (feature, resolution, lang, showLocationCodes) => {
+const labelFunction = (
+  feature,
+  resolution,
+  targetId,
+  lang,
+  showLocationCodes
+) => {
   let result = [];
-  const marked = getMarkerStore().getFeatures().indexOf(feature) >= 0;
+  const marked = getMarkerStore(targetId).getFeatures().indexOf(feature) >= 0;
   const labelCache = munimap_range.contains(BIG_LABEL_RESOLUTION, resolution)
     ? LABEL_CACHE
     : STYLE_LABEL_CACHE;

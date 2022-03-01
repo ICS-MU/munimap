@@ -14,40 +14,46 @@ import {createXYZ as ol_tilegrid_createXYZ} from 'ol/tilegrid';
  */
 
 /**
- * @type {VectorSource}
+ * @type {Object<string, VectorSource>}
  */
-let BUILDING_STORE;
+const BUILDING_STORES = {};
 
 /**
  * Create store for buildings.
+ * @param {string} targetId targetId
  * @param {Function} callback callback
  * @return {VectorSource} store
  */
-const createStore = (callback) => {
-  BUILDING_STORE = new VectorSource({
+const createStore = (targetId, callback) => {
+  const buildingStore = new VectorSource({
     strategy: ol_loadingstrategy_tile(
       ol_tilegrid_createXYZ({
         tileSize: 512,
       })
     ),
   });
-  BUILDING_STORE.setLoader(
+  buildingStore.setLoader(
     munimap_utils.partial(munimap_load.buildingFeaturesForMap, {
-      source: BUILDING_STORE,
+      source: buildingStore,
       type: getBuildingType(),
-      processor: munimap_load.buildingLoadProcessor,
+      processor: munimap_utils.partial(
+        munimap_load.buildingLoadProcessor,
+        targetId
+      ),
       callback: callback,
     })
   );
-  return BUILDING_STORE;
+  BUILDING_STORES[targetId] = buildingStore;
+  return buildingStore;
 };
 
 /**
  * Get building store.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const getStore = () => {
-  return BUILDING_STORE;
+const getStore = (targetId) => {
+  return BUILDING_STORES[targetId];
 };
 
 export {createStore, getStore};

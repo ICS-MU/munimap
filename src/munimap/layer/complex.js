@@ -26,16 +26,17 @@ const isLayer = (layer) => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @return {VectorLayer} layer
  */
-const create = () => {
+const create = (targetId) => {
   return new VectorLayer(
     /**@type {VectorLayerOptions}*/ ({
       id: LAYER_ID,
       isFeatureClickable: munimap_complex.isClickable,
       featureClickHandler: munimap_complex.featureClickHandler,
       type: munimap_complex.getType(),
-      source: getComplexStore(),
+      source: getComplexStore(targetId),
       minResolution: munimap_complex.RESOLUTION.min,
       maxResolution: munimap_complex.RESOLUTION.max,
       updateWhileAnimating: true,

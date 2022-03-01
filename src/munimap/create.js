@@ -106,6 +106,7 @@ const STORES = {};
  */
 export const loadOrDecorateMarkers = async (featuresLike, options) => {
   const lang = options.lang;
+  const targetId = options.targetId;
   const arrPromises = []; // array of promises of features
 
   if (!Array.isArray(featuresLike)) {
@@ -119,7 +120,7 @@ export const loadOrDecorateMarkers = async (featuresLike, options) => {
               decorateCustomMarker(REQUIRED_CUSTOM_MARKERS[el]);
               resolve(REQUIRED_CUSTOM_MARKERS[el]);
             } else if (munimap_utils.isString(el)) {
-              munimap_load.featuresFromParam(el).then((results) => {
+              munimap_load.featuresFromParam(targetId, el).then((results) => {
                 resolve(results);
               });
             }
@@ -132,7 +133,7 @@ export const loadOrDecorateMarkers = async (featuresLike, options) => {
 
         arrPromises.push(
           munimap_load
-            .loadOptPois({
+            .loadOptPois(targetId, {
               ids: ctgIds,
               workplaces: workplaces,
               poiFilter: options.poiFilter,
@@ -148,9 +149,11 @@ export const loadOrDecorateMarkers = async (featuresLike, options) => {
                 optPoiMarkerLabel(ctgIds[0], roomCodes, lang);
 
               return new Promise((resolve, reject) => {
-                munimap_load.featuresFromParam(roomCodes).then((rooms) => {
-                  resolve(addPoiDetail(rooms, features, lang));
-                });
+                munimap_load
+                  .featuresFromParam(targetId, roomCodes)
+                  .then((rooms) => {
+                    resolve(addPoiDetail(rooms, features, lang));
+                  });
               });
             })
         );

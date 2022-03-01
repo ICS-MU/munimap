@@ -45,9 +45,10 @@ const getActiveLayer = (map) => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @return {VectorLayer} layer
  */
-const createActive = () => {
+const createActive = (targetId) => {
   const layer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: ACTIVE_LAYER_ID,
@@ -55,7 +56,7 @@ const createActive = () => {
       featureClickHandler: featureClickHandler,
       type: getDoorType(),
       maxResolution: DOOR_RESOLUTION.max,
-      source: getActiveDoorStore(),
+      source: getActiveDoorStore(targetId),
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       renderOrder: null,

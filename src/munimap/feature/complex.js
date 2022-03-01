@@ -65,12 +65,13 @@ const getType = () => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {number} id id
  * @param {Array<ol.Feature>} [opt_features] optional features
  * @return {ol.Feature} building
  */
-const getById = (id, opt_features) => {
-  const features = opt_features || getComplexStore().getFeatures();
+const getById = (targetId, id, opt_features) => {
+  const features = opt_features || getComplexStore(targetId).getFeatures();
   const result = features.find((feature) => {
     const idProperty = getType().primaryKey;
     return feature.get(idProperty) === id;

@@ -9,25 +9,27 @@ import VectorSource from 'ol/source/Vector';
  */
 
 /**
- * @type {VectorSource}
+ * @type {Object<string, VectorSource>}
  */
-let OPT_POI_STORE;
+const OPT_POI_STORES = {};
 
 /**
  * Create store for opt_pois.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const createStore = () => {
-  OPT_POI_STORE = new VectorSource();
-  return OPT_POI_STORE;
+const createStore = (targetId) => {
+  OPT_POI_STORES[targetId] = new VectorSource();
+  return OPT_POI_STORES[targetId];
 };
 
 /**
  * Get opt_poi store.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const getStore = () => {
-  return OPT_POI_STORE;
+const getStore = (targetId) => {
+  return OPT_POI_STORES[targetId];
 };
 
 export {createStore, getStore};

@@ -120,6 +120,7 @@ const createReducer = (initialState) => {
     let pixelInCoords;
     let isIdentifyAllowed;
     let title;
+    let targetId;
 
     switch (action.type) {
       // MARKERS_LOADED
@@ -202,7 +203,8 @@ const createReducer = (initialState) => {
           } else {
             zoomToStrings = [];
           }
-          featuresFromParam(zoomToStrings).then((res) => {
+          targetId = slctr.getTargetId(state);
+          featuresFromParam(targetId, zoomToStrings).then((res) => {
             const loadedTypes = getLoadedTypes(res);
             action.asyncDispatch(actions.zoomTo_loaded(loadedTypes));
           });
@@ -224,16 +226,17 @@ const createReducer = (initialState) => {
       case actions.FLOORS_LOADED:
         const floorCode = slctr.calculateSelectedFloor(state);
         const newSelectedIsActive = action.payload.newSelectedIsActive;
+        targetId = slctr.getTargetId(state);
         let result;
         let flId;
         if (floorCode) {
           result = floorCode;
-          flId = getFloorLayerIdByCode(floorCode);
+          flId = getFloorLayerIdByCode(targetId, floorCode);
           if (!newSelectedIsActive) {
             const where = 'vrstvaId = ' + flId;
-            loadFloors(where).then((floors) => {
+            loadFloors(targetId, where).then((floors) => {
               if (floors) {
-                refreshFloorBasedStores();
+                refreshFloorBasedStores(targetId);
               }
               action.asyncDispatch(actions.floors_loaded(true));
             });
@@ -263,6 +266,7 @@ const createReducer = (initialState) => {
 
       // OL_MAP_VIEW_CHANGE
       case actions.OL_MAP_VIEW_CHANGE:
+        targetId = slctr.getTargetId(state);
         newState = {
           ...state,
           center: action.payload.view.center,
@@ -276,7 +280,7 @@ const createReducer = (initialState) => {
             //set to state - it can be building/floor code
             newState.selectedFeature = locationCode;
             const where = `polohKod LIKE '${locationCode.substring(0, 5)}%'`;
-            loadFloors(where).then((floors) =>
+            loadFloors(targetId, where).then((floors) =>
               action.asyncDispatch(
                 actions.floors_loaded(isFloorCode(locationCode))
               )
@@ -284,7 +288,7 @@ const createReducer = (initialState) => {
           } else {
             //deselect feature from state
             newState.selectedFeature = null;
-            clearFloorBasedStores();
+            clearFloorBasedStores(targetId);
           }
         }
         return newState;
@@ -316,6 +320,7 @@ const createReducer = (initialState) => {
       case actions.SELECTED_FEATURE_CHANGED:
         const newValue = action.payload;
         const selectedFeature = state.selectedFeature;
+        targetId = slctr.getTargetId(state);
         newState = {
           ...state,
           popup: {
@@ -326,7 +331,7 @@ const createReducer = (initialState) => {
           newState.selectedFeature = newValue;
           newState.popup.uid = null;
           const where = `polohKod LIKE '${newValue.substring(0, 5)}%'`;
-          loadFloors(where).then((floors) =>
+          loadFloors(targetId, where).then((floors) =>
             action.asyncDispatch(actions.floors_loaded(false))
           );
         }
@@ -449,7 +454,8 @@ const createReducer = (initialState) => {
         featureUid = action.payload.featureUid;
         pixelInCoords = action.payload.pixelInCoords;
         const extent = slctr.getExtent(state);
-        feature = getBuildingStore().getFeatureByUid(featureUid);
+        targetId = slctr.getTargetId(state);
+        feature = getBuildingStore(targetId).getFeatureByUid(featureUid);
         isVisible = munimap_range.contains(FLOOR_RESOLUTION, state.resolution);
         isIdentifyAllowed =
           slctr.isIdentifyEnabled(state) &&
@@ -480,6 +486,7 @@ const createReducer = (initialState) => {
           munimap_identify.handleCallback(
             slctr.getIdentifyCallback(state),
             action.asyncDispatch,
+            targetId,
             {feature, pixelInCoords}
           );
           return {
@@ -493,7 +500,7 @@ const createReducer = (initialState) => {
           result = feature.get('vychoziPodlazi') || feature.get('polohKod');
           if (result) {
             const where = `polohKod LIKE '${result.substring(0, 5)}%'`;
-            loadFloors(where).then((floors) =>
+            loadFloors(targetId, where).then((floors) =>
               action.asyncDispatch(actions.floors_loaded(false))
             );
           }
@@ -510,12 +517,14 @@ const createReducer = (initialState) => {
       //COMPLEX_CLICKED
       case actions.COMPLEX_CLICKED:
         featureUid = action.payload.featureUid;
-        feature = getComplexStore().getFeatureByUid(featureUid);
+        targetId = slctr.getTargetId(state);
+        feature = getComplexStore(targetId).getFeatureByUid(featureUid);
 
+        targetId = slctr.getTargetId(state);
         const complexId = /**@type {number}*/ (
           feature.get(COMPLEX_ID_FIELD_NAME)
         );
-        const complexBldgs = getBuildingStore()
+        const complexBldgs = getBuildingStore(targetId)
           .getFeatures()
           .filter((bldg) => {
             const cId = bldg.get('arealId');
@@ -527,7 +536,7 @@ const createReducer = (initialState) => {
             }
             return false;
           });
-        featuresExtent = extentOfFeatures(complexBldgs);
+        featuresExtent = extentOfFeatures(complexBldgs, targetId);
         const futureRes =
           complexBldgs.length === 1
             ? FLOOR_RESOLUTION.max / 2
@@ -557,11 +566,12 @@ const createReducer = (initialState) => {
       //CLUSTER_CLICKED
       case actions.CLUSTER_CLICKED:
         featureUid = action.payload.featureUid;
-        feature = getClusterStore().getFeatureByUid(featureUid);
+        targetId = slctr.getTargetId(state);
+        feature = getClusterStore(targetId).getFeatureByUid(featureUid);
 
-        let clusteredFeatures = getMainFeatures(feature);
+        let clusteredFeatures = getMainFeatures(targetId, feature);
         if (state.requiredOpts.clusterFacultyAbbr) {
-          const minorFeatures = getMinorFeatures(feature);
+          const minorFeatures = getMinorFeatures(targetId, feature);
           clusteredFeatures = clusteredFeatures.concat(minorFeatures);
         }
 
@@ -600,7 +610,8 @@ const createReducer = (initialState) => {
             }
           }
         } else {
-          featuresExtent = extentOfFeatures(clusteredFeatures);
+          targetId = slctr.getTargetId(state);
+          featuresExtent = extentOfFeatures(clusteredFeatures, targetId);
           animationRequest = {
             extent: featuresExtent,
             duration: getAnimationDuration(
@@ -637,7 +648,8 @@ const createReducer = (initialState) => {
       case actions.MARKER_CLICKED:
         featureUid = action.payload.featureUid;
         pixelInCoords = action.payload.pixelInCoords;
-        feature = getMarkerStore().getFeatureByUid(featureUid);
+        targetId = slctr.getTargetId(state);
+        feature = getMarkerStore(targetId).getFeatureByUid(featureUid);
         resolutionRange = isDoor(feature) ? DOOR_RESOLUTION : FLOOR_RESOLUTION;
         isVisible = munimap_range.contains(resolutionRange, state.resolution);
         isIdentifyAllowed =
@@ -676,7 +688,7 @@ const createReducer = (initialState) => {
           if (locationCode) {
             const where = `polohKod LIKE '${locationCode.substring(0, 5)}%'`;
             const activeFloorCodes = slctr.getActiveFloorCodes(state);
-            loadFloors(where).then((floors) =>
+            loadFloors(targetId, where).then((floors) =>
               action.asyncDispatch(
                 actions.floors_loaded(activeFloorCodes.includes(locationCode))
               )
@@ -685,6 +697,7 @@ const createReducer = (initialState) => {
               munimap_identify.handleCallback(
                 slctr.getIdentifyCallback(state),
                 action.asyncDispatch,
+                targetId,
                 {feature, pixelInCoords}
               );
             }
@@ -719,7 +732,8 @@ const createReducer = (initialState) => {
       //POI_CLICKED
       case actions.POI_CLICKED:
         featureUid = action.payload.featureUid;
-        feature = getActivePoiStore().getFeatureByUid(featureUid);
+        targetId = slctr.getTargetId(state);
+        feature = getActivePoiStore(targetId).getFeatureByUid(featureUid);
 
         animationRequest = null;
         isVisible = munimap_range.contains(FLOOR_RESOLUTION, state.resolution);
@@ -752,7 +766,8 @@ const createReducer = (initialState) => {
       //PUBTRAN_CLICKED
       case actions.PUBTRAN_CLICKED:
         featureUid = action.payload.featureUid;
-        feature = getPubTranStore().getFeatureByUid(featureUid);
+        targetId = slctr.getTargetId(state);
+        feature = getPubTranStore(targetId).getFeatureByUid(featureUid);
 
         const point = /**@type {ol.geom.Point}*/ (feature.getGeometry());
         const coords = point.getCoordinates();
@@ -786,7 +801,8 @@ const createReducer = (initialState) => {
       case actions.ROOM_CLICKED:
         featureUid = action.payload.featureUid;
         pixelInCoords = action.payload.pixelInCoords;
-        feature = getActiveRoomStore().getFeatureByUid(featureUid);
+        targetId = slctr.getTargetId(state);
+        feature = getActiveRoomStore(targetId).getFeatureByUid(featureUid);
         locationCode = feature.get('polohKod');
         result = locationCode ? locationCode.substr(0, 8) : null;
         isIdentifyAllowed =
@@ -801,7 +817,7 @@ const createReducer = (initialState) => {
             popupOpts.uid = null;
           }
           const where = `polohKod LIKE '${result.substring(0, 5)}%'`;
-          loadFloors(where).then((floors) =>
+          loadFloors(targetId, where).then((floors) =>
             action.asyncDispatch(actions.floors_loaded(true))
           );
 
@@ -809,6 +825,7 @@ const createReducer = (initialState) => {
             munimap_identify.handleCallback(
               slctr.getIdentifyCallback(state),
               action.asyncDispatch,
+              targetId,
               {feature, pixelInCoords}
             );
           }
@@ -826,7 +843,8 @@ const createReducer = (initialState) => {
       case actions.DOOR_CLICKED:
         featureUid = action.payload.featureUid;
         pixelInCoords = action.payload.pixelInCoords;
-        feature = getActiveDoorStore().getFeatureByUid(featureUid);
+        targetId = slctr.getTargetId(state);
+        feature = getActiveDoorStore(targetId).getFeatureByUid(featureUid);
         isIdentifyAllowed =
           slctr.isIdentifyEnabled(state) &&
           munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
@@ -835,6 +853,7 @@ const createReducer = (initialState) => {
           munimap_identify.handleCallback(
             slctr.getIdentifyCallback(state),
             action.asyncDispatch,
+            targetId,
             {feature, pixelInCoords}
           );
         }
@@ -854,9 +873,11 @@ const createReducer = (initialState) => {
 
       //IDENTIFY_RESET
       case actions.IDENTIFY_RESETED:
+        targetId = slctr.getTargetId(state);
         munimap_identify.handleCallback(
           slctr.getIdentifyCallback(state),
-          action.asyncDispatch
+          action.asyncDispatch,
+          targetId
         );
         return {
           ...state,
@@ -864,6 +885,7 @@ const createReducer = (initialState) => {
 
       //RESET_MUNIMAP
       case actions.RESET_MUNIMAP:
+        targetId = slctr.getTargetId(state);
         const markerIdsEquals =
           action.payload.markerIds &&
           munimap_utils.arrayEquals(
@@ -905,9 +927,9 @@ const createReducer = (initialState) => {
           newState.requiredOpts.markerIds = requiredMarkers;
           newState.markersTimestamp = 0;
           newState.optPoisTimestamp = 0;
-          getMarkerStore().clear();
-          getOptPoiStore().clear();
-          getClusterStore().clear();
+          getMarkerStore(targetId).clear();
+          getOptPoiStore(targetId).clear();
+          getClusterStore(targetId).clear();
 
           let markerStrings;
           if (requiredMarkers.length) {
@@ -922,7 +944,7 @@ const createReducer = (initialState) => {
             (res) => {
               munimap_assert.assertMarkerFeatures(res);
               const loadedTypes = getLoadedTypes(res, requiredMarkers);
-              getMarkerStore().addFeatures(res);
+              getMarkerStore(targetId).addFeatures(res);
               action.asyncDispatch(actions.markers_loaded(res, loadedTypes));
             }
           );
@@ -930,7 +952,7 @@ const createReducer = (initialState) => {
           !action.payload.markerIds &&
           state.requiredOpts.markerIds.length > 0
         ) {
-          getMarkerStore().clear();
+          getMarkerStore(targetId).clear();
         }
 
         //load zoomTo
@@ -948,7 +970,7 @@ const createReducer = (initialState) => {
           } else {
             zoomToStrings = [];
           }
-          featuresFromParam(zoomToStrings).then((res) => {
+          featuresFromParam(targetId, zoomToStrings).then((res) => {
             const loadedTypes = getLoadedTypes(res);
             action.asyncDispatch(actions.zoomTo_loaded(loadedTypes));
           });
@@ -957,20 +979,21 @@ const createReducer = (initialState) => {
         //manage identify callback
         if (action.payload.identifyCallbackId) {
           //new callback in munimap.reset
-          const store = getIdentifyStore();
+          const store = getIdentifyStore(targetId);
           if (store) {
             store.once('clear', () =>
               action.asyncDispatch(actions.identifyFeatureChanged())
             );
             store.clear();
           } else {
-            createIdentifyStore();
+            createIdentifyStore(targetId);
           }
         } else if (slctr.isIdentifyEnabled(state)) {
           //same callback as in munimap.create => handle with undefined
           munimap_identify.handleCallback(
             slctr.getIdentifyCallback(state),
-            action.asyncDispatch
+            action.asyncDispatch,
+            targetId
           );
           newState.requiredOpts.identifyCallbackId =
             state.requiredOpts.identifyCallbackId;

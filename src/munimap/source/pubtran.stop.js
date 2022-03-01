@@ -9,37 +9,40 @@ import {pubtranFeaturesForMap} from '../load.js';
 import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
 
 /**
- * @type {VectorSource}
+ * @type {Object<string, VectorSource>}
  */
-let PUBTRAN_STORE;
+const PUBTRAN_STORES = {};
 
 /**
  * Create store for public transportation stops.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const createStore = () => {
-  PUBTRAN_STORE = new VectorSource({
+const createStore = (targetId) => {
+  const pubtranStore = new VectorSource({
     strategy: tileLoadingStrategy(
       createTilegridXYZ({
         tileSize: 512,
       })
     ),
   });
-  PUBTRAN_STORE.setLoader(
+  pubtranStore.setLoader(
     munimap_utils.partial(pubtranFeaturesForMap, {
-      source: PUBTRAN_STORE,
+      source: pubtranStore,
       type: getPubtranType(),
     })
   );
-  return PUBTRAN_STORE;
+  PUBTRAN_STORES[targetId] = pubtranStore;
+  return pubtranStore;
 };
 
 /**
  * Get pubtran store.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const getStore = () => {
-  return PUBTRAN_STORE;
+const getStore = (targetId) => {
+  return PUBTRAN_STORES[targetId];
 };
 
 export {createStore, getStore};

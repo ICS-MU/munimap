@@ -48,21 +48,21 @@ const IS_CLICKABLE = 'isFeatureClickable';
 const TYPE = 'type';
 
 /**
- * @param {string} lang lang
+ * @param {string} targetId targetId
  * @param {boolean} showLabels whether show labels for MU objects
  * @param {boolean} showLocationCodes whether to show only location codes
  *
  * @return {Array<ol.layer.Vector>} layers
  */
-const getDefaultLayers = (lang, showLabels, showLocationCodes) => {
+const getDefaultLayers = (targetId, showLabels, showLocationCodes) => {
   const result = [];
-  const buildings = munimap_layer_building.create();
-  const rooms = createRoomLayer();
-  const activeRooms = createActiveRoomLayer();
-  const doors = createActiveDoorLayer();
-  const poi = createActivePoiLayer();
-  const roomLabels = createRoomLabelLayer(showLocationCodes);
-  const buildingLabels = munimap_layer_building.createLabel(lang, showLabels);
+  const buildings = munimap_layer_building.create(targetId);
+  const rooms = createRoomLayer(targetId);
+  const activeRooms = createActiveRoomLayer(targetId);
+  const doors = createActiveDoorLayer(targetId);
+  const poi = createActivePoiLayer(targetId);
+  const roomLabels = createRoomLabelLayer(targetId, showLocationCodes);
+  const buildingLabels = munimap_layer_building.createLabel(targetId);
   result.push(
     buildings,
     rooms,
@@ -75,7 +75,7 @@ const getDefaultLayers = (lang, showLabels, showLocationCodes) => {
   if (showLabels === false) {
     return result;
   }
-  const complexes = munimap_layer_complex.create();
+  const complexes = munimap_layer_complex.create(targetId);
   result.push(complexes);
   return result;
 };

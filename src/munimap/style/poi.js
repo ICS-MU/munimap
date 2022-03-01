@@ -336,9 +336,15 @@ const defaultStyleFunction = (feature, resolution) => {
  * @param {ol.Feature|ol.render.Feature} feature feature
  * @param {number} resolution resolution
  * @param {string} selectedFeature selected feature
+ * @param {string} targetId targetId
  * @return {Style|Array<Style>} style
  */
-const outdoorStyleFunction = (feature, resolution, selectedFeature) => {
+const outdoorStyleFunction = (
+  feature,
+  resolution,
+  selectedFeature,
+  targetId
+) => {
   const poiType = feature.get('typ');
   let result = null;
   let showEntrance = false;
@@ -356,7 +362,7 @@ const outdoorStyleFunction = (feature, resolution, selectedFeature) => {
         selectedFeature && selectedFeature.length >= 5
           ? selectedFeature.substr(0, 5)
           : '';
-      const building = getBuildingByCode(floorCode.substr(0, 5));
+      const building = getBuildingByCode(targetId, floorCode.substr(0, 5));
       if (building) {
         //some buildings not loaded when outdoorFunction is called;
         //building with active floor (where entrances should be added)

@@ -149,9 +149,10 @@ const createParamForCallback = (opt_options) => {
 /**
  * @param {CallbackFunction} callback callback
  * @param {Function} asyncDispatch asyncDispatch
+ * @param {string} targetId targetId
  * @param {HandleCallbackOptions} [opt_options] opts
  */
-const handleCallback = (callback, asyncDispatch, opt_options) => {
+const handleCallback = (callback, asyncDispatch, targetId, opt_options) => {
   if (!callback) {
     return;
   }
@@ -174,7 +175,7 @@ const handleCallback = (callback, asyncDispatch, opt_options) => {
     );
 
     if (callbackResult) {
-      const store = getStore();
+      const store = getStore(targetId);
       store.once('addfeature', () =>
         asyncDispatch(actions.identifyFeatureChanged())
       );
@@ -184,7 +185,7 @@ const handleCallback = (callback, asyncDispatch, opt_options) => {
     }
   } else {
     const params = createParamForCallback();
-    const store = getStore();
+    const store = getStore(targetId);
     callback(params);
 
     store.once('clear', () => asyncDispatch(actions.identifyFeatureChanged()));

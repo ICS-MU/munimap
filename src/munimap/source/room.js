@@ -13,61 +13,65 @@ import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
  */
 
 /**
- * @type {VectorSource}
+ * @type {Object<string, VectorSource>}
  */
-let ROOM_STORE;
+const ROOM_STORES = {};
 
 /**
- * @type {VectorSource}
+ * @type {Object<string, VectorSource>}
  */
-let DEFAULT_ROOM_STORE;
+const DEFAULT_ROOM_STORES = {};
 
 /**
- * @type {VectorSource}
+ * @type {Object<string, VectorSource>}
  */
-let ACTIVE_ROOM_STORE;
+const ACTIVE_ROOM_STORES = {};
 
 /**
  * Create store for rooms.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const createStore = () => {
-  ROOM_STORE = new VectorSource();
-  return ROOM_STORE;
+const createStore = (targetId) => {
+  ROOM_STORES[targetId] = new VectorSource();
+  return ROOM_STORES[targetId];
 };
 
 /**
  * Create store for default rooms.
+ * @param {string} targetId targetId
  * @param {Function} callback callback
  * @return {VectorSource} store
  */
-const createDefaultStore = (callback) => {
-  DEFAULT_ROOM_STORE = new VectorSource({
+const createDefaultStore = (targetId, callback) => {
+  const defaultStore = new VectorSource({
     strategy: tileLoadingStrategy(
       createTilegridXYZ({
         tileSize: 512,
       })
     ),
   });
-  DEFAULT_ROOM_STORE.setLoader(
-    munimap_utils.partial(loadDefaultRooms, {
-      source: ROOM_STORE,
+  defaultStore.setLoader(
+    munimap_utils.partial(loadDefaultRooms, targetId, {
+      source: defaultStore,
       type: getRoomType(),
       where: 'vychoziPodlazi = 1',
       callback: callback,
     })
   );
-  return DEFAULT_ROOM_STORE;
+  DEFAULT_ROOM_STORES[targetId] = defaultStore;
+  return defaultStore;
 };
 
 /**
  * Create store for active rooms.
  * @param {redux.Store} store store
+ * @param {string} targetId targetId
  * @param {Function} callback callback
  * @return {VectorSource} store
  */
-const createActiveStore = (store, callback) => {
-  ACTIVE_ROOM_STORE = new VectorSource({
+const createActiveStore = (store, targetId, callback) => {
+  const activeStore = new VectorSource({
     strategy: tileLoadingStrategy(
       createTilegridXYZ({
         tileSize: 512,
@@ -75,31 +79,35 @@ const createActiveStore = (store, callback) => {
     ),
     loader: munimap_utils.partial(loadActiveRooms, {store, callback}),
   });
-  return ACTIVE_ROOM_STORE;
+  ACTIVE_ROOM_STORES[targetId] = activeStore;
+  return activeStore;
 };
 
 /**
  * Get room store.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const getStore = () => {
-  return ROOM_STORE;
+const getStore = (targetId) => {
+  return ROOM_STORES[targetId];
 };
 
 /**
  * Get default room store.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const getDefaultStore = () => {
-  return DEFAULT_ROOM_STORE;
+const getDefaultStore = (targetId) => {
+  return DEFAULT_ROOM_STORES[targetId];
 };
 
 /**
  * Get active room store.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const getActiveStore = () => {
-  return ACTIVE_ROOM_STORE;
+const getActiveStore = (targetId) => {
+  return ACTIVE_ROOM_STORES[targetId];
 };
 
 export {

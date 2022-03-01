@@ -27,6 +27,7 @@ import {useSelector} from 'react-redux';
 
 /**
  * @typedef {Object} InfoPositionOptions
+ * @property {string} targetId targetId
  * @property {ol.extent.Extent} [extent] extent
  * @property {number} [resolution] resolution
  * @property {string} [selectedFeature] selectedFeature
@@ -39,11 +40,11 @@ import {useSelector} from 'react-redux';
  * @return {PopupPositionOptions} position
  */
 const getInfoBoxPosition = (infoEl, options) => {
-  const {extent, resolution, selectedFeature} = options;
+  const {targetId, extent, resolution, selectedFeature} = options;
   if (!extent || !selectedFeature || !resolution) {
     return;
   }
-  const building = getBuildingByCode(selectedFeature);
+  const building = getBuildingByCode(targetId, selectedFeature);
   const topRight = ol_extent.getTopRight(extent);
   const elSize = getElementSize(infoEl);
   const extWidth = resolution * elSize.width;
@@ -119,6 +120,7 @@ const InfoBubbleComponent = (props) => {
   const center = useSelector(slctr.getCenter);
   const selectedFeature = useSelector(slctr.getSelectedFeature);
   const {bldgTitle, complexTitle} = useSelector(slctr.getBuildingTitle);
+  const targetId = useSelector(slctr.getTargetId);
 
   const mapRef = useContext(MapContext);
   const map = mapRef && mapRef.current;
@@ -133,7 +135,7 @@ const InfoBubbleComponent = (props) => {
       console.log('########## INFOBUBBLE-useEffect-position');
     }
     if (map && bubbleRef.current) {
-      const opts = {extent, resolution, selectedFeature};
+      const opts = {extent, resolution, selectedFeature, targetId};
       const positionInfo = getInfoBoxPosition(bubbleRef.current, opts);
       if (positionInfo) {
         const position = positionInfo.coordinate

@@ -489,13 +489,14 @@ const featuresByCode = async (options) => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {ComplexByIdsOptions} options opts
  * @return {Promise<Array<ol.Feature>>} complexes
  * @protected
  */
-const complexByIds = async (options) => {
+const complexByIds = async (targetId, options) => {
   return features({
-    source: getComplexStore(),
+    source: getComplexStore(targetId),
     type: munimap_complex.getType(),
     method: 'POST',
     returnGeometry: true,
@@ -545,14 +546,15 @@ const pubtranFeaturesForMap = async (options, extent, resolution, projection) =>
   await featuresForMap(options, extent, resolution, projection);
 
 /**
+ * @param {string} targetId targetId
  * @param {string} where where
  * @return {Promise<Array<ol.Feature>>} promise of features contained
  * in server response
  * @protected
  */
-const loadUnits = async (where) => {
+const loadUnits = async (targetId, where) => {
   return features({
-    source: getUnitStore(),
+    source: getUnitStore(targetId),
     type: munimap_unit.getType(),
     method: 'POST',
     returnGeometry: false,
@@ -561,37 +563,40 @@ const loadUnits = async (where) => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {Array<number>} buildingIds ids
  * @return {Promise<Array<ol.Feature>>} promise of features contained
  * in server response
  */
-const loadUnitsByHeadquartersIds = async (buildingIds) => {
+const loadUnitsByHeadquartersIds = async (targetId, buildingIds) => {
   const where = 'budova_sidelni_id IN (' + buildingIds.join() + ')';
-  return loadUnits(where);
+  return loadUnits(targetId, where);
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {Array<number>} complexIds complex ids
  * @return {Promise<Array<ol.Feature>>} promise of features contained
  * in server response
  */
-const loadUnitsByHeadquartersComplexIds = async (complexIds) => {
+const loadUnitsByHeadquartersComplexIds = async (targetId, complexIds) => {
   const where = 'areal_sidelni_id IN (' + complexIds.join() + ')';
-  return loadUnits(where);
+  return loadUnits(targetId, where);
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {ProcessorOptions} options opts
  * @return {Promise<ProcessorOptions>} opts
  */
-const unitLoadProcessor = async (options) => {
+const unitLoadProcessor = async (targetId, options) => {
   const newBuildings = options.new;
   const buildingIdsToLoad = newBuildings.map((building) => {
     return building.get('inetId');
   });
 
   if (buildingIdsToLoad.length) {
-    const units = await loadUnitsByHeadquartersIds(buildingIdsToLoad);
+    const units = await loadUnitsByHeadquartersIds(targetId, buildingIdsToLoad);
     newBuildings.forEach((building) => {
       const buildingUnits = units.filter((unit) => {
         return unit.get('budova_sidelni_id') === building.get('inetId');
@@ -605,18 +610,22 @@ const unitLoadProcessor = async (options) => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {ProcessorOptions} options opts
  * @return {Promise<ProcessorOptions>} promise
  * @protected
  */
-const complexLoadProcessorWithUnits = async (options) => {
+const complexLoadProcessorWithUnits = async (targetId, options) => {
   const newComplexes = options.new;
   const complexIdsToLoad = newComplexes.map((complex) => {
     return complex.get(munimap_complex.ID_FIELD_NAME);
   });
 
   if (complexIdsToLoad.length) {
-    const units = await loadUnitsByHeadquartersComplexIds(complexIdsToLoad);
+    const units = await loadUnitsByHeadquartersComplexIds(
+      targetId,
+      complexIdsToLoad
+    );
     newComplexes.forEach((complex) => {
       const complexUnits = units.filter((unit) => {
         return (
@@ -633,11 +642,12 @@ const complexLoadProcessorWithUnits = async (options) => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {ProcessorOptions} options opts
  * @return {Promise<ProcessorOptions>} processor
  * @protected
  */
-const complexLoadProcessor = async (options) => {
+const complexLoadProcessor = async (targetId, options) => {
   const newBuildings = options.new;
   let complexIdsToLoad = [];
   const buildingsToLoadComplex = [];
@@ -645,7 +655,7 @@ const complexLoadProcessor = async (options) => {
     const complexId = building.get(munimap_building.COMPLEX_ID_FIELD_NAME);
     if (munimap_utils.isNumber(complexId)) {
       munimap_assert.assertNumber(complexId);
-      const complex = munimap_complex.getById(complexId);
+      const complex = munimap_complex.getById(targetId, complexId);
       if (complex) {
         building.set(munimap_building.COMPLEX_FIELD_NAME, complex);
       } else {
@@ -659,13 +669,13 @@ const complexLoadProcessor = async (options) => {
 
   complexIdsToLoad = [...new Set(complexIdsToLoad)];
   if (complexIdsToLoad.length) {
-    const complexes = await complexByIds({
+    const complexes = await complexByIds(targetId, {
       ids: complexIdsToLoad,
-      processor: complexLoadProcessorWithUnits,
+      processor: munimap_utils.partial(complexLoadProcessorWithUnits, targetId),
     });
     buildingsToLoadComplex.forEach((building) => {
       const complexId = building.get(munimap_building.COMPLEX_ID_FIELD_NAME);
-      const complex = munimap_complex.getById(complexId, complexes);
+      const complex = munimap_complex.getById(targetId, complexId, complexes);
       if (!complex) {
         throw new Error('Complex ' + complexId + ' not found.');
       }
@@ -678,13 +688,14 @@ const complexLoadProcessor = async (options) => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {ProcessorOptions} options opts
  * @return {Promise<ProcessorOptions>} opts
  */
-const buildingLoadProcessor = async (options) => {
+const buildingLoadProcessor = async (targetId, options) => {
   const result = await Promise.all([
-    complexLoadProcessor(options),
-    unitLoadProcessor(options),
+    complexLoadProcessor(targetId, options),
+    unitLoadProcessor(targetId, options),
   ]);
   munimap_assert.assertArray(result);
   result.forEach((opts) => {
@@ -699,57 +710,60 @@ const buildingLoadProcessor = async (options) => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {BuildingsByCodeOptions} options options
  * @return {Promise<Array<ol.Feature>>} promise of features contained
  * in server response
  */
-const buildingsByCode = async (options) => {
+const buildingsByCode = async (targetId, options) => {
   return featuresByCode({
     codes: options.codes,
     type: munimap_building.getType(),
-    source: getBuildingStore(),
+    source: getBuildingStore(targetId),
     likeExprs: options.likeExprs,
-    processor: buildingLoadProcessor,
+    processor: munimap_utils.partial(buildingLoadProcessor, targetId),
   });
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {RoomsByCodeOptions} options options
  * @return {Promise<Array<ol.Feature>>} promise of features contained
  * in server response
  */
-const roomsByCode = async (options) => {
+const roomsByCode = async (targetId, options) => {
   return featuresByCode({
     codes: options.codes,
     type: getRoomType(),
-    source: getRoomStore(),
+    source: getRoomStore(targetId),
     likeExprs: options.likeExprs,
   });
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {DoorsByCodeOptions} options options
  * @return {Promise<Array<ol.Feature>>} promise of features contained
  * in server response
  */
-const doorsByCode = async (options) => {
+const doorsByCode = async (targetId, options) => {
   return featuresByCode({
     codes: options.codes,
     likeExprs: options.likeExprs,
     type: getDoorType(),
-    source: getDoorStore(),
+    source: getDoorStore(targetId),
   });
 };
 
 /**
- *
+ * @param {string} targetId targetId
  * @param {string} where where
  * @return {Promise<Array<ol.Feature>>} promise of features contained
  * in server response
  */
-const loadFloors = (where) => {
+const loadFloors = (targetId, where) => {
   return features({
-    source: getFloorStore(),
+    source: getFloorStore(targetId),
     type: getFloorType(),
     returnGeometry: false,
     where: where,
@@ -757,11 +771,12 @@ const loadFloors = (where) => {
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {Array<string>|string|undefined} paramValue zoomTo or markers
  * @return {Promise<Array<ol.Feature>>} promise of features contained
  * in server response
  */
-const featuresFromParam = async (paramValue) => {
+const featuresFromParam = async (targetId, paramValue) => {
   const values = /**@type {Array.<string>}*/ (
     munimap_utils.isString(paramValue) ? [paramValue] : paramValue
   );
@@ -773,7 +788,7 @@ const featuresFromParam = async (paramValue) => {
     if (munimap_building.isCodeOrLikeExpr(firstParamValue)) {
       codes = values.filter(munimap_building.isCode);
       likeExprs = values.filter(munimap_building.isLikeExpr);
-      return await buildingsByCode({
+      return await buildingsByCode(targetId, {
         codes: codes,
         likeExprs: likeExprs,
       });
@@ -801,21 +816,21 @@ const featuresFromParam = async (paramValue) => {
       });
       munimap_utils.removeArrayDuplicates(buildingCodes);
       munimap_utils.removeArrayDuplicates(buildingLikeExprs);
-      await buildingsByCode({
+      await buildingsByCode(targetId, {
         codes: buildingCodes,
         likeExprs: buildingLikeExprs,
       });
       const loadFunction = isRoomCodeOrLikeExpr(firstParamValue)
         ? roomsByCode
         : doorsByCode;
-      const features = await loadFunction({
+      const features = await loadFunction(targetId, {
         codes: codes,
         likeExprs: likeExprs,
       });
       features.forEach((feature, index) => {
         if (!munimap_utils.isDefAndNotNull(feature.getGeometry())) {
           const locCode = /**@type {string}*/ (feature.get('polohKod'));
-          const building = munimap_building.getByCode(locCode);
+          const building = munimap_building.getByCode(targetId, locCode);
           const bldgGeom = building.getGeometry();
           if (munimap_utils.isDef(bldgGeom)) {
             munimap_assert.assertExists(bldgGeom);
@@ -830,15 +845,21 @@ const featuresFromParam = async (paramValue) => {
 };
 
 /**
- *
+ * @param {string} targetId targetId
  * @param {FeaturesForMapOptions} options options
  * @param {ol.extent.Extent} extent extent
  * @param {number} resolution resolution
  * @param {ol.proj.Projection} projection projection
  */
-const loadDefaultRooms = async (options, extent, resolution, projection) => {
+const loadDefaultRooms = async (
+  targetId,
+  options,
+  extent,
+  resolution,
+  projection
+) => {
   const rooms = await featuresForMap(options, extent, resolution, projection);
-  const defaultRoomStore = getDefaultRoomStore();
+  const defaultRoomStore = getDefaultRoomStore(targetId);
   const roomsToAdd = getNotYetAddedFeatures(defaultRoomStore, rooms);
   defaultRoomStore.addFeatures(roomsToAdd);
 
@@ -861,6 +882,7 @@ const loadActiveRooms = async (
   projection
 ) => {
   const activeFloorCodes = slctr.getActiveFloorCodes(store.getState());
+  const targetId = slctr.getTargetId(store.getState());
 
   let where;
   if (activeFloorCodes.length > 0) {
@@ -870,13 +892,13 @@ const loadActiveRooms = async (
     );
     where = conditions.join(' OR ');
     const opts = {
-      source: getRoomStore(),
+      source: getRoomStore(targetId),
       type: getRoomType(),
       where: where,
       method: 'POST',
     };
     const rooms = await featuresForMap(opts, extent, resolution, projection);
-    const activeStore = getActiveRoomStore();
+    const activeStore = getActiveRoomStore(targetId);
     munimap_assert.assertInstanceof(activeStore, VectorSource);
     const roomsFromActiveFloor = rooms.filter((room) =>
       activeFloorCodes.includes(room.get('polohKod').substr(0, 8))
@@ -906,6 +928,7 @@ const loadActiveDoors = async (
   projection
 ) => {
   const activeFloorCodes = slctr.getActiveFloorCodes(store.getState());
+  const targetId = slctr.getTargetId(store.getState());
   let where;
   if (activeFloorCodes.length > 0) {
     const conditions = [];
@@ -914,13 +937,13 @@ const loadActiveDoors = async (
     );
     where = conditions.join(' OR ');
     const opts = {
-      source: getDoorStore(),
+      source: getDoorStore(targetId),
       type: getDoorType(),
       where: where,
       method: 'POST',
     };
     const doors = await featuresForMap(opts, extent, resolution, projection);
-    const activeStore = getActiveDoorStore();
+    const activeStore = getActiveDoorStore(targetId);
     const doorsFromActiveFloor = doors.filter((door) =>
       activeFloorCodes.includes(door.get('polohKodPodlazi'))
     );
@@ -949,6 +972,7 @@ const loadActivePois = async (
   projection
 ) => {
   const activeFloorCodes = slctr.getActiveFloorCodes(store.getState());
+  const targetId = slctr.getTargetId(store.getState());
 
   const entrances = [
     POI_PURPOSE.BUILDING_ENTRANCE,
@@ -966,12 +990,12 @@ const loadActivePois = async (
   where = '(' + where + ') AND volitelny = 0';
   const opts = {
     type: getPoiType(),
-    source: getPoiStore(),
+    source: getPoiStore(targetId),
     where: where,
     method: 'POST',
   };
   const pois = await featuresForMap(opts, extent, resolution, projection);
-  const activeStore = getActivePoiStore();
+  const activeStore = getActivePoiStore(targetId);
   const poisToAdd = getNotYetAddedFeatures(activeStore, pois);
   activeStore.addFeatures(poisToAdd);
 
@@ -981,10 +1005,11 @@ const loadActivePois = async (
 };
 
 /**
+ * @param {string} targetId targetId
  * @param {OptPoiLoadOptions} options options
  * @return {Promise<Array<ol.Feature>>} load function
  */
-const loadOptPois = (options) => {
+const loadOptPois = (targetId, options) => {
   let labels = options.labels || [];
   const workplaces = options.workplaces || [];
   const poiFilter = options.poiFilter || [];
@@ -1004,7 +1029,7 @@ const loadOptPois = (options) => {
     where += ` AND poznamka IN ('${poiFilter.join("', '")}')`;
   }
   const opts = {
-    source: getOptPoiStore(),
+    source: getOptPoiStore(targetId),
     type: getOptPoiType(),
     where: where,
     method: 'POST',

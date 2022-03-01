@@ -4,25 +4,27 @@
 import VectorSource from 'ol/source/Vector';
 
 /**
- * @type {VectorSource}
+ * @type {Object<string, VectorSource>}
  */
-let MARKER_STORE;
+const MARKER_STORES = {};
 
 /**
  * Create store for markers.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const createStore = () => {
-  MARKER_STORE = new VectorSource();
-  return MARKER_STORE;
+const createStore = (targetId) => {
+  MARKER_STORES[targetId] = new VectorSource();
+  return MARKER_STORES[targetId];
 };
 
 /**
  * Get markers source.
+ * @param {string} targetId targetId
  * @return {VectorSource} store
  */
-const getStore = () => {
-  return MARKER_STORE;
+const getStore = (targetId) => {
+  return MARKER_STORES[targetId];
 };
 
 export {createStore, getStore};
