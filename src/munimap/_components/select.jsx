@@ -102,8 +102,8 @@ const customStyles = (floorsWithMarkers) => {
  * @return {string} abbreviated floor label
  */
 const getLabelAbbr = (floorCode, lang) => {
-  const letter = floorCode.substr(0, 1);
-  const num = parseInt(floorCode.substr(1), 10);
+  const letter = floorCode.substring(0, 1);
+  const num = parseInt(floorCode.substring(1), 10);
   let numLabel = '';
   let mezzanineNumLabel = '';
   if (lang === munimap_lang.Abbr.ENGLISH) {
@@ -174,8 +174,8 @@ const getLabelAbbr = (floorCode, lang) => {
  * @return {string} floor label
  */
 const getLabel = (floorCode, lang) => {
-  const letter = floorCode.substr(0, 1);
-  const num = parseInt(floorCode.substr(1), 10);
+  const letter = floorCode.substring(0, 1);
+  const num = parseInt(floorCode.substring(1), 10);
   let numLabel = '';
   if (lang === munimap_lang.Abbr.ENGLISH) {
     switch (num) {

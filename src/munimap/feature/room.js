@@ -214,7 +214,7 @@ const addPoiDetail = (rooms, pois, lang) => {
 
   rooms.forEach((room) => {
     const roomCode = room.get('polohKod');
-    const buildingCode = roomCode.substr(0, 5);
+    const buildingCode = roomCode.substring(0, 5);
     const isFictiveRoom = room.getGeometry().getType() === 'Point';
     if (isFictiveRoom && alreadyInitialized(buildingCode)) {
       // building should have only one fictional room with all pois set
@@ -227,7 +227,7 @@ const addPoiDetail = (rooms, pois, lang) => {
     const filteredPois = pois.filter((poi) => {
       const poiCode = poi.get('polohKodLokace');
       return isFictiveRoom
-        ? poiCode.substr(0, 5) === buildingCode
+        ? poiCode.substring(0, 5) === buildingCode
         : poiCode === roomCode;
     });
 

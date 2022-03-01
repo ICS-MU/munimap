@@ -1177,7 +1177,7 @@ export const getSelectedLocationCode = createSelector(
             const locCode = /**@type {string}*/ (
               featureForComputingSelected.get('polohKod')
             );
-            lc = locCode.substr(0, 5);
+            lc = locCode.substring(0, 5);
           } else {
             lc = featureForComputingSelected.get('polohKodPodlazi') || null;
           }
@@ -1351,7 +1351,7 @@ export const calculateSelectedFloor = createSelector(
       const building = getBuildingByCode(targetId, selectedFeature);
       if (hasInnerGeometry(building)) {
         floorCode = activeFloorCodes.find(
-          (code) => code.substr(0, 5) === selectedFeature
+          (code) => code.substring(0, 5) === selectedFeature
         );
 
         if (floorCode) {
@@ -1416,7 +1416,7 @@ export const getStyleForRoomLayer = createSelector(
     const styleFce = (feature, res) => {
       const locCode = feature.get('polohKod');
       const isDefault = !activeFloorCodes.some((code) =>
-        locCode.startsWith(code.substr(0, 5))
+        locCode.startsWith(code.substring(0, 5))
       );
       if (isDefault) {
         return defaultRoomStyleFunction(feature, res, targetId);
@@ -1603,7 +1603,7 @@ export const getStyleForActivePoiLayer = createSelector(
         if (
           defaultFloor === 1 &&
           activeFloorCodes.every(
-            (floor) => !locCode.startsWith(floor.substr(0, 5))
+            (floor) => !locCode.startsWith(floor.substring(0, 5))
           )
         ) {
           return defaultPoiStyleFunction(feature, res);
@@ -1638,7 +1638,7 @@ export const getFloorsByBuildingCode = createSelector(
       const features = store.getFeatures();
       const floors = features.filter((floor) => {
         const locationCode = floor.get('polohKod');
-        return locationCode.startsWith(selectedFeature.substr(0, 5));
+        return locationCode.startsWith(selectedFeature.substring(0, 5));
       });
       return floors || [];
     }

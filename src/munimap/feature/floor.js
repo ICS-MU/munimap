@@ -110,7 +110,7 @@ export const getFloorLayerIdByCode = (targetId, code) => {
 const getOrderId = (floorCode) => {
   const prefix = floorCode.length > 3 ? 5 : 0;
   const letter = floorCode[prefix + 0];
-  let num = parseInt(floorCode.substr(prefix + 1), 10);
+  let num = parseInt(floorCode.substring(prefix + 1), 10);
 
   switch (letter) {
     case FloorTypes.UNDERGROUND:

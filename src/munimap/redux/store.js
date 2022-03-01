@@ -804,7 +804,7 @@ const createReducer = (initialState) => {
         targetId = slctr.getTargetId(state);
         feature = getActiveRoomStore(targetId).getFeatureByUid(featureUid);
         locationCode = feature.get('polohKod');
-        result = locationCode ? locationCode.substr(0, 8) : null;
+        result = locationCode ? locationCode.substring(0, 8) : null;
         isIdentifyAllowed =
           slctr.isIdentifyEnabled(state) &&
           munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes);

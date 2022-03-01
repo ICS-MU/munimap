@@ -225,7 +225,7 @@ const featureClickHandler = (dispatch, options) => {
  * @return {Feature} building
  */
 const getByCode = (targetId, code) => {
-  code = code.substr(0, 5);
+  code = code.substring(0, 5);
   const features = getBuildingStore(targetId).getFeatures();
   const building = features.find((feature) => {
     const idProperty = TYPE.primaryKey;
@@ -303,7 +303,7 @@ const getSelectedFloorCode = (targetId, building) => {
       if (isRoom(marked) || isDoor(marked)) {
         const buildingLocCode = getLocationCode(building);
         const locationCode = /**@type {string}*/ (marked.get('polohKod'));
-        return locationCode.substr(0, 5) === buildingLocCode;
+        return locationCode.substring(0, 5) === buildingLocCode;
       } else {
         return false;
       }
@@ -311,7 +311,7 @@ const getSelectedFloorCode = (targetId, building) => {
 
     if (firstMarked) {
       const firstMarkedCode = /**@type {string}*/ (firstMarked.get('polohKod'));
-      floorCode = firstMarkedCode.substr(0, 8);
+      floorCode = firstMarkedCode.substring(0, 8);
     }
   }
   if (!floorCode) {

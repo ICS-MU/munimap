@@ -360,9 +360,9 @@ const outdoorStyleFunction = (
           : null;
       const selectedBuildingCode =
         selectedFeature && selectedFeature.length >= 5
-          ? selectedFeature.substr(0, 5)
+          ? selectedFeature.substring(0, 5)
           : '';
-      const building = getBuildingByCode(targetId, floorCode.substr(0, 5));
+      const building = getBuildingByCode(targetId, floorCode.substring(0, 5));
       if (building) {
         //some buildings not loaded when outdoorFunction is called;
         //building with active floor (where entrances should be added)

@@ -804,10 +804,10 @@ const featuresFromParam = async (targetId, paramValue) => {
         : isDoorLikeExpr;
       codes = values.filter(codeFilterFunction);
       likeExprs = values.filter(likeExprFilterFunction);
-      const buildingCodes = codes.map((code) => code.substr(0, 5));
+      const buildingCodes = codes.map((code) => code.substring(0, 5));
       const buildingLikeExprs = [];
       likeExprs.forEach((expr) => {
-        expr = expr.substr(0, 5);
+        expr = expr.substring(0, 5);
         if (munimap_building.isCode(expr)) {
           buildingCodes.push(expr);
         } else if (munimap_building.isLikeExpr(expr)) {
@@ -901,7 +901,7 @@ const loadActiveRooms = async (
     const activeStore = getActiveRoomStore(targetId);
     munimap_assert.assertInstanceof(activeStore, VectorSource);
     const roomsFromActiveFloor = rooms.filter((room) =>
-      activeFloorCodes.includes(room.get('polohKod').substr(0, 8))
+      activeFloorCodes.includes(room.get('polohKod').substring(0, 8))
     );
     const roomsToAdd = getNotYetAddedFeatures(
       activeStore,

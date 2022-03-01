@@ -156,7 +156,7 @@ const alignTextToRows = (parts, separator) => {
     if (i === 0) {
       text = part;
     } else {
-      const charsInLastRow = text.substr(text.lastIndexOf('\n') + 1).length;
+      const charsInLastRow = text.substring(text.lastIndexOf('\n') + 1).length;
       if (
         (charsInLastRow < charsPerRow &&
           (part.length < 3 || charsInLastRow < charsPerRow / 2)) ||
