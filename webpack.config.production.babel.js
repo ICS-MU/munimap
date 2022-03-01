@@ -95,6 +95,10 @@ export default (env) => {
               options: {
                 minimize: true,
                 preprocessor: preprocessor,
+                sources: {
+                  urlFilter: (attribute, value, resourcePath) =>
+                    !/.*munimapext.js$/i.test(value),
+                },
               },
             },
           ],
@@ -171,6 +175,10 @@ export default (env) => {
             from: '*.geojson',
             to: 'example/data',
             context: path.resolve(__dirname, 'resources'),
+          },
+          {
+            from: './src/munimapext.js',
+            context: path.resolve(__dirname),
           },
         ],
       }),

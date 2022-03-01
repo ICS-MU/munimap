@@ -56,6 +56,12 @@ import {v4 as uuidv4} from 'uuid';
  */
 
 /**
+ * @typedef {Object} ResultOptions
+ * @property {ol.Map} map map
+ * @property {redux.Store} store store
+ */
+
+/**
  * @typedef {Object} LoadOrDecorateMarkersOptions
  * @property {Array<string>} [poiFilter] poi filter
  * @property {Array<string>} [markerFilter] marker filter
@@ -327,7 +333,7 @@ const getStoreByTargetId = (id) => STORES[id];
 
 /**
  * @param {Options} options Options
- * @return {Promise<Map>} initialized map
+ * @return {Promise<ResultOptions>} initialized map and redux store
  */
 export default (options) => {
   return new Promise((resolve, reject) => {
@@ -351,7 +357,7 @@ export default (options) => {
 
     ReactDOM.render(
       <Provider store={store}>
-        <MunimapComponent afterInit={(map) => resolve(map)} />
+        <MunimapComponent afterInit={(map) => resolve({map, store})} />
       </Provider>,
       TARGET_ELEMENTS_STORE[targetId]
     );
