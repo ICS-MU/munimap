@@ -28,7 +28,7 @@ export default (env) => {
     inject: 'head',
     minify: true,
     appVersion: PACKAGE.version,
-    olVersion: PACKAGE.dependencies.ol.substr(0, 1).match(/[0-9]/i)
+    olVersion: PACKAGE.dependencies.ol.substring(0, 1).match(/[0-9]/i)
       ? PACKAGE.dependencies.ol
       : PACKAGE.dependencies.ol.substring(1),
     appPath: APP_PATH,
@@ -61,7 +61,7 @@ export default (env) => {
 
   const preprocessor = (content) => {
     const newContent = (content) => {
-      const INCLUDE_PATTERN = /<%= (.*) %>/gi;
+      const INCLUDE_PATTERN = /<%= (\w+) %>/gi;
       return INCLUDE_PATTERN.test(content)
         ? content.replace(INCLUDE_PATTERN, (_, group) => opts[group])
         : content;
