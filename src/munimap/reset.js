@@ -34,49 +34,63 @@ import {
 /**
  * @param {ol.Map} map map
  * @param {Options} options Options
+ * @return {Promise<ol.Map>} initialized map
  */
 export default (map, options) => {
-  const mapTargetEl = map.getTargetElement();
-  const targetId = mapTargetEl.parentElement.parentElement.id;
+  let unsubscribe;
 
-  const store = getStoreByTargetId(targetId);
-  if (!store) {
-    throw new Error(`Store (for id: ${targetId}) not found!`);
-  }
+  return new Promise((resolve, reject) => {
+    const mapTargetEl = map.getTargetElement();
+    const targetId = mapTargetEl.parentElement.parentElement.id;
 
-  const opts = /** @type {RequiredOptions}*/ ({
-    zoom: options.zoom,
-    center: options.center,
-    zoomTo: options.zoomTo,
-    markerFilter: options.markerFilter,
-    poiFilter: options.poiFilter,
-    identifyTypes: options.identifyTypes,
-  });
-
-  if (options.markers !== undefined) {
-    const reqMarkers = /** @type {Array<string>}*/ ([]);
-    for (const prop of Object.getOwnPropertyNames(REQUIRED_CUSTOM_MARKERS)) {
-      delete REQUIRED_CUSTOM_MARKERS[prop];
+    const store = getStoreByTargetId(targetId);
+    if (!store) {
+      throw new Error(`Store (for id: ${targetId}) not found!`);
     }
-    options.markers.forEach((marker, idx) => {
-      if (marker instanceof Feature) {
-        const id = `CUSTOM_MARKER_${targetId}_${idx}`;
-        REQUIRED_CUSTOM_MARKERS[id] = marker;
-        reqMarkers.push(id);
-      } else {
-        reqMarkers.push(marker);
-      }
+
+    const opts = /** @type {RequiredOptions}*/ ({
+      zoom: options.zoom,
+      center: options.center,
+      zoomTo: options.zoomTo,
+      markerFilter: options.markerFilter,
+      poiFilter: options.poiFilter,
+      identifyTypes: options.identifyTypes,
     });
 
-    opts.markerIds = reqMarkers;
-  }
+    if (options.markers !== undefined) {
+      const reqMarkers = /** @type {Array<string>}*/ ([]);
+      for (const prop of Object.getOwnPropertyNames(REQUIRED_CUSTOM_MARKERS)) {
+        delete REQUIRED_CUSTOM_MARKERS[prop];
+      }
+      options.markers.forEach((marker, idx) => {
+        if (marker instanceof Feature) {
+          const id = `CUSTOM_MARKER_${targetId}_${idx}`;
+          REQUIRED_CUSTOM_MARKERS[id] = marker;
+          reqMarkers.push(id);
+        } else {
+          reqMarkers.push(marker);
+        }
+      });
 
-  if (options.identifyCallback !== undefined) {
-    const id = `IDENTIFY_CALLBACK_${targetId}`;
-    if (options.identifyCallback !== IDENTIFY_CALLBACK_STORE[id]) {
-      IDENTIFY_CALLBACK_STORE[id] = options.identifyCallback;
-      opts.identifyCallbackId = id;
+      opts.markerIds = reqMarkers;
     }
-  }
-  store.dispatch(actions.resetMunimap(opts));
+
+    if (options.identifyCallback !== undefined) {
+      const id = `IDENTIFY_CALLBACK_${targetId}`;
+      if (options.identifyCallback !== IDENTIFY_CALLBACK_STORE[id]) {
+        IDENTIFY_CALLBACK_STORE[id] = options.identifyCallback;
+        opts.identifyCallbackId = id;
+      }
+    }
+
+    //resolve map as animation callback
+    unsubscribe = store.subscribe(() => {
+      const state = store.getState();
+      if (state.resetTimestamp > 0) {
+        resolve(map);
+        unsubscribe();
+      }
+    });
+    store.dispatch(actions.resetMunimap(opts));
+  });
 };

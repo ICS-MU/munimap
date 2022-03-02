@@ -153,6 +153,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {ErrorMessageState} errorMessage error message
  * @property {AnimationRequestState} animationRequest requested view
  * @property {PopupState} popup popup
+ * @property {number} resetTimestamp reset timestamp
  */
 
 /**
@@ -219,4 +220,5 @@ export const INITIAL_STATE = {
   popup: {
     uid: null,
   },
+  resetTimestamp: null,
 };

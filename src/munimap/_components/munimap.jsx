@@ -53,6 +53,7 @@ const MunimapComponent = (props) => {
   const identifyVisibled = useSelector(slctr.isIdentifyLayerVisible);
   const isIdentifyEnabled = useSelector(slctr.isIdentifyEnabled);
   const lang = useSelector(slctr.getLang);
+  const resetTimestamp = useSelector((state) => state.resetTimestamp);
 
   const [tooltipProps, setTooltipProps] = useState(null);
 
@@ -141,7 +142,9 @@ const MunimapComponent = (props) => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## MUNIMAP-useEffect-animate');
     }
-    munimap_view.animate(map, animationRequest);
+    const callback =
+      resetTimestamp === 0 ? () => dispatch(actions.resetDone()) : undefined;
+    munimap_view.animate(map, animationRequest, callback);
   }, [map, animationRequest]);
 
   useEffect(() => {

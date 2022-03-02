@@ -529,8 +529,9 @@ const createAnimationOptions_ = (view, options) => {
  *
  * @param {ol.Map} map map
  * @param {AnimationRequestState} animationRequest requested view state
+ * @param {function(boolean): void} [opt_callback] callback
  */
-const animate = (map, animationRequest) => {
+const animate = (map, animationRequest, opt_callback) => {
   if (!map || Object.values(animationRequest[0]).every((i) => i === null)) {
     return;
   }
@@ -538,13 +539,27 @@ const animate = (map, animationRequest) => {
   const view = map.getView();
   animationRequest.forEach((animationReqItem) => {
     if (Array.isArray(animationReqItem)) {
-      view.animate(
-        ...animationReqItem.map((item) => createAnimationOptions_(view, item))
-      );
+      opt_callback
+        ? view.animate(
+            ...animationReqItem.map((item) =>
+              createAnimationOptions_(view, item)
+            ),
+            opt_callback
+          )
+        : view.animate(
+            ...animationReqItem.map((item) =>
+              createAnimationOptions_(view, item)
+            )
+          );
     } else {
       const {extent, duration} = animationReqItem;
       extent
-        ? view.fit(extent, {duration})
+        ? view.fit(extent, {duration, callback: opt_callback})
+        : opt_callback
+        ? view.animate(
+            createAnimationOptions_(view, animationReqItem),
+            opt_callback
+          )
         : view.animate(createAnimationOptions_(view, animationReqItem));
     }
   });

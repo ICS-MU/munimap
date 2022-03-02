@@ -141,6 +141,8 @@ const createReducer = (initialState) => {
           animationRequest = slctr.calculateAnimationRequest(newState);
           if (animationRequest) {
             newState.animationRequest = animationRequest;
+          } else {
+            newState.resetTimestamp = Date.now();
           }
         }
         return newState;
@@ -159,6 +161,8 @@ const createReducer = (initialState) => {
           animationRequest = slctr.calculateAnimationRequest(newState);
           if (animationRequest) {
             newState.animationRequest = animationRequest;
+          } else {
+            newState.resetTimestamp = Date.now();
           }
         }
         return newState;
@@ -894,6 +898,7 @@ const createReducer = (initialState) => {
           );
         newState = /** @type {State}*/ ({
           ...state,
+          resetTimestamp: 0,
           requiredOpts: {
             ...state.requiredOpts,
             zoom: action.payload.zoom || INITIAL_STATE.requiredOpts.zoom,
@@ -1006,6 +1011,8 @@ const createReducer = (initialState) => {
           animationRequest = slctr.calculateAnimationRequest(newState);
           if (animationRequest) {
             newState.animationRequest = animationRequest;
+          } else {
+            newState.resetTimestamp = Date.now();
           }
         }
         return newState;
@@ -1015,6 +1022,13 @@ const createReducer = (initialState) => {
         return {
           ...state,
           identifyTimestamp: Date.now(),
+        };
+
+      // RESET_DONE
+      case actions.RESET_DONE:
+        return {
+          ...state,
+          resetTimestamp: Date.now(),
         };
 
       //DEAFULT

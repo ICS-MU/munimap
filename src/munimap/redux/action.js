@@ -220,6 +220,12 @@ export const RESET_MUNIMAP = 'RESET_MUNIMAP';
 export const IDENTIFY_FEATURE_CHANGED = 'IDENTIFY_FEATURE_CHANGED';
 
 /**
+ * @type {string}
+ * @const
+ */
+export const RESET_DONE = 'RESET_DONE';
+
+/**
  * @param {Array<ol.Feature|string>} markers markers
  * @param {LoadedTypes} loadedTypes loaded feature types
  * @return {PayloadAsyncAction} action
@@ -547,5 +553,14 @@ export function resetMunimap(object) {
 export function identifyFeatureChanged() {
   return {
     type: IDENTIFY_FEATURE_CHANGED,
+  };
+}
+
+/**
+ * @return {PayloadAsyncAction} action
+ */
+export function resetDone() {
+  return {
+    type: RESET_DONE,
   };
 }
