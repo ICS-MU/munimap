@@ -4,9 +4,14 @@
  * MUST BE IE11 COMPATIBILE!
  */
 const munimap_ext = {
-  'addDoorOpenings': function (options) {
-    var map = options.map;
-    var store = options.store;
+  'addDoorOpenings': function (map) {
+    var mapTargetEl = map.getTargetElement();
+    var targetId = mapTargetEl.parentElement.parentElement.id;
+
+    var store = munimap.getStoreByTargetId(targetId);
+    if (!store) {
+      throw new Error('Store (for id: ' + targetId + ') not found!');
+    }
 
     var style = new munimap.ol.style.Style({
       stroke: new munimap.ol.style.Stroke({

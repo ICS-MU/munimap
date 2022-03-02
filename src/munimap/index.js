@@ -24,6 +24,7 @@ import {createXYZ} from 'ol/tilegrid';
 import {featuresForMap} from './load.js';
 import {getActiveFloorCodes, getSelectedFloorCode} from './redux/selector.js';
 import {getNotYetAddedFeatures} from './utils/store.js';
+import {getStoreByTargetId} from './create.js';
 import {tile} from 'ol/loadingstrategy';
 
 import '../img/google.png';
@@ -81,4 +82,4 @@ const store = {
   getNotYetAddedFeatures,
 };
 
-export {create, reset, ol, slctr, load, store};
+export {create, reset, ol, slctr, load, store, getStoreByTargetId};
