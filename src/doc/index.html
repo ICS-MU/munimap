@@ -36,7 +36,7 @@
       </div>
     </div>
     <div class="content">
-      <p>Pro formální popis rozhraní používáme <a href="https://github.com/google/closure-compiler/wiki/Annotating-JavaScript-for-the-Closure-Compiler#type-expressions">javascriptovou anotaci pro Closure Compiler</a>.</p>
+      <p>Pro formální popis rozhraní používáme <a href="https://jsdoc.app/">javascriptovou anotaci JSDoc</a>.</p>
       <ul>
         <li><a href="#create">funkce munimap.create</a></li>
         <li><a href="#reset">funkce munimap.reset</a></li>
@@ -44,7 +44,7 @@
       <h2 id="create">Funkce munimap.create</h2>
       <p>Vytvoří mapu do zadaného elementu a vykreslí ji dle zadaných parametrů.</p>
       <h3>Specifikace</h3>
-      <p class="specification">munimap.create(options:&nbsp;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">Object</a>): <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a>&lt;<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.Map.html" target="_blank">ol.Map</a>&gt;</p>
+      <p class="specification">munimap.create(options:&nbsp;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">Object</a>): <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a>&lt;<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_Map-Map.html" target="_blank">ol.Map</a>&gt;</p>
       <h3>Vstup</h3>
       <p>Objekt definující požadované vlastnosti vytvářené mapy pomocí těchto parametrů:</p>
       <table>
@@ -65,7 +65,7 @@
         </tr>
         <tr id="markers">
           <td class="param-name">markers</td>
-          <td class="param-type">Array.&lt;string&gt; | Array.&lt;<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.Feature.html" target="_blank">ol.Feature</a>&gt; 
+          <td class="param-type">Array&lt;string&gt; | Array&lt;<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_Feature-Feature.html" target="_blank">ol.Feature</a>&gt; 
             | undefined</td>
           <td class="param-desc">
             <ul>
@@ -90,9 +90,9 @@
                 <li><code>poi.ctg:canteen</code> (menzy)</li>
                 <li><code>poi.ctg:dormitory</code> (koleje)</li>
               </ul>
-              <li>od verze 1.1 je možné umístit "špendlík" na libovolné místo v mapě, a to pomocí pole objektů typu <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.Feature.html" target="_blank">ol.Feature</a> s parametry:
+              <li>od verze 1.1 je možné umístit "špendlík" na libovolné místo v mapě, a to pomocí pole objektů typu <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_Feature-Feature.html" target="_blank">ol.Feature</a> s parametry:
                 <ul>
-                  <li>geometry definující geometrii pomocí objektu <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.geom.Point.html" target="_blank">ol.geom.Point</a></li>
+                  <li>geometry definující geometrii pomocí objektu <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_geom_Point-Point.html" target="_blank">ol.geom.Point</a></li>
                   <li>label pro textový popisek bodu</li>
                   <li>detail pro textový / HTML popis v info bublině (nepovinný parametr)</li>
                   <li>color pro nastavení vlastní barvy (hexadecimální zápis #RRGGBB) špendlíku a popisku (nepovinný parametr)</li>
@@ -108,7 +108,7 @@
         </tr>
         <tr id="poiFilter">
             <td class="param-name">poiFilter</td> 
-            <td class="param-type">Array.&lt;string&gt; | undefined</td>
+            <td class="param-type">Array&lt;string&gt; | undefined</td>
             <td class="param-desc">
                 <ul>
                     <li>parametr upřesňující výběr bodů zájmu</li>
@@ -124,7 +124,7 @@
         </tr>
         <tr id="markerFilter">
           <td class="param-name">markerFilter</td>
-          <td class="param-type">Array.&lt;string&gt; | undefined</td>
+          <td class="param-type">Array&lt;string&gt; | undefined</td>
           <td class="param-desc">
             <ul>
               <li>pole zkratek součástí MU (pro možné hodnoty viz tabulku níže)</li>
@@ -239,11 +239,11 @@
         </tr>
         <tr id="markerLabel">
           <td class="param-name">markerLabel</td>
-          <td class="param-type">function((<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.Feature.html" target="_blank">ol.Feature</a> | <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.render.Feature.html" target="_blank">ol.render.Feature</a>), number): (string | null | undefined) | undefined</td>
+          <td class="param-type">function((<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_Feature-Feature.html" target="_blank">ol.Feature</a> | <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_render_Feature-RenderFeature.html" target="_blank">ol.render.Feature</a>), number): (string | null | undefined) | undefined</td>
           <td class="param-desc">
             <ul>
               <li>funkce pro úpravu textu popisků zvýrazněných budov či místností</li>
-              <li>první parametr je objekt, pro který funkce vrací popisek, druhý parametr je <a href='http://openlayers.org/en/<%= olVersion %>/apidoc/ol.View.html'>rozlišení mapy (resolution)</a>; aplikace tedy může ukazovat různé popisky jednoho objektu pro různé úrovně přiblížení</li>
+              <li>první parametr je objekt, pro který funkce vrací popisek, druhý parametr je <a href='http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_View-View.html'>rozlišení mapy (resolution)</a>; aplikace tedy může ukazovat různé popisky jednoho objektu pro různé úrovně přiblížení</li>
               <li>není-li funkce zadána, zobrazí se stejný text popisku jako v případě, kdy budova či místnost nejsou označeny</li>
             </ul>
             <div class="hint">
@@ -257,7 +257,7 @@
         <tr id='identifyTypes'>
             <td class="param-name">identifyTypes</td>
             <td class="param-type">
-                <pre style="font-family: arial">Array.&lt;string&gt; | undefined</pre></td>
+                <pre style="font-family: arial">Array&lt;string&gt; | undefined</pre></td>
             <td class="param-desc">
                 <ul>
                     <li>pole klíčových slov typů (pro možné hodnoty viz tabulka níže)</li>
@@ -289,8 +289,8 @@
             <td class="param-name">identifyCallback</td>
             <td class="param-type">
                 <pre style="font-family: arial">function({
-    coordsInMeters: (<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.html#.Coordinate" target="_blank">ol.Coordinate</a> | undefined),
-    coordsInDegrees: (<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.html#.Coordinate" target="_blank">ol.Coordinate</a> | undefined),
+    coordsInMeters: (<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_coordinate.html#~Coordinate" target="_blank">ol.coordinate.Coordinate</a> | undefined),
+    coordsInDegrees: (<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_coordinate.html#~Coordinate" target="_blank">ol.coorindate.Coordinate</a> | undefined),
     buildingCode: (string | undefined),
     roomCode: (string | undefined), 
     doorCode: (string | undefined)
@@ -318,7 +318,7 @@
         </tr>    
         <tr id="zoomTo">
           <td class="param-name">zoomTo</td>
-          <td class="param-type">Array.&lt;string&gt; | string | undefined</td>
+          <td class="param-type">Array&lt;string&gt; | string | undefined</td>
           <td class="param-desc">
             <ul>
               <li>pole polohových kódů budov, nebo polohových kódů místností, na které se má mapa zazoomovat</li>
@@ -347,7 +347,7 @@
         </tr>
         <tr id="center">
           <td class="param-name">center</td>
-          <td class="param-type"><a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.html#.Coordinate" target="_blank">ol.Coordinate</a> | undefined</td>
+          <td class="param-type"><a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_coordinate.html#~Coordinate" target="_blank">ol.coordinate.Coordinate</a> | undefined</td>
           <td class="param-desc">
             <ul>
               <li>výchozí střed mapy v zeměpisné šířce a délce (<a href="http://spatialreference.org/ref/epsg/wgs-84/" target="_blank">EPSG:4326</a>)</li>
@@ -453,14 +453,14 @@
           </tr>
       </table>
       <h3>Výstup</h3>
-      <p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a>&lt;<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.Map.html" target="_blank">ol.Map</a>&gt;</p>
+      <p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a>&lt;<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_Map-Map.html" target="_blank">ol.Map</a>&gt;</p>
     </div>
     <div class="separator"></div>
     <div class="content">
       <h2 id="reset">Funkce munimap.reset</h2>
       <p>Přenastaví zadané parametry mapy na nové hodnoty, ostatní parametry nastaví na výchozí hodnoty.</p>
       <h3>Specifikace</h3>
-      <p class="specification">munimap.reset(map:&nbsp;<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.Map.html" target="_blank">ol.Map</a>, options:&nbsp;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">Object</a>): <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a>&lt;<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.Map.html" target="_blank">ol.Map</a>&gt;</p>
+      <p class="specification">munimap.reset(map:&nbsp;<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_Map-Map.html" target="_blank">ol.Map</a>, options:&nbsp;<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">Object</a>): <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a>&lt;<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_Map-Map.html" target="_blank">ol.Map</a>&gt;</p>
       <h3>Vstup</h3>
       <p>
         Již existující mapa vytvořená pomocí funkce <a href="#create">munimap.create</a> a 
@@ -475,7 +475,7 @@
         </tr>
         <tr  id="reset-markers">
           <td class="param-name">markers</td>
-          <td class="param-type">Array.&lt;string&gt; | Array.&lt;<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.Feature.html" target="_blank">ol.Feature</a>&gt; 
+          <td class="param-type">Array&lt;string&gt; | Array&lt;<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_Feature-Feature.html" target="_blank">ol.Feature</a>&gt; 
             | undefined</td>
           <td class="param-desc">
 	    <a href="#markers">viz parametr markers metody create</a>
@@ -483,28 +483,28 @@
         </tr>
         <tr  id="reset-markers">
           <td class="param-name">poiFilter</td>
-          <td class="param-type">Array.&lt;string&gt; | undefined</td>
+          <td class="param-type">Array&lt;string&gt; | undefined</td>
           <td class="param-desc">
 	    <a href="#poiFilter">viz parametr poiFilter metody create</a>
           </td>
         </tr>
         <tr  id="reset-markers">
           <td class="param-name">markerFilter</td>
-          <td class="param-type">Array.&lt;string&gt; | undefined</td>
+          <td class="param-type">Array&lt;string&gt; | undefined</td>
           <td class="param-desc">
 	    <a href="#markerFilter">viz parametr markerFilter metody create</a>
           </td>
         </tr>
         <tr>
           <td class="param-name">markerLabel</td>
-          <td class="param-type">function((<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.Feature.html" target="_blank">ol.Feature</a> | <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.render.Feature.html" target="_blank">ol.render.Feature</a>), number): (string | null | undefined) | undefined</td>
+          <td class="param-type">function((<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_Feature-Feature.html" target="_blank">ol.Feature</a> | <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_render_Feature-RenderFeature.html" target="_blank">ol.render.Feature</a>), number): (string | null | undefined) | undefined</td>
           <td class="param-desc">
 	    <a href="#markerLabel">viz parametr markerLabel metody create</a>
           </td>
         </tr>
         <tr id="reset-zoomTo">
           <td class="param-name">zoomTo</td>
-          <td class="param-type">Array.&lt;string&gt; | string | undefined</td>
+          <td class="param-type">Array&lt;string&gt; | string | undefined</td>
           <td class="param-desc">
 	    <a href="#zoomTo">viz parametr zoomTo metody create</a>
           </td>
@@ -518,7 +518,7 @@
         </tr>
         <tr id="reset-center">
           <td class="param-name">center</td>
-          <td class="param-type"><a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.html#.Coordinate" target="_blank">ol.Coordinate</a> | undefined</td>
+          <td class="param-type"><a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_coordinate.html#~Coordinate" target="_blank">ol.coordinate.Coordinate</a> | undefined</td>
           <td class="param-desc">
 	    <a href="#center">viz parametr center metody create</a>
           </td>
@@ -526,7 +526,7 @@
           <tr>
               <td class="param-name">identifyTypes</td>
                 <td class="param-type">
-                    <pre style="font-family: arial">Array.&lt;string&gt; | undefined</pre></td>
+                    <pre style="font-family: arial">Array&lt;string&gt; | undefined</pre></td>
                 <td class="param-desc">
                     <a href="#identifyTypes">viz parametr identifyTypes metody create</a>
                 </td>
@@ -535,8 +535,8 @@
             <td class="param-name">identifyCallback</td>
             <td class="param-type">
                 <pre style="font-family: arial">function({
-    coordsInMeters: (<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.html#.Coordinate" target="_blank">ol.Coordinate</a> | undefined),
-    coordsInDegrees: (<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.html#.Coordinate" target="_blank">ol.Coordinate</a> | undefined),
+    coordsInMeters: (<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_coordinate.html#~Coordinate" target="_blank">ol.coordinate.Coordinate</a> | undefined),
+    coordsInDegrees: (<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_coordinate.html#~Coordinate" target="_blank">ol.coordinate.Coordinate</a> | undefined),
     buildingCode: (string | undefined),
     roomCode: (string | undefined), 
     doorCode: (string | undefined)
@@ -547,7 +547,7 @@
         </tr>    
       </table>
       <h3>Výstup</h3>
-      <p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a>&lt;<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.Map.html" target="_blank">ol.Map</a>&gt;</p>
+      <p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a>&lt;<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_Map-Map.html" target="_blank">ol.Map</a>&gt;</p>
     </div>
     <div class="navigation bottom">
       <div>
