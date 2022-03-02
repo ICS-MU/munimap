@@ -120,7 +120,12 @@ const MapLinksComponent = (props) => {
   }
 
   return (
-    <div ref={mapLinksRef} className="munimap-link">
+    <div
+      ref={mapLinksRef}
+      className={
+        'ontouchstart' in window ? 'ol-touch munimap-link' : 'munimap-link'
+      }
+    >
       <div
         className="munimap-link-item"
         style={{backgroundImage: `url(${SEZNAM_IMG_PATH})`}}

@@ -112,7 +112,11 @@ const GeolocationComponent = (props) => {
     return (
       <div
         id="muni-locate"
-        className="munimap-geolocate"
+        className={
+          'ontouchstart' in window
+            ? 'ol-touch munimap-geolocate'
+            : 'munimap-geolocate'
+        }
         title={munimap_lang.getMsg(munimap_lang.Translations.FIND_ME, lang)}
         ref={geolocElRef}
         onClick={onGeolocate}

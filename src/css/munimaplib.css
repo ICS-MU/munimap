@@ -321,7 +321,7 @@
   color: #000;
 }
 
-.ol-touch .munimap-geolocate {
+.ol-touch.munimap-geolocate {
   bottom: 55px;
   right: calc(.5em + 2px);
 }
@@ -503,7 +503,7 @@
   z-index: 2;
 }
 
-.ol-touch .munimap-identify {
+.ol-touch.munimap-identify {
   bottom: 95px;
   right: calc(.5em + 4px);
 }
@@ -612,32 +612,32 @@
   padding: 0;
 }
 
-.ol-touch .munimap-map-tools {
+.ol-touch.munimap-map-tools {
   top: 83px;
 }
 
-.ol-touch .munimap-map-tools .munimap-map-tools-button {
+.ol-touch.munimap-map-tools .munimap-map-tools-button {
   height: 33px;
   width: 33px;
 }
 
-.ol-touch .munimap-map-tools.collapsed .munimap-map-tools-button {
+.ol-touch.munimap-map-tools.collapsed .munimap-map-tools-button {
   height: 33px;
   width: 33px;
 }
 
-.ol-touch .munimap-map-tools .munimap-map-tools-icon {
+.ol-touch.munimap-map-tools .munimap-map-tools-icon {
   font-size: 1em;
   top: 9px;
   right: 1px;
 }
 
-.ol-touch .munimap-map-tools.collapsed .munimap-map-tools-icon {
+.ol-touch.munimap-map-tools.collapsed .munimap-map-tools-icon {
   right: 0px;
   left: 1px;
 }
 
-.ol-touch .munimap-tool-bar.default {
+.ol-touch.munimap-tool-bar.default {
   top: 83px;
   width: 33px;
 }
@@ -662,7 +662,7 @@
     top: 8px;
 }
 
-.ol-touch .munimap-map-tools .munimap-vertical-line {
+.ol-touch.munimap-map-tools .munimap-vertical-line {
   height: 1.95em;
 }
 

@@ -107,10 +107,15 @@ const MapToolsComponent = (props) => {
   }
 
   if (collapsed) {
+    const className =
+      'ontouchstart' in window
+        ? 'ol-touch munimap-map-tools'
+        : 'munimap-map-tools';
+
     return (
       <div
         id="muni-map-tools"
-        className={`munimap-map-tools${toolbarVisible ? '' : ' collapsed'}`}
+        className={`${className}${toolbarVisible ? '' : ' collapsed'}`}
         ref={mapToolsElRef}
         style={{display: collapsed ? '' : 'none'}}
       >

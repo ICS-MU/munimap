@@ -58,7 +58,11 @@ const IdentifyComponent = (props) => {
   return (
     <div
       id="muni-identify"
-      className="munimap-identify"
+      className={
+        'ontouchstart' in window
+          ? 'ol-touch munimap-identify'
+          : 'munimap-identify'
+      }
       title={munimap_lang.getMsg(
         munimap_lang.Translations.RESET_IDENTIFICATION,
         lang

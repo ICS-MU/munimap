@@ -42,10 +42,13 @@ const ToolbarComponent = forwardRef((props, ref) => {
     console.log('########## TOOLBAR-render');
   }
 
+  const className =
+    'ontouchstart' in window ? 'ol-touch munimap-tool-bar' : 'munimap-tool-bar';
+
   return (
     <div
       id="muni-tool-bar"
-      className={`munimap-tool-bar${horizontal ? ' default' : ' nested'}`}
+      className={`${className}${horizontal ? ' default' : ' nested'}`}
       ref={ref}
       style={{display: visible ? '' : 'none'}}
     >
