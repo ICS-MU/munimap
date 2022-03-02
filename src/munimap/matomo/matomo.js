@@ -30,7 +30,9 @@ export const init = () => {
     'x' +
     String(window.screen.height) +
     '&send_image=0';
-  //fetch(encodeURI(matomo));
+
+  //eslint-disable-next-line no-console
+  PRODUCTION ? fetch(encodeURI(matomo)) : console.log(matomo);
 };
 
 /**
@@ -59,8 +61,9 @@ export const sendEvent = (category, action) => {
     '&e_a=' +
     action +
     '&send_image=0';
-  console.log(matomo);
-  //fetch(encodeURI(matomo));
+
+  //eslint-disable-next-line no-console
+  PRODUCTION ? fetch(encodeURI(matomo)) : console.log(matomo);
 };
 
 /**
