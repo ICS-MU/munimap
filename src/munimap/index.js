@@ -82,4 +82,9 @@ const store = {
   getNotYetAddedFeatures,
 };
 
+//legacy export as global ol
+if (!window.hasOwnProperty('ol')) {
+  window['ol'] = ol;
+}
+
 export {create, reset, ol, slctr, load, store, getStoreByTargetId};
