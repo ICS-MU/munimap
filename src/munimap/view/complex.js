@@ -5,8 +5,10 @@ import * as munimap_assert from '../assert/assert.js';
 import * as munimap_utils from '../utils/utils.js';
 import * as ol_extent from 'ol/extent';
 import * as slctr from '../redux/selector.js';
-import {COMPLEX_ID_FIELD_NAME} from '../feature/building.js';
-import {RESOLUTION as COMPLEX_RESOLUTION} from '../feature/complex.js';
+import {
+  ID_FIELD_NAME as COMPLEX_ID_FIELD_NAME,
+  RESOLUTION as COMPLEX_RESOLUTION,
+} from '../feature/complex.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.js';
 import {INITIAL_STATE} from '../conf.js';
 import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
