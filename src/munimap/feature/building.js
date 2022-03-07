@@ -98,16 +98,6 @@ const isCode = (maybeCode) => {
 };
 
 /**
- * @param {string} code code
- */
-const assertCode = (code) => {
-  munimap_assert.assert(
-    !!isCode(code),
-    'Location code of building should consist of 3 letters and 2 digits.'
-  );
-};
-
-/**
  * @param {string} maybeLikeExpr maybeLikeExpr
  * @return {boolean} isLikeExpr
  */
@@ -123,17 +113,6 @@ const isLikeExpr = (maybeLikeExpr) => {
  */
 export const isCodeOrLikeExpr = (maybeCodeOrLikeExpr) => {
   return isCode(maybeCodeOrLikeExpr) || isLikeExpr(maybeCodeOrLikeExpr);
-};
-
-/**
- * @param {string} code code
- */
-const assertCodeOrLikeExpr = (code) => {
-  munimap_assert.assert(
-    !!code.match(LIKE_EXPR_REGEX),
-    'Location code of building should consist of 3 letters and 2 digits. ' +
-      'Any of these characters might be replaced with _ wildcard.'
-  );
 };
 
 /**
@@ -188,6 +167,14 @@ const isSelected = (building, selectedFeature) => {
   //selectedFeature doesn't have to be only building
   return selectedFeature ? locCode === selectedFeature.substring(0, 5) : false;
 };
+
+/**
+ * @param {string} newCode new code
+ * @param {string} oldCode old code
+ * @return {boolean} whether is selected different code
+ */
+const isSameCode = (newCode, oldCode) =>
+  newCode && oldCode && newCode.slice(0, 5) !== oldCode.slice(0, 5);
 
 /**
  * @param {IsClickableOptions} options options
@@ -429,27 +416,28 @@ const getFaculties = (building) => {
 };
 
 export {
-  UNITS_FIELD_NAME,
-  COMPLEX_ID_FIELD_NAME,
   COMPLEX_FIELD_NAME,
-  isClickable,
+  COMPLEX_ID_FIELD_NAME,
+  UNITS_FIELD_NAME,
   featureClickHandler,
-  isCode,
-  isLikeExpr,
-  isBuilding,
-  hasInnerGeometry,
-  isSelected,
-  getDefaultLabel,
-  getUnits,
-  getFaculties,
-  getAddressPart,
-  getComplex,
-  filterHeadquaters,
   filterFacultyHeadquaters,
-  getType,
+  filterHeadquaters,
+  getAddressPart,
   getByCode,
+  getComplex,
+  getDefaultLabel,
+  getFaculties,
   getLocationCode,
+  getNamePart,
   getSelectedFloorCode,
   getTitleWithoutOrgUnit,
-  getNamePart,
+  getType,
+  getUnits,
+  hasInnerGeometry,
+  isBuilding,
+  isClickable,
+  isCode,
+  isLikeExpr,
+  isSameCode,
+  isSelected,
 };

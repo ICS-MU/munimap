@@ -25,6 +25,10 @@ import {
   isLikeExpr as isRoomLikeExpr,
 } from './feature/room.js';
 import {
+  createMarkerStringsArray,
+  createZoomToStringsArray,
+} from './utils/param.js';
+import {
   getActiveStore as getActiveDoorStore,
   getStore as getDoorStore,
 } from './source/door.js';
@@ -38,6 +42,7 @@ import {
   getStore as getRoomStore,
 } from './source/room.js';
 import {getStore as getBuildingStore} from './source/building.js';
+import {getStore as getClusterStore} from './source/cluster.js';
 import {getStore as getComplexStore} from './source/complex.js';
 import {
   getType as getDoorType,
@@ -45,13 +50,20 @@ import {
   isCodeOrLikeExpr as isDoorCodeOrLikeExpr,
   isLikeExpr as isDoorLikeExpr,
 } from './feature/door.js';
+import {
+  getFloorLayerIdByCode,
+  getType as getFloorType,
+} from './feature/floor.js';
 import {getStore as getFloorStore} from './source/floor.js';
-import {getType as getFloorType} from './feature/floor.js';
 import {getGeometryCenter} from './utils/geom.js';
+import {getLoadedTypes} from './utils/reducer.js';
+import {getStore as getMarkerStore} from './source/marker.js';
 import {getNotYetAddedFeatures} from './utils/store.js';
 import {getStore as getOptPoiStore} from './source/optpoi.js';
 import {getType as getPoiType} from './feature/poi.js';
 import {getStore as getUnitStore} from './source/unit.js';
+import {loadOrDecorateMarkers} from './create.js';
+import {refreshFloorBasedStores} from './source/source.js';
 
 /**
  * @typedef {import("./feature/feature.js").TypeOptions} TypeOptions
@@ -61,6 +73,9 @@ import {getStore as getUnitStore} from './source/unit.js';
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/proj/Projection").default} ol.proj.Projection
  * @typedef {import("redux").Store} redux.Store
+ * @typedef {import("redux").Dispatch} redux.Dispatch
+ * @typedef {import("./conf.js").RequiredOptions} RequiredOptions
+ * @typedef {import("./conf.js").State} State
  */
 
 /**
@@ -140,6 +155,13 @@ import {getStore as getUnitStore} from './source/unit.js';
  * @property {FormData} [postContent] post content
  * @property {Processor} [processor] processor
  * @property {Array<ol.Feature>} [newProcessedFeatures] new features
+ */
+
+/**
+ * @typedef {Object} LoadFloorsOptions
+ * @property {string} targetId targetId
+ * @property {string} floorCode floorCode
+ * @property {boolean} newSelectedIsActive whether is already active
  */
 
 /**
@@ -1038,17 +1060,136 @@ const loadOptPois = (targetId, options) => {
   return features(opts);
 };
 
+/**
+ * @param {RequiredOptions} requiredOpts required options
+ * @param {redux.Dispatch} asyncDispatch asynchronous dispatch method
+ */
+const loadMarkers = (requiredOpts, asyncDispatch) => {
+  const requiredMarkers = requiredOpts.markerIds;
+  const markerStrings = createMarkerStringsArray(requiredMarkers);
+  loadOrDecorateMarkers(markerStrings, requiredOpts).then((res) => {
+    munimap_assert.assertMarkerFeatures(res);
+    const loadedTypes = getLoadedTypes(res, requiredMarkers);
+    asyncDispatch(actions.markers_loaded(res, loadedTypes));
+  });
+};
+
+/**
+ * @param {string} targetId targetId
+ * @param {Array<string>|string} requiredZoomTo required zoom to
+ * @param {redux.Dispatch} asyncDispatch asynchronous dispatch method
+ */
+const loadZoomTo = (targetId, requiredZoomTo, asyncDispatch) => {
+  const zoomToStrings = createZoomToStringsArray(requiredZoomTo);
+  featuresFromParam(targetId, zoomToStrings).then((res) => {
+    const loadedTypes = getLoadedTypes(res);
+    asyncDispatch(actions.zoomTo_loaded(loadedTypes));
+  });
+};
+
+/**
+ * @param {LoadFloorsOptions} options opts
+ * @param {redux.Dispatch} asyncDispatch async dispatch
+ */
+const loadFloorsByFloorLayer = (options, asyncDispatch) => {
+  const {targetId, floorCode, newSelectedIsActive} = options;
+  const flId = getFloorLayerIdByCode(targetId, floorCode);
+  if (!newSelectedIsActive) {
+    const where = 'vrstvaId = ' + flId;
+    loadFloors(targetId, where).then((floors) => {
+      if (floors) {
+        refreshFloorBasedStores(targetId);
+      }
+      asyncDispatch(actions.floors_loaded(true));
+    });
+  }
+};
+
+/**
+ * @param {string} targetId targetId
+ * @param {State} newState new state
+ * @param {Array<string>} requiredMarkers requred markers
+ * @param {redux.Dispatch} asyncDispatch async dispatch
+ */
+const clearAndLoadMarkers = (
+  targetId,
+  newState,
+  requiredMarkers,
+  asyncDispatch
+) => {
+  getMarkerStore(targetId).clear();
+  getOptPoiStore(targetId).clear();
+  getClusterStore(targetId).clear();
+
+  const markerStrings = createMarkerStringsArray(requiredMarkers);
+  loadOrDecorateMarkers(markerStrings, newState.requiredOpts).then((res) => {
+    munimap_assert.assertMarkerFeatures(res);
+    const loadedTypes = getLoadedTypes(res, requiredMarkers);
+    getMarkerStore(targetId).addFeatures(res);
+    asyncDispatch(actions.markers_loaded(res, loadedTypes));
+  });
+};
+
+/**
+ * @param {string} locationCode location code
+ * @param {State} state state
+ * @param {redux.Dispatch} asyncDispatch async dispatch
+ */
+const loadFloorsForMarker = (locationCode, state, asyncDispatch) => {
+  const targetId = slctr.getTargetId(state);
+  const where = `polohKod LIKE '${locationCode.substring(0, 5)}%'`;
+  const activeFloorCodes = slctr.getActiveFloorCodes(state);
+  loadFloors(targetId, where).then((floors) =>
+    asyncDispatch(
+      actions.floors_loaded(activeFloorCodes.includes(locationCode))
+    )
+  );
+};
+
+/**
+ * @param {string} locationCode location code
+ * @param {State} state state
+ * @param {redux.Dispatch} asyncDispatch async dispatch
+ */
+const loadFloorsForRoom = (locationCode, state, asyncDispatch) => {
+  const targetId = slctr.getTargetId(state);
+  const where = `polohKod LIKE '${locationCode.substring(0, 5)}%'`;
+  loadFloors(targetId, where).then((floors) =>
+    asyncDispatch(actions.floors_loaded(true))
+  );
+};
+
+/**
+ * @param {string} locationCode location code
+ * @param {State} state state
+ * @param {redux.Dispatch} asyncDispatch async dispatch
+ */
+const loadFloorsForBuilding = (locationCode, state, asyncDispatch) => {
+  const targetId = slctr.getTargetId(state);
+  const where = `polohKod LIKE '${locationCode.substring(0, 5)}%'`;
+  loadFloors(targetId, where).then((floors) =>
+    asyncDispatch(actions.floors_loaded(false))
+  );
+};
+
 export {
   buildingFeaturesForMap,
   buildingLoadProcessor,
+  clearAndLoadMarkers,
   featuresForMap,
   features,
   featuresFromParam,
-  loadFloors,
-  pubtranFeaturesForMap,
-  loadDefaultRooms,
-  loadActiveRooms,
   loadActiveDoors,
   loadActivePois,
+  loadActiveRooms,
+  loadDefaultRooms,
+  loadFloors,
+  loadFloorsByFloorLayer,
+  loadFloorsForBuilding,
+  loadFloorsForMarker,
+  loadFloorsForRoom,
+  loadMarkers,
   loadOptPois,
+  loadZoomTo,
+  pubtranFeaturesForMap,
 };

@@ -337,6 +337,12 @@ export const getPopupFeatureUid = (state) => state.popup.uid;
  */
 export const getIdentifyTimestamp = (state) => state.identifyTimestamp;
 
+/**
+ * @param {State} state state
+ * @return {number} timestamp
+ */
+export const getResetTimestamp = (state) => state.resetTimestamp;
+
 // Create selector with memoize options.
 const createSelector = (selectors, fn) => {
   const slctr = createReselectSelector(...selectors, fn, {
@@ -629,6 +635,20 @@ export const areZoomToLoaded = createSelector(
       (requiredZoomTo.length > 0 && zoomToTimestamp > 0) ||
       requiredZoomTo.length === 0
     );
+  }
+);
+
+/**
+ * @type {import("reselect").OutputSelector<
+ *    State,
+ *    boolean,
+ *    function(boolean, boolean): boolean
+ * >}
+ */
+export const areMarkersAndZoomToLoaded = createSelector(
+  [areMarkersLoaded, areZoomToLoaded],
+  (markersLoaded, zoomToLoaded) => {
+    return markersLoaded && zoomToLoaded;
   }
 );
 

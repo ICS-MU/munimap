@@ -3,6 +3,7 @@
  */
 import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
+import * as slctr from '../redux/selector.js';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import {CLICK_HANDLER, IS_CLICKABLE} from '../layer/layer.js';
@@ -17,6 +18,7 @@ import {
   inTooltipResolutionRange,
   isSuitableForTooltip,
 } from './tooltip.js';
+import {clearFloorBasedStores} from '../source/source.js';
 import {
   createActiveStore as createActiveDoorStore,
   createStore as createDoorStore,
@@ -53,6 +55,8 @@ import {createStore as createUnitStore} from '../source/unit.js';
 import {getDefaultLayers} from '../layer/layer.js';
 import {getMainFeatureAtPixel} from '../feature/feature.js';
 import {getUid} from 'ol';
+import {isCode as isFloorCode} from '../feature/floor.js';
+import {loadFloors} from '../load.js';
 import {refreshActiveStyle as refreshActiveDoorStyle} from './door.js';
 import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
 import {updateClusteredFeatures} from './cluster.js';
@@ -580,6 +584,33 @@ const refreshVisibility = (map, options) => {
   }
 };
 
+/**
+ * @param {string} targetId targetId
+ * @param {State} newState new state
+ * @param {redux.Dispatch} asyncDispatch async dispatch
+ * @return {string|null|undefined} selected feature
+ */
+const handleMapViewChange = (targetId, newState, asyncDispatch) => {
+  let selectedFeature;
+  const locationCode = slctr.getSelectedLocationCode(newState);
+  if (locationCode !== undefined) {
+    //null is valid value
+    if (locationCode !== null) {
+      //set to variable - it can be building/floor code
+      selectedFeature = locationCode;
+      const where = `polohKod LIKE '${locationCode.substring(0, 5)}%'`;
+      loadFloors(targetId, where).then((floors) =>
+        asyncDispatch(actions.floors_loaded(isFloorCode(locationCode)))
+      );
+    } else {
+      //deselect feature from state
+      selectedFeature = null;
+      clearFloorBasedStores(targetId);
+    }
+  }
+  return selectedFeature;
+};
+
 export {
   animate,
   attachIndependentMapListeners,
@@ -589,6 +620,7 @@ export {
   ensureClusterUpdate,
   ensureLayers,
   ensureTooltip,
+  handleMapViewChange,
   refreshStyles,
   refreshVisibility,
 };

@@ -2,12 +2,16 @@
  * @module feature/door
  */
 import * as actions from '../redux/action.js';
+import * as munimap_identify from '../identify/identify.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
+import * as slctr from '../redux/selector.js';
 import {MUNIMAP_URL} from '../conf.js';
+import {getActiveStore as getActiveDoorStore} from '../source/door.js';
 import {isAllowed} from '../identify/identify.js';
 
 /**
+ * @typedef {import("../conf.js").State} State
  * @typedef {import("../utils/range").RangeInterface} RangeInterface
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
  * @typedef {import("ol").Feature} ol.Feature
@@ -108,10 +112,35 @@ const featureClickHandler = (dispatch, options) => {
   dispatch(actions.doorClicked(options));
 };
 
+/**
+ * @param {State} state state
+ * @param {FeatureClickHandlerOptions} options payload
+ * @param {redux.Dispatch} asyncDispatch async dispatch
+ */
+const handleDoorClick = (state, options, asyncDispatch) => {
+  const featureUid = options.featureUid;
+  const pixelInCoords = options.pixelInCoords;
+  const targetId = slctr.getTargetId(state);
+  const feature = getActiveDoorStore(targetId).getFeatureByUid(featureUid);
+  const isIdentifyAllowed =
+    slctr.isIdentifyEnabled(state) &&
+    munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
+
+  if (isIdentifyAllowed) {
+    munimap_identify.handleCallback(
+      slctr.getIdentifyCallback(state),
+      asyncDispatch,
+      targetId,
+      {feature, pixelInCoords}
+    );
+  }
+};
+
 export {
   RESOLUTION,
   featureClickHandler,
   getType,
+  handleDoorClick,
   isClickable,
   isCode,
   isCodeOrLikeExpr,

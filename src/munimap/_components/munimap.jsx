@@ -53,7 +53,7 @@ const MunimapComponent = (props) => {
   const identifyVisibled = useSelector(slctr.isIdentifyLayerVisible);
   const isIdentifyEnabled = useSelector(slctr.isIdentifyEnabled);
   const lang = useSelector(slctr.getLang);
-  const resetTimestamp = useSelector((state) => state.resetTimestamp);
+  const resetTimestamp = useSelector(slctr.getResetTimestamp);
 
   const [tooltipProps, setTooltipProps] = useState(null);
 

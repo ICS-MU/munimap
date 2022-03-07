@@ -2,15 +2,20 @@
  * @module cluster/cluster
  */
 import * as actions from '../redux/action.js';
+import * as munimap_assert from '../assert/assert.js';
 import * as munimap_building from '../feature/building.js';
 import * as munimap_marker from '../feature/marker.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
+import * as slctr from '../redux/selector.js';
 import {Feature} from 'ol';
 import {getStore as getBuildingStore} from '../source/building.js';
+import {getStore as getClusterStore} from '../source/cluster.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
+import {getUid} from 'ol';
 
 /**
+ * @typedef {import("../conf.js").State} State
  * @typedef {import("../utils/range").RangeInterface} RangeInterface
  * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  * @typedef {import("../feature/feature.js").IsClickableOptions} IsClickableOptions
@@ -177,6 +182,34 @@ const getMinorFeatures = (targetId, feature) => {
   return result;
 };
 
+/**
+ * @param {State} state state
+ * @param {FeatureClickHandlerOptions} options payload
+ * @return {string} feature uid
+ */
+const getPopupFeatureUid = (state, options) => {
+  const featureUid = options.featureUid;
+  const targetId = slctr.getTargetId(state);
+  const feature = getClusterStore(targetId).getFeatureByUid(featureUid);
+  let uid;
+
+  let clusteredFeatures = getMainFeatures(targetId, feature);
+  if (state.requiredOpts.clusterFacultyAbbr) {
+    const minorFeatures = getMinorFeatures(targetId, feature);
+    clusteredFeatures = clusteredFeatures.concat(minorFeatures);
+  }
+
+  const firstFeature = clusteredFeatures[0];
+  munimap_assert.assertInstanceof(firstFeature, Feature);
+
+  if (clusteredFeatures.length === 1) {
+    if (firstFeature.get('detail')) {
+      uid = getUid(firstFeature);
+    }
+  }
+  return uid;
+};
+
 export {
   BUILDING_RESOLUTION,
   ROOM_RESOLUTION,
@@ -188,4 +221,5 @@ export {
   getResolutionRange,
   getMinorFeatures,
   getClusteredFeatures,
+  getPopupFeatureUid,
 };
