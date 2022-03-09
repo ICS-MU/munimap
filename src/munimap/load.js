@@ -3,27 +3,26 @@
  */
 import * as actions from './redux/action.js';
 import * as munimap_assert from './assert/assert.js';
-import * as munimap_building from './feature/building.js';
+import * as munimap_building from './feature/building.constants.js';
 import * as munimap_complex from './feature/complex.js';
-import * as munimap_unit from './feature/unit.js';
 import * as munimap_utils from './utils/utils.js';
 import * as slctr from './redux/selector.js';
 import VectorSource from 'ol/source/Vector';
 import {EsriJSON} from 'ol/format';
-import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.js';
+import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.constants.js';
+import {ID_FIELD_NAME, UNITS_FIELD_NAME} from './feature/complex.constants.js';
 import {
   Ids as OptPoiIds,
   Labels as OptPoiLabels,
-  getType as getOptPoiType,
-} from './feature/optpoi.js';
-import {PURPOSE as POI_PURPOSE} from './feature/poi.js';
+} from './feature/optpoi.constants.js';
+import {PURPOSE as POI_PURPOSE} from './feature/poi.constants.js';
 import {
   ROOM_TYPES,
   getType as getRoomType,
   isCode as isRoomCode,
   isCodeOrLikeExpr as isRoomCodeOrLikeExpr,
   isLikeExpr as isRoomLikeExpr,
-} from './feature/room.js';
+} from './feature/room.constants.js';
 import {
   createMarkerStringsArray,
   createZoomToStringsArray,
@@ -41,27 +40,30 @@ import {
   getDefaultStore as getDefaultRoomStore,
   getStore as getRoomStore,
 } from './source/room.js';
+import {getByCode as getBldgByCode} from './feature/building.js';
+import {getType as getBldgType} from './feature/building.constants.js';
 import {getStore as getBuildingStore} from './source/building.js';
 import {getStore as getClusterStore} from './source/cluster.js';
 import {getStore as getComplexStore} from './source/complex.js';
-import {
-  getType as getDoorType,
-  isCode as isDoorCode,
-  isCodeOrLikeExpr as isDoorCodeOrLikeExpr,
-  isLikeExpr as isDoorLikeExpr,
-} from './feature/door.js';
-import {
-  getFloorLayerIdByCode,
-  getType as getFloorType,
-} from './feature/floor.js';
+import {getType as getDoorType} from './feature/door.constants.js';
+import {getFloorLayerIdByCode} from './feature/floor.js';
 import {getStore as getFloorStore} from './source/floor.js';
+import {getType as getFloorType} from './feature/floor.constants.js';
 import {getGeometryCenter} from './utils/geom.js';
 import {getLoadedTypes} from './utils/reducer.js';
 import {getStore as getMarkerStore} from './source/marker.js';
 import {getNotYetAddedFeatures} from './utils/store.js';
 import {getStore as getOptPoiStore} from './source/optpoi.js';
-import {getType as getPoiType} from './feature/poi.js';
+import {getType as getOptPoiType} from './feature/optpoi.constants.js';
+import {getType as getPoiType} from './feature/poi.constants.js';
 import {getStore as getUnitStore} from './source/unit.js';
+import {getType as getUnitType} from './feature/unit.constants.js';
+import {isCustom} from './feature/marker.custom.js';
+import {
+  isCode as isDoorCode,
+  isCodeOrLikeExpr as isDoorCodeOrLikeExpr,
+  isLikeExpr as isDoorLikeExpr,
+} from './feature/door.constants.js';
 import {loadOrDecorateMarkers} from './create.js';
 import {refreshFloorBasedStores} from './source/source.js';
 
@@ -476,8 +478,7 @@ const features = async (options) => {
  */
 const featuresByCode = async (options) => {
   munimap_assert.assert(
-    JSON.stringify(options.type) ==
-      JSON.stringify(munimap_building.getType()) ||
+    JSON.stringify(options.type) == JSON.stringify(getBldgType()) ||
       JSON.stringify(options.type) == JSON.stringify(getRoomType()) ||
       JSON.stringify(options.type) == JSON.stringify(getDoorType()),
     'Feature type should be' + ' building, room or door type.'
@@ -577,7 +578,7 @@ const pubtranFeaturesForMap = async (options, extent, resolution, projection) =>
 const loadUnits = async (targetId, where) => {
   return features({
     source: getUnitStore(targetId),
-    type: munimap_unit.getType(),
+    type: getUnitType(),
     method: 'POST',
     returnGeometry: false,
     where: where,
@@ -640,7 +641,7 @@ const unitLoadProcessor = async (targetId, options) => {
 const complexLoadProcessorWithUnits = async (targetId, options) => {
   const newComplexes = options.new;
   const complexIdsToLoad = newComplexes.map((complex) => {
-    return complex.get(munimap_complex.ID_FIELD_NAME);
+    return complex.get(ID_FIELD_NAME);
   });
 
   if (complexIdsToLoad.length) {
@@ -650,12 +651,9 @@ const complexLoadProcessorWithUnits = async (targetId, options) => {
     );
     newComplexes.forEach((complex) => {
       const complexUnits = units.filter((unit) => {
-        return (
-          unit.get('areal_sidelni_id') ===
-          complex.get(munimap_complex.ID_FIELD_NAME)
-        );
+        return unit.get('areal_sidelni_id') === complex.get(ID_FIELD_NAME);
       });
-      complex.set(munimap_complex.UNITS_FIELD_NAME, complexUnits);
+      complex.set(UNITS_FIELD_NAME, complexUnits);
     });
     return options;
   } else {
@@ -740,7 +738,7 @@ const buildingLoadProcessor = async (targetId, options) => {
 const buildingsByCode = async (targetId, options) => {
   return featuresByCode({
     codes: options.codes,
-    type: munimap_building.getType(),
+    type: getBldgType(),
     source: getBuildingStore(targetId),
     likeExprs: options.likeExprs,
     processor: munimap_utils.partial(buildingLoadProcessor, targetId),
@@ -852,7 +850,7 @@ const featuresFromParam = async (targetId, paramValue) => {
       features.forEach((feature, index) => {
         if (!munimap_utils.isDefAndNotNull(feature.getGeometry())) {
           const locCode = /**@type {string}*/ (feature.get('polohKod'));
-          const building = munimap_building.getByCode(targetId, locCode);
+          const building = getBldgByCode(targetId, locCode);
           const bldgGeom = building.getGeometry();
           if (munimap_utils.isDef(bldgGeom)) {
             munimap_assert.assertExists(bldgGeom);
@@ -1070,7 +1068,8 @@ const loadMarkers = (requiredOpts, asyncDispatch) => {
   loadOrDecorateMarkers(markerStrings, requiredOpts).then((res) => {
     munimap_assert.assertMarkerFeatures(res);
     const loadedTypes = getLoadedTypes(res, requiredMarkers);
-    asyncDispatch(actions.markers_loaded(res, loadedTypes));
+    const hasCustom = res.length && res.some((el) => isCustom(el));
+    asyncDispatch(actions.markers_loaded(hasCustom, loadedTypes));
   });
 };
 
@@ -1126,7 +1125,8 @@ const clearAndLoadMarkers = (
     munimap_assert.assertMarkerFeatures(res);
     const loadedTypes = getLoadedTypes(res, requiredMarkers);
     getMarkerStore(targetId).addFeatures(res);
-    asyncDispatch(actions.markers_loaded(res, loadedTypes));
+    const hasCustom = res.length && res.some((el) => isCustom(el));
+    asyncDispatch(actions.markers_loaded(hasCustom, loadedTypes));
   });
 };
 

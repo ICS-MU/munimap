@@ -2,17 +2,14 @@
  * @module layer/room
  */
 import * as munimap_assert from '../assert/assert.js';
-import * as munimap_floor from '../feature/floor.js';
 import VectorLayer from 'ol/layer/Vector';
-import {
-  featureClickHandler,
-  getType as getRoomType,
-  isClickable,
-} from '../feature/room.js';
+import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
+import {featureClickHandler, isClickable} from '../feature/room.js';
 import {
   getActiveStore as getActiveRoomStore,
   getDefaultStore as getDefaultRoomStore,
 } from '../source/room.js';
+import {getType as getRoomType} from '../feature/room.constants.js';
 import {setCorridorStyle} from '../style/room.js';
 
 /**
@@ -95,7 +92,7 @@ const create = (targetId) => {
       id: DEFAULT_LAYER_ID,
       type: getRoomType(),
       // refreshStyleOnFloorChange: true,
-      maxResolution: munimap_floor.RESOLUTION.max,
+      maxResolution: FLOOR_RESOLUTION.max,
       opacity: 0.4,
       source: getDefaultRoomStore(targetId),
       updateWhileAnimating: true,
@@ -119,7 +116,7 @@ const createActive = (targetId) => {
       isFeatureClickable: isClickable,
       featureClickHandler: featureClickHandler,
       type: getRoomType(),
-      maxResolution: munimap_floor.RESOLUTION.max,
+      maxResolution: FLOOR_RESOLUTION.max,
       source: getActiveRoomStore(targetId),
       updateWhileAnimating: true,
       updateWhileInteracting: true,
@@ -136,7 +133,7 @@ const createActive = (targetId) => {
  * @return {VectorLayer} layer
  */
 const createLabel = (targetId, showLocationCodes) => {
-  const maxResolution = showLocationCodes ? 0.13 : munimap_floor.RESOLUTION.max;
+  const maxResolution = showLocationCodes ? 0.13 : FLOOR_RESOLUTION.max;
   return new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: LABEL_LAYER_ID,

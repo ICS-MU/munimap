@@ -5,25 +5,30 @@ import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
 import turf_booleanPointInPolygon from '@turf/boolean-point-in-polygon';
-import {Ids as OptPoiIds, isCtgUid as isOptPoiCtgUid} from './optpoi.js';
+import {Ids as OptPoiIds} from './optpoi.constants.js';
 import {Point} from 'ol/geom';
 import {REQUIRED_CUSTOM_MARKERS} from '../create.js';
 import {featureExtentIntersect} from '../utils/geom.js';
 import {
   getByCode as getBuildingByCode,
-  getType as getBuildingType,
   getSelectedFloorCode as getSelectedFloorCodeFromBuilding,
   hasInnerGeometry,
   isBuilding,
-  isCode as isBuildingCode,
 } from './building.js';
+import {
+  getType as getBuildingType,
+  isCode as isBuildingCode,
+} from './building.constants.js';
 import {getLayer as getClusterLayer} from '../layer/cluster.js';
 import {getDefaultLayer as getDefaultRoomLayer} from '../layer/room.js';
-import {getType as getDoorType, isDoor} from './door.js';
+import {getType as getDoorType} from './door.constants.js';
 import {getLayer as getMarkerLayer} from '../layer/marker.js';
-import {getType as getRoomType, isRoom} from './room.js';
+import {getType as getRoomType} from './room.constants.js';
 import {isCustom as isCustomMarker} from './marker.custom.js';
-import {isCode as isFloorCode} from './floor.js';
+import {isDoor} from './door.js';
+import {isCode as isFloorCode} from './floor.constants.js';
+import {isCtgUid as isOptPoiCtgUid} from './optpoi.js';
+import {isRoom} from './room.js';
 
 /**
  * @typedef {import("ol/source").Vector} ol.source.Vector
@@ -86,12 +91,6 @@ import {isCode as isFloorCode} from './floor.js';
 /**
  * @typedef {function(redux.Dispatch, FeatureClickHandlerOptions): void} featureClickHandlerFunction
  */
-
-/**
- * @type {string}
- * @const
- */
-const FEATURE_TYPE_PROPERTY_NAME = 'featureType';
 
 /**
  * @type {getMainFeatureAtPixelFunction}
@@ -247,7 +246,6 @@ const getSelectedFloorCode = (options) => {
 };
 
 export {
-  FEATURE_TYPE_PROPERTY_NAME,
   getSelectedFloorCode,
   getClosestPointToPixel,
   getLocationCodeFromFeature,

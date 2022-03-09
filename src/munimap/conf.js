@@ -2,7 +2,7 @@
  * @module conf
  */
 
-import {Types as IdentifyTypes} from './identify/identify.js';
+import {IdentifyTypes} from './identify/_constants.js';
 
 /**
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate

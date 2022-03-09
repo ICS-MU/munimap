@@ -5,8 +5,8 @@
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_range from '../utils/range.js';
 import {Circle, Fill, Stroke, Style, Text} from 'ol/style';
-import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.js';
-import {PURPOSE} from '../feature/poi.js';
+import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
+import {PURPOSE} from '../feature/poi.constants.js';
 import {getByCode as getBuildingByCode} from '../feature/building.js';
 
 /**

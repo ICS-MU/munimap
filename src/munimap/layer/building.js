@@ -4,9 +4,10 @@
 
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_building from '../feature/building.js';
-import * as munimap_complex from '../feature/complex.js';
 import VectorLayer from 'ol/layer/Vector';
+import {RESOLUTION as COMPLEX_RESOLUTION} from '../feature/complex.constants.js';
 import {getStore as getBuildingStore} from '../source/building.js';
+import {getType} from '../feature/building.constants.js';
 
 /**
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions
@@ -69,9 +70,9 @@ const create = (targetId) => {
       id: LAYER_ID,
       isFeatureClickable: munimap_building.isClickable,
       featureClickHandler: munimap_building.featureClickHandler,
-      type: munimap_building.getType(),
+      type: getType(),
       source: getBuildingStore(targetId),
-      maxResolution: munimap_complex.RESOLUTION.max,
+      maxResolution: COMPLEX_RESOLUTION.max,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       renderOrder: null,
@@ -89,7 +90,7 @@ const createLabel = (targetId) => {
       id: LABEL_LAYER_ID,
       isFeatureClickable: munimap_building.isClickable,
       featureClickHandler: munimap_building.featureClickHandler,
-      type: munimap_building.getType(),
+      type: getType(),
       source: getBuildingStore(targetId),
       updateWhileAnimating: true,
       updateWhileInteracting: false,

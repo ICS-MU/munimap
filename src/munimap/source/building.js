@@ -7,10 +7,8 @@ import VectorSource from 'ol/source/Vector';
 import {GeoJSON} from 'ol/format';
 import {MultiPolygon, Polygon} from 'ol/geom';
 import {featureExtentIntersect} from '../utils/geom.js';
-import {
-  getType as getBuildingType,
-  hasInnerGeometry,
-} from '../feature/building.js';
+import {getType as getBuildingType} from '../feature/building.constants.js';
+import {hasInnerGeometry} from '../feature/building.js';
 import {tile as ol_loadingstrategy_tile} from 'ol/loadingstrategy';
 import {createXYZ as ol_tilegrid_createXYZ} from 'ol/tilegrid';
 

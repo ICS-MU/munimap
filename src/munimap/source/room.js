@@ -4,7 +4,7 @@
 import * as munimap_utils from '../utils/utils.js';
 import VectorSource from 'ol/source/Vector';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
-import {getType as getRoomType} from '../feature/room.js';
+import {getType as getRoomType} from '../feature/room.constants.js';
 import {loadActiveRooms, loadDefaultRooms} from '../load.js';
 import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
 

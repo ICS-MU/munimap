@@ -5,6 +5,7 @@ import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_utils from '../utils/utils.js';
 import {Feature} from 'ol';
+import {IdentifyTypes} from './_constants.js';
 import {Point} from 'ol/geom';
 import {getStore} from '../source/identify.js';
 import {isBuilding} from '../feature/building.js';
@@ -53,15 +54,6 @@ import {transform} from 'ol/proj';
  */
 
 /**
- * @enum {string}
- */
-const Types = {
-  BUILDING: 'building',
-  ROOM: 'room',
-  DOOR: 'door',
-};
-
-/**
  * @type {string}
  * @const
  */
@@ -81,12 +73,12 @@ const LOCATION_CODE_FIELD_NAME = 'polohKod';
 const isAllowed = (feature, opt_identifyTypes) => {
   const types = isDef(opt_identifyTypes)
     ? opt_identifyTypes
-    : Object.values(Types);
+    : Object.values(IdentifyTypes);
 
   return (
-    (isBuilding(feature) && types.includes(Types.BUILDING)) ||
-    (isRoom(feature) && types.includes(Types.ROOM)) ||
-    (isDoor(feature) && types.includes(Types.DOOR))
+    (isBuilding(feature) && types.includes(IdentifyTypes.BUILDING)) ||
+    (isRoom(feature) && types.includes(IdentifyTypes.ROOM)) ||
+    (isDoor(feature) && types.includes(IdentifyTypes.DOOR))
   );
 };
 
@@ -211,7 +203,6 @@ const inSameFloorAsSelected = (targetId, selectedFeature) => {
 };
 
 export {
-  Types,
   getLocationCode,
   getIdentifiedFeature,
   handleCallback,

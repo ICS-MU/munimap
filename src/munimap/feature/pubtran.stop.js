@@ -4,8 +4,7 @@
 
 import * as actions from '../redux/action.js';
 import * as munimap_lang from '../lang/lang.js';
-import * as munimap_range from '../utils/range.js';
-import {IDOS_URL, MUNIMAP_PUBTRAN_URL} from '../conf.js';
+import {IDOS_URL} from '../conf.js';
 
 /**
  * @typedef {import("../utils/range.js").RangeInterface} RangeInterface
@@ -18,39 +17,6 @@ import {IDOS_URL, MUNIMAP_PUBTRAN_URL} from '../conf.js';
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("redux").Dispatch} redux.Dispatch
  */
-
-/**
- * @type {RangeInterface}
- * @const
- */
-const RESOLUTION = munimap_range.createResolution(0, 2.39);
-
-/**
- * @type {RangeInterface}
- * @const
- */
-const CLUSTER_RESOLUTION = munimap_range.createResolution(0.6, 2.39);
-
-/**
- *
- * @type {TypeOptions}
- */
-let TYPE;
-
-/**
- * @return {TypeOptions} Type
- */
-const getType = () => {
-  if (!TYPE) {
-    TYPE = {
-      primaryKey: 'OBJECTID',
-      serviceUrl: MUNIMAP_PUBTRAN_URL,
-      layerId: 0,
-      name: 'publictransport',
-    };
-  }
-  return TYPE;
-};
 
 /**
  * @param {IsClickableOptions} options opts
@@ -98,11 +64,4 @@ const getDetailHtml = (title, lang) => {
   return `${main}${content}`;
 };
 
-export {
-  RESOLUTION,
-  CLUSTER_RESOLUTION,
-  isClickable,
-  featureClickHandler,
-  getDetailHtml,
-  getType,
-};
+export {isClickable, featureClickHandler, getDetailHtml};

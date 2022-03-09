@@ -5,8 +5,8 @@
 import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_range from '../utils/range.js';
-import {FEATURE_TYPE_PROPERTY_NAME} from './feature.js';
-import {MUNIMAP_URL} from '../conf.js';
+import {FEATURE_TYPE_PROPERTY_NAME} from './feature.constants.js';
+import {RESOLUTION, UNITS_FIELD_NAME, getType} from './complex.constants.js';
 import {getStore as getComplexStore} from '../source/complex.js';
 
 /**
@@ -19,50 +19,6 @@ import {getStore as getComplexStore} from '../source/complex.js';
  * @typedef {import("./feature.js").IsClickableOptions} IsClickableOptions
  * @typedef {import("redux").Dispatch} redux.Dispatch
  */
-
-/**
- * @type {RangeInterface}
- * @const
- */
-const RESOLUTION = munimap_range.createResolution(1.19, 4.77);
-
-/**
- * @type {string}
- */
-const ID_FIELD_NAME = 'inetId';
-
-/**
- * @type {string}
- */
-const UNITS_FIELD_NAME = 'pracoviste';
-
-/**
- *
- * @type {number}
- * @protected
- */
-const FONT_SIZE = 13;
-
-/**
- *
- * @type {TypeOptions}
- */
-let TYPE;
-
-/**
- * @return {TypeOptions} Type
- */
-const getType = () => {
-  if (!TYPE) {
-    TYPE = {
-      primaryKey: ID_FIELD_NAME,
-      serviceUrl: MUNIMAP_URL,
-      layerId: 4,
-      name: 'complex',
-    };
-  }
-  return TYPE;
-};
 
 /**
  * @param {string} targetId targetId
@@ -125,11 +81,6 @@ const getUnits = (complex) => {
 };
 
 export {
-  RESOLUTION,
-  ID_FIELD_NAME,
-  UNITS_FIELD_NAME,
-  FONT_SIZE,
-  TYPE,
   isClickable,
   featureClickHandler,
   isComplex,

@@ -5,8 +5,8 @@ import * as munimap_assert from '../assert/assert.js';
 import * as munimap_range from '../utils/range.js';
 import * as ol_extent from 'ol/extent';
 import * as slctr from '../redux/selector.js';
-import {RESOLUTION as DOOR_RESOLUTION, isDoor} from '../feature/door.js';
-import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.js';
+import {RESOLUTION as DOOR_RESOLUTION} from '../feature/door.constants.js';
+import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {Feature} from 'ol';
 import {INITIAL_STATE} from '../conf.js';
 import {
@@ -25,6 +25,7 @@ import {
 } from '../cluster/cluster.js';
 import {getVectorStore} from '../source/cluster.js';
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
+import {isDoor} from '../feature/door.js';
 
 /**
  * @typedef {import("ol/layer/Base").default} ol.layer.Base

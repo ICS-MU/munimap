@@ -7,13 +7,13 @@
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {Abbr} from '../lang/lang.js';
-import {BASEMAPS} from '../layer/basemap.js';
-import {Types as IdentifyTypes} from '../identify/identify.js';
-import {isCodeOrLikeExpr as isBldgCodeOrLikeExpr} from '../feature/building.js';
-import {isCodeOrLikeExpr as isDoorCodeOrLikeExpr} from '../feature/door.js';
+import {BASEMAPS} from '../layer/_constants.js';
+import {IdentifyTypes} from '../identify/_constants.js';
+import {isCodeOrLikeExpr as isBldgCodeOrLikeExpr} from '../feature/building.constants.js';
+import {isCodeOrLikeExpr as isDoorCodeOrLikeExpr} from '../feature/door.constants.js';
 import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.js';
-import {isCodeOrLikeExpr as isRoomCodeOrLikeExpr} from '../feature/room.js';
-import {assertSuitable as marker_custom_assertSuitable} from '../feature/marker.custom.js';
+import {isCodeOrLikeExpr as isRoomCodeOrLikeExpr} from '../feature/room.constants.js';
+import {isSuitable} from '../feature/marker.custom.constants.js';
 
 /**
  * @typedef {import("ol/Feature").default} ol.Feature
@@ -289,7 +289,11 @@ const markers = (markers) => {
       } else if (el instanceof Feature) {
         assertInstanceof(el, Feature);
         featureMarkers.push(el);
-        marker_custom_assertSuitable(el);
+        assert(
+          isSuitable(el),
+          'Custom marker represented by ol.Feature must have ol.Point geometry ' +
+            'with appropriate longitude (-180;180) and latitude (-90, 90).'
+        );
       } else {
         console.log(
           'Markers should contain only strings or only instances of ol.Feature'

@@ -4,21 +4,27 @@
 import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_complex from './complex.js';
-import * as munimap_floor from './floor.js';
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_range from '../utils/range.js';
-import * as munimap_style from '../style/style.js';
 import * as munimap_unit from './unit.js';
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
-import {MUNIMAP_URL} from '../conf.js';
+import {
+  COMPLEX_FIELD_NAME,
+  LOCATION_CODE_FIELD_NAME,
+  UNITS_FIELD_NAME,
+  getType,
+  isCode,
+} from './building.constants.js';
+import {RESOLUTION as COMPLEX_RESOLUTION} from './complex.constants.js';
+import {RESOLUTION as FLOOR_RESOLUTION} from './floor.constants.js';
+import {alignTextToRows} from '../style/_constants.js';
 import {getStore as getBuildingStore} from '../source/building.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {isDoor} from './door.js';
 import {isRoom} from './room.js';
 
 /**
- * @typedef {import("./feature.js").TypeOptions} TypeOptions
  * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  * @typedef {import("./feature.js").IsClickableOptions} IsClickableOptions
  * @typedef {import("ol/source").Vector} ol.source.Vector
@@ -45,86 +51,6 @@ import {isRoom} from './room.js';
  * @property {string} bldgTitle title
  * @property {string} complexTitle title
  */
-
-/**
- * @type {RegExp}
- * @protected
- */
-const CODE_REGEX = /^[A-Z]{3}[0-9]{2}$/gi;
-
-/**
- * @type {RegExp}
- * @protected
- */
-const LIKE_EXPR_REGEX = /^[A-Z_]{3}[0-9_]{2}$/gi;
-
-/**
- * @type {string}
- */
-const LOCATION_CODE_FIELD_NAME = 'polohKod';
-
-/**
- * @type {string}
- * @protected
- */
-const COMPLEX_FIELD_NAME = 'areal';
-
-/**
- * @type {string}
- */
-const COMPLEX_ID_FIELD_NAME = 'arealId';
-
-/**
- * @type {string}
- */
-const UNITS_FIELD_NAME = 'pracoviste';
-
-/**
- *
- * @type {TypeOptions}
- */
-let TYPE;
-
-/**
- * @return {TypeOptions} Type
- */
-const getType = () => {
-  if (!TYPE) {
-    TYPE = {
-      primaryKey: LOCATION_CODE_FIELD_NAME,
-      serviceUrl: MUNIMAP_URL,
-      layerId: 2,
-      name: 'building',
-    };
-  }
-  return TYPE;
-};
-
-/**
- * @param {string} maybeCode location code
- * @return {boolean} if it it location code or not
- */
-const isCode = (maybeCode) => {
-  return !!maybeCode.match(CODE_REGEX);
-};
-
-/**
- * @param {string} maybeLikeExpr maybeLikeExpr
- * @return {boolean} isLikeExpr
- */
-const isLikeExpr = (maybeLikeExpr) => {
-  return (
-    !!maybeLikeExpr.match(LIKE_EXPR_REGEX) && maybeLikeExpr.indexOf('_') >= 0
-  );
-};
-
-/**
- * @param {string} maybeCodeOrLikeExpr location code or like expression
- * @return {boolean} if it it location code or not
- */
-export const isCodeOrLikeExpr = (maybeCodeOrLikeExpr) => {
-  return isCode(maybeCodeOrLikeExpr) || isLikeExpr(maybeCodeOrLikeExpr);
-};
 
 /**
  * @param {Feature|ol.render.Feature} feature feature
@@ -195,16 +121,13 @@ const isClickable = (options) => {
   const {feature, resolution, selectedFeature, isIdentifyEnabled, targetId} =
     options;
 
-  if (munimap_range.contains(munimap_floor.RESOLUTION, resolution)) {
+  if (munimap_range.contains(FLOOR_RESOLUTION, resolution)) {
     return isIdentifyEnabled
       ? !isSelected(feature, selectedFeature)
       : !isSelected(feature, selectedFeature) && hasInnerGeometry(feature);
   } else if (hasInnerGeometry(feature) || isIdentifyEnabled) {
     const markers = getMarkerStore(targetId).getFeatures();
-    return (
-      markers.indexOf(feature) >= 0 ||
-      resolution < munimap_complex.RESOLUTION.max
-    );
+    return markers.indexOf(feature) >= 0 || resolution < COMPLEX_RESOLUTION.max;
   }
   return false;
 };
@@ -226,7 +149,7 @@ const getByCode = (targetId, code) => {
   code = code.substring(0, 5);
   const features = getBuildingStore(targetId).getFeatures();
   const building = features.find((feature) => {
-    const idProperty = TYPE.primaryKey;
+    const idProperty = getType().primaryKey;
     return feature.get(idProperty) === code;
   });
   return building || null;
@@ -370,7 +293,7 @@ const getAddressPart = (feature, resolution, lang) => {
       )
     );
     if (munimap_utils.isDefAndNotNull(bldgAbbr)) {
-      if (munimap_range.contains(munimap_floor.RESOLUTION, resolution)) {
+      if (munimap_range.contains(FLOOR_RESOLUTION, resolution)) {
         const bldgType = feature.get(
           munimap_lang.getMsg(
             munimap_lang.Translations.BUILDING_TYPE_FIELD_NAME,
@@ -382,9 +305,7 @@ const getAddressPart = (feature, resolution, lang) => {
           munimap_assert.assertString(bldgType);
           const units = getUnits(feature);
           if (units.length === 0) {
-            titleParts.push(
-              munimap_style.alignTextToRows([bldgType, bldgAbbr], ' ')
-            );
+            titleParts.push(alignTextToRows([bldgType, bldgAbbr], ' '));
           } else {
             titleParts.push(bldgType + ' ' + bldgAbbr);
           }
@@ -419,7 +340,7 @@ const getDefaultLabel = (feature, resolution, lang) => {
     !namePart ||
     !complex ||
     munimap_complex.getBuildingCount(complex) === 1 ||
-    resolution < munimap_complex.RESOLUTION.min
+    resolution < COMPLEX_RESOLUTION.min
   ) {
     const addressPart = getAddressPart(feature, resolution, lang);
     if (addressPart) {
@@ -437,6 +358,30 @@ const getFaculties = (building) => {
   const units = getUnits(building);
   const result = units.filter((unit) => munimap_unit.getPriority(unit) > 0);
   return result;
+};
+
+/**
+ * @param {Array<Feature>} buildings bldgs
+ * @return {Array<Feature>} units
+ */
+const getUnitsOfBuildings = (buildings) => {
+  return buildings.reduce((prev, building) => {
+    const units = getUnits(building);
+    prev.push(...units);
+    return prev;
+  }, []);
+};
+
+/**
+ * @param {Array<Feature>} buildings bldgs
+ * @return {Array<Feature>} faculties
+ */
+const getFacultiesOfBuildings = (buildings) => {
+  return buildings.reduce((prev, building) => {
+    const units = getFaculties(building);
+    prev.push(...units);
+    return prev;
+  }, []);
 };
 
 /**
@@ -507,9 +452,6 @@ const getTitle = (options) => {
 };
 
 export {
-  COMPLEX_FIELD_NAME,
-  COMPLEX_ID_FIELD_NAME,
-  UNITS_FIELD_NAME,
   featureClickHandler,
   filterFacultyHeadquaters,
   filterHeadquaters,
@@ -518,17 +460,16 @@ export {
   getComplex,
   getDefaultLabel,
   getFaculties,
+  getFacultiesOfBuildings,
   getLocationCode,
   getSelectedFloorCode,
   getTitle,
-  getType,
   getUnits,
+  getUnitsOfBuildings,
   hasInnerGeometry,
   isBuilding,
   isClickable,
-  isCode,
   isInExtent,
-  isLikeExpr,
   isSameCode,
   isSelected,
 };

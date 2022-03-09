@@ -4,6 +4,7 @@
 
 import * as munimap_complex from '../feature/complex.js';
 import VectorLayer from 'ol/layer/Vector';
+import {RESOLUTION as COMPLEX_RESOLUTION} from '../feature/complex.constants.js';
 import {getStore as getComplexStore} from '../source/complex.js';
 
 /**
@@ -37,8 +38,8 @@ const create = (targetId) => {
       featureClickHandler: munimap_complex.featureClickHandler,
       type: munimap_complex.getType(),
       source: getComplexStore(targetId),
-      minResolution: munimap_complex.RESOLUTION.min,
-      maxResolution: munimap_complex.RESOLUTION.max,
+      minResolution: COMPLEX_RESOLUTION.min,
+      maxResolution: COMPLEX_RESOLUTION.max,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       renderOrder: null,

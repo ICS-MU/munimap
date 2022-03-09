@@ -5,7 +5,6 @@
 import * as munimap_asserts from '../assert/assert.js';
 import * as munimap_building from '../feature/building.js';
 import * as munimap_cluster from '../cluster/cluster.js';
-import * as munimap_floor from '../feature/floor.js';
 import * as munimap_markerCustom from '../feature/marker.custom.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_style from './style.js';
@@ -16,13 +15,12 @@ import {
   CENTER_GEOMETRY_FUNCTION,
   INTERSECT_CENTER_GEOMETRY_FUNCTION,
 } from '../utils/geom.js';
-import {
-  RESOLUTION as DOOR_RESOLUTION,
-  isDoor as isDoorFeature,
-} from '../feature/door.js';
+import {RESOLUTION as DOOR_RESOLUTION} from '../feature/door.constants.js';
+import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
 import {Point} from 'ol/geom';
 import {FONT_SIZE as ROOM_FONT_SIZE} from '../style/room.js';
+import {isDoor as isDoorFeature} from '../feature/door.js';
 import {isRoom as isRoomFeature} from '../feature/room.js';
 
 /**
@@ -304,7 +302,7 @@ const labelFunction = (feature, resolution, options) => {
     fontSize = ROOM_FONT_SIZE;
   } else if (
     isBuilding &&
-    munimap_range.contains(munimap_floor.RESOLUTION, resolution)
+    munimap_range.contains(FLOOR_RESOLUTION, resolution)
   ) {
     fontSize = munimap_style_building.BIG_FONT_SIZE;
   } else {
@@ -351,7 +349,7 @@ const styleFunction = (feature, resolution, options) => {
 
   if (
     isBuilding &&
-    munimap_range.contains(munimap_floor.RESOLUTION, resolution) &&
+    munimap_range.contains(FLOOR_RESOLUTION, resolution) &&
     munimap_building.hasInnerGeometry(feature)
   ) {
     return result;
@@ -366,14 +364,14 @@ const styleFunction = (feature, resolution, options) => {
     );
     const hasPointGeom = feature.getGeometry() instanceof Point;
     if (
-      munimap_range.contains(munimap_floor.RESOLUTION, resolution) &&
+      munimap_range.contains(FLOOR_RESOLUTION, resolution) &&
       !inActiveFloor &&
       !hasPointGeom
     ) {
       return null;
     } else if (isRoom) {
       const markedRoomResolution = munimap_range.createResolution(
-        munimap_floor.RESOLUTION.max,
+        FLOOR_RESOLUTION.max,
         munimap_cluster.ROOM_RESOLUTION.min
       );
       if (

@@ -2,8 +2,6 @@
  * @module matomo/matomo
  */
 
-import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
-
 /**
  * @typedef {Object} Options
  * @property {boolean} [mapLinks] maplinks
@@ -67,10 +65,10 @@ export const sendEvent = (category, action) => {
 };
 
 /**
- * @param {Array} markers markers
+ * @param {boolean} hasCustom has custom marker
  */
-export const sendEventForCustomMarker = (markers) => {
-  if (markers.length && markers.some((el) => isCustomMarker(el))) {
+export const sendEventForCustomMarker = (hasCustom) => {
+  if (hasCustom) {
     sendEvent('customMarker', 'true');
   }
 };

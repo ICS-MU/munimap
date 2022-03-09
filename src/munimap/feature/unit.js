@@ -2,10 +2,9 @@
  * @module feature/unit
  */
 import * as munimap_assert from '../assert/assert.js';
-import * as munimap_building from './building.js';
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_utils from '../utils/utils.js';
-import {MUNIMAP_URL} from '../conf.js';
+import {PRIORITY_FIELD_NAME} from './unit.constants.js';
 
 /**
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
@@ -13,32 +12,6 @@ import {MUNIMAP_URL} from '../conf.js';
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("../load.js").ProcessorOptions} ProcessorOptions
  */
-
-/**
- * @type {string}
- * @protected
- */
-const PRIORITY_FIELD_NAME = 'priorita';
-
-/**
- * @type {TypeOptions}
- */
-let TYPE;
-
-/**
- * @return {TypeOptions} Type
- */
-const getType = () => {
-  if (!TYPE) {
-    TYPE = {
-      primaryKey: 'OBJECTID',
-      serviceUrl: MUNIMAP_URL,
-      layerId: 6,
-      name: 'unit',
-    };
-  }
-  return TYPE;
-};
 
 /**
  * @param {ol.Feature} unit unit
@@ -75,30 +48,6 @@ const getTitle = (unit, lang) => {
   );
   munimap_assert.assert(result === null || munimap_utils.isString(result));
   return /** @type {?string}*/ (result);
-};
-
-/**
- * @param {Array<ol.Feature>} buildings bldgs
- * @return {Array<ol.Feature>} units
- */
-const getUnitsOfBuildings = (buildings) => {
-  return buildings.reduce((prev, building) => {
-    const units = munimap_building.getUnits(building);
-    prev.push(...units);
-    return prev;
-  }, []);
-};
-
-/**
- * @param {Array<ol.Feature>} buildings bldgs
- * @return {Array<ol.Feature>} faculties
- */
-const getFacultiesOfBuildings = (buildings) => {
-  return buildings.reduce((prev, building) => {
-    const units = munimap_building.getFaculties(building);
-    prev.push(...units);
-    return prev;
-  }, []);
 };
 
 /**
@@ -148,12 +97,4 @@ const getTitleParts = (units, lang) => {
   return titleParts;
 };
 
-export {
-  getPriority,
-  getAbbr,
-  getTitle,
-  getTitleParts,
-  getFacultiesOfBuildings,
-  getUnitsOfBuildings,
-  getType,
-};
+export {getAbbr, getPriority, getTitle, getTitleParts};

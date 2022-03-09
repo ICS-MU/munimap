@@ -226,12 +226,12 @@ export const IDENTIFY_FEATURE_CHANGED = 'IDENTIFY_FEATURE_CHANGED';
 export const RESET_DONE = 'RESET_DONE';
 
 /**
- * @param {Array<ol.Feature|string>} markers markers
+ * @param {boolean} hasCustom has custom markers
  * @param {LoadedTypes} loadedTypes loaded feature types
  * @return {PayloadAsyncAction} action
  */
-export function markers_loaded(markers, loadedTypes) {
-  sendEventForCustomMarker(markers);
+export function markers_loaded(hasCustom, loadedTypes) {
+  sendEventForCustomMarker(hasCustom);
   return {
     type: MARKERS_LOADED,
     payload: loadedTypes,

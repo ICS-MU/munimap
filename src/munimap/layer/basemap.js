@@ -7,6 +7,7 @@ import * as munimap_utils from '../utils/utils.js';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
+import {BASEMAPS} from './_constants.js';
 import {assert} from '../assert/assert.js';
 import {isDefAndNotNull} from '../utils/utils.js';
 import {setStyle as setBaseMapStyle} from '../style/basemap.js';
@@ -14,17 +15,6 @@ import {setStyle as setBaseMapStyle} from '../style/basemap.js';
 /**
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
  */
-
-/**
- *
- * @enum {string}
- */
-const BASEMAPS = {
-  OSM: 'osm',
-  OSM_BW: 'osm-bw',
-  ARCGIS: 'arcgis',
-  ARCGIS_BW: 'arcgis-bw',
-};
 
 /**
  * @param {string} id id

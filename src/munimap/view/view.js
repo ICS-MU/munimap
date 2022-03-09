@@ -59,7 +59,7 @@ import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
 import {getDefaultLayers} from '../layer/layer.js';
 import {getMainFeatureAtPixel} from '../feature/feature.js';
 import {getUid} from 'ol';
-import {isCode as isFloorCode} from '../feature/floor.js';
+import {isCode as isFloorCode} from '../feature/floor.constants.js';
 import {loadFloors} from '../load.js';
 import {refreshActiveStyle as refreshActiveDoorStyle} from './door.js';
 import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';

@@ -16,7 +16,7 @@ import {addPoiDetail} from './feature/room.js';
 import {createStore} from './redux/store.js';
 import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
 import {isCtgUid as isOptPoiCtgUid} from './feature/optpoi.js';
-import {isCode as isRoomCode} from './feature/room.js';
+import {isCode as isRoomCode} from './feature/room.constants.js';
 import {markerLabel as optPoiMarkerLabel} from './style/optpoi.js';
 import {v4 as uuidv4} from 'uuid';
 

@@ -7,10 +7,12 @@ import GeoJSON from 'ol/format/GeoJSON';
 import turf_booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
 import {Circle, Point} from 'ol/geom';
-import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.js';
+import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {ICON_HEIGHT} from '../style/poi.js';
-import {RESOLUTION as POI_RESOLUTION} from '../feature/poi.js';
-import {PURPOSE} from '../feature/poi.js';
+import {
+  RESOLUTION as POI_RESOLUTION,
+  PURPOSE,
+} from '../feature/poi.constants.js';
 import {FONT_SIZE as ROOM_FONT_SIZE} from '../style/room.js';
 import {fromCircle} from 'ol/geom/Polygon';
 import {getActiveStore as getActiveRoomStore} from '../source/room.js';

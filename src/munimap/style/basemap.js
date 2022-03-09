@@ -2,8 +2,8 @@
  * @module style/basemap
  */
 
-import {BASEMAPS} from '../layer/basemap.js';
-import {RESOLUTION_COLOR} from './style.js';
+import {BASEMAPS} from '../layer/_constants.js';
+import {RESOLUTION_COLOR} from './_constants.js';
 import {isUserAgentIE} from '../utils/utils.js';
 
 /**

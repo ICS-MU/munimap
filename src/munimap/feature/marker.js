@@ -5,10 +5,11 @@
 import * as actions from '../redux/action.js';
 import * as munimap_building from './building.js';
 import * as munimap_range from '../utils/range.js';
-import {RESOLUTION as DOOR_RESOLUTION, isDoor} from './door.js';
-import {RESOLUTION as FLOOR_RESOLUTION} from './floor.js';
+import {RESOLUTION as DOOR_RESOLUTION} from './door.constants.js';
+import {RESOLUTION as FLOOR_RESOLUTION} from './floor.constants.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {isCustom as isCustomMarker} from './marker.custom.js';
+import {isDoor} from './door.js';
 import {isRoom, isInSelectedFloor as isRoomInSelectedFloor} from './room.js';
 
 /**
@@ -26,12 +27,6 @@ import {isRoom, isInSelectedFloor as isRoomInSelectedFloor} from './room.js';
 /**
  * @typedef {function((ol.Feature|ol.render.Feature), number): (string|null|undefined)} LabelFunction
  */
-
-/**
- * @type {RangeInterface}
- * @const
- */
-const RESOLUTION = munimap_range.createResolution(0, 2.39);
 
 /**
  * @param {ol.Feature} feature feature
@@ -103,7 +98,6 @@ const featureClickHandler = (dispatch, options) => {
 };
 
 export {
-  RESOLUTION,
   getFloorCode,
   isClickable,
   featureClickHandler,

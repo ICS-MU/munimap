@@ -5,8 +5,6 @@
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_building from '../feature/building.js';
 import * as munimap_cluster from '../cluster/cluster.js';
-import * as munimap_complex from '../feature/complex.js';
-import * as munimap_floor from '../feature/floor.js';
 import * as munimap_geom from '../utils/geom.js';
 import * as munimap_markerStyle from './marker.js';
 import * as munimap_range from '../utils/range.js';
@@ -14,7 +12,11 @@ import * as munimap_store from '../utils/store.js';
 import * as munimap_style from './style.js';
 import * as munimap_unit from '../feature/unit.js';
 import * as munimap_utils from '../utils/utils.js';
+import {RESOLUTION as COMPLEX_RESOLUTION} from '../feature/complex.constants.js';
+import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
+import {RESOLUTION_COLOR} from './_constants.js';
+import {getBuildingCount} from '../feature/complex.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 
 /**
@@ -128,7 +130,7 @@ const BIG_FONT_SIZE = 15;
  * @return {Style|Array<Style>} style
  */
 const styleFunction = (feature, resolution, targetId, showSelected) => {
-  const resColor = munimap_style.RESOLUTION_COLOR.find((obj, i, arr) => {
+  const resColor = RESOLUTION_COLOR.find((obj, i, arr) => {
     return resolution > obj.resolution || i === arr.length - 1;
   });
 
@@ -245,9 +247,9 @@ const smallScaleLabelFunction = (feature, resolution, extent, lang) => {
       let title;
       const complex = munimap_building.getComplex(feature);
       if (
-        munimap_range.contains(munimap_complex.RESOLUTION, resolution) &&
+        munimap_range.contains(COMPLEX_RESOLUTION, resolution) &&
         munimap_utils.isDefAndNotNull(complex) &&
-        munimap_complex.getBuildingCount(complex) > 1
+        getBuildingCount(complex) > 1
       ) {
         title = munimap_unit.getTitleParts(units, lang).join('\n');
       } else {
@@ -267,7 +269,7 @@ const smallScaleLabelFunction = (feature, resolution, extent, lang) => {
         result = munimap_style.getLabelWithPin(options);
       }
     }
-  } else if (resolution < munimap_complex.RESOLUTION.min) {
+  } else if (resolution < COMPLEX_RESOLUTION.min) {
     result = defaultLabelFunction(feature, resolution, extent, lang);
   }
   return result;
@@ -345,8 +347,8 @@ const labelFunction = (labelOptions, feature, resolution) => {
 
   let result = null;
   const marked = getMarkerStore(targetId).getFeatures().indexOf(feature) >= 0;
-  if (!marked && resolution < munimap_complex.RESOLUTION.max) {
-    if (!munimap_range.contains(munimap_floor.RESOLUTION, resolution)) {
+  if (!marked && resolution < COMPLEX_RESOLUTION.max) {
+    if (!munimap_range.contains(FLOOR_RESOLUTION, resolution)) {
       result = smallScaleLabelFunction(feature, resolution, extent, lang);
     } else {
       result = largeScaleLabelFunction(feature, resolution, extent, lang);

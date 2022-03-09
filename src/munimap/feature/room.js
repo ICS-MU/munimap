@@ -5,9 +5,9 @@ import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_utils from '../utils/utils.js';
-import {MUNIMAP_URL} from '../conf.js';
 import {alignRoomTitleToRows} from '../style/room.js';
 import {isAllowed} from '../identify/identify.js';
+import {isCode} from './room.constants.js';
 import {wrapText} from '../style/style.js';
 
 /**
@@ -19,53 +19,6 @@ import {wrapText} from '../style/style.js';
  * @typedef {import("./feature.js").IsClickableOptions} IsClickableOptions
  * @typedef {import("redux").Dispatch} redux.Dispatch
  */
-
-/**
- * @enum {string}
- * @const
- */
-const ROOM_TYPES = {
-  DEFAULT: 'default',
-  ACTIVE: 'active',
-};
-
-/**
- * @type {RegExp}
- * @protected
- */
-const CODE_REGEX = /^[A-Z]{3}[0-9]{2}[NMPSZ]{1}[0-9]{5}[a-z]?$/gi;
-
-/**
- * @type {RegExp}
- * @protected
- */
-const LIKE_EXPR_REGEX = /^[A-Z_]{3}[0-9_]{2}[NMPSZ_]{1}[0-9_]{5}[a-z_]?$/gi;
-
-/**
- * @type {TypeOptions}
- */
-let TYPE;
-
-/**
- * @return {TypeOptions} type
- */
-const getType = () => {
-  if (!TYPE) {
-    TYPE = {
-      primaryKey: 'polohKod',
-      serviceUrl: MUNIMAP_URL,
-      layerId: 1,
-      name: 'room',
-    };
-  }
-  return TYPE;
-};
-
-/**
- * @param {string} maybeCode code
- * @return {boolean} whether is room code
- */
-const isCode = (maybeCode) => !!maybeCode.match(CODE_REGEX);
 
 /**
  * @param {ol.Feature|ol.render.Feature} feature feature
@@ -87,58 +40,40 @@ const isInSelectedFloor = (room, selectedFeature) => {
   return selectedFeature ? locCode.startsWith(selectedFeature) : false;
 };
 
-/**
- * @param {string} code code
- */
-const assertCode = (code) => {
-  munimap_assert.assert(
-    !!isCode(code),
-    'Location code of room should consist of 3 letters and 2 digits, ' +
-      "one of the letters 'N', 'M', 'P', 'S' or 'Z' " +
-      'followed by 5 digits, and optionally 1 letter.'
-  );
-};
+// /**
+//  * @param {string} code code
+//  */
+// const assertCode = (code) => {
+//   munimap_assert.assert(
+//     !!isCode(code),
+//     'Location code of room should consist of 3 letters and 2 digits, ' +
+//       "one of the letters 'N', 'M', 'P', 'S' or 'Z' " +
+//       'followed by 5 digits, and optionally 1 letter.'
+//   );
+// };
 
-/**
- * @param {ol.Feature} feature feature
- */
-const assertRoom = (feature) => {
-  munimap_assert.assert(
-    !!isRoom(feature),
-    "Feature does not have value of room's primary key."
-  );
-};
+// /**
+//  * @param {ol.Feature} feature feature
+//  */
+// const assertRoom = (feature) => {
+//   munimap_assert.assert(
+//     !!isRoom(feature),
+//     "Feature does not have value of room's primary key."
+//   );
+// };
 
-/**
- * @param {string} maybeLikeExpr expression
- * @return {boolean} whether is room like expression
- */
-const isLikeExpr = (maybeLikeExpr) => {
-  return (
-    !!maybeLikeExpr.match(LIKE_EXPR_REGEX) && maybeLikeExpr.indexOf('_') >= 0
-  );
-};
-
-/**
- * @param {string} maybeCodeOrLikeExpr code or expression
- * @return {boolean} whether is room code or like expression
- */
-const isCodeOrLikeExpr = (maybeCodeOrLikeExpr) => {
-  return isCode(maybeCodeOrLikeExpr) || isLikeExpr(maybeCodeOrLikeExpr);
-};
-
-/**
- * @param {string} code code
- */
-const assertCodeOrLikeExpr = (code) => {
-  munimap_assert.assert(
-    !!code.match(LIKE_EXPR_REGEX),
-    'Location code of building should consist of 3 letters and 2 digits, ' +
-      "one of the letters 'N', 'M', 'P', 'S' or 'Z' " +
-      'followed by 5 digits, and optionally 1 letter. ' +
-      'Any of these characters might be replaced with _ wildcard.'
-  );
-};
+// /**
+//  * @param {string} code code
+//  */
+// const assertCodeOrLikeExpr = (code) => {
+//   munimap_assert.assert(
+//     !!code.match(LIKE_EXPR_REGEX),
+//     'Location code of building should consist of 3 letters and 2 digits, ' +
+//       "one of the letters 'N', 'M', 'P', 'S' or 'Z' " +
+//       'followed by 5 digits, and optionally 1 letter. ' +
+//       'Any of these characters might be replaced with _ wildcard.'
+//   );
+// };
 
 /**
  * @param {IsClickableOptions} options options
@@ -293,15 +228,10 @@ const addPoiDetail = (rooms, pois, lang) => {
 };
 
 export {
-  ROOM_TYPES,
   addPoiDetail,
   featureClickHandler,
   getDefaultLabel,
-  getType,
-  isCode,
-  isCodeOrLikeExpr,
   isClickable,
   isInSelectedFloor,
-  isLikeExpr,
   isRoom,
 };

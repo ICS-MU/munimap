@@ -13,21 +13,21 @@ import {
   getStore as getRoomStore,
 } from './room.js';
 import {getStore as getBuildingStore} from './building.js';
-import {getType as getBuildingType} from '../feature/building.js';
-import {getType as getDoorType} from '../feature/door.js';
+import {getType as getBuildingType} from '../feature/building.constants.js';
+import {getType as getDoorType} from '../feature/door.constants.js';
 import {getStore as getOptPoiStore} from './optpoi.js';
 import {getStore as getPubTranStore} from './pubtran.stop.js';
-import {getType as getRoomType} from '../feature/room.js';
+import {
+  getType as getRoomType,
+  isCode as isRoomCode,
+  isCodeOrLikeExpr as isRoomCodeOrLikeExpr,
+} from '../feature/room.constants.js';
 import {getUid} from 'ol';
 import {
   isCode as isDoorCode,
   isCodeOrLikeExpr as isDoorCodeOrLikeExpr,
-} from '../feature/door.js';
+} from '../feature/door.constants.js';
 import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.js';
-import {
-  isCode as isRoomCode,
-  isCodeOrLikeExpr as isRoomCodeOrLikeExpr,
-} from '../feature/room.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature

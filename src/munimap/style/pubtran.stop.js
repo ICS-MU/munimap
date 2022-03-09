@@ -2,9 +2,9 @@
  * @module style/pubtranstop
  */
 
-import * as munimap_pubtran_stop from '../feature/pubtran.stop.js';
 import * as munimap_range from '../utils/range.js';
 import {Fill, Style, Text} from 'ol/style';
+import {CLUSTER_RESOLUTION as PUBTRAN_CLUSTER_RESOLUTION} from '../feature/pubtran.stop.constants.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature
@@ -50,7 +50,7 @@ const STYLE = [
  */
 export const styleFunction = (feature, resolution) => {
   const inClusterRes = munimap_range.contains(
-    munimap_pubtran_stop.CLUSTER_RESOLUTION,
+    PUBTRAN_CLUSTER_RESOLUTION,
     resolution
   );
   if (inClusterRes) {

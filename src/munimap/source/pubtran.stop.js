@@ -4,7 +4,7 @@
 import * as munimap_utils from '../utils/utils.js';
 import VectorSource from 'ol/source/Vector';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
-import {getType as getPubtranType} from '../feature/pubtran.stop.js';
+import {getType as getPubtranType} from '../feature/pubtran.stop.constants.js';
 import {pubtranFeaturesForMap} from '../load.js';
 import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
 

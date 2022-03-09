@@ -72,7 +72,7 @@ const getMinorTitleParts = (minorFeatures, isMarked, lang) => {
   let minorTitle;
   if (isMarked) {
     if (minorFeatures.length > 0) {
-      const units = munimap_unit.getFacultiesOfBuildings(minorFeatures);
+      const units = munimap_building.getFacultiesOfBuildings(minorFeatures);
       const titleParts = [];
 
       units.forEach((unit) => {
@@ -121,7 +121,7 @@ const getUnmarkedDefaultLabel = (feature, resolution, lang) => {
 
   const range = munimap_cluster.getResolutionRange(resolution);
   if (range === munimap_cluster.Resolutions.MARKERS_AND_FACULTIES) {
-    units = munimap_unit.getFacultiesOfBuildings(clusteredBuildings);
+    units = munimap_building.getFacultiesOfBuildings(clusteredBuildings);
     if (units.length >= 10) {
       return munimap_lang.getMsg(
         munimap_lang.Translations.CLUSTER_MU_LABEL,
@@ -129,7 +129,7 @@ const getUnmarkedDefaultLabel = (feature, resolution, lang) => {
       );
     }
   } else {
-    units = munimap_unit.getUnitsOfBuildings(clusteredBuildings);
+    units = munimap_building.getUnitsOfBuildings(clusteredBuildings);
   }
   titleParts = munimap_unit.getTitleParts(units, lang);
   return titleParts.join('\n');

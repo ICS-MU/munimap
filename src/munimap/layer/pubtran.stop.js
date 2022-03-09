@@ -4,6 +4,7 @@
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_pubtran_stop from '../feature/pubtran.stop.js';
 import VectorLayer from 'ol/layer/Vector';
+import {RESOLUTION as PUBTRAN_RESOLUTION} from '../feature/pubtran.stop.constants.js';
 import {getStore as getPubtranStore} from '../source/pubtran.stop.js';
 
 /**
@@ -41,7 +42,7 @@ const create = (targetId, lang) => {
       id: LAYER_ID,
       isFeatureClickable: munimap_pubtran_stop.isClickable,
       featureClickHandler: munimap_pubtran_stop.featureClickHandler,
-      maxResolution: munimap_pubtran_stop.RESOLUTION.max,
+      maxResolution: PUBTRAN_RESOLUTION.max,
       source: getPubtranStore(targetId),
       updateWhileAnimating: true,
       updateWhileInteracting: true,

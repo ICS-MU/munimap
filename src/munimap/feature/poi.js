@@ -3,9 +3,9 @@
  */
 import * as actions from '../redux/action.js';
 import * as munimap_range from '../utils/range.js';
-import {FEATURE_TYPE_PROPERTY_NAME} from '../feature/feature.js';
-import {RESOLUTION as FLOOR_RESOLUTION} from './floor.js';
-import {MUNIMAP_URL} from '../conf.js';
+import {FEATURE_TYPE_PROPERTY_NAME} from '../feature/feature.constants.js';
+import {RESOLUTION as FLOOR_RESOLUTION} from './floor.constants.js';
+import {PURPOSE, getType} from './poi.constants.js';
 
 /**
  * @typedef {import('../utils/range.js').RangeInterface} RangeInterface
@@ -17,49 +17,6 @@ import {MUNIMAP_URL} from '../conf.js';
  * @typedef {import("ol/geom").Point} ol.geom.Point
  * @typedef {import("redux").Dispatch} redux.Dispatch
  */
-
-/**
- * @enum {string}
- * @const
- */
-const PURPOSE = {
-  INFORMATION_POINT: 'informace',
-  BUILDING_ENTRANCE: 'vstup do budovy',
-  BUILDING_COMPLEX_ENTRANCE: 'vstup do areálu a budovy',
-  COMPLEX_ENTRANCE: 'vstup do areálu',
-  ELEVATOR: 'výtah',
-  CLASSROOM: 'učebna',
-  TOILET: 'WC',
-  TOILET_IMMOBILE: 'WC invalidé',
-  TOILET_MEN: 'WC muži',
-  TOILET_WOMEN: 'WC ženy',
-};
-
-/**
- * @type {RangeInterface}
- * @const
- */
-const RESOLUTION = munimap_range.createResolution(0, 1.195);
-
-/**
- * @type {TypeOptions}
- */
-let TYPE;
-
-/**
- * @return {TypeOptions} type
- */
-const getType = () => {
-  if (!TYPE) {
-    TYPE = {
-      primaryKey: 'OBJECTID',
-      serviceUrl: MUNIMAP_URL,
-      layerId: 0,
-      name: 'poi',
-    };
-  }
-  return TYPE;
-};
 
 /**
  * @param {ol.Feature|ol.render.Feature} feature feature
@@ -97,4 +54,4 @@ const featureClickHandler = (dispatch, options) => {
   dispatch(actions.poiClicked(options));
 };
 
-export {PURPOSE, RESOLUTION, getType, isClickable, featureClickHandler};
+export {isClickable, featureClickHandler};

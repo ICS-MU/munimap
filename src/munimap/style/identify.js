@@ -12,7 +12,7 @@ import {
   CENTER_GEOMETRY_FUNCTION,
   INTERSECT_CENTER_GEOMETRY_FUNCTION,
 } from '../utils/geom.js';
-import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.js';
+import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {Fill} from 'ol/style';
 import {FONT_SIZE as ROOM_FONT_SIZE} from './room.js';
 import {getDefaultLabel, getLabelWithPin} from './style.js';

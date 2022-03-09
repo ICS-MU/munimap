@@ -16,26 +16,18 @@ import {BUILDING_RESOLUTION, ROOM_RESOLUTION} from '../cluster/cluster.js';
 import {LAYER_ID as CLUSTER_LAYER_ID} from '../layer/cluster.js';
 import {LAYER_ID as COMPLEX_LAYER_ID} from '../layer/complex.js';
 import {ENABLE_SELECTOR_LOGS, INITIAL_STATE} from '../conf.js';
+import {FEATURE_TYPE_PROPERTY_NAME} from '../feature/feature.constants.js';
 import {
-  FEATURE_TYPE_PROPERTY_NAME,
-  filterInvalidCodes,
-  getLocationCodeFromFeature,
-  getSelectedFloorCode as getSelectedFloorCodeBySelectedFeature,
-} from '../feature/feature.js';
+  RESOLUTION as FLOOR_RESOLUTION,
+  isCode as isFloorCode,
+} from '../feature/floor.constants.js';
 import {IDENTIFY_CALLBACK_STORE, MARKER_LABEL_STORE} from '../create.js';
 import {LAYER_ID as IDENTIFY_LAYER_ID} from '../layer/identify.js';
 import {LAYER_ID as MARKER_LAYER_ID} from '../layer/marker.js';
-import {
-  RESOLUTION as MARKER_RESOLUTION,
-  getSelectedFloorCodesWithMarkers,
-} from '../feature/marker.js';
+import {RESOLUTION as MARKER_RESOLUTION} from '../feature/marker.constants.js';
 import {MultiPolygon, Polygon} from 'ol/geom';
 import {ACTIVE_LAYER_ID as POI_ACTIVE_LAYER_ID} from '../layer/poi.js';
-import {
-  RESOLUTION as PUBTRAN_RESOLUTION,
-  getDetailHtml,
-  getType as getPubtranType,
-} from '../feature/pubtran.stop.js';
+import {RESOLUTION as PUBTRAN_RESOLUTION} from '../feature/pubtran.stop.constants.js';
 import {
   ACTIVE_LAYER_ID as ROOM_ACTIVE_LAYER_ID,
   LABEL_LAYER_ID as ROOM_LABEL_LAYER_ID,
@@ -45,6 +37,11 @@ import {defaults as control_defaults} from 'ol/control';
 import {createLayer as createBasemapLayer, getId} from '../layer/basemap.js';
 import {createMapView} from '../view/view.js';
 import {createSelector as createReselectSelector} from 'reselect';
+import {
+  filterInvalidCodes,
+  getLocationCodeFromFeature,
+  getSelectedFloorCode as getSelectedFloorCodeBySelectedFeature,
+} from '../feature/feature.js';
 import {getActiveStyleFunction as getActivePoiStyleFunction} from '../style/poi.js';
 import {
   getActiveStyleFunction as getActiveRoomStyleFunction,
@@ -58,11 +55,7 @@ import {
   getPartialLabelFunction as getBldgPartialLabelFunction,
   getStyleFunction as getBldgStyleFunction,
 } from '../style/building.js';
-import {
-  getTitle as getBldgTitle,
-  isCode as isBuildingCode,
-  isInExtent,
-} from '../feature/building.js';
+import {getTitle as getBldgTitle, isInExtent} from '../feature/building.js';
 import {getBufferValue} from '../utils/extent.js';
 import {
   getStore as getBuildingStore,
@@ -70,6 +63,7 @@ import {
 } from '../source/building.js';
 import {getStyleFunction as getClusterStyleFunction} from '../style/cluster.js';
 import {getStyleFunction as getCmplxStyleFunction} from '../style/complex.js';
+import {getDetailHtml} from '../feature/pubtran.stop.js';
 import {
   getFeaturesByIds,
   getPopupFeatureByUid,
@@ -79,6 +73,9 @@ import {getStore as getIdentifyStore} from '../source/identify.js';
 import {getStyleFunction as getIdentifyStyleFunction} from '../style/identify.js';
 import {getInExtent as getMarkerInExtent} from '../source/marker.js';
 import {getStyleFunction as getMarkerStyleFunction} from '../style/marker.js';
+import {getType as getPubtranType} from '../feature/pubtran.stop.constants.js';
+import {getSelectedFloorCodesWithMarkers} from '../feature/marker.js';
+import {isCode as isBuildingCode} from '../feature/building.constants.js';
 import {isDoor} from '../feature/door.js';
 import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.js';
 import {isRoom} from '../feature/room.js';
@@ -690,7 +687,7 @@ export const getSelectedFloorCode = createSelector(
     if (!selectedFeature) {
       return null;
     } else {
-      return munimap_floor.isCode(selectedFeature) ? selectedFeature : null;
+      return isFloorCode(selectedFeature) ? selectedFeature : null;
     }
   }
 );
@@ -735,7 +732,7 @@ const isInFloorResolutionRange = createSelector(
     }
     return (
       munimap_utils.isDef(resolution) &&
-      munimap_range.contains(munimap_floor.RESOLUTION, resolution)
+      munimap_range.contains(FLOOR_RESOLUTION, resolution)
     );
   }
 );

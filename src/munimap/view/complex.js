@@ -8,8 +8,8 @@ import * as slctr from '../redux/selector.js';
 import {
   ID_FIELD_NAME as COMPLEX_ID_FIELD_NAME,
   RESOLUTION as COMPLEX_RESOLUTION,
-} from '../feature/complex.js';
-import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.js';
+} from '../feature/complex.constants.js';
+import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {INITIAL_STATE} from '../conf.js';
 import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
 import {getAnimationDuration} from '../utils/animation.js';

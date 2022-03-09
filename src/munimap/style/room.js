@@ -10,8 +10,9 @@ import {
   ICON_HEIGHT as POI_ICON_HEIGHT,
   Resolutions as PoiResolutions,
 } from '../style/poi.js';
-import {PURPOSE as POI_PURPOSE} from '../feature/poi.js';
+import {PURPOSE as POI_PURPOSE} from '../feature/poi.constants.js';
 import {LABEL_CACHE as STYLE_LABEL_CACHE, getLabelHeight} from './style.js';
+import {alignTextToRows} from './_constants.js';
 import {getDefaultLabel} from '../feature/room.js';
 import {
   getCorridor as getMarkerCorridorStyle,
@@ -208,7 +209,7 @@ const alignRoomTitleToRows = (title) => {
       let result = part;
       if (part.indexOf(' ') >= 0) {
         const parts = part.split(' ');
-        result = munimap_style.alignTextToRows(parts, ' ');
+        result = alignTextToRows(parts, ' ');
       }
       return result;
     });
@@ -216,7 +217,7 @@ const alignRoomTitleToRows = (title) => {
   } else {
     if (title.indexOf(' ') >= 0) {
       const parts = title.split(' ');
-      title = munimap_style.alignTextToRows(parts, ' ');
+      title = alignTextToRows(parts, ' ');
     }
   }
   return title;
