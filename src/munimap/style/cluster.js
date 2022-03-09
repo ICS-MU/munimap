@@ -25,6 +25,7 @@ import {localeCompare} from '../utils/string.js';
 /**
  * @typedef {import("../style/marker.js").LabelFunction} LabelFunction
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
+ * @typedef {import("ol/style/Style").StyleFunction} ol.style.StyleFunction
  */
 
 /**
@@ -55,23 +56,6 @@ const getMultiple = () => {
       stroke: new Stroke({
         color: '#ffffff',
         width: 2,
-      }),
-    }),
-  });
-};
-
-/**
- * @return {Style} style
- * @protected
- */
-const getMultipleMarked = () => {
-  return new Style({
-    image: new Circle({
-      radius: RADIUS,
-      fill: munimap_style_marker.FILL,
-      stroke: new Stroke({
-        color: '#ffffff',
-        width: 3,
       }),
     }),
   });
@@ -500,4 +484,17 @@ const styleFunction = (feature, resolution, options) => {
   return result;
 };
 
-export {styleFunction};
+/**
+ * @param {StyleFunctionOptions} options options
+ * @return {ol.style.StyleFunction} style function
+ */
+const getStyleFunction = (options) => {
+  const styleFce = (feature, res) => {
+    const style = styleFunction(feature, res, options);
+    return style;
+  };
+
+  return styleFce;
+};
+
+export {getStyleFunction};

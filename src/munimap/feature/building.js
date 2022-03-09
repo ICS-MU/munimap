@@ -36,6 +36,17 @@ import {isRoom} from './room.js';
  */
 
 /**
+ * @typedef {Object} TitleOptions
+ * @property {string} selectedFeature selectedFeature
+ * @property {string} lang lang
+ * @property {string} targetId targetId
+ *
+ * @typedef {Object} TitleResult
+ * @property {string} bldgTitle title
+ * @property {string} complexTitle title
+ */
+
+/**
  * @type {RegExp}
  * @protected
  */
@@ -219,6 +230,19 @@ const getByCode = (targetId, code) => {
     return feature.get(idProperty) === code;
   });
   return building || null;
+};
+
+/**
+ * @param {string} code code
+ * @param {string} targetId targetId
+ * @param {ol.extent.Extent} extent extent
+ * @return {boolean} whether is in extent
+ */
+const isInExtent = (code, targetId, extent) => {
+  munimap_assert.assertString(code);
+  const building = getByCode(targetId, code);
+  const geom = building.getGeometry();
+  return geom.intersectsExtent(extent);
 };
 
 /**
@@ -415,6 +439,73 @@ const getFaculties = (building) => {
   return result;
 };
 
+/**
+ * @param {TitleOptions} options options
+ * @return {TitleResult} result
+ */
+const getTitle = (options) => {
+  const {selectedFeature, targetId, lang} = options;
+  if (!selectedFeature) {
+    return {bldgTitle: '', complexTitle: ''};
+  }
+
+  let bldgTitle = '';
+  let complexTitle = '';
+  const building = getByCode(targetId, selectedFeature);
+  if (building) {
+    bldgTitle = /**@type {string}*/ (
+      building.get(
+        munimap_lang.getMsg(
+          munimap_lang.Translations.BUILDING_TITLE_FIELD_NAME,
+          lang
+        )
+      )
+    );
+    const complex = getComplex(building);
+    if (munimap_utils.isDefAndNotNull(complex)) {
+      complexTitle = /**@type {string}*/ (
+        complex.get(
+          munimap_lang.getMsg(
+            munimap_lang.Translations.COMPLEX_TITLE_FIELD_NAME,
+            lang
+          )
+        )
+      );
+      const buildingType = /**@type {string}*/ (
+        building.get(
+          munimap_lang.getMsg(
+            munimap_lang.Translations.BUILDING_TYPE_FIELD_NAME,
+            lang
+          )
+        )
+      );
+      const buildingTitle = /**@type {string}*/ (
+        building.get(
+          munimap_lang.getMsg(
+            munimap_lang.Translations.BUILDING_ABBR_FIELD_NAME,
+            lang
+          )
+        )
+      );
+      if (
+        munimap_utils.isDefAndNotNull(buildingType) &&
+        munimap_utils.isDefAndNotNull(buildingTitle)
+      ) {
+        bldgTitle = buildingType + ' ' + buildingTitle;
+      } else {
+        if (munimap_complex.getBuildingCount(complex) === 1) {
+          bldgTitle = getNamePart(building, lang);
+        } else {
+          bldgTitle = getTitleWithoutOrgUnit(building, lang);
+        }
+      }
+    } else {
+      bldgTitle = getTitleWithoutOrgUnit(building, lang);
+    }
+  }
+  return {bldgTitle, complexTitle};
+};
+
 export {
   COMPLEX_FIELD_NAME,
   COMPLEX_ID_FIELD_NAME,
@@ -428,15 +519,15 @@ export {
   getDefaultLabel,
   getFaculties,
   getLocationCode,
-  getNamePart,
   getSelectedFloorCode,
-  getTitleWithoutOrgUnit,
+  getTitle,
   getType,
   getUnits,
   hasInnerGeometry,
   isBuilding,
   isClickable,
   isCode,
+  isInExtent,
   isLikeExpr,
   isSameCode,
   isSelected,

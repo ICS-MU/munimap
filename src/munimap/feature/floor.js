@@ -151,3 +151,38 @@ export const sort = (a, b) => {
   const bCode = /**@type {string}*/ (b.get('polohKod'));
   return compareCodesByAltitude(aCode, bCode);
 };
+
+/**
+ * @param {string} targetId targetId
+ * @param {string} selectedFeature selected feature
+ * @return {Array<string>} floor codes
+ */
+export const getActiveCodes = (targetId, selectedFeature) => {
+  const floors = getFloorStore(targetId).getFeatures();
+  const activeFloorLayerId = getFloorLayerIdByCode(targetId, selectedFeature);
+  const active = floors.filter(
+    (floor) => floor.get('vrstvaId') === activeFloorLayerId
+  );
+  const codes = active.map((floor) => {
+    return /**@type {string}*/ (floor.get('polohKod'));
+  });
+  return codes;
+};
+
+/**
+ * @param {string} targetId targetId
+ * @param {string} selectedFeature selected feature
+ * @return {Array<ol.Feature>} floor codes
+ */
+export const getFloorsByBuildingCode = (targetId, selectedFeature) => {
+  const store = getFloorStore(targetId);
+  if (store) {
+    const features = store.getFeatures();
+    const floors = features.filter((floor) => {
+      const locationCode = floor.get('polohKod');
+      return locationCode.startsWith(selectedFeature.substring(0, 5));
+    });
+    return floors || [];
+  }
+  return [];
+};

@@ -34,6 +34,7 @@ import {isRoom as isRoomFeature} from '../feature/room.js';
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("../feature/marker.js").LabelFunction} LabelFunction
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
+ * @typedef {import("ol/style/Style").StyleFunction} ol.style.StyleFunction
  */
 
 /**
@@ -342,7 +343,7 @@ const labelFunction = (feature, resolution, options) => {
  * @param {StyleFunctionOptions} options options
  * @return {Array<Style>} style
  */
-export const styleFunction = (feature, resolution, options) => {
+const styleFunction = (feature, resolution, options) => {
   munimap_asserts.assertInstanceof(feature, Feature);
 
   const result = [];
@@ -397,6 +398,28 @@ export const styleFunction = (feature, resolution, options) => {
   return result;
 };
 
+/**
+ * @param {boolean} inFloorResolutionRange inFloorResolutionRange
+ * @param {string} selectedFeature selectedFeature
+ * @param {StyleFunctionOptions} options options
+ * @return {ol.style.StyleFunction} style fn
+ */
+const getStyleFunction = (inFloorResolutionRange, selectedFeature, options) => {
+  const styleFce = (feature, res) => {
+    if (
+      inFloorResolutionRange &&
+      munimap_building.isBuilding(feature) &&
+      munimap_building.isSelected(feature, selectedFeature)
+    ) {
+      return null;
+    }
+    const style = styleFunction(feature, res, options);
+    return style;
+  };
+
+  return styleFce;
+};
+
 export {
   BUILDING,
   BUILDING_STROKE,
@@ -408,4 +431,5 @@ export {
   getCorridor,
   getPattern,
   getRoom,
+  getStyleFunction,
 };

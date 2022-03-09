@@ -43,6 +43,20 @@ const getFloorCode = (feature) => {
 };
 
 /**
+ * @param {Array<ol.Feature>} markers markers
+ * @param {string} selectedFeature selected feature
+ * @return {Array<string>} codes
+ */
+const getSelectedFloorCodesWithMarkers = (markers, selectedFeature) => {
+  const result = markers.map((marker) => {
+    const pk = /** @type {string}*/ (marker.get('polohKod'));
+    const inSelectedBuilding = pk && pk.startsWith(selectedFeature.slice(0, 5));
+    return pk && inSelectedBuilding && pk.length >= 8 && pk.slice(0, 8);
+  });
+  return result.filter((item) => item);
+};
+
+/**
  * @param {string} targetId targetId
  * @param {ol.Feature} feature feature
  * @return {boolean} whether is marker feature
@@ -88,4 +102,11 @@ const featureClickHandler = (dispatch, options) => {
   dispatch(actions.markerClicked(options));
 };
 
-export {RESOLUTION, getFloorCode, isClickable, featureClickHandler, isMarker};
+export {
+  RESOLUTION,
+  getFloorCode,
+  isClickable,
+  featureClickHandler,
+  getSelectedFloorCodesWithMarkers,
+  isMarker,
+};

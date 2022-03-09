@@ -3,9 +3,12 @@
  */
 import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
+import * as ol_extent from 'ol/extent';
+import * as ol_proj from 'ol/proj';
 import * as slctr from '../redux/selector.js';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
+import View from 'ol/View';
 import {CLICK_HANDLER, IS_CLICKABLE} from '../layer/layer.js';
 import {
   GET_MAIN_FEATURE_AT_PIXEL_STORE,
@@ -52,6 +55,7 @@ import {createStore as createOptPoiStore} from '../source/optpoi.js';
 import {create as createPubtranLayer} from '../layer/pubtran.stop.js';
 import {createStore as createPubtranStore} from '../source/pubtran.stop.js';
 import {createStore as createUnitStore} from '../source/unit.js';
+import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
 import {getDefaultLayers} from '../layer/layer.js';
 import {getMainFeatureAtPixel} from '../feature/feature.js';
 import {getUid} from 'ol';
@@ -64,6 +68,7 @@ import {updateClusteredFeatures} from './cluster.js';
 /**
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("ol").View} ol.View
+ * @typedef {import("ol/size").Size} ol.Size
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("ol/source/Vector").default} ol.source.Vector
  * @typedef {import("ol/layer/Vector").default} ol.layer.Vector
@@ -71,6 +76,7 @@ import {updateClusteredFeatures} from './cluster.js';
  * @typedef {import('../conf.js').RequiredOptions} RequiredOptions
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
+ * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("../feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("redux").Store} redux.Store
  * @typedef {import("redux").Dispatch} redux.Dispatch
@@ -139,6 +145,15 @@ import {updateClusteredFeatures} from './cluster.js';
  * @property {ol.coordinate.Coordinate} pixelInCoords pixelInCoords
  * @property {string} purposeTitle purposeTitle
  * @property {string} purposeGis purposeGis
+ */
+
+/**
+ * @typedef {Object} InitExtentOptions
+ * @property {ol.extent.Extent|undefined} extent extent
+ * @property {ol.Size} size size
+ * @property {ol.coordinate.Coordinate|undefined} center center
+ * @property {number|undefined} zoom zoom
+ * @property {number|undefined} resolution resolution
  */
 
 /**
@@ -611,11 +626,90 @@ const handleMapViewChange = (targetId, newState, asyncDispatch) => {
   return selectedFeature;
 };
 
+/**
+ * @param {string} targetId targetId
+ * @param {ol.coordinate.Coordinate} requiredCenter required center
+ * @param {number} requiredZoom required zoom
+ * @param {Array<ol.Feature>} markers markers
+ * @param {Array<ol.Feature>} zoomTo zoomTo
+ * @return {ol.View} view
+ */
+const createMapView = (
+  targetId,
+  requiredCenter,
+  requiredZoom,
+  markers,
+  zoomTo
+) => {
+  const target = TARGET_ELEMENTS_STORE[targetId];
+  const center = ol_proj.transform(
+    requiredCenter || [16.605390495656977, 49.1986567194723],
+    ol_proj.get('EPSG:4326'),
+    ol_proj.get('EPSG:3857')
+  );
+  const zoom = requiredZoom === null ? 13 : requiredZoom;
+  const view = new View({
+    center: center,
+    maxZoom: 23,
+    minZoom: 0,
+    zoom: zoom,
+    constrainResolution: true,
+  });
+  const initExtentOpts = /**@type {InitExtentOptions}*/ ({});
+  if (zoomTo || markers) {
+    zoomTo = zoomTo.length ? zoomTo : markers;
+    if (zoomTo.length) {
+      let res;
+      const extent = extentOfFeatures(zoomTo, targetId);
+      if (requiredZoom === null && requiredCenter === null) {
+        if (target.offsetWidth === 0 || target.offsetHeight === 0) {
+          view.fit(extent);
+        } else {
+          view.fit(extent, {
+            size: [target.offsetWidth, target.offsetHeight],
+          });
+          res = view.getResolution();
+          munimap_assert.assert(res);
+          ol_extent.buffer(extent, res * 30, extent);
+          view.fit(extent, {
+            size: [target.offsetWidth, target.offsetHeight],
+          });
+          initExtentOpts.extent = extent;
+          initExtentOpts.size = [target.offsetWidth, target.offsetHeight];
+        }
+        /** constrainResolution not exists in OL6, */
+        /** use view.getConstrainedResolution(resolution), */
+        /** https://github.com/openlayers/openlayers/pull/9137 */
+        // if (munimap.marker.custom.isCustom(zoomTo[0])) {
+        //   if (view.getResolution() < munimap.floor.RESOLUTION.max) {
+        //     res = view.constrainResolution(
+        //       munimap.floor.RESOLUTION.max,
+        //       undefined,
+        //       1
+        //     );
+        //     initExtentOpts.resolution = res;
+        //     view.setResolution(res);
+        //   }
+        // }
+      } else if (requiredCenter === null) {
+        initExtentOpts.center = ol_extent.getCenter(extent);
+        view.setCenter(ol_extent.getCenter(extent));
+      }
+    } else {
+      initExtentOpts.center = center;
+      initExtentOpts.zoom = zoom;
+    }
+  }
+  view.set('initExtentOpts', initExtentOpts, true);
+  return view;
+};
+
 export {
   animate,
   attachIndependentMapListeners,
   attachDependentMapListeners,
   createFeatureStores,
+  createMapView,
   ensureBaseMap,
   ensureClusterUpdate,
   ensureLayers,

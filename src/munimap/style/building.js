@@ -18,11 +18,11 @@ import {Fill, Stroke, Style, Text} from 'ol/style';
 import {getStore as getMarkerStore} from '../source/marker.js';
 
 /**
- * @typedef {import("./style").StyleFunctionOptions} StyleFunctionOptions
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("ol/Map").default} ol.Map
  * @typedef {import("ol/extent").Extent} ol.Extent
+ * @typedef {import("ol/style/Style").StyleFunction} ol.style.StyleFunction
  */
 
 /**
@@ -31,6 +31,19 @@ import {getStore as getMarkerStore} from '../source/marker.js';
  * @property {string} lang lang
  * @property {boolean} showLabels wherther to show labels for MU objects
  * @property {ol.Extent} extent map extent based on current state
+ */
+
+/**
+ * @typedef {Object} StyleFunctionOptions
+ * @property {string} targetId targetId
+ * @property {string} selectedFloorCode selected floor code
+ * @property {boolean} inFloorResolutionRange inFloorResolutionRange
+ */
+
+/**
+ * @typedef {Object} LabelStyleFunctionOptions
+ * @property {string} selectedFloorCode selected floor code
+ * @property {boolean} inFloorResolutionRange inFloorResolutionRange
  */
 
 /**
@@ -358,4 +371,59 @@ const labelFunction = (labelOptions, feature, resolution) => {
   return result;
 };
 
-export {BIG_FONT_SIZE, FONT_SIZE, labelFunction, styleFunction};
+/**
+ * @param {StyleFunctionOptions} options options
+ * @return {ol.style.StyleFunction} style fn
+ */
+const getStyleFunction = (options) => {
+  const {targetId, inFloorResolutionRange, selectedFloorCode} = options;
+  const selectedFloor = inFloorResolutionRange ? selectedFloorCode : null;
+  const styleFce = (feature, res) => {
+    const showSelected =
+      inFloorResolutionRange &&
+      munimap_building.isSelected(feature, selectedFloor);
+    const style = styleFunction(feature, res, targetId, showSelected);
+    return style;
+  };
+
+  return styleFce;
+};
+
+/**
+ * @param {LabelOptions} options options
+ * @return {ol.style.StyleFunction} label style
+ */
+const getPartialLabelFunction = (options) => {
+  return munimap_utils.partial(labelFunction, options);
+};
+
+/**
+ * @param {ol.style.StyleFunction} labelFn label fn
+ * @param {LabelStyleFunctionOptions} options options
+ * @return {ol.style.StyleFunction} style fn
+ */
+const getLabelStyleFunction = (labelFn, options) => {
+  const {inFloorResolutionRange, selectedFloorCode} = options;
+  const selectedFloor = inFloorResolutionRange ? selectedFloorCode : null;
+  const styleFce = (feature, res) => {
+    const showSelected =
+      inFloorResolutionRange &&
+      munimap_building.isSelected(feature, selectedFloor);
+    if (showSelected) {
+      return null;
+    } else {
+      const style = labelFn(feature, res);
+      return style;
+    }
+  };
+
+  return styleFce;
+};
+
+export {
+  BIG_FONT_SIZE,
+  FONT_SIZE,
+  getPartialLabelFunction,
+  getLabelStyleFunction,
+  getStyleFunction,
+};

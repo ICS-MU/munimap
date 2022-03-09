@@ -3,12 +3,17 @@
  */
 
 import * as munimap_lang from '../lang/lang.js';
+import * as munimap_utils from '../utils/utils.js';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import {assert} from '../assert/assert.js';
 import {isDefAndNotNull} from '../utils/utils.js';
 import {setStyle as setBaseMapStyle} from '../style/basemap.js';
+
+/**
+ * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
+ */
 
 /**
  *
@@ -106,11 +111,37 @@ const createLayer = (basemapId, lang) => {
   return layer;
 };
 
+/**
+ * @param {ol.coordinate.Coordinate} center center
+ * @param {number} resolution resolution
+ * @param {string} requiredBasemap required basemap id
+ * @return {string} id
+ */
+const getId = (center, resolution, requiredBasemap) => {
+  const isSafeLatLon = munimap_utils.inRange(
+    center[1],
+    -8399737.89, //60° N
+    8399737.89 //60° S
+  );
+  const isSafeResolution = munimap_utils.inRange(
+    resolution,
+    38.21851414258813,
+    Infinity
+  );
+  const basemapLayerId =
+    !isSafeLatLon && !isSafeResolution && isArcGISBasemap(requiredBasemap)
+      ? getPairedBasemap(requiredBasemap)
+      : requiredBasemap;
+
+  return basemapLayerId;
+};
+
 export {
   BASEMAPS,
+  createLayer,
+  getPairedBasemap,
+  getId,
   isArcGISBasemap,
   isOSMBasemap,
   isBWBasemap,
-  getPairedBasemap,
-  createLayer,
 };

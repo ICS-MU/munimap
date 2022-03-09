@@ -2,6 +2,7 @@
  * @module style/poi
  */
 
+import * as munimap_assert from '../assert/assert.js';
 import * as munimap_range from '../utils/range.js';
 import {Circle, Fill, Stroke, Style, Text} from 'ol/style';
 import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.js';
@@ -12,6 +13,14 @@ import {getByCode as getBuildingByCode} from '../feature/building.js';
  * @typedef {import('../utils/range.js').RangeInterface} RangeInterface
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
+ * @typedef {import("ol/style/Style").StyleFunction} ol.style.StyleFunction
+ */
+
+/**
+ * @typedef {Object} StyleFunctionOptions
+ * @property {string} targetId targetId
+ * @property {string} selectedFeature selected feature
+ * @property {Array<string>} activeFloorCodes activeFloorCodes
  */
 
 /**
@@ -390,11 +399,45 @@ const outdoorStyleFunction = (
   return result;
 };
 
-export {
-  ICON_HEIGHT,
-  Resolutions,
-  activeStyleFunction,
-  defaultStyleFunction,
-  getStyle,
-  outdoorStyleFunction,
+/**
+ * @param {StyleFunctionOptions} options options
+ * @return {ol.style.StyleFunction} style function
+ */
+const getActiveStyleFunction = (options) => {
+  const {selectedFeature, activeFloorCodes, targetId} = options;
+
+  const styleFce = (feature, res) => {
+    const locCode = /**@type {string}*/ (feature.get('polohKodPodlazi'));
+    if (locCode && activeFloorCodes.includes(locCode)) {
+      return activeStyleFunction(feature, res);
+    }
+
+    const poiType = feature.get('typ');
+    const entranceTypes = [
+      PURPOSE.BUILDING_ENTRANCE,
+      PURPOSE.BUILDING_COMPLEX_ENTRANCE,
+    ];
+    if (entranceTypes.includes(poiType)) {
+      const defaultFloor = feature.get('vychoziPodlazi');
+      munimap_assert.assertNumber(defaultFloor);
+      const locCode = /**@type {string}*/ (feature.get('polohKodPodlazi'));
+      if (
+        defaultFloor === 1 &&
+        activeFloorCodes.every(
+          (floor) => !locCode.startsWith(floor.substring(0, 5))
+        )
+      ) {
+        return defaultStyleFunction(feature, res);
+      }
+    }
+
+    entranceTypes.push(PURPOSE.COMPLEX_ENTRANCE);
+    if (entranceTypes.includes(poiType)) {
+      return outdoorStyleFunction(feature, res, selectedFeature, targetId);
+    }
+    return null;
+  };
+  return styleFce;
 };
+
+export {ICON_HEIGHT, Resolutions, getActiveStyleFunction, getStyle};

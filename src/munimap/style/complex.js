@@ -11,11 +11,13 @@ import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
 import {Style, Text} from 'ol/style';
+import {getStore as getMarkerStore} from '../source/marker.js';
 import {getUid as getStoreUid} from '../utils/store.js';
 
 /**
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("ol/Map").default} ol.Map
+ * @typedef {import("ol/style/Style").StyleFunction} ol.style.StyleFunction
  */
 
 /**
@@ -90,4 +92,19 @@ const styleFunction = (feature, resolution, markers, lang) => {
   return null;
 };
 
-export {styleFunction};
+/**
+ * @param {string} targetId targetId
+ * @param {string} lang lang
+ * @return {ol.style.StyleFunction} style fn
+ */
+const getStyleFunction = (targetId, lang) => {
+  const markers = getMarkerStore(targetId).getFeatures();
+  const styleFce = (feature, res) => {
+    const style = styleFunction(feature, res, markers, lang);
+    return style;
+  };
+
+  return styleFce;
+};
+
+export {getStyleFunction};

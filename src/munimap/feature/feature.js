@@ -5,11 +5,25 @@ import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
 import turf_booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import {Ids as OptPoiIds, isCtgUid as isOptPoiCtgUid} from './optpoi.js';
 import {Point} from 'ol/geom';
+import {REQUIRED_CUSTOM_MARKERS} from '../create.js';
 import {featureExtentIntersect} from '../utils/geom.js';
+import {
+  getByCode as getBuildingByCode,
+  getType as getBuildingType,
+  getSelectedFloorCode as getSelectedFloorCodeFromBuilding,
+  hasInnerGeometry,
+  isBuilding,
+  isCode as isBuildingCode,
+} from './building.js';
 import {getLayer as getClusterLayer} from '../layer/cluster.js';
 import {getDefaultLayer as getDefaultRoomLayer} from '../layer/room.js';
+import {getType as getDoorType, isDoor} from './door.js';
 import {getLayer as getMarkerLayer} from '../layer/marker.js';
+import {getType as getRoomType, isRoom} from './room.js';
+import {isCustom as isCustomMarker} from './marker.custom.js';
+import {isCode as isFloorCode} from './floor.js';
 
 /**
  * @typedef {import("ol/source").Vector} ol.source.Vector
@@ -52,6 +66,13 @@ import {getLayer as getMarkerLayer} from '../layer/marker.js';
  * @typedef {Object} FeatureWithLayer
  * @property {ol.Feature} feature feature
  * @property {ol.layer.Vector}  layer vector layer
+ */
+
+/**
+ * @typedef {Object} SelectedOptions
+ * @property {string} targetId targetId
+ * @property {string} selectedFeature selected feature
+ * @property {Array<string>} activeFloorCodes activeFloorCodes
  */
 
 /**
@@ -139,8 +160,97 @@ const getClosestPointToPixel = (feature, pixelCoord, extent) => {
   }
 };
 
+/**
+ * @param {Array<string>} requiredMarkerIds ids
+ * @param {Array<ol.Feature>} initMarkers markers
+ * @return {Array<string>} result
+ */
+const filterInvalidCodes = (requiredMarkerIds, initMarkers) => {
+  const initMarkersCodes = [];
+  let type;
+  initMarkers.forEach((marker) => {
+    if (!isCustomMarker(marker)) {
+      if (isRoom(marker)) {
+        type = getRoomType();
+      } else if (isDoor(marker)) {
+        type = getDoorType();
+      } else {
+        type = getBuildingType();
+      }
+      initMarkersCodes.push(marker.get(type.primaryKey));
+    }
+  });
+
+  const difference = /**@type {Array}*/ (requiredMarkerIds).filter(
+    (markerString) => {
+      if (isOptPoiCtgUid(markerString)) {
+        return !Object.values(OptPoiIds).includes(markerString.split(':')[1]);
+      }
+
+      return munimap_utils.isString(markerString) &&
+        !REQUIRED_CUSTOM_MARKERS[markerString]
+        ? !initMarkersCodes.includes(markerString)
+        : false;
+    }
+  );
+  return difference;
+};
+
+/**
+ * @param {ol.Feature} feature feature
+ * @return {string} code
+ */
+const getLocationCodeFromFeature = (feature) => {
+  if (!feature) {
+    return;
+  }
+
+  let lc;
+  if (isBuilding(feature)) {
+    lc = feature.get('polohKod') || null;
+  } else if (isRoom(feature) || isDoor(feature)) {
+    const locCode = /**@type {string}*/ (feature.get('polohKod'));
+    lc = locCode.substring(0, 5);
+  } else {
+    lc = feature.get('polohKodPodlazi') || null;
+  }
+  return lc;
+};
+
+/**
+ * @param {SelectedOptions} options options
+ * @return {string|undefined} code
+ */
+const getSelectedFloorCode = (options) => {
+  const {selectedFeature, targetId, activeFloorCodes} = options;
+
+  if (!selectedFeature) {
+    return;
+  } else if (isFloorCode(selectedFeature)) {
+    return selectedFeature;
+  }
+
+  if (isBuildingCode(selectedFeature)) {
+    const building = getBuildingByCode(targetId, selectedFeature);
+    if (hasInnerGeometry(building)) {
+      const floorCode = activeFloorCodes.find(
+        (code) => code.substring(0, 5) === selectedFeature
+      );
+
+      if (floorCode) {
+        return floorCode;
+      } else {
+        return getSelectedFloorCodeFromBuilding(targetId, building);
+      }
+    }
+  }
+};
+
 export {
   FEATURE_TYPE_PROPERTY_NAME,
+  getSelectedFloorCode,
   getClosestPointToPixel,
+  getLocationCodeFromFeature,
   getMainFeatureAtPixel,
+  filterInvalidCodes,
 };

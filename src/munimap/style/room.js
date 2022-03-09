@@ -24,6 +24,15 @@ import {getUid} from '../utils/store.js';
  * @typedef {import("ol/render/Event").default} RenderEvent
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("ol").Feature} ol.Feature
+ * @typedef {import("ol/style/Style").StyleFunction} ol.style.StyleFunction
+ */
+
+/**
+ * @typedef {Object} StyleFunctionOptions
+ * @property {string} targetId targetId
+ * @property {string} lang lang
+ * @property {boolean} requiredLocationCodes requiredLocationCodes
+ * @property {string} selectedFloorCode selectedFloorCode
  */
 
 /**
@@ -379,12 +388,68 @@ const labelFunction = (
   return result.length ? result : null;
 };
 
+/**
+ * @param {StyleFunctionOptions} options options
+ * @return {ol.style.StyleFunction} style function
+ */
+const getLabelFunction = (options) => {
+  const {lang, requiredLocationCodes, selectedFloorCode, targetId} = options;
+  const styleFce = (feature, res) => {
+    const locCode = feature.get('polohKod');
+    const isSelected =
+      selectedFloorCode && locCode.startsWith(selectedFloorCode);
+    if (isSelected) {
+      return labelFunction(feature, res, targetId, lang, requiredLocationCodes);
+    }
+    return null;
+  };
+  return styleFce;
+};
+
+/**
+ * @param {Array<string>} activeFloorCodes codes
+ * @param {string} targetId targetId
+ * @return {ol.style.StyleFunction} style function
+ */
+const getDefaultStyleFunction = (activeFloorCodes, targetId) => {
+  const styleFce = (feature, res) => {
+    const locCode = feature.get('polohKod');
+    const isDefault = !activeFloorCodes.some((code) =>
+      locCode.startsWith(code.substring(0, 5))
+    );
+    if (isDefault) {
+      return defaultStyleFunction(feature, res, targetId);
+    }
+    return null;
+  };
+  return styleFce;
+};
+
+/**
+ * @param {string} targetId targetId
+ * @return {ol.style.StyleFunction} style function
+ */
+const getActiveStyleFunction = (targetId) => {
+  const styleFce = (feature, res) => {
+    let result = defaultStyleFunction(feature, res, targetId);
+    if (
+      munimap_range.contains(PoiResolutions.STAIRS, res) &&
+      result === getStaircase()
+    ) {
+      result = [...result, ...STAIRCASE_ICON];
+    }
+    return result;
+  };
+  return styleFce;
+};
+
 export {
   FONT_SIZE,
   STAIRCASE_ICON,
   setCorridorStyle,
   alignRoomTitleToRows,
-  defaultStyleFunction,
-  labelFunction,
+  getActiveStyleFunction,
+  getDefaultStyleFunction,
+  getLabelFunction,
   getStaircase,
 };

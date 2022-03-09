@@ -25,6 +25,7 @@ import {isRoom} from '../feature/room.js';
 /**
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/style").Style} ol.style.Style
+ * @typedef {import("ol/style/Style").StyleFunction} ol.style.StyleFunction
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("./marker.js").LabelFunction} LabelFunction
  */
@@ -108,4 +109,17 @@ const styleFunction = (feature, resolution, options) => {
   return getLabelWithPin(opts);
 };
 
-export {styleFunction};
+/**
+ * @param {StyleFunctionOptions} options options
+ * @return {ol.style.StyleFunction} style function
+ */
+const getStyleFunction = (options) => {
+  const styleFce = (feature, res) => {
+    const style = styleFunction(feature, res, options);
+    return style;
+  };
+
+  return styleFce;
+};
+
+export {getStyleFunction};

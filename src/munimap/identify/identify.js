@@ -193,10 +193,28 @@ const handleCallback = (callback, asyncDispatch, targetId, opt_options) => {
   }
 };
 
+/**
+ * @param {string} targetId targetId
+ * @param {string} selectedFeature selected feature
+ * @return {boolean|undefined} result
+ */
+const inSameFloorAsSelected = (targetId, selectedFeature) => {
+  const features = getStore(targetId).getFeatures();
+  if (features && features.length > 0) {
+    const pointFeature = features[0];
+    const code = getLocationCode(pointFeature);
+    if (code && code.length > 5) {
+      return code.substring(5, 8) === selectedFeature.substring(5, 8);
+    }
+  }
+  return;
+};
+
 export {
   Types,
   getLocationCode,
   getIdentifiedFeature,
   handleCallback,
+  inSameFloorAsSelected,
   isAllowed,
 };
