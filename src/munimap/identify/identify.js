@@ -5,6 +5,10 @@ import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_utils from '../utils/utils.js';
 import {Feature} from 'ol';
+import {
+  IDENTIFIED_FEATURE_PROPERTY_NAME,
+  LOCATION_CODE_FIELD_NAME,
+} from './_constants.js';
 import {IdentifyTypes} from './_constants.js';
 import {Point} from 'ol/geom';
 import {getIdentifyStore} from '../source/_constants.js';
@@ -52,18 +56,6 @@ import {transform} from 'ol/proj';
 /**
  * @typedef {function(Result): boolean} CallbackFunction
  */
-
-/**
- * @type {string}
- * @const
- */
-const IDENTIFIED_FEATURE_PROPERTY_NAME = 'identifiedFeature';
-
-/**
- * @type {string}
- * @const
- */
-const LOCATION_CODE_FIELD_NAME = 'polohKod';
 
 /**
  * @param {ol.Feature} feature feature
