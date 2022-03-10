@@ -8,7 +8,6 @@ import * as munimap_cluster from '../cluster/cluster.js';
 import * as munimap_markerCustom from '../feature/marker.custom.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_style from './style.js';
-import * as munimap_style_building_constants from './building.constants.js';
 import * as munimap_style_constants from './_constants.js';
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
@@ -18,9 +17,8 @@ import {
 } from '../utils/geom.js';
 import {RESOLUTION as DOOR_RESOLUTION} from '../feature/door.constants.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
-import {Fill, Stroke, Style, Text} from 'ol/style';
+import {Fill, Style, Text} from 'ol/style';
 import {Point} from 'ol/geom';
-import {FONT_SIZE as ROOM_FONT_SIZE} from '../style/room.constants.js';
 import {isDoor as isDoorFeature} from '../feature/door.constants.js';
 import {isRoom as isRoomFeature} from '../feature/room.constants.js';
 
@@ -63,107 +61,11 @@ import {isRoom as isRoomFeature} from '../feature/room.constants.js';
 const CORRIDOR_IMG_PATH = APP_PATH + 'img/marker.style.coridors.bg.png';
 
 /**
- * @type {Fill}
- * @const
- */
-const FILL = new Fill({
-  color: '#e51c23',
-});
-
-/**
- * @type {Fill}
- * @const
- */
-const TEXT_FILL = new Fill({
-  color: '#e51c23',
-});
-
-/**
  * Styles corresponding different resolutions.
  * @type {Object<number, Style|Array<Style>>}
  * @const
  */
 const WHITE_TO_GREY_CACHE = {};
-
-/**
- * @type {Fill}
- * @const
- */
-const BUILDING_FILL = new Fill({
-  color: '#ffffff',
-});
-
-/**
- * @type {Stroke}
- * @const
- */
-const BUILDING_STROKE = new Stroke({
-  color: '#e51c23',
-  width: 1,
-});
-
-/**
- * @type {Style}
- * @const
- */
-const BUILDING = new Style({
-  fill: BUILDING_FILL,
-  stroke: BUILDING_STROKE,
-});
-
-/**
- * @type {Fill}
- * @const
- */
-const ROOM_FILL = new Fill({
-  color: '#fff',
-});
-
-/**
- * @type {Stroke}
- * @const
- */
-const ROOM_STROKE = new Stroke({
-  color: '#e51c23',
-  width: 1,
-});
-
-/**
- * @type {Style}
- * @const
- */
-const ROOM = new Style({
-  fill: ROOM_FILL,
-  stroke: ROOM_STROKE,
-  zIndex: 5,
-});
-
-/**
- * @type {Fill}
- * @const
- */
-const DOOR_FILL = new Fill({
-  color: '#FFC0C0',
-});
-
-/**
- * @type {Stroke}
- * @const
- */
-const DOOR_STROKE = new Stroke({
-  color: '#e51c23',
-  width: 1,
-});
-
-/**
- * @type {Style}
- * @const
- */
-const DOOR = new Style({
-  fill: DOOR_FILL,
-  stroke: DOOR_STROKE,
-  zIndex: 5,
-});
 
 /**
  * @type {Array<Style>}
@@ -174,11 +76,6 @@ let CORRIDOR = [];
  * @return {Array<Style>} corridor style
  */
 const getCorridor = () => CORRIDOR;
-
-/**
- * @return {Style} room style
- */
-const getRoom = () => ROOM;
 
 /**
  * @param {RenderEvent} event event
@@ -201,7 +98,7 @@ const getPattern = (event) => {
       fill: new Fill({
         color: '#ffffff',
       }),
-      stroke: BUILDING_STROKE,
+      stroke: munimap_style_constants.MARKER_BUILDING_STROKE,
     });
     CORRIDOR = [corridorStyle, corridorBackground];
   };
@@ -215,7 +112,7 @@ const getPinText = function () {
   return new Text({
     text: '\uf041',
     font: 'normal ' + munimap_style_constants.PIN_SIZE + 'px MunimapFont',
-    fill: TEXT_FILL,
+    fill: munimap_style_constants.MARKER_TEXT_FILL,
     offsetY: -munimap_style_constants.PIN_SIZE / 2,
     stroke: munimap_style_constants.TEXT_STROKE,
     overflow: true,
@@ -293,21 +190,21 @@ const labelFunction = (feature, resolution, options) => {
       color: color,
     });
   } else if (isMarked) {
-    fill = TEXT_FILL;
+    fill = munimap_style_constants.MARKER_TEXT_FILL;
   } else {
     fill = munimap_style_constants.TEXT_FILL;
   }
 
   let fontSize;
   if (isRoom || isDoor) {
-    fontSize = ROOM_FONT_SIZE;
+    fontSize = munimap_style_constants.ROOM_FONT_SIZE;
   } else if (
     isBuilding &&
     munimap_range.contains(FLOOR_RESOLUTION, resolution)
   ) {
-    fontSize = munimap_style_building_constants.BIG_FONT_SIZE;
+    fontSize = munimap_style_constants.BUILDING_BIG_FONT_SIZE;
   } else {
-    fontSize = munimap_style_building_constants.FONT_SIZE;
+    fontSize = munimap_style_constants.BUILDING_FONT_SIZE;
   }
 
   const intersectFunction = munimap_utils.partial(
@@ -379,10 +276,10 @@ const styleFunction = (feature, resolution, options) => {
         munimap_range.contains(markedRoomResolution, resolution) ||
         hasPointGeom
       ) {
-        result.push(ROOM);
+        result.push(munimap_style_constants.MARKER_ROOM_STYLE);
       }
     } else if (munimap_range.contains(DOOR_RESOLUTION, resolution)) {
-      result.push(DOOR);
+      result.push(munimap_style_constants.MARKER_DOOR_STYLE);
     }
   }
   if (
@@ -420,15 +317,9 @@ const getStyleFunction = (inFloorResolutionRange, selectedFeature, options) => {
 };
 
 export {
-  BUILDING,
-  BUILDING_STROKE,
-  FILL,
-  DOOR,
-  TEXT_FILL,
   WHITE_TO_GREY_CACHE,
   createPinFromGeometry,
   getCorridor,
   getPattern,
-  getRoom,
   getStyleFunction,
 };

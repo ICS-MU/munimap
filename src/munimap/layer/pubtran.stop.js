@@ -4,9 +4,9 @@
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_pubtran_stop from '../feature/pubtran.stop.js';
 import VectorLayer from 'ol/layer/Vector';
-import {LAYER_ID} from './pubtran.stop.constants.js';
+import {PUBTRAN_LAYER_ID} from './_constants.js';
 import {RESOLUTION as PUBTRAN_RESOLUTION} from '../feature/pubtran.stop.constants.js';
-import {getStore as getPubtranStore} from '../source/pubtran.stop.constants.js';
+import {getPubTranStore} from '../source/_constants.js';
 
 /**
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions
@@ -18,7 +18,7 @@ import {getStore as getPubtranStore} from '../source/pubtran.stop.constants.js';
  * @return {boolean} isLayer
  */
 const isLayer = (layer) => {
-  return layer.get('id') === LAYER_ID;
+  return layer.get('id') === PUBTRAN_LAYER_ID;
 };
 
 /**
@@ -34,11 +34,11 @@ const create = (targetId, lang) => {
   const pubTranLayer = new VectorLayer(
     /** @type {VectorLayerOptions} */
     ({
-      id: LAYER_ID,
+      id: PUBTRAN_LAYER_ID,
       isFeatureClickable: munimap_pubtran_stop.isClickable,
       featureClickHandler: munimap_pubtran_stop.featureClickHandler,
       maxResolution: PUBTRAN_RESOLUTION.max,
-      source: getPubtranStore(targetId),
+      source: getPubTranStore(targetId),
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       refreshStyleOnFloorChange: false,

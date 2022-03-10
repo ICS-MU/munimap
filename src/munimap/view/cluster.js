@@ -16,13 +16,12 @@ import {
   getAnimationDuration,
   getAnimationRequestParams,
 } from '../utils/animation.js';
-import {getStore as getClusterStore} from '../source/cluster.js';
+import {getClusterStore, getClusterVectorStore} from '../source/_constants.js';
 import {
   getClusteredFeatures,
   getMainFeatures,
   getMinorFeatures,
 } from '../cluster/cluster.js';
-import {getVectorStore} from '../source/cluster.js';
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
 import {isDoor} from '../feature/door.constants.js';
 
@@ -54,7 +53,7 @@ const updateClusteredFeatures = (targetId, resolution, showLabels) => {
   if (showLabels === false) {
     return;
   }
-  const source = getVectorStore(targetId);
+  const source = getClusterVectorStore(targetId);
   const oldFeatures = source.getFeatures();
   const newFeatures = getClusteredFeatures(targetId, resolution);
 

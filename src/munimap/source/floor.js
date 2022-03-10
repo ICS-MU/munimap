@@ -2,11 +2,7 @@
  * @module source/floor
  */
 import VectorSource from 'ol/source/Vector';
-
-/**
- * @type {Object<string, VectorSource>}
- */
-const FLOOR_STORES = {};
+import {setFloorStore} from './_constants.js';
 
 /**
  * Create store for complexes.
@@ -14,17 +10,9 @@ const FLOOR_STORES = {};
  * @return {VectorSource} store
  */
 const createStore = (targetId) => {
-  FLOOR_STORES[targetId] = new VectorSource();
-  return FLOOR_STORES[targetId];
+  const store = new VectorSource();
+  setFloorStore(targetId, store);
+  return store;
 };
 
-/**
- * Get building store.
- * @param {string} targetId targetId
- * @return {VectorSource} store
- */
-const getStore = (targetId) => {
-  return FLOOR_STORES[targetId];
-};
-
-export {createStore, getStore};
+export {createStore};

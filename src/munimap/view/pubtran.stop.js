@@ -4,7 +4,7 @@
 import VectorLayer from 'ol/layer/Vector';
 import {INITIAL_STATE} from '../conf.js';
 import {getAnimationRequestParams} from '../utils/animation.js';
-import {getStore} from '../source/pubtran.stop.constants.js';
+import {getPubTranStore} from '../source/_constants.js';
 import {isLayer} from '../layer/pubtran.stop.js';
 import {styleFunction} from '../style/pubtran.stop.js';
 
@@ -45,7 +45,7 @@ const refreshStyle = (layers) => {
  */
 const getAnimationRequest = (options) => {
   const {featureUid, targetId, rotation, size, extent, resolution} = options;
-  const feature = getStore(targetId).getFeatureByUid(featureUid);
+  const feature = getPubTranStore(targetId).getFeatureByUid(featureUid);
 
   const point = /**@type {ol.geom.Point}*/ (feature.getGeometry());
   const coords = point.getCoordinates();

@@ -4,9 +4,9 @@
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_marker from '../feature/marker.js';
 import VectorLayer from 'ol/layer/Vector';
-import {LAYER_ID} from './marker.constants.js';
+import {MARKER_LAYER_ID} from './_constants.js';
+import {getMarkerStore} from '../source/_constants.js';
 import {getPattern} from '../style/marker.js';
-import {getStore} from '../source/marker.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map
@@ -20,7 +20,7 @@ import {getStore} from '../source/marker.js';
  * @return {boolean} isLayer
  */
 const isLayer = (layer) => {
-  return layer.get('id') === LAYER_ID;
+  return layer.get('id') === MARKER_LAYER_ID;
 };
 
 /**
@@ -44,13 +44,13 @@ const create = (options) => {
   const {markers, muAttrs, clusterResolution} = options;
   const {targetId} = options.requiredOpts;
 
-  const markerSource = getStore(targetId);
+  const markerSource = getMarkerStore(targetId);
   markerSource.setAttributions(muAttrs);
   markerSource.addFeatures(markers);
 
   const markerLayer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
-      id: LAYER_ID,
+      id: MARKER_LAYER_ID,
       isFeatureClickable: munimap_marker.isClickable,
       featureClickHandler: munimap_marker.featureClickHandler,
       source: markerSource,

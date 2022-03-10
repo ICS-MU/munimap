@@ -3,11 +3,7 @@
  */
 
 import VectorSource from 'ol/source/Vector';
-
-/**
- * @type {Object<string, VectorSource>}
- */
-const COMPLEX_STORES = {};
+import {setComplexStore} from './_constants.js';
 
 /**
  * Create store for complexes.
@@ -15,17 +11,9 @@ const COMPLEX_STORES = {};
  * @return {VectorSource} store
  */
 const createStore = (targetId) => {
-  COMPLEX_STORES[targetId] = new VectorSource();
-  return COMPLEX_STORES[targetId];
+  const store = new VectorSource();
+  setComplexStore(targetId, store);
+  return store;
 };
 
-/**
- * Get building store.
- * @param {string} targetId targetId
- * @return {VectorSource} store
- */
-const getStore = (targetId) => {
-  return COMPLEX_STORES[targetId];
-};
-
-export {createStore, getStore};
+export {createStore};

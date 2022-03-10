@@ -8,9 +8,11 @@ import * as munimap_marker from '../feature/marker.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
 import {Feature} from 'ol';
-import {getStore as getBuildingStore} from '../source/building.constants.js';
-import {getStore as getClusterStore} from '../source/cluster.js';
-import {getStore as getMarkerStore} from '../source/marker.js';
+import {
+  getBuildingStore,
+  getClusterStore,
+  getMarkerStore,
+} from '../source/_constants.js';
 import {getUid} from 'ol';
 
 /**

@@ -13,19 +13,12 @@ import * as munimap_style from './style.js';
 import * as munimap_style_constants from './_constants.js';
 import * as munimap_unit from '../feature/unit.js';
 import * as munimap_utils from '../utils/utils.js';
-import {
-  BIG_FONT_SIZE,
-  FONT_SIZE,
-  STROKE,
-  STYLE,
-  getNoGeometryStyle,
-} from './building.constants.js';
 import {RESOLUTION as COMPLEX_RESOLUTION} from '../feature/complex.constants.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
 import {RESOLUTION_COLOR} from './_constants.js';
 import {getBuildingCount} from '../feature/complex.js';
-import {getStore as getMarkerStore} from '../source/marker.js';
+import {getMarkerStore} from '../source/_constants.js';
 
 /**
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
@@ -98,15 +91,15 @@ const styleFunction = (feature, resolution, targetId, showSelected) => {
             fill: new Fill({
               color: resColor.color,
             }),
-            stroke: munimap_markerStyle.BUILDING_STROKE,
+            stroke: munimap_style_constants.MARKER_BUILDING_STROKE,
           });
           munimap_markerStyle.WHITE_TO_GREY_CACHE[resColor.resolution] = result;
         }
       } else {
-        result = getNoGeometryStyle();
+        result = munimap_style_constants.MARKER_BUILDING_NO_GEOMETRY;
       }
     } else {
-      result = STYLE;
+      result = munimap_style_constants.BUILDING_STYLE;
     }
   } else {
     if (munimap_building.hasInnerGeometry(feature)) {
@@ -117,12 +110,12 @@ const styleFunction = (feature, resolution, targetId, showSelected) => {
           fill: new Fill({
             color: resColor.color,
           }),
-          stroke: STROKE,
+          stroke: munimap_style_constants.BUILDING_STROKE,
         });
         WHITE_TO_GREY_CACHE[resColor.resolution] = result;
       }
     } else {
-      result = getNoGeometryStyle();
+      result = munimap_style_constants.BUILDING_NO_GEOMETRY;
     }
   }
 
@@ -165,7 +158,7 @@ const defaultLabelFunction = (feature, resolution, extent, lang) => {
       extent
     ),
     text: new Text({
-      font: 'bold ' + FONT_SIZE + 'px arial',
+      font: 'bold ' + munimap_style_constants.BUILDING_FONT_SIZE + 'px arial',
       fill: munimap_style_constants.TEXT_FILL,
       stroke: munimap_style_constants.TEXT_STROKE,
       text: title,
@@ -212,7 +205,7 @@ const smallScaleLabelFunction = (feature, resolution, extent, lang) => {
         );
         const options = {
           fill: munimap_style_constants.TEXT_FILL,
-          fontSize: FONT_SIZE,
+          fontSize: munimap_style_constants.BUILDING_FONT_SIZE,
           geometry: geometryFunction,
           title: title,
         };
@@ -254,7 +247,7 @@ const largeScaleLabelFunction = (feature, resolution, extent, lang) => {
     if (units.length > 0) {
       const options = {
         fill: munimap_style_constants.TEXT_FILL,
-        fontSize: FONT_SIZE,
+        fontSize: munimap_style_constants.BUILDING_FONT_SIZE,
         geometry: geometryFunction,
         title: title,
       };
@@ -263,7 +256,10 @@ const largeScaleLabelFunction = (feature, resolution, extent, lang) => {
       result = new Style({
         geometry: geometryFunction,
         text: new Text({
-          font: 'bold ' + BIG_FONT_SIZE + 'px arial',
+          font:
+            'bold ' +
+            munimap_style_constants.BUILDING_BIG_FONT_SIZE +
+            'px arial',
           fill: munimap_style_constants.TEXT_FILL,
           stroke: munimap_style_constants.TEXT_STROKE,
           text: title,

@@ -4,10 +4,10 @@
 
 import * as munimap_assert from '../assert/assert.js';
 import VectorLayer from 'ol/layer/Vector';
-import {ACTIVE_LAYER_ID} from './poi.constants.js';
+import {ACTIVE_POI_LAYER_ID} from './_constants.js';
 import {RESOLUTION, getType} from '../feature/poi.constants.js';
 import {featureClickHandler, isClickable} from '../feature/poi.js';
-import {getActiveStore as getActivePoiStore} from '../source/poi.constants.js';
+import {getActivePoiStore} from '../source/_constants.js';
 
 /**
  * @typedef {import("ol/Map").default} ol.Map
@@ -20,7 +20,7 @@ import {getActiveStore as getActivePoiStore} from '../source/poi.constants.js';
  * @return {boolean} whether is active layer
  */
 const isActiveLayer = function (layer) {
-  return layer.get('id') === ACTIVE_LAYER_ID;
+  return layer.get('id') === ACTIVE_POI_LAYER_ID;
 };
 
 /**
@@ -43,7 +43,7 @@ const getActiveLayer = function (map) {
 const createActive = (targetId) => {
   const layer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
-      id: ACTIVE_LAYER_ID,
+      id: ACTIVE_POI_LAYER_ID,
       isFeatureClickable: isClickable,
       featureClickHandler: featureClickHandler,
       type: getType(),

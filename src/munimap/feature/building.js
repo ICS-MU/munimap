@@ -19,8 +19,7 @@ import {
 import {RESOLUTION as COMPLEX_RESOLUTION} from './complex.constants.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from './floor.constants.js';
 import {alignTextToRows} from '../style/_constants.js';
-import {getStore as getBuildingStore} from '../source/building.constants.js';
-import {getStore as getMarkerStore} from '../source/marker.js';
+import {getBuildingStore, getMarkerStore} from '../source/_constants.js';
 import {isDoor} from './door.constants.js';
 import {isRoom} from './room.constants.js';
 

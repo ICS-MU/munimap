@@ -5,7 +5,7 @@ import * as munimap_utils from '../utils/utils.js';
 import VectorSource from 'ol/source/Vector';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
 import {loadActivePois} from '../load.js';
-import {setActiveStore, setStore} from './poi.constants.js';
+import {setActivePoiStore, setPoiStore} from './_constants.js';
 import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
 
 /**
@@ -19,7 +19,7 @@ import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
  */
 const createStore = (targetId) => {
   const store = new VectorSource();
-  setStore(targetId, store);
+  setPoiStore(targetId, store);
   return store;
 };
 
@@ -39,7 +39,7 @@ const createActiveStore = (store, targetId, callback) => {
     ),
     loader: munimap_utils.partial(loadActivePois, {store, callback}),
   });
-  setActiveStore(targetId, poiStore);
+  setActivePoiStore(targetId, poiStore);
   return poiStore;
 };
 

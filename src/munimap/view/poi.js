@@ -5,7 +5,7 @@ import * as munimap_range from '../utils/range.js';
 import * as slctr from '../redux/selector.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {INITIAL_STATE} from '../conf.js';
-import {getActiveStore as getActivePoiStore} from '../source/poi.constants.js';
+import {getActivePoiStore} from '../source/_constants.js';
 import {getAnimationRequestParams} from '../utils/animation.js';
 
 /**

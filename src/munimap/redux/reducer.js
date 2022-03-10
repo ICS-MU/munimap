@@ -6,23 +6,20 @@ import * as munimap_identify from '../identify/identify.js';
 import * as munimap_load from '../load.js';
 import * as munimap_range from '../utils/range.js';
 import * as slctr from './selector.js';
+import * as srcs from '../source/_constants.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {INITIAL_STATE} from '../conf.js';
 import {ROOM_TYPES} from '../feature/room.constants.js';
-import {getActiveStore as getActiveRoomStore} from '../source/room.constants.js';
 import {getAnimationRequest as getBuildingAnimationRequest} from '../view/building.js';
-import {getStore as getBuildingStore} from '../source/building.constants.js';
 import {getAnimationRequest as getClusterAnimationRequest} from '../view/cluster.js';
 import {getAnimationRequest as getComplexAnimationRequest} from '../view/complex.js';
 import {getFeaturesTimestamps} from '../utils/reducer.js';
 import {getAnimationRequest as getGeolocationAnimationRequest} from '../view/geolocation.js';
 import {getAnimationRequest as getMarkerAnimationRequest} from '../view/marker.js';
 import {getFloorCode as getMarkerFloorCode} from '../feature/marker.js';
-import {getStore as getMarkerStore} from '../source/marker.js';
 import {getAnimationRequest as getPoiAnimationRequest} from '../view/poi.js';
 import {getPopupFeatureUid} from '../cluster/cluster.js';
 import {getAnimationRequest as getPubTranAnimationRequest} from '../view/pubtran.stop.js';
-import {getStore as getPubTranStore} from '../source/pubtran.stop.constants.js';
 import {getUid} from 'ol';
 import {handleDoorClick} from '../feature/door.js';
 import {handleMapViewChange} from '../view/view.js';
@@ -59,7 +56,7 @@ const handleMarkerLocationCode = (
   const featureUid = payload.featureUid;
   const pixelInCoords = payload.pixelInCoords;
   const targetId = slctr.getTargetId(state);
-  const feature = getMarkerStore(targetId).getFeatureByUid(featureUid);
+  const feature = srcs.getMarkerStore(targetId).getFeatureByUid(featureUid);
   const isIdentifyAllowed =
     slctr.isIdentifyEnabled(state) &&
     munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
@@ -90,7 +87,7 @@ const handleRoomLocationCode = (
   const featureUid = payload.featureUid;
   const pixelInCoords = payload.pixelInCoords;
   const targetId = slctr.getTargetId(state);
-  const feature = getActiveRoomStore(targetId).getFeatureByUid(featureUid);
+  const feature = srcs.getActiveRoomStore(targetId).getFeatureByUid(featureUid);
   const isIdentifyAllowed =
     slctr.isIdentifyEnabled(state) &&
     munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
@@ -115,7 +112,7 @@ const handleIdentifyCallback = (state, payload, asyncDispatch) => {
   const featureUid = payload.featureUid;
   const pixelInCoords = payload.pixelInCoords;
   const targetId = slctr.getTargetId(state);
-  const feature = getBuildingStore(targetId).getFeatureByUid(featureUid);
+  const feature = srcs.getBuildingStore(targetId).getFeatureByUid(featureUid);
   munimap_identify.handleCallback(
     slctr.getIdentifyCallback(state),
     asyncDispatch,
@@ -389,9 +386,9 @@ const createReducer = (initialState) => {
 
       //BUILDING_CLICKED
       case actions.BUILDING_CLICKED:
-        feature = getBuildingStore(slctr.getTargetId(state)).getFeatureByUid(
-          action.payload.featureUid
-        );
+        feature = srcs
+          .getBuildingStore(slctr.getTargetId(state))
+          .getFeatureByUid(action.payload.featureUid);
         isVisible = munimap_range.contains(FLOOR_RESOLUTION, state.resolution);
         isIdentifyAllowed =
           slctr.isIdentifyEnabled(state) &&
@@ -464,9 +461,9 @@ const createReducer = (initialState) => {
 
       //MARKER_CLICKED
       case actions.MARKER_CLICKED:
-        feature = getMarkerStore(slctr.getTargetId(state)).getFeatureByUid(
-          action.payload.featureUid
-        );
+        feature = srcs
+          .getMarkerStore(slctr.getTargetId(state))
+          .getFeatureByUid(action.payload.featureUid);
         animationRequest = getMarkerAnimationRequest(state, action.payload);
         uid = !!feature.get('detail') && getUid(feature);
 
@@ -502,9 +499,9 @@ const createReducer = (initialState) => {
 
       //PUBTRAN_CLICKED
       case actions.PUBTRAN_CLICKED:
-        feature = getPubTranStore(slctr.getTargetId(state)).getFeatureByUid(
-          action.payload.featureUid
-        );
+        feature = srcs
+          .getPubTranStore(slctr.getTargetId(state))
+          .getFeatureByUid(action.payload.featureUid);
         animationRequest = getPubTranAnimationRequest({
           featureUid: action.payload.featureUid,
           ...getViewOptions(state),
@@ -522,9 +519,9 @@ const createReducer = (initialState) => {
 
       //ROOM_CLICKED
       case actions.ROOM_CLICKED:
-        feature = getActiveRoomStore(slctr.getTargetId(state)).getFeatureByUid(
-          action.payload.featureUid
-        );
+        feature = srcs
+          .getActiveRoomStore(slctr.getTargetId(state))
+          .getFeatureByUid(action.payload.featureUid);
         locationCode = feature.get('polohKod')
           ? feature.get('polohKod').substring(0, 8)
           : null;

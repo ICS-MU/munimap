@@ -7,7 +7,7 @@ import * as munimap_building from './building.js';
 import * as munimap_range from '../utils/range.js';
 import {RESOLUTION as DOOR_RESOLUTION} from './door.constants.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from './floor.constants.js';
-import {getStore as getMarkerStore} from '../source/marker.js';
+import {getMarkerStore} from '../source/_constants.js';
 import {isCustom as isCustomMarker} from './marker.custom.js';
 import {isDoor} from './door.constants.js';
 import {isRoom} from './room.constants.js';

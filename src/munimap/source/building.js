@@ -7,7 +7,7 @@ import VectorSource from 'ol/source/Vector';
 import {getType as getBuildingType} from '../feature/building.constants.js';
 import {tile as ol_loadingstrategy_tile} from 'ol/loadingstrategy';
 import {createXYZ as ol_tilegrid_createXYZ} from 'ol/tilegrid';
-import {setStore} from './building.constants.js';
+import {setBuildingStore} from './_constants.js';
 
 /**
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
@@ -41,7 +41,7 @@ const createStore = (targetId, callback) => {
       callback: callback,
     })
   );
-  setStore(targetId, buildingStore);
+  setBuildingStore(targetId, buildingStore);
   return buildingStore;
 };
 

@@ -3,13 +3,13 @@
  */
 import * as munimap_assert from '../assert/assert.js';
 import VectorLayer from 'ol/layer/Vector';
-import {ACTIVE_LAYER_ID} from './door.constants.js';
+import {ACTIVE_DOOR_LAYER_ID} from './_constants.js';
 import {
   RESOLUTION as DOOR_RESOLUTION,
   getType,
 } from '../feature/door.constants.js';
 import {featureClickHandler, isClickable} from '../feature/door.js';
-import {getActiveStore as getActiveDoorStore} from '../source/door.constants.js';
+import {getActiveDoorStore} from '../source/_constants.js';
 
 /**
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
@@ -22,7 +22,7 @@ import {getActiveStore as getActiveDoorStore} from '../source/door.constants.js'
  * @return {boolean} whether is active layer
  */
 const isActiveLayer = (layer) => {
-  return layer.get('id') === ACTIVE_LAYER_ID;
+  return layer.get('id') === ACTIVE_DOOR_LAYER_ID;
 };
 
 /**
@@ -45,7 +45,7 @@ const getActiveLayer = (map) => {
 const createActive = (targetId) => {
   const layer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
-      id: ACTIVE_LAYER_ID,
+      id: ACTIVE_DOOR_LAYER_ID,
       isFeatureClickable: isClickable,
       featureClickHandler: featureClickHandler,
       type: getType(),

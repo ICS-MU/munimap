@@ -7,6 +7,7 @@ import * as munimap_building from './feature/building.constants.js';
 import * as munimap_complex from './feature/complex.js';
 import * as munimap_utils from './utils/utils.js';
 import * as slctr from './redux/selector.js';
+import * as srcs from './source/_constants.js';
 import VectorSource from 'ol/source/Vector';
 import {EsriJSON} from 'ol/format';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.constants.js';
@@ -33,39 +34,19 @@ import {
   createZoomToStringsArray,
 } from './utils/param.js';
 import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
-import {
-  getActiveStore as getActiveDoorStore,
-  getStore as getDoorStore,
-} from './source/door.constants.js';
-import {
-  getActiveStore as getActivePoiStore,
-  getStore as getPoiStore,
-} from './source/poi.constants.js';
-import {
-  getActiveStore as getActiveRoomStore,
-  getDefaultStore as getDefaultRoomStore,
-  getStore as getRoomStore,
-} from './source/room.constants.js';
 import {getByCode as getBldgByCode} from './feature/building.js';
 import {getType as getBldgType} from './feature/building.constants.js';
-import {getStore as getBuildingStore} from './source/building.constants.js';
-import {getStore as getClusterStore} from './source/cluster.js';
-import {getStore as getComplexStore} from './source/complex.js';
 import {getType as getDoorType} from './feature/door.constants.js';
 import {getFloorLayerIdByCode} from './feature/floor.js';
-import {getStore as getFloorStore} from './source/floor.js';
 import {getType as getFloorType} from './feature/floor.constants.js';
 import {getGeometryCenter} from './utils/geom.js';
 import {getLoadedTypes} from './utils/reducer.js';
-import {getStore as getMarkerStore} from './source/marker.js';
 import {getNotYetAddedFeatures} from './utils/store.js';
-import {getStore as getOptPoiStore} from './source/optpoi.js';
 import {
   getType as getOptPoiType,
   isCtgUid as isOptPoiCtgUid,
 } from './feature/optpoi.constants.js';
 import {getType as getPoiType} from './feature/poi.constants.js';
-import {getStore as getUnitStore} from './source/unit.js';
 import {getType as getUnitType} from './feature/unit.constants.js';
 import {isCustom} from './feature/marker.custom.js';
 import {
@@ -536,7 +517,7 @@ const featuresByCode = async (options) => {
  */
 const complexByIds = async (targetId, options) => {
   return features({
-    source: getComplexStore(targetId),
+    source: srcs.getComplexStore(targetId),
     type: munimap_complex.getType(),
     method: 'POST',
     returnGeometry: true,
@@ -594,7 +575,7 @@ const pubtranFeaturesForMap = async (options, extent, resolution, projection) =>
  */
 const loadUnits = async (targetId, where) => {
   return features({
-    source: getUnitStore(targetId),
+    source: srcs.getUnitStore(targetId),
     type: getUnitType(),
     method: 'POST',
     returnGeometry: false,
@@ -756,7 +737,7 @@ const buildingsByCode = async (targetId, options) => {
   return featuresByCode({
     codes: options.codes,
     type: getBldgType(),
-    source: getBuildingStore(targetId),
+    source: srcs.getBuildingStore(targetId),
     likeExprs: options.likeExprs,
     processor: munimap_utils.partial(buildingLoadProcessor, targetId),
   });
@@ -772,7 +753,7 @@ const roomsByCode = async (targetId, options) => {
   return featuresByCode({
     codes: options.codes,
     type: getRoomType(),
-    source: getRoomStore(targetId),
+    source: srcs.getRoomStore(targetId),
     likeExprs: options.likeExprs,
   });
 };
@@ -788,7 +769,7 @@ const doorsByCode = async (targetId, options) => {
     codes: options.codes,
     likeExprs: options.likeExprs,
     type: getDoorType(),
-    source: getDoorStore(targetId),
+    source: srcs.getDoorStore(targetId),
   });
 };
 
@@ -800,7 +781,7 @@ const doorsByCode = async (targetId, options) => {
  */
 const loadFloors = (targetId, where) => {
   return features({
-    source: getFloorStore(targetId),
+    source: srcs.getFloorStore(targetId),
     type: getFloorType(),
     returnGeometry: false,
     where: where,
@@ -896,7 +877,7 @@ const loadDefaultRooms = async (
   projection
 ) => {
   const rooms = await featuresForMap(options, extent, resolution, projection);
-  const defaultRoomStore = getDefaultRoomStore(targetId);
+  const defaultRoomStore = srcs.getDefaultRoomStore(targetId);
   const roomsToAdd = getNotYetAddedFeatures(defaultRoomStore, rooms);
   defaultRoomStore.addFeatures(roomsToAdd);
 
@@ -929,13 +910,13 @@ const loadActiveRooms = async (
     );
     where = conditions.join(' OR ');
     const opts = {
-      source: getRoomStore(targetId),
+      source: srcs.getRoomStore(targetId),
       type: getRoomType(),
       where: where,
       method: 'POST',
     };
     const rooms = await featuresForMap(opts, extent, resolution, projection);
-    const activeStore = getActiveRoomStore(targetId);
+    const activeStore = srcs.getActiveRoomStore(targetId);
     munimap_assert.assertInstanceof(activeStore, VectorSource);
     const roomsFromActiveFloor = rooms.filter((room) =>
       activeFloorCodes.includes(room.get('polohKod').substring(0, 8))
@@ -974,13 +955,13 @@ const loadActiveDoors = async (
     );
     where = conditions.join(' OR ');
     const opts = {
-      source: getDoorStore(targetId),
+      source: srcs.getDoorStore(targetId),
       type: getDoorType(),
       where: where,
       method: 'POST',
     };
     const doors = await featuresForMap(opts, extent, resolution, projection);
-    const activeStore = getActiveDoorStore(targetId);
+    const activeStore = srcs.getActiveDoorStore(targetId);
     const doorsFromActiveFloor = doors.filter((door) =>
       activeFloorCodes.includes(door.get('polohKodPodlazi'))
     );
@@ -1027,12 +1008,12 @@ const loadActivePois = async (
   where = '(' + where + ') AND volitelny = 0';
   const opts = {
     type: getPoiType(),
-    source: getPoiStore(targetId),
+    source: srcs.getPoiStore(targetId),
     where: where,
     method: 'POST',
   };
   const pois = await featuresForMap(opts, extent, resolution, projection);
-  const activeStore = getActivePoiStore(targetId);
+  const activeStore = srcs.getActivePoiStore(targetId);
   const poisToAdd = getNotYetAddedFeatures(activeStore, pois);
   activeStore.addFeatures(poisToAdd);
 
@@ -1066,7 +1047,7 @@ const loadOptPois = (targetId, options) => {
     where += ` AND poznamka IN ('${poiFilter.join("', '")}')`;
   }
   const opts = {
-    source: getOptPoiStore(targetId),
+    source: srcs.getOptPoiStore(targetId),
     type: getOptPoiType(),
     where: where,
     method: 'POST',
@@ -1202,15 +1183,15 @@ const clearAndLoadMarkers = (
   requiredMarkers,
   asyncDispatch
 ) => {
-  getMarkerStore(targetId).clear();
-  getOptPoiStore(targetId).clear();
-  getClusterStore(targetId).clear();
+  srcs.getMarkerStore(targetId).clear();
+  srcs.getOptPoiStore(targetId).clear();
+  srcs.getClusterStore(targetId).clear();
 
   const markerStrings = createMarkerStringsArray(requiredMarkers);
   loadOrDecorateMarkers(markerStrings, newState.requiredOpts).then((res) => {
     munimap_assert.assertMarkerFeatures(res);
     const loadedTypes = getLoadedTypes(res, requiredMarkers);
-    getMarkerStore(targetId).addFeatures(res);
+    srcs.getMarkerStore(targetId).addFeatures(res);
     const hasCustom = res.length && res.some((el) => isCustom(el));
     asyncDispatch(actions.markers_loaded(hasCustom, loadedTypes));
   });

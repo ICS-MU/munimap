@@ -4,7 +4,7 @@
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_cluster from '../cluster/cluster.js';
 import VectorLayer from 'ol/layer/Vector';
-import {LAYER_ID} from './cluster.constants.js';
+import {CLUSTER_LAYER_ID} from './_constants.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {createStore as createClusterStore} from '../source/cluster.js';
 import {updateClusteredFeatures} from '../view/cluster.js';
@@ -22,7 +22,7 @@ import {updateClusteredFeatures} from '../view/cluster.js';
  * @param {ol.layer.Base} layer layer
  * @return {boolean} whether is layer
  */
-const isLayer = (layer) => layer.get('id') === LAYER_ID;
+const isLayer = (layer) => layer.get('id') === CLUSTER_LAYER_ID;
 
 /**
  * @param {ol.Map} map map
@@ -55,7 +55,7 @@ const create = (map, options) => {
 
   const markerClusterLayer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
-      id: LAYER_ID,
+      id: CLUSTER_LAYER_ID,
       isFeatureClickable: munimap_cluster.isClickable,
       featureClickHandler: munimap_cluster.featureClickHandler,
       source: markerClusterSrc,

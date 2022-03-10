@@ -7,7 +7,7 @@ import * as munimap_utils from '../utils/utils.js';
 import {Feature} from 'ol';
 import {IdentifyTypes} from './_constants.js';
 import {Point} from 'ol/geom';
-import {getStore} from '../source/identify.js';
+import {getIdentifyStore} from '../source/_constants.js';
 import {isBuilding} from '../feature/building.js';
 import {isDef} from '../utils/utils.js';
 import {isDoor} from '../feature/door.constants.js';
@@ -167,7 +167,7 @@ const handleCallback = (callback, asyncDispatch, targetId, opt_options) => {
     );
 
     if (callbackResult) {
-      const store = getStore(targetId);
+      const store = getIdentifyStore(targetId);
       store.once('addfeature', () =>
         asyncDispatch(actions.identifyFeatureChanged())
       );
@@ -177,7 +177,7 @@ const handleCallback = (callback, asyncDispatch, targetId, opt_options) => {
     }
   } else {
     const params = createParamForCallback();
-    const store = getStore(targetId);
+    const store = getIdentifyStore(targetId);
     callback(params);
 
     store.once('clear', () => asyncDispatch(actions.identifyFeatureChanged()));
@@ -191,7 +191,7 @@ const handleCallback = (callback, asyncDispatch, targetId, opt_options) => {
  * @return {boolean|undefined} result
  */
 const inSameFloorAsSelected = (targetId, selectedFeature) => {
-  const features = getStore(targetId).getFeatures();
+  const features = getIdentifyStore(targetId).getFeatures();
   if (features && features.length > 0) {
     const pointFeature = features[0];
     const code = getLocationCode(pointFeature);

@@ -4,21 +4,26 @@
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
-import {FONT_SIZE, SMALL_FONT_SIZE, STROKE, STYLE} from './room.constants.js';
 import {Fill, Style, Text} from 'ol/style';
+import {
+  MARKER_ROOM_STYLE,
+  ROOM_BIG_LABEL_RESOLUTION,
+  ROOM_FONT_SIZE,
+  ROOM_SMALL_FONT_SIZE,
+  ROOM_STROKE,
+  ROOM_STYLE,
+  TEXT_FILL,
+  TEXT_STROKE,
+} from './_constants.js';
 import {
   ICON_HEIGHT as POI_ICON_HEIGHT,
   Resolutions as PoiResolutions,
-} from '../style/poi.js';
+} from '../style/_constants.poi.js';
 import {PURPOSE as POI_PURPOSE} from '../feature/poi.constants.js';
 import {LABEL_CACHE as STYLE_LABEL_CACHE, getLabelHeight} from './style.js';
-import {TEXT_FILL, TEXT_STROKE} from './_constants.js';
 import {getDefaultLabel} from '../feature/room.js';
-import {
-  getCorridor as getMarkerCorridorStyle,
-  getRoom as getMarkerRoomStyle,
-} from './marker.js';
-import {getStore as getMarkerStore} from '../source/marker.js';
+import {getCorridor as getMarkerCorridorStyle} from './marker.js';
+import {getMarkerStore} from '../source/_constants.js';
 import {getUid} from '../utils/store.js';
 
 /**
@@ -35,12 +40,6 @@ import {getUid} from '../utils/store.js';
  * @property {boolean} requiredLocationCodes requiredLocationCodes
  * @property {string} selectedFloorCode selectedFloorCode
  */
-
-/**
- * @type {import('../utils/range.js').RangeInterface}
- * @const
- */
-const BIG_LABEL_RESOLUTION = munimap_range.createResolution(0, 0.15);
 
 /**
  * @type {string}
@@ -150,8 +149,8 @@ const setCorridorStyle = (event) => {
         }),
         zIndex: 1,
       });
-      CORRIDOR = [corridorBackground, corridorStyle, STROKE];
-      STAIRCASE = [staircaseBackground, corridorStyle, STROKE];
+      CORRIDOR = [corridorBackground, corridorStyle, ROOM_STROKE];
+      STAIRCASE = [staircaseBackground, corridorStyle, ROOM_STROKE];
     };
   }
 };
@@ -201,13 +200,13 @@ const getStyle = (feature, marked) => {
   const purposeGroup = feature.get('ucel_skupina_nazev');
   const purpose = /** @type {string} */ (feature.get('ucel_nazev'));
   const purposeGis = feature.get('ucel_gis');
-  let result = marked ? getMarkerRoomStyle() : STYLE;
+  let result = marked ? MARKER_ROOM_STYLE : ROOM_STYLE;
 
   switch (purposeGroup) {
     case 'komunikace obecně':
       if (PURPOSES_TO_OMIT.indexOf(purpose) === -1) {
         if (purpose === 'schodiště') {
-          result = marked ? getMarkerRoomStyle() : STAIRCASE;
+          result = marked ? MARKER_ROOM_STYLE : STAIRCASE;
         } else {
           result = marked ? getMarkerCorridorStyle() : CORRIDOR;
         }
@@ -249,7 +248,10 @@ const labelFunction = (
 ) => {
   let result = [];
   const marked = getMarkerStore(targetId).getFeatures().indexOf(feature) >= 0;
-  const labelCache = munimap_range.contains(BIG_LABEL_RESOLUTION, resolution)
+  const labelCache = munimap_range.contains(
+    ROOM_BIG_LABEL_RESOLUTION,
+    resolution
+  )
     ? LABEL_CACHE
     : STYLE_LABEL_CACHE;
 
@@ -262,9 +264,12 @@ const labelFunction = (
       let title;
       let offset;
       const purposeGis = /**@type {string}*/ (feature.get('ucel_gis'));
-      const fontSize = munimap_range.contains(BIG_LABEL_RESOLUTION, resolution)
-        ? FONT_SIZE
-        : SMALL_FONT_SIZE;
+      const fontSize = munimap_range.contains(
+        ROOM_BIG_LABEL_RESOLUTION,
+        resolution
+      )
+        ? ROOM_FONT_SIZE
+        : ROOM_SMALL_FONT_SIZE;
       const textFont = 'bold ' + fontSize + 'px arial';
 
       if (showLocationCodes) {

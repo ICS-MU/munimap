@@ -2,24 +2,14 @@
  * @module source/source
  */
 import * as munimap_utils from '../utils/utils.js';
+import * as srcs from './_constants.js';
 import {GeoJSON} from 'ol/format';
 import {MultiPolygon, Polygon} from 'ol/geom';
 import {REQUIRED_CUSTOM_MARKERS} from '../create.constants.js';
 import {featureExtentIntersect} from '../utils/geom.js';
-import {
-  getActiveStore as getActiveDoorStore,
-  getStore as getDoorStore,
-} from './door.constants.js';
-import {getActiveStore as getActivePoiStore} from './poi.constants.js';
-import {
-  getActiveStore as getActiveRoomStore,
-  getStore as getRoomStore,
-} from './room.constants.js';
-import {getStore as getBuildingStore} from './building.constants.js';
 import {getType as getBuildingType} from '../feature/building.constants.js';
 import {getType as getDoorType} from '../feature/door.constants.js';
-import {getStore as getOptPoiStore} from './optpoi.js';
-import {getStore as getPubTranStore} from './pubtran.stop.constants.js';
+import {getOptPoiStore} from './_constants.js';
 import {
   getType as getRoomType,
   isCode as isRoomCode,
@@ -44,9 +34,9 @@ import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.constants.js';
  * @param {string} targetId targetId
  */
 const refreshFloorBasedStores = (targetId) => {
-  getActiveRoomStore(targetId).refresh();
-  getActiveDoorStore(targetId).refresh();
-  getActivePoiStore(targetId).refresh();
+  srcs.getActiveRoomStore(targetId).refresh();
+  srcs.getActiveDoorStore(targetId).refresh();
+  srcs.getActivePoiStore(targetId).refresh();
 };
 
 /**
@@ -54,8 +44,8 @@ const refreshFloorBasedStores = (targetId) => {
  * @param {string} targetId targetId
  */
 const clearFloorBasedStores = (targetId) => {
-  getActiveRoomStore(targetId).clear();
-  getActiveDoorStore(targetId).clear();
+  srcs.getActiveRoomStore(targetId).clear();
+  srcs.getActiveDoorStore(targetId).clear();
 };
 
 /**
@@ -65,11 +55,11 @@ const clearFloorBasedStores = (targetId) => {
  */
 const getFeaturesByIds = (targetId, requiredMarkerIds) => {
   const buildingType = getBuildingType();
-  const buildings = getBuildingStore(targetId).getFeatures();
+  const buildings = srcs.getBuildingStore(targetId).getFeatures();
   const roomType = getRoomType();
-  const rooms = getRoomStore(targetId).getFeatures();
+  const rooms = srcs.getRoomStore(targetId).getFeatures();
   const doorType = getDoorType();
-  const doors = getDoorStore(targetId).getFeatures();
+  const doors = srcs.getDoorStore(targetId).getFeatures();
   const optPois = getOptPoiStore(targetId).getFeatures();
   const result = requiredMarkerIds.map((initMarkerId) => {
     if (REQUIRED_CUSTOM_MARKERS[initMarkerId]) {
@@ -110,11 +100,11 @@ const getFeaturesByIds = (targetId, requiredMarkerIds) => {
  */
 const getZoomToFeatures = (targetId, initZoomTos) => {
   const buildingType = getBuildingType();
-  const buildings = getBuildingStore(targetId).getFeatures();
+  const buildings = srcs.getBuildingStore(targetId).getFeatures();
   const roomType = getRoomType();
-  const rooms = getRoomStore(targetId).getFeatures();
+  const rooms = srcs.getRoomStore(targetId).getFeatures();
   const doorType = getDoorType();
-  const doors = getDoorStore(targetId).getFeatures();
+  const doors = srcs.getDoorStore(targetId).getFeatures();
   return /**@type {Array<string>}*/ (initZoomTos).map((initZoomTo) => {
     if (isRoomCode(initZoomTo)) {
       return rooms.find((room) => {
@@ -139,10 +129,10 @@ const getZoomToFeatures = (targetId, initZoomTos) => {
  */
 const getPopupFeatureByUid = (targetId, uid) => {
   const suitableStores = [
-    getBuildingStore(targetId),
-    getRoomStore(targetId),
-    getDoorStore(targetId),
-    getPubTranStore(targetId),
+    srcs.getBuildingStore(targetId),
+    srcs.getRoomStore(targetId),
+    srcs.getDoorStore(targetId),
+    srcs.getPubTranStore(targetId),
   ];
 
   let feature = null;
@@ -172,7 +162,7 @@ const getLargestInExtent = (store, extent) => {
   let maxArea;
   const format = new GeoJSON();
   store.forEachFeatureIntersectingExtent(extent, (f) => {
-    if (hasInnerGeometry(f)) {
+    if (hasInnerGeometry(f)) { //opravit
       const intersect = featureExtentIntersect(f, extent, format);
       const geom = intersect.getGeometry();
       if (geom instanceof Polygon || geom instanceof MultiPolygon) {

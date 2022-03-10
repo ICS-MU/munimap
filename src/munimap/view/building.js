@@ -7,8 +7,8 @@ import * as slctr from '../redux/selector.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {INITIAL_STATE} from '../conf.js';
 import {getAnimationRequestParams} from '../utils/animation.js';
+import {getBuildingStore} from '../source/_constants.js';
 import {getClosestPointToPixel} from '../feature/feature.js';
-import {getStore} from '../source/building.constants.js';
 
 /**
  * @typedef {import("../conf.js").State} State
@@ -26,7 +26,7 @@ const getAnimationRequest = (state, options) => {
   const pixelInCoords = options.pixelInCoords;
   const extent = slctr.getExtent(state);
   const targetId = slctr.getTargetId(state);
-  const feature = getStore(targetId).getFeatureByUid(featureUid);
+  const feature = getBuildingStore(targetId).getFeatureByUid(featureUid);
   const isVisible = munimap_range.contains(FLOOR_RESOLUTION, state.resolution);
   const isIdentifyAllowed =
     slctr.isIdentifyEnabled(state) &&

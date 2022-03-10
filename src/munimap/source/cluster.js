@@ -16,6 +16,7 @@ import {
 } from 'ol/extent';
 import {getUid} from 'ol/util';
 import {isMarker} from '../feature/marker.js';
+import {setClusterStore} from './_constants.js';
 
 /**
  * @typedef {import("ol/source/Cluster").Options} ClusterSourceOptions
@@ -117,11 +118,6 @@ const clusterCompareFn = (targetId, lang, f1, f2) => {
 };
 
 /**
- * @type {Object<string, EnhancedClusterSource>}
- */
-const CLUSTER_STORES = {};
-
-/**
  * Create store for clusters.
  * @param {Array<ol.Feature>} clusterFeatures features
  * @param {string} targetId targetId
@@ -148,33 +144,8 @@ const createStore = (clusterFeatures, targetId, muAttrs, lang) => {
     },
     distance: 80,
   });
-  CLUSTER_STORES[targetId] = clusterStore;
+  setClusterStore(targetId, clusterStore);
   return clusterStore;
 };
 
-/**
- * Get cluster source.
- * @param {string} targetId targetId
- * @return {EnhancedClusterSource} store
- */
-const getStore = (targetId) => {
-  return CLUSTER_STORES[targetId];
-};
-
-/**
- * Get vector source from cluster. ClusterSource/EnhancedClusterSource has
- * this.source_ where VectorSource and features are stored.
- * @param {string} targetId targetId
- * @return {VectorSource} store
- */
-const getVectorStore = (targetId) => {
-  return CLUSTER_STORES[targetId].getSource();
-};
-
-export {
-  EnhancedClusterSource,
-  clusterCompareFn,
-  createStore,
-  getStore,
-  getVectorStore,
-};
+export {EnhancedClusterSource, clusterCompareFn, createStore};

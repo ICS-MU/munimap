@@ -2,7 +2,7 @@
  * @module view/room
  */
 import VectorLayer from 'ol/layer/Vector';
-import {STYLE} from '../style/door.js';
+import {DOOR_STYLE} from '../style/_constants.js';
 import {isActiveLayer} from '../layer/door.js';
 
 /**
@@ -20,7 +20,7 @@ const refreshActiveStyle = (layers) => {
   const lyr = layers.find((l) => isActiveLayer(l));
 
   if (lyr && lyr instanceof VectorLayer) {
-    const style = STYLE;
+    const style = DOOR_STYLE;
     if (style !== lyr.getStyle()) {
       lyr.setStyle(style);
     }

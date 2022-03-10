@@ -4,9 +4,9 @@
 
 import * as munimap_complex from '../feature/complex.js';
 import VectorLayer from 'ol/layer/Vector';
+import {COMPLEX_LAYER_ID} from './_constants.js';
 import {RESOLUTION as COMPLEX_RESOLUTION} from '../feature/complex.constants.js';
-import {LAYER_ID} from './complex.constants.js';
-import {getStore as getComplexStore} from '../source/complex.js';
+import {getComplexStore} from '../source/_constants.js';
 
 /**
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions
@@ -18,7 +18,7 @@ import {getStore as getComplexStore} from '../source/complex.js';
  * @return {boolean} isLayer
  */
 const isLayer = (layer) => {
-  return layer.get('id') === LAYER_ID;
+  return layer.get('id') === COMPLEX_LAYER_ID;
 };
 
 /**
@@ -28,7 +28,7 @@ const isLayer = (layer) => {
 const create = (targetId) => {
   return new VectorLayer(
     /**@type {VectorLayerOptions}*/ ({
-      id: LAYER_ID,
+      id: COMPLEX_LAYER_ID,
       isFeatureClickable: munimap_complex.isClickable,
       featureClickHandler: munimap_complex.featureClickHandler,
       type: munimap_complex.getType(),

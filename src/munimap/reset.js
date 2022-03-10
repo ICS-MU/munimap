@@ -13,11 +13,8 @@ import {
 } from './create.constants.js';
 import {INITIAL_STATE} from './conf.js';
 import {clearAndLoadMarkers, loadZoomTo} from './load.js';
-import {
-  createStore as createIdentifyStore,
-  getStore as getIdentifyStore,
-} from './source/identify.js';
-import {getStore as getMarkerStore} from './source/marker.js';
+import {createStore as createIdentifyStore} from './source/identify.js';
+import {getIdentifyStore, getMarkerStore} from './source/_constants.js';
 
 /**
  * @typedef {import("./conf.js").State} State

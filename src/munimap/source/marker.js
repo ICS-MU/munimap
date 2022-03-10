@@ -2,6 +2,7 @@
  * @module source/marker
  */
 import VectorSource from 'ol/source/Vector';
+import {getMarkerStore, setMarkerStore} from './_constants.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature
@@ -9,27 +10,14 @@ import VectorSource from 'ol/source/Vector';
  */
 
 /**
- * @type {Object<string, VectorSource>}
- */
-const MARKER_STORES = {};
-
-/**
  * Create store for markers.
  * @param {string} targetId targetId
  * @return {VectorSource} store
  */
 const createStore = (targetId) => {
-  MARKER_STORES[targetId] = new VectorSource();
-  return MARKER_STORES[targetId];
-};
-
-/**
- * Get markers source.
- * @param {string} targetId targetId
- * @return {VectorSource} store
- */
-const getStore = (targetId) => {
-  return MARKER_STORES[targetId];
+  const store = new VectorSource();
+  setMarkerStore(targetId, store);
+  return store;
 };
 
 /**
@@ -38,10 +26,10 @@ const getStore = (targetId) => {
  * @return {ol.Feature} marker
  */
 const getInExtent = (targetId, extent) => {
-  const markers = getStore(targetId).getFeatures();
+  const markers = getMarkerStore(targetId).getFeatures();
   return markers.find((f) =>
     f.getGeometry() ? f.getGeometry().intersectsExtent(extent) : null
   );
 };
 
-export {createStore, getInExtent, getStore};
+export {createStore, getInExtent};

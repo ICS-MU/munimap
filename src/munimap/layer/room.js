@@ -4,16 +4,13 @@
 import * as munimap_assert from '../assert/assert.js';
 import VectorLayer from 'ol/layer/Vector';
 import {
-  ACTIVE_LAYER_ID,
-  DEFAULT_LAYER_ID,
-  LABEL_LAYER_ID,
-} from './room.constants.js';
+  ACTIVE_ROOM_LAYER_ID,
+  ROOM_LABEL_LAYER_ID,
+  ROOM_LAYER_ID,
+} from './_constants.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {featureClickHandler, isClickable} from '../feature/room.js';
-import {
-  getActiveStore as getActiveRoomStore,
-  getDefaultStore as getDefaultRoomStore,
-} from '../source/room.constants.js';
+import {getActiveRoomStore, getDefaultRoomStore} from '../source/_constants.js';
 import {getType as getRoomType} from '../feature/room.constants.js';
 import {setCorridorStyle} from '../style/room.js';
 
@@ -27,7 +24,7 @@ import {setCorridorStyle} from '../style/room.js';
  * @param {ol.layer.Base} layer layer
  * @return {boolean} whether is default room layer
  */
-const isDefaultLayer = (layer) => layer.get('id') === DEFAULT_LAYER_ID;
+const isDefaultLayer = (layer) => layer.get('id') === ROOM_LAYER_ID;
 
 /**
  * @param {ol.Map} map map
@@ -47,7 +44,7 @@ const getDefaultLayer = (map) => {
  * @return {boolean} whether is active layer
  */
 const isActiveLayer = (layer) => {
-  return layer.get('id') === ACTIVE_LAYER_ID;
+  return layer.get('id') === ACTIVE_ROOM_LAYER_ID;
 };
 
 /**
@@ -67,7 +64,7 @@ const getActiveLayer = (map) => {
  * @param {ol.layer.Base} layer layer
  * @return {boolean} whether is label room layer
  */
-const isLabelLayer = (layer) => layer.get('id') === LABEL_LAYER_ID;
+const isLabelLayer = (layer) => layer.get('id') === ROOM_LABEL_LAYER_ID;
 
 /**
  * @param {string} targetId targetId
@@ -76,7 +73,7 @@ const isLabelLayer = (layer) => layer.get('id') === LABEL_LAYER_ID;
 const create = (targetId) => {
   const layer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
-      id: DEFAULT_LAYER_ID,
+      id: ROOM_LAYER_ID,
       type: getRoomType(),
       // refreshStyleOnFloorChange: true,
       maxResolution: FLOOR_RESOLUTION.max,
@@ -99,7 +96,7 @@ const create = (targetId) => {
 const createActive = (targetId) => {
   const layer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
-      id: ACTIVE_LAYER_ID,
+      id: ACTIVE_ROOM_LAYER_ID,
       isFeatureClickable: isClickable,
       featureClickHandler: featureClickHandler,
       type: getRoomType(),
@@ -123,7 +120,7 @@ const createLabel = (targetId, showLocationCodes) => {
   const maxResolution = showLocationCodes ? 0.13 : FLOOR_RESOLUTION.max;
   return new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
-      id: LABEL_LAYER_ID,
+      id: ROOM_LABEL_LAYER_ID,
       type: getRoomType(),
       // refreshStyleOnFloorChange: true,
       isFeatureClickable: isClickable,

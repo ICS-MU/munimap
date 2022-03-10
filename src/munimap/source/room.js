@@ -6,7 +6,11 @@ import VectorSource from 'ol/source/Vector';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
 import {getType as getRoomType} from '../feature/room.constants.js';
 import {loadActiveRooms, loadDefaultRooms} from '../load.js';
-import {setActiveStore, setDefaultStore, setStore} from './room.constants.js';
+import {
+  setActiveRoomStore,
+  setDefaultRoomStore,
+  setRoomStore,
+} from './_constants.js';
 import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
 
 /**
@@ -20,7 +24,7 @@ import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
  */
 const createStore = (targetId) => {
   const store = new VectorSource();
-  setStore(targetId, store);
+  setRoomStore(targetId, store);
   return store;
 };
 
@@ -46,7 +50,7 @@ const createDefaultStore = (targetId, callback) => {
       callback: callback,
     })
   );
-  setDefaultStore(targetId, defaultStore);
+  setDefaultRoomStore(targetId, defaultStore);
   return defaultStore;
 };
 
@@ -66,7 +70,7 @@ const createActiveStore = (store, targetId, callback) => {
     ),
     loader: munimap_utils.partial(loadActiveRooms, {store, callback}),
   });
-  setActiveStore(targetId, activeStore);
+  setActiveRoomStore(targetId, activeStore);
   return activeStore;
 };
 

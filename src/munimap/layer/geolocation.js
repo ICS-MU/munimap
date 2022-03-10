@@ -6,7 +6,7 @@ import Feature from 'ol/Feature';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import {Circle, Fill, Stroke, Style} from 'ol/style';
-import {LAYER_ID} from './geolocation.constants.js';
+import {GEOLOCATION_LAYER_ID} from './_constants.js';
 
 /**
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
@@ -17,7 +17,7 @@ import {LAYER_ID} from './geolocation.constants.js';
  * @return {boolean} isLayer
  */
 const isLayer = (layer) => {
-  return layer.get('id') === LAYER_ID;
+  return layer.get('id') === GEOLOCATION_LAYER_ID;
 };
 
 /**
@@ -45,7 +45,7 @@ const create = () => {
       features: [positionFeature],
     }),
   });
-  layer.set('id', LAYER_ID);
+  layer.set('id', GEOLOCATION_LAYER_ID);
   return layer;
 };
 

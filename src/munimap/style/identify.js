@@ -5,19 +5,19 @@ import * as munimap_assert from '../assert/assert.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
 import {
-  BIG_FONT_SIZE as BLDG_BIG_FONT_SIZE,
-  FONT_SIZE as BLDG_FONT_SIZE,
-} from './building.constants.js';
+  BUILDING_BIG_FONT_SIZE,
+  BUILDING_FONT_SIZE,
+  IDENTIFY_FILL,
+  ROOM_FONT_SIZE,
+} from './_constants.js';
 import {
   CENTER_GEOMETRY_FUNCTION,
   INTERSECT_CENTER_GEOMETRY_FUNCTION,
 } from '../utils/geom.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
-import {Fill} from 'ol/style';
-import {FONT_SIZE as ROOM_FONT_SIZE} from './room.constants.js';
 import {getDefaultLabel, getLabelWithPin} from './style.js';
 import {getIdentifiedFeature, getLocationCode} from '../identify/identify.js';
-import {getStore as getMarkerStore} from '../source/marker.js';
+import {getMarkerStore} from '../source/_constants.js';
 import {isBuilding} from '../feature/building.js';
 import {isDoor} from '../feature/door.constants.js';
 import {isRoom} from '../feature/room.constants.js';
@@ -38,14 +38,6 @@ import {isRoom} from '../feature/room.constants.js';
  * @property {LabelFunction} [markerLabel] marker label function
  * @property {ol.extent.Extent} [extent] extent
  */
-
-/**
- * @type {Fill}
- * @const
- */
-const IDENTIFY_FILL = new Fill({
-  color: '#eba01e',
-});
 
 /**
  * @param {ol.Feature} feature feature
@@ -76,9 +68,9 @@ const styleFunction = (feature, resolution, options) => {
     _isBuilding &&
     munimap_range.contains(FLOOR_RESOLUTION, resolution)
   ) {
-    fontSize = BLDG_BIG_FONT_SIZE;
+    fontSize = BUILDING_BIG_FONT_SIZE;
   } else {
-    fontSize = BLDG_FONT_SIZE;
+    fontSize = BUILDING_FONT_SIZE;
   }
 
   let title;

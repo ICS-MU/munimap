@@ -2,19 +2,15 @@
 /**
  * @module redux/selector
  */
+import * as lyr from '../layer/_constants.js';
 import * as munimap_floor from '../feature/floor.js';
 import * as munimap_identify from '../identify/identify.js';
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
 import * as ol_extent from 'ol/extent';
-import {
-  LABEL_LAYER_ID as BUILDING_LABEL_LAYER_ID,
-  LAYER_ID as BUILDING_LAYER_ID,
-} from '../layer/building.constants.js';
+import * as srcs from '../source/_constants.js';
 import {BUILDING_RESOLUTION, ROOM_RESOLUTION} from '../cluster/cluster.js';
-import {LAYER_ID as CLUSTER_LAYER_ID} from '../layer/cluster.constants.js';
-import {LAYER_ID as COMPLEX_LAYER_ID} from '../layer/complex.constants.js';
 import {ENABLE_SELECTOR_LOGS, INITIAL_STATE} from '../conf.js';
 import {FEATURE_TYPE_PROPERTY_NAME} from '../feature/feature.constants.js';
 import {
@@ -25,17 +21,9 @@ import {
   IDENTIFY_CALLBACK_STORE,
   MARKER_LABEL_STORE,
 } from '../create.constants.js';
-import {LAYER_ID as IDENTIFY_LAYER_ID} from '../layer/identify.constants.js';
-import {LAYER_ID as MARKER_LAYER_ID} from '../layer/marker.constants.js';
 import {RESOLUTION as MARKER_RESOLUTION} from '../feature/marker.constants.js';
 import {MultiPolygon, Polygon} from 'ol/geom';
-import {ACTIVE_LAYER_ID as POI_ACTIVE_LAYER_ID} from '../layer/poi.constants.js';
 import {RESOLUTION as PUBTRAN_RESOLUTION} from '../feature/pubtran.stop.constants.js';
-import {
-  ACTIVE_LAYER_ID as ROOM_ACTIVE_LAYER_ID,
-  LABEL_LAYER_ID as ROOM_LABEL_LAYER_ID,
-  DEFAULT_LAYER_ID as ROOM_LAYER_ID,
-} from '../layer/room.constants.js';
 import {defaults as control_defaults} from 'ol/control';
 import {createLayer as createBasemapLayer, getId} from '../layer/basemap.js';
 import {create as createMapView} from '../view/mapview.js';
@@ -60,7 +48,6 @@ import {
 } from '../style/building.js';
 import {getTitle as getBldgTitle, isInExtent} from '../feature/building.js';
 import {getBufferValue} from '../utils/extent.js';
-import {getStore as getBuildingStore} from '../source/building.constants.js';
 import {getStyleFunction as getClusterStyleFunction} from '../style/cluster.js';
 import {getStyleFunction as getCmplxStyleFunction} from '../style/complex.js';
 import {getDetailHtml} from '../feature/pubtran.stop.js';
@@ -70,7 +57,6 @@ import {
   getPopupFeatureByUid,
   getZoomToFeatures,
 } from '../source/source.js';
-import {getStore as getIdentifyStore} from '../source/identify.js';
 import {getStyleFunction as getIdentifyStyleFunction} from '../style/identify.js';
 import {getInExtent as getMarkerInExtent} from '../source/marker.js';
 import {getStyleFunction as getMarkerStyleFunction} from '../style/marker.js';
@@ -671,7 +657,7 @@ export const getLoadedBuildingsCount = createSelector(
     if (buildingsTimestamp === null) {
       return 0;
     }
-    return getBuildingStore(targetId).getFeatures().length;
+    return srcs.getBuildingStore(targetId).getFeatures().length;
   }
 );
 
@@ -812,7 +798,7 @@ const getFeatureForComputingSelected = createSelector(
     //buildingsTimestamp and markersTimestamp are important for recalculations
     return (
       getMarkerInExtent(targetId, refExt) ||
-      getLargestBldgInExtent(getBuildingStore(targetId), refExt)
+      getLargestBldgInExtent(srcs.getBuildingStore(targetId), refExt)
     );
   }
 );
@@ -1307,16 +1293,16 @@ export const getAllStyleFunctions = createSelector(
       console.log('STYLE - get all style functions');
     }
     return {
-      [BUILDING_LAYER_ID]: styleForBuildingLayer,
-      [BUILDING_LABEL_LAYER_ID]: styleForBuildingLabelLayer,
-      [COMPLEX_LAYER_ID]: styleForComplexLayer,
-      [MARKER_LAYER_ID]: styleForMarkerLayer,
-      [CLUSTER_LAYER_ID]: styleForClusterLayer,
-      [ROOM_LAYER_ID]: styleForRoomLayer,
-      [ROOM_LABEL_LAYER_ID]: styleForRoomLabelLayer,
-      [ROOM_ACTIVE_LAYER_ID]: styleForRoomActiveLayer,
-      [POI_ACTIVE_LAYER_ID]: styleForPoiActiveLayer,
-      [IDENTIFY_LAYER_ID]: styleForIdentifyLayer,
+      [lyr.BUILDING_LAYER_ID]: styleForBuildingLayer,
+      [lyr.BUILDING_LABEL_LAYER_ID]: styleForBuildingLabelLayer,
+      [lyr.COMPLEX_LAYER_ID]: styleForComplexLayer,
+      [lyr.MARKER_LAYER_ID]: styleForMarkerLayer,
+      [lyr.CLUSTER_LAYER_ID]: styleForClusterLayer,
+      [lyr.ROOM_LAYER_ID]: styleForRoomLayer,
+      [lyr.ROOM_LABEL_LAYER_ID]: styleForRoomLabelLayer,
+      [lyr.ACTIVE_ROOM_LAYER_ID]: styleForRoomActiveLayer,
+      [lyr.ACTIVE_POI_LAYER_ID]: styleForPoiActiveLayer,
+      [lyr.IDENTIFY_LAYER_ID]: styleForIdentifyLayer,
     };
   }
 );
@@ -1368,7 +1354,7 @@ export const isIdentifyControlEnabled = createSelector(
     if (!munimap_utils.isDefAndNotNull(identifyTimestamp)) {
       return false;
     }
-    const features = getIdentifyStore(targetId).getFeatures();
+    const features = srcs.getIdentifyStore(targetId).getFeatures();
     return Array.isArray(features) ? features.length > 0 : !!features;
   }
 );

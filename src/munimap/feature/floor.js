@@ -3,7 +3,7 @@
  */
 
 import {FloorTypes} from './floor.constants.js';
-import {getStore as getFloorStore} from '../source/floor.js';
+import {getFloorStore} from '../source/_constants.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature

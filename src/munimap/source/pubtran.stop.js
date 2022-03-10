@@ -6,7 +6,7 @@ import VectorSource from 'ol/source/Vector';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
 import {getType as getPubtranType} from '../feature/pubtran.stop.constants.js';
 import {pubtranFeaturesForMap} from '../load.js';
-import {setStore} from './pubtran.stop.constants.js';
+import {setPubTranStore} from './_constants.js';
 import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
 
 /**
@@ -28,7 +28,7 @@ const createStore = (targetId) => {
       type: getPubtranType(),
     })
   );
-  setStore(targetId, pubtranStore);
+  setPubTranStore(targetId, pubtranStore);
   return pubtranStore;
 };
 

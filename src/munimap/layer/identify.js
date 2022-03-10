@@ -4,8 +4,8 @@
 
 import * as munimap_assert from '../assert/assert.js';
 import VectorLayer from 'ol/layer/Vector';
-import {LAYER_ID} from './identify.constants.js';
-import {getStore as getIdentifyStore} from '../source/identify.js';
+import {IDENTIFY_LAYER_ID} from './_constants.js';
+import {getIdentifyStore} from '../source/_constants.js';
 
 /**
  * @typedef {import('ol').Map} ol.Map
@@ -18,7 +18,7 @@ import {getStore as getIdentifyStore} from '../source/identify.js';
  * @return {boolean} whether is layer
  */
 const isLayer = (layer) => {
-  return layer.get('id') === LAYER_ID;
+  return layer.get('id') === IDENTIFY_LAYER_ID;
 };
 
 /**
@@ -45,7 +45,7 @@ const getLayer = (map) => {
 const createLayer = (targetId) => {
   const identifyLayer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
-      id: LAYER_ID,
+      id: IDENTIFY_LAYER_ID,
       source: getIdentifyStore(targetId),
       visible: false,
       renderOrder: null,

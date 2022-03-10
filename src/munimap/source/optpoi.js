@@ -3,15 +3,7 @@
  */
 
 import VectorSource from 'ol/source/Vector';
-
-/**
- * @typedef {import("redux").Store} redux.Store
- */
-
-/**
- * @type {Object<string, VectorSource>}
- */
-const OPT_POI_STORES = {};
+import {setOptPoiStore} from './_constants.js';
 
 /**
  * Create store for opt_pois.
@@ -19,17 +11,9 @@ const OPT_POI_STORES = {};
  * @return {VectorSource} store
  */
 const createStore = (targetId) => {
-  OPT_POI_STORES[targetId] = new VectorSource();
-  return OPT_POI_STORES[targetId];
+  const store = new VectorSource();
+  setOptPoiStore(targetId, store);
+  return store;
 };
 
-/**
- * Get opt_poi store.
- * @param {string} targetId targetId
- * @return {VectorSource} store
- */
-const getStore = (targetId) => {
-  return OPT_POI_STORES[targetId];
-};
-
-export {createStore, getStore};
+export {createStore};

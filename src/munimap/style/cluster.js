@@ -15,10 +15,10 @@ import * as munimap_style_marker from '../style/marker.js';
 import * as munimap_unit from '../feature/unit.js';
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
-import {FONT_SIZE as BLDG_FONT_SIZE} from './building.constants.js';
+import {BUILDING_FONT_SIZE} from './_constants.js';
 import {Circle, Fill, Stroke, Style, Text} from 'ol/style';
 import {MultiPolygon} from 'ol/geom';
-import {getStore as getMarkerStore} from '../source/marker.js';
+import {getMarkerStore} from '../source/_constants.js';
 import {isDoor} from '../feature/door.constants.js';
 import {isRoom} from '../feature/room.constants.js';
 import {localeCompare} from '../utils/string.js';
@@ -37,30 +37,6 @@ import {localeCompare} from '../utils/string.js';
  * @property {LabelFunction} [markerLabel] marker label function
  * @property {boolean} [clusterFacultyAbbr] whether to cluster faculty abbrs
  */
-
-/**
- * @type {number}
- * @protected
- * @const
- */
-const RADIUS = 12;
-
-/**
- * @return {Style} style
- * @protected
- */
-const getMultiple = () => {
-  return new Style({
-    image: new Circle({
-      radius: RADIUS,
-      fill: munimap_style_constants.TEXT_FILL,
-      stroke: new Stroke({
-        color: '#ffffff',
-        width: 2,
-      }),
-    }),
-  });
-};
 
 /**
  *
@@ -289,7 +265,7 @@ const pinFunction = (options, clusterFeature, feature, resolution) => {
       color: color,
     });
   } else if (isMarked) {
-    fill = munimap_style_marker.TEXT_FILL;
+    fill = munimap_style_constants.MARKER_TEXT_FILL;
   } else {
     fill = munimap_style_constants.TEXT_FILL;
   }
@@ -304,7 +280,7 @@ const pinFunction = (options, clusterFeature, feature, resolution) => {
 
   const opts = {
     fill: fill,
-    fontSize: BLDG_FONT_SIZE,
+    fontSize: BUILDING_FONT_SIZE,
     geometry: geometry,
     title: /**@type {!string|undefined}*/ (title),
     zIndex: 6,
@@ -379,9 +355,11 @@ const multipleLabelFunction = (options, feature, resolution) => {
   if (title) {
     const fontSize = 13;
     const offsetY =
-      munimap_style.getLabelHeight(title, fontSize) / 2 + RADIUS + 2;
+      munimap_style.getLabelHeight(title, fontSize) / 2 +
+      munimap_style_constants.CLUSTER_RADIUS +
+      2;
     const fill = marked
-      ? munimap_style_marker.TEXT_FILL
+      ? munimap_style_constants.MARKER_TEXT_FILL
       : munimap_style_constants.TEXT_FILL;
     const geometry = marked
       ? munimap_geom.getGeometryCenterOfFeatures(features)
@@ -411,7 +389,7 @@ const multipleLabelFunction = (options, feature, resolution) => {
 
       if (minorTitle) {
         const minorOffsetY =
-          RADIUS +
+          munimap_style_constants.CLUSTER_RADIUS +
           2 +
           munimap_style.getLabelHeight(title, fontSize) +
           munimap_style.getLabelHeight(minorTitle, fontSize) / 2;
@@ -468,8 +446,8 @@ const styleFunction = (feature, resolution, options) => {
       circleStyle = new Style({
         geometry: munimap_geom.getGeometryCenterOfFeatures(features),
         image: new Circle({
-          radius: RADIUS,
-          fill: munimap_style_marker.FILL,
+          radius: munimap_style_constants.CLUSTER_RADIUS,
+          fill: munimap_style_constants.MARKER_FILL,
           stroke: new Stroke({
             color: '#ffffff',
             width: 3,
@@ -478,7 +456,7 @@ const styleFunction = (feature, resolution, options) => {
         zIndex: 7,
       });
     } else {
-      circleStyle = getMultiple();
+      circleStyle = munimap_style_constants.MULTIPLE;
     }
     result.push(circleStyle);
   }

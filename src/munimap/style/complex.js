@@ -14,7 +14,7 @@ import {FONT_SIZE, ID_FIELD_NAME} from '../feature/complex.constants.js';
 import {Style, Text} from 'ol/style';
 import {TEXT_FILL, TEXT_STROKE} from './_constants.js';
 import {alignTextToRows} from './_constants.js';
-import {getStore as getMarkerStore} from '../source/marker.js';
+import {getMarkerStore} from '../source/_constants.js';
 import {getUid as getStoreUid} from '../utils/store.js';
 
 /**

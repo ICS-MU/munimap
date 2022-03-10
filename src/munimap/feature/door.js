@@ -3,7 +3,7 @@
  */
 import * as actions from '../redux/action.js';
 import * as munimap_identify from '../identify/identify.js';
-import {getActiveStore as getActiveDoorStore} from '../source/door.constants.js';
+import {getActiveDoorStore} from '../source/_constants.js';
 import {isAllowed} from '../identify/identify.js';
 
 /**

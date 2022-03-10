@@ -5,9 +5,9 @@
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_building from '../feature/building.js';
 import VectorLayer from 'ol/layer/Vector';
+import {BUILDING_LABEL_LAYER_ID, BUILDING_LAYER_ID} from './_constants.js';
 import {RESOLUTION as COMPLEX_RESOLUTION} from '../feature/complex.constants.js';
-import {LABEL_LAYER_ID, LAYER_ID} from './building.constants.js';
-import {getStore as getBuildingStore} from '../source/building.constants.js';
+import {getBuildingStore} from '../source/_constants.js';
 import {getType} from '../feature/building.constants.js';
 
 /**
@@ -22,7 +22,7 @@ import {getType} from '../feature/building.constants.js';
  * @return {boolean} isLayer
  */
 const isLayer = (layer) => {
-  return layer.get('id') === LAYER_ID;
+  return layer.get('id') === BUILDING_LAYER_ID;
 };
 
 /**
@@ -30,7 +30,7 @@ const isLayer = (layer) => {
  * @return {boolean} isLayer
  */
 const isLabelLayer = (layer) => {
-  return layer.get('id') === LABEL_LAYER_ID;
+  return layer.get('id') === BUILDING_LABEL_LAYER_ID;
 };
 
 /**
@@ -56,7 +56,7 @@ const getLayer = (map) => {
 const create = (targetId) => {
   return new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
-      id: LAYER_ID,
+      id: BUILDING_LAYER_ID,
       isFeatureClickable: munimap_building.isClickable,
       featureClickHandler: munimap_building.featureClickHandler,
       type: getType(),
@@ -76,7 +76,7 @@ const create = (targetId) => {
 const createLabel = (targetId) => {
   return new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
-      id: LABEL_LAYER_ID,
+      id: BUILDING_LABEL_LAYER_ID,
       isFeatureClickable: munimap_building.isClickable,
       featureClickHandler: munimap_building.featureClickHandler,
       type: getType(),
