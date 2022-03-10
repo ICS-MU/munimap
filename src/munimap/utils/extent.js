@@ -6,7 +6,7 @@ import * as ol_extent from 'ol/extent';
 import {Feature} from 'ol';
 import {Point} from 'ol/geom';
 import {getByCode as getBuildingByCode} from '../feature/building.js';
-import {isRoom} from '../feature/room.js';
+import {isRoom} from '../feature/room.constants.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature

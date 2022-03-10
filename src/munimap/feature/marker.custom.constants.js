@@ -8,8 +8,16 @@ import Point from 'ol/geom/Point';
  * @typedef {import("ol/Feature").FeatureLike} ol.FeatureLike
  */
 
+/**
+ * @type {string}
+ * @const
+ */
 export const LABEL_FIELD_NAME = 'label';
 
+/**
+ * @type {Object<string, string>}
+ * @const
+ */
 export const TYPE = {
   name: 'custom-marker',
 };

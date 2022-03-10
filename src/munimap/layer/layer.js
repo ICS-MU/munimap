@@ -30,24 +30,6 @@ import {
  */
 
 /**
- * @type {string}
- * @const
- */
-const CLICK_HANDLER = 'featureClickHandler';
-
-/**
- * @type {string}
- * @const
- */
-const IS_CLICKABLE = 'isFeatureClickable';
-
-/**
- * @type {string}
- * @const
- */
-const TYPE = 'type';
-
-/**
  * @param {string} targetId targetId
  * @param {boolean} showLabels whether show labels for MU objects
  * @param {boolean} showLocationCodes whether to show only location codes
@@ -80,4 +62,4 @@ const getDefaultLayers = (targetId, showLabels, showLocationCodes) => {
   return result;
 };
 
-export {CLICK_HANDLER, IS_CLICKABLE, TYPE, getDefaultLayers};
+export {getDefaultLayers};

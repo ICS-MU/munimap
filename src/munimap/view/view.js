@@ -3,17 +3,13 @@
  */
 import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
-import * as ol_extent from 'ol/extent';
-import * as ol_proj from 'ol/proj';
-import * as slctr from '../redux/selector.js';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
-import View from 'ol/View';
-import {CLICK_HANDLER, IS_CLICKABLE} from '../layer/layer.js';
+import {CLICK_HANDLER, IS_CLICKABLE} from '../layer/_constants.js';
 import {
   GET_MAIN_FEATURE_AT_PIXEL_STORE,
   TARGET_ELEMENTS_STORE,
-} from '../create.js';
+} from '../create.constants.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {Point} from 'ol/geom';
 import {
@@ -55,7 +51,6 @@ import {createStore as createOptPoiStore} from '../source/optpoi.js';
 import {create as createPubtranLayer} from '../layer/pubtran.stop.js';
 import {createStore as createPubtranStore} from '../source/pubtran.stop.js';
 import {createStore as createUnitStore} from '../source/unit.js';
-import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
 import {getDefaultLayers} from '../layer/layer.js';
 import {getMainFeatureAtPixel} from '../feature/feature.js';
 import {getUid} from 'ol';
@@ -145,15 +140,6 @@ import {updateClusteredFeatures} from './cluster.js';
  * @property {ol.coordinate.Coordinate} pixelInCoords pixelInCoords
  * @property {string} purposeTitle purposeTitle
  * @property {string} purposeGis purposeGis
- */
-
-/**
- * @typedef {Object} InitExtentOptions
- * @property {ol.extent.Extent|undefined} extent extent
- * @property {ol.Size} size size
- * @property {ol.coordinate.Coordinate|undefined} center center
- * @property {number|undefined} zoom zoom
- * @property {number|undefined} resolution resolution
  */
 
 /**
@@ -601,21 +587,20 @@ const refreshVisibility = (map, options) => {
 
 /**
  * @param {string} targetId targetId
- * @param {State} newState new state
  * @param {redux.Dispatch} asyncDispatch async dispatch
+ * @param {string} [opt_locationCode] selected location code
  * @return {string|null|undefined} selected feature
  */
-const handleMapViewChange = (targetId, newState, asyncDispatch) => {
+const handleMapViewChange = (targetId, asyncDispatch, opt_locationCode) => {
   let selectedFeature;
-  const locationCode = slctr.getSelectedLocationCode(newState);
-  if (locationCode !== undefined) {
+  if (opt_locationCode !== undefined) {
     //null is valid value
-    if (locationCode !== null) {
+    if (opt_locationCode !== null) {
       //set to variable - it can be building/floor code
-      selectedFeature = locationCode;
-      const where = `polohKod LIKE '${locationCode.substring(0, 5)}%'`;
+      selectedFeature = opt_locationCode;
+      const where = `polohKod LIKE '${opt_locationCode.substring(0, 5)}%'`;
       loadFloors(targetId, where).then((floors) =>
-        asyncDispatch(actions.floors_loaded(isFloorCode(locationCode)))
+        asyncDispatch(actions.floors_loaded(isFloorCode(opt_locationCode)))
       );
     } else {
       //deselect feature from state
@@ -626,90 +611,11 @@ const handleMapViewChange = (targetId, newState, asyncDispatch) => {
   return selectedFeature;
 };
 
-/**
- * @param {string} targetId targetId
- * @param {ol.coordinate.Coordinate} requiredCenter required center
- * @param {number} requiredZoom required zoom
- * @param {Array<ol.Feature>} markers markers
- * @param {Array<ol.Feature>} zoomTo zoomTo
- * @return {ol.View} view
- */
-const createMapView = (
-  targetId,
-  requiredCenter,
-  requiredZoom,
-  markers,
-  zoomTo
-) => {
-  const target = TARGET_ELEMENTS_STORE[targetId];
-  const center = ol_proj.transform(
-    requiredCenter || [16.605390495656977, 49.1986567194723],
-    ol_proj.get('EPSG:4326'),
-    ol_proj.get('EPSG:3857')
-  );
-  const zoom = requiredZoom === null ? 13 : requiredZoom;
-  const view = new View({
-    center: center,
-    maxZoom: 23,
-    minZoom: 0,
-    zoom: zoom,
-    constrainResolution: true,
-  });
-  const initExtentOpts = /**@type {InitExtentOptions}*/ ({});
-  if (zoomTo || markers) {
-    zoomTo = zoomTo.length ? zoomTo : markers;
-    if (zoomTo.length) {
-      let res;
-      const extent = extentOfFeatures(zoomTo, targetId);
-      if (requiredZoom === null && requiredCenter === null) {
-        if (target.offsetWidth === 0 || target.offsetHeight === 0) {
-          view.fit(extent);
-        } else {
-          view.fit(extent, {
-            size: [target.offsetWidth, target.offsetHeight],
-          });
-          res = view.getResolution();
-          munimap_assert.assert(res);
-          ol_extent.buffer(extent, res * 30, extent);
-          view.fit(extent, {
-            size: [target.offsetWidth, target.offsetHeight],
-          });
-          initExtentOpts.extent = extent;
-          initExtentOpts.size = [target.offsetWidth, target.offsetHeight];
-        }
-        /** constrainResolution not exists in OL6, */
-        /** use view.getConstrainedResolution(resolution), */
-        /** https://github.com/openlayers/openlayers/pull/9137 */
-        // if (munimap.marker.custom.isCustom(zoomTo[0])) {
-        //   if (view.getResolution() < munimap.floor.RESOLUTION.max) {
-        //     res = view.constrainResolution(
-        //       munimap.floor.RESOLUTION.max,
-        //       undefined,
-        //       1
-        //     );
-        //     initExtentOpts.resolution = res;
-        //     view.setResolution(res);
-        //   }
-        // }
-      } else if (requiredCenter === null) {
-        initExtentOpts.center = ol_extent.getCenter(extent);
-        view.setCenter(ol_extent.getCenter(extent));
-      }
-    } else {
-      initExtentOpts.center = center;
-      initExtentOpts.zoom = zoom;
-    }
-  }
-  view.set('initExtentOpts', initExtentOpts, true);
-  return view;
-};
-
 export {
   animate,
   attachIndependentMapListeners,
   attachDependentMapListeners,
   createFeatureStores,
-  createMapView,
   ensureBaseMap,
   ensureClusterUpdate,
   ensureLayers,

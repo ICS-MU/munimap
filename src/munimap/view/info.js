@@ -1,7 +1,7 @@
 /**
  * @module view/info
  */
-import {TARGET_ELEMENTS_STORE} from '../create.js';
+import {TARGET_ELEMENTS_STORE} from '../create.constants.js';
 
 /**
  * @typedef {Object} BuildingTitleOptions

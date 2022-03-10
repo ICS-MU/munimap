@@ -1,9 +1,12 @@
+import * as munimap_utils from '../utils/utils.js';
 import {MUNIMAP_URL} from '../conf.js';
 import {createResolution} from '../utils/range.js';
 
 /**
  * @typedef {import("../utils/range").RangeInterface} RangeInterface
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
+ * @typedef {import("ol").Feature} ol.Feature
+ * @typedef {import("ol/render/Feature").default} ol.render.Feature
  */
 
 /**
@@ -68,6 +71,15 @@ const getType = () => {
   return TYPE;
 };
 
+/**
+ * @param {ol.Feature|ol.render.Feature} feature feature
+ * @return {boolean} whether is door
+ */
+const isDoor = (feature) => {
+  const code = feature.get('polohKod');
+  return munimap_utils.isString(code) && isCode(/** @type {string}*/ (code));
+};
+
 export {
   CODE_REGEX,
   LIKE_EXPR_REGEX,
@@ -75,5 +87,6 @@ export {
   getType,
   isCode,
   isCodeOrLikeExpr,
+  isDoor,
   isLikeExpr,
 };

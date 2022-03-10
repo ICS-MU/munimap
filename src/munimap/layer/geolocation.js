@@ -6,16 +6,11 @@ import Feature from 'ol/Feature';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import {Circle, Fill, Stroke, Style} from 'ol/style';
+import {LAYER_ID} from './geolocation.constants.js';
 
 /**
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  */
-
-/**
- * @type {string}
- * @const
- */
-const LAYER_ID = 'geolocation';
 
 /**
  * @param {ol.layer.Base} layer layer

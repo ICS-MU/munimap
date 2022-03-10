@@ -3,12 +3,17 @@
  */
 import * as munimap_assert from '../assert/assert.js';
 import VectorLayer from 'ol/layer/Vector';
+import {
+  ACTIVE_LAYER_ID,
+  DEFAULT_LAYER_ID,
+  LABEL_LAYER_ID,
+} from './room.constants.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {featureClickHandler, isClickable} from '../feature/room.js';
 import {
   getActiveStore as getActiveRoomStore,
   getDefaultStore as getDefaultRoomStore,
-} from '../source/room.js';
+} from '../source/room.constants.js';
 import {getType as getRoomType} from '../feature/room.constants.js';
 import {setCorridorStyle} from '../style/room.js';
 
@@ -17,24 +22,6 @@ import {setCorridorStyle} from '../style/room.js';
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions
  */
-
-/**
- * @type {string}
- * @const
- */
-const DEFAULT_LAYER_ID = 'room';
-
-/**
- * @type {string}
- * @const
- */
-const ACTIVE_LAYER_ID = 'active-room';
-
-/**
- * @type {string}
- * @const
- */
-const LABEL_LAYER_ID = 'roomlabel';
 
 /**
  * @param {ol.layer.Base} layer layer
@@ -151,9 +138,6 @@ const createLabel = (targetId, showLocationCodes) => {
 };
 
 export {
-  ACTIVE_LAYER_ID,
-  DEFAULT_LAYER_ID,
-  LABEL_LAYER_ID,
   create,
   createActive,
   createLabel,

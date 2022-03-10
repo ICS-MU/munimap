@@ -9,11 +9,10 @@ import * as munimap_store from '../utils/store.js';
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
-import {Fill, Stroke, Style, Text} from 'ol/style';
-import {
-  getDefaultLabel as getDefaultRoomLabel,
-  isRoom,
-} from '../feature/room.js';
+import {PIN_SIZE, TEXT_FILL, TEXT_STROKE} from './_constants.js';
+import {Style, Text} from 'ol/style';
+import {getDefaultLabel as getDefaultRoomLabel} from '../feature/room.js';
+import {isRoom} from '../feature/room.constants.js';
 
 /**
  * @typedef {import("./marker").LabelFunction} MarkerLabelFunction
@@ -22,6 +21,7 @@ import {
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("ol/").Map} ol.Map
  * @typedef {import("ol/style/Style").StyleFunction} ol.StyleFunction
+ * @typedef {import("ol/style/Fill").default} ol.style.Fill
  * @typedef {import("ol/Feature").FeatureLike} ol.FeatureLike
  * @typedef {import("ol/geom/Geometry").default} ol.geom.Geometry
  * @typedef {import("../utils/geom.js").GeometryFunction} GeometryFunction
@@ -46,7 +46,7 @@ import {
 
 /**
  * @typedef {Object} LabelWithPinOptions
- * @property {Fill}  fill fill
+ * @property {ol.style.Fill}  fill fill
  * @property {number}  [fontSize] font size
  * @property {GeometryFunction|ol.geom.Geometry|string}  geometry geom
  * @property {string}  [title] title
@@ -59,37 +59,6 @@ import {
  * @const
  */
 const LABEL_CACHE = {};
-
-/**
- * @type {Fill}
- * @const
- */
-const TEXT_FILL = new Fill({
-  color: '#0000dc',
-});
-
-/**
- * @type {Stroke}
- * @const
- */
-const TEXT_STROKE = new Stroke({
-  color: '#ffffff',
-  width: 4,
-});
-
-/**
- * @type {Fill}
- * @const
- */
-const NO_GEOMETRY_FILL = new Fill({
-  color: '#dfdfdf',
-});
-
-/**
- * @type {number}
- * @const
- */
-const PIN_SIZE = 25;
 
 /**
  * @type {Style}
@@ -143,30 +112,6 @@ const getLabelHeight = (title, fontSize) => {
   const rowCount = title.split('\n').length;
   const lineHeight = 1.2 * fontSize;
   return rowCount * lineHeight;
-};
-
-/**
- * @param {string|undefined} text text
- * @param {string} [opt_char] Character for newline (/n or </br>)
- * @return {string|undefined} wrapped text
- */
-const wrapText = (text, opt_char) => {
-  if (!text) {
-    return text;
-  }
-  let char = opt_char;
-  if (!char) {
-    char = '\n';
-  }
-  const wrappedText = [];
-  const words = text.split(' ');
-  words.forEach((word, i) => {
-    wrappedText.push(word);
-    if ((i + 1) % 3 === 0) {
-      wrappedText.push(char);
-    }
-  });
-  return wrappedText.join(' ');
 };
 
 /**
@@ -253,15 +198,10 @@ const getLabelWithPin = (options) => {
 };
 
 export {
-  PIN,
-  NO_GEOMETRY_FILL,
-  PIN_SIZE,
-  TEXT_STROKE,
-  TEXT_FILL,
   LABEL_CACHE,
+  PIN,
   getLabelWithPin,
   getTextStyleWithOffsetY,
   getDefaultLabel,
   getLabelHeight,
-  wrapText,
 };

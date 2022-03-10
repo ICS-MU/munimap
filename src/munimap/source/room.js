@@ -6,6 +6,7 @@ import VectorSource from 'ol/source/Vector';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
 import {getType as getRoomType} from '../feature/room.constants.js';
 import {loadActiveRooms, loadDefaultRooms} from '../load.js';
+import {setActiveStore, setDefaultStore, setStore} from './room.constants.js';
 import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
 
 /**
@@ -13,28 +14,14 @@ import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
  */
 
 /**
- * @type {Object<string, VectorSource>}
- */
-const ROOM_STORES = {};
-
-/**
- * @type {Object<string, VectorSource>}
- */
-const DEFAULT_ROOM_STORES = {};
-
-/**
- * @type {Object<string, VectorSource>}
- */
-const ACTIVE_ROOM_STORES = {};
-
-/**
  * Create store for rooms.
  * @param {string} targetId targetId
  * @return {VectorSource} store
  */
 const createStore = (targetId) => {
-  ROOM_STORES[targetId] = new VectorSource();
-  return ROOM_STORES[targetId];
+  const store = new VectorSource();
+  setStore(targetId, store);
+  return store;
 };
 
 /**
@@ -59,7 +46,7 @@ const createDefaultStore = (targetId, callback) => {
       callback: callback,
     })
   );
-  DEFAULT_ROOM_STORES[targetId] = defaultStore;
+  setDefaultStore(targetId, defaultStore);
   return defaultStore;
 };
 
@@ -79,42 +66,8 @@ const createActiveStore = (store, targetId, callback) => {
     ),
     loader: munimap_utils.partial(loadActiveRooms, {store, callback}),
   });
-  ACTIVE_ROOM_STORES[targetId] = activeStore;
+  setActiveStore(targetId, activeStore);
   return activeStore;
 };
 
-/**
- * Get room store.
- * @param {string} targetId targetId
- * @return {VectorSource} store
- */
-const getStore = (targetId) => {
-  return ROOM_STORES[targetId];
-};
-
-/**
- * Get default room store.
- * @param {string} targetId targetId
- * @return {VectorSource} store
- */
-const getDefaultStore = (targetId) => {
-  return DEFAULT_ROOM_STORES[targetId];
-};
-
-/**
- * Get active room store.
- * @param {string} targetId targetId
- * @return {VectorSource} store
- */
-const getActiveStore = (targetId) => {
-  return ACTIVE_ROOM_STORES[targetId];
-};
-
-export {
-  createActiveStore,
-  createDefaultStore,
-  createStore,
-  getActiveStore,
-  getDefaultStore,
-  getStore,
-};
+export {createActiveStore, createDefaultStore, createStore};

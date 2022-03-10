@@ -4,19 +4,14 @@
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_pubtran_stop from '../feature/pubtran.stop.js';
 import VectorLayer from 'ol/layer/Vector';
+import {LAYER_ID} from './pubtran.stop.constants.js';
 import {RESOLUTION as PUBTRAN_RESOLUTION} from '../feature/pubtran.stop.constants.js';
-import {getStore as getPubtranStore} from '../source/pubtran.stop.js';
+import {getStore as getPubtranStore} from '../source/pubtran.stop.constants.js';
 
 /**
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  */
-
-/**
- * @type {string}
- * @const
- */
-const LAYER_ID = 'publictransport';
 
 /**
  * @param {ol.layer.Base} layer layer

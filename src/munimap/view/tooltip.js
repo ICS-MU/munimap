@@ -13,9 +13,9 @@ import {
   RESOLUTION as POI_RESOLUTION,
   PURPOSE,
 } from '../feature/poi.constants.js';
-import {FONT_SIZE as ROOM_FONT_SIZE} from '../style/room.js';
+import {FONT_SIZE as ROOM_FONT_SIZE} from '../style/room.constants.js';
 import {fromCircle} from 'ol/geom/Polygon';
-import {getActiveStore as getActiveRoomStore} from '../source/room.js';
+import {getActiveStore as getActiveRoomStore} from '../source/room.constants.js';
 import {getDefaultLabel} from '../feature/room.js';
 import {getLabelHeight} from '../style/style.js';
 

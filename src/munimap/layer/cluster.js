@@ -4,6 +4,7 @@
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_cluster from '../cluster/cluster.js';
 import VectorLayer from 'ol/layer/Vector';
+import {LAYER_ID} from './cluster.constants.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {createStore as createClusterStore} from '../source/cluster.js';
 import {updateClusteredFeatures} from '../view/cluster.js';
@@ -16,12 +17,6 @@ import {updateClusteredFeatures} from '../view/cluster.js';
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import("../conf.js").MapProps} MapProps
  */
-
-/**
- * @type {string}
- * @const
- */
-const LAYER_ID = 'markercluster';
 
 /**
  * @param {ol.layer.Base} layer layer
@@ -86,4 +81,4 @@ const create = (map, options) => {
   return markerClusterLayer;
 };
 
-export {LAYER_ID, create, getLayer, isLayer};
+export {create, getLayer, isLayer};

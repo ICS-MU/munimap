@@ -13,7 +13,7 @@ import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {INITIAL_STATE} from '../conf.js';
 import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
 import {getAnimationDuration} from '../utils/animation.js';
-import {getStore as getBuildingStore} from '../source/building.js';
+import {getStore as getBuildingStore} from '../source/building.constants.js';
 import {getStore as getComplexStore} from '../source/complex.js';
 
 /**

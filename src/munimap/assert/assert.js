@@ -11,7 +11,7 @@ import {BASEMAPS} from '../layer/_constants.js';
 import {IdentifyTypes} from '../identify/_constants.js';
 import {isCodeOrLikeExpr as isBldgCodeOrLikeExpr} from '../feature/building.constants.js';
 import {isCodeOrLikeExpr as isDoorCodeOrLikeExpr} from '../feature/door.constants.js';
-import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.js';
+import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.constants.js';
 import {isCodeOrLikeExpr as isRoomCodeOrLikeExpr} from '../feature/room.constants.js';
 import {isSuitable} from '../feature/marker.custom.constants.js';
 

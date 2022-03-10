@@ -12,6 +12,10 @@ import {EsriJSON} from 'ol/format';
 import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.constants.js';
 import {ID_FIELD_NAME, UNITS_FIELD_NAME} from './feature/complex.constants.js';
 import {
+  MARKER_LABEL_STORE,
+  REQUIRED_CUSTOM_MARKERS,
+} from './create.constants.js';
+import {
   Ids as OptPoiIds,
   Labels as OptPoiLabels,
 } from './feature/optpoi.constants.js';
@@ -23,26 +27,28 @@ import {
   isCodeOrLikeExpr as isRoomCodeOrLikeExpr,
   isLikeExpr as isRoomLikeExpr,
 } from './feature/room.constants.js';
+import {addPoiDetail} from './feature/room.js';
 import {
   createMarkerStringsArray,
   createZoomToStringsArray,
 } from './utils/param.js';
+import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
 import {
   getActiveStore as getActiveDoorStore,
   getStore as getDoorStore,
-} from './source/door.js';
+} from './source/door.constants.js';
 import {
   getActiveStore as getActivePoiStore,
   getStore as getPoiStore,
-} from './source/poi.js';
+} from './source/poi.constants.js';
 import {
   getActiveStore as getActiveRoomStore,
   getDefaultStore as getDefaultRoomStore,
   getStore as getRoomStore,
-} from './source/room.js';
+} from './source/room.constants.js';
 import {getByCode as getBldgByCode} from './feature/building.js';
 import {getType as getBldgType} from './feature/building.constants.js';
-import {getStore as getBuildingStore} from './source/building.js';
+import {getStore as getBuildingStore} from './source/building.constants.js';
 import {getStore as getClusterStore} from './source/cluster.js';
 import {getStore as getComplexStore} from './source/complex.js';
 import {getType as getDoorType} from './feature/door.constants.js';
@@ -54,7 +60,10 @@ import {getLoadedTypes} from './utils/reducer.js';
 import {getStore as getMarkerStore} from './source/marker.js';
 import {getNotYetAddedFeatures} from './utils/store.js';
 import {getStore as getOptPoiStore} from './source/optpoi.js';
-import {getType as getOptPoiType} from './feature/optpoi.constants.js';
+import {
+  getType as getOptPoiType,
+  isCtgUid as isOptPoiCtgUid,
+} from './feature/optpoi.constants.js';
 import {getType as getPoiType} from './feature/poi.constants.js';
 import {getStore as getUnitStore} from './source/unit.js';
 import {getType as getUnitType} from './feature/unit.constants.js';
@@ -64,7 +73,7 @@ import {
   isCodeOrLikeExpr as isDoorCodeOrLikeExpr,
   isLikeExpr as isDoorLikeExpr,
 } from './feature/door.constants.js';
-import {loadOrDecorateMarkers} from './create.js';
+import {markerLabel as optPoiMarkerLabel} from './style/optpoi.js';
 import {refreshFloorBasedStores} from './source/source.js';
 
 /**
@@ -189,6 +198,14 @@ import {refreshFloorBasedStores} from './source/source.js';
  * @property {Array<ol.Feature>} all all features
  * @property {Array<ol.Feature>} new new features
  * @property {Array<ol.Feature>} existing existing features
+ */
+
+/**
+ * @typedef {Object} LoadOrDecorateMarkersOptions
+ * @property {Array<string>} [poiFilter] poi filter
+ * @property {Array<string>} [markerFilter] marker filter
+ * @property {string} [lang] language
+ * @property {string} targetId target
  */
 
 /**
@@ -1056,6 +1073,75 @@ const loadOptPois = (targetId, options) => {
     returnGeometry: false,
   };
   return features(opts);
+};
+
+/**
+ * Load features by location codes or decorate custom markers.
+ * @param {Array<string>|Array<ol.Feature>|undefined} featuresLike featuresLike
+ * @param {LoadOrDecorateMarkersOptions} options options
+ * @return {Promise<Array<ol.Feature>>} promise resolving with markers
+ */
+export const loadOrDecorateMarkers = async (featuresLike, options) => {
+  const lang = options.lang;
+  const targetId = options.targetId;
+  const arrPromises = []; // array of promises of features
+
+  if (!Array.isArray(featuresLike)) {
+    return [];
+  } else {
+    featuresLike.forEach((el) => {
+      if (!isOptPoiCtgUid(el)) {
+        arrPromises.push(
+          new Promise((resolve, reject) => {
+            if (REQUIRED_CUSTOM_MARKERS[el]) {
+              decorateCustomMarker(REQUIRED_CUSTOM_MARKERS[el]);
+              resolve(REQUIRED_CUSTOM_MARKERS[el]);
+            } else if (munimap_utils.isString(el)) {
+              featuresFromParam(targetId, el).then((results) => {
+                resolve(results);
+              });
+            }
+          })
+        );
+      } else {
+        const workplaces = //HS
+          options.markerFilter !== null ? [...options.markerFilter] : [];
+        const ctgIds = [el.split(':')[1]];
+
+        arrPromises.push(
+          loadOptPois(targetId, {
+            ids: ctgIds,
+            workplaces: workplaces,
+            poiFilter: options.poiFilter,
+          }).then((features) => {
+            const roomOptPois = features.filter((f) => {
+              const lc = /**@type {string}*/ (f.get('polohKodLokace'));
+              munimap_assert.assertString(lc);
+              return isRoomCode(lc);
+            });
+            const roomCodes = roomOptPois.map((f) => f.get('polohKodLokace'));
+            MARKER_LABEL_STORE[`OPT_POI_MARKER_LABEL_${options.targetId}`] =
+              optPoiMarkerLabel(ctgIds[0], roomCodes, lang);
+
+            return new Promise((resolve, reject) => {
+              featuresFromParam(targetId, roomCodes).then((rooms) => {
+                resolve(addPoiDetail(rooms, features, lang));
+              });
+            });
+          })
+        );
+      }
+    });
+
+    let markers = await Promise.all(arrPromises);
+    // reduce array of arrays to 1 array
+    markers = markers.reduce((a, b) => {
+      a = a.concat(b);
+      munimap_utils.removeArrayDuplicates(a);
+      return a;
+    }, []);
+    return markers;
+  }
 };
 
 /**

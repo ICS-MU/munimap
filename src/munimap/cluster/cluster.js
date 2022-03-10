@@ -7,9 +7,8 @@ import * as munimap_building from '../feature/building.js';
 import * as munimap_marker from '../feature/marker.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
-import * as slctr from '../redux/selector.js';
 import {Feature} from 'ol';
-import {getStore as getBuildingStore} from '../source/building.js';
+import {getStore as getBuildingStore} from '../source/building.constants.js';
 import {getStore as getClusterStore} from '../source/cluster.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {getUid} from 'ol';
@@ -25,6 +24,12 @@ import {getUid} from 'ol';
  * @typedef {import("ol/render/Event").default} ol.render.Event
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("redux").Dispatch} redux.Dispatch
+ */
+
+/**
+ * @typedef {Object} GetPopupFeatureOptions
+ * @property {string} targetId targetId
+ * @property {string} featureUid featureUid
  */
 
 /**
@@ -184,12 +189,11 @@ const getMinorFeatures = (targetId, feature) => {
 
 /**
  * @param {State} state state
- * @param {FeatureClickHandlerOptions} options payload
+ * @param {GetPopupFeatureOptions} options payload
  * @return {string} feature uid
  */
 const getPopupFeatureUid = (state, options) => {
-  const featureUid = options.featureUid;
-  const targetId = slctr.getTargetId(state);
+  const {featureUid, targetId} = options;
   const feature = getClusterStore(targetId).getFeatureByUid(featureUid);
   let uid;
 

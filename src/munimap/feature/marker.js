@@ -9,8 +9,9 @@ import {RESOLUTION as DOOR_RESOLUTION} from './door.constants.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from './floor.constants.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {isCustom as isCustomMarker} from './marker.custom.js';
-import {isDoor} from './door.js';
-import {isRoom, isInSelectedFloor as isRoomInSelectedFloor} from './room.js';
+import {isDoor} from './door.constants.js';
+import {isRoom} from './room.constants.js';
+import {isInSelectedFloor as isRoomInSelectedFloor} from './room.js';
 
 /**
  * @typedef {import("ol").Map} ol.Map

@@ -7,20 +7,20 @@ import * as munimap_utils from '../utils/utils.js';
 import {
   BIG_FONT_SIZE as BLDG_BIG_FONT_SIZE,
   FONT_SIZE as BLDG_FONT_SIZE,
-} from './building.js';
+} from './building.constants.js';
 import {
   CENTER_GEOMETRY_FUNCTION,
   INTERSECT_CENTER_GEOMETRY_FUNCTION,
 } from '../utils/geom.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {Fill} from 'ol/style';
-import {FONT_SIZE as ROOM_FONT_SIZE} from './room.js';
+import {FONT_SIZE as ROOM_FONT_SIZE} from './room.constants.js';
 import {getDefaultLabel, getLabelWithPin} from './style.js';
 import {getIdentifiedFeature, getLocationCode} from '../identify/identify.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {isBuilding} from '../feature/building.js';
-import {isDoor} from '../feature/door.js';
-import {isRoom} from '../feature/room.js';
+import {isDoor} from '../feature/door.constants.js';
+import {isRoom} from '../feature/room.constants.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature

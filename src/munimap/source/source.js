@@ -2,35 +2,41 @@
  * @module source/source
  */
 import * as munimap_utils from '../utils/utils.js';
-import {REQUIRED_CUSTOM_MARKERS} from '../create.js';
+import {GeoJSON} from 'ol/format';
+import {MultiPolygon, Polygon} from 'ol/geom';
+import {REQUIRED_CUSTOM_MARKERS} from '../create.constants.js';
+import {featureExtentIntersect} from '../utils/geom.js';
 import {
   getActiveStore as getActiveDoorStore,
   getStore as getDoorStore,
-} from './door.js';
-import {getActiveStore as getActivePoiStore} from './poi.js';
+} from './door.constants.js';
+import {getActiveStore as getActivePoiStore} from './poi.constants.js';
 import {
   getActiveStore as getActiveRoomStore,
   getStore as getRoomStore,
-} from './room.js';
-import {getStore as getBuildingStore} from './building.js';
+} from './room.constants.js';
+import {getStore as getBuildingStore} from './building.constants.js';
 import {getType as getBuildingType} from '../feature/building.constants.js';
 import {getType as getDoorType} from '../feature/door.constants.js';
 import {getStore as getOptPoiStore} from './optpoi.js';
-import {getStore as getPubTranStore} from './pubtran.stop.js';
+import {getStore as getPubTranStore} from './pubtran.stop.constants.js';
 import {
   getType as getRoomType,
   isCode as isRoomCode,
   isCodeOrLikeExpr as isRoomCodeOrLikeExpr,
 } from '../feature/room.constants.js';
 import {getUid} from 'ol';
+import {hasInnerGeometry} from '../feature/building.js';
 import {
   isCode as isDoorCode,
   isCodeOrLikeExpr as isDoorCodeOrLikeExpr,
 } from '../feature/door.constants.js';
-import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.js';
+import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.constants.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature
+ * @typedef {import("ol/extent").Extent} ol.extent.Extent
+ * @typedef {import("ol/source").Vector} ol.source.Vector
  */
 
 /**
@@ -156,9 +162,35 @@ const getPopupFeatureByUid = (targetId, uid) => {
   return feature;
 };
 
+/**
+ * @param {ol.source.Vector} store store
+ * @param {ol.extent.Extent} extent extent
+ * @return {ol.Feature} marker
+ */
+const getLargestInExtent = (store, extent) => {
+  let selectFeature;
+  let maxArea;
+  const format = new GeoJSON();
+  store.forEachFeatureIntersectingExtent(extent, (f) => {
+    if (hasInnerGeometry(f)) {
+      const intersect = featureExtentIntersect(f, extent, format);
+      const geom = intersect.getGeometry();
+      if (geom instanceof Polygon || geom instanceof MultiPolygon) {
+        const area = geom.getArea();
+        if (!munimap_utils.isDef(maxArea) || area > maxArea) {
+          maxArea = area;
+          selectFeature = f;
+        }
+      }
+    }
+  });
+  return selectFeature || null;
+};
+
 export {
   clearFloorBasedStores,
   getFeaturesByIds,
+  getLargestInExtent,
   getPopupFeatureByUid,
   getZoomToFeatures,
   refreshFloorBasedStores,

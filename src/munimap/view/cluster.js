@@ -4,7 +4,6 @@
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_range from '../utils/range.js';
 import * as ol_extent from 'ol/extent';
-import * as slctr from '../redux/selector.js';
 import {RESOLUTION as DOOR_RESOLUTION} from '../feature/door.constants.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {Feature} from 'ol';
@@ -25,7 +24,7 @@ import {
 } from '../cluster/cluster.js';
 import {getVectorStore} from '../source/cluster.js';
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
-import {isDoor} from '../feature/door.js';
+import {isDoor} from '../feature/door.constants.js';
 
 /**
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
@@ -34,6 +33,16 @@ import {isDoor} from '../feature/door.js';
  * @typedef {import("../conf.js").AnimationRequestOptions} AnimationRequestOptions
  * @typedef {import("../conf.js").AnimationRequestState} AnimationRequestState
  * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
+ * @typedef {import("../utils/animation.js").ViewOptions} ViewOptions
+ */
+
+/**
+ * @typedef {Object} Props
+ * @property {string} featureUid featureUid
+ * @property {string} targetId targetId
+ * @property {boolean} clusterFacultyAbbr clusterFacultyAbbr
+ *
+ * @typedef {ViewOptions & Props} GetAnimationRequestOptions
  */
 
 /**
@@ -59,17 +68,23 @@ const updateClusteredFeatures = (targetId, resolution, showLabels) => {
 };
 
 /**
- * @param {State} state state
- * @param {FeatureClickHandlerOptions} options payload
+ * @param {GetAnimationRequestOptions} options payload
  * @return {AnimationRequestState} future extent
  */
-const getAnimationRequest = (state, options) => {
-  const featureUid = options.featureUid;
-  const targetId = slctr.getTargetId(state);
+const getAnimationRequest = (options) => {
+  const {
+    featureUid,
+    targetId,
+    rotation,
+    size,
+    extent,
+    resolution,
+    clusterFacultyAbbr,
+  } = options;
   const feature = getClusterStore(targetId).getFeatureByUid(featureUid);
 
   let clusteredFeatures = getMainFeatures(targetId, feature);
-  if (state.requiredOpts.clusterFacultyAbbr) {
+  if (clusterFacultyAbbr) {
     const minorFeatures = getMinorFeatures(targetId, feature);
     clusteredFeatures = clusteredFeatures.concat(minorFeatures);
   }
@@ -86,9 +101,9 @@ const getAnimationRequest = (state, options) => {
     let center;
     const opts = {
       resolution: resolutionRange.max,
-      rotation: slctr.getRotation(state),
-      size: slctr.getSize(state),
-      extent: slctr.getExtent(state),
+      rotation,
+      size,
+      extent,
     };
 
     if (isCustomMarker(firstFeature)) {
@@ -96,10 +111,7 @@ const getAnimationRequest = (state, options) => {
       center = ol_extent.getCenter(featuresExtent);
       animationRequest = getAnimationRequestParams(center, opts);
     } else {
-      const isVisible = munimap_range.contains(
-        resolutionRange,
-        slctr.getResolution(state)
-      );
+      const isVisible = munimap_range.contains(resolutionRange, resolution);
       if (!isVisible) {
         featuresExtent = extentOfFeature(firstFeature);
         center = ol_extent.getCenter(featuresExtent);
@@ -110,7 +122,7 @@ const getAnimationRequest = (state, options) => {
     featuresExtent = extentOfFeatures(clusteredFeatures, targetId);
     animationRequest = /** @type {AnimationRequestOptions}*/ ({
       extent: featuresExtent,
-      duration: getAnimationDuration(slctr.getExtent(state), featuresExtent),
+      duration: getAnimationDuration(extent, featuresExtent),
     });
   }
 

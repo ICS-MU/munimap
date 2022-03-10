@@ -4,6 +4,7 @@
 
 import * as munimap_assert from '../assert/assert.js';
 import VectorLayer from 'ol/layer/Vector';
+import {LAYER_ID} from './identify.constants.js';
 import {getStore as getIdentifyStore} from '../source/identify.js';
 
 /**
@@ -11,12 +12,6 @@ import {getStore as getIdentifyStore} from '../source/identify.js';
  * @typedef {import('ol').Feature} ol.Feature
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions
  */
-
-/**
- * @type {string}
- * @const
- */
-const LAYER_ID = 'identify-layer';
 
 /**
  * @param {VectorLayer} layer layer
@@ -73,4 +68,4 @@ const refreshVisibility = (map, visible) => {
   }
 };
 
-export {LAYER_ID, createLayer, getLayer, refreshVisibility};
+export {createLayer, getLayer, refreshVisibility};

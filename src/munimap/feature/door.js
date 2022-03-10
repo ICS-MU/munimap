@@ -3,11 +3,8 @@
  */
 import * as actions from '../redux/action.js';
 import * as munimap_identify from '../identify/identify.js';
-import * as munimap_utils from '../utils/utils.js';
-import * as slctr from '../redux/selector.js';
-import {getActiveStore as getActiveDoorStore} from '../source/door.js';
+import {getActiveStore as getActiveDoorStore} from '../source/door.constants.js';
 import {isAllowed} from '../identify/identify.js';
-import {isCode} from './door.constants.js';
 
 /**
  * @typedef {import("../conf.js").State} State
@@ -19,15 +16,6 @@ import {isCode} from './door.constants.js';
  * @typedef {import("./feature.js").IsClickableOptions} IsClickableOptions
  * @typedef {import("redux").Dispatch} redux.Dispatch
  */
-
-/**
- * @param {ol.Feature|ol.render.Feature} feature feature
- * @return {boolean} whether is door
- */
-const isDoor = (feature) => {
-  const code = feature.get('polohKod');
-  return munimap_utils.isString(code) && isCode(/** @type {string}*/ (code));
-};
 
 /**
  * @param {IsClickableOptions} options options
@@ -50,27 +38,28 @@ const featureClickHandler = (dispatch, options) => {
 };
 
 /**
- * @param {State} state state
  * @param {FeatureClickHandlerOptions} options payload
  * @param {redux.Dispatch} asyncDispatch async dispatch
  */
-const handleDoorClick = (state, options, asyncDispatch) => {
-  const featureUid = options.featureUid;
-  const pixelInCoords = options.pixelInCoords;
-  const targetId = slctr.getTargetId(state);
+const handleDoorClick = (options, asyncDispatch) => {
+  const {
+    featureUid,
+    pixelInCoords,
+    targetId,
+    isIdentifyEnabled,
+    identifyCallback,
+    identifyTypes,
+  } = options;
   const feature = getActiveDoorStore(targetId).getFeatureByUid(featureUid);
   const isIdentifyAllowed =
-    slctr.isIdentifyEnabled(state) &&
-    munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
+    isIdentifyEnabled && munimap_identify.isAllowed(feature, identifyTypes);
 
   if (isIdentifyAllowed) {
-    munimap_identify.handleCallback(
-      slctr.getIdentifyCallback(state),
-      asyncDispatch,
-      targetId,
-      {feature, pixelInCoords}
-    );
+    munimap_identify.handleCallback(identifyCallback, asyncDispatch, targetId, {
+      feature,
+      pixelInCoords,
+    });
   }
 };
 
-export {featureClickHandler, handleDoorClick, isClickable, isDoor};
+export {featureClickHandler, handleDoorClick, isClickable};

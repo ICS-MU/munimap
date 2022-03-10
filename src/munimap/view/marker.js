@@ -14,8 +14,8 @@ import {getAnimationRequestParams} from '../utils/animation.js';
 import {getClosestPointToPixel} from '../feature/feature.js';
 import {getStore as getMarkerStore} from '../source/marker.js';
 import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
-import {isDoor} from '../feature/door.js';
-import {isRoom} from '../feature/room.js';
+import {isDoor} from '../feature/door.constants.js';
+import {isRoom} from '../feature/room.constants.js';
 
 /**
  * @typedef {import("../conf.js").State} State

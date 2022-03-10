@@ -8,7 +8,7 @@ import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {INITIAL_STATE} from '../conf.js';
 import {getAnimationRequestParams} from '../utils/animation.js';
 import {getClosestPointToPixel} from '../feature/feature.js';
-import {getStore} from '../source/building.js';
+import {getStore} from '../source/building.constants.js';
 
 /**
  * @typedef {import("../conf.js").State} State

@@ -3,21 +3,23 @@
  */
 import * as actions from './redux/action.js';
 import * as munimap_assert from './assert/assert.js';
-import * as munimap_load from './load.js';
 import * as munimap_utils from './utils/utils.js';
 import * as munimap_view from './view/view.js';
 import Feature from 'ol/Feature';
 import MunimapComponent from './_components/munimap.jsx';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {
+  GET_MAIN_FEATURE_AT_PIXEL_STORE,
+  IDENTIFY_CALLBACK_STORE,
+  MARKER_LABEL_STORE,
+  REQUIRED_CUSTOM_MARKERS,
+  TARGET_ELEMENTS_STORE,
+  setStoreByTargetId,
+} from './create.constants.js';
 import {INITIAL_STATE} from './conf.js';
 import {Provider} from 'react-redux';
-import {addPoiDetail} from './feature/room.js';
 import {createStore} from './redux/store.js';
-import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
-import {isCtgUid as isOptPoiCtgUid} from './feature/optpoi.js';
-import {isCode as isRoomCode} from './feature/room.constants.js';
-import {markerLabel as optPoiMarkerLabel} from './style/optpoi.js';
 import {v4 as uuidv4} from 'uuid';
 
 /**
@@ -54,122 +56,6 @@ import {v4 as uuidv4} from 'uuid';
  * @property {IdentifyCallbackFunction} [identifyCallback] identifyCallback function
  * @property {boolean} [tooltips] tooltips
  */
-
-/**
- * @typedef {Object} LoadOrDecorateMarkersOptions
- * @property {Array<string>} [poiFilter] poi filter
- * @property {Array<string>} [markerFilter] marker filter
- * @property {string} [lang] language
- * @property {string} targetId target
- */
-
-/**
- * @type {Object<string, Feature>}
- */
-export const REQUIRED_CUSTOM_MARKERS = {};
-
-/**
- * @type {Object<string, MarkerLabelFunction>}
- */
-export const MARKER_LABEL_STORE = {};
-
-/**
- * @type {Object<string, ol.Map>}
- */
-export const CREATED_MAPS = {};
-
-/**
- * @type {Object<string, HTMLElement>}
- */
-export const TARGET_ELEMENTS_STORE = {};
-
-/**
- * @type {Object<string, getMainFeatureAtPixelFunction>}
- */
-export const GET_MAIN_FEATURE_AT_PIXEL_STORE = {};
-
-/**
- * @type {Object<string, IdentifyCallbackFunction>}
- */
-export const IDENTIFY_CALLBACK_STORE = {};
-
-/**
- * @type {Object<string, redux.Store>}
- */
-const STORES = {};
-
-/**
- * Load features by location codes or decorate custom markers.
- * @param {Array<string>|Array<Feature>|undefined} featuresLike featuresLike
- * @param {LoadOrDecorateMarkersOptions} options options
- * @return {Promise<Array<Feature>>} promise resolving with markers
- */
-export const loadOrDecorateMarkers = async (featuresLike, options) => {
-  const lang = options.lang;
-  const targetId = options.targetId;
-  const arrPromises = []; // array of promises of features
-
-  if (!Array.isArray(featuresLike)) {
-    return [];
-  } else {
-    featuresLike.forEach((el) => {
-      if (!isOptPoiCtgUid(el)) {
-        arrPromises.push(
-          new Promise((resolve, reject) => {
-            if (REQUIRED_CUSTOM_MARKERS[el]) {
-              decorateCustomMarker(REQUIRED_CUSTOM_MARKERS[el]);
-              resolve(REQUIRED_CUSTOM_MARKERS[el]);
-            } else if (munimap_utils.isString(el)) {
-              munimap_load.featuresFromParam(targetId, el).then((results) => {
-                resolve(results);
-              });
-            }
-          })
-        );
-      } else {
-        const workplaces = //HS
-          options.markerFilter !== null ? [...options.markerFilter] : [];
-        const ctgIds = [el.split(':')[1]];
-
-        arrPromises.push(
-          munimap_load
-            .loadOptPois(targetId, {
-              ids: ctgIds,
-              workplaces: workplaces,
-              poiFilter: options.poiFilter,
-            })
-            .then((features) => {
-              const roomOptPois = features.filter((f) => {
-                const lc = /**@type {string}*/ (f.get('polohKodLokace'));
-                munimap_assert.assertString(lc);
-                return isRoomCode(lc);
-              });
-              const roomCodes = roomOptPois.map((f) => f.get('polohKodLokace'));
-              MARKER_LABEL_STORE[`OPT_POI_MARKER_LABEL_${options.targetId}`] =
-                optPoiMarkerLabel(ctgIds[0], roomCodes, lang);
-
-              return new Promise((resolve, reject) => {
-                munimap_load
-                  .featuresFromParam(targetId, roomCodes)
-                  .then((rooms) => {
-                    resolve(addPoiDetail(rooms, features, lang));
-                  });
-              });
-            })
-        );
-      }
-    });
-
-    let markers = await Promise.all(arrPromises);
-    // reduce array of arrays to 1 array
-    markers = markers.reduce((a, b) => {
-      a = a.concat(b);
-      munimap_utils.removeArrayDuplicates(a);
-      return a;
-    }, []);
-    return markers;
-  }
-};
 
 /**
  * @param {Options} options opts
@@ -320,12 +206,6 @@ const getInitialState = (options, targetId) => {
 };
 
 /**
- * @param {string} id id
- * @return {redux.Store} store
- */
-const getStoreByTargetId = (id) => STORES[id];
-
-/**
  * @param {Options} options Options
  * @return {Promise<ol.Map>} initialized map
  */
@@ -336,7 +216,7 @@ export default (options) => {
     const targetId = addTargetElementToStore(options);
     const initialState = getInitialState(options, targetId);
     const store = createStore(initialState);
-    STORES[targetId] = store;
+    setStoreByTargetId(targetId, store);
 
     munimap_view.createFeatureStores(store);
     store.dispatch(
@@ -357,5 +237,3 @@ export default (options) => {
     );
   });
 };
-
-export {getStoreByTargetId};

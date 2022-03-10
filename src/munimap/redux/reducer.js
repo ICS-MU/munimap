@@ -9,9 +9,9 @@ import * as slctr from './selector.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {INITIAL_STATE} from '../conf.js';
 import {ROOM_TYPES} from '../feature/room.constants.js';
-import {getActiveStore as getActiveRoomStore} from '../source/room.js';
+import {getActiveStore as getActiveRoomStore} from '../source/room.constants.js';
 import {getAnimationRequest as getBuildingAnimationRequest} from '../view/building.js';
-import {getStore as getBuildingStore} from '../source/building.js';
+import {getStore as getBuildingStore} from '../source/building.constants.js';
 import {getAnimationRequest as getClusterAnimationRequest} from '../view/cluster.js';
 import {getAnimationRequest as getComplexAnimationRequest} from '../view/complex.js';
 import {getFeaturesTimestamps} from '../utils/reducer.js';
@@ -22,7 +22,7 @@ import {getStore as getMarkerStore} from '../source/marker.js';
 import {getAnimationRequest as getPoiAnimationRequest} from '../view/poi.js';
 import {getPopupFeatureUid} from '../cluster/cluster.js';
 import {getAnimationRequest as getPubTranAnimationRequest} from '../view/pubtran.stop.js';
-import {getStore as getPubTranStore} from '../source/pubtran.stop.js';
+import {getStore as getPubTranStore} from '../source/pubtran.stop.constants.js';
 import {getUid} from 'ol';
 import {handleDoorClick} from '../feature/door.js';
 import {handleMapViewChange} from '../view/view.js';
@@ -34,6 +34,14 @@ import {isSameCode} from '../feature/building.js';
  * @typedef {import("redux").Dispatch} redux.Dispatch
  * @typedef {import("redux").Reducer} redux.Reducer
  * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
+ * @typedef {import("../utils/animation.js").ViewOptions} ViewOptions
+ */
+
+/**
+ * @typedef {Object} ViewParams
+ * @property {string} targetId targetId
+ *
+ * @typedef {ViewOptions & ViewParams} ViewOptionsResult
  */
 
 /**
@@ -114,6 +122,20 @@ const handleIdentifyCallback = (state, payload, asyncDispatch) => {
     targetId,
     {feature, pixelInCoords}
   );
+};
+
+/**
+ * @param {State} state state
+ * @return {ViewOptionsResult} result
+ */
+const getViewOptions = (state) => {
+  return {
+    targetId: slctr.getTargetId(state),
+    rotation: slctr.getRotation(state),
+    size: slctr.getSize(state),
+    extent: slctr.getExtent(state),
+    resolution: slctr.getResolution(state),
+  };
 };
 
 /**
@@ -250,7 +272,11 @@ const createReducer = (initialState) => {
           mapSize: action.payload.view.mapSize,
         };
         targetId = slctr.getTargetId(state);
-        result = handleMapViewChange(targetId, newState, action.asyncDispatch);
+        result = handleMapViewChange(
+          targetId,
+          action.asyncDispatch,
+          slctr.getSelectedLocationCode(newState)
+        );
         newState.selectedFeature =
           result !== undefined ? result : state.selectedFeature;
         return newState;
@@ -409,8 +435,15 @@ const createReducer = (initialState) => {
 
       //CLUSTER_CLICKED
       case actions.CLUSTER_CLICKED:
-        animationRequest = getClusterAnimationRequest(state, action.payload);
-        uid = getPopupFeatureUid(state, action.payload);
+        animationRequest = getClusterAnimationRequest({
+          featureUid: action.payload.featureUid,
+          clusterFacultyAbbr: state.requiredOpts.clusterFacultyAbbr,
+          ...getViewOptions(state),
+        });
+        uid = getPopupFeatureUid(state, {
+          featureUid: action.payload.featureUid,
+          targetId: slctr.getTargetId(state),
+        });
         if (animationRequest) {
           return {
             ...state,
@@ -472,7 +505,10 @@ const createReducer = (initialState) => {
         feature = getPubTranStore(slctr.getTargetId(state)).getFeatureByUid(
           action.payload.featureUid
         );
-        animationRequest = getPubTranAnimationRequest(state, action.payload);
+        animationRequest = getPubTranAnimationRequest({
+          featureUid: action.payload.featureUid,
+          ...getViewOptions(state),
+        });
         uid = !!feature.get('nazev') && getUid(feature);
 
         return {
@@ -520,7 +556,17 @@ const createReducer = (initialState) => {
 
       // DOOR_CLICKED
       case actions.DOOR_CLICKED:
-        handleDoorClick(state, action.payload, action.asyncDispatch);
+        handleDoorClick(
+          {
+            featureUid: action.payload.featureUid,
+            pixelInCoords: action.payload.pixelInCoords,
+            targetId: slctr.getTargetId(state),
+            isIdentifyEnabled: slctr.isIdentifyEnabled(state),
+            identifyCallback: slctr.getIdentifyCallback(state),
+            identifyTypes: state.requiredOpts.identifyTypes,
+          },
+          action.asyncDispatch
+        );
         return {
           ...state,
         };

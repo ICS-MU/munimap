@@ -4,21 +4,16 @@
 
 import * as munimap_assert from '../assert/assert.js';
 import VectorLayer from 'ol/layer/Vector';
+import {ACTIVE_LAYER_ID} from './poi.constants.js';
 import {RESOLUTION, getType} from '../feature/poi.constants.js';
 import {featureClickHandler, isClickable} from '../feature/poi.js';
-import {getActiveStore as getActivePoiStore} from '../source/poi.js';
+import {getActiveStore as getActivePoiStore} from '../source/poi.constants.js';
 
 /**
  * @typedef {import("ol/Map").default} ol.Map
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions
  */
-
-/**
- * @type {string}
- * @const
- */
-const ACTIVE_LAYER_ID = 'active-poi';
 
 /**
  * @param {ol.layer.Base} layer layer
@@ -62,4 +57,4 @@ const createActive = (targetId) => {
   return layer;
 };
 
-export {ACTIVE_LAYER_ID, createActive, isActiveLayer};
+export {createActive, isActiveLayer};

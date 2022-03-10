@@ -6,7 +6,8 @@ import * as munimap_assert from '../assert/assert.js';
 import * as munimap_building from '../feature/building.js';
 import VectorLayer from 'ol/layer/Vector';
 import {RESOLUTION as COMPLEX_RESOLUTION} from '../feature/complex.constants.js';
-import {getStore as getBuildingStore} from '../source/building.js';
+import {LABEL_LAYER_ID, LAYER_ID} from './building.constants.js';
+import {getStore as getBuildingStore} from '../source/building.constants.js';
 import {getType} from '../feature/building.constants.js';
 
 /**
@@ -15,18 +16,6 @@ import {getType} from '../feature/building.constants.js';
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import("ol").Map} ol.Map
  */
-
-/**
- * @type {string}
- * @const
- */
-const LAYER_ID = 'building';
-
-/**
- * @type {string}
- * @const
- */
-const LABEL_LAYER_ID = 'building-label';
 
 /**
  * @param {ol.layer.Base} layer layer
@@ -99,12 +88,4 @@ const createLabel = (targetId) => {
   );
 };
 
-export {
-  LAYER_ID,
-  LABEL_LAYER_ID,
-  create,
-  createLabel,
-  getLayer,
-  isLayer,
-  isLabelLayer,
-};
+export {create, createLabel, getLayer, isLayer, isLabelLayer};

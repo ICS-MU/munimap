@@ -5,18 +5,13 @@
 import * as munimap_complex from '../feature/complex.js';
 import VectorLayer from 'ol/layer/Vector';
 import {RESOLUTION as COMPLEX_RESOLUTION} from '../feature/complex.constants.js';
+import {LAYER_ID} from './complex.constants.js';
 import {getStore as getComplexStore} from '../source/complex.js';
 
 /**
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  */
-
-/**
- * @type {string}
- * @const
- */
-const LAYER_ID = 'complex';
 
 /**
  * @param {ol.layer.Base} layer layer
@@ -46,4 +41,4 @@ const create = (targetId) => {
     })
   );
 };
-export {LAYER_ID, create, isLayer};
+export {create, isLayer};

@@ -5,10 +5,9 @@ import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_utils from '../utils/utils.js';
-import {alignRoomTitleToRows} from '../style/room.js';
+import {alignRoomTitleToRows, wrapText} from '../style/_constants.js';
 import {isAllowed} from '../identify/identify.js';
-import {isCode} from './room.constants.js';
-import {wrapText} from '../style/style.js';
+import {isRoom} from './room.constants.js';
 
 /**
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
@@ -19,15 +18,6 @@ import {wrapText} from '../style/style.js';
  * @typedef {import("./feature.js").IsClickableOptions} IsClickableOptions
  * @typedef {import("redux").Dispatch} redux.Dispatch
  */
-
-/**
- * @param {ol.Feature|ol.render.Feature} feature feature
- * @return {boolean} whether is room feature
- */
-const isRoom = (feature) => {
-  const code = feature.get('polohKod');
-  return munimap_utils.isString(code) && isCode(/** @type {string}*/ (code));
-};
 
 /**
  * @param {ol.Feature} room room
@@ -233,5 +223,4 @@ export {
   getDefaultLabel,
   isClickable,
   isInSelectedFloor,
-  isRoom,
 };

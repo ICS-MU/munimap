@@ -1,11 +1,13 @@
 /**
  *
  */
-
+import * as munimap_utils from '../utils/utils.js';
 import {MUNIMAP_URL} from '../conf.js';
 
 /**
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
+ * @typedef {import("ol").Feature} ol.Feature
+ * @typedef {import("ol/render/Feature").default} ol.render.Feature
  */
 
 /**
@@ -73,4 +75,13 @@ const getType = () => {
   return TYPE;
 };
 
-export {ROOM_TYPES, getType, isCode, isCodeOrLikeExpr, isLikeExpr};
+/**
+ * @param {ol.Feature|ol.render.Feature} feature feature
+ * @return {boolean} whether is room feature
+ */
+const isRoom = (feature) => {
+  const code = feature.get('polohKod');
+  return munimap_utils.isString(code) && isCode(/** @type {string}*/ (code));
+};
+
+export {ROOM_TYPES, getType, isCode, isCodeOrLikeExpr, isLikeExpr, isRoom};

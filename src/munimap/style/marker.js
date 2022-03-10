@@ -8,7 +8,8 @@ import * as munimap_cluster from '../cluster/cluster.js';
 import * as munimap_markerCustom from '../feature/marker.custom.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_style from './style.js';
-import * as munimap_style_building from './building.js';
+import * as munimap_style_building_constants from './building.constants.js';
+import * as munimap_style_constants from './_constants.js';
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {
@@ -19,9 +20,9 @@ import {RESOLUTION as DOOR_RESOLUTION} from '../feature/door.constants.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
 import {Point} from 'ol/geom';
-import {FONT_SIZE as ROOM_FONT_SIZE} from '../style/room.js';
-import {isDoor as isDoorFeature} from '../feature/door.js';
-import {isRoom as isRoomFeature} from '../feature/room.js';
+import {FONT_SIZE as ROOM_FONT_SIZE} from '../style/room.constants.js';
+import {isDoor as isDoorFeature} from '../feature/door.constants.js';
+import {isRoom as isRoomFeature} from '../feature/room.constants.js';
 
 /**
  * @typedef {import("ol/render/Event").default} RenderEvent
@@ -213,10 +214,10 @@ const getPattern = (event) => {
 const getPinText = function () {
   return new Text({
     text: '\uf041',
-    font: 'normal ' + munimap_style.PIN_SIZE + 'px MunimapFont',
+    font: 'normal ' + munimap_style_constants.PIN_SIZE + 'px MunimapFont',
     fill: TEXT_FILL,
-    offsetY: -munimap_style.PIN_SIZE / 2,
-    stroke: munimap_style.TEXT_STROKE,
+    offsetY: -munimap_style_constants.PIN_SIZE / 2,
+    stroke: munimap_style_constants.TEXT_STROKE,
     overflow: true,
   });
 };
@@ -294,7 +295,7 @@ const labelFunction = (feature, resolution, options) => {
   } else if (isMarked) {
     fill = TEXT_FILL;
   } else {
-    fill = munimap_style.TEXT_FILL;
+    fill = munimap_style_constants.TEXT_FILL;
   }
 
   let fontSize;
@@ -304,9 +305,9 @@ const labelFunction = (feature, resolution, options) => {
     isBuilding &&
     munimap_range.contains(FLOOR_RESOLUTION, resolution)
   ) {
-    fontSize = munimap_style_building.BIG_FONT_SIZE;
+    fontSize = munimap_style_building_constants.BIG_FONT_SIZE;
   } else {
-    fontSize = munimap_style_building.FONT_SIZE;
+    fontSize = munimap_style_building_constants.FONT_SIZE;
   }
 
   const intersectFunction = munimap_utils.partial(

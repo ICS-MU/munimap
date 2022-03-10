@@ -4,6 +4,7 @@
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_marker from '../feature/marker.js';
 import VectorLayer from 'ol/layer/Vector';
+import {LAYER_ID} from './marker.constants.js';
 import {getPattern} from '../style/marker.js';
 import {getStore} from '../source/marker.js';
 
@@ -13,12 +14,6 @@ import {getStore} from '../source/marker.js';
  * @typedef {import("../view/view.js").AddLayersOptions} AddLayersOptions
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  */
-
-/**
- * @type {string}
- * @const
- */
-const LAYER_ID = 'marker';
 
 /**
  * @param {ol.layer.Base} layer layer
@@ -70,4 +65,4 @@ const create = (options) => {
   return markerLayer;
 };
 
-export {LAYER_ID, create, getLayer, isLayer};
+export {create, getLayer, isLayer};

@@ -10,8 +10,8 @@ import {Point} from 'ol/geom';
 import {getStore} from '../source/identify.js';
 import {isBuilding} from '../feature/building.js';
 import {isDef} from '../utils/utils.js';
-import {isDoor} from '../feature/door.js';
-import {isRoom} from '../feature/room.js';
+import {isDoor} from '../feature/door.constants.js';
+import {isRoom} from '../feature/room.constants.js';
 import {transform} from 'ol/proj';
 
 /**

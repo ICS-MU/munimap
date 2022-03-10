@@ -1,6 +1,7 @@
 /**
  *
  */
+import {Fill, Stroke} from 'ol/style';
 
 /**
  * @typedef {Object} ResolutionColorObject
@@ -20,6 +21,37 @@ const RESOLUTION_COLOR = [
   {resolution: 0.32, color: '#efefef', opacity: 0.2},
   {resolution: 0.29, color: '#ededed', opacity: 0.2},
 ];
+
+/**
+ * @type {Fill}
+ * @const
+ */
+const TEXT_FILL = new Fill({
+  color: '#0000dc',
+});
+
+/**
+ * @type {Stroke}
+ * @const
+ */
+const TEXT_STROKE = new Stroke({
+  color: '#ffffff',
+  width: 4,
+});
+
+/**
+ * @type {Fill}
+ * @const
+ */
+const NO_GEOMETRY_FILL = new Fill({
+  color: '#dfdfdf',
+});
+
+/**
+ * @type {number}
+ * @const
+ */
+const PIN_SIZE = 25;
 
 /**
  * @type {number}
@@ -66,4 +98,62 @@ const alignTextToRows = (parts, separator) => {
   return text;
 };
 
-export {RESOLUTION_COLOR, alignTextToRows};
+/**
+ * @param {string} title title
+ * @return {string} aligned title
+ */
+const alignRoomTitleToRows = (title) => {
+  if (title.indexOf(' / ') >= 0) {
+    let mainParts = title.split(' / ');
+    mainParts = mainParts.map((part) => {
+      let result = part;
+      if (part.indexOf(' ') >= 0) {
+        const parts = part.split(' ');
+        result = alignTextToRows(parts, ' ');
+      }
+      return result;
+    });
+    title = mainParts.join(' /\n');
+  } else {
+    if (title.indexOf(' ') >= 0) {
+      const parts = title.split(' ');
+      title = alignTextToRows(parts, ' ');
+    }
+  }
+  return title;
+};
+
+/**
+ * @param {string|undefined} text text
+ * @param {string} [opt_char] Character for newline (/n or </br>)
+ * @return {string|undefined} wrapped text
+ */
+const wrapText = (text, opt_char) => {
+  if (!text) {
+    return text;
+  }
+  let char = opt_char;
+  if (!char) {
+    char = '\n';
+  }
+  const wrappedText = [];
+  const words = text.split(' ');
+  words.forEach((word, i) => {
+    wrappedText.push(word);
+    if ((i + 1) % 3 === 0) {
+      wrappedText.push(char);
+    }
+  });
+  return wrappedText.join(' ');
+};
+
+export {
+  NO_GEOMETRY_FILL,
+  PIN_SIZE,
+  RESOLUTION_COLOR,
+  TEXT_FILL,
+  TEXT_STROKE,
+  alignRoomTitleToRows,
+  alignTextToRows,
+  wrapText,
+};

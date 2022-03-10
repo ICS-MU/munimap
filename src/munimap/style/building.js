@@ -10,8 +10,16 @@ import * as munimap_markerStyle from './marker.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_store from '../utils/store.js';
 import * as munimap_style from './style.js';
+import * as munimap_style_constants from './_constants.js';
 import * as munimap_unit from '../feature/unit.js';
 import * as munimap_utils from '../utils/utils.js';
+import {
+  BIG_FONT_SIZE,
+  FONT_SIZE,
+  STROKE,
+  STYLE,
+  getNoGeometryStyle,
+} from './building.constants.js';
 import {RESOLUTION as COMPLEX_RESOLUTION} from '../feature/complex.constants.js';
 import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
@@ -62,64 +70,6 @@ const LABEL_CACHE = {};
  * @const
  */
 const WHITE_TO_GREY_CACHE = {};
-
-/**
- * @type {Fill}
- * @protected
- * @const
- */
-const FILL = new Fill({
-  color: '#ffffff',
-});
-
-/**
- * @type {Stroke}
- * @protected
- * @const
- */
-const STROKE = new Stroke({
-  color: '#0000dc',
-  width: 1,
-});
-
-/**
- * @type {Style}
- * @protected
- * @const
- */
-const STYLE = new Style({
-  fill: FILL,
-  stroke: STROKE,
-});
-
-/**
- * @type {Style}
- * @const
- */
-let NO_GEOMETRY;
-
-/**
- * @return {Style} style
- */
-const getNoGeometryStyle = () => {
-  if (!NO_GEOMETRY) {
-    NO_GEOMETRY = new Style({
-      fill: munimap_style.NO_GEOMETRY_FILL,
-      stroke: STROKE,
-    });
-  }
-  return NO_GEOMETRY;
-};
-
-/**
- * @type {number}
- */
-const FONT_SIZE = 13;
-
-/**
- * @type {number}
- */
-const BIG_FONT_SIZE = 15;
 
 /**
  *
@@ -216,8 +166,8 @@ const defaultLabelFunction = (feature, resolution, extent, lang) => {
     ),
     text: new Text({
       font: 'bold ' + FONT_SIZE + 'px arial',
-      fill: munimap_style.TEXT_FILL,
-      stroke: munimap_style.TEXT_STROKE,
+      fill: munimap_style_constants.TEXT_FILL,
+      stroke: munimap_style_constants.TEXT_STROKE,
       text: title,
       overflow: true,
     }),
@@ -261,7 +211,7 @@ const smallScaleLabelFunction = (feature, resolution, extent, lang) => {
           extent
         );
         const options = {
-          fill: munimap_style.TEXT_FILL,
+          fill: munimap_style_constants.TEXT_FILL,
           fontSize: FONT_SIZE,
           geometry: geometryFunction,
           title: title,
@@ -303,7 +253,7 @@ const largeScaleLabelFunction = (feature, resolution, extent, lang) => {
     const units = munimap_building.getUnits(feature);
     if (units.length > 0) {
       const options = {
-        fill: munimap_style.TEXT_FILL,
+        fill: munimap_style_constants.TEXT_FILL,
         fontSize: FONT_SIZE,
         geometry: geometryFunction,
         title: title,
@@ -314,8 +264,8 @@ const largeScaleLabelFunction = (feature, resolution, extent, lang) => {
         geometry: geometryFunction,
         text: new Text({
           font: 'bold ' + BIG_FONT_SIZE + 'px arial',
-          fill: munimap_style.TEXT_FILL,
-          stroke: munimap_style.TEXT_STROKE,
+          fill: munimap_style_constants.TEXT_FILL,
+          stroke: munimap_style_constants.TEXT_STROKE,
           text: title,
           overflow: true,
         }),
@@ -422,10 +372,4 @@ const getLabelStyleFunction = (labelFn, options) => {
   return styleFce;
 };
 
-export {
-  BIG_FONT_SIZE,
-  FONT_SIZE,
-  getPartialLabelFunction,
-  getLabelStyleFunction,
-  getStyleFunction,
-};
+export {getPartialLabelFunction, getLabelStyleFunction, getStyleFunction};

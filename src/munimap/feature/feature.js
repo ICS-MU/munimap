@@ -7,7 +7,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import turf_booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import {Ids as OptPoiIds} from './optpoi.constants.js';
 import {Point} from 'ol/geom';
-import {REQUIRED_CUSTOM_MARKERS} from '../create.js';
+import {REQUIRED_CUSTOM_MARKERS} from '../create.constants.js';
 import {featureExtentIntersect} from '../utils/geom.js';
 import {
   getByCode as getBuildingByCode,
@@ -25,10 +25,10 @@ import {getType as getDoorType} from './door.constants.js';
 import {getLayer as getMarkerLayer} from '../layer/marker.js';
 import {getType as getRoomType} from './room.constants.js';
 import {isCustom as isCustomMarker} from './marker.custom.js';
-import {isDoor} from './door.js';
+import {isDoor} from './door.constants.js';
 import {isCode as isFloorCode} from './floor.constants.js';
-import {isCtgUid as isOptPoiCtgUid} from './optpoi.js';
-import {isRoom} from './room.js';
+import {isCtgUid as isOptPoiCtgUid} from './optpoi.constants.js';
+import {isRoom} from './room.constants.js';
 
 /**
  * @typedef {import("ol/source").Vector} ol.source.Vector
@@ -39,12 +39,17 @@ import {isRoom} from './room.js';
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
  * @typedef {import("redux").Dispatch} redux.Dispatch
+ * @typedef {import("../identify/identify.js").CallbackFunction} CallbackFunction
  */
 
 /**
  * @typedef {Object} FeatureClickHandlerOptions
  * @property {string} featureUid feature uid
  * @property {ol.Coordinate} pixelInCoords feature uid
+ * @property {string} [targetId] targetId
+ * @property {boolean} [isIdentifyEnabled] isIdentifyEnabled
+ * @property {Array<string>} [identifyTypes] identifyTypes
+ * @property {CallbackFunction} [identifyCallback] identifyCallback
  */
 
 /**

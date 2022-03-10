@@ -2,17 +2,17 @@
  * @module style/room
  */
 import * as munimap_range from '../utils/range.js';
-import * as munimap_style from './style.js';
 import * as munimap_utils from '../utils/utils.js';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
-import {Fill, Stroke, Style, Text} from 'ol/style';
+import {FONT_SIZE, SMALL_FONT_SIZE, STROKE, STYLE} from './room.constants.js';
+import {Fill, Style, Text} from 'ol/style';
 import {
   ICON_HEIGHT as POI_ICON_HEIGHT,
   Resolutions as PoiResolutions,
 } from '../style/poi.js';
 import {PURPOSE as POI_PURPOSE} from '../feature/poi.constants.js';
 import {LABEL_CACHE as STYLE_LABEL_CACHE, getLabelHeight} from './style.js';
-import {alignTextToRows} from './_constants.js';
+import {TEXT_FILL, TEXT_STROKE} from './_constants.js';
 import {getDefaultLabel} from '../feature/room.js';
 import {
   getCorridor as getMarkerCorridorStyle,
@@ -68,48 +68,6 @@ const getStaircase = () => STAIRCASE;
  * @const
  */
 const LABEL_CACHE = {};
-
-/**
- * @type {number}
- */
-const SMALL_FONT_SIZE = 9;
-
-/**
- * @type {number}
- */
-const FONT_SIZE = 11;
-
-/**
- * @type {Fill}
- * @const
- */
-const FILL = new Fill({
-  color: '#ffffff',
-});
-
-/**
- * @type {Style}
- * @const
- */
-const STROKE = new Style({
-  stroke: new Stroke({
-    color: '#99a9c8',
-    width: 1,
-  }),
-  zIndex: 4,
-});
-
-/**
- * @type {Array<Style>}
- * @const
- */
-const STYLE = [
-  new Style({
-    fill: FILL,
-    zIndex: 0,
-  }),
-  STROKE,
-];
 
 /**
  * @type {Array<string>}
@@ -196,31 +154,6 @@ const setCorridorStyle = (event) => {
       STAIRCASE = [staircaseBackground, corridorStyle, STROKE];
     };
   }
-};
-
-/**
- * @param {string} title title
- * @return {string} aligned title
- */
-const alignRoomTitleToRows = (title) => {
-  if (title.indexOf(' / ') >= 0) {
-    let mainParts = title.split(' / ');
-    mainParts = mainParts.map((part) => {
-      let result = part;
-      if (part.indexOf(' ') >= 0) {
-        const parts = part.split(' ');
-        result = alignTextToRows(parts, ' ');
-      }
-      return result;
-    });
-    title = mainParts.join(' /\n');
-  } else {
-    if (title.indexOf(' ') >= 0) {
-      const parts = title.split(' ');
-      title = alignTextToRows(parts, ' ');
-    }
-  }
-  return title;
 };
 
 /**
@@ -371,8 +304,8 @@ const labelFunction = (
           text: new Text({
             font: textFont,
             offsetY: offset,
-            fill: munimap_style.TEXT_FILL,
-            stroke: munimap_style.TEXT_STROKE,
+            fill: TEXT_FILL,
+            stroke: TEXT_STROKE,
             text: title,
           }),
           zIndex: 4,
@@ -445,10 +378,8 @@ const getActiveStyleFunction = (targetId) => {
 };
 
 export {
-  FONT_SIZE,
   STAIRCASE_ICON,
   setCorridorStyle,
-  alignRoomTitleToRows,
   getActiveStyleFunction,
   getDefaultStyleFunction,
   getLabelFunction,

@@ -5,6 +5,7 @@ import * as munimap_utils from '../utils/utils.js';
 import VectorSource from 'ol/source/Vector';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
 import {loadActiveDoors} from '../load.js';
+import {setActiveStore, setStore} from './door.constants.js';
 import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
 
 /**
@@ -12,23 +13,14 @@ import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
  */
 
 /**
- * @type {Object<string, VectorSource>}
- */
-const DOOR_STORES = {};
-
-/**
- * @type {Object<string, VectorSource>}
- */
-const ACTIVE_DOOR_STORES = {};
-
-/**
  * Create store for doors.
  * @param {string} targetId targetId
  * @return {VectorSource} store
  */
 const createStore = (targetId) => {
-  DOOR_STORES[targetId] = new VectorSource();
-  return DOOR_STORES[targetId];
+  const store = new VectorSource();
+  setStore(targetId, store);
+  return store;
 };
 
 /**
@@ -47,26 +39,8 @@ const createActiveStore = (store, targetId, callback) => {
     ),
     loader: munimap_utils.partial(loadActiveDoors, {store, callback}),
   });
-  ACTIVE_DOOR_STORES[targetId] = activeStore;
+  setActiveStore(targetId, activeStore);
   return activeStore;
 };
 
-/**
- * Get door store.
- * @param {string} targetId targetId
- * @return {VectorSource} store
- */
-const getStore = (targetId) => {
-  return DOOR_STORES[targetId];
-};
-
-/**
- * Get active door store.
- * @param {string} targetId targetId
- * @return {VectorSource} store
- */
-const getActiveStore = (targetId) => {
-  return ACTIVE_DOOR_STORES[targetId];
-};
-
-export {createActiveStore, createStore, getActiveStore, getStore};
+export {createActiveStore, createStore};
