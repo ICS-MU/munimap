@@ -16,7 +16,7 @@ import {
   isCodeOrLikeExpr as isRoomCodeOrLikeExpr,
 } from '../feature/room.constants.js';
 import {getUid} from 'ol';
-import {hasInnerGeometry} from '../feature/building.js';
+import {hasInnerGeometry, isBuilding} from '../feature/building.js';
 import {
   isCode as isDoorCode,
   isCodeOrLikeExpr as isDoorCodeOrLikeExpr,
@@ -162,7 +162,7 @@ const getLargestInExtent = (store, extent) => {
   let maxArea;
   const format = new GeoJSON();
   store.forEachFeatureIntersectingExtent(extent, (f) => {
-    if (hasInnerGeometry(f)) { //opravit
+    if (isBuilding(f) && hasInnerGeometry(f)) {
       const intersect = featureExtentIntersect(f, extent, format);
       const geom = intersect.getGeometry();
       if (geom instanceof Polygon || geom instanceof MultiPolygon) {
