@@ -6,10 +6,10 @@ import * as munimap_utils from '../utils/utils.js';
 import * as ol_extent from 'ol/extent';
 import * as slctr from '../redux/selector.js';
 import {
-  ID_FIELD_NAME as COMPLEX_ID_FIELD_NAME,
-  RESOLUTION as COMPLEX_RESOLUTION,
-} from '../feature/complex.constants.js';
-import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
+  COMPLEX_ID_FIELD_NAME,
+  COMPLEX_RESOLUTION,
+  FLOOR_RESOLUTION,
+} from '../feature/_constants.js';
 import {INITIAL_STATE} from '../conf.js';
 import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
 import {getAnimationDuration} from '../utils/animation.js';

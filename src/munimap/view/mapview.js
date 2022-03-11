@@ -2,7 +2,7 @@ import * as munimap_assert from '../assert/assert.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
 import View from 'ol/View';
-import {TARGET_ELEMENTS_STORE} from '../create.constants.js';
+import {TARGET_ELEMENTS_STORE} from '../constants.js';
 import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
 
 /**

@@ -3,9 +3,11 @@
  */
 import {Feature} from 'ol';
 import {isBuilding} from '../feature/building.js';
-import {isDoor} from '../feature/door.constants.js';
-import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.constants.js';
-import {isRoom} from '../feature/room.constants.js';
+import {
+  isDoor,
+  isOptPoiCtgUid,
+  isRoom,
+} from '../feature/_constants.functions.js';
 
 /**
  * @typedef {import("../conf.js").State} State

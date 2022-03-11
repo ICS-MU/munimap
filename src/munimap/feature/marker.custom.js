@@ -3,8 +3,11 @@
  */
 import * as munimap_assert from '../assert/assert.js';
 import * as ol_proj from 'ol/proj';
-import {FEATURE_TYPE_PROPERTY_NAME} from './feature.constants.js';
-import {LABEL_FIELD_NAME, TYPE} from './marker.custom.constants.js';
+import {
+  CUSTOM_MARKER_LABEL_FIELD_NAME,
+  CUSTOM_MARKER_TYPE,
+  FEATURE_TYPE_PROPERTY_NAME,
+} from './_constants.js';
 import {isString} from '../utils/utils.js';
 
 /**
@@ -15,19 +18,10 @@ import {isString} from '../utils/utils.js';
 
 /**
  * @param {ol.FeatureLike} feature feature
- * @return {boolean} isCustom
- */
-const isCustom = (feature) => {
-  const fType = feature.get(FEATURE_TYPE_PROPERTY_NAME);
-  return fType === TYPE;
-};
-
-/**
- * @param {ol.FeatureLike} feature feature
  * @return {string|undefined} label
  */
 const getLabel = (feature) => {
-  const label = feature.get(LABEL_FIELD_NAME);
+  const label = feature.get(CUSTOM_MARKER_LABEL_FIELD_NAME);
   munimap_assert.assert(label === undefined || isString(label));
   return /** @type {string|undefined}*/ (label);
 };
@@ -38,10 +32,10 @@ const getLabel = (feature) => {
  * @param {ol.Feature} feature feature
  */
 const decorate = (feature) => {
-  feature.set(FEATURE_TYPE_PROPERTY_NAME, TYPE);
+  feature.set(FEATURE_TYPE_PROPERTY_NAME, CUSTOM_MARKER_TYPE);
   const geom = feature.getGeometry();
   const transformFn = ol_proj.getTransform('EPSG:4326', 'EPSG:3857');
   geom.applyTransform(transformFn);
 };
 
-export {isCustom, getLabel, decorate};
+export {getLabel, decorate};

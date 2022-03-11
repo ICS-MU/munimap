@@ -3,9 +3,7 @@
  */
 import * as actions from '../redux/action.js';
 import * as munimap_range from '../utils/range.js';
-import {FEATURE_TYPE_PROPERTY_NAME} from '../feature/feature.constants.js';
-import {RESOLUTION as FLOOR_RESOLUTION} from './floor.constants.js';
-import {PURPOSE, getType} from './poi.constants.js';
+import {FLOOR_RESOLUTION, PoiPurpose} from '../feature/_constants.js';
 
 /**
  * @typedef {import('../utils/range.js').RangeInterface} RangeInterface
@@ -19,17 +17,6 @@ import {PURPOSE, getType} from './poi.constants.js';
  */
 
 /**
- * @param {ol.Feature|ol.render.Feature} feature feature
- * @return {boolean} whether is feature poi
- */
-const isPoi = (feature) => {
-  const type = /**@type {TypeOptions}*/ (
-    feature.get(FEATURE_TYPE_PROPERTY_NAME)
-  );
-  return type === getType();
-};
-
-/**
  * @param {IsClickableOptions} options options
  * @return {boolean} whether is clickable
  */
@@ -39,8 +26,8 @@ const isClickable = (options) => {
   if (!munimap_range.contains(FLOOR_RESOLUTION, resolution)) {
     const poiType = feature.get('typ');
     return (
-      poiType === PURPOSE.BUILDING_ENTRANCE ||
-      poiType === PURPOSE.BUILDING_COMPLEX_ENTRANCE
+      poiType === PoiPurpose.BUILDING_ENTRANCE ||
+      poiType === PoiPurpose.BUILDING_COMPLEX_ENTRANCE
     );
   }
   return false;

@@ -5,8 +5,11 @@
 import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_range from '../utils/range.js';
-import {FEATURE_TYPE_PROPERTY_NAME} from './feature.constants.js';
-import {RESOLUTION, UNITS_FIELD_NAME, getType} from './complex.constants.js';
+import {
+  COMPLEX_RESOLUTION,
+  COMPLEX_TYPE,
+  COMPLEX_UNITS_FIELD_NAME,
+} from './_constants.js';
 import {getComplexStore} from '../source/_constants.js';
 
 /**
@@ -29,19 +32,10 @@ import {getComplexStore} from '../source/_constants.js';
 const getById = (targetId, id, opt_features) => {
   const features = opt_features || getComplexStore(targetId).getFeatures();
   const result = features.find((feature) => {
-    const idProperty = getType().primaryKey;
+    const idProperty = COMPLEX_TYPE.primaryKey;
     return feature.get(idProperty) === id;
   });
   return result || null;
-};
-
-/**
- * @param {ol.Feature} feature feature
- * @return {boolean} whereas is feature complex
- */
-const isComplex = (feature) => {
-  const fType = feature.get(FEATURE_TYPE_PROPERTY_NAME);
-  return fType === getType();
 };
 
 /**
@@ -59,7 +53,7 @@ const getBuildingCount = (complex) => {
  * @return {boolean} whether is clickable
  */
 const isClickable = (options) => {
-  return munimap_range.contains(RESOLUTION, options.resolution);
+  return munimap_range.contains(COMPLEX_RESOLUTION, options.resolution);
 };
 
 /**
@@ -75,17 +69,9 @@ const featureClickHandler = (dispatch, options) => {
  * @return {Array<ol.Feature>} units
  */
 const getUnits = (complex) => {
-  const result = complex.get(UNITS_FIELD_NAME);
+  const result = complex.get(COMPLEX_UNITS_FIELD_NAME);
   munimap_assert.assert(result === null || result instanceof Array);
   return result;
 };
 
-export {
-  isClickable,
-  featureClickHandler,
-  isComplex,
-  getBuildingCount,
-  getById,
-  getType,
-  getUnits,
-};
+export {isClickable, featureClickHandler, getBuildingCount, getById, getUnits};

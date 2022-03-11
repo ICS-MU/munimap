@@ -8,10 +8,9 @@ import {
   ROOM_LABEL_LAYER_ID,
   ROOM_LAYER_ID,
 } from './_constants.js';
-import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
+import {FLOOR_RESOLUTION, ROOM_TYPE} from '../feature/_constants.js';
 import {featureClickHandler, isClickable} from '../feature/room.js';
 import {getActiveRoomStore, getDefaultRoomStore} from '../source/_constants.js';
-import {getType as getRoomType} from '../feature/room.constants.js';
 import {setCorridorStyle} from '../style/room.js';
 
 /**
@@ -74,7 +73,7 @@ const create = (targetId) => {
   const layer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: ROOM_LAYER_ID,
-      type: getRoomType(),
+      type: ROOM_TYPE,
       // refreshStyleOnFloorChange: true,
       maxResolution: FLOOR_RESOLUTION.max,
       opacity: 0.4,
@@ -99,7 +98,7 @@ const createActive = (targetId) => {
       id: ACTIVE_ROOM_LAYER_ID,
       isFeatureClickable: isClickable,
       featureClickHandler: featureClickHandler,
-      type: getRoomType(),
+      type: ROOM_TYPE,
       maxResolution: FLOOR_RESOLUTION.max,
       source: getActiveRoomStore(targetId),
       updateWhileAnimating: true,
@@ -121,7 +120,7 @@ const createLabel = (targetId, showLocationCodes) => {
   return new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: ROOM_LABEL_LAYER_ID,
-      type: getRoomType(),
+      type: ROOM_TYPE,
       // refreshStyleOnFloorChange: true,
       isFeatureClickable: isClickable,
       featureClickHandler: featureClickHandler,

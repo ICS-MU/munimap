@@ -5,7 +5,7 @@
 import * as munimap_assert from '../assert/assert.js';
 import VectorLayer from 'ol/layer/Vector';
 import {ACTIVE_POI_LAYER_ID} from './_constants.js';
-import {RESOLUTION, getType} from '../feature/poi.constants.js';
+import {POI_RESOLUTION, POI_TYPE} from '../feature/_constants.js';
 import {featureClickHandler, isClickable} from '../feature/poi.js';
 import {getActivePoiStore} from '../source/_constants.js';
 
@@ -46,8 +46,8 @@ const createActive = (targetId) => {
       id: ACTIVE_POI_LAYER_ID,
       isFeatureClickable: isClickable,
       featureClickHandler: featureClickHandler,
-      type: getType(),
-      maxResolution: RESOLUTION.max,
+      type: POI_TYPE,
+      maxResolution: POI_RESOLUTION.max,
       source: getActivePoiStore(targetId),
       updateWhileAnimating: true,
       updateWhileInteracting: true,

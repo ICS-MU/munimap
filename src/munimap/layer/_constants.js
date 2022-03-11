@@ -20,7 +20,7 @@ export const TYPE = 'type';
  *
  * @enum {string}
  */
-export const BASEMAPS = {
+export const BasemapIds = {
   OSM: 'osm',
   OSM_BW: 'osm-bw',
   ARCGIS: 'arcgis',

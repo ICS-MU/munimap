@@ -8,7 +8,6 @@ import * as munimap_cluster from '../cluster/cluster.js';
 import * as munimap_geom from '../utils/geom.js';
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_marker from '../feature/marker.js';
-import * as munimap_marker_custom from '../feature/marker.custom.js';
 import * as munimap_style from '../style/style.js';
 import * as munimap_style_constants from '../style/_constants.js';
 import * as munimap_style_marker from '../style/marker.js';
@@ -18,9 +17,13 @@ import Feature from 'ol/Feature';
 import {BUILDING_FONT_SIZE} from './_constants.js';
 import {Circle, Fill, Stroke, Style, Text} from 'ol/style';
 import {MultiPolygon} from 'ol/geom';
+import {getLabel} from '../feature/marker.custom.js';
 import {getMarkerStore} from '../source/_constants.js';
-import {isDoor} from '../feature/door.constants.js';
-import {isRoom} from '../feature/room.constants.js';
+import {
+  isCustomMarker,
+  isDoor,
+  isRoom,
+} from '../feature/_constants.functions.js';
 import {localeCompare} from '../utils/string.js';
 
 /**
@@ -193,8 +196,8 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
             }
             titleParts.push(buildingTitle);
           });
-        } else if (munimap_marker_custom.isCustom(marker)) {
-          const cmTitle = munimap_marker_custom.getLabel(marker);
+        } else if (isCustomMarker(marker)) {
+          const cmTitle = getLabel(marker);
           if (munimap_utils.isDefAndNotNull(cmTitle)) {
             titleParts.push(cmTitle);
           }

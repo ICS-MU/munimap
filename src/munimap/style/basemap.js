@@ -2,7 +2,7 @@
  * @module style/basemap
  */
 
-import {BASEMAPS} from '../layer/_constants.js';
+import {BasemapIds} from '../layer/_constants.js';
 import {RESOLUTION_COLOR} from './_constants.js';
 import {isUserAgentIE} from '../utils/utils.js';
 
@@ -28,7 +28,7 @@ const setStyle = (raster, baseMap) => {
     raster.setOpacity(resColor.opacity);
   });
   if (
-    (baseMap === BASEMAPS.OSM_BW || baseMap === BASEMAPS.ARCGIS_BW) &&
+    (baseMap === BasemapIds.OSM_BW || baseMap === BasemapIds.ARCGIS_BW) &&
     !isUserAgentIE()
   ) {
     raster.on('postrender', (evt) => {

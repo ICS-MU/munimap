@@ -5,7 +5,6 @@
 import * as munimap_asserts from '../assert/assert.js';
 import * as munimap_building from '../feature/building.js';
 import * as munimap_cluster from '../cluster/cluster.js';
-import * as munimap_markerCustom from '../feature/marker.custom.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_style from './style.js';
 import * as munimap_style_constants from './_constants.js';
@@ -15,12 +14,14 @@ import {
   CENTER_GEOMETRY_FUNCTION,
   INTERSECT_CENTER_GEOMETRY_FUNCTION,
 } from '../utils/geom.js';
-import {RESOLUTION as DOOR_RESOLUTION} from '../feature/door.constants.js';
-import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
+import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from '../feature/_constants.js';
 import {Fill, Style, Text} from 'ol/style';
 import {Point} from 'ol/geom';
-import {isDoor as isDoorFeature} from '../feature/door.constants.js';
-import {isRoom as isRoomFeature} from '../feature/room.constants.js';
+import {
+  isCustomMarker as isCustomMarkerFeature,
+  isDoor as isDoorFeature,
+  isRoom as isRoomFeature,
+} from '../feature/_constants.functions.js';
 
 /**
  * @typedef {import("ol/render/Event").default} RenderEvent
@@ -155,7 +156,7 @@ const labelFunction = (feature, resolution, options) => {
   const isBuilding = munimap_building.isBuilding(feature);
   const isRoom = isRoomFeature(feature);
   const isDoor = isDoorFeature(feature);
-  const isCustomMarker = munimap_markerCustom.isCustom(feature);
+  const isCustomMarker = isCustomMarkerFeature(feature);
 
   let title;
   if (munimap_utils.isDefAndNotNull(markerLabel)) {

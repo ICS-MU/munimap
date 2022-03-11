@@ -12,18 +12,15 @@ import * as ol_extent from 'ol/extent';
 import * as srcs from '../source/_constants.js';
 import {BUILDING_RESOLUTION, ROOM_RESOLUTION} from '../cluster/cluster.js';
 import {ENABLE_SELECTOR_LOGS, INITIAL_STATE} from '../conf.js';
-import {FEATURE_TYPE_PROPERTY_NAME} from '../feature/feature.constants.js';
 import {
-  RESOLUTION as FLOOR_RESOLUTION,
-  isCode as isFloorCode,
-} from '../feature/floor.constants.js';
-import {
-  IDENTIFY_CALLBACK_STORE,
-  MARKER_LABEL_STORE,
-} from '../create.constants.js';
-import {RESOLUTION as MARKER_RESOLUTION} from '../feature/marker.constants.js';
+  FEATURE_TYPE_PROPERTY_NAME,
+  FLOOR_RESOLUTION,
+  MARKER_RESOLUTION,
+  PUBTRAN_RESOLUTION,
+  PUBTRAN_TYPE,
+} from '../feature/_constants.js';
+import {IDENTIFY_CALLBACK_STORE, MARKER_LABEL_STORE} from '../constants.js';
 import {MultiPolygon, Polygon} from 'ol/geom';
-import {RESOLUTION as PUBTRAN_RESOLUTION} from '../feature/pubtran.stop.constants.js';
 import {defaults as control_defaults} from 'ol/control';
 import {createLayer as createBasemapLayer, getId} from '../layer/basemap.js';
 import {create as createMapView} from '../view/mapview.js';
@@ -60,12 +57,14 @@ import {
 import {getStyleFunction as getIdentifyStyleFunction} from '../style/identify.js';
 import {getInExtent as getMarkerInExtent} from '../source/marker.js';
 import {getStyleFunction as getMarkerStyleFunction} from '../style/marker.js';
-import {getType as getPubtranType} from '../feature/pubtran.stop.constants.js';
 import {getSelectedFloorCodesWithMarkers} from '../feature/marker.js';
-import {isCode as isBuildingCode} from '../feature/building.constants.js';
-import {isDoor} from '../feature/door.constants.js';
-import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.constants.js';
-import {isRoom} from '../feature/room.constants.js';
+import {isBuildingCode} from '../feature/_constants.functions.js';
+import {
+  isDoor,
+  isFloorCode,
+  isOptPoiCtgUid,
+  isRoom,
+} from '../feature/_constants.functions.js';
 
 /**
  * @typedef {import("../conf.js").State} State
@@ -1437,7 +1436,7 @@ export const getHideResolutionForPopup = createSelector(
     }
 
     const ft = feature.get(FEATURE_TYPE_PROPERTY_NAME);
-    return ft && ft.layerId === getPubtranType().layerId
+    return ft && ft.layerId === PUBTRAN_TYPE.layerId
       ? PUBTRAN_RESOLUTION
       : MARKER_RESOLUTION;
   }
@@ -1476,7 +1475,7 @@ export const getPopupContent = createSelector(
       return null;
     }
     const ft = feature.get(FEATURE_TYPE_PROPERTY_NAME);
-    return ft && ft.layerId === getPubtranType().layerId
+    return ft && ft.layerId === PUBTRAN_TYPE.layerId
       ? getDetailHtml(feature.get('nazev'), lang)
       : feature.get('detail');
   }
@@ -1533,9 +1532,7 @@ export const getOffsetForPopup = createSelector(
     }
 
     const ft = feature.get(FEATURE_TYPE_PROPERTY_NAME);
-    return ft && ft.layerId === getPubtranType().layerId
-      ? [0, 0]
-      : defaultOffset;
+    return ft && ft.layerId === PUBTRAN_TYPE.layerId ? [0, 0] : defaultOffset;
   }
 );
 

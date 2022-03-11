@@ -3,8 +3,8 @@
  */
 import * as munimap_utils from '../utils/utils.js';
 import VectorSource from 'ol/source/Vector';
+import {ROOM_TYPE} from '../feature/_constants.js';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
-import {getType as getRoomType} from '../feature/room.constants.js';
 import {loadActiveRooms, loadDefaultRooms} from '../load.js';
 import {
   setActiveRoomStore,
@@ -45,7 +45,7 @@ const createDefaultStore = (targetId, callback) => {
   defaultStore.setLoader(
     munimap_utils.partial(loadDefaultRooms, targetId, {
       source: defaultStore,
-      type: getRoomType(),
+      type: ROOM_TYPE,
       where: 'vychoziPodlazi = 1',
       callback: callback,
     })

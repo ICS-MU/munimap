@@ -7,7 +7,7 @@ import * as munimap_utils from '../utils/utils.js';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
-import {BASEMAPS} from './_constants.js';
+import {BasemapIds} from './_constants.js';
 import {assert} from '../assert/assert.js';
 import {isDefAndNotNull} from '../utils/utils.js';
 import {setStyle as setBaseMapStyle} from '../style/basemap.js';
@@ -21,7 +21,7 @@ import {setStyle as setBaseMapStyle} from '../style/basemap.js';
  * @return {boolean} isArcGISBasemap
  */
 const isArcGISBasemap = (id) => {
-  return id === BASEMAPS.ARCGIS || id === BASEMAPS.ARCGIS_BW;
+  return id === BasemapIds.ARCGIS || id === BasemapIds.ARCGIS_BW;
 };
 
 /**
@@ -29,7 +29,7 @@ const isArcGISBasemap = (id) => {
  * @return {boolean} isOSMBasemap
  */
 const isOSMBasemap = (id) => {
-  return id === BASEMAPS.OSM || id === BASEMAPS.OSM_BW;
+  return id === BasemapIds.OSM || id === BasemapIds.OSM_BW;
 };
 
 /**
@@ -37,7 +37,7 @@ const isOSMBasemap = (id) => {
  * @return {boolean} isBlackAndWhiteBasemap
  */
 const isBWBasemap = (id) => {
-  return id === BASEMAPS.ARCGIS_BW || id === BASEMAPS.OSM_BW;
+  return id === BasemapIds.ARCGIS_BW || id === BasemapIds.OSM_BW;
 };
 
 /**
@@ -46,14 +46,14 @@ const isBWBasemap = (id) => {
  */
 const getPairedBasemap = (id) => {
   switch (id) {
-    case BASEMAPS.ARCGIS:
-      return BASEMAPS.OSM;
-    case BASEMAPS.ARCGIS_BW:
-      return BASEMAPS.OSM_BW;
-    case BASEMAPS.OSM:
-      return BASEMAPS.ARCGIS;
-    case BASEMAPS.OSM_BW:
-      return BASEMAPS.ARCGIS_BW;
+    case BasemapIds.ARCGIS:
+      return BasemapIds.OSM;
+    case BasemapIds.ARCGIS_BW:
+      return BasemapIds.OSM_BW;
+    case BasemapIds.OSM:
+      return BasemapIds.ARCGIS;
+    case BasemapIds.OSM_BW:
+      return BasemapIds.ARCGIS_BW;
     default:
       return undefined;
   }
@@ -67,7 +67,7 @@ const getPairedBasemap = (id) => {
 const createLayer = (basemapId, lang) => {
   let source;
 
-  if (basemapId === BASEMAPS.ARCGIS || basemapId === BASEMAPS.ARCGIS_BW) {
+  if (basemapId === BasemapIds.ARCGIS || basemapId === BasemapIds.ARCGIS_BW) {
     const esriAttribution =
       '© <a href="http://help.arcgis.com/' +
       'en/communitymaps/pdf/WorldTopographicMap_Contributors.pdf"' +
@@ -81,7 +81,7 @@ const createLayer = (basemapId, lang) => {
       crossOrigin: null,
       maxZoom: 19,
     });
-  } else if (basemapId === BASEMAPS.OSM || basemapId === BASEMAPS.OSM_BW) {
+  } else if (basemapId === BasemapIds.OSM || basemapId === BasemapIds.OSM_BW) {
     assert(isDefAndNotNull(lang), 'Language must be set.');
     const osmAttribution = munimap_lang.getMsg(
       munimap_lang.Translations.OSM_ATTRIBUTION_HTML,
@@ -127,7 +127,6 @@ const getId = (center, resolution, requiredBasemap) => {
 };
 
 export {
-  BASEMAPS,
   createLayer,
   getPairedBasemap,
   getId,

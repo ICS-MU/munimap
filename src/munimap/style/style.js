@@ -12,7 +12,7 @@ import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
 import {PIN_SIZE, TEXT_FILL, TEXT_STROKE} from './_constants.js';
 import {Style, Text} from 'ol/style';
 import {getDefaultLabel as getDefaultRoomLabel} from '../feature/room.js';
-import {isRoom} from '../feature/room.constants.js';
+import {isCustomMarker, isRoom} from '../feature/_constants.functions.js';
 
 /**
  * @typedef {import("./marker").LabelFunction} MarkerLabelFunction
@@ -95,7 +95,7 @@ const getDefaultLabel = (feature, resolution, lang) => {
       lang
     );
     munimap_assert.assertString(title);
-  } else if (munimap_customMarker.isCustom(feature)) {
+  } else if (isCustomMarker(feature)) {
     return munimap_customMarker.getLabel(feature);
   } else if (isRoom(feature)) {
     title = getDefaultRoomLabel(feature, lang);

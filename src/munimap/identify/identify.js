@@ -7,15 +7,14 @@ import * as munimap_utils from '../utils/utils.js';
 import {Feature} from 'ol';
 import {
   IDENTIFIED_FEATURE_PROPERTY_NAME,
+  IdentifyTypes,
   LOCATION_CODE_FIELD_NAME,
 } from './_constants.js';
-import {IdentifyTypes} from './_constants.js';
 import {Point} from 'ol/geom';
 import {getIdentifyStore} from '../source/_constants.js';
 import {isBuilding} from '../feature/building.js';
 import {isDef} from '../utils/utils.js';
-import {isDoor} from '../feature/door.constants.js';
-import {isRoom} from '../feature/room.constants.js';
+import {isDoor, isRoom} from '../feature/_constants.functions.js';
 import {transform} from 'ol/proj';
 
 /**

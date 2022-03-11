@@ -5,8 +5,7 @@
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_poi_style_constants from './_constants.poi.js';
 import * as munimap_range from '../utils/range.js';
-import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
-import {PURPOSE} from '../feature/poi.constants.js';
+import {FLOOR_RESOLUTION, PoiPurpose} from '../feature/_constants.js';
 import {getByCode as getBuildingByCode} from '../feature/building.js';
 
 /**
@@ -41,31 +40,31 @@ const activeStyleFunction = (feature, resolution) => {
   const showToilets = munimap_range.contains(resolutions.TOILET, resolution);
   const showStairs = munimap_range.contains(resolutions.STAIRS, resolution);
   switch (poiType) {
-    case PURPOSE.INFORMATION_POINT:
+    case PoiPurpose.INFORMATION_POINT:
       result = showInfo ? munimap_poi_style_constants.INFORMATION : null;
       break;
-    case PURPOSE.ELEVATOR:
+    case PoiPurpose.ELEVATOR:
       result = showStairs ? munimap_poi_style_constants.ELEVATOR : null;
       break;
-    case PURPOSE.BUILDING_ENTRANCE:
+    case PoiPurpose.BUILDING_ENTRANCE:
       result = munimap_poi_style_constants.ENTRANCE;
       break;
-    case PURPOSE.BUILDING_COMPLEX_ENTRANCE:
+    case PoiPurpose.BUILDING_COMPLEX_ENTRANCE:
       result = munimap_poi_style_constants.BUILDING_COMPLEX_ENTRANCE;
       break;
-    case PURPOSE.TOILET_IMMOBILE:
+    case PoiPurpose.TOILET_IMMOBILE:
       result = showToilets ? munimap_poi_style_constants.TOILET_IM : null;
       break;
-    case PURPOSE.TOILET_MEN:
+    case PoiPurpose.TOILET_MEN:
       result = showToilets ? munimap_poi_style_constants.TOILET_M : null;
       break;
-    case PURPOSE.TOILET_WOMEN:
+    case PoiPurpose.TOILET_WOMEN:
       result = showToilets ? munimap_poi_style_constants.TOILET_W : null;
       break;
-    case PURPOSE.TOILET:
+    case PoiPurpose.TOILET:
       result = showToilets ? munimap_poi_style_constants.TOILET : null;
       break;
-    case PURPOSE.CLASSROOM:
+    case PoiPurpose.CLASSROOM:
       result = null;
       break;
     default:
@@ -85,11 +84,11 @@ const defaultStyleFunction = (feature, resolution) => {
   const poiType = feature.get('typ');
   let result = null;
   switch (poiType) {
-    case PURPOSE.COMPLEX_ENTRANCE:
-    case PURPOSE.BUILDING_COMPLEX_ENTRANCE:
+    case PoiPurpose.COMPLEX_ENTRANCE:
+    case PoiPurpose.BUILDING_COMPLEX_ENTRANCE:
       result = munimap_poi_style_constants.COMPLEX_ENTRANCE;
       break;
-    case PURPOSE.BUILDING_ENTRANCE:
+    case PoiPurpose.BUILDING_ENTRANCE:
       result = munimap_poi_style_constants.ENTRANCE;
       break;
     default:
@@ -118,10 +117,10 @@ const outdoorStyleFunction = (
   let result = null;
   let showEntrance = false;
   switch (poiType) {
-    case PURPOSE.COMPLEX_ENTRANCE:
+    case PoiPurpose.COMPLEX_ENTRANCE:
       result = munimap_poi_style_constants.COMPLEX_ENTRANCE;
       break;
-    case PURPOSE.BUILDING_COMPLEX_ENTRANCE:
+    case PoiPurpose.BUILDING_COMPLEX_ENTRANCE:
       const floorCode = /**@type {string}*/ (feature.get('polohKodPodlazi'));
       const selectedFloor =
         selectedFeature && selectedFeature.length === 8
@@ -149,7 +148,7 @@ const outdoorStyleFunction = (
           : null;
       }
       break;
-    case PURPOSE.BUILDING_ENTRANCE:
+    case PoiPurpose.BUILDING_ENTRANCE:
       showEntrance =
         !munimap_range.contains(FLOOR_RESOLUTION, resolution) &&
         munimap_range.contains(resolutions.BUILDING_ENTRANCE, resolution);
@@ -176,8 +175,8 @@ const getActiveStyleFunction = (options) => {
 
     const poiType = feature.get('typ');
     const entranceTypes = [
-      PURPOSE.BUILDING_ENTRANCE,
-      PURPOSE.BUILDING_COMPLEX_ENTRANCE,
+      PoiPurpose.BUILDING_ENTRANCE,
+      PoiPurpose.BUILDING_COMPLEX_ENTRANCE,
     ];
     if (entranceTypes.includes(poiType)) {
       const defaultFloor = feature.get('vychoziPodlazi');
@@ -193,7 +192,7 @@ const getActiveStyleFunction = (options) => {
       }
     }
 
-    entranceTypes.push(PURPOSE.COMPLEX_ENTRANCE);
+    entranceTypes.push(PoiPurpose.COMPLEX_ENTRANCE);
     if (entranceTypes.includes(poiType)) {
       return outdoorStyleFunction(feature, res, selectedFeature, targetId);
     }

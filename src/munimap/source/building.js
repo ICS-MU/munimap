@@ -4,7 +4,7 @@
 import * as munimap_load from '../load.js';
 import * as munimap_utils from '../utils/utils.js';
 import VectorSource from 'ol/source/Vector';
-import {getType as getBuildingType} from '../feature/building.constants.js';
+import {BUILDING_TYPE} from '../feature/_constants.js';
 import {tile as ol_loadingstrategy_tile} from 'ol/loadingstrategy';
 import {createXYZ as ol_tilegrid_createXYZ} from 'ol/tilegrid';
 import {setBuildingStore} from './_constants.js';
@@ -33,7 +33,7 @@ const createStore = (targetId, callback) => {
   buildingStore.setLoader(
     munimap_utils.partial(munimap_load.buildingFeaturesForMap, {
       source: buildingStore,
-      type: getBuildingType(),
+      type: BUILDING_TYPE,
       processor: munimap_utils.partial(
         munimap_load.buildingLoadProcessor,
         targetId

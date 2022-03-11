@@ -7,12 +7,12 @@ import GeoJSON from 'ol/format/GeoJSON';
 import turf_booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
 import {Circle, Point} from 'ol/geom';
-import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
-import {ICON_HEIGHT} from '../style/_constants.poi.js';
 import {
-  RESOLUTION as POI_RESOLUTION,
-  PURPOSE,
-} from '../feature/poi.constants.js';
+  FLOOR_RESOLUTION,
+  POI_RESOLUTION,
+  PoiPurpose,
+} from '../feature/_constants.js';
+import {ICON_HEIGHT} from '../style/_constants.poi.js';
 import {ROOM_FONT_SIZE} from '../style/_constants.js';
 import {fromCircle} from 'ol/geom/Polygon';
 import {getActiveRoomStore} from '../source/_constants.js';
@@ -52,7 +52,7 @@ const RoomPurposesWithTooltip = {
 /**
  * @type {Array<string>}
  */
-const GIS_PURPOSES_WITH_TOOLTIP = [PURPOSE.CLASSROOM];
+const GIS_PURPOSES_WITH_TOOLTIP = [PoiPurpose.CLASSROOM];
 
 /**
  * @param {ol.Feature} feature feature
@@ -62,8 +62,8 @@ const GIS_PURPOSES_WITH_TOOLTIP = [PURPOSE.CLASSROOM];
  */
 const inTooltipResolutionRange = (feature, resolution, selectedFeature) => {
   const title = feature.get('typ');
-  return title === PURPOSE.COMPLEX_ENTRANCE ||
-    title === PURPOSE.BUILDING_COMPLEX_ENTRANCE
+  return title === PoiPurpose.COMPLEX_ENTRANCE ||
+    title === PoiPurpose.BUILDING_COMPLEX_ENTRANCE
     ? munimap_range.contains(POI_RESOLUTION, resolution)
     : !!selectedFeature && munimap_range.contains(FLOOR_RESOLUTION, resolution);
 };
@@ -77,7 +77,7 @@ const isSuitableForTooltip = (feature) => {
   const purposeTitle = feature.get('ucel_nazev');
   const purposeGis = feature.get('ucel_gis');
   return (
-    (!!title && Object.values(PURPOSE).includes(title)) ||
+    (!!title && Object.values(PoiPurpose).includes(title)) ||
     (!!purposeTitle &&
       Object.values(RoomPurposesWithTooltip).includes(purposeTitle)) ||
     (!!purposeGis && GIS_PURPOSES_WITH_TOOLTIP.includes(purposeGis))
@@ -147,7 +147,7 @@ const calculateParameters = (options) => {
   let {title} = options;
   let positionInCoords = null;
 
-  if (!!title && Object.values(PURPOSE).includes(title)) {
+  if (!!title && Object.values(PoiPurpose).includes(title)) {
     positionInCoords = pixelInCoords;
   } else if (
     !!purposeTitle &&

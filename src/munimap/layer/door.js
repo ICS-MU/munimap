@@ -4,10 +4,7 @@
 import * as munimap_assert from '../assert/assert.js';
 import VectorLayer from 'ol/layer/Vector';
 import {ACTIVE_DOOR_LAYER_ID} from './_constants.js';
-import {
-  RESOLUTION as DOOR_RESOLUTION,
-  getType,
-} from '../feature/door.constants.js';
+import {DOOR_RESOLUTION, DOOR_TYPE} from '../feature/_constants.js';
 import {featureClickHandler, isClickable} from '../feature/door.js';
 import {getActiveDoorStore} from '../source/_constants.js';
 
@@ -48,7 +45,7 @@ const createActive = (targetId) => {
       id: ACTIVE_DOOR_LAYER_ID,
       isFeatureClickable: isClickable,
       featureClickHandler: featureClickHandler,
-      type: getType(),
+      type: DOOR_TYPE,
       maxResolution: DOOR_RESOLUTION.max,
       source: getActiveDoorStore(targetId),
       updateWhileAnimating: true,

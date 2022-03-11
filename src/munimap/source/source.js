@@ -3,25 +3,21 @@
  */
 import * as munimap_utils from '../utils/utils.js';
 import * as srcs from './_constants.js';
+import {BUILDING_TYPE, DOOR_TYPE, ROOM_TYPE} from '../feature/_constants.js';
 import {GeoJSON} from 'ol/format';
 import {MultiPolygon, Polygon} from 'ol/geom';
-import {REQUIRED_CUSTOM_MARKERS} from '../create.constants.js';
+import {REQUIRED_CUSTOM_MARKERS} from '../constants.js';
 import {featureExtentIntersect} from '../utils/geom.js';
-import {getType as getBuildingType} from '../feature/building.constants.js';
-import {getType as getDoorType} from '../feature/door.constants.js';
 import {getOptPoiStore} from './_constants.js';
-import {
-  getType as getRoomType,
-  isCode as isRoomCode,
-  isCodeOrLikeExpr as isRoomCodeOrLikeExpr,
-} from '../feature/room.constants.js';
 import {getUid} from 'ol';
 import {hasInnerGeometry, isBuilding} from '../feature/building.js';
 import {
-  isCode as isDoorCode,
-  isCodeOrLikeExpr as isDoorCodeOrLikeExpr,
-} from '../feature/door.constants.js';
-import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.constants.js';
+  isDoorCode,
+  isDoorCodeOrLikeExpr,
+  isOptPoiCtgUid,
+  isRoomCode,
+  isRoomCodeOrLikeExpr,
+} from '../feature/_constants.functions.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature
@@ -54,11 +50,9 @@ const clearFloorBasedStores = (targetId) => {
  * @return {Array<ol.Feature>} features
  */
 const getFeaturesByIds = (targetId, requiredMarkerIds) => {
-  const buildingType = getBuildingType();
   const buildings = srcs.getBuildingStore(targetId).getFeatures();
-  const roomType = getRoomType();
   const rooms = srcs.getRoomStore(targetId).getFeatures();
-  const doorType = getDoorType();
+  const doorType = DOOR_TYPE;
   const doors = srcs.getDoorStore(targetId).getFeatures();
   const optPois = getOptPoiStore(targetId).getFeatures();
   const result = requiredMarkerIds.map((initMarkerId) => {
@@ -66,7 +60,7 @@ const getFeaturesByIds = (targetId, requiredMarkerIds) => {
       return REQUIRED_CUSTOM_MARKERS[initMarkerId];
     } else if (isRoomCodeOrLikeExpr(initMarkerId)) {
       return rooms.find((room) => {
-        return room.get(roomType.primaryKey) === initMarkerId;
+        return room.get(ROOM_TYPE.primaryKey) === initMarkerId;
       });
     } else if (isDoorCodeOrLikeExpr(initMarkerId)) {
       return doors.find((door) => {
@@ -78,14 +72,14 @@ const getFeaturesByIds = (targetId, requiredMarkerIds) => {
         if (roomCode) {
           return rooms.find((room) => {
             const isValid = !room.get('detailsMoved');
-            return isValid && room.get(roomType.primaryKey) === roomCode;
+            return isValid && room.get(ROOM_TYPE.primaryKey) === roomCode;
           });
         }
         return;
       });
     } else {
       return buildings.find((building) => {
-        return building.get(buildingType.primaryKey) === initMarkerId;
+        return building.get(BUILDING_TYPE.primaryKey) === initMarkerId;
       });
     }
   });
@@ -99,24 +93,21 @@ const getFeaturesByIds = (targetId, requiredMarkerIds) => {
  * @return {Array<ol.Feature>} features
  */
 const getZoomToFeatures = (targetId, initZoomTos) => {
-  const buildingType = getBuildingType();
   const buildings = srcs.getBuildingStore(targetId).getFeatures();
-  const roomType = getRoomType();
   const rooms = srcs.getRoomStore(targetId).getFeatures();
-  const doorType = getDoorType();
   const doors = srcs.getDoorStore(targetId).getFeatures();
   return /**@type {Array<string>}*/ (initZoomTos).map((initZoomTo) => {
     if (isRoomCode(initZoomTo)) {
       return rooms.find((room) => {
-        return room.get(roomType.primaryKey) === initZoomTo;
+        return room.get(ROOM_TYPE.primaryKey) === initZoomTo;
       });
     } else if (isDoorCode(initZoomTo)) {
       return doors.find((door) => {
-        return door.get(doorType.primaryKey) === initZoomTo;
+        return door.get(DOOR_TYPE.primaryKey) === initZoomTo;
       });
     } else {
       return buildings.find((building) => {
-        return building.get(buildingType.primaryKey) === initZoomTo;
+        return building.get(BUILDING_TYPE.primaryKey) === initZoomTo;
       });
     }
   });

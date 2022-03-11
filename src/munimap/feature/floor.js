@@ -2,7 +2,7 @@
  * @module feature/floor
  */
 
-import {FloorTypes} from './floor.constants.js';
+import {FloorTypes} from './_constants.js';
 import {getFloorStore} from '../source/_constants.js';
 
 /**

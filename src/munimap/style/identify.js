@@ -14,13 +14,12 @@ import {
   CENTER_GEOMETRY_FUNCTION,
   INTERSECT_CENTER_GEOMETRY_FUNCTION,
 } from '../utils/geom.js';
-import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
+import {FLOOR_RESOLUTION} from '../feature/_constants.js';
 import {getDefaultLabel, getLabelWithPin} from './style.js';
 import {getIdentifiedFeature, getLocationCode} from '../identify/identify.js';
 import {getMarkerStore} from '../source/_constants.js';
 import {isBuilding} from '../feature/building.js';
-import {isDoor} from '../feature/door.constants.js';
-import {isRoom} from '../feature/room.constants.js';
+import {isDoor, isRoom} from '../feature/_constants.functions.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature

@@ -9,7 +9,7 @@ import {CLICK_HANDLER, IS_CLICKABLE} from '../layer/_constants.js';
 import {
   GET_MAIN_FEATURE_AT_PIXEL_STORE,
   TARGET_ELEMENTS_STORE,
-} from '../create.constants.js';
+} from '../constants.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {Point} from 'ol/geom';
 import {
@@ -54,7 +54,7 @@ import {createStore as createUnitStore} from '../source/unit.js';
 import {getDefaultLayers} from '../layer/layer.js';
 import {getMainFeatureAtPixel} from '../feature/feature.js';
 import {getUid} from 'ol';
-import {isCode as isFloorCode} from '../feature/floor.constants.js';
+import {isFloorCode} from '../feature/_constants.functions.js';
 import {loadFloors} from '../load.js';
 import {refreshActiveStyle as refreshActiveDoorStyle} from './door.js';
 import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';

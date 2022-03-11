@@ -1,5 +1,5 @@
 import {Circle, Fill, Stroke, Style, Text} from 'ol/style';
-import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
+import {FLOOR_RESOLUTION} from '../feature/_constants.js';
 import {createResolution} from '../utils/range.js';
 
 /**

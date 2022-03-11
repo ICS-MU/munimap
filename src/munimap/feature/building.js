@@ -10,18 +10,16 @@ import * as munimap_unit from './unit.js';
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {
-  COMPLEX_FIELD_NAME,
-  LOCATION_CODE_FIELD_NAME,
-  UNITS_FIELD_NAME,
-  getType,
-  isCode,
-} from './building.constants.js';
-import {RESOLUTION as COMPLEX_RESOLUTION} from './complex.constants.js';
-import {RESOLUTION as FLOOR_RESOLUTION} from './floor.constants.js';
-import {alignTextToRows} from '../style/_constants.js';
+  BUILDING_COMPLEX_FIELD_NAME,
+  BUILDING_LOCATION_CODE_FIELD_NAME,
+  BUILDING_TYPE,
+  BUILDING_UNITS_FIELD_NAME,
+  COMPLEX_RESOLUTION,
+  FLOOR_RESOLUTION,
+} from './_constants.js';
+import {alignTextToRows} from '../style/_constants.functions.js';
 import {getBuildingStore, getMarkerStore} from '../source/_constants.js';
-import {isDoor} from './door.constants.js';
-import {isRoom} from './room.constants.js';
+import {isBuildingCode, isDoor, isRoom} from './_constants.functions.js';
 
 /**
  * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
@@ -56,8 +54,10 @@ import {isRoom} from './room.constants.js';
  * @return {boolean} isBuilding
  */
 const isBuilding = (feature) => {
-  const code = feature.get(LOCATION_CODE_FIELD_NAME);
-  return munimap_utils.isString(code) && isCode(/** @type {string}*/ (code));
+  const code = feature.get(BUILDING_LOCATION_CODE_FIELD_NAME);
+  return (
+    munimap_utils.isString(code) && isBuildingCode(/** @type {string}*/ (code))
+  );
 };
 
 /**
@@ -65,7 +65,7 @@ const isBuilding = (feature) => {
  * @return {string} location code
  */
 const getLocationCode = (building) => {
-  const result = building.get(LOCATION_CODE_FIELD_NAME);
+  const result = building.get(BUILDING_LOCATION_CODE_FIELD_NAME);
   munimap_assert.assertString(
     result,
     'Something is wrong! Location code of building should be a string!'
@@ -148,7 +148,7 @@ const getByCode = (targetId, code) => {
   code = code.substring(0, 5);
   const features = getBuildingStore(targetId).getFeatures();
   const building = features.find((feature) => {
-    const idProperty = getType().primaryKey;
+    const idProperty = BUILDING_TYPE.primaryKey;
     return feature.get(idProperty) === code;
   });
   return building || null;
@@ -172,7 +172,7 @@ const isInExtent = (code, targetId, extent) => {
  * @return {Array<Feature>} units
  */
 const getUnits = (building) => {
-  const result = building.get(UNITS_FIELD_NAME);
+  const result = building.get(BUILDING_UNITS_FIELD_NAME);
   munimap_assert.assertArray(result);
   return /**@type {Array<Feature>}*/ (result);
 };
@@ -271,7 +271,7 @@ const getNamePart = (feature, lang, opt_resolution) => {
  * @return {Feature} complex
  */
 const getComplex = (building) => {
-  const result = building.get(COMPLEX_FIELD_NAME);
+  const result = building.get(BUILDING_COMPLEX_FIELD_NAME);
   munimap_assert.assert(result === null || result instanceof Feature);
   return result;
 };

@@ -6,7 +6,7 @@ import React from 'react';
 import Select from 'react-select';
 import {ENABLE_RENDER_LOGS} from '../conf.js';
 import {Feature} from 'ol';
-import {FloorTypes} from '../feature/floor.constants.js';
+import {FloorTypes} from '../feature/_constants.js';
 import {hot} from 'react-hot-loader';
 import {useDispatch, useSelector} from 'react-redux';
 

@@ -7,13 +7,15 @@
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {Abbr} from '../lang/lang.js';
-import {BASEMAPS} from '../layer/_constants.js';
+import {BasemapIds} from '../layer/_constants.js';
 import {IdentifyTypes} from '../identify/_constants.js';
-import {isCodeOrLikeExpr as isBldgCodeOrLikeExpr} from '../feature/building.constants.js';
-import {isCodeOrLikeExpr as isDoorCodeOrLikeExpr} from '../feature/door.constants.js';
-import {isCtgUid as isOptPoiCtgUid} from '../feature/optpoi.constants.js';
-import {isCodeOrLikeExpr as isRoomCodeOrLikeExpr} from '../feature/room.constants.js';
-import {isSuitable} from '../feature/marker.custom.constants.js';
+import {
+  isBuildingCodeOrLikeExpr,
+  isCustomMarkerSuitable,
+  isDoorCodeOrLikeExpr,
+  isOptPoiCtgUid,
+  isRoomCodeOrLikeExpr,
+} from '../feature/_constants.functions.js';
 
 /**
  * @typedef {import("ol/Feature").default} ol.Feature
@@ -225,7 +227,7 @@ const zoomTo = (zoomTo) => {
       munimap_utils.isString(zoomTo) ? [zoomTo] : zoomTo
     );
 
-    const onlyBuildings = zoomTo.every(isBldgCodeOrLikeExpr);
+    const onlyBuildings = zoomTo.every(isBuildingCodeOrLikeExpr);
     if (!onlyBuildings) {
       const onlyRooms = zoomTo.every(isRoomCodeOrLikeExpr);
       if (!onlyRooms) {
@@ -275,7 +277,7 @@ const markers = (markers) => {
     markers.forEach((el) => {
       if (munimap_utils.isString(el)) {
         if (
-          !isBldgCodeOrLikeExpr(el) &&
+          !isBuildingCodeOrLikeExpr(el) &&
           !isRoomCodeOrLikeExpr(el) &&
           !isDoorCodeOrLikeExpr(el) &&
           !isOptPoiCtgUid(el)
@@ -290,7 +292,7 @@ const markers = (markers) => {
         assertInstanceof(el, Feature);
         featureMarkers.push(el);
         assert(
-          isSuitable(el),
+          isCustomMarkerSuitable(el),
           'Custom marker represented by ol.Feature must have ol.Point geometry ' +
             'with appropriate longitude (-180;180) and latitude (-90, 90).'
         );
@@ -334,7 +336,7 @@ const assertMarkerFeatures = (markers) => {
 const baseMap = (baseMap) => {
   if (baseMap !== undefined) {
     if (munimap_utils.isString(baseMap)) {
-      const baseMaps = Object.values(BASEMAPS);
+      const baseMaps = Object.values(BasemapIds);
       if (!baseMaps.includes(baseMap)) {
         throw new AssertionError(
           `Parameter baseMap contains unknown value. ` +

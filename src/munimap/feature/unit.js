@@ -4,7 +4,7 @@
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_utils from '../utils/utils.js';
-import {PRIORITY_FIELD_NAME} from './unit.constants.js';
+import {UNIT_PRIORITY_FIELD_NAME} from './_constants.js';
 
 /**
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
@@ -18,7 +18,7 @@ import {PRIORITY_FIELD_NAME} from './unit.constants.js';
  * @return {number} priority
  */
 const getPriority = (unit) => {
-  const result = unit.get(PRIORITY_FIELD_NAME);
+  const result = unit.get(UNIT_PRIORITY_FIELD_NAME);
   munimap_assert.assertNumber(result);
   return result;
 };

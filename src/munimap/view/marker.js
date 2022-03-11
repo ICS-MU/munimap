@@ -6,16 +6,17 @@ import * as munimap_identify from '../identify/identify.js';
 import * as munimap_range from '../utils/range.js';
 import * as ol_extent from 'ol/extent';
 import * as slctr from '../redux/selector.js';
-import {RESOLUTION as DOOR_RESOLUTION} from '../feature/door.constants.js';
-import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
+import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from '../feature/_constants.js';
 import {INITIAL_STATE} from '../conf.js';
 import {ofFeature as extentOfFeature} from '../utils/extent.js';
 import {getAnimationRequestParams} from '../utils/animation.js';
 import {getClosestPointToPixel} from '../feature/feature.js';
 import {getMarkerStore} from '../source/_constants.js';
-import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
-import {isDoor} from '../feature/door.constants.js';
-import {isRoom} from '../feature/room.constants.js';
+import {
+  isCustomMarker,
+  isDoor,
+  isRoom,
+} from '../feature/_constants.functions.js';
 
 /**
  * @typedef {import("../conf.js").State} State

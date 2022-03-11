@@ -3,7 +3,7 @@
  */
 
 import * as munimap_range from '../utils/range.js';
-import {CLUSTER_RESOLUTION as PUBTRAN_CLUSTER_RESOLUTION} from '../feature/pubtran.stop.constants.js';
+import {PUBTRAN_CLUSTER_RESOLUTION} from '../feature/_constants.js';
 import {PUBTRAN_STYLE} from './_constants.js';
 
 /**

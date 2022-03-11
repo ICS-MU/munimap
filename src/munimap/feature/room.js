@@ -5,9 +5,9 @@ import * as actions from '../redux/action.js';
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_utils from '../utils/utils.js';
-import {alignRoomTitleToRows, wrapText} from '../style/_constants.js';
+import {alignRoomTitleToRows, wrapText} from '../style/_constants.functions.js';
 import {isAllowed} from '../identify/identify.js';
-import {isRoom} from './room.constants.js';
+import {isRoom} from './_constants.functions.js';
 
 /**
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
@@ -29,41 +29,6 @@ const isInSelectedFloor = (room, selectedFeature) => {
   const locCode = /**@type {string}*/ (room.get('polohKod'));
   return selectedFeature ? locCode.startsWith(selectedFeature) : false;
 };
-
-// /**
-//  * @param {string} code code
-//  */
-// const assertCode = (code) => {
-//   munimap_assert.assert(
-//     !!isCode(code),
-//     'Location code of room should consist of 3 letters and 2 digits, ' +
-//       "one of the letters 'N', 'M', 'P', 'S' or 'Z' " +
-//       'followed by 5 digits, and optionally 1 letter.'
-//   );
-// };
-
-// /**
-//  * @param {ol.Feature} feature feature
-//  */
-// const assertRoom = (feature) => {
-//   munimap_assert.assert(
-//     !!isRoom(feature),
-//     "Feature does not have value of room's primary key."
-//   );
-// };
-
-// /**
-//  * @param {string} code code
-//  */
-// const assertCodeOrLikeExpr = (code) => {
-//   munimap_assert.assert(
-//     !!code.match(LIKE_EXPR_REGEX),
-//     'Location code of building should consist of 3 letters and 2 digits, ' +
-//       "one of the letters 'N', 'M', 'P', 'S' or 'Z' " +
-//       'followed by 5 digits, and optionally 1 letter. ' +
-//       'Any of these characters might be replaced with _ wildcard.'
-//   );
-// };
 
 /**
  * @param {IsClickableOptions} options options

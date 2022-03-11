@@ -16,7 +16,7 @@ import {
   REQUIRED_CUSTOM_MARKERS,
   TARGET_ELEMENTS_STORE,
   setStoreByTargetId,
-} from './create.constants.js';
+} from './constants.js';
 import {INITIAL_STATE} from './conf.js';
 import {Provider} from 'react-redux';
 import {createStore} from './redux/store.js';

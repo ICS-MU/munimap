@@ -5,9 +5,9 @@ import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
 import turf_booleanPointInPolygon from '@turf/boolean-point-in-polygon';
-import {Ids as OptPoiIds} from './optpoi.constants.js';
+import {BUILDING_TYPE, DOOR_TYPE, OptPoiIds, ROOM_TYPE} from './_constants.js';
 import {Point} from 'ol/geom';
-import {REQUIRED_CUSTOM_MARKERS} from '../create.constants.js';
+import {REQUIRED_CUSTOM_MARKERS} from '../constants.js';
 import {featureExtentIntersect} from '../utils/geom.js';
 import {
   getByCode as getBuildingByCode,
@@ -15,20 +15,17 @@ import {
   hasInnerGeometry,
   isBuilding,
 } from './building.js';
-import {
-  getType as getBuildingType,
-  isCode as isBuildingCode,
-} from './building.constants.js';
 import {getLayer as getClusterLayer} from '../layer/cluster.js';
 import {getDefaultLayer as getDefaultRoomLayer} from '../layer/room.js';
-import {getType as getDoorType} from './door.constants.js';
 import {getLayer as getMarkerLayer} from '../layer/marker.js';
-import {getType as getRoomType} from './room.constants.js';
-import {isCustom as isCustomMarker} from './marker.custom.js';
-import {isDoor} from './door.constants.js';
-import {isCode as isFloorCode} from './floor.constants.js';
-import {isCtgUid as isOptPoiCtgUid} from './optpoi.constants.js';
-import {isRoom} from './room.constants.js';
+import {
+  isBuildingCode,
+  isCustomMarker,
+  isDoor,
+  isFloorCode,
+  isOptPoiCtgUid,
+  isRoom,
+} from './_constants.functions.js';
 
 /**
  * @typedef {import("ol/source").Vector} ol.source.Vector
@@ -175,11 +172,11 @@ const filterInvalidCodes = (requiredMarkerIds, initMarkers) => {
   initMarkers.forEach((marker) => {
     if (!isCustomMarker(marker)) {
       if (isRoom(marker)) {
-        type = getRoomType();
+        type = ROOM_TYPE;
       } else if (isDoor(marker)) {
-        type = getDoorType();
+        type = DOOR_TYPE;
       } else {
-        type = getBuildingType();
+        type = BUILDING_TYPE;
       }
       initMarkersCodes.push(marker.get(type.primaryKey));
     }

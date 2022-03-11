@@ -5,7 +5,7 @@ import * as munimap_lang from '../lang/lang.js';
 import * as munimap_pubtran_stop from '../feature/pubtran.stop.js';
 import VectorLayer from 'ol/layer/Vector';
 import {PUBTRAN_LAYER_ID} from './_constants.js';
-import {RESOLUTION as PUBTRAN_RESOLUTION} from '../feature/pubtran.stop.constants.js';
+import {PUBTRAN_RESOLUTION} from '../feature/_constants.js';
 import {getPubTranStore} from '../source/_constants.js';
 
 /**

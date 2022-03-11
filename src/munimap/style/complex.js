@@ -10,10 +10,13 @@ import * as munimap_style from './style.js';
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
-import {FONT_SIZE, ID_FIELD_NAME} from '../feature/complex.constants.js';
+import {
+  COMPLEX_FONT_SIZE,
+  COMPLEX_ID_FIELD_NAME,
+} from '../feature/_constants.js';
 import {Style, Text} from 'ol/style';
 import {TEXT_FILL, TEXT_STROKE} from './_constants.js';
-import {alignTextToRows} from './_constants.js';
+import {alignTextToRows} from './_constants.functions.js';
 import {getMarkerStore} from '../source/_constants.js';
 import {getUid as getStoreUid} from '../utils/store.js';
 
@@ -44,7 +47,7 @@ const styleFunction = (feature, resolution, markers, lang) => {
       if (markers.length && munimap_building.isBuilding(markers[0])) {
         const complexId =
           /**@type {number}*/
-          (feature.get(ID_FIELD_NAME));
+          (feature.get(COMPLEX_ID_FIELD_NAME));
         const isMarked = markers.some((marker) => {
           const markerComplexId = marker.get('arealId');
           if (munimap_utils.isDefAndNotNull(markerComplexId)) {
@@ -79,7 +82,7 @@ const styleFunction = (feature, resolution, markers, lang) => {
     const style = new Style({
       geometry: CENTER_GEOMETRY_FUNCTION,
       text: new Text({
-        font: 'bold ' + FONT_SIZE + 'px arial',
+        font: 'bold ' + COMPLEX_FONT_SIZE + 'px arial',
         fill: TEXT_FILL,
         stroke: TEXT_STROKE,
         text: title,

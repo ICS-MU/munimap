@@ -10,7 +10,7 @@ import {
   IDENTIFY_CALLBACK_STORE,
   REQUIRED_CUSTOM_MARKERS,
   getStoreByTargetId,
-} from './create.constants.js';
+} from './constants.js';
 import {INITIAL_STATE} from './conf.js';
 import {clearAndLoadMarkers, loadZoomTo} from './load.js';
 import {createStore as createIdentifyStore} from './source/identify.js';

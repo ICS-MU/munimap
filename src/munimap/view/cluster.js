@@ -4,8 +4,7 @@
 import * as munimap_assert from '../assert/assert.js';
 import * as munimap_range from '../utils/range.js';
 import * as ol_extent from 'ol/extent';
-import {RESOLUTION as DOOR_RESOLUTION} from '../feature/door.constants.js';
-import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
+import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from '../feature/_constants.js';
 import {Feature} from 'ol';
 import {INITIAL_STATE} from '../conf.js';
 import {
@@ -22,8 +21,7 @@ import {
   getMainFeatures,
   getMinorFeatures,
 } from '../cluster/cluster.js';
-import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
-import {isDoor} from '../feature/door.constants.js';
+import {isCustomMarker, isDoor} from '../feature/_constants.functions.js';
 
 /**
  * @typedef {import("ol/layer/Base").default} ol.layer.Base

@@ -3,31 +3,33 @@
  */
 import * as actions from './redux/action.js';
 import * as munimap_assert from './assert/assert.js';
-import * as munimap_building from './feature/building.constants.js';
 import * as munimap_complex from './feature/complex.js';
 import * as munimap_utils from './utils/utils.js';
 import * as slctr from './redux/selector.js';
 import * as srcs from './source/_constants.js';
 import VectorSource from 'ol/source/Vector';
+import {
+  BUILDING_COMPLEX_FIELD_NAME,
+  BUILDING_COMPLEX_ID_FIELD_NAME,
+  BUILDING_TYPE,
+  BUILDING_UNITS_FIELD_NAME,
+  COMPLEX_ID_FIELD_NAME,
+  COMPLEX_TYPE,
+  COMPLEX_UNITS_FIELD_NAME,
+  DOOR_TYPE,
+  FEATURE_TYPE_PROPERTY_NAME,
+  FLOOR_TYPE,
+  OPT_POI_TYPE,
+  OptPoiIds,
+  OptPoiLabels,
+  POI_TYPE,
+  PoiPurpose,
+  ROOM_TYPE,
+  RoomTypes,
+  UNIT_TYPE,
+} from './feature/_constants.js';
 import {EsriJSON} from 'ol/format';
-import {FEATURE_TYPE_PROPERTY_NAME} from './feature/feature.constants.js';
-import {ID_FIELD_NAME, UNITS_FIELD_NAME} from './feature/complex.constants.js';
-import {
-  MARKER_LABEL_STORE,
-  REQUIRED_CUSTOM_MARKERS,
-} from './create.constants.js';
-import {
-  Ids as OptPoiIds,
-  Labels as OptPoiLabels,
-} from './feature/optpoi.constants.js';
-import {PURPOSE as POI_PURPOSE} from './feature/poi.constants.js';
-import {
-  ROOM_TYPES,
-  getType as getRoomType,
-  isCode as isRoomCode,
-  isCodeOrLikeExpr as isRoomCodeOrLikeExpr,
-  isLikeExpr as isRoomLikeExpr,
-} from './feature/room.constants.js';
+import {MARKER_LABEL_STORE, REQUIRED_CUSTOM_MARKERS} from './constants.js';
 import {addPoiDetail} from './feature/room.js';
 import {
   createMarkerStringsArray,
@@ -35,25 +37,23 @@ import {
 } from './utils/param.js';
 import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
 import {getByCode as getBldgByCode} from './feature/building.js';
-import {getType as getBldgType} from './feature/building.constants.js';
-import {getType as getDoorType} from './feature/door.constants.js';
 import {getFloorLayerIdByCode} from './feature/floor.js';
-import {getType as getFloorType} from './feature/floor.constants.js';
 import {getGeometryCenter} from './utils/geom.js';
 import {getLoadedTypes} from './utils/reducer.js';
 import {getNotYetAddedFeatures} from './utils/store.js';
 import {
-  getType as getOptPoiType,
-  isCtgUid as isOptPoiCtgUid,
-} from './feature/optpoi.constants.js';
-import {getType as getPoiType} from './feature/poi.constants.js';
-import {getType as getUnitType} from './feature/unit.constants.js';
-import {isCustom} from './feature/marker.custom.js';
-import {
-  isCode as isDoorCode,
-  isCodeOrLikeExpr as isDoorCodeOrLikeExpr,
-  isLikeExpr as isDoorLikeExpr,
-} from './feature/door.constants.js';
+  isBuildingCode,
+  isBuildingCodeOrLikeExpr,
+  isBuildingLikeExpr,
+  isCustomMarker,
+  isDoorCode,
+  isDoorCodeOrLikeExpr,
+  isDoorLikeExpr,
+  isOptPoiCtgUid,
+  isRoomCode,
+  isRoomCodeOrLikeExpr,
+  isRoomLikeExpr,
+} from './feature/_constants.functions.js';
 import {markerLabel as optPoiMarkerLabel} from './style/optpoi.js';
 import {refreshFloorBasedStores} from './source/source.js';
 
@@ -476,9 +476,9 @@ const features = async (options) => {
  */
 const featuresByCode = async (options) => {
   munimap_assert.assert(
-    JSON.stringify(options.type) == JSON.stringify(getBldgType()) ||
-      JSON.stringify(options.type) == JSON.stringify(getRoomType()) ||
-      JSON.stringify(options.type) == JSON.stringify(getDoorType()),
+    JSON.stringify(options.type) == JSON.stringify(BUILDING_TYPE) ||
+      JSON.stringify(options.type) == JSON.stringify(ROOM_TYPE) ||
+      JSON.stringify(options.type) == JSON.stringify(DOOR_TYPE),
     'Feature type should be' + ' building, room or door type.'
   );
 
@@ -518,7 +518,7 @@ const featuresByCode = async (options) => {
 const complexByIds = async (targetId, options) => {
   return features({
     source: srcs.getComplexStore(targetId),
-    type: munimap_complex.getType(),
+    type: COMPLEX_TYPE,
     method: 'POST',
     returnGeometry: true,
     where: 'inetId IN (' + options.ids.join() + ')',
@@ -576,7 +576,7 @@ const pubtranFeaturesForMap = async (options, extent, resolution, projection) =>
 const loadUnits = async (targetId, where) => {
   return features({
     source: srcs.getUnitStore(targetId),
-    type: getUnitType(),
+    type: UNIT_TYPE,
     method: 'POST',
     returnGeometry: false,
     where: where,
@@ -622,7 +622,7 @@ const unitLoadProcessor = async (targetId, options) => {
       const buildingUnits = units.filter((unit) => {
         return unit.get('budova_sidelni_id') === building.get('inetId');
       });
-      building.set(munimap_building.UNITS_FIELD_NAME, buildingUnits);
+      building.set(BUILDING_UNITS_FIELD_NAME, buildingUnits);
     });
     return options;
   } else {
@@ -639,7 +639,7 @@ const unitLoadProcessor = async (targetId, options) => {
 const complexLoadProcessorWithUnits = async (targetId, options) => {
   const newComplexes = options.new;
   const complexIdsToLoad = newComplexes.map((complex) => {
-    return complex.get(ID_FIELD_NAME);
+    return complex.get(COMPLEX_ID_FIELD_NAME);
   });
 
   if (complexIdsToLoad.length) {
@@ -649,9 +649,11 @@ const complexLoadProcessorWithUnits = async (targetId, options) => {
     );
     newComplexes.forEach((complex) => {
       const complexUnits = units.filter((unit) => {
-        return unit.get('areal_sidelni_id') === complex.get(ID_FIELD_NAME);
+        return (
+          unit.get('areal_sidelni_id') === complex.get(COMPLEX_ID_FIELD_NAME)
+        );
       });
-      complex.set(UNITS_FIELD_NAME, complexUnits);
+      complex.set(COMPLEX_UNITS_FIELD_NAME, complexUnits);
     });
     return options;
   } else {
@@ -670,18 +672,18 @@ const complexLoadProcessor = async (targetId, options) => {
   let complexIdsToLoad = [];
   const buildingsToLoadComplex = [];
   newBuildings.forEach((building) => {
-    const complexId = building.get(munimap_building.COMPLEX_ID_FIELD_NAME);
+    const complexId = building.get(BUILDING_COMPLEX_ID_FIELD_NAME);
     if (munimap_utils.isNumber(complexId)) {
       munimap_assert.assertNumber(complexId);
       const complex = munimap_complex.getById(targetId, complexId);
       if (complex) {
-        building.set(munimap_building.COMPLEX_FIELD_NAME, complex);
+        building.set(BUILDING_COMPLEX_FIELD_NAME, complex);
       } else {
         complexIdsToLoad.push(complexId);
         buildingsToLoadComplex.push(building);
       }
     } else {
-      building.set(munimap_building.COMPLEX_FIELD_NAME, null);
+      building.set(BUILDING_COMPLEX_FIELD_NAME, null);
     }
   });
 
@@ -692,12 +694,12 @@ const complexLoadProcessor = async (targetId, options) => {
       processor: munimap_utils.partial(complexLoadProcessorWithUnits, targetId),
     });
     buildingsToLoadComplex.forEach((building) => {
-      const complexId = building.get(munimap_building.COMPLEX_ID_FIELD_NAME);
+      const complexId = building.get(BUILDING_COMPLEX_ID_FIELD_NAME);
       const complex = munimap_complex.getById(targetId, complexId, complexes);
       if (!complex) {
         throw new Error('Complex ' + complexId + ' not found.');
       }
-      building.set(munimap_building.COMPLEX_FIELD_NAME, complex || null);
+      building.set(BUILDING_COMPLEX_FIELD_NAME, complex || null);
     });
     return options;
   } else {
@@ -736,7 +738,7 @@ const buildingLoadProcessor = async (targetId, options) => {
 const buildingsByCode = async (targetId, options) => {
   return featuresByCode({
     codes: options.codes,
-    type: getBldgType(),
+    type: BUILDING_TYPE,
     source: srcs.getBuildingStore(targetId),
     likeExprs: options.likeExprs,
     processor: munimap_utils.partial(buildingLoadProcessor, targetId),
@@ -752,7 +754,7 @@ const buildingsByCode = async (targetId, options) => {
 const roomsByCode = async (targetId, options) => {
   return featuresByCode({
     codes: options.codes,
-    type: getRoomType(),
+    type: ROOM_TYPE,
     source: srcs.getRoomStore(targetId),
     likeExprs: options.likeExprs,
   });
@@ -768,7 +770,7 @@ const doorsByCode = async (targetId, options) => {
   return featuresByCode({
     codes: options.codes,
     likeExprs: options.likeExprs,
-    type: getDoorType(),
+    type: DOOR_TYPE,
     source: srcs.getDoorStore(targetId),
   });
 };
@@ -782,7 +784,7 @@ const doorsByCode = async (targetId, options) => {
 const loadFloors = (targetId, where) => {
   return features({
     source: srcs.getFloorStore(targetId),
-    type: getFloorType(),
+    type: FLOOR_TYPE,
     returnGeometry: false,
     where: where,
   });
@@ -803,9 +805,9 @@ const featuresFromParam = async (targetId, paramValue) => {
   let likeExprs;
 
   if (paramValue && paramValue.length) {
-    if (munimap_building.isCodeOrLikeExpr(firstParamValue)) {
-      codes = values.filter(munimap_building.isCode);
-      likeExprs = values.filter(munimap_building.isLikeExpr);
+    if (isBuildingCodeOrLikeExpr(firstParamValue)) {
+      codes = values.filter(isBuildingCode);
+      likeExprs = values.filter(isBuildingLikeExpr);
       return await buildingsByCode(targetId, {
         codes: codes,
         likeExprs: likeExprs,
@@ -826,9 +828,9 @@ const featuresFromParam = async (targetId, paramValue) => {
       const buildingLikeExprs = [];
       likeExprs.forEach((expr) => {
         expr = expr.substring(0, 5);
-        if (munimap_building.isCode(expr)) {
+        if (isBuildingCode(expr)) {
           buildingCodes.push(expr);
-        } else if (munimap_building.isLikeExpr(expr)) {
+        } else if (isBuildingLikeExpr(expr)) {
           buildingLikeExprs.push(expr);
         }
       });
@@ -882,7 +884,7 @@ const loadDefaultRooms = async (
   defaultRoomStore.addFeatures(roomsToAdd);
 
   if (options.callback) {
-    options.callback(actions.rooms_loaded, ROOM_TYPES.DEFAULT);
+    options.callback(actions.rooms_loaded, RoomTypes.DEFAULT);
   }
 };
 
@@ -911,7 +913,7 @@ const loadActiveRooms = async (
     where = conditions.join(' OR ');
     const opts = {
       source: srcs.getRoomStore(targetId),
-      type: getRoomType(),
+      type: ROOM_TYPE,
       where: where,
       method: 'POST',
     };
@@ -928,7 +930,7 @@ const loadActiveRooms = async (
     activeStore.addFeatures(roomsToAdd);
 
     if (callback) {
-      callback(actions.rooms_loaded, ROOM_TYPES.ACTIVE);
+      callback(actions.rooms_loaded, RoomTypes.ACTIVE);
     }
   }
 };
@@ -956,7 +958,7 @@ const loadActiveDoors = async (
     where = conditions.join(' OR ');
     const opts = {
       source: srcs.getDoorStore(targetId),
-      type: getDoorType(),
+      type: DOOR_TYPE,
       where: where,
       method: 'POST',
     };
@@ -993,9 +995,9 @@ const loadActivePois = async (
   const targetId = slctr.getTargetId(store.getState());
 
   const entrances = [
-    POI_PURPOSE.BUILDING_ENTRANCE,
-    POI_PURPOSE.BUILDING_COMPLEX_ENTRANCE,
-    POI_PURPOSE.COMPLEX_ENTRANCE,
+    PoiPurpose.BUILDING_ENTRANCE,
+    PoiPurpose.BUILDING_COMPLEX_ENTRANCE,
+    PoiPurpose.COMPLEX_ENTRANCE,
   ];
   let where = `typ IN ('${entrances.join("', '")}')`;
   if (activeFloorCodes.length > 0) {
@@ -1007,7 +1009,7 @@ const loadActivePois = async (
   }
   where = '(' + where + ') AND volitelny = 0';
   const opts = {
-    type: getPoiType(),
+    type: POI_TYPE,
     source: srcs.getPoiStore(targetId),
     where: where,
     method: 'POST',
@@ -1048,7 +1050,7 @@ const loadOptPois = (targetId, options) => {
   }
   const opts = {
     source: srcs.getOptPoiStore(targetId),
-    type: getOptPoiType(),
+    type: OPT_POI_TYPE,
     where: where,
     method: 'POST',
     returnGeometry: false,
@@ -1135,7 +1137,7 @@ const loadMarkers = (requiredOpts, asyncDispatch) => {
   loadOrDecorateMarkers(markerStrings, requiredOpts).then((res) => {
     munimap_assert.assertMarkerFeatures(res);
     const loadedTypes = getLoadedTypes(res, requiredMarkers);
-    const hasCustom = res.length && res.some((el) => isCustom(el));
+    const hasCustom = res.length && res.some((el) => isCustomMarker(el));
     asyncDispatch(actions.markers_loaded(hasCustom, loadedTypes));
   });
 };
@@ -1192,7 +1194,7 @@ const clearAndLoadMarkers = (
     munimap_assert.assertMarkerFeatures(res);
     const loadedTypes = getLoadedTypes(res, requiredMarkers);
     srcs.getMarkerStore(targetId).addFeatures(res);
-    const hasCustom = res.length && res.some((el) => isCustom(el));
+    const hasCustom = res.length && res.some((el) => isCustomMarker(el));
     asyncDispatch(actions.markers_loaded(hasCustom, loadedTypes));
   });
 };

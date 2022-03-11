@@ -7,9 +7,8 @@ import * as munimap_load from '../load.js';
 import * as munimap_range from '../utils/range.js';
 import * as slctr from './selector.js';
 import * as srcs from '../source/_constants.js';
-import {RESOLUTION as FLOOR_RESOLUTION} from '../feature/floor.constants.js';
+import {FLOOR_RESOLUTION, RoomTypes} from '../feature/_constants.js';
 import {INITIAL_STATE} from '../conf.js';
-import {ROOM_TYPES} from '../feature/room.constants.js';
 import {getAnimationRequest as getBuildingAnimationRequest} from '../view/building.js';
 import {getAnimationRequest as getClusterAnimationRequest} from '../view/cluster.js';
 import {getAnimationRequest as getComplexAnimationRequest} from '../view/complex.js';
@@ -24,7 +23,7 @@ import {getUid} from 'ol';
 import {handleDoorClick} from '../feature/door.js';
 import {handleMapViewChange} from '../view/view.js';
 import {handleReset} from '../reset.js';
-import {isCustom as isCustomMarker} from '../feature/marker.custom.js';
+import {isCustomMarker} from '../feature/_constants.functions.js';
 import {isSameCode} from '../feature/building.js';
 /**
  * @typedef {import("../conf.js").State} State
@@ -284,13 +283,11 @@ const createReducer = (initialState) => {
         return {
           ...state,
           defaultRoomsTimestamp:
-            type === ROOM_TYPES.DEFAULT
+            type === RoomTypes.DEFAULT
               ? Date.now()
               : state.defaultRoomsTimestamp,
           activeRoomsTimestamp:
-            type === ROOM_TYPES.ACTIVE
-              ? Date.now()
-              : state.activeRoomsTimestamp,
+            type === RoomTypes.ACTIVE ? Date.now() : state.activeRoomsTimestamp,
         };
 
       //DOORS_LOADED

@@ -19,7 +19,7 @@ import {
   ICON_HEIGHT as POI_ICON_HEIGHT,
   Resolutions as PoiResolutions,
 } from '../style/_constants.poi.js';
-import {PURPOSE as POI_PURPOSE} from '../feature/poi.constants.js';
+import {PoiPurpose} from '../feature/_constants.js';
 import {LABEL_CACHE as STYLE_LABEL_CACHE, getLabelHeight} from './style.js';
 import {getDefaultLabel} from '../feature/room.js';
 import {getCorridor as getMarkerCorridorStyle} from './marker.js';
@@ -277,8 +277,8 @@ const labelFunction = (
         const purposeTitle = /**@type {string}*/ (feature.get('ucel_nazev'));
         if (
           munimap_utils.isDefAndNotNull(purposeGis) &&
-          (purposeGis === POI_PURPOSE.ELEVATOR ||
-            purposeGis === POI_PURPOSE.INFORMATION_POINT)
+          (purposeGis === PoiPurpose.ELEVATOR ||
+            purposeGis === PoiPurpose.INFORMATION_POINT)
         ) {
           offset = POI_ICON_HEIGHT - 6;
         } else if (
@@ -293,7 +293,7 @@ const labelFunction = (
       if (title) {
         if (
           munimap_utils.isDefAndNotNull(purposeGis) &&
-          purposeGis === POI_PURPOSE.CLASSROOM &&
+          purposeGis === PoiPurpose.CLASSROOM &&
           munimap_range.contains(PoiResolutions.STAIRS, resolution)
         ) {
           const labelHeight = getLabelHeight(title, fontSize);

@@ -10,7 +10,7 @@ import Popup from './popup.jsx';
 import PropTypes from 'prop-types';
 import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import Tooltip from './tooltip.jsx';
-import {CREATED_MAPS} from '../create.constants.js';
+import {CREATED_MAPS} from '../constants.js';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {MUNIMAP_PROPS_ID} from '../conf.js';
 import {Map} from 'ol';
