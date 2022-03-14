@@ -7,6 +7,8 @@ import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
 import {Fill, Style, Text} from 'ol/style';
 import {
   MARKER_ROOM_STYLE,
+  POI_ICON_HEIGHT,
+  PoiResolutions,
   ROOM_BIG_LABEL_RESOLUTION,
   ROOM_FONT_SIZE,
   ROOM_SMALL_FONT_SIZE,
@@ -15,10 +17,6 @@ import {
   TEXT_FILL,
   TEXT_STROKE,
 } from './_constants.js';
-import {
-  ICON_HEIGHT as POI_ICON_HEIGHT,
-  Resolutions as PoiResolutions,
-} from '../style/_constants.poi.js';
 import {PoiPurpose} from '../feature/_constants.js';
 import {LABEL_CACHE as STYLE_LABEL_CACHE, getLabelHeight} from './style.js';
 import {getDefaultLabel} from '../feature/room.js';

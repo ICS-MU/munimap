@@ -3,8 +3,8 @@
  */
 
 import * as munimap_assert from '../assert/assert.js';
-import * as munimap_poi_style_constants from './_constants.poi.js';
 import * as munimap_range from '../utils/range.js';
+import * as munimap_style_constants from './_constants.js';
 import {FLOOR_RESOLUTION, PoiPurpose} from '../feature/_constants.js';
 import {getByCode as getBuildingByCode} from '../feature/building.js';
 
@@ -31,9 +31,9 @@ import {getByCode as getBuildingByCode} from '../feature/building.js';
  * @return {ol.style.Style|Array<ol.style.Style>} style
  */
 const activeStyleFunction = (feature, resolution) => {
-  const resolutions = munimap_poi_style_constants.Resolutions;
+  const resolutions = munimap_style_constants.PoiResolutions;
   let result = /** @type {ol.style.Style|Array<ol.style.Style>} */ (
-    munimap_poi_style_constants.STYLE
+    munimap_style_constants.POI_STYLE
   );
   const poiType = feature.get('typ');
   const showInfo = munimap_range.contains(resolutions.INFORMATION, resolution);
@@ -41,28 +41,28 @@ const activeStyleFunction = (feature, resolution) => {
   const showStairs = munimap_range.contains(resolutions.STAIRS, resolution);
   switch (poiType) {
     case PoiPurpose.INFORMATION_POINT:
-      result = showInfo ? munimap_poi_style_constants.INFORMATION : null;
+      result = showInfo ? munimap_style_constants.INFORMATION : null;
       break;
     case PoiPurpose.ELEVATOR:
-      result = showStairs ? munimap_poi_style_constants.ELEVATOR : null;
+      result = showStairs ? munimap_style_constants.ELEVATOR : null;
       break;
     case PoiPurpose.BUILDING_ENTRANCE:
-      result = munimap_poi_style_constants.ENTRANCE;
+      result = munimap_style_constants.ENTRANCE;
       break;
     case PoiPurpose.BUILDING_COMPLEX_ENTRANCE:
-      result = munimap_poi_style_constants.BUILDING_COMPLEX_ENTRANCE;
+      result = munimap_style_constants.BUILDING_COMPLEX_ENTRANCE;
       break;
     case PoiPurpose.TOILET_IMMOBILE:
-      result = showToilets ? munimap_poi_style_constants.TOILET_IM : null;
+      result = showToilets ? munimap_style_constants.TOILET_IM : null;
       break;
     case PoiPurpose.TOILET_MEN:
-      result = showToilets ? munimap_poi_style_constants.TOILET_M : null;
+      result = showToilets ? munimap_style_constants.TOILET_M : null;
       break;
     case PoiPurpose.TOILET_WOMEN:
-      result = showToilets ? munimap_poi_style_constants.TOILET_W : null;
+      result = showToilets ? munimap_style_constants.TOILET_W : null;
       break;
     case PoiPurpose.TOILET:
-      result = showToilets ? munimap_poi_style_constants.TOILET : null;
+      result = showToilets ? munimap_style_constants.TOILET : null;
       break;
     case PoiPurpose.CLASSROOM:
       result = null;
@@ -86,10 +86,10 @@ const defaultStyleFunction = (feature, resolution) => {
   switch (poiType) {
     case PoiPurpose.COMPLEX_ENTRANCE:
     case PoiPurpose.BUILDING_COMPLEX_ENTRANCE:
-      result = munimap_poi_style_constants.COMPLEX_ENTRANCE;
+      result = munimap_style_constants.COMPLEX_ENTRANCE;
       break;
     case PoiPurpose.BUILDING_ENTRANCE:
-      result = munimap_poi_style_constants.ENTRANCE;
+      result = munimap_style_constants.ENTRANCE;
       break;
     default:
       result = null;
@@ -112,13 +112,13 @@ const outdoorStyleFunction = (
   selectedFeature,
   targetId
 ) => {
-  const resolutions = munimap_poi_style_constants.Resolutions;
+  const resolutions = munimap_style_constants.PoiResolutions;
   const poiType = feature.get('typ');
   let result = null;
   let showEntrance = false;
   switch (poiType) {
     case PoiPurpose.COMPLEX_ENTRANCE:
-      result = munimap_poi_style_constants.COMPLEX_ENTRANCE;
+      result = munimap_style_constants.COMPLEX_ENTRANCE;
       break;
     case PoiPurpose.BUILDING_COMPLEX_ENTRANCE:
       const floorCode = /**@type {string}*/ (feature.get('polohKodPodlazi'));
@@ -144,7 +144,7 @@ const outdoorStyleFunction = (
           !munimap_range.contains(FLOOR_RESOLUTION, resolution) ||
           (selectedFloor && selectedFloor === defaultFloorCode);
         result = showEntrance
-          ? munimap_poi_style_constants.BUILDING_COMPLEX_ENTRANCE
+          ? munimap_style_constants.BUILDING_COMPLEX_ENTRANCE
           : null;
       }
       break;
@@ -152,7 +152,7 @@ const outdoorStyleFunction = (
       showEntrance =
         !munimap_range.contains(FLOOR_RESOLUTION, resolution) &&
         munimap_range.contains(resolutions.BUILDING_ENTRANCE, resolution);
-      result = showEntrance ? munimap_poi_style_constants.ENTRANCE : null;
+      result = showEntrance ? munimap_style_constants.ENTRANCE : null;
       break;
     default:
       break;

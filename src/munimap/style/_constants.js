@@ -5,7 +5,12 @@
  * circular dependency.
  */
 import {Circle, Fill, Stroke, Style, Text} from 'ol/style';
+import {FLOOR_RESOLUTION} from '../feature/_constants.js';
 import {createResolution} from '../utils/range.js';
+
+/**
+ * @typedef {import('../utils/range.js').RangeInterface} RangeInterface
+ */
 
 /**
  * @typedef {Object} ResolutionColorObject
@@ -13,6 +18,17 @@ import {createResolution} from '../utils/range.js';
  * @property {string} color color
  * @property {number} opacity opacity
  */
+
+/**
+ * @enum {RangeInterface}
+ * @const
+ */
+const PoiResolutions = {
+  INFORMATION: FLOOR_RESOLUTION,
+  STAIRS: createResolution(0, 0.15),
+  TOILET: createResolution(0, 0.13),
+  BUILDING_ENTRANCE: createResolution(0, 1.19),
+};
 
 /**
  * @type {Array<ResolutionColorObject>}
@@ -377,16 +393,252 @@ const MARKER_DOOR_STYLE = new Style({
   zIndex: 5,
 });
 
+///////////////////////////////////////////////
+///////////////////// POI /////////////////////
+///////////////////////////////////////////////
+/**
+ * @type {number}
+ */
+const POI_RADIUS = 7;
+
+/**
+ * @type {Fill}
+ */
+const POI_FILL = new Fill({
+  color: [255, 255, 255, 1],
+});
+
+/**
+ * @type {Stroke}
+ */
+const POI_STROKE = new Stroke({
+  color: [0, 0, 0, 1],
+  width: 1.2,
+});
+
+/**
+ * @type {Style}
+ * @const
+ */
+const POI_STYLE = new Style({
+  image: new Circle({
+    radius: POI_RADIUS,
+    fill: POI_FILL,
+    stroke: POI_STROKE,
+  }),
+});
+
+/**
+ * @type {number}
+ * @const
+ */
+const POI_ICON_HEIGHT = 24;
+
+/**
+ * @type {Style}
+ * @const
+ */
+const BACKGROUND_SQUARE = new Style({
+  text: new Text({
+    text: '\uf0c8',
+    font: `normal ${POI_ICON_HEIGHT}px MunimapFont`,
+    fill: new Fill({
+      color: '#666',
+    }),
+  }),
+});
+
+/**
+ * @type {Style}
+ * @const
+ */
+const BACKGROUND_SQUARE_GREEN = new Style({
+  text: new Text({
+    text: '\uf0c8',
+    font: `normal ${POI_ICON_HEIGHT}px MunimapFont`,
+    fill: new Fill({
+      color: 'green',
+    }),
+  }),
+});
+
+/**
+ * @type {Style}
+ * @const
+ */
+const BACKGROUND_SQUARE_GREEN_BIG = new Style({
+  text: new Text({
+    text: '\uf0c8',
+    font: 'normal 30px MunimapFont',
+    fill: new Fill({
+      color: 'green',
+    }),
+  }),
+});
+
+/**
+ * @type {Array<Style>}
+ */
+const ELEVATOR = [
+  BACKGROUND_SQUARE,
+  new Style({
+    text: new Text({
+      text: '\uf183\uf07d',
+      font: 'normal 16px MunimapFont',
+      fill: new Fill({
+        color: 'white',
+      }),
+    }),
+  }),
+];
+
+/**
+ * @type {Array<Style>}
+ * @const
+ */
+const ENTRANCE = [
+  BACKGROUND_SQUARE_GREEN,
+  new Style({
+    text: new Text({
+      text: '\uf090',
+      font: 'normal 16px MunimapFont',
+      fill: new Fill({
+        color: 'white',
+      }),
+    }),
+  }),
+];
+
+/**
+ * @type {Array<Style>}
+ * @const
+ */
+const COMPLEX_ENTRANCE = [
+  BACKGROUND_SQUARE_GREEN_BIG,
+  new Style({
+    text: new Text({
+      text: '\uf090',
+      font: 'normal 20px MunimapFont',
+      fill: new Fill({
+        color: 'white',
+      }),
+    }),
+  }),
+];
+
+/**
+ * @type {Array<Style>}
+ * @const
+ */
+const BUILDING_COMPLEX_ENTRANCE = [
+  BACKGROUND_SQUARE_GREEN_BIG,
+  new Style({
+    text: new Text({
+      text: '\uf090',
+      font: 'normal 20px MunimapFont',
+      fill: new Fill({
+        color: 'white',
+      }),
+    }),
+  }),
+];
+
+/**
+ * @type {Array<Style>}
+ */
+const INFORMATION = [
+  BACKGROUND_SQUARE,
+  new Style({
+    text: new Text({
+      text: '\uf129',
+      offsetY: 1,
+      font: 'normal 18px MunimapFont',
+      fill: new Fill({
+        color: 'white',
+      }),
+    }),
+  }),
+];
+
+/**
+ * @type {Array<Style>}
+ */
+const TOILET = [
+  BACKGROUND_SQUARE,
+  new Style({
+    text: new Text({
+      text: '\uf182\uf183',
+      font: 'normal 14px MunimapFont',
+      fill: new Fill({
+        color: 'white',
+      }),
+    }),
+  }),
+];
+
+/**
+ * @type {Array<Style>}
+ */
+const TOILET_IM = [
+  BACKGROUND_SQUARE,
+  new Style({
+    text: new Text({
+      text: '\uf193',
+      font: 'bold 16px MunimapFont',
+      fill: new Fill({
+        color: 'white',
+      }),
+    }),
+  }),
+];
+
+/**
+ * @type {Array<Style>}
+ */
+const TOILET_M = [
+  BACKGROUND_SQUARE,
+  new Style({
+    text: new Text({
+      text: '\uf183',
+      font: 'normal 18px MunimapFont',
+      fill: new Fill({
+        color: 'white',
+      }),
+    }),
+  }),
+];
+
+/**
+ * @type {Array<Style>}
+ */
+const TOILET_W = [
+  BACKGROUND_SQUARE,
+  new Style({
+    text: new Text({
+      text: '\uf182',
+      font: 'normal 18px MunimapFont',
+      fill: new Fill({
+        color: 'white',
+      }),
+    }),
+  }),
+];
+
 export {
   BUILDING_BIG_FONT_SIZE,
+  BUILDING_COMPLEX_ENTRANCE,
   BUILDING_FONT_SIZE,
   BUILDING_NO_GEOMETRY,
   BUILDING_STROKE,
   BUILDING_STYLE,
   CHAR_HEIGHT_WIDTH_RATIO,
   CLUSTER_RADIUS,
+  COMPLEX_ENTRANCE,
   DOOR_STYLE,
+  ELEVATOR,
+  ENTRANCE,
   IDENTIFY_FILL,
+  INFORMATION,
   MARKER_BUILDING,
   MARKER_BUILDING_NO_GEOMETRY,
   MARKER_BUILDING_STROKE,
@@ -397,6 +649,9 @@ export {
   MULTIPLE,
   NO_GEOMETRY_FILL,
   PIN_SIZE,
+  POI_ICON_HEIGHT,
+  POI_STYLE,
+  PoiResolutions,
   PUBTRAN_STYLE,
   RESOLUTION_COLOR,
   ROOM_BIG_LABEL_RESOLUTION,
@@ -406,4 +661,8 @@ export {
   ROOM_STYLE,
   TEXT_FILL,
   TEXT_STROKE,
+  TOILET,
+  TOILET_IM,
+  TOILET_M,
+  TOILET_W,
 };

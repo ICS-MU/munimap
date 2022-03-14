@@ -12,8 +12,7 @@ import {
   POI_RESOLUTION,
   PoiPurpose,
 } from '../feature/_constants.js';
-import {ICON_HEIGHT} from '../style/_constants.poi.js';
-import {ROOM_FONT_SIZE} from '../style/_constants.js';
+import {POI_ICON_HEIGHT, ROOM_FONT_SIZE} from '../style/_constants.js';
 import {fromCircle} from 'ol/geom/Polygon';
 import {getActiveRoomStore} from '../source/_constants.js';
 import {getDefaultLabel} from '../feature/room.js';
@@ -102,8 +101,8 @@ const getPolygonOffset = (feature, lang, locationCodes) => {
     /**@type {string}*/ (title),
     ROOM_FONT_SIZE
   );
-  const overallHeight = labelHeight + ICON_HEIGHT + 2;
-  const iconOffset = -(overallHeight - ICON_HEIGHT) / 2;
+  const overallHeight = labelHeight + POI_ICON_HEIGHT + 2;
+  const iconOffset = -(overallHeight - POI_ICON_HEIGHT) / 2;
   return iconOffset;
 };
 
@@ -122,7 +121,7 @@ const isPoiPixel = (options) => {
   //feature is always room
   const room = getActiveRoomStore(targetId).getFeatureByUid(featureUid);
   const center = CENTER_GEOMETRY_FUNCTION(room).getCoordinates();
-  const circle = new Circle(center, ((ICON_HEIGHT + 1) / 2) * resolution);
+  const circle = new Circle(center, ((POI_ICON_HEIGHT + 1) / 2) * resolution);
   const polygon = fromCircle(circle, 4);
   polygon.rotate(Math.PI / 4, center);
   if (
