@@ -38,12 +38,14 @@ const getErrorMessageStyle = (errEl) => {
 
 /**
  * @param {Array<string>} invalidCodes invalid codes
+ * @param {Array<string>} noGeomCodes no geom codes
  * @param {boolean} simpleScroll simple scroll
  * @param {string} lang language
  * @return {string|undefined} message
  */
-const createInnerText = (invalidCodes, simpleScroll, lang) => {
+const createInnerText = (invalidCodes, noGeomCodes, simpleScroll, lang) => {
   const hasInvalidCodes = invalidCodes && invalidCodes.length > 0;
+  const hasNoGeomCodes = noGeomCodes && noGeomCodes.length > 0;
   const shouldBlockMap = !simpleScroll;
   let msg;
   if (hasInvalidCodes) {
@@ -53,8 +55,16 @@ const createInnerText = (invalidCodes, simpleScroll, lang) => {
       munimap_lang.getMsg(munimap_lang.Translations.NOT_FOUND, lang) +
       ':\n' +
       invalidCodes.join(', ');
-  } else if (shouldBlockMap) {
+  } else if (shouldBlockMap || hasNoGeomCodes) {
     msg = munimap_lang.getMsg(munimap_lang.Translations.ACTIVATE_MAP, lang);
+  }
+
+  if (hasNoGeomCodes) {
+    msg = msg ? msg + '\n' : '';
+    msg +=
+      munimap_lang.getMsg(munimap_lang.Translations.NO_GEOMETRY, lang) +
+      ': ' +
+      noGeomCodes.join(', ');
   }
   return msg;
 };
@@ -71,12 +81,14 @@ const createInnerText = (invalidCodes, simpleScroll, lang) => {
 const ErrorMessageComponent = (props) => {
   const targetId = useSelector(slctr.getTargetId);
   const invalidCodes = useSelector(slctr.getInvalidCodes);
+  const noGeomCodes = useSelector(slctr.getNoGeomCodes);
   const simpleScroll = useSelector(slctr.getRequiredSimpleScroll);
   const errorMessage = useSelector(slctr.getErrorMessageState);
   const lang = useSelector(slctr.getLang);
   const dispatch = useDispatch();
 
   const hasInvalidCodes = invalidCodes && invalidCodes.length > 0;
+  const hasNoGeomCodes = noGeomCodes && noGeomCodes.length > 0;
   const shouldBlockMap = !simpleScroll;
   const {render, withMessage} = errorMessage;
 
@@ -99,12 +111,16 @@ const ErrorMessageComponent = (props) => {
     }
   };
 
-  const msg = createInnerText(invalidCodes, simpleScroll, lang);
+  const msg = createInnerText(invalidCodes, noGeomCodes, simpleScroll, lang);
   useLayoutEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## ERRORMSG-useLayoutEffect');
     }
-    if (withMessage === true || (hasInvalidCodes && withMessage === null)) {
+    if (
+      withMessage === true ||
+      (hasInvalidCodes && withMessage === null) ||
+      (hasNoGeomCodes && withMessage === null)
+    ) {
       if (msg) {
         const {size, lineHeight} = getErrorMessageStyle(errElRef.current);
         msgElRef.current.innerText = msg;
@@ -113,13 +129,16 @@ const ErrorMessageComponent = (props) => {
         errElRef.current.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
       }
     }
-  }, [withMessage, hasInvalidCodes, msg]);
+  }, [withMessage, hasInvalidCodes, hasNoGeomCodes, msg]);
 
   if (ENABLE_RENDER_LOGS) {
     console.log('########## ERRORMSG-render');
   }
 
-  if ((hasInvalidCodes || shouldBlockMap) && render !== false) {
+  if (
+    (hasInvalidCodes || shouldBlockMap || hasNoGeomCodes) &&
+    render !== false
+  ) {
     return (
       <div
         id={`munimap-error_${targetId}`}

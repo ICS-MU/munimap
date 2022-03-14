@@ -328,6 +328,26 @@ export const getInitMarkers = createSelector(
 
 /**
  * @type {import("reselect").OutputSelector<
+ *    import("reselect").SelectorArray,
+ *    Array<ol.Feature>,
+ *    function(Array<string>, number, string): Array<ol.Feature>
+ * >}
+ */
+export const getInitMarkersWithGeometry = createSelector(
+  [getInitMarkers],
+  (initMarkers) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing init markers with geometry');
+    }
+    if (initMarkers.length === 0) {
+      return [];
+    }
+    return initMarkers.filter((item) => !!item.getGeometry());
+  }
+);
+
+/**
+ * @type {import("reselect").OutputSelector<
  *    State,
  *    Array<ol.Feature>,
  *    function(Array<string>|string, number): Array<ol.Feature>
@@ -410,6 +430,27 @@ export const getInvalidCodes = createSelector(
       return [];
     }
     return filterInvalidCodes(requiredMarkerIds, initMarkers);
+  }
+);
+
+/**
+ * @type {import("reselect").OutputSelector<
+ *    State,
+ *    Array<string>,
+ *    function(Array<ol.Feature>, Array<ol.Feature>): Array<string>
+ * >}
+ */
+export const getNoGeomCodes = createSelector(
+  [getInitMarkers, getInitMarkersWithGeometry],
+  (initMarkersAll, initMarkersWithGeom) => {
+    if (ENABLE_SELECTOR_LOGS) {
+      console.log('computing no geom codes');
+    }
+    const result = initMarkersAll.filter(
+      (initMarker) => !initMarkersWithGeom.includes(initMarker)
+    );
+
+    return munimap_utils.flat(result.map((item) => item.get('polohKod')));
   }
 );
 
@@ -581,7 +622,7 @@ export const calculateView = createSelector(
     getTargetId,
     getRequiredCenter,
     getRequiredZoom,
-    getInitMarkers,
+    getInitMarkersWithGeometry,
     getInitZoomTo,
   ],
   (targetId, requiredCenter, requiredZoom, markers, zoomTo) => {
@@ -913,7 +954,7 @@ export const showInfoEl = createSelector(
  * >}
  */
 export const getClusterResolution = createSelector(
-  [getMarkersTimestamp, getInitMarkers],
+  [getMarkersTimestamp, getInitMarkersWithGeometry],
   (markersTimestamp, markers) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing cluster resolution');
@@ -1070,7 +1111,7 @@ export const getMarkerLabel = createSelector(
 export const getStyleForMarkerLayer = createSelector(
   [
     getLang,
-    getInitMarkers,
+    getInitMarkersWithGeometry,
     getMarkerLabel,
     getExtent,
     getRequiredLocationCodes,
@@ -1314,7 +1355,7 @@ export const getAllStyleFunctions = createSelector(
  * >}
  */
 export const getFloorCodesWithMarkers = createSelector(
-  [getInitMarkers, getSelectedFeature],
+  [getInitMarkersWithGeometry, getSelectedFeature],
   (initMarkers, selectedFeature) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing floor codes with markers');

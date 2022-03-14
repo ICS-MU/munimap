@@ -344,13 +344,16 @@ const createReducer = (initialState) => {
       //TARGET_BLURRED
       case actions.TARGET_BLURRED:
         const invalidCodes = slctr.getInvalidCodes(state);
+        const noGeomCodes = slctr.getNoGeomCodes(state);
         const hasInvalidCodes = invalidCodes && invalidCodes.length > 0;
+        const hasNoGeom = noGeomCodes && noGeomCodes.length > 0;
         const shouldBlockMap = !state.requiredOpts.simpleScroll;
         return {
           ...state,
           errorMessage: {
             ...state.errorMessage,
-            render: hasInvalidCodes && !shouldBlockMap ? false : true,
+            render:
+              (hasInvalidCodes || hasNoGeom) && !shouldBlockMap ? false : true,
             withMessage: false,
           },
         };

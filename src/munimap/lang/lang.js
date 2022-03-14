@@ -61,6 +61,7 @@ const Translations = {
   INITIAL_EXTENT: 'INITIAL_EXTENT',
   MAP_TOOLS_OPEN: 'MAP_TOOLS_OPEN',
   MAP_TOOLS_CLOSE: 'MAP_TOOLS_CLOSE',
+  NO_GEOMETRY: 'NO_GEOMETRY',
 };
 
 /**
@@ -133,6 +134,7 @@ const CS_TRANSLATIONS = {
   'INITIAL_EXTENT': 'Výchozí rozsah',
   'MAP_TOOLS_OPEN': 'Rozbalit další nástroje',
   'MAP_TOOLS_CLOSE': 'Sbalit nástroje',
+  'NO_GEOMETRY': 'Objekt nemá geometrii',
 };
 
 /**
@@ -205,6 +207,7 @@ const EN_TRANSLATIONS = {
   'INITIAL_EXTENT': 'Initial extent',
   'MAP_TOOLS_OPEN': 'More map tools',
   'MAP_TOOLS_CLOSE': 'Close map tools',
+  'NO_GEOMETRY': 'Object does not have a geometry',
 };
 
 /**
