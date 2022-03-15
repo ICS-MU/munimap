@@ -12,12 +12,11 @@ import {getOptPoiStore} from './_constants.js';
 import {getUid} from 'ol';
 import {hasInnerGeometry, isBuilding} from '../feature/building.js';
 import {
-  isDoorCode,
   isDoorCodeOrLikeExpr,
   isOptPoiCtgUid,
-  isRoomCode,
   isRoomCodeOrLikeExpr,
 } from '../feature/_constants.functions.js';
+import {testCodeOrLikeExpr} from '../utils/regex.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature
@@ -52,35 +51,53 @@ const clearFloorBasedStores = (targetId) => {
 const getFeaturesByIds = (targetId, requiredMarkerIds) => {
   const buildings = srcs.getBuildingStore(targetId).getFeatures();
   const rooms = srcs.getRoomStore(targetId).getFeatures();
-  const doorType = DOOR_TYPE;
+  // const doorType = DOOR_TYPE;
   const doors = srcs.getDoorStore(targetId).getFeatures();
   const optPois = getOptPoiStore(targetId).getFeatures();
-  const result = requiredMarkerIds.map((initMarkerId) => {
+  const result = [];
+  requiredMarkerIds.forEach((initMarkerId) => {
     if (REQUIRED_CUSTOM_MARKERS[initMarkerId]) {
-      return REQUIRED_CUSTOM_MARKERS[initMarkerId];
+      result.push(REQUIRED_CUSTOM_MARKERS[initMarkerId]);
     } else if (isRoomCodeOrLikeExpr(initMarkerId)) {
-      return rooms.find((room) => {
-        return room.get(ROOM_TYPE.primaryKey) === initMarkerId;
-      });
+      result.push(
+        ...rooms.filter((room) => {
+          return testCodeOrLikeExpr(
+            initMarkerId,
+            room.get(ROOM_TYPE.primaryKey)
+          );
+        })
+      );
     } else if (isDoorCodeOrLikeExpr(initMarkerId)) {
-      return doors.find((door) => {
-        return door.get(doorType.primaryKey) === initMarkerId;
-      });
+      result.push(
+        ...doors.filter((door) => {
+          return testCodeOrLikeExpr(
+            initMarkerId,
+            door.get(DOOR_TYPE.primaryKey)
+          );
+        })
+      );
     } else if (isOptPoiCtgUid(initMarkerId)) {
-      return optPois.map((optPoi) => {
-        const roomCode = optPoi.get('polohKodLokace');
-        if (roomCode) {
-          return rooms.find((room) => {
-            const isValid = !room.get('detailsMoved');
-            return isValid && room.get(ROOM_TYPE.primaryKey) === roomCode;
-          });
-        }
-        return;
-      });
+      result.push(
+        ...optPois.map((optPoi) => {
+          const roomCode = optPoi.get('polohKodLokace');
+          if (roomCode) {
+            return rooms.find((room) => {
+              const isValid = !room.get('detailsMoved');
+              return isValid && room.get(ROOM_TYPE.primaryKey) === roomCode;
+            });
+          }
+          return;
+        })
+      );
     } else {
-      return buildings.find((building) => {
-        return building.get(BUILDING_TYPE.primaryKey) === initMarkerId;
-      });
+      result.push(
+        ...buildings.filter((building) => {
+          return testCodeOrLikeExpr(
+            initMarkerId,
+            building.get(BUILDING_TYPE.primaryKey)
+          );
+        })
+      );
     }
   });
   //remove undefined (= invalid codes)
@@ -96,21 +113,32 @@ const getZoomToFeatures = (targetId, initZoomTos) => {
   const buildings = srcs.getBuildingStore(targetId).getFeatures();
   const rooms = srcs.getRoomStore(targetId).getFeatures();
   const doors = srcs.getDoorStore(targetId).getFeatures();
-  return /**@type {Array<string>}*/ (initZoomTos).map((initZoomTo) => {
-    if (isRoomCode(initZoomTo)) {
-      return rooms.find((room) => {
-        return room.get(ROOM_TYPE.primaryKey) === initZoomTo;
-      });
-    } else if (isDoorCode(initZoomTo)) {
-      return doors.find((door) => {
-        return door.get(DOOR_TYPE.primaryKey) === initZoomTo;
-      });
+  const result = [];
+  /**@type {Array<string>}*/ (initZoomTos).forEach((initZoomTo) => {
+    if (isRoomCodeOrLikeExpr(initZoomTo)) {
+      result.push(
+        ...rooms.filter((room) => {
+          return testCodeOrLikeExpr(initZoomTo, room.get(ROOM_TYPE.primaryKey));
+        })
+      );
+    } else if (isDoorCodeOrLikeExpr(initZoomTo)) {
+      result.push(
+        ...doors.filter((door) => {
+          return testCodeOrLikeExpr(initZoomTo, door.get(DOOR_TYPE.primaryKey));
+        })
+      );
     } else {
-      return buildings.find((building) => {
-        return building.get(BUILDING_TYPE.primaryKey) === initZoomTo;
-      });
+      result.push(
+        ...buildings.filter((building) => {
+          return testCodeOrLikeExpr(
+            initZoomTo,
+            building.get(BUILDING_TYPE.primaryKey)
+          );
+        })
+      );
     }
   });
+  return munimap_utils.flat(result).filter((item) => item);
 };
 
 /**

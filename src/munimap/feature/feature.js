@@ -27,6 +27,7 @@ import {
   isOptPoiCtgUid,
   isRoom,
 } from './_constants.functions.js';
+import {testCodeOrLikeExpr} from '../utils/regex.js';
 
 /**
  * @typedef {import("ol/source").Vector} ol.source.Vector
@@ -204,7 +205,11 @@ const filterInvalidCodes = (requiredMarkerIds, initMarkers) => {
 
       return munimap_utils.isString(markerString) &&
         !REQUIRED_CUSTOM_MARKERS[markerString]
-        ? !initMarkersCodes.includes(markerString)
+        ? (initMarkersCodes.length === 0 ||
+            !initMarkersCodes.every((code) =>
+              testCodeOrLikeExpr(markerString, code)
+            )) &&
+            !initMarkersCodes.includes(markerString)
         : false;
     }
   );
