@@ -458,6 +458,12 @@ const createReducer = (initialState) => {
           slctr.getRequiredClusterOptions(state)
         );
         uid = getPopupFeatureUid(features);
+        callbackResult = handleOnClickCallback(
+          features[0],
+          {centerToFeature: false, zoomToFeature: true},
+          getEventByType(EventType.CLICK, slctr.getTargetId(state))
+        );
+
         newState = {
           ...state,
           popup: {
@@ -465,12 +471,6 @@ const createReducer = (initialState) => {
             uid: uid || INITIAL_STATE.popup.uid,
           },
         };
-        callbackResult = handleOnClickCallback(
-          features[0],
-          {centerToFeature: false, zoomToFeature: true},
-          getEventByType(EventType.CLICK, slctr.getTargetId(newState))
-        );
-
         animationRequest = getClusterAnimationRequest({
           clusteredFeatures: features,
           popupCoords: slctr.getPopupPositionInCoords(newState),
@@ -488,7 +488,7 @@ const createReducer = (initialState) => {
         callbackResult = handleOnClickCallback(
           feature,
           {centerToFeature: true, zoomToFeature: true},
-          getEventByType(EventType.CLICK, slctr.getTargetId(newState))
+          getEventByType(EventType.CLICK, slctr.getTargetId(state))
         );
 
         newState = {
