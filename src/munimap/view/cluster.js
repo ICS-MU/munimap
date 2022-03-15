@@ -15,12 +15,8 @@ import {
   getAnimationDuration,
   getAnimationRequestParams,
 } from '../utils/animation.js';
-import {getClusterStore, getClusterVectorStore} from '../source/_constants.js';
-import {
-  getClusteredFeatures,
-  getMainFeatures,
-  getMinorFeatures,
-} from '../cluster/cluster.js';
+import {getClusterVectorStore} from '../source/_constants.js';
+import {getClusteredFeatures} from '../cluster/cluster.js';
 import {isCustomMarker, isDoor} from '../feature/_constants.functions.js';
 
 /**
@@ -31,15 +27,17 @@ import {isCustomMarker, isDoor} from '../feature/_constants.functions.js';
  * @typedef {import("../conf.js").AnimationRequestState} AnimationRequestState
  * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  * @typedef {import("../utils/animation.js").ViewOptions} ViewOptions
+ * @typedef {import("ol/Feature").default} ol.Feature
+ * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
+ * @typedef {import("../feature/feature.js").OnClickResult} OnClickResult
  */
 
 /**
  * @typedef {Object} Props
- * @property {string} featureUid featureUid
- * @property {string} targetId targetId
- * @property {boolean} clusterFacultyAbbr clusterFacultyAbbr
+ * @property {Array<ol.Feature>} clusteredFeatures features
+ * @property {ol.coordinate.Coordinate} popupCoords coords
  *
- * @typedef {ViewOptions & Props} GetAnimationRequestOptions
+ * @typedef {ViewOptions & Props & OnClickResult} GetAnimationRequestOptions
  */
 
 /**
@@ -70,21 +68,15 @@ const updateClusteredFeatures = (targetId, resolution, showLabels) => {
  */
 const getAnimationRequest = (options) => {
   const {
-    featureUid,
-    targetId,
     rotation,
     size,
     extent,
     resolution,
-    clusterFacultyAbbr,
+    clusteredFeatures,
+    zoomToFeature,
+    centerToFeature,
+    popupCoords,
   } = options;
-  const feature = getClusterStore(targetId).getFeatureByUid(featureUid);
-
-  let clusteredFeatures = getMainFeatures(targetId, feature);
-  if (clusterFacultyAbbr) {
-    const minorFeatures = getMinorFeatures(targetId, feature);
-    clusteredFeatures = clusteredFeatures.concat(minorFeatures);
-  }
 
   const firstFeature = clusteredFeatures[0];
   munimap_assert.assertInstanceof(firstFeature, Feature);
@@ -92,31 +84,33 @@ const getAnimationRequest = (options) => {
     ? DOOR_RESOLUTION
     : FLOOR_RESOLUTION;
 
-  let featuresExtent;
   let animationRequest;
   if (clusteredFeatures.length === 1) {
     let center;
+    const isCustom = isCustomMarker(firstFeature);
     const opts = {
-      resolution: resolutionRange.max,
+      resolution: isCustom && !zoomToFeature ? resolution : resolutionRange.max,
       rotation,
       size,
       extent,
     };
 
-    if (isCustomMarker(firstFeature)) {
-      featuresExtent = extentOfFeature(firstFeature);
-      center = ol_extent.getCenter(featuresExtent);
-      animationRequest = getAnimationRequestParams(center, opts);
+    if (isCustom) {
+      if (zoomToFeature) {
+        center = ol_extent.getCenter(extentOfFeature(firstFeature));
+        animationRequest = getAnimationRequestParams(center, opts);
+      } else if (centerToFeature) {
+        animationRequest = getAnimationRequestParams(popupCoords, opts);
+      }
     } else {
       const isVisible = munimap_range.contains(resolutionRange, resolution);
       if (!isVisible) {
-        featuresExtent = extentOfFeature(firstFeature);
-        center = ol_extent.getCenter(featuresExtent);
+        center = ol_extent.getCenter(extentOfFeature(firstFeature));
         animationRequest = getAnimationRequestParams(center, opts);
       }
     }
   } else {
-    featuresExtent = extentOfFeatures(clusteredFeatures, targetId);
+    const featuresExtent = extentOfFeatures(clusteredFeatures);
     animationRequest = /** @type {AnimationRequestOptions}*/ ({
       extent: featuresExtent,
       duration: getAnimationDuration(extent, featuresExtent),

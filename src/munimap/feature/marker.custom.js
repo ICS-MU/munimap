@@ -38,4 +38,4 @@ const decorate = (feature) => {
   geom.applyTransform(transformFn);
 };
 
-export {getLabel, decorate};
+export {decorate, getLabel};

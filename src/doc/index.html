@@ -65,8 +65,30 @@
         </tr>
         <tr id="markers">
           <td class="param-name">markers</td>
-          <td class="param-type">Array&lt;string&gt; | Array&lt;<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_Feature-Feature.html" target="_blank">ol.Feature</a>&gt; 
-            | undefined</td>
+          <td class="param-type">
+            Array.&lt;string&gt; | Array.&lt;<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.Feature.html" target="_blank">ol.Feature</a>&gt; | undefined
+            <br><br><br>
+            <strong>FeatureOptions</strong>
+            <ul>
+              <li><code>geometry: <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.geom.Point.html" target="_blank">ol.geom.Point</a></code> - geometrie</li>
+              <li><code>label: string|undefined</code> - popisek "špendlíku"</li>
+              <li><code>detail: string|HTML|undefined</code> - podrobné informace</li>
+              <li><code>color: string|undefined</code> - barva popisku a výchozího "špendlíku"</li>
+              <li><code>onClick: (function(evt, options): void)|undefined</code> - callback po kliknutí na "špendlík"</li>
+              <li><code>icon: Object|undefined</code> - definice vlastní ikony
+                <ul>
+                  <li><code>url: string</code> - url adresa symbolu</li>
+                  <li><code>size: Array&lt;number&gt;</code> - velikost (šířka, výška)</li>
+                  <li><code>position: string|undefined</code> - pozice ikony (<i>above</i> - nad souřadnicemi, <i>below</i> - pod souřadnicemi, <i>origin</i> - na souřadnice)</li>
+                </ul>
+              </li>
+            </ul>
+            <br><br><br>
+            <strong>OnClickOptions</strong>
+            <ul>
+              <li><code>animation: string</code> - po kliknutí animovat na "špendlík" (<i>zoomTo</i> - nazoomovat, <i>centerTo</i> - jen vycentrovat, <i>none</i> - bez animace)</li>
+            </ul>
+          </td>
           <td class="param-desc">
             <ul>
               <li>pole textových řetězců může být
@@ -99,6 +121,32 @@
                 </ul>
               </li>
               <li>od verze 1.5 je možné kombinovat "špendlíky" s polohovými kódy budov, místností a dveří</li>
+              <li>od verze 1.14 je možné dát "špendlíku" vlastní ikonu pomocí parametru icon u objektu typu <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/ol.Feature.html" target="_blank">ol.Feature</a>. Vlastnosti parametru icon jsou následující:
+                <ul>
+                  <li>url definující url ikony</li>
+                  <li>size určující velikost ikony (šířku a výšku v pixelech)</li>
+                  <li>position pro nastavení pozice ikony (nepovinný parametr)
+                    <ul>
+                      <li><code>above</code> (nad souřadnicemi)</li>
+                      <li><code>below</code> (pod souřadnicemi)</li>
+                      <li><code>origin</code> (na souřadnice)</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>od verze 1.14.1 je callback funkce vázána přímo na ol.Feature
+                <ul>
+                  <li>onClick pro nastavení callbacku po kliknutí na ikonu (nepovinný parametr)
+                    <ul>
+                      <li>předává <code>evt</code> typu <a href="https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent">PointerEvent</a></li>
+                      <li>předává objekt <code>options</code> jako referenci, proto je možné změnou jeho vlastností ovlivňovat chování mapy po kliknutí na "špendlík"</li>
+                      <ul>
+                        <li><code>animation</code> - po kliknutí animovat na "špendlík" (<i>zoomTo</i> - nazoomovat, <i>centerTo</i> - jen vycentrovat, <i>none</i> - bez animace)</li>
+                      </ul>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
               <li>není-li parametr zadán, nic se v mapě nezvýrazní</li>
             </ul>
             <div class="hint">
@@ -254,10 +302,76 @@
             </div>
           </td>
         </tr>
+        <tr id="cluster">
+          <td class="param-name">cluster</td>
+          <td class="param-type">
+<pre style="font-family: monospace">{
+  marked: {
+    icon: {
+      single: IconOptions|undefined,
+      multiple: IconOptions|undefined
+    }|undefined,
+    color: {
+      single: string|undefined,
+      multiple: string|undefined
+    }|undefined
+  }|undefined,
+  
+  unmarked: {
+    icon: {
+      single: IconOptions|undefined,
+      multiple: IconOptions|undefined
+    }|undefined,
+    color: {
+      single: string|undefined,
+      multiple: string|undefined
+    }|undefined
+  }|undefined,
+
+  distance: number|undefined
+}</pre>
+          <br><br><br>
+          <strong>IconOptions</strong>
+          <ul>
+            <li><code>icon: Object|undefined</code> - definice vlastní ikony
+              <ul>
+                <li><code>url: string</code> - url adresa symbolu</li>
+                <li><code>size: Array&lt;number&gt;</code> - velikost (šířka, výška)</li>
+                <li><code>position: string|undefined</code> - pozice ikony (<i>above</i> - nad souřadnicemi, <i>below</i> - pod souřadnicemi, <i>origin</i> - na souřadnice)</li>
+              </ul>
+            </li>
+          </ul>
+          </td>
+          <td class="param-desc">
+            <ul>
+              <li>funkce pro konfiguraci shlukování</li>
+              <li>vlastnost <code>marked/unmarked</code> určuje, zda se jedná o cluster s alespoň jedním markerem</li>
+              <li>vlastnost <code>icon</code> definuje vlastní ikonu
+                <ul>
+                  <li>url definující url ikony</li>
+                  <li>size určující velikost ikony (šířku a výšku v pixelech)</li>
+                  <li>position pro nastavení pozice ikony (nepovinný parametr)
+                    <ul>
+                      <li>above (nad souřadnicemi)</li>
+                      <li>below (pod souřadnicemi)</li>
+                      <li>origin (na souřadnice)</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>vlastnost <code>color</code> definuje barvu popisku</li>
+              <li>vlastnost <code>single/multiple</code> určuje, zda se jedná o cluster s jedním nebo vícero prvky</li>
+              <li>vlastnost <code>distance</code> definuje minimální vzdálenost mezi clustery v pixelech (default = 80)</li>
+            </ul>
+            <div class="experimental">
+              <p>experimentální funkcionalita</p>
+            </div>
+          </td>
+        </tr>
         <tr id='identifyTypes'>
             <td class="param-name">identifyTypes</td>
             <td class="param-type">
-                <pre style="font-family: arial">Array&lt;string&gt; | undefined</pre></td>
+                <pre style="font-family: monospace">Array&lt;string&gt; | undefined</pre></td>
             <td class="param-desc">
                 <ul>
                     <li>pole klíčových slov typů (pro možné hodnoty viz tabulka níže)</li>
@@ -288,9 +402,11 @@
         <tr id="identifyCallback">
             <td class="param-name">identifyCallback</td>
             <td class="param-type">
-                <pre style="font-family: arial">function({
-    coordsInMeters: (<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_coordinate.html#~Coordinate" target="_blank">ol.coordinate.Coordinate</a> | undefined),
-    coordsInDegrees: (<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_coordinate.html#~Coordinate" target="_blank">ol.coorindate.Coordinate</a> | undefined),
+                <pre style="font-family: monospace">function({
+    coordsInMeters:
+      (<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_coordinate.html#~Coordinate" target="_blank">ol.coordinate.Coordinate</a> | undefined),
+    coordsInDegrees:
+      (<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_coordinate.html#~Coordinate" target="_blank">ol.coorindate.Coordinate</a> | undefined),
     buildingCode: (string | undefined),
     roomCode: (string | undefined), 
     doorCode: (string | undefined)
@@ -523,10 +639,55 @@
 	    <a href="#center">viz parametr center metody create</a>
           </td>
         </tr>
+        <tr>
+          <td class="param-name">cluster</td>
+            <td class="param-type">
+<pre style="font-family: monospace">{
+  marked: {
+    icon: {
+      single: IconOptions|undefined,
+      multiple: IconOptions|undefined
+    }|undefined,
+    color: {
+      single: string|undefined,
+      multiple: string|undefined
+    }|undefined
+  }|undefined,
+  
+  unmarked: {
+    icon: {
+      single: IconOptions|undefined,
+      multiple: IconOptions|undefined
+    }|undefined,
+    color: {
+      single: string|undefined,
+      multiple: string|undefined
+    }|undefined
+  }|undefined,
+
+  distance: number|undefined
+}</pre>
+              <br><br><br>
+              <strong>IconOptions</strong>
+              <ul>
+                <li><code>icon: Object|undefined</code> - definice vlastní ikony
+                  <ul>
+                    <li><code>url: string</code> - url adresa symbolu</li>
+                    <li><code>size: Array&lt;number&gt;</code> - velikost (šířka, výška)</li>
+                    <li><code>position: string|undefined</code> - pozice ikony (<i>above</i> - nad souřadnicemi, <i>below</i> - pod souřadnicemi, <i>origin</i> - na souřadnice)</li>
+                  </ul>
+                </li>
+              </ul>
+              <br>
+            </td>
+            <td class="param-desc">
+                <a href="#cluster">viz parametr cluster metody create</a>
+            </td>
+        </tr>
           <tr>
               <td class="param-name">identifyTypes</td>
                 <td class="param-type">
-                    <pre style="font-family: arial">Array&lt;string&gt; | undefined</pre></td>
+                    <pre style="font-family: monospace">Array&lt;string&gt; | undefined</pre></td>
                 <td class="param-desc">
                     <a href="#identifyTypes">viz parametr identifyTypes metody create</a>
                 </td>
@@ -534,9 +695,11 @@
         <tr id="reset-identifyCallback">
             <td class="param-name">identifyCallback</td>
             <td class="param-type">
-                <pre style="font-family: arial">function({
-    coordsInMeters: (<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_coordinate.html#~Coordinate" target="_blank">ol.coordinate.Coordinate</a> | undefined),
-    coordsInDegrees: (<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_coordinate.html#~Coordinate" target="_blank">ol.coordinate.Coordinate</a> | undefined),
+                <pre style="font-family: monospace">function({
+    coordsInMeters:
+      (<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_coordinate.html#~Coordinate" target="_blank">ol.coordinate.Coordinate</a> | undefined),
+    coordsInDegrees:
+      (<a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_coordinate.html#~Coordinate" target="_blank">ol.coordinate.Coordinate</a> | undefined),
     buildingCode: (string | undefined),
     roomCode: (string | undefined), 
     doorCode: (string | undefined)

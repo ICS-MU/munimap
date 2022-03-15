@@ -10,6 +10,7 @@ import {IdentifyTypes} from './identify/_constants.js';
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/size").Size} ol.size.Size
  * @typedef {import("./feature/floor.js").Options} FloorOptions
+ * @typedef {import("./cluster/cluster.js").ClusterOptions} ClusterOptions
  * @typedef {import("./utils/range.js").RangeInterface} RangeInterface
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/geom").Point} ol.geom.Point
@@ -83,7 +84,6 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {boolean} [loadingMessage] whether to show loading message
  * @property {string} [baseMap] basemap
  * @property {boolean} [mapLinks] whether to show maplinks
- * @property {boolean} [clusterFacultyAbbr] whether to cluster faculty abbreviations
  * @property {boolean} [labels] whether to show labels
  * @property {boolean} [locationCodes] whether to show location codes
  * @property {boolean} [simpleScroll] whether to simple scrool or not
@@ -95,6 +95,7 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  * @property {Array<string>} [identifyTypes] identifyTypes
  * @property {string} [identifyCallbackId] identifyCallbackId id
  * @property {boolean} [tooltips] whether to show poi tooltips
+ * @property {ClusterOptions} [cluster] cluster options
  */
 
 /**
@@ -178,7 +179,6 @@ export const INITIAL_STATE = {
     zoomTo: [],
     loadingMessage: true,
     mapLinks: false,
-    clusterFacultyAbbr: false,
     labels: true,
     locationCodes: false,
     simpleScroll: true,
@@ -192,6 +192,7 @@ export const INITIAL_STATE = {
     identifyTypes: Object.values(IdentifyTypes),
     identifyCallbackId: null,
     tooltips: true,
+    cluster: null,
   },
   markersTimestamp: null,
   zoomToTimestamp: null,

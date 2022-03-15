@@ -96,9 +96,9 @@ const featureClickHandler = (dispatch, options) => {
 };
 
 export {
-  getFloorCode,
-  isClickable,
   featureClickHandler,
+  getFloorCode,
   getSelectedFloorCodesWithMarkers,
+  isClickable,
   isMarker,
 };

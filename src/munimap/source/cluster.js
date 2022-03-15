@@ -31,6 +31,14 @@ import {setClusterStore} from './_constants.js';
  * } EnhancedClusterSourceOptions
  */
 
+/**
+ * @typedef {Object} CreateStoreOptions
+ * @property {string} targetId targetId
+ * @property {ol.AttributionLike} muAttrs attributions
+ * @property {string} lang language
+ * @property {number} [distance] distance
+ */
+
 class EnhancedClusterSource extends ClusterSource {
   /**
    * @param {EnhancedClusterSourceOptions} options options
@@ -120,12 +128,11 @@ const clusterCompareFn = (targetId, lang, f1, f2) => {
 /**
  * Create store for clusters.
  * @param {Array<ol.Feature>} clusterFeatures features
- * @param {string} targetId targetId
- * @param {ol.AttributionLike} muAttrs attributions
- * @param {string} lang language
+ * @param {CreateStoreOptions} options options
  * @return {EnhancedClusterSource} store
  */
-const createStore = (clusterFeatures, targetId, muAttrs, lang) => {
+const createStore = (clusterFeatures, options) => {
+  const {targetId, muAttrs, lang, distance} = options;
   const clusterStore = new EnhancedClusterSource({
     attributions: muAttrs,
     source: new VectorSource({
@@ -142,7 +149,7 @@ const createStore = (clusterFeatures, targetId, muAttrs, lang) => {
       }
       return result;
     },
-    distance: 80,
+    distance: munimap_utils.isDefAndNotNull(distance) ? distance : 80,
   });
   setClusterStore(targetId, clusterStore);
   return clusterStore;

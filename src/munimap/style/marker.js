@@ -15,8 +15,9 @@ import {
   INTERSECT_CENTER_GEOMETRY_FUNCTION,
 } from '../utils/geom.js';
 import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from '../feature/_constants.js';
-import {Fill, Style, Text} from 'ol/style';
+import {Fill, Icon, Style, Text} from 'ol/style';
 import {Point} from 'ol/geom';
+import {calculateIconAnchor} from './icon.js';
 import {
   isCustomMarker as isCustomMarkerFeature,
   isDoor as isDoorFeature,
@@ -31,6 +32,7 @@ import {
  * @typedef {import("ol/source/Vector").default} ol.source.Vector
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("../feature/marker.js").LabelFunction} LabelFunction
+ * @typedef {import("../style/icon.js").IconOptions} IconOptions
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("ol/style/Style").StyleFunction} ol.style.StyleFunction
  */
@@ -221,6 +223,27 @@ const labelFunction = (feature, resolution, options) => {
     title: title,
     zIndex: 6,
   };
+
+  const icon = /** @type {IconOptions}*/ (feature.get('icon'));
+  if (isCustomMarker && icon) {
+    const anchor = calculateIconAnchor(icon);
+    styleArray.push(
+      new Style({
+        geometry: geometry,
+        image: new Icon({
+          src: icon.url,
+          anchor: anchor,
+        }),
+      })
+    );
+    if (munimap_utils.isDefAndNotNull(opts.title)) {
+      opts.icon = icon;
+      const textStyle = munimap_style.getTextStyleWithOffsetY(opts);
+      styleArray = styleArray.concat(textStyle);
+    }
+    return styleArray;
+  }
+
   if (isBuilding || isCustomMarker) {
     styleArray = munimap_style.getLabelWithPin(opts);
   } else {

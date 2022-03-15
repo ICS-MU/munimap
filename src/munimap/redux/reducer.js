@@ -7,37 +7,41 @@ import * as munimap_load from '../load.js';
 import * as munimap_range from '../utils/range.js';
 import * as slctr from './selector.js';
 import * as srcs from '../source/_constants.js';
+import {EventType} from '../view/_constants.js';
 import {FLOOR_RESOLUTION, RoomTypes} from '../feature/_constants.js';
 import {INITIAL_STATE} from '../conf.js';
 import {getAnimationRequest as getBuildingAnimationRequest} from '../view/building.js';
 import {getAnimationRequest as getClusterAnimationRequest} from '../view/cluster.js';
 import {getAnimationRequest as getComplexAnimationRequest} from '../view/complex.js';
+import {getEventByType} from '../view/_constants.functions.js';
+import {getFeaturesByPriority, getPopupFeatureUid} from '../cluster/cluster.js';
 import {getFeaturesTimestamps} from '../utils/reducer.js';
 import {getAnimationRequest as getGeolocationAnimationRequest} from '../view/geolocation.js';
 import {getAnimationRequest as getMarkerAnimationRequest} from '../view/marker.js';
 import {getFloorCode as getMarkerFloorCode} from '../feature/marker.js';
 import {getAnimationRequest as getPoiAnimationRequest} from '../view/poi.js';
-import {getPopupFeatureUid} from '../cluster/cluster.js';
 import {getAnimationRequest as getPubTranAnimationRequest} from '../view/pubtran.stop.js';
 import {getUid} from 'ol';
 import {handleDoorClick} from '../feature/door.js';
 import {handleMapViewChange} from '../view/view.js';
+import {handleOnClickCallback} from '../feature/feature.js';
 import {handleReset} from '../reset.js';
 import {isCustomMarker} from '../feature/_constants.functions.js';
 import {isSameCode} from '../feature/building.js';
+
 /**
  * @typedef {import("../conf.js").State} State
  * @typedef {import("redux").Dispatch} redux.Dispatch
  * @typedef {import("redux").Reducer} redux.Reducer
  * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  * @typedef {import("../utils/animation.js").ViewOptions} ViewOptions
- */
-
-/**
- * @typedef {Object} ViewParams
- * @property {string} targetId targetId
- *
- * @typedef {ViewOptions & ViewParams} ViewOptionsResult
+ * @typedef {import("../style/icon.js").IconOptions} IconOptions
+ * @typedef {import("../feature/_constants.js").CustomMarkerOnClickAnimationOptions} CustomMarkerOnClickAnimationOptions
+ * @typedef {import("../feature/feature.js").OnClickFunction} CustomMarkerOnClickFn
+ * @typedef {import("../feature/feature.js").OnClickOptions} CustomMarkerOnClickOpts
+ * @typedef {import("ol/Feature").default} ol.Feature
+ * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
+ * @typedef {import("../view/marker.js").MarkerAnimRequestOptions} MarkerAnimRequestOptions
  */
 
 /**
@@ -122,15 +126,30 @@ const handleIdentifyCallback = (state, payload, asyncDispatch) => {
 
 /**
  * @param {State} state state
- * @return {ViewOptionsResult} result
+ * @return {ViewOptions} result
  */
 const getViewOptions = (state) => {
   return {
-    targetId: slctr.getTargetId(state),
     rotation: slctr.getRotation(state),
     size: slctr.getSize(state),
     extent: slctr.getExtent(state),
     resolution: slctr.getResolution(state),
+  };
+};
+
+/**
+ * @param {State} state state
+ * @param {ol.Feature} feature feature
+ * @return {MarkerAnimRequestOptions} opts
+ */
+const getMarkerAnimRequestOptions = (state, feature) => {
+  return {
+    ...getViewOptions(state),
+    feature,
+    popupCoords: slctr.getPopupPositionInCoords(state),
+    isIdentifyAllowed:
+      slctr.isIdentifyEnabled(state) &&
+      munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes),
   };
 };
 
@@ -152,6 +171,7 @@ const createReducer = (initialState) => {
     let targetId;
     let result;
     let uid;
+    let callbackResult;
 
     switch (action.type) {
       // MARKERS_LOADED
@@ -432,40 +452,61 @@ const createReducer = (initialState) => {
 
       //CLUSTER_CLICKED
       case actions.CLUSTER_CLICKED:
-        animationRequest = getClusterAnimationRequest({
-          featureUid: action.payload.featureUid,
-          clusterFacultyAbbr: state.requiredOpts.clusterFacultyAbbr,
-          ...getViewOptions(state),
-        });
-        uid = getPopupFeatureUid(state, {
-          featureUid: action.payload.featureUid,
-          targetId: slctr.getTargetId(state),
-        });
-        if (animationRequest) {
-          return {
-            ...state,
-            animationRequest,
-            popup: {
-              ...INITIAL_STATE.popup,
-              uid: uid || INITIAL_STATE.popup.uid,
-            },
-          };
-        }
-        return {
+        const features = getFeaturesByPriority(
+          slctr.getTargetId(state),
+          action.payload.featureUid,
+          slctr.getRequiredClusterOptions(state)
+        );
+        uid = getPopupFeatureUid(features);
+        newState = {
           ...state,
           popup: {
             ...INITIAL_STATE.popup,
             uid: uid || INITIAL_STATE.popup.uid,
           },
         };
+        callbackResult = handleOnClickCallback(
+          features[0],
+          {centerToFeature: false, zoomToFeature: true},
+          getEventByType(EventType.CLICK, slctr.getTargetId(newState))
+        );
+
+        animationRequest = getClusterAnimationRequest({
+          clusteredFeatures: features,
+          popupCoords: slctr.getPopupPositionInCoords(newState),
+          ...callbackResult,
+          ...getViewOptions(state),
+        });
+        newState.animationRequest = animationRequest || state.animationRequest;
+        return newState;
 
       //MARKER_CLICKED
       case actions.MARKER_CLICKED:
         feature = srcs
           .getMarkerStore(slctr.getTargetId(state))
           .getFeatureByUid(action.payload.featureUid);
-        animationRequest = getMarkerAnimationRequest(state, action.payload);
-        uid = !!feature.get('detail') && getUid(feature);
+        callbackResult = handleOnClickCallback(
+          feature,
+          {centerToFeature: true, zoomToFeature: true},
+          getEventByType(EventType.CLICK, slctr.getTargetId(newState))
+        );
+
+        newState = {
+          ...state,
+          popup: {
+            ...INITIAL_STATE.popup,
+            uid:
+              (!!feature.get('detail') && action.payload.featureUid) ||
+              INITIAL_STATE.popup.uid,
+          },
+        };
+
+        animationRequest = getMarkerAnimationRequest({
+          ...getMarkerAnimRequestOptions(newState, feature),
+          ...callbackResult,
+          pixelInCoords: action.payload.pixelInCoords,
+        });
+        newState.animationRequest = animationRequest || state.animationRequest;
 
         if (!isCustomMarker(feature)) {
           locationCode = getMarkerFloorCode(feature);
@@ -478,16 +519,8 @@ const createReducer = (initialState) => {
             );
           }
         }
-
-        return {
-          ...state,
-          selectedFeature: locationCode || state.selectedFeature,
-          animationRequest: animationRequest || state.animationRequest,
-          popup: {
-            ...INITIAL_STATE.popup,
-            uid: uid || INITIAL_STATE.popup.uid,
-          },
-        };
+        newState.selectedFeature = locationCode || state.selectedFeature;
+        return newState;
 
       //POI_CLICKED
       case actions.POI_CLICKED:
@@ -504,6 +537,7 @@ const createReducer = (initialState) => {
           .getFeatureByUid(action.payload.featureUid);
         animationRequest = getPubTranAnimationRequest({
           featureUid: action.payload.featureUid,
+          targetId: slctr.getTargetId(state),
           ...getViewOptions(state),
         });
         uid = !!feature.get('nazev') && getUid(feature);

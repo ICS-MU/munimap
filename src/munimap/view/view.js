@@ -6,6 +6,7 @@ import * as munimap_assert from '../assert/assert.js';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import {CLICK_HANDLER, IS_CLICKABLE} from '../layer/_constants.js';
+import {EventType} from './_constants.js';
 import {
   GET_MAIN_FEATURE_AT_PIXEL_STORE,
   TARGET_ELEMENTS_STORE,
@@ -58,6 +59,7 @@ import {isFloorCode} from '../feature/_constants.functions.js';
 import {loadFloors} from '../load.js';
 import {refreshActiveStyle as refreshActiveDoorStyle} from './door.js';
 import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
+import {setEventByType} from './_constants.functions.js';
 import {updateClusteredFeatures} from './cluster.js';
 
 /**
@@ -225,8 +227,12 @@ const ensureLayers = (map, options) => {
  */
 const handleMapClick = (evt, dispatch, options) => {
   const {selectedFeature, isIdentifyEnabled} = options;
-  const {getMainFeatureAtPixelId, clusterFacultyAbbr, identifyTypes, targetId} =
-    options.requiredOpts;
+  const {
+    getMainFeatureAtPixelId,
+    cluster: clusterOptions,
+    identifyTypes,
+    targetId,
+  } = options.requiredOpts;
   const {map, pixel} = evt;
 
   const getMainFeatureAtPixelFn = getMainFeatureAtPixelId
@@ -246,7 +252,7 @@ const handleMapClick = (evt, dispatch, options) => {
         feature: featureWithLayer.feature,
         resolution: map.getView().getResolution(),
         selectedFeature,
-        clusterFacultyAbbr,
+        clusterFacultyAbbr: clusterOptions && clusterOptions.facultyAbbr,
         identifyTypes,
         isIdentifyEnabled,
         targetId,
@@ -256,6 +262,7 @@ const handleMapClick = (evt, dispatch, options) => {
           layer.get(CLICK_HANDLER)
         );
         if (featureClickHandler) {
+          setEventByType(EventType.CLICK, targetId, evt.originalEvent);
           munimap_assert.assertFunction(featureClickHandler);
           featureClickHandler(dispatch, {
             featureUid: getUid(featureWithLayer.feature),
@@ -277,8 +284,12 @@ const handlePointerMove = (evt, options) => {
   }
 
   const {selectedFeature, isIdentifyEnabled} = options;
-  const {targetId, getMainFeatureAtPixelId, clusterFacultyAbbr, identifyTypes} =
-    options.requiredOpts;
+  const {
+    targetId,
+    getMainFeatureAtPixelId,
+    cluster: clusterOptions,
+    identifyTypes,
+  } = options.requiredOpts;
   const map = evt.map;
   const targetEl = TARGET_ELEMENTS_STORE[targetId];
   const pixel = map.getEventPixel(evt.originalEvent);
@@ -300,7 +311,7 @@ const handlePointerMove = (evt, options) => {
         feature,
         resolution: map.getView().getResolution(),
         selectedFeature,
-        clusterFacultyAbbr,
+        clusterFacultyAbbr: clusterOptions && clusterOptions.facultyAbbr,
         identifyTypes,
         isIdentifyEnabled,
         targetId,

@@ -21,6 +21,7 @@ import {
 } from '../feature/_constants.js';
 import {IDENTIFY_CALLBACK_STORE, MARKER_LABEL_STORE} from '../constants.js';
 import {MultiPolygon, Polygon} from 'ol/geom';
+import {calculateBubbleOffsets} from '../style/icon.js';
 import {defaults as control_defaults} from 'ol/control';
 import {createLayer as createBasemapLayer, getId} from '../layer/basemap.js';
 import {create as createMapView} from '../view/mapview.js';
@@ -89,6 +90,8 @@ import {
  * @typedef {import("../feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("../identify/identify.js").CallbackFunction} IdentifyCallbackFunction
  * @typedef {import("../conf.js").PopupContentOptions} PopupContentOptions
+ * @typedef {import("../cluster/cluster.js").ClusterOptions} ClusterOptions
+ * @typedef {import("../style/icon.js").IconOptions} IconOptions
  */
 
 /**
@@ -245,7 +248,7 @@ const getRequiredLocationCodes = (state) => state.requiredOpts.locationCodes;
  * @return {boolean} whether to cluster faculty abbreviations
  */
 export const getRequiredClusterFacultyAbbr = (state) =>
-  state.requiredOpts.clusterFacultyAbbr;
+  state.requiredOpts.cluster && state.requiredOpts.cluster.facultyAbbr;
 
 /**
  * @param {State} state state
@@ -290,6 +293,12 @@ export const getIdentifyTimestamp = (state) => state.identifyTimestamp;
  * @return {number} timestamp
  */
 export const getResetTimestamp = (state) => state.resetTimestamp;
+
+/**
+ * @param {State} state state
+ * @return {ClusterOptions} cluster options
+ */
+export const getRequiredClusterOptions = (state) => state.requiredOpts.cluster;
 
 // Create selector with memoize options.
 const createSelector = (selectors, fn) => {
@@ -1167,8 +1176,16 @@ export const getStyleForClusterLayer = createSelector(
     getMarkerLabel,
     getRequiredClusterFacultyAbbr,
     getTargetId,
+    getRequiredClusterOptions,
   ],
-  (lang, locationCodes, markerLabel, clusterFacultyAbbr, targetId) => {
+  (
+    lang,
+    locationCodes,
+    markerLabel,
+    clusterFacultyAbbr,
+    targetId,
+    clusterOptions
+  ) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - computing style for clusters');
     }
@@ -1180,7 +1197,7 @@ export const getStyleForClusterLayer = createSelector(
       clusterFacultyAbbr,
       targetId,
     };
-    return getClusterStyleFunction(options);
+    return getClusterStyleFunction(options, clusterOptions);
   }
 );
 
@@ -1573,7 +1590,15 @@ export const getOffsetForPopup = createSelector(
     }
 
     const ft = feature.get(FEATURE_TYPE_PROPERTY_NAME);
-    return ft && ft.layerId === PUBTRAN_TYPE.layerId ? [0, 0] : defaultOffset;
+    const icon = /** @type {IconOptions|undefined}*/ (feature.get('icon'));
+    if (ft && ft.layerId === PUBTRAN_TYPE.layerId) {
+      return [0, 0];
+    } else if (icon && icon.size) {
+      const {offsetX, offsetY} = calculateBubbleOffsets(icon);
+      return [offsetX, offsetY];
+    } else {
+      return defaultOffset;
+    }
   }
 );
 

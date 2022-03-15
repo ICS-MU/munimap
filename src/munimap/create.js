@@ -30,6 +30,7 @@ import {v4 as uuidv4} from 'uuid';
  * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("./feature/feature.js").getMainFeatureAtPixelFunction} getMainFeatureAtPixelFunction
  * @typedef {import("./identify/identify.js").CallbackFunction} IdentifyCallbackFunction
+ * @typedef {import("./cluster/cluster.js").ClusterOptions} ClusterOptions
  */
 
 /**
@@ -43,7 +44,6 @@ import {v4 as uuidv4} from 'uuid';
  * @property {boolean} [loadingMessage] loading message
  * @property {string} [baseMap] basemap
  * @property {boolean} [mapLinks] maplinks
- * @property {boolean} [clusterFacultyAbbr] cluster faculty abbreviations
  * @property {boolean} [labels] labels
  * @property {boolean} [locationCodes] location codes
  * @property {boolean} [simpleScroll] simple scroll
@@ -55,6 +55,7 @@ import {v4 as uuidv4} from 'uuid';
  * @property {Array<string>} [identifyTypes] identifyTypes
  * @property {IdentifyCallbackFunction} [identifyCallback] identifyCallback function
  * @property {boolean} [tooltips] tooltips
+ * @property {ClusterOptions} [cluster] cluster
  */
 
 /**
@@ -153,9 +154,6 @@ const getInitialState = (options, targetId) => {
   if (options.mapLinks !== undefined) {
     initialState.requiredOpts.mapLinks = options.mapLinks;
   }
-  if (options.clusterFacultyAbbr !== undefined) {
-    initialState.requiredOpts.clusterFacultyAbbr = options.clusterFacultyAbbr;
-  }
   if (options.labels !== undefined) {
     initialState.requiredOpts.labels = options.labels;
   }
@@ -200,6 +198,9 @@ const getInitialState = (options, targetId) => {
   }
   if (options.tooltips !== undefined) {
     initialState.requiredOpts.tooltips = options.tooltips;
+  }
+  if (options.cluster !== undefined) {
+    initialState.requiredOpts.cluster = options.cluster;
   }
 
   return initialState;

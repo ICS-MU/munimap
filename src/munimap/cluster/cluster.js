@@ -8,16 +8,19 @@ import * as munimap_marker from '../feature/marker.js';
 import * as munimap_range from '../utils/range.js';
 import * as munimap_utils from '../utils/utils.js';
 import {Feature} from 'ol';
+import {getAbbr} from '../feature/unit.js';
 import {
   getBuildingStore,
   getClusterStore,
   getMarkerStore,
 } from '../source/_constants.js';
+import {getPropertySafe} from '../utils/object.js';
 import {getUid} from 'ol';
 
 /**
  * @typedef {import("../conf.js").State} State
  * @typedef {import("../utils/range").RangeInterface} RangeInterface
+ * @typedef {import("../style/icon.js").IconOptions} IconOptions
  * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  * @typedef {import("../feature/feature.js").IsClickableOptions} IsClickableOptions
  * @typedef {import("ol").Map} ol.Map
@@ -32,6 +35,33 @@ import {getUid} from 'ol';
  * @typedef {Object} GetPopupFeatureOptions
  * @property {string} targetId targetId
  * @property {string} featureUid featureUid
+ */
+
+/**
+ * @typedef {{
+ *    marked: ({
+ *      icon: ({
+ *        single: (IconOptions|undefined),
+ *        multiple: (IconOptions|undefined)
+ *      }|undefined),
+ *      color: ({
+ *        single: (string|undefined),
+ *        multiple: (string|undefined)
+ *      }|undefined)
+ *    }|undefined),
+ *    unmarked: ({
+ *      icon: ({
+ *        single: (IconOptions|undefined),
+ *        multiple: (IconOptions|undefined)
+ *      }|undefined),
+ *      color: ({
+ *        single: (string|undefined),
+ *        multiple: (string|undefined)
+ *      }|undefined)
+ *    }|undefined),
+ *    facultyAbbr: (boolean|undefined),
+ *    distance: (number|undefined)
+ * }} ClusterOptions
  */
 
 /**
@@ -190,30 +220,155 @@ const getMinorFeatures = (targetId, feature) => {
 };
 
 /**
- * @param {State} state state
- * @param {GetPopupFeatureOptions} options payload
- * @return {string} feature uid
+ * @param {string} targetId targetId
+ * @param {Feature|string} featureOrUid feature or feature uid
+ * @param {ClusterOptions} opt_options options
+ * @return {Array<Feature>} features
  */
-const getPopupFeatureUid = (state, options) => {
-  const {featureUid, targetId} = options;
-  const feature = getClusterStore(targetId).getFeatureByUid(featureUid);
-  let uid;
+const getFeaturesByPriority = (targetId, featureOrUid, opt_options) => {
+  const feature = /** @type {Feature} */ (
+    munimap_utils.isString(featureOrUid)
+      ? getClusterStore(targetId).getFeatureByUid(
+          /** @type {string}*/ (featureOrUid)
+        )
+      : featureOrUid
+  );
 
   let clusteredFeatures = getMainFeatures(targetId, feature);
-  if (state.requiredOpts.clusterFacultyAbbr) {
+  if (opt_options && opt_options.facultyAbbr) {
     const minorFeatures = getMinorFeatures(targetId, feature);
     clusteredFeatures = clusteredFeatures.concat(minorFeatures);
   }
 
-  const firstFeature = clusteredFeatures[0];
-  munimap_assert.assertInstanceof(firstFeature, Feature);
+  return clusteredFeatures;
+};
+
+/**
+ * @param {string} targetId targetId
+ * @param {Feature|string} featureOrUid feature or feature uid
+ * @param {ClusterOptions} opt_options options
+ * @return {Feature} features
+ */
+const getFirstFeatureByPriority = (targetId, featureOrUid, opt_options) => {
+  const features = getFeaturesByPriority(targetId, featureOrUid, opt_options);
+  return features.length > 0 ? features[0] : null;
+};
+
+/**
+ *
+ * @param {Array<Feature>} minorFeatures minor features
+ * @param {boolean} isMarked is marked
+ * @param {string} lang lang
+ * @return {string|undefined} titleparts
+ */
+const getMinorTitleParts = (minorFeatures, isMarked, lang) => {
+  let minorTitle;
+  if (isMarked) {
+    if (minorFeatures.length > 0) {
+      const units = munimap_building.getFacultiesOfBuildings(minorFeatures);
+      const titleParts = [];
+
+      units.forEach((unit) => {
+        const abbr = getAbbr(unit, lang);
+        if (abbr) {
+          titleParts.push(abbr);
+        }
+      });
+      titleParts.sort();
+      if (titleParts.length > 5) {
+        let result = [];
+        for (let i = 0, len = titleParts.length; i < len; i += 5) {
+          result.push(titleParts.slice(i, i + 5));
+        }
+        result = result.map((item) => item.join(', '));
+        minorTitle = result.join('\n');
+      } else {
+        minorTitle = titleParts.join(', ');
+      }
+    }
+  }
+  return minorTitle;
+};
+
+/**
+ * @param {Array<Feature>} clusteredFeatures clustered features
+ * @return {string} feature uid
+ */
+const getPopupFeatureUid = (clusteredFeatures) => {
+  let uid;
 
   if (clusteredFeatures.length === 1) {
+    const firstFeature = clusteredFeatures[0];
+    munimap_assert.assertInstanceof(firstFeature, Feature);
     if (firstFeature.get('detail')) {
       uid = getUid(firstFeature);
     }
   }
   return uid;
+};
+
+/**
+ * @param {ClusterOptions} [opt_options] opts
+ * @return {IconOptions?} opts
+ */
+const getMultipleMarkedIconOptions = (opt_options) => {
+  return getPropertySafe(() => opt_options.marked.icon.multiple, null);
+};
+
+/**
+ * @param {ClusterOptions} [opt_options] opts
+ * @return {IconOptions?} opts
+ */
+const getSingleMarkedIconOptions = (opt_options) => {
+  return getPropertySafe(() => opt_options.marked.icon.single, null);
+};
+
+/**
+ * @param {ClusterOptions} [opt_options] opts
+ * @return {IconOptions?} opts
+ */
+const getMultipleUnmarkedIconOptions = (opt_options) => {
+  return getPropertySafe(() => opt_options.unmarked.icon.multiple, null);
+};
+
+/**
+ * @param {ClusterOptions} [opt_options] opts
+ * @return {IconOptions?} opts
+ */
+const getSingleUnmarkedIconOptions = (opt_options) => {
+  return getPropertySafe(() => opt_options.unmarked.icon.single, null);
+};
+
+/**
+ * @param {ClusterOptions} [opt_options] opts
+ * @return {string?} color
+ */
+const getMultipleMarkedColor = (opt_options) => {
+  return getPropertySafe(() => opt_options.marked.color.multiple, null);
+};
+
+/**
+ * @param {ClusterOptions} [opt_options] opts
+ * @return {string?} color
+ */
+const getSingleMarkedColor = (opt_options) => {
+  return getPropertySafe(() => opt_options.marked.color.single, null);
+};
+
+/**
+ * @param {ClusterOptions} [opt_options] opts
+ * @return {string?} color
+ */
+const getMultipleUnmarkedColor = (opt_options) => {
+  return getPropertySafe(() => opt_options.unmarked.color.multiple, null);
+};
+
+/**
+ * @param {ClusterOptions} [opt_options] opts
+ * @return {string?} color
+ */
+const getSingleUnmarkedColor = (opt_options) => {
+  return getPropertySafe(() => opt_options.unmarked.color.single, null);
 };
 
 export {
@@ -222,10 +377,21 @@ export {
   Resolutions,
   isClickable,
   featureClickHandler,
-  getMainFeatures,
-  getFeatures,
-  getResolutionRange,
-  getMinorFeatures,
   getClusteredFeatures,
+  getFeatures,
+  getFeaturesByPriority,
+  getFirstFeatureByPriority,
+  getMainFeatures,
+  getMinorFeatures,
+  getMinorTitleParts,
+  getMultipleMarkedColor,
+  getMultipleMarkedIconOptions,
+  getMultipleUnmarkedColor,
+  getMultipleUnmarkedIconOptions,
   getPopupFeatureUid,
+  getResolutionRange,
+  getSingleMarkedColor,
+  getSingleMarkedIconOptions,
+  getSingleUnmarkedColor,
+  getSingleUnmarkedIconOptions,
 };

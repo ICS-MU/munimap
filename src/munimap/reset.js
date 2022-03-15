@@ -14,7 +14,11 @@ import {
 import {INITIAL_STATE} from './conf.js';
 import {clearAndLoadMarkers, loadZoomTo} from './load.js';
 import {createStore as createIdentifyStore} from './source/identify.js';
-import {getIdentifyStore, getMarkerStore} from './source/_constants.js';
+import {
+  getClusterStore,
+  getIdentifyStore,
+  getMarkerStore,
+} from './source/_constants.js';
 
 /**
  * @typedef {import("./conf.js").State} State
@@ -25,6 +29,7 @@ import {getIdentifyStore, getMarkerStore} from './source/_constants.js';
  * @typedef {import("./conf.js").RequiredOptions} RequiredOptions
  * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("./identify/identify.js").CallbackFunction} IdentifyCallbackFunction
+ * @typedef {import("./cluster/cluster.js").ClusterOptions} ClusterOptions
  */
 
 /**
@@ -38,6 +43,7 @@ import {getIdentifyStore, getMarkerStore} from './source/_constants.js';
  * @property {Array<string>} poiFilter poiFilter
  * @property {Array<string>} identifyTypes identifyTypes
  * @property {IdentifyCallbackFunction} identifyCallback identifyCallback
+ * @property {ClusterOptions} cluster cluster
  */
 
 /**
@@ -69,6 +75,7 @@ const createNewState = (state, options) => {
       identifyCallbackId:
         options.identifyCallbackId ||
         INITIAL_STATE.requiredOpts.identifyCallbackId,
+      cluster: options.cluster || INITIAL_STATE.requiredOpts.cluster,
     },
   };
 };
@@ -138,6 +145,7 @@ const handleIdentifyCallback = (state, payload, asyncDispatch) => {
 const handleReset = (state, payload, asyncDispatch) => {
   const targetId = slctr.getTargetId(state);
   const newState = createNewState(state, payload);
+  const clusterOpts = slctr.getRequiredClusterOptions(newState);
 
   //clear stores and load markers
   if (areMarkerDependenciesChanged(state, payload)) {
@@ -148,6 +156,9 @@ const handleReset = (state, payload, asyncDispatch) => {
     clearAndLoadMarkers(targetId, newState, requiredMarkers, asyncDispatch);
   } else if (shouldClearMarkers(state, payload)) {
     getMarkerStore(targetId).clear();
+  }
+  if (clusterOpts && munimap_utils.isDefAndNotNull(clusterOpts.distance)) {
+    getClusterStore(targetId).setDistance(clusterOpts.distance);
   }
 
   //load zoomTo
@@ -200,6 +211,7 @@ export default (map, options) => {
       markerFilter: options.markerFilter,
       poiFilter: options.poiFilter,
       identifyTypes: options.identifyTypes,
+      cluster: options.cluster,
     });
 
     if (options.markers !== undefined) {

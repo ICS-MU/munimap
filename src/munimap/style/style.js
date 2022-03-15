@@ -9,8 +9,9 @@ import * as munimap_store from '../utils/store.js';
 import * as munimap_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
-import {PIN_SIZE, TEXT_FILL, TEXT_STROKE} from './_constants.js';
+import {IconPosition, PIN_SIZE, TEXT_FILL, TEXT_STROKE} from './_constants.js';
 import {Style, Text} from 'ol/style';
+import {extendTitleOffset} from './icon.js';
 import {getDefaultLabel as getDefaultRoomLabel} from '../feature/room.js';
 import {isCustomMarker, isRoom} from '../feature/_constants.functions.js';
 
@@ -26,6 +27,7 @@ import {isCustomMarker, isRoom} from '../feature/_constants.functions.js';
  * @typedef {import("ol/geom/Geometry").default} ol.geom.Geometry
  * @typedef {import("../utils/geom.js").GeometryFunction} GeometryFunction
  * @typedef {import("../conf.js").State} State
+ * @typedef {import("./icon.js").IconOptions} IconOptions
  */
 
 /**
@@ -48,10 +50,11 @@ import {isCustomMarker, isRoom} from '../feature/_constants.functions.js';
  * @typedef {Object} LabelWithPinOptions
  * @property {ol.style.Fill}  fill fill
  * @property {number}  [fontSize] font size
- * @property {GeometryFunction|ol.geom.Geometry|string}  geometry geom
+ * @property {GeometryFunction|ol.geom.Geometry}  geometry geom
  * @property {string}  [title] title
  * @property {string}  [minorTitle] minor title
  * @property {number}  [zIndex] z-index
+ * @property {IconOptions} [icon] icon
  */
 
 /**
@@ -120,18 +123,30 @@ const getLabelHeight = (title, fontSize) => {
  */
 const getTextStyleWithOffsetY = (options) => {
   const fontSize = options.fontSize;
-  const title = options.title;
-  const minorTitle = options.minorTitle;
+  const icon = options.icon;
+  let title = options.title;
+  let minorTitle = options.minorTitle;
+  let fill = options.fill;
+  let minorFill = TEXT_FILL;
   let result;
   if (munimap_utils.isDef(title) && munimap_utils.isDef(fontSize)) {
+    if (!!minorTitle && icon && icon.position === IconPosition.BELOW) {
+      [title, minorTitle] = [minorTitle, title];
+      [fill, minorFill] = [minorFill, fill];
+    }
     munimap_assert.assertString(title);
     munimap_assert.assertNumber(fontSize);
+
+    let offsetY = getLabelHeight(title, fontSize) / 2 + 2;
+    if (icon) {
+      offsetY = extendTitleOffset(icon, offsetY);
+    }
     result = new Style({
       geometry: options.geometry,
       text: new Text({
         font: 'bold ' + fontSize + 'px arial',
-        fill: options.fill,
-        offsetY: getLabelHeight(title, fontSize) / 2 + 2,
+        fill: fill,
+        offsetY: offsetY,
         stroke: TEXT_STROKE,
         text: title,
         overflow: true,
@@ -140,10 +155,13 @@ const getTextStyleWithOffsetY = (options) => {
     });
 
     if (minorTitle) {
-      const minorOffsetY =
+      let minorOffsetY =
         2 +
         getLabelHeight(title, fontSize) +
         getLabelHeight(minorTitle, fontSize) / 2;
+      if (icon) {
+        minorOffsetY = extendTitleOffset(icon, minorOffsetY);
+      }
 
       result = [
         result,
@@ -151,7 +169,7 @@ const getTextStyleWithOffsetY = (options) => {
           geometry: options.geometry,
           text: new Text({
             font: 'bold ' + fontSize + 'px arial',
-            fill: TEXT_FILL,
+            fill: minorFill,
             offsetY: minorOffsetY,
             stroke: TEXT_STROKE,
             text: minorTitle,

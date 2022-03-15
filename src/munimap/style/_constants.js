@@ -199,7 +199,7 @@ const CLUSTER_RADIUS = 12;
  * @return {Style} style
  * @protected
  */
-const MULTIPLE = new Style({
+const CLUSTER_MULTIPLE = new Style({
   image: new Circle({
     radius: CLUSTER_RADIUS,
     fill: TEXT_FILL,
@@ -624,6 +624,20 @@ const TOILET_W = [
   }),
 ];
 
+///////////////////////////////////////////////
+//////////////////// ICON /////////////////////
+///////////////////////////////////////////////
+
+/**
+ * @enum {string}
+ * @const
+ */
+const IconPosition = {
+  ABOVE: 'above',
+  BELOW: 'below',
+  ORIGIN: 'origin',
+};
+
 export {
   BUILDING_BIG_FONT_SIZE,
   BUILDING_COMPLEX_ENTRANCE,
@@ -633,12 +647,14 @@ export {
   BUILDING_STYLE,
   CHAR_HEIGHT_WIDTH_RATIO,
   CLUSTER_RADIUS,
+  CLUSTER_MULTIPLE,
   COMPLEX_ENTRANCE,
   DOOR_STYLE,
   ELEVATOR,
   ENTRANCE,
   IDENTIFY_FILL,
   INFORMATION,
+  IconPosition,
   MARKER_BUILDING,
   MARKER_BUILDING_NO_GEOMETRY,
   MARKER_BUILDING_STROKE,
@@ -646,7 +662,6 @@ export {
   MARKER_FILL,
   MARKER_ROOM_STYLE,
   MARKER_TEXT_FILL,
-  MULTIPLE,
   NO_GEOMETRY_FILL,
   PIN_SIZE,
   POI_ICON_HEIGHT,

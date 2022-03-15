@@ -44,14 +44,14 @@ const getLayer = (map) => {
  */
 const create = (map, options) => {
   const {markers, muAttrs, clusterResolution} = options;
-  const {lang, labels, targetId} = options.requiredOpts;
+  const {lang, labels, targetId, cluster} = options.requiredOpts;
   const clusterFeatures = markers.concat();
-  const markerClusterSrc = createClusterStore(
-    clusterFeatures,
+  const markerClusterSrc = createClusterStore(clusterFeatures, {
     targetId,
     muAttrs,
-    lang
-  );
+    lang,
+    distance: cluster && cluster.distance,
+  });
 
   const markerClusterLayer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({

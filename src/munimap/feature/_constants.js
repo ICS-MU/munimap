@@ -181,6 +181,16 @@ const CUSTOM_MARKER_TYPE = {
   name: 'custom-marker',
 };
 
+/**
+ * @enum {string}
+ * @const
+ */
+const CustomMarkerOnClickAnimationOptions = {
+  ZOOM_TO: 'zoomTo',
+  CENTER_TO: 'centerTo',
+  NONE: 'none',
+};
+
 ///////////////////////////////////////////////
 //////////////////// MARKER ///////////////////
 ///////////////////////////////////////////////
@@ -378,6 +388,7 @@ export {
   COMPLEX_UNITS_FIELD_NAME,
   CUSTOM_MARKER_LABEL_FIELD_NAME,
   CUSTOM_MARKER_TYPE,
+  CustomMarkerOnClickAnimationOptions,
   DOOR_CODE_REGEX,
   DOOR_LIKE_EXPR_REGEX,
   DOOR_RESOLUTION,

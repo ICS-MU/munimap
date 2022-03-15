@@ -6,6 +6,7 @@ import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
 import turf_booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import {BUILDING_TYPE, DOOR_TYPE, OptPoiIds, ROOM_TYPE} from './_constants.js';
+import {CustomMarkerOnClickAnimationOptions} from './_constants.js';
 import {Point} from 'ol/geom';
 import {REQUIRED_CUSTOM_MARKERS} from '../constants.js';
 import {featureExtentIntersect} from '../utils/geom.js';
@@ -92,6 +93,19 @@ import {
 
 /**
  * @typedef {function(redux.Dispatch, FeatureClickHandlerOptions): void} featureClickHandlerFunction
+ */
+
+/**
+ * @typedef {Object} OnClickOptions
+ * @property {CustomMarkerOnClickAnimationOptions} animation animation
+ *
+ * @typedef {function(Event, OnClickOptions): void} OnClickFunction
+ */
+
+/**
+ * @typedef {Object} OnClickResult
+ * @property {boolean} zoomToFeature zoomToFeature
+ * @property {boolean} centerToFeature centerToFeature
  */
 
 /**
@@ -247,10 +261,46 @@ const getSelectedFloorCode = (options) => {
   }
 };
 
+/**
+ * @param {ol.Feature} feature feature
+ * @param {OnClickResult} defaults default values
+ * @param {Event} originalEvent event
+ * @return {OnClickResult} result
+ */
+const handleOnClickCallback = (feature, defaults, originalEvent) => {
+  const isCustom = isCustomMarker(feature);
+  const animationOpts = CustomMarkerOnClickAnimationOptions;
+  let {zoomToFeature, centerToFeature} = defaults;
+  let animation = animationOpts.ZOOM_TO;
+
+  if (isCustom) {
+    const onClick = /** @type {OnClickFunction|undefined} */ (
+      feature.get('onClick')
+    );
+    if (onClick) {
+      const opts = /** @type {OnClickOptions}*/ ({
+        animation: animationOpts.ZOOM_TO,
+      });
+      //opts is passed as reference - user can change values from onClick body
+      onClick(originalEvent, opts);
+      if (Object.values(animationOpts).includes(opts.animation)) {
+        animation = opts.animation;
+      }
+    }
+
+    zoomToFeature = animation === animationOpts.ZOOM_TO;
+    centerToFeature =
+      animation === animationOpts.ZOOM_TO ||
+      animation === animationOpts.CENTER_TO;
+  }
+  return {centerToFeature, zoomToFeature};
+};
+
 export {
-  getSelectedFloorCode,
+  filterInvalidCodes,
   getClosestPointToPixel,
   getLocationCodeFromFeature,
   getMainFeatureAtPixel,
-  filterInvalidCodes,
+  getSelectedFloorCode,
+  handleOnClickCallback,
 };

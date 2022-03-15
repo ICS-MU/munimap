@@ -61,30 +61,63 @@
         <b>label</b> - textový popis, který se zobrazí u "špendlíku" v mapě
       </li>
       <li>
-        <b>detail</b> - popis, který se zobrazí po kliknutí na "špendlík" - nepovinný parametr
+        <b>detail</b> - textový / HTML popis, který se zobrazí po kliknutí na "špendlík" - nepovinný parametr
       </li>
       <li>
-        <b>color</b> - nastaví vlastní barvu (hexadecimální zápis #RRGGBB) špendlíku a popisku - nepovinný parametr
+        <b>color</b> - nastaví vlastní barvu (hexadecimální zápis #RRGGBB) špendlíku a popisku.
+        V případě vlastní ikony nastaví pouze barvu popisku - nepovinný parametr
+      </li>
+      <li>
+        <b>onClick</b> - callback po kliknutí (<i>evt</i> - <a href="https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent">PointerEvent</a>, <i>options</i> - {<i>animation</i>: 'zoomTo'}).
+        Změnou hodnoty v <i>options</i> je možné přizpůsobit chování mapy po kliknutí na "špendlík". onClick - nepovinný parametr
+      </li>
+      <li>
+        <b>icon</b> - nastaví vlastní ikonu - nepovinný parametr
+        <ul>
+          <li>
+            <b>url</b> - url ikony - povinný parametr
+          </li>
+          <li>
+            <b>size</b> - velikost ikony (šířka a výška v pixelech) - povinný parametr
+          </li>
+          <li>
+            <b>position</b> - pozice ikony (<i>above</i> - nad souřadnicemi, <i>below</i> - pod souřadnicemi, <i>origin</i> - na souřadnice) - nepovinný parametr
+          </li>
+        </ul>
       </li>
     </ul>
-    <p>"Špendlíky" je možné kombinovat s polohovými kódy - v tomto případě rektorát 'BMA01'. Polohové kódy můžete dohledat např. na <a href="https://maps.muni.cz/kompas" target="_blank">Kompasu</a>.</p>
+    <p>"Špendlíky" je možné kombinovat s polohovými kódy - v tomto případě rektorát 'BMA01'. Polohové kódy můžete dohledat např. v <a href="https://kompas.muni.cz" target="_blank">Kompasu</a>.</p>
     <pre class="prettyprint">
 &lt;script type="text/javascript"&gt;
   munimap.create({
-        target: 'map',
-        markers: [
-          new munimap.ol.Feature({
-            geometry: new munimap.ol.geom.Point([16.612802, 49.190582]),
-            label: 'Brno hlavní nádraží',
-            detail: '&lt;h4&gt;Hlavní nádraží&lt;/h4&gt;&lt;a href="https://www.cd.cz" target="_blank"&gt;www.cd.cz&lt;/a&gt;',
-            color: '#009900'
-          }),
-          new munimap.ol.Feature({
-            geometry: new munimap.ol.geom.Point([16.616667, 49.185833]),
-            label: 'Autobusové nádraží Zvonařka'
-          }),
-          'BMA01'
-        ]
+    target: 'map',
+    markers: [
+      new ol.Feature({
+        geometry: new ol.geom.Point([16.6311797, 49.2019158]),
+        label: 'Vojenská nemocnice',
+        detail:'&lt;h4&gt;Vojenská nemocnice&lt;/h4&gt;&lt;a href="www.vnbrno.cz" target="_blank"&gt;www.vnbrno.cz&lt;/a&gt;',
+        color: 'green',
+        onClick: function (evt, options) { //evt: PointerEvent
+          options.animation = 'zoomTo'; //enum ['zoomTo', 'centerTo', 'none']
+        },
+        icon: {
+          url: '../munimap/rectangle.png',
+          size: [20, 20], // [width, height] in px
+          position: 'origin', // enum ['above', 'below', 'origin']           
+        },
+      }),
+      new ol.Feature({
+        geometry: new ol.geom.Point([16.612802, 49.190582]),
+        label: 'Brno hlavní nádraží',
+        detail: '&lt;h4&gt;Hlavní nádraží&lt;/h4&gt;&lt;a href="https://www.cd.cz" target="_blank">www.cd.cz&lt;/a&gt;',
+        color: '#009900'
+      }),
+      new ol.Feature({
+        geometry: new ol.geom.Point([16.616667, 49.185833]),
+        label: 'Autobusové nádraží Zvonařka'
+      }),
+      'BMA01'
+    ]
   });
 &lt;/script&gt;
       </pre>
@@ -134,6 +167,20 @@
     munimap.create({
       target: 'map',
       markers: [
+        new munimap.ol.Feature({
+          geometry: new ol.geom.Point([16.6311797, 49.2019158]),
+          label: 'Vojenská nemocnice',
+          detail:'<h4>Vojenská nemocnice</h4><a href="https://www.vnbrno.cz" target="_blank">www.vnbrno.cz</a>',
+          color: 'green',
+          onClick: function (evt, options) { //evt: PointerEvent
+            options.animation = 'zoomTo'; //enum ['zoomTo', 'centerTo', 'none']
+          },
+          icon: {
+            url: '../img/rectangle.png',
+            size: [20, 20], // [width, height] in px
+            position: 'origin', // enum ['above', 'below', 'origin']            
+          },
+        }),
         new munimap.ol.Feature({
           geometry: new munimap.ol.geom.Point([16.612802, 49.190582]),
           label: 'Brno hlavní nádraží',

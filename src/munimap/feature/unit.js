@@ -88,7 +88,9 @@ const getTitleParts = (units, lang) => {
           break;
       }
     });
-    titleParts.push(unitAbbrs.join(', '));
+    if (unitAbbrs.length > 0) {
+      titleParts.push(unitAbbrs.join(', '));
+    }
   } else {
     units.forEach((unit) => {
       titleParts.push(getTitle(unit, lang));
