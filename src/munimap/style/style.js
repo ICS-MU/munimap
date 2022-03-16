@@ -13,7 +13,11 @@ import {IconPosition, PIN_SIZE, TEXT_FILL, TEXT_STROKE} from './_constants.js';
 import {Style, Text} from 'ol/style';
 import {extendTitleOffset} from './icon.js';
 import {getDefaultLabel as getDefaultRoomLabel} from '../feature/room.js';
-import {isCustomMarker, isRoom} from '../feature/_constants.functions.js';
+import {
+  isBuilding,
+  isCustomMarker,
+  isRoom,
+} from '../feature/_constants.functions.js';
 
 /**
  * @typedef {import("./marker").LabelFunction} MarkerLabelFunction
@@ -91,7 +95,7 @@ const getDefaultLabel = (feature, resolution, lang) => {
   let title;
   const uid = munimap_store.getUid(feature);
   munimap_assert.assert(!!uid);
-  if (munimap_building.isBuilding(feature)) {
+  if (isBuilding(feature)) {
     title = munimap_building.getDefaultLabel(
       /** @type {Feature}*/ (feature),
       resolution,

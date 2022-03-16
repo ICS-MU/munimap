@@ -7,7 +7,12 @@ import * as munimap_building from './building.js';
 import * as munimap_range from '../utils/range.js';
 import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from './_constants.js';
 import {getMarkerStore} from '../source/_constants.js';
-import {isCustomMarker, isDoor, isRoom} from './_constants.functions.js';
+import {
+  isBuilding,
+  isCustomMarker,
+  isDoor,
+  isRoom,
+} from './_constants.functions.js';
 import {isInSelectedFloor as isRoomInSelectedFloor} from './room.js';
 
 /**
@@ -70,7 +75,7 @@ const isClickable = (options) => {
 
   if (isCustomMarker(feature) || hasPoiDetail) {
     return true;
-  } else if (munimap_building.isBuilding(feature)) {
+  } else if (isBuilding(feature)) {
     return (
       munimap_building.hasInnerGeometry(feature) &&
       (!munimap_range.contains(FLOOR_RESOLUTION, resolution) ||

@@ -3,7 +3,6 @@
  */
 
 import * as munimap_assert from '../assert/assert.js';
-import * as munimap_building from '../feature/building.js';
 import * as munimap_complex from '../feature/complex.js';
 import * as munimap_lang from '../lang/lang.js';
 import * as munimap_style from './style.js';
@@ -19,6 +18,7 @@ import {TEXT_FILL, TEXT_STROKE} from './_constants.js';
 import {alignTextToRows} from './_constants.functions.js';
 import {getMarkerStore} from '../source/_constants.js';
 import {getUid as getStoreUid} from '../utils/store.js';
+import {isBuilding} from '../feature/_constants.functions.js';
 
 /**
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
@@ -44,7 +44,7 @@ const styleFunction = (feature, resolution, markers, lang) => {
     showLabel =
       munimap_complex.getUnits(/**@type {Feature}*/ (feature)).length === 0;
     if (showLabel) {
-      if (markers.length && munimap_building.isBuilding(markers[0])) {
+      if (markers.length && isBuilding(markers[0])) {
         const complexId =
           /**@type {number}*/
           (feature.get(COMPLEX_ID_FIELD_NAME));

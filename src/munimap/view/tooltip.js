@@ -12,6 +12,10 @@ import {
   POI_RESOLUTION,
   PoiPurpose,
 } from '../feature/_constants.js';
+import {
+  GIS_PURPOSES_WITH_TOOLTIP,
+  RoomPurposesWithTooltip,
+} from './_constants.js';
 import {POI_ICON_HEIGHT, ROOM_FONT_SIZE} from '../style/_constants.js';
 import {fromCircle} from 'ol/geom/Polygon';
 import {getActiveRoomStore} from '../source/_constants.js';
@@ -39,19 +43,6 @@ import {getLabelHeight} from '../style/style.js';
  * @property {string} title title
  * @property {ol.coordinate.Coordinate} positionInCoords positionInCoords
  */
-
-/**
- * @enum {string}
- * @const
- */
-const RoomPurposesWithTooltip = {
-  STAIRCASE: 'schodiště',
-};
-
-/**
- * @type {Array<string>}
- */
-const GIS_PURPOSES_WITH_TOOLTIP = [PoiPurpose.CLASSROOM];
 
 /**
  * @param {ol.Feature} feature feature

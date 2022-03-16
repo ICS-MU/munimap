@@ -2,8 +2,8 @@
  * @module utils/reducer
  */
 import {Feature} from 'ol';
-import {isBuilding} from '../feature/building.js';
 import {
+  isBuilding,
   isDoor,
   isOptPoiCtgUid,
   isRoom,

@@ -21,6 +21,7 @@ import {calculateIconAnchor, extendTitleOffset} from './icon.js';
 import {getLabel} from '../feature/marker.custom.js';
 import {getMarkerStore} from '../source/_constants.js';
 import {
+  isBuilding,
   isCustomMarker,
   isDoor,
   isRoom,
@@ -56,43 +57,6 @@ import {localeCompare} from '../utils/string.js';
  */
 
 /**
- *
- * @param {Array<Feature>} minorFeatures minor features
- * @param {boolean} isMarked whether is marked
- * @param {string} lang language
- * @return {string|undefined} minor title parts
- */
-const getMinorTitleParts = (minorFeatures, isMarked, lang) => {
-  let minorTitle;
-  if (isMarked) {
-    if (minorFeatures.length > 0) {
-      const units = munimap_building.getFacultiesOfBuildings(minorFeatures);
-      const titleParts = [];
-
-      units.forEach((unit) => {
-        const abbr = munimap_unit.getAbbr(unit, lang);
-        if (abbr) {
-          titleParts.push(abbr);
-        }
-      });
-      titleParts.sort();
-      if (titleParts.length > 5) {
-        let result = [];
-        for (let i = 0, len = titleParts.length; i < len; i += 5) {
-          result.push(titleParts.slice(i, i + 5));
-        }
-        result = result.map((item) => item.join(', '));
-        minorTitle = result.join('\n');
-      } else {
-        minorTitle = titleParts.join(', ');
-      }
-    }
-  }
-
-  return minorTitle;
-};
-
-/**
  * @param {Feature} feature feature
  * @param {number} resolution resoltuion
  * @param {string} lang language
@@ -106,8 +70,7 @@ const getUnmarkedDefaultLabel = (feature, resolution, lang) => {
 
   const clusteredFeatures = munimap_cluster.getFeatures(feature);
   const clusteredBuildings =
-    clusteredFeatures &&
-    clusteredFeatures.filter((f) => munimap_building.isBuilding(f));
+    clusteredFeatures && clusteredFeatures.filter((f) => isBuilding(f));
 
   if (!clusteredBuildings || clusteredBuildings.length < 1) {
     return null;
@@ -147,7 +110,7 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
 
   if (markers.length > 3) {
     let markerType;
-    if (markers.every((el) => munimap_building.isBuilding(el))) {
+    if (markers.every((el) => isBuilding(el))) {
       markerType = munimap_lang.getMsg(
         munimap_lang.Translations.BUILDING,
         lang
@@ -179,7 +142,7 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
     }
     if (markers.length) {
       markers.forEach((marker) => {
-        if (munimap_building.isBuilding(marker)) {
+        if (isBuilding(marker)) {
           const range = munimap_cluster.getResolutionRange(resolution);
           const units = [];
           const unitsFunc =
@@ -459,7 +422,11 @@ const pinFunction = (
       targetId,
       clusterFeature
     );
-    minorTitle = getMinorTitleParts(minorFeatures, isMarked, lang);
+    minorTitle = munimap_cluster.getMinorTitleParts(
+      minorFeatures,
+      isMarked,
+      lang
+    );
   }
 
   const opts = /** @type {LabelWithPinOptions}*/ ({

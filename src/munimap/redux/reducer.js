@@ -45,83 +45,50 @@ import {isSameCode} from '../feature/building.js';
  */
 
 /**
- * @param {string} locationCode location code
- * @param {State} state state
- * @param {FeatureClickHandlerOptions} payload payload
- * @param {redux.Dispatch} asyncDispatch async dispatch
+ * @typedef {Object} IdentifyCallbackOptions
+ * @property {ol.Feature} feature feature
+ * @property {ol.coordinate.Coordinate} pixelInCoords pixelInCoords
+ * @property {State} state state
+ * @property {redux.Dispatch} asyncDispatch asyncDispatch
+ * @property {string} [locationCode] locationCode
  */
-const handleMarkerLocationCode = (
-  locationCode,
-  state,
-  payload,
-  asyncDispatch
-) => {
-  const featureUid = payload.featureUid;
-  const pixelInCoords = payload.pixelInCoords;
+
+/**
+ * @param {IdentifyCallbackOptions} options opts
+ */
+const handleIdentifyCallback = (options) => {
+  const {feature, pixelInCoords, state, asyncDispatch} = options;
   const targetId = slctr.getTargetId(state);
-  const feature = srcs.getMarkerStore(targetId).getFeatureByUid(featureUid);
   const isIdentifyAllowed =
     slctr.isIdentifyEnabled(state) &&
     munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
 
+  if (isIdentifyAllowed) {
+    munimap_identify.handleCallback(
+      slctr.getIdentifyCallback(state),
+      asyncDispatch,
+      targetId,
+      {feature, pixelInCoords}
+    );
+  }
+};
+
+/**
+ * @param {IdentifyCallbackOptions} options opts
+ */
+const handleMarkerLocationCode = (options) => {
+  const {locationCode, state, asyncDispatch} = options;
   munimap_load.loadFloorsForMarker(locationCode, state, asyncDispatch);
-  if (isIdentifyAllowed) {
-    munimap_identify.handleCallback(
-      slctr.getIdentifyCallback(state),
-      asyncDispatch,
-      targetId,
-      {feature, pixelInCoords}
-    );
-  }
+  handleIdentifyCallback(options);
 };
 
 /**
- * @param {string} locationCode location code
- * @param {State} state state
- * @param {FeatureClickHandlerOptions} payload payload
- * @param {redux.Dispatch} asyncDispatch async dispatch
+ * @param {IdentifyCallbackOptions} options opts
  */
-const handleRoomLocationCode = (
-  locationCode,
-  state,
-  payload,
-  asyncDispatch
-) => {
-  const featureUid = payload.featureUid;
-  const pixelInCoords = payload.pixelInCoords;
-  const targetId = slctr.getTargetId(state);
-  const feature = srcs.getActiveRoomStore(targetId).getFeatureByUid(featureUid);
-  const isIdentifyAllowed =
-    slctr.isIdentifyEnabled(state) &&
-    munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
-
+const handleRoomLocationCode = (options) => {
+  const {locationCode, state, asyncDispatch} = options;
   munimap_load.loadFloorsForRoom(locationCode, state, asyncDispatch);
-  if (isIdentifyAllowed) {
-    munimap_identify.handleCallback(
-      slctr.getIdentifyCallback(state),
-      asyncDispatch,
-      targetId,
-      {feature, pixelInCoords}
-    );
-  }
-};
-
-/**
- * @param {State} state state
- * @param {FeatureClickHandlerOptions} payload payload
- * @param {redux.Dispatch} asyncDispatch async dispatch
- */
-const handleIdentifyCallback = (state, payload, asyncDispatch) => {
-  const featureUid = payload.featureUid;
-  const pixelInCoords = payload.pixelInCoords;
-  const targetId = slctr.getTargetId(state);
-  const feature = srcs.getBuildingStore(targetId).getFeatureByUid(featureUid);
-  munimap_identify.handleCallback(
-    slctr.getIdentifyCallback(state),
-    asyncDispatch,
-    targetId,
-    {feature, pixelInCoords}
-  );
+  handleIdentifyCallback(options);
 };
 
 /**
@@ -167,7 +134,6 @@ const createReducer = (initialState) => {
     let animationRequest;
     let feature;
     let isVisible;
-    let isIdentifyAllowed;
     let targetId;
     let result;
     let uid;
@@ -410,15 +376,15 @@ const createReducer = (initialState) => {
           .getBuildingStore(slctr.getTargetId(state))
           .getFeatureByUid(action.payload.featureUid);
         isVisible = munimap_range.contains(FLOOR_RESOLUTION, state.resolution);
-        isIdentifyAllowed =
-          slctr.isIdentifyEnabled(state) &&
-          munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
-
         animationRequest = getBuildingAnimationRequest(state, action.payload);
 
-        if (isIdentifyAllowed) {
-          handleIdentifyCallback(state, action.payload, action.asyncDispatch);
-        } else if (isVisible) {
+        handleIdentifyCallback({
+          state,
+          feature,
+          pixelInCoords: action.payload.pixelInCoords,
+          asyncDispatch: action.asyncDispatch,
+        });
+        if (isVisible) {
           locationCode =
             feature.get('vychoziPodlazi') || feature.get('polohKod');
           if (locationCode) {
@@ -511,12 +477,13 @@ const createReducer = (initialState) => {
         if (!isCustomMarker(feature)) {
           locationCode = getMarkerFloorCode(feature);
           if (locationCode) {
-            handleMarkerLocationCode(
+            handleMarkerLocationCode({
               locationCode,
               state,
-              action.payload,
-              action.asyncDispatch
-            );
+              feature,
+              pixelInCoords: action.payload.pixelInCoords,
+              asyncDispatch: action.asyncDispatch,
+            });
           }
         }
         newState.selectedFeature = locationCode || state.selectedFeature;
@@ -568,12 +535,13 @@ const createReducer = (initialState) => {
           if (wasOtherFloorSelected) {
             uid = null;
           }
-          handleRoomLocationCode(
+          handleRoomLocationCode({
             locationCode,
             state,
-            action.payload,
-            action.asyncDispatch
-          );
+            feature,
+            pixelInCoords: action.payload.pixelInCoords,
+            asyncDispatch: action.asyncDispatch,
+          });
         }
 
         return {
@@ -589,8 +557,7 @@ const createReducer = (initialState) => {
       case actions.DOOR_CLICKED:
         handleDoorClick(
           {
-            featureUid: action.payload.featureUid,
-            pixelInCoords: action.payload.pixelInCoords,
+            ...action.payload,
             targetId: slctr.getTargetId(state),
             isIdentifyEnabled: slctr.isIdentifyEnabled(state),
             identifyCallback: slctr.getIdentifyCallback(state),

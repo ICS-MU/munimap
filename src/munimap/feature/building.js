@@ -19,7 +19,7 @@ import {
 } from './_constants.js';
 import {alignTextToRows} from '../style/_constants.functions.js';
 import {getBuildingStore, getMarkerStore} from '../source/_constants.js';
-import {isBuildingCode, isDoor, isRoom} from './_constants.functions.js';
+import {isBuilding, isDoor, isRoom} from './_constants.functions.js';
 
 /**
  * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
@@ -48,17 +48,6 @@ import {isBuildingCode, isDoor, isRoom} from './_constants.functions.js';
  * @property {string} bldgTitle title
  * @property {string} complexTitle title
  */
-
-/**
- * @param {Feature|ol.render.Feature} feature feature
- * @return {boolean} isBuilding
- */
-const isBuilding = (feature) => {
-  const code = feature.get(BUILDING_LOCATION_CODE_FIELD_NAME);
-  return (
-    munimap_utils.isString(code) && isBuildingCode(/** @type {string}*/ (code))
-  );
-};
 
 /**
  * @param {Feature|ol.render.Feature} building building
@@ -466,7 +455,6 @@ export {
   getUnits,
   getUnitsOfBuildings,
   hasInnerGeometry,
-  isBuilding,
   isClickable,
   isInExtent,
   isSameCode,

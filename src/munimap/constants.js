@@ -10,6 +10,17 @@
  */
 
 /**
+ * @typedef {Object} MapProps
+ * @property {number} currentRes current resolution
+ */
+
+/**
+ * @type {string}
+ * @const
+ */
+export const MUNIMAP_PROPS_ID = 'munimapProps';
+
+/**
  * @type {Object<string, ol.Feature>}
  */
 export const REQUIRED_CUSTOM_MARKERS = {};

@@ -43,7 +43,7 @@ const getAnimationRequest = (state, options) => {
       }
       return false;
     });
-  const featuresExtent = extentOfFeatures(complexBldgs, targetId);
+  const featuresExtent = extentOfFeatures(complexBldgs);
   const futureRes =
     complexBldgs.length === 1
       ? FLOOR_RESOLUTION.max / 2

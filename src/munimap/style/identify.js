@@ -18,8 +18,7 @@ import {FLOOR_RESOLUTION} from '../feature/_constants.js';
 import {getDefaultLabel, getLabelWithPin} from './style.js';
 import {getIdentifiedFeature, getLocationCode} from '../identify/identify.js';
 import {getMarkerStore} from '../source/_constants.js';
-import {isBuilding} from '../feature/building.js';
-import {isDoor, isRoom} from '../feature/_constants.functions.js';
+import {isBuilding, isDoor, isRoom} from '../feature/_constants.functions.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature

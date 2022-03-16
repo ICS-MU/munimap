@@ -2,7 +2,6 @@
  * @module create
  */
 import * as actions from './redux/action.js';
-import * as munimap_assert from './assert/assert.js';
 import * as munimap_utils from './utils/utils.js';
 import * as munimap_view from './view/view.js';
 import Feature from 'ol/Feature';
@@ -19,6 +18,7 @@ import {
 } from './constants.js';
 import {INITIAL_STATE} from './conf.js';
 import {Provider} from 'react-redux';
+import {assertOptions} from './assert/assert.params.js';
 import {createStore} from './redux/store.js';
 import {v4 as uuidv4} from 'uuid';
 
@@ -57,44 +57,6 @@ import {v4 as uuidv4} from 'uuid';
  * @property {boolean} [tooltips] tooltips
  * @property {ClusterOptions} [cluster] cluster
  */
-
-/**
- * @param {Options} options opts
- */
-const assertOptions = (options) => {
-  munimap_assert.target(options.target);
-  munimap_assert.assert(
-    options.zoom === undefined || options.zoomTo === undefined,
-    "Zoom and zoomTo options can't be defined together."
-  );
-  munimap_assert.assert(
-    options.center === undefined || options.zoomTo === undefined,
-    "Center and zoomTo options can't be defined together."
-  );
-  munimap_assert.zoom(options.zoom);
-  munimap_assert.zoomTo(options.zoomTo);
-  munimap_assert.getMainFeatureAtPixel(options.getMainFeatureAtPixel);
-  munimap_assert.markers(options.markers);
-  // munimap_assert.layers(options.layers);
-  munimap_assert.lang(options.lang);
-  munimap_assert.baseMap(options.baseMap);
-  munimap_assert.pubTran(options.pubTran);
-  munimap_assert.locationCodes(options.locationCodes);
-  munimap_assert.mapLinks(options.mapLinks);
-  munimap_assert.labels(options.labels);
-  munimap_assert.markerFilter(options.markerFilter);
-  munimap_assert.poiFilter(options.poiFilter);
-  munimap_assert.identifyTypes(options.identifyTypes);
-  munimap_assert.identifyCallback(options.identifyCallback);
-  if (
-    munimap_utils.isDef(options.identifyTypes) &&
-    !munimap_utils.isDef(options.identifyCallback)
-  ) {
-    throw new munimap_assert.AssertionError(
-      'IdentifyTypes must be defined together with identifyCallback.'
-    );
-  }
-};
 
 /**
  * @param {Options} options options

@@ -11,7 +11,7 @@ import {
   GET_MAIN_FEATURE_AT_PIXEL_STORE,
   TARGET_ELEMENTS_STORE,
 } from '../constants.js';
-import {MUNIMAP_PROPS_ID} from '../conf.js';
+import {MUNIMAP_PROPS_ID} from '../constants.js';
 import {Point} from 'ol/geom';
 import {
   calculateParameters,

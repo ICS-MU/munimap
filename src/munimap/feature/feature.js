@@ -14,12 +14,12 @@ import {
   getByCode as getBuildingByCode,
   getSelectedFloorCode as getSelectedFloorCodeFromBuilding,
   hasInnerGeometry,
-  isBuilding,
 } from './building.js';
 import {getLayer as getClusterLayer} from '../layer/cluster.js';
 import {getDefaultLayer as getDefaultRoomLayer} from '../layer/room.js';
 import {getLayer as getMarkerLayer} from '../layer/marker.js';
 import {
+  isBuilding,
   isBuildingCode,
   isCustomMarker,
   isDoor,

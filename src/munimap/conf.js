@@ -17,63 +17,6 @@ import {IdentifyTypes} from './identify/_constants.js';
  */
 
 /**
- * Whether to log selectors to console.
- * @type {boolean}
- */
-export const ENABLE_SELECTOR_LOGS = false;
-
-/**
- * Whether to log react useEffect to console.
- * @type {boolean}
- */
-export const ENABLE_EFFECT_LOGS = false;
-
-/**
- * Whether to log react render to console.
- * @type {boolean}
- */
-export const ENABLE_RENDER_LOGS = false;
-
-/**
- * @type {string}
- */
-export const MUNIMAP_URL = PRODUCTION
-  ? '//maps.muni.cz/arcgis/rest/services/munimap/MapServer/'
-  : '//gis-dev.dis.ics.muni.cz/arcgis/rest/services/munimap/MapServer/';
-
-/**
- * @type {string}
- */
-export const MUNIMAP_PUBTRAN_URL = PRODUCTION
-  ? '//maps.muni.cz/arcgis/rest/services/munimap_mhd/MapServer/'
-  : '//gis-dev.dis.ics.muni.cz/arcgis/rest/services/munimap_mhd/MapServer/';
-
-/**
- * @type {string}
- */
-export const IDOS_URL = 'https://idos.idnes.cz/idsjmk/spojeni/';
-
-/**
- * Equal to 2 * border-width of ol.popup:after.
- * @type {number}
- * @const
- */
-export const POPUP_TALE_HEIGHT = 10;
-
-/**
- * Equal to left positioning (- 11px of margin) of ol.popup:after.
- * @type {number}
- * @const
- */
-export const POPUP_TALE_INDENT = 8;
-
-/**
- * @type {string}
- * @const
- */
-export const MUNIMAP_PROPS_ID = 'munimapProps';
-
-/**
  * @typedef {Object} RequiredOptions
  * @property {string} targetId target id
  * @property {number} [zoom] zoom
@@ -158,9 +101,41 @@ export const MUNIMAP_PROPS_ID = 'munimapProps';
  */
 
 /**
- * @typedef {Object} MapProps
- * @property {number} currentRes current resolution
+ * Whether to log selectors to console.
+ * @type {boolean}
  */
+export const ENABLE_SELECTOR_LOGS = false;
+
+/**
+ * Whether to log react useEffect to console.
+ * @type {boolean}
+ */
+export const ENABLE_EFFECT_LOGS = false;
+
+/**
+ * Whether to log react render to console.
+ * @type {boolean}
+ */
+export const ENABLE_RENDER_LOGS = false;
+
+/**
+ * @type {string}
+ */
+export const MUNIMAP_URL = PRODUCTION
+  ? '//maps.muni.cz/arcgis/rest/services/munimap/MapServer/'
+  : '//gis-dev.dis.ics.muni.cz/arcgis/rest/services/munimap/MapServer/';
+
+/**
+ * @type {string}
+ */
+export const MUNIMAP_PUBTRAN_URL = PRODUCTION
+  ? '//maps.muni.cz/arcgis/rest/services/munimap_mhd/MapServer/'
+  : '//gis-dev.dis.ics.muni.cz/arcgis/rest/services/munimap_mhd/MapServer/';
+
+/**
+ * @type {string}
+ */
+export const IDOS_URL = 'https://idos.idnes.cz/idsjmk/spojeni/';
 
 /**
  * @type {State}

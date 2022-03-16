@@ -5,15 +5,21 @@ import * as munimap_utils from '../utils/utils.js';
 import * as srcs from './_constants.js';
 import {BUILDING_TYPE, DOOR_TYPE, ROOM_TYPE} from '../feature/_constants.js';
 import {GeoJSON} from 'ol/format';
-import {MultiPolygon, Polygon} from 'ol/geom';
+import {MultiPolygon, Point, Polygon} from 'ol/geom';
 import {REQUIRED_CUSTOM_MARKERS} from '../constants.js';
+import {assertExists} from '../assert/assert.js';
 import {featureExtentIntersect} from '../utils/geom.js';
+import {
+  getByCode as getBuildingByCode,
+  hasInnerGeometry,
+} from '../feature/building.js';
 import {getOptPoiStore} from './_constants.js';
 import {getUid} from 'ol';
-import {hasInnerGeometry, isBuilding} from '../feature/building.js';
 import {
+  isBuilding,
   isDoorCodeOrLikeExpr,
   isOptPoiCtgUid,
+  isRoom,
   isRoomCodeOrLikeExpr,
 } from '../feature/_constants.functions.js';
 import {testCodeOrLikeExpr} from '../utils/regex.js';
@@ -196,8 +202,25 @@ const getLargestInExtent = (store, extent) => {
   return selectFeature || null;
 };
 
+/**
+ * @param {ol.Feature} feature feature
+ * @param {string} targetId targetId
+ * @return {ol.Feature} result bldg
+ */
+const getBuildingForFictive = (feature, targetId) => {
+  assertExists(targetId, 'TargetId must be defined.');
+  let result = null;
+  if (isRoom(feature) && feature.getGeometry() instanceof Point) {
+    //fictive room
+    const locCode = /**@type {string}*/ (feature.get('polohKod'));
+    result = getBuildingByCode(targetId, locCode);
+  }
+  return result;
+};
+
 export {
   clearFloorBasedStores,
+  getBuildingForFictive,
   getFeaturesByIds,
   getLargestInExtent,
   getPopupFeatureByUid,

@@ -12,14 +12,14 @@ import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import Tooltip from './tooltip.jsx';
 import {CREATED_MAPS} from '../constants.js';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
-import {MUNIMAP_PROPS_ID} from '../conf.js';
+import {MUNIMAP_PROPS_ID} from '../constants.js';
 import {Map} from 'ol';
 import {hot} from 'react-hot-loader';
 import {unlistenByKey} from 'ol/events';
 import {useDispatch, useSelector} from 'react-redux';
 
 /**
- * @typedef {import("../conf.js").MapProps} MapProps
+ * @typedef {import("../constants.js").MapProps} MapProps
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("react").MutableRefObject<Map>} MapRefObject
  * @typedef {import("react").Dispatch<import("react").SetStateAction<Map>>} MapStateAction

@@ -4,6 +4,7 @@
  * It must be in separate file because of multiple imports in munimap and
  * circular dependency.
  */
+import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
 import {Circle, Fill, Stroke, Style, Text} from 'ol/style';
 import {FLOOR_RESOLUTION} from '../feature/_constants.js';
 import {createResolution} from '../utils/range.js';
@@ -134,57 +135,6 @@ const BUILDING_FONT_SIZE = 13;
  */
 const BUILDING_BIG_FONT_SIZE = 15;
 
-///////////////////////////////////////////////////
-////////////////////// ROOM ///////////////////////
-///////////////////////////////////////////////////
-/**
- * @type {import('../utils/range.js').RangeInterface}
- * @const
- */
-const ROOM_BIG_LABEL_RESOLUTION = createResolution(0, 0.15);
-
-/**
- * @type {number}
- */
-const ROOM_SMALL_FONT_SIZE = 9;
-
-/**
- * @type {number}
- */
-const ROOM_FONT_SIZE = 11;
-
-/**
- * @type {Fill}
- * @const
- */
-const ROOM_FILL = new Fill({
-  color: '#ffffff',
-});
-
-/**
- * @type {Style}
- * @const
- */
-const ROOM_STROKE = new Style({
-  stroke: new Stroke({
-    color: '#99a9c8',
-    width: 1,
-  }),
-  zIndex: 4,
-});
-
-/**
- * @type {Array<Style>}
- * @const
- */
-const ROOM_STYLE = [
-  new Style({
-    fill: ROOM_FILL,
-    zIndex: 0,
-  }),
-  ROOM_STROKE,
-];
-
 //////////////////////////////////////////////////////
 ///////////////////////// CLUSTER ////////////////////
 //////////////////////////////////////////////////////
@@ -288,6 +238,12 @@ const PUBTRAN_STYLE = [
 ///////////////////////////////////////////////
 /////////////////// MARKER ////////////////////
 ///////////////////////////////////////////////
+/**
+ * @type {string}
+ * @const
+ */
+const MARKER_CORRIDOR_IMG_PATH = APP_PATH + 'img/marker.style.coridors.bg.png';
+
 /**
  * @type {Fill}
  * @const
@@ -624,6 +580,116 @@ const TOILET_W = [
   }),
 ];
 
+///////////////////////////////////////////////////
+////////////////////// ROOM ///////////////////////
+///////////////////////////////////////////////////
+/**
+ * @type {string}
+ * @const
+ */
+const ROOM_CORRIDOR_IMG_PATH = APP_PATH + 'img/room.style.coridors.bg.png';
+
+/**
+ * @type {import('../utils/range.js').RangeInterface}
+ * @const
+ */
+const ROOM_BIG_LABEL_RESOLUTION = createResolution(0, 0.15);
+
+/**
+ * @type {number}
+ */
+const ROOM_SMALL_FONT_SIZE = 9;
+
+/**
+ * @type {number}
+ */
+const ROOM_FONT_SIZE = 11;
+
+/**
+ * @type {Array<string>}
+ * @const
+ */
+const ROOM_PURPOSES_TO_OMIT = [
+  'angl.dvorek',
+  'balkon',
+  'manipulační prostory',
+  'nevyužívané prostory', //also gateaway which are not used for drive in,
+  //but can be used as corridor
+  'plocha pod schodištěm',
+  'předsíň', //also some corridors
+  'příjem', //receptions
+  'rampa', //somewhere is maybe an entrance
+  'světlík',
+  'šachta',
+  'vrátnice',
+  'výtah', //shown due to ucel_gis
+];
+
+/**
+ * @type {Fill}
+ * @const
+ */
+const ROOM_FILL = new Fill({
+  color: '#ffffff',
+});
+
+/**
+ * @type {Style}
+ * @const
+ */
+const ROOM_STROKE = new Style({
+  stroke: new Stroke({
+    color: '#99a9c8',
+    width: 1,
+  }),
+  zIndex: 4,
+});
+
+/**
+ * @type {Array<Style>}
+ * @const
+ */
+const ROOM_STYLE = [
+  new Style({
+    fill: ROOM_FILL,
+    zIndex: 0,
+  }),
+  ROOM_STROKE,
+];
+
+/**
+ * @type {Style}
+ */
+const ROOM_STAIRCASE_BACKGROUND_ICON = new Style({
+  geometry: CENTER_GEOMETRY_FUNCTION,
+  text: new Text({
+    text: '\uf0c8',
+    font: `normal ${POI_ICON_HEIGHT}px MunimapFont`,
+    fill: new Fill({
+      color: '#666',
+    }),
+  }),
+  zIndex: 5,
+});
+
+/**
+ * @type {Array<Style>}
+ */
+const ROOM_STAIRCASE_ICON = [
+  ROOM_STAIRCASE_BACKGROUND_ICON,
+  new Style({
+    geometry: CENTER_GEOMETRY_FUNCTION,
+    text: new Text({
+      text: '\ue806',
+      font: 'normal 16px MunimapFont',
+      fill: new Fill({
+        color: 'white',
+      }),
+    }),
+    zIndex: 5,
+  }),
+];
+
 ///////////////////////////////////////////////
 //////////////////// ICON /////////////////////
 ///////////////////////////////////////////////
@@ -658,6 +724,7 @@ export {
   MARKER_BUILDING,
   MARKER_BUILDING_NO_GEOMETRY,
   MARKER_BUILDING_STROKE,
+  MARKER_CORRIDOR_IMG_PATH,
   MARKER_DOOR_STYLE,
   MARKER_FILL,
   MARKER_ROOM_STYLE,
@@ -670,8 +737,11 @@ export {
   PUBTRAN_STYLE,
   RESOLUTION_COLOR,
   ROOM_BIG_LABEL_RESOLUTION,
+  ROOM_CORRIDOR_IMG_PATH,
   ROOM_FONT_SIZE,
+  ROOM_PURPOSES_TO_OMIT,
   ROOM_SMALL_FONT_SIZE,
+  ROOM_STAIRCASE_ICON,
   ROOM_STROKE,
   ROOM_STYLE,
   TEXT_FILL,

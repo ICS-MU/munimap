@@ -4,6 +4,7 @@ import * as ol_proj from 'ol/proj';
 import View from 'ol/View';
 import {TARGET_ELEMENTS_STORE} from '../constants.js';
 import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
+import {getBuildingForFictive} from '../source/source.js';
 
 /**
  * @typedef {import("ol/size").Size} ol.Size
@@ -50,7 +51,7 @@ const create = (targetId, requiredCenter, requiredZoom, markers, zoomTo) => {
     zoomTo = zoomTo.length ? zoomTo : markers;
     if (zoomTo.length) {
       let res;
-      const extent = extentOfFeatures(zoomTo, targetId);
+      const extent = extentOfFeatures(zoomTo, targetId, getBuildingForFictive);
       if (requiredZoom === null && requiredCenter === null) {
         if (target.offsetWidth === 0 || target.offsetHeight === 0) {
           view.fit(extent);

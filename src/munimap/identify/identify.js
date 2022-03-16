@@ -12,9 +12,8 @@ import {
 } from './_constants.js';
 import {Point} from 'ol/geom';
 import {getIdentifyStore} from '../source/_constants.js';
-import {isBuilding} from '../feature/building.js';
+import {isBuilding, isDoor, isRoom} from '../feature/_constants.functions.js';
 import {isDef} from '../utils/utils.js';
-import {isDoor, isRoom} from '../feature/_constants.functions.js';
 import {transform} from 'ol/proj';
 
 /**

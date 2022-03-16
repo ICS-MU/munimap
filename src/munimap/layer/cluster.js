@@ -5,7 +5,7 @@ import * as munimap_assert from '../assert/assert.js';
 import * as munimap_cluster from '../cluster/cluster.js';
 import VectorLayer from 'ol/layer/Vector';
 import {CLUSTER_LAYER_ID} from './_constants.js';
-import {MUNIMAP_PROPS_ID} from '../conf.js';
+import {MUNIMAP_PROPS_ID} from '../constants.js';
 import {createStore as createClusterStore} from '../source/cluster.js';
 import {updateClusteredFeatures} from '../view/cluster.js';
 
@@ -15,7 +15,7 @@ import {updateClusteredFeatures} from '../view/cluster.js';
  * @typedef {import("../view/view.js").AddLayersOptions} AddLayersOptions
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
- * @typedef {import("../conf.js").MapProps} MapProps
+ * @typedef {import("../constants.js").MapProps} MapProps
  */
 
 /**

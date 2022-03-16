@@ -39,11 +39,20 @@ const isBuildingLikeExpr = (maybeLikeExpr) => {
  * @param {string} maybeCodeOrLikeExpr location code or like expression
  * @return {boolean} if it it location code or not
  */
-export const isBuildingCodeOrLikeExpr = (maybeCodeOrLikeExpr) => {
+const isBuildingCodeOrLikeExpr = (maybeCodeOrLikeExpr) => {
   return (
     isBuildingCode(maybeCodeOrLikeExpr) ||
     isBuildingLikeExpr(maybeCodeOrLikeExpr)
   );
+};
+
+/**
+ * @param {ol.Feature|ol.render.Feature} feature feature
+ * @return {boolean} isBuilding
+ */
+const isBuilding = (feature) => {
+  const code = feature.get(constants.BUILDING_LOCATION_CODE_FIELD_NAME);
+  return isString(code) && isBuildingCode(/** @type {string}*/ (code));
 };
 
 /////////////////////////////////////////////////////
@@ -215,8 +224,10 @@ const isRoom = (feature) => {
 };
 
 export {
+  isBuilding,
   isBuildingCode,
   isBuildingLikeExpr,
+  isBuildingCodeOrLikeExpr,
   isComplex,
   isCustomMarker,
   isCustomMarkerSuitable,

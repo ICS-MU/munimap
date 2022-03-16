@@ -19,6 +19,7 @@ import {Fill, Icon, Style, Text} from 'ol/style';
 import {Point} from 'ol/geom';
 import {calculateIconAnchor} from './icon.js';
 import {
+  isBuilding as isBuildingFeature,
   isCustomMarker as isCustomMarkerFeature,
   isDoor as isDoorFeature,
   isRoom as isRoomFeature,
@@ -58,12 +59,6 @@ import {
  */
 
 /**
- * @type {string}
- * @const
- */
-const CORRIDOR_IMG_PATH = APP_PATH + 'img/marker.style.coridors.bg.png';
-
-/**
  * Styles corresponding different resolutions.
  * @type {Object<number, Style|Array<Style>>}
  * @const
@@ -86,7 +81,7 @@ const getCorridor = () => CORRIDOR;
 const getPattern = (event) => {
   const context = event.context;
   const image = new Image();
-  const imgsrc = CORRIDOR_IMG_PATH;
+  const imgsrc = munimap_style_constants.MARKER_CORRIDOR_IMG_PATH;
   image.src = imgsrc;
   image.onload = () => {
     const pattern = context.createPattern(image, 'repeat');
@@ -155,7 +150,7 @@ const labelFunction = (feature, resolution, options) => {
 
   let styleArray = [];
   munimap_asserts.assertInstanceof(feature, Feature);
-  const isBuilding = munimap_building.isBuilding(feature);
+  const isBuilding = isBuildingFeature(feature);
   const isRoom = isRoomFeature(feature);
   const isDoor = isDoorFeature(feature);
   const isCustomMarker = isCustomMarkerFeature(feature);
@@ -267,7 +262,7 @@ const styleFunction = (feature, resolution, options) => {
   munimap_asserts.assertInstanceof(feature, Feature);
 
   const result = [];
-  const isBuilding = munimap_building.isBuilding(feature);
+  const isBuilding = isBuildingFeature(feature);
 
   if (
     isBuilding &&
@@ -328,7 +323,7 @@ const getStyleFunction = (inFloorResolutionRange, selectedFeature, options) => {
   const styleFce = (feature, res) => {
     if (
       inFloorResolutionRange &&
-      munimap_building.isBuilding(feature) &&
+      isBuildingFeature(feature) &&
       munimap_building.isSelected(feature, selectedFeature)
     ) {
       return null;

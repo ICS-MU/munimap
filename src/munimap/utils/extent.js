@@ -4,10 +4,6 @@
 
 import * as ol_extent from 'ol/extent';
 import {Feature} from 'ol';
-import {Point} from 'ol/geom';
-import {assertExists} from '../assert/assert.js';
-import {getByCode as getBuildingByCode} from '../feature/building.js';
-import {isRoom} from '../feature/_constants.functions.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature
@@ -53,23 +49,18 @@ export const ofFeature = (feature) => {
 /**
  * @param {Array<ol.Feature>} features features
  * @param {string} [opt_targetId] targetId
+ * @param {function(ol.Feature, string): ol.Feature} [opt_checkFictiveFn] targetId
  * @return {ol_extent.Extent} extent
  */
-export const ofFeatures = (features, opt_targetId) => {
+export const ofFeatures = (features, opt_targetId, opt_checkFictiveFn) => {
   const extent = ol_extent.createEmpty();
   features.forEach((feature) => {
     const geom = feature.getGeometry();
     let ext;
     if (geom) {
-      if (isRoom(feature) && geom instanceof Point) {
-        //fictive room
-        assertExists(opt_targetId, 'TargetId must be defined.');
-        const locCode = /**@type {string}*/ (feature.get('polohKod'));
-        const building = getBuildingByCode(opt_targetId, locCode);
-        ext = building.getGeometry().getExtent();
-      } else {
-        ext = geom.getExtent();
-      }
+      const bldg =
+        opt_checkFictiveFn && opt_checkFictiveFn(feature, opt_targetId);
+      ext = bldg ? bldg.getGeometry().getExtent() : geom.getExtent();
     }
 
     if (ext) {

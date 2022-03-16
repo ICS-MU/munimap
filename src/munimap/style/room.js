@@ -10,8 +10,11 @@ import {
   POI_ICON_HEIGHT,
   PoiResolutions,
   ROOM_BIG_LABEL_RESOLUTION,
+  ROOM_CORRIDOR_IMG_PATH,
   ROOM_FONT_SIZE,
+  ROOM_PURPOSES_TO_OMIT,
   ROOM_SMALL_FONT_SIZE,
+  ROOM_STAIRCASE_ICON,
   ROOM_STROKE,
   ROOM_STYLE,
   TEXT_FILL,
@@ -40,12 +43,6 @@ import {getUid} from '../utils/store.js';
  */
 
 /**
- * @type {string}
- * @const
- */
-const CORRIDOR_IMG_PATH = APP_PATH + 'img/room.style.coridors.bg.png';
-
-/**
  * @type {Array<Style>}
  */
 let CORRIDOR = [];
@@ -67,66 +64,13 @@ const getStaircase = () => STAIRCASE;
 const LABEL_CACHE = {};
 
 /**
- * @type {Array<string>}
- * @const
- */
-const PURPOSES_TO_OMIT = [
-  'angl.dvorek',
-  'balkon',
-  'manipulační prostory',
-  'nevyužívané prostory', //also gateaway which are not used for drive in,
-  //but can be used as corridor
-  'plocha pod schodištěm',
-  'předsíň', //also some corridors
-  'příjem', //receptions
-  'rampa', //somewhere is maybe an entrance
-  'světlík',
-  'šachta',
-  'vrátnice',
-  'výtah', //shown due to ucel_gis
-];
-
-/**
- * @type {Style}
- */
-const STAIRCASE_BACKGROUND_ICON = new Style({
-  geometry: CENTER_GEOMETRY_FUNCTION,
-  text: new Text({
-    text: '\uf0c8',
-    font: `normal ${POI_ICON_HEIGHT}px MunimapFont`,
-    fill: new Fill({
-      color: '#666',
-    }),
-  }),
-  zIndex: 5,
-});
-
-/**
- * @type {Array<Style>}
- */
-const STAIRCASE_ICON = [
-  STAIRCASE_BACKGROUND_ICON,
-  new Style({
-    geometry: CENTER_GEOMETRY_FUNCTION,
-    text: new Text({
-      text: '\ue806',
-      font: 'normal 16px MunimapFont',
-      fill: new Fill({
-        color: 'white',
-      }),
-    }),
-    zIndex: 5,
-  }),
-];
-
-/**
  * @param {RenderEvent} event event
  */
 const setCorridorStyle = (event) => {
   if (CORRIDOR.length === 0) {
     const context = event.context;
     const image = new Image();
-    image.src = CORRIDOR_IMG_PATH;
+    image.src = ROOM_CORRIDOR_IMG_PATH;
     image.onload = () => {
       const pattern = context.createPattern(image, 'repeat');
       const corridorFill = new Fill({
@@ -202,7 +146,7 @@ const getStyle = (feature, marked) => {
 
   switch (purposeGroup) {
     case 'komunikace obecně':
-      if (PURPOSES_TO_OMIT.indexOf(purpose) === -1) {
+      if (ROOM_PURPOSES_TO_OMIT.indexOf(purpose) === -1) {
         if (purpose === 'schodiště') {
           result = marked ? MARKER_ROOM_STYLE : STAIRCASE;
         } else {
@@ -373,7 +317,7 @@ const getActiveStyleFunction = (targetId) => {
       munimap_range.contains(PoiResolutions.STAIRS, res) &&
       result === getStaircase()
     ) {
-      result = [...result, ...STAIRCASE_ICON];
+      result = [...result, ...ROOM_STAIRCASE_ICON];
     }
     return result;
   };
@@ -381,7 +325,6 @@ const getActiveStyleFunction = (targetId) => {
 };
 
 export {
-  STAIRCASE_ICON,
   setCorridorStyle,
   getActiveStyleFunction,
   getDefaultStyleFunction,

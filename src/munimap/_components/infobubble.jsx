@@ -4,13 +4,9 @@ import * as slctr from '../redux/selector.js';
 import MapContext from '../_contexts/mapcontext.jsx';
 import React, {useContext, useLayoutEffect, useRef} from 'react';
 import Select from './select.jsx';
-import {
-  ENABLE_EFFECT_LOGS,
-  ENABLE_RENDER_LOGS,
-  POPUP_TALE_HEIGHT,
-  POPUP_TALE_INDENT,
-} from '../conf.js';
+import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {GeoJSON} from 'ol/format';
+import {POPUP_TALE_HEIGHT, POPUP_TALE_INDENT} from '../view/_constants.js';
 import {featureExtentIntersect} from '../utils/geom.js';
 import {sort as floorSortFn} from '../feature/floor.js';
 import {getByCode as getBuildingByCode} from '../feature/building.js';

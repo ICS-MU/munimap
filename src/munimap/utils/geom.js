@@ -2,7 +2,6 @@
  * @module utils/geom
  */
 import * as munimap_assert from '../assert/assert.js';
-import * as munimap_building from '../feature/building.js';
 import * as munimap_utils from './utils.js';
 import * as ol_extent from 'ol/extent';
 import Feature from 'ol/Feature';
@@ -17,6 +16,7 @@ import {
   Polygon,
 } from 'ol/geom';
 import {getBufferValue} from './extent.js';
+import {isBuilding} from '../feature/_constants.functions.js';
 
 /**
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
@@ -193,7 +193,7 @@ const CENTER_GEOMETRY_FUNCTION = (feature) => {
   }
   const center = getGeometryCenter(
     /** @type {Polygon}*/ (geom),
-    munimap_building.isBuilding(feature)
+    isBuilding(feature)
   );
   return center;
 };
@@ -217,7 +217,7 @@ const INTERSECT_CENTER_GEOMETRY_FUNCTION = (viewExt, feature) => {
   if (geom instanceof MultiPolygon) {
     geom = getLargestPolygon(geom);
   }
-  const center = getGeometryCenter(geom, munimap_building.isBuilding(feature));
+  const center = getGeometryCenter(geom, isBuilding(feature));
   return center;
 };
 
