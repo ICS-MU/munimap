@@ -81,7 +81,11 @@ const getAnimationRequest = (options) => {
     }
   }
 
-  if (!animationRequest && (zoomToFeature || centerToFeature)) {
+  if (
+    !animationRequest &&
+    !isIdentifyAllowed &&
+    (zoomToFeature || centerToFeature)
+  ) {
     animationRequest = getAnimationRequestParams(popupCoords, {
       resolution,
       rotation,
