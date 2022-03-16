@@ -2,11 +2,11 @@
  * @module cluster/cluster
  */
 import * as actions from '../redux/action.js';
-import * as munimap_assert from '../assert/assert.js';
-import * as munimap_building from '../feature/building.js';
-import * as munimap_marker from '../feature/marker.js';
-import * as munimap_range from '../utils/range.js';
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_assert from '../assert/assert.js';
+import * as mm_building from '../feature/building.js';
+import * as mm_marker from '../feature/marker.js';
+import * as mm_range from '../utils/range.js';
+import * as mm_utils from '../utils/utils.js';
 import {Feature} from 'ol';
 import {getAbbr} from '../feature/unit.js';
 import {
@@ -68,7 +68,7 @@ import {getUid} from 'ol';
  * @type {RangeInterface}
  * @const
  */
-const ROOM_RESOLUTION = munimap_range.createResolution(
+const ROOM_RESOLUTION = mm_range.createResolution(
   1.19,
   Number.POSITIVE_INFINITY
 );
@@ -77,7 +77,7 @@ const ROOM_RESOLUTION = munimap_range.createResolution(
  * @type {RangeInterface}
  * @const
  */
-const BUILDING_RESOLUTION = munimap_range.createResolution(
+const BUILDING_RESOLUTION = mm_range.createResolution(
   2.39,
   Number.POSITIVE_INFINITY
 );
@@ -104,12 +104,9 @@ const featureClickHandler = (dispatch, options) => {
  * @protected
  */
 const Resolutions = {
-  MARKERS_ONLY: munimap_range.createResolution(0, 2.39),
-  MARKERS_AND_UNITS: munimap_range.createResolution(2.39, 9),
-  MARKERS_AND_FACULTIES: munimap_range.createResolution(
-    9,
-    Number.POSITIVE_INFINITY
-  ),
+  MARKERS_ONLY: mm_range.createResolution(0, 2.39),
+  MARKERS_AND_UNITS: mm_range.createResolution(2.39, 9),
+  MARKERS_AND_FACULTIES: mm_range.createResolution(9, Number.POSITIVE_INFINITY),
 };
 
 /**
@@ -120,7 +117,7 @@ const Resolutions = {
 const getResolutionRange = (resolution) => {
   let result;
   for (const range of Object.values(Resolutions)) {
-    if (munimap_range.contains(range, resolution)) {
+    if (mm_range.contains(range, resolution)) {
       result = range;
     }
   }
@@ -134,7 +131,7 @@ const getResolutionRange = (resolution) => {
  * @protected
  */
 const getClusteredFeatures = (targetId, resolution) => {
-  const range = munimap_utils.isNumber(resolution)
+  const range = mm_utils.isNumber(resolution)
     ? getResolutionRange(/** @type {number}*/ (resolution))
     : resolution;
   const ranges = Resolutions;
@@ -146,10 +143,10 @@ const getClusteredFeatures = (targetId, resolution) => {
       result = markers;
       break;
     case ranges.MARKERS_AND_UNITS:
-      result = markers.concat(munimap_building.filterHeadquaters(bldgs));
+      result = markers.concat(mm_building.filterHeadquaters(bldgs));
       break;
     case ranges.MARKERS_AND_FACULTIES:
-      result = markers.concat(munimap_building.filterFacultyHeadquaters(bldgs));
+      result = markers.concat(mm_building.filterFacultyHeadquaters(bldgs));
       break;
     default:
       break;
@@ -166,7 +163,7 @@ const getClusteredFeatures = (targetId, resolution) => {
 const isCluster = (feature) => {
   const clusteredFeatures = feature.get('features');
   return (
-    munimap_utils.isArray(clusteredFeatures) &&
+    mm_utils.isArray(clusteredFeatures) &&
     clusteredFeatures.every((f) => f instanceof Feature)
   );
 };
@@ -203,7 +200,7 @@ const getFeatures = (feature) => {
 const getMainFeatures = (targetId, feature) => {
   let result = getFeatures(feature);
   if (containsMarker(targetId, feature)) {
-    result = result.filter((f) => munimap_marker.isMarker(targetId, f));
+    result = result.filter((f) => mm_marker.isMarker(targetId, f));
   }
   return result;
 };
@@ -215,7 +212,7 @@ const getMainFeatures = (targetId, feature) => {
  */
 const getMinorFeatures = (targetId, feature) => {
   let result = getFeatures(feature);
-  result = result.filter((f) => !munimap_marker.isMarker(targetId, f));
+  result = result.filter((f) => !mm_marker.isMarker(targetId, f));
   return result;
 };
 
@@ -227,7 +224,7 @@ const getMinorFeatures = (targetId, feature) => {
  */
 const getFeaturesByPriority = (targetId, featureOrUid, opt_options) => {
   const feature = /** @type {Feature} */ (
-    munimap_utils.isString(featureOrUid)
+    mm_utils.isString(featureOrUid)
       ? getClusterStore(targetId).getFeatureByUid(
           /** @type {string}*/ (featureOrUid)
         )
@@ -265,7 +262,7 @@ const getMinorTitleParts = (minorFeatures, isMarked, lang) => {
   let minorTitle;
   if (isMarked) {
     if (minorFeatures.length > 0) {
-      const units = munimap_building.getFacultiesOfBuildings(minorFeatures);
+      const units = mm_building.getFacultiesOfBuildings(minorFeatures);
       const titleParts = [];
 
       units.forEach((unit) => {
@@ -299,7 +296,7 @@ const getPopupFeatureUid = (clusteredFeatures) => {
 
   if (clusteredFeatures.length === 1) {
     const firstFeature = clusteredFeatures[0];
-    munimap_assert.assertInstanceof(firstFeature, Feature);
+    mm_assert.assertInstanceof(firstFeature, Feature);
     if (firstFeature.get('detail')) {
       uid = getUid(firstFeature);
     }

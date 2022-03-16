@@ -1,7 +1,7 @@
 /**
  * @module layer/room
  */
-import * as munimap_assert from '../assert/assert.js';
+import * as mm_assert from '../assert/assert.js';
 import VectorLayer from 'ol/layer/Vector';
 import {ACTIVE_DOOR_LAYER_ID} from './_constants.js';
 import {DOOR_RESOLUTION, DOOR_TYPE} from '../feature/_constants.js';
@@ -30,7 +30,7 @@ const getActiveLayer = (map) => {
   const layers = map.getLayers().getArray();
   const result = layers.find(isActiveLayer);
   if (result) {
-    munimap_assert.assertInstanceof(result, VectorLayer);
+    mm_assert.assertInstanceof(result, VectorLayer);
   }
   return /** @type {VectorLayer|undefined} */ (result);
 };

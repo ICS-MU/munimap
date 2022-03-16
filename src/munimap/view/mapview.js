@@ -1,4 +1,4 @@
-import * as munimap_assert from '../assert/assert.js';
+import * as mm_assert from '../assert/assert.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
 import View from 'ol/View';
@@ -60,7 +60,7 @@ const create = (targetId, requiredCenter, requiredZoom, markers, zoomTo) => {
             size: [target.offsetWidth, target.offsetHeight],
           });
           res = view.getResolution();
-          munimap_assert.assert(res);
+          mm_assert.assert(res);
           ol_extent.buffer(extent, res * 30, extent);
           view.fit(extent, {
             size: [target.offsetWidth, target.offsetHeight],

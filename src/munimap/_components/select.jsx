@@ -1,5 +1,5 @@
 import * as actions from '../redux/action.js';
-import * as munimap_lang from '../lang/lang.js';
+import * as mm_lang from '../lang/lang.js';
 import * as slctr from '../redux/selector.js';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -106,12 +106,12 @@ const getLabelAbbr = (floorCode, lang) => {
   const num = parseInt(floorCode.substring(1), 10);
   let numLabel = '';
   let mezzanineNumLabel = '';
-  if (lang === munimap_lang.Abbr.ENGLISH) {
+  if (lang === mm_lang.Abbr.ENGLISH) {
     numLabel = (
       letter === FloorTypes.UNDERGROUND_MEZZANINE ? num - 1 : num
     ).toString();
     mezzanineNumLabel = '.5';
-  } else if (lang === munimap_lang.Abbr.CZECH) {
+  } else if (lang === mm_lang.Abbr.CZECH) {
     numLabel = (
       letter === FloorTypes.UNDERGROUND_MEZZANINE ? num - 1 : num
     ).toString();
@@ -121,42 +121,42 @@ const getLabelAbbr = (floorCode, lang) => {
   let floorTypeString;
   switch (letter) {
     case FloorTypes.UNDERGROUND:
-      floorTypeString = munimap_lang.getMsg(
-        munimap_lang.Translations.FLOOR_UNDER_ABBR,
+      floorTypeString = mm_lang.getMsg(
+        mm_lang.Translations.FLOOR_UNDER_ABBR,
         lang
       );
       label =
-        lang === munimap_lang.Abbr.ENGLISH
+        lang === mm_lang.Abbr.ENGLISH
           ? floorTypeString + numLabel
           : numLabel + '. ' + floorTypeString;
       break;
     case FloorTypes.UNDERGROUND_MEZZANINE:
-      floorTypeString = munimap_lang.getMsg(
-        munimap_lang.Translations.FLOOR_MEZZANINE_UNDER_ABBR,
+      floorTypeString = mm_lang.getMsg(
+        mm_lang.Translations.FLOOR_MEZZANINE_UNDER_ABBR,
         lang
       );
       label =
-        lang === munimap_lang.Abbr.ENGLISH
+        lang === mm_lang.Abbr.ENGLISH
           ? floorTypeString + numLabel + mezzanineNumLabel
           : numLabel + mezzanineNumLabel + '. ' + floorTypeString;
       break;
     case FloorTypes.MEZZANINE:
-      floorTypeString = munimap_lang.getMsg(
-        munimap_lang.Translations.FLOOR_MEZZANINE_ABBR,
+      floorTypeString = mm_lang.getMsg(
+        mm_lang.Translations.FLOOR_MEZZANINE_ABBR,
         lang
       );
       label =
-        lang === munimap_lang.Abbr.ENGLISH
+        lang === mm_lang.Abbr.ENGLISH
           ? floorTypeString + numLabel + mezzanineNumLabel
           : numLabel + mezzanineNumLabel + '. ' + floorTypeString;
       break;
     case FloorTypes.ABOVEGROUND:
-      floorTypeString = munimap_lang.getMsg(
-        munimap_lang.Translations.FLOOR_ABOVE_ABBR,
+      floorTypeString = mm_lang.getMsg(
+        mm_lang.Translations.FLOOR_ABOVE_ABBR,
         lang
       );
       label =
-        lang === munimap_lang.Abbr.ENGLISH
+        lang === mm_lang.Abbr.ENGLISH
           ? floorTypeString + numLabel
           : numLabel + '. ' + floorTypeString;
       break;
@@ -177,7 +177,7 @@ const getLabel = (floorCode, lang) => {
   const letter = floorCode.substring(0, 1);
   const num = parseInt(floorCode.substring(1), 10);
   let numLabel = '';
-  if (lang === munimap_lang.Abbr.ENGLISH) {
+  if (lang === mm_lang.Abbr.ENGLISH) {
     switch (num) {
       case 1:
         numLabel = num + 'st ';
@@ -192,36 +192,36 @@ const getLabel = (floorCode, lang) => {
         numLabel = num + 'th ';
         break;
     }
-  } else if (lang === munimap_lang.Abbr.CZECH) {
+  } else if (lang === mm_lang.Abbr.CZECH) {
     numLabel = num + '. ';
   }
   let label;
   let floorTypeString;
   switch (letter) {
     case FloorTypes.UNDERGROUND:
-      floorTypeString = munimap_lang.getMsg(
-        munimap_lang.Translations.FLOOR_UNDER,
+      floorTypeString = mm_lang.getMsg(
+        mm_lang.Translations.FLOOR_UNDER,
         lang
       );
       label = numLabel + floorTypeString;
       break;
     case FloorTypes.UNDERGROUND_MEZZANINE:
-      floorTypeString = munimap_lang.getMsg(
-        munimap_lang.Translations.FLOOR_MEZZANINE_UNDER,
+      floorTypeString = mm_lang.getMsg(
+        mm_lang.Translations.FLOOR_MEZZANINE_UNDER,
         lang
       );
       label = floorTypeString;
       break;
     case FloorTypes.MEZZANINE:
-      floorTypeString = munimap_lang.getMsg(
-        munimap_lang.Translations.FLOOR_MEZZANINE,
+      floorTypeString = mm_lang.getMsg(
+        mm_lang.Translations.FLOOR_MEZZANINE,
         lang
       );
       label = floorTypeString;
       break;
     case FloorTypes.ABOVEGROUND:
-      floorTypeString = munimap_lang.getMsg(
-        munimap_lang.Translations.FLOOR_ABOVE,
+      floorTypeString = mm_lang.getMsg(
+        mm_lang.Translations.FLOOR_ABOVE,
         lang
       );
       label = numLabel + floorTypeString;
@@ -269,8 +269,8 @@ const SelectComponent = (props) => {
       value={selectedFloor && options.find((opt) => opt.value == selectedFloor)}
       onChange={handleChange}
       options={options}
-      placeholder={munimap_lang.getMsg(
-        munimap_lang.Translations.INFOBOX_CHOOSE,
+      placeholder={mm_lang.getMsg(
+        mm_lang.Translations.INFOBOX_CHOOSE,
         lang
       )}
       styles={customStyles(floorsWithMarkers)}

@@ -9,7 +9,7 @@ import 'whatwg-fetch';
 import 'ol/ol.css';
 import '../css/munimaplib.css'; //must be after ol.css => rewrite some rules
 
-import * as munimap_matomo from './matomo/matomo.js';
+import * as mm_matomo from './matomo/matomo.js';
 import VectorSource from 'ol/source/Vector';
 import create from './create.js';
 import reset from './reset.js';
@@ -32,7 +32,7 @@ import '../img/seznam.png';
 import '../img/marker.style.coridors.bg.png';
 import '../img/room.style.coridors.bg.png';
 
-munimap_matomo.init();
+mm_matomo.init();
 
 // Example how to "export" openlayers classes
 // They will be accessible as munimap.ol.Map, munimap.ol.View including all their methods

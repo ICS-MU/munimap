@@ -3,8 +3,8 @@
  */
 
 import * as actions from '../redux/action.js';
-import * as munimap_assert from '../assert/assert.js';
-import * as munimap_range from '../utils/range.js';
+import * as mm_assert from '../assert/assert.js';
+import * as mm_range from '../utils/range.js';
 import {
   COMPLEX_RESOLUTION,
   COMPLEX_TYPE,
@@ -44,7 +44,7 @@ const getById = (targetId, id, opt_features) => {
  */
 const getBuildingCount = (complex) => {
   const result = complex.get('pocetBudov');
-  munimap_assert.assertNumber(result);
+  mm_assert.assertNumber(result);
   return result;
 };
 
@@ -53,7 +53,7 @@ const getBuildingCount = (complex) => {
  * @return {boolean} whether is clickable
  */
 const isClickable = (options) => {
-  return munimap_range.contains(COMPLEX_RESOLUTION, options.resolution);
+  return mm_range.contains(COMPLEX_RESOLUTION, options.resolution);
 };
 
 /**
@@ -70,7 +70,7 @@ const featureClickHandler = (dispatch, options) => {
  */
 const getUnits = (complex) => {
   const result = complex.get(COMPLEX_UNITS_FIELD_NAME);
-  munimap_assert.assert(result === null || result instanceof Array);
+  mm_assert.assert(result === null || result instanceof Array);
   return result;
 };
 

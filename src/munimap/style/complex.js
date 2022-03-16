@@ -2,11 +2,11 @@
  * @module style/complex
  */
 
-import * as munimap_assert from '../assert/assert.js';
-import * as munimap_complex from '../feature/complex.js';
-import * as munimap_lang from '../lang/lang.js';
-import * as munimap_style from './style.js';
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_assert from '../assert/assert.js';
+import * as mm_complex from '../feature/complex.js';
+import * as mm_lang from '../lang/lang.js';
+import * as mm_style from './style.js';
+import * as mm_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
 import {
@@ -36,13 +36,11 @@ import {isBuilding} from '../feature/_constants.functions.js';
 const styleFunction = (feature, resolution, markers, lang) => {
   let showLabel = true;
 
-  munimap_assert.assertInstanceof(feature, Feature);
-  const bldgCount = munimap_complex.getBuildingCount(
-    /**@type {Feature}*/ (feature)
-  );
+  mm_assert.assertInstanceof(feature, Feature);
+  const bldgCount = mm_complex.getBuildingCount(/**@type {Feature}*/ (feature));
   if (bldgCount === 1) {
     showLabel =
-      munimap_complex.getUnits(/**@type {Feature}*/ (feature)).length === 0;
+      mm_complex.getUnits(/**@type {Feature}*/ (feature)).length === 0;
     if (showLabel) {
       if (markers.length && isBuilding(markers[0])) {
         const complexId =
@@ -50,8 +48,8 @@ const styleFunction = (feature, resolution, markers, lang) => {
           (feature.get(COMPLEX_ID_FIELD_NAME));
         const isMarked = markers.some((marker) => {
           const markerComplexId = marker.get('arealId');
-          if (munimap_utils.isDefAndNotNull(markerComplexId)) {
-            munimap_assert.assertNumber(markerComplexId);
+          if (mm_utils.isDefAndNotNull(markerComplexId)) {
+            mm_assert.assertNumber(markerComplexId);
             return markerComplexId === complexId;
           }
           return false;
@@ -61,20 +59,17 @@ const styleFunction = (feature, resolution, markers, lang) => {
     }
   }
   if (showLabel) {
-    munimap_assert.assertInstanceof(feature, Feature);
+    mm_assert.assertInstanceof(feature, Feature);
     let title;
     const uid = getStoreUid(feature);
-    munimap_assert.assertString(uid);
-    if (munimap_utils.isDef(munimap_style.LABEL_CACHE[lang + uid])) {
-      return munimap_style.LABEL_CACHE[lang + uid];
+    mm_assert.assertString(uid);
+    if (mm_utils.isDef(mm_style.LABEL_CACHE[lang + uid])) {
+      return mm_style.LABEL_CACHE[lang + uid];
     }
 
     title = /**@type {string}*/ (
       feature.get(
-        munimap_lang.getMsg(
-          munimap_lang.Translations.COMPLEX_TITLE_FIELD_NAME,
-          lang
-        )
+        mm_lang.getMsg(mm_lang.Translations.COMPLEX_TITLE_FIELD_NAME, lang)
       )
     );
     title = title.split(', ')[0];
@@ -92,7 +87,7 @@ const styleFunction = (feature, resolution, markers, lang) => {
     });
     const result = style;
 
-    munimap_style.LABEL_CACHE[lang + uid] = result;
+    mm_style.LABEL_CACHE[lang + uid] = result;
     return result;
   }
   return null;

@@ -1,5 +1,5 @@
 import * as actions from '../../redux/action.js';
-import * as munimap_lang from '../../lang/lang.js';
+import * as mm_lang from '../../lang/lang.js';
 import * as slctr from '../../redux/selector.js';
 import MapContext from '../../_contexts/mapcontext.jsx';
 import React, {forwardRef, useContext, useEffect, useRef} from 'react';
@@ -91,8 +91,8 @@ const InitExtentComponent = forwardRef((props, ref) => {
       <div
         id="muni-init-extent"
         className="munimap-initial-extent"
-        title={munimap_lang.getMsg(
-          munimap_lang.Translations.INITIAL_EXTENT,
+        title={mm_lang.getMsg(
+          mm_lang.Translations.INITIAL_EXTENT,
           lang
         )}
         onClick={onInitExtentClick}
@@ -100,8 +100,8 @@ const InitExtentComponent = forwardRef((props, ref) => {
       >
         <div
           className="munimap-init-extent-button"
-          title={munimap_lang.getMsg(
-            munimap_lang.Translations.INITIAL_EXTENT,
+          title={mm_lang.getMsg(
+            mm_lang.Translations.INITIAL_EXTENT,
             lang
           )}
         >

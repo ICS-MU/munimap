@@ -2,7 +2,7 @@
  * @module style/pubtranstop
  */
 
-import * as munimap_range from '../utils/range.js';
+import * as mm_range from '../utils/range.js';
 import {PUBTRAN_CLUSTER_RESOLUTION} from '../feature/_constants.js';
 import {PUBTRAN_STYLE} from './_constants.js';
 
@@ -18,7 +18,7 @@ import {PUBTRAN_STYLE} from './_constants.js';
  * @return {ol.style.Style|Array<ol.style.Style>} style
  */
 export const styleFunction = (feature, resolution) => {
-  const inClusterRes = munimap_range.contains(
+  const inClusterRes = mm_range.contains(
     PUBTRAN_CLUSTER_RESOLUTION,
     resolution
   );

@@ -1,7 +1,7 @@
 /**
  * @module view/tooltip
  */
-import * as munimap_range from '../utils/range.js';
+import * as mm_range from '../utils/range.js';
 import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
 import turf_booleanPointInPolygon from '@turf/boolean-point-in-polygon';
@@ -54,8 +54,8 @@ const inTooltipResolutionRange = (feature, resolution, selectedFeature) => {
   const title = feature.get('typ');
   return title === PoiPurpose.COMPLEX_ENTRANCE ||
     title === PoiPurpose.BUILDING_COMPLEX_ENTRANCE
-    ? munimap_range.contains(POI_RESOLUTION, resolution)
-    : !!selectedFeature && munimap_range.contains(FLOOR_RESOLUTION, resolution);
+    ? mm_range.contains(POI_RESOLUTION, resolution)
+    : !!selectedFeature && mm_range.contains(FLOOR_RESOLUTION, resolution);
 };
 
 /**

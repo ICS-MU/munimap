@@ -2,17 +2,17 @@
  * @module style/cluster
  */
 
-import * as munimap_assert from '../assert/assert.js';
-import * as munimap_building from '../feature/building.js';
-import * as munimap_cluster from '../cluster/cluster.js';
-import * as munimap_geom from '../utils/geom.js';
-import * as munimap_lang from '../lang/lang.js';
-import * as munimap_marker from '../feature/marker.js';
-import * as munimap_style from '../style/style.js';
-import * as munimap_style_constants from '../style/_constants.js';
-import * as munimap_style_marker from '../style/marker.js';
-import * as munimap_unit from '../feature/unit.js';
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_assert from '../assert/assert.js';
+import * as mm_building from '../feature/building.js';
+import * as mm_cluster from '../cluster/cluster.js';
+import * as mm_geom from '../utils/geom.js';
+import * as mm_lang from '../lang/lang.js';
+import * as mm_marker from '../feature/marker.js';
+import * as mm_style from '../style/style.js';
+import * as mm_style_constants from '../style/_constants.js';
+import * as mm_style_marker from '../style/marker.js';
+import * as mm_unit from '../feature/unit.js';
+import * as mm_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {BUILDING_FONT_SIZE} from './_constants.js';
 import {Circle, Fill, Icon, Stroke, Style, Text} from 'ol/style';
@@ -64,11 +64,11 @@ import {localeCompare} from '../utils/string.js';
  * @protected
  */
 const getUnmarkedDefaultLabel = (feature, resolution, lang) => {
-  munimap_assert.assertInstanceof(feature, Feature);
+  mm_assert.assertInstanceof(feature, Feature);
   let titleParts = [];
   let units;
 
-  const clusteredFeatures = munimap_cluster.getFeatures(feature);
+  const clusteredFeatures = mm_cluster.getFeatures(feature);
   const clusteredBuildings =
     clusteredFeatures && clusteredFeatures.filter((f) => isBuilding(f));
 
@@ -76,19 +76,16 @@ const getUnmarkedDefaultLabel = (feature, resolution, lang) => {
     return null;
   }
 
-  const range = munimap_cluster.getResolutionRange(resolution);
-  if (range === munimap_cluster.Resolutions.MARKERS_AND_FACULTIES) {
-    units = munimap_building.getFacultiesOfBuildings(clusteredBuildings);
+  const range = mm_cluster.getResolutionRange(resolution);
+  if (range === mm_cluster.Resolutions.MARKERS_AND_FACULTIES) {
+    units = mm_building.getFacultiesOfBuildings(clusteredBuildings);
     if (units.length >= 10) {
-      return munimap_lang.getMsg(
-        munimap_lang.Translations.CLUSTER_MU_LABEL,
-        lang
-      );
+      return mm_lang.getMsg(mm_lang.Translations.CLUSTER_MU_LABEL, lang);
     }
   } else {
-    units = munimap_building.getUnitsOfBuildings(clusteredBuildings);
+    units = mm_building.getUnitsOfBuildings(clusteredBuildings);
   }
-  titleParts = munimap_unit.getTitleParts(units, lang);
+  titleParts = mm_unit.getTitleParts(units, lang);
   return titleParts.join('\n');
 };
 
@@ -103,7 +100,7 @@ const getUnmarkedDefaultLabel = (feature, resolution, lang) => {
  */
 const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
   const lang = options.lang;
-  const clusteredFeatures = munimap_cluster.getFeatures(feature);
+  const clusteredFeatures = mm_cluster.getFeatures(feature);
   let markers = clusteredFeatures.filter((feat) => allMarkers.includes(feat));
 
   const titleParts = [];
@@ -111,26 +108,20 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
   if (markers.length > 3) {
     let markerType;
     if (markers.every((el) => isBuilding(el))) {
-      markerType = munimap_lang.getMsg(
-        munimap_lang.Translations.BUILDING,
-        lang
-      );
+      markerType = mm_lang.getMsg(mm_lang.Translations.BUILDING, lang);
     } else if (markers.every((el) => isRoom(el))) {
-      markerType = munimap_lang.getMsg(munimap_lang.Translations.ROOM, lang);
+      markerType = mm_lang.getMsg(mm_lang.Translations.ROOM, lang);
     } else if (markers.every((el) => isDoor(el))) {
-      markerType = munimap_lang.getMsg(munimap_lang.Translations.DOOR, lang);
+      markerType = mm_lang.getMsg(mm_lang.Translations.DOOR, lang);
     } else {
-      markerType = munimap_lang.getMsg(
-        munimap_lang.Translations.LOCATION,
-        lang
-      );
+      markerType = mm_lang.getMsg(mm_lang.Translations.LOCATION, lang);
     }
     titleParts.push(markers.length + 'x ' + markerType);
   } else {
-    if (munimap_utils.isDefAndNotNull(options.markerLabel)) {
+    if (mm_utils.isDefAndNotNull(options.markerLabel)) {
       markers = markers.filter((marker) => {
         const title = options.markerLabel(marker, resolution);
-        if (munimap_utils.isDefAndNotNull(title)) {
+        if (mm_utils.isDefAndNotNull(title)) {
           if (title) {
             titleParts.push(title);
           }
@@ -143,12 +134,12 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
     if (markers.length) {
       markers.forEach((marker) => {
         if (isBuilding(marker)) {
-          const range = munimap_cluster.getResolutionRange(resolution);
+          const range = mm_cluster.getResolutionRange(resolution);
           const units = [];
           const unitsFunc =
-            range === munimap_cluster.Resolutions.MARKERS_AND_FACULTIES
-              ? munimap_building.getFaculties
-              : munimap_building.getUnits;
+            range === mm_cluster.Resolutions.MARKERS_AND_FACULTIES
+              ? mm_building.getFaculties
+              : mm_building.getUnits;
           const buildingsWithoutUnits = [];
           const uns = unitsFunc(marker);
           if (uns.length) {
@@ -156,16 +147,16 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
           } else {
             buildingsWithoutUnits.push(marker);
           }
-          if (munimap_unit.getTitleParts(units, lang).length > 0) {
-            titleParts.push(munimap_unit.getTitleParts(units, lang)[0]);
+          if (mm_unit.getTitleParts(units, lang).length > 0) {
+            titleParts.push(mm_unit.getTitleParts(units, lang)[0]);
           }
           buildingsWithoutUnits.forEach((building) => {
             let buildingTitle;
-            const bUnits = munimap_building.getUnits(building);
+            const bUnits = mm_building.getUnits(building);
             if (bUnits.length) {
-              buildingTitle = munimap_unit.getTitleParts(bUnits, lang);
+              buildingTitle = mm_unit.getTitleParts(bUnits, lang);
             } else {
-              buildingTitle = munimap_building.getDefaultLabel(
+              buildingTitle = mm_building.getDefaultLabel(
                 building,
                 resolution,
                 lang
@@ -175,7 +166,7 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
           });
         } else if (isCustomMarker(marker)) {
           const cmTitle = getLabel(marker);
-          if (munimap_utils.isDefAndNotNull(cmTitle)) {
+          if (mm_utils.isDefAndNotNull(cmTitle)) {
             titleParts.push(cmTitle);
           }
           titleParts.sort(localeCompare);
@@ -183,8 +174,8 @@ const getMarkedDefaultLabel = (options, allMarkers, feature, resolution) => {
           const showLocationCodes = options.locationCodes;
           const roomTitle = showLocationCodes
             ? /**@type {string}*/ (marker.get('polohKod'))
-            : munimap_style.getDefaultLabel(marker, resolution, lang);
-          if (munimap_utils.isDefAndNotNull(roomTitle)) {
+            : mm_style.getDefaultLabel(marker, resolution, lang);
+          if (mm_utils.isDefAndNotNull(roomTitle)) {
             titleParts.push(roomTitle);
           }
         }
@@ -208,11 +199,11 @@ const getFill = (isMarked, markedColor, unmarkedColor, opt_color) => {
   } else if (isMarked) {
     fill = markedColor
       ? new Fill({color: markedColor})
-      : munimap_style_constants.MARKER_TEXT_FILL;
+      : mm_style_constants.MARKER_TEXT_FILL;
   } else {
     fill = unmarkedColor
       ? new Fill({color: unmarkedColor})
-      : munimap_style_constants.TEXT_FILL;
+      : mm_style_constants.TEXT_FILL;
   }
 
   return fill;
@@ -225,9 +216,8 @@ const getFill = (isMarked, markedColor, unmarkedColor, opt_color) => {
  * @return {Fill} fill
  */
 const getFillForPin = (isMarked, opt_color, opt_clusterOptions) => {
-  const markedColor = munimap_cluster.getSingleMarkedColor(opt_clusterOptions);
-  const unmarkedColor =
-    munimap_cluster.getSingleUnmarkedColor(opt_clusterOptions);
+  const markedColor = mm_cluster.getSingleMarkedColor(opt_clusterOptions);
+  const unmarkedColor = mm_cluster.getSingleUnmarkedColor(opt_clusterOptions);
 
   return getFill(isMarked, markedColor, unmarkedColor, opt_color);
 };
@@ -238,10 +228,8 @@ const getFillForPin = (isMarked, opt_color, opt_clusterOptions) => {
  * @return {Fill} fill
  */
 const getFillForMultipleLabel = (isMarked, opt_clusterOptions) => {
-  const markedColor =
-    munimap_cluster.getMultipleMarkedColor(opt_clusterOptions);
-  const unmarkedColor =
-    munimap_cluster.getMultipleUnmarkedColor(opt_clusterOptions);
+  const markedColor = mm_cluster.getMultipleMarkedColor(opt_clusterOptions);
+  const unmarkedColor = mm_cluster.getMultipleUnmarkedColor(opt_clusterOptions);
 
   return getFill(isMarked, markedColor, unmarkedColor);
 };
@@ -278,8 +266,8 @@ const multipleSymbolFunction = (icon, geom) => {
     style = new Style({
       geometry: geom,
       image: new Circle({
-        radius: munimap_style_constants.CLUSTER_RADIUS,
-        fill: munimap_style_constants.MARKER_FILL,
+        radius: mm_style_constants.CLUSTER_RADIUS,
+        fill: mm_style_constants.MARKER_FILL,
         stroke: new Stroke({
           color: '#ffffff',
           width: 3,
@@ -298,9 +286,7 @@ const multipleSymbolFunction = (icon, geom) => {
  * @return {Style} style
  */
 const singleSymbolFunction = (icon, geom) => {
-  return icon
-    ? iconFunction(icon, geom)
-    : munimap_style_constants.CLUSTER_MULTIPLE;
+  return icon ? iconFunction(icon, geom) : mm_style_constants.CLUSTER_MULTIPLE;
 };
 
 /**
@@ -312,51 +298,42 @@ const pinFunction_ = (options) => {
   const color = /**@type {string}*/ (feature.get('color'));
   let styleArray = [];
 
-  const markedIcon = munimap_cluster.getSingleMarkedIconOptions(clusterOptions);
-  const unmarkedIcon =
-    munimap_cluster.getSingleUnmarkedIconOptions(clusterOptions);
+  const markedIcon = mm_cluster.getSingleMarkedIconOptions(clusterOptions);
+  const unmarkedIcon = mm_cluster.getSingleUnmarkedIconOptions(clusterOptions);
 
   if (color && !markedIcon) {
     //create pin with color from custom marker
-    styleArray = munimap_style.getLabelWithPin(opts);
+    styleArray = mm_style.getLabelWithPin(opts);
   } else {
     if (isMarked && markedIcon) {
       //cluster with markers and with custom icon
       if (title) {
         opts.icon = markedIcon;
-        const textStyle = munimap_style.getTextStyleWithOffsetY(opts);
+        const textStyle = mm_style.getTextStyleWithOffsetY(opts);
         styleArray = styleArray.concat(textStyle);
       }
       styleArray.push(
-        iconFunction(
-          markedIcon,
-          munimap_geom.CENTER_GEOMETRY_FUNCTION(feature),
-          6
-        )
+        iconFunction(markedIcon, mm_geom.CENTER_GEOMETRY_FUNCTION(feature), 6)
       );
     } else if (!isMarked && unmarkedIcon) {
       //cluster without markers and custom icon
       if (title) {
         opts.icon = unmarkedIcon;
-        const textStyle = munimap_style.getTextStyleWithOffsetY(opts);
+        const textStyle = mm_style.getTextStyleWithOffsetY(opts);
         styleArray = styleArray.concat(textStyle);
       }
       styleArray.push(
-        iconFunction(
-          unmarkedIcon,
-          munimap_geom.CENTER_GEOMETRY_FUNCTION(feature),
-          6
-        )
+        iconFunction(unmarkedIcon, mm_geom.CENTER_GEOMETRY_FUNCTION(feature), 6)
       );
     } else {
       //default style - default marked or unmarked pin
       if (title) {
-        const textStyle = munimap_style.getTextStyleWithOffsetY(opts);
+        const textStyle = mm_style.getTextStyleWithOffsetY(opts);
         styleArray = styleArray.concat(textStyle);
       }
       const pin = isMarked
-        ? munimap_style_marker.createPinFromGeometry(opts.geometry)
-        : munimap_style.PIN;
+        ? mm_style_marker.createPinFromGeometry(opts.geometry)
+        : mm_style.PIN;
       styleArray.push(pin);
     }
   }
@@ -382,20 +359,20 @@ const pinFunction = (
   const {lang, locationCodes, clusterFacultyAbbr, targetId} = options;
 
   const color = /**@type {string}*/ (feature.get('color'));
-  const isMarked = munimap_marker.isMarker(targetId, feature);
+  const isMarked = mm_marker.isMarker(targetId, feature);
   const isCustom = isCustomMarker(feature);
   let geometry = feature.getGeometry();
   if (geometry instanceof MultiPolygon) {
-    geometry = munimap_geom.getLargestPolygon(geometry);
+    geometry = mm_geom.getLargestPolygon(geometry);
   }
-  munimap_assert.assert(!!geometry);
+  mm_assert.assert(!!geometry);
 
   const fill = getFillForPin(isMarked, color, clusterOptions);
   let styleArray = [];
   let title;
   let minorTitle;
 
-  if (munimap_utils.isDefAndNotNull(options.markerLabel)) {
+  if (mm_utils.isDefAndNotNull(options.markerLabel)) {
     title = options.markerLabel(clusterFeature, resolution);
   }
 
@@ -403,7 +380,7 @@ const pinFunction = (
     title = /**@type {string}*/ (feature.get('polohKod'));
   }
 
-  if (!munimap_utils.isDefAndNotNull(title)) {
+  if (!mm_utils.isDefAndNotNull(title)) {
     if (isMarked) {
       const allMarkers = getMarkerStore(targetId).getFeatures();
       title = getMarkedDefaultLabel(
@@ -418,15 +395,8 @@ const pinFunction = (
   }
 
   if (clusterFacultyAbbr) {
-    const minorFeatures = munimap_cluster.getMinorFeatures(
-      targetId,
-      clusterFeature
-    );
-    minorTitle = munimap_cluster.getMinorTitleParts(
-      minorFeatures,
-      isMarked,
-      lang
-    );
+    const minorFeatures = mm_cluster.getMinorFeatures(targetId, clusterFeature);
+    minorTitle = mm_cluster.getMinorTitleParts(minorFeatures, isMarked, lang);
   }
 
   const opts = /** @type {LabelWithPinOptions}*/ ({
@@ -452,9 +422,9 @@ const pinFunction = (
         }),
       })
     );
-    if (munimap_utils.isDefAndNotNull(opts.title)) {
+    if (mm_utils.isDefAndNotNull(opts.title)) {
       opts.icon = icon;
-      const textStyle = munimap_style.getTextStyleWithOffsetY(opts);
+      const textStyle = mm_style.getTextStyleWithOffsetY(opts);
       styleArray = styleArray.concat(textStyle);
     }
     return styleArray;
@@ -481,17 +451,17 @@ const pinFunction = (
  */
 const calculateOffset = (isMarked, fontSize, title, opt_clusterOptions) => {
   const markedIcon =
-    munimap_cluster.getMultipleMarkedIconOptions(opt_clusterOptions);
+    mm_cluster.getMultipleMarkedIconOptions(opt_clusterOptions);
   const unmarkedIcon =
-    munimap_cluster.getMultipleUnmarkedIconOptions(opt_clusterOptions);
+    mm_cluster.getMultipleUnmarkedIconOptions(opt_clusterOptions);
 
-  let offY = munimap_style.getLabelHeight(title, fontSize) / 2;
+  let offY = mm_style.getLabelHeight(title, fontSize) / 2;
   if (isMarked && markedIcon) {
     offY = extendTitleOffset(markedIcon, offY);
   } else if (!isMarked && unmarkedIcon) {
     offY = extendTitleOffset(unmarkedIcon, offY);
   } else {
-    offY += munimap_style_constants.CLUSTER_RADIUS + 2;
+    offY += mm_style_constants.CLUSTER_RADIUS + 2;
   }
   return offY;
 };
@@ -512,23 +482,23 @@ const calculateMinorOffset = (
   opt_clusterOptions
 ) => {
   const markedIcon =
-    munimap_cluster.getMultipleMarkedIconOptions(opt_clusterOptions);
+    mm_cluster.getMultipleMarkedIconOptions(opt_clusterOptions);
   const unmarkedIcon =
-    munimap_cluster.getMultipleUnmarkedIconOptions(opt_clusterOptions);
+    mm_cluster.getMultipleUnmarkedIconOptions(opt_clusterOptions);
 
-  let offY = munimap_style.getLabelHeight(title, fontSize) / 2;
+  let offY = mm_style.getLabelHeight(title, fontSize) / 2;
   if (isMarked && markedIcon) {
     offY = extendTitleOffset(markedIcon, offY);
-    if (markedIcon.position !== munimap_style_constants.IconPosition.ORIGIN) {
+    if (markedIcon.position !== mm_style_constants.IconPosition.ORIGIN) {
       offY += offsetY;
     }
   } else if (!isMarked && unmarkedIcon) {
     offY = extendTitleOffset(unmarkedIcon, offY);
-    if (unmarkedIcon.position !== munimap_style_constants.IconPosition.ORIGIN) {
+    if (unmarkedIcon.position !== mm_style_constants.IconPosition.ORIGIN) {
       offY += offsetY;
     }
   } else {
-    offY += munimap_style_constants.CLUSTER_RADIUS - 2;
+    offY += mm_style_constants.CLUSTER_RADIUS - 2;
   }
 
   return offsetY + offY;
@@ -548,19 +518,19 @@ const multipleLabelFunction = (
   feature,
   resolution
 ) => {
-  munimap_assert.assertInstanceof(feature, Feature);
+  mm_assert.assertInstanceof(feature, Feature);
   const {lang, targetId} = options;
   const appendFacultyAbbr = clusterOptions && clusterOptions.facultyAbbr;
 
-  const features = munimap_cluster.getMainFeatures(
+  const features = mm_cluster.getMainFeatures(
     targetId,
     /**@type {Feature}*/ (feature)
   );
-  const minorFeatures = munimap_cluster.getMinorFeatures(
+  const minorFeatures = mm_cluster.getMinorFeatures(
     targetId,
     /**@type {Feature}*/ (feature)
   );
-  const marked = munimap_marker.isMarker(targetId, features[0]);
+  const marked = mm_marker.isMarker(targetId, features[0]);
   const textStyle = [];
 
   let allMarkers;
@@ -571,11 +541,11 @@ const multipleLabelFunction = (
     allMarkers = getMarkerStore(targetId).getFeatures();
   }
 
-  if (munimap_utils.isDefAndNotNull(options.markerLabel)) {
+  if (mm_utils.isDefAndNotNull(options.markerLabel)) {
     title = options.markerLabel(feature, resolution);
   }
 
-  if (!munimap_utils.isDefAndNotNull(title)) {
+  if (!mm_utils.isDefAndNotNull(title)) {
     if (marked) {
       title = getMarkedDefaultLabel(
         options,
@@ -594,21 +564,16 @@ const multipleLabelFunction = (
 
   if (title) {
     const fontSize = 13;
-    const markedIcon =
-      munimap_cluster.getMultipleMarkedIconOptions(clusterOptions);
+    const markedIcon = mm_cluster.getMultipleMarkedIconOptions(clusterOptions);
     const unmarkedIcon =
-      munimap_cluster.getMultipleUnmarkedIconOptions(clusterOptions);
+      mm_cluster.getMultipleUnmarkedIconOptions(clusterOptions);
 
-    let minorFill = munimap_style_constants.TEXT_FILL;
+    let minorFill = mm_style_constants.TEXT_FILL;
     let fill = getFillForMultipleLabel(marked, clusterOptions);
 
     if (appendFacultyAbbr) {
-      const pos = munimap_style_constants.IconPosition;
-      minorTitle = munimap_cluster.getMinorTitleParts(
-        minorFeatures,
-        marked,
-        lang
-      );
+      const pos = mm_style_constants.IconPosition;
+      minorTitle = mm_cluster.getMinorTitleParts(minorFeatures, marked, lang);
       if (
         !!minorTitle &&
         ((marked && markedIcon && markedIcon.position === pos.BELOW) ||
@@ -620,8 +585,8 @@ const multipleLabelFunction = (
     }
     const offsetY = calculateOffset(marked, fontSize, title, clusterOptions);
     const geometry = marked
-      ? munimap_geom.getGeometryCenterOfFeatures(features)
-      : munimap_geom.CENTER_GEOMETRY_FUNCTION;
+      ? mm_geom.getGeometryCenterOfFeatures(features)
+      : mm_geom.CENTER_GEOMETRY_FUNCTION;
 
     textStyle.push(
       new Style({
@@ -630,7 +595,7 @@ const multipleLabelFunction = (
           font: 'bold ' + fontSize + 'px arial',
           fill: fill,
           offsetY: offsetY,
-          stroke: munimap_style_constants.TEXT_STROKE,
+          stroke: mm_style_constants.TEXT_STROKE,
           text: title,
           overflow: true,
         }),
@@ -655,7 +620,7 @@ const multipleLabelFunction = (
               font: 'bold ' + fontSize + 'px arial',
               fill: minorFill,
               offsetY: minorOffY,
-              stroke: munimap_style_constants.TEXT_STROKE,
+              stroke: mm_style_constants.TEXT_STROKE,
               text: minorTitle,
               overflow: true,
             }),
@@ -677,14 +642,14 @@ const multipleLabelFunction = (
  * @return {Style|Array<Style>} style
  */
 const styleFunction = (feature, resolution, markerOptions, clusterOptions) => {
-  munimap_assert.assertInstanceof(feature, Feature);
+  mm_assert.assertInstanceof(feature, Feature);
   let result;
-  const features = munimap_cluster.getMainFeatures(
+  const features = mm_cluster.getMainFeatures(
     markerOptions.targetId,
     /** @type {Feature}*/ (feature)
   );
   const firstFeature = features[0];
-  const marked = munimap_marker.isMarker(markerOptions.targetId, firstFeature);
+  const marked = mm_marker.isMarker(markerOptions.targetId, firstFeature);
   if (features.length === 1) {
     result = pinFunction(
       markerOptions,
@@ -705,17 +670,16 @@ const styleFunction = (feature, resolution, markerOptions, clusterOptions) => {
     result.push(...labelStyle);
     if (marked) {
       const multipleIcon =
-        munimap_cluster.getMultipleMarkedIconOptions(clusterOptions);
+        mm_cluster.getMultipleMarkedIconOptions(clusterOptions);
       symbolStyle = multipleSymbolFunction(
         multipleIcon,
-        munimap_geom.getGeometryCenterOfFeatures(features)
+        mm_geom.getGeometryCenterOfFeatures(features)
       );
     } else {
-      const icon =
-        munimap_cluster.getMultipleUnmarkedIconOptions(clusterOptions);
+      const icon = mm_cluster.getMultipleUnmarkedIconOptions(clusterOptions);
       symbolStyle = singleSymbolFunction(
         icon,
-        munimap_geom.CENTER_GEOMETRY_FUNCTION
+        mm_geom.CENTER_GEOMETRY_FUNCTION
       );
     }
 

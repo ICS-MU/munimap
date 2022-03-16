@@ -2,7 +2,6 @@
  * @module layer/poi
  */
 
-import * as munimap_assert from '../assert/assert.js';
 import VectorLayer from 'ol/layer/Vector';
 import {ACTIVE_POI_LAYER_ID} from './_constants.js';
 import {POI_RESOLUTION, POI_TYPE} from '../feature/_constants.js';
@@ -21,19 +20,6 @@ import {getActivePoiStore} from '../source/_constants.js';
  */
 const isActiveLayer = function (layer) {
   return layer.get('id') === ACTIVE_POI_LAYER_ID;
-};
-
-/**
- * @param {ol.Map} map map
- * @return {VectorLayer|undefined} active layer
- */
-const getActiveLayer = function (map) {
-  const layers = map.getLayers().getArray();
-  const result = layers.find(isActiveLayer);
-  if (result) {
-    munimap_assert.assertInstanceof(result, VectorLayer);
-  }
-  return /** @type {VectorLayer|undefined} */ (result);
 };
 
 /**

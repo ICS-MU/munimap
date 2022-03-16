@@ -2,8 +2,8 @@
  * @module create
  */
 import * as actions from './redux/action.js';
-import * as munimap_utils from './utils/utils.js';
-import * as munimap_view from './view/view.js';
+import * as mm_utils from './utils/utils.js';
+import * as mm_view from './view/view.js';
 import Feature from 'ol/Feature';
 import MunimapComponent from './_components/munimap.jsx';
 import React from 'react';
@@ -63,7 +63,7 @@ import {v4 as uuidv4} from 'uuid';
  * @return {string} id in store
  */
 const addTargetElementToStore = (options) => {
-  const targetEl = munimap_utils.isElement(options.target)
+  const targetEl = mm_utils.isElement(options.target)
     ? /** @type {HTMLElement}*/ (options.target)
     : document.getElementById(/** @type {string}*/ (options.target));
   const targetId =
@@ -181,7 +181,7 @@ export default (options) => {
     const store = createStore(initialState);
     setStoreByTargetId(targetId, store);
 
-    munimap_view.createFeatureStores(store);
+    mm_view.createFeatureStores(store);
     store.dispatch(
       actions.create_munimap({
         mapLinks: options.mapLinks,

@@ -2,8 +2,8 @@
  * @module reset
  */
 import * as actions from './redux/action.js';
-import * as munimap_identify from './identify/identify.js';
-import * as munimap_utils from './utils/utils.js';
+import * as mm_identify from './identify/identify.js';
+import * as mm_utils from './utils/utils.js';
 import * as slctr from './redux/selector.js';
 import Feature from 'ol/Feature';
 import {
@@ -54,7 +54,7 @@ import {
 const createNewState = (state, options) => {
   const markerIdsEquals =
     options.markerIds &&
-    munimap_utils.arrayEquals(options.markerIds, state.requiredOpts.markerIds);
+    mm_utils.arrayEquals(options.markerIds, state.requiredOpts.markerIds);
 
   return {
     ...state,
@@ -88,7 +88,7 @@ const createNewState = (state, options) => {
 const areMarkerDependenciesChanged = (state, payload) => {
   const markerIdsEquals =
     payload.markerIds &&
-    munimap_utils.arrayEquals(payload.markerIds, state.requiredOpts.markerIds);
+    mm_utils.arrayEquals(payload.markerIds, state.requiredOpts.markerIds);
   return (
     payload.markerIds &&
     (!markerIdsEquals || !!payload.markerFilter || !!payload.poiFilter)
@@ -126,7 +126,7 @@ const handleIdentifyCallback = (state, payload, asyncDispatch) => {
     }
   } else if (slctr.isIdentifyEnabled(state)) {
     //same callback as in munimap.create => handle with undefined
-    munimap_identify.handleCallback(
+    mm_identify.handleCallback(
       slctr.getIdentifyCallback(state),
       asyncDispatch,
       targetId
@@ -157,7 +157,7 @@ const handleReset = (state, payload, asyncDispatch) => {
   } else if (shouldClearMarkers(state, payload)) {
     getMarkerStore(targetId).clear();
   }
-  if (clusterOpts && munimap_utils.isDefAndNotNull(clusterOpts.distance)) {
+  if (clusterOpts && mm_utils.isDefAndNotNull(clusterOpts.distance)) {
     getClusterStore(targetId).setDistance(clusterOpts.distance);
   }
 

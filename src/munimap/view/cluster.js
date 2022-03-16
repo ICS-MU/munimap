@@ -1,8 +1,8 @@
 /**
  * @module view/cluster
  */
-import * as munimap_assert from '../assert/assert.js';
-import * as munimap_range from '../utils/range.js';
+import * as mm_assert from '../assert/assert.js';
+import * as mm_range from '../utils/range.js';
 import * as ol_extent from 'ol/extent';
 import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from '../feature/_constants.js';
 import {Feature} from 'ol';
@@ -79,7 +79,7 @@ const getAnimationRequest = (options) => {
   } = options;
 
   const firstFeature = clusteredFeatures[0];
-  munimap_assert.assertInstanceof(firstFeature, Feature);
+  mm_assert.assertInstanceof(firstFeature, Feature);
   const resolutionRange = isDoor(firstFeature)
     ? DOOR_RESOLUTION
     : FLOOR_RESOLUTION;
@@ -103,7 +103,7 @@ const getAnimationRequest = (options) => {
         animationRequest = getAnimationRequestParams(popupCoords, opts);
       }
     } else {
-      const isVisible = munimap_range.contains(resolutionRange, resolution);
+      const isVisible = mm_range.contains(resolutionRange, resolution);
       if (!isVisible) {
         center = ol_extent.getCenter(extentOfFeature(firstFeature));
         animationRequest = getAnimationRequestParams(center, opts);

@@ -1,8 +1,8 @@
 /**
  * @module layer/marker
  */
-import * as munimap_assert from '../assert/assert.js';
-import * as munimap_marker from '../feature/marker.js';
+import * as mm_assert from '../assert/assert.js';
+import * as mm_marker from '../feature/marker.js';
 import VectorLayer from 'ol/layer/Vector';
 import {MARKER_LAYER_ID} from './_constants.js';
 import {getMarkerStore} from '../source/_constants.js';
@@ -31,7 +31,7 @@ const getLayer = (map) => {
   const layers = map.getLayers().getArray();
   const result = layers.find(isLayer);
   if (result) {
-    munimap_assert.assertInstanceof(result, VectorLayer);
+    mm_assert.assertInstanceof(result, VectorLayer);
   }
   return /** @type {VectorLayer|undefined} */ (result);
 };
@@ -51,8 +51,8 @@ const create = (options) => {
   const markerLayer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: MARKER_LAYER_ID,
-      isFeatureClickable: munimap_marker.isClickable,
-      featureClickHandler: munimap_marker.featureClickHandler,
+      isFeatureClickable: mm_marker.isClickable,
+      featureClickHandler: mm_marker.featureClickHandler,
       source: markerSource,
       maxResolution: clusterResolution.min,
       updateWhileAnimating: true,

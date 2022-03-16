@@ -1,8 +1,8 @@
 /**
  * @module utils/geom
  */
-import * as munimap_assert from '../assert/assert.js';
-import * as munimap_utils from './utils.js';
+import * as mm_assert from '../assert/assert.js';
+import * as mm_utils from './utils.js';
 import * as ol_extent from 'ol/extent';
 import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
@@ -44,7 +44,7 @@ const featureExtentIntersect = (feature, extent, format) => {
   );
   const turfBBox = turf_bboxPolygon(extent);
   const turfIntersect = turf_intersect(turfFeature, turfBBox);
-  return munimap_utils.isDef(turfIntersect)
+  return mm_utils.isDef(turfIntersect)
     ? format.readFeature(turfIntersect)
     : null;
 };
@@ -185,9 +185,9 @@ const getGeometryCenterOfFeatures = (features) => {
  * @const
  */
 const CENTER_GEOMETRY_FUNCTION = (feature) => {
-  munimap_assert.assertInstanceof(feature, Feature);
+  mm_assert.assertInstanceof(feature, Feature);
   let geom = feature.getGeometry();
-  munimap_assert.assertInstanceof(geom, Geometry);
+  mm_assert.assertInstanceof(geom, Geometry);
   if (geom instanceof MultiPolygon) {
     geom = getLargestPolygon(geom);
   }
@@ -206,7 +206,7 @@ const CENTER_GEOMETRY_FUNCTION = (feature) => {
  */
 const INTERSECT_CENTER_GEOMETRY_FUNCTION = (viewExt, feature) => {
   const refExt = ol_extent.buffer(viewExt, getBufferValue(viewExt));
-  munimap_assert.assertInstanceof(feature, Feature);
+  mm_assert.assertInstanceof(feature, Feature);
   let geom = feature.getGeometry() || null;
   const featCenter = CENTER_GEOMETRY_FUNCTION(feature);
   if (geom.intersectsExtent(refExt) && !featCenter.intersectsExtent(refExt)) {

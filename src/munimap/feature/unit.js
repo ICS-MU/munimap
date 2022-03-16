@@ -1,9 +1,9 @@
 /**
  * @module feature/unit
  */
-import * as munimap_assert from '../assert/assert.js';
-import * as munimap_lang from '../lang/lang.js';
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_assert from '../assert/assert.js';
+import * as mm_lang from '../lang/lang.js';
+import * as mm_utils from '../utils/utils.js';
 import {UNIT_PRIORITY_FIELD_NAME} from './_constants.js';
 
 /**
@@ -19,7 +19,7 @@ import {UNIT_PRIORITY_FIELD_NAME} from './_constants.js';
  */
 const getPriority = (unit) => {
   const result = unit.get(UNIT_PRIORITY_FIELD_NAME);
-  munimap_assert.assertNumber(result);
+  mm_assert.assertNumber(result);
   return result;
 };
 
@@ -30,9 +30,9 @@ const getPriority = (unit) => {
  */
 const getAbbr = (unit, lang) => {
   const result = unit.get(
-    munimap_lang.getMsg(munimap_lang.Translations.UNIT_ABBR_FIELD_NAME, lang)
+    mm_lang.getMsg(mm_lang.Translations.UNIT_ABBR_FIELD_NAME, lang)
   );
-  munimap_assert.assert(result === null || munimap_utils.isString(result));
+  mm_assert.assert(result === null || mm_utils.isString(result));
   return /** @type {?string}*/ (result);
 };
 
@@ -44,9 +44,9 @@ const getAbbr = (unit, lang) => {
  */
 const getTitle = (unit, lang) => {
   const result = unit.get(
-    munimap_lang.getMsg(munimap_lang.Translations.UNIT_TITLE_FIELD_NAME, lang)
+    mm_lang.getMsg(mm_lang.Translations.UNIT_TITLE_FIELD_NAME, lang)
   );
-  munimap_assert.assert(result === null || munimap_utils.isString(result));
+  mm_assert.assert(result === null || mm_utils.isString(result));
   return /** @type {?string}*/ (result);
 };
 

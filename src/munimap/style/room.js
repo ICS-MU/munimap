@@ -1,8 +1,8 @@
 /**
  * @module style/room
  */
-import * as munimap_range from '../utils/range.js';
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_range from '../utils/range.js';
+import * as mm_utils from '../utils/utils.js';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
 import {Fill, Style, Text} from 'ol/style';
 import {
@@ -190,10 +190,7 @@ const labelFunction = (
 ) => {
   let result = [];
   const marked = getMarkerStore(targetId).getFeatures().indexOf(feature) >= 0;
-  const labelCache = munimap_range.contains(
-    ROOM_BIG_LABEL_RESOLUTION,
-    resolution
-  )
+  const labelCache = mm_range.contains(ROOM_BIG_LABEL_RESOLUTION, resolution)
     ? LABEL_CACHE
     : STYLE_LABEL_CACHE;
 
@@ -206,10 +203,7 @@ const labelFunction = (
       let title;
       let offset;
       const purposeGis = /**@type {string}*/ (feature.get('ucel_gis'));
-      const fontSize = munimap_range.contains(
-        ROOM_BIG_LABEL_RESOLUTION,
-        resolution
-      )
+      const fontSize = mm_range.contains(ROOM_BIG_LABEL_RESOLUTION, resolution)
         ? ROOM_FONT_SIZE
         : ROOM_SMALL_FONT_SIZE;
       const textFont = 'bold ' + fontSize + 'px arial';
@@ -218,13 +212,13 @@ const labelFunction = (
         title = /**@type {string}*/ (feature.get('polohKod'));
         const purposeTitle = /**@type {string}*/ (feature.get('ucel_nazev'));
         if (
-          munimap_utils.isDefAndNotNull(purposeGis) &&
+          mm_utils.isDefAndNotNull(purposeGis) &&
           (purposeGis === PoiPurpose.ELEVATOR ||
             purposeGis === PoiPurpose.INFORMATION_POINT)
         ) {
           offset = POI_ICON_HEIGHT - 6;
         } else if (
-          munimap_utils.isDefAndNotNull(purposeTitle) &&
+          mm_utils.isDefAndNotNull(purposeTitle) &&
           (purposeTitle === 'WC' || purposeTitle === 'schodiště')
         ) {
           offset = POI_ICON_HEIGHT - 6;
@@ -234,9 +228,9 @@ const labelFunction = (
       }
       if (title) {
         if (
-          munimap_utils.isDefAndNotNull(purposeGis) &&
+          mm_utils.isDefAndNotNull(purposeGis) &&
           purposeGis === PoiPurpose.CLASSROOM &&
-          munimap_range.contains(PoiResolutions.STAIRS, resolution)
+          mm_range.contains(PoiResolutions.STAIRS, resolution)
         ) {
           const labelHeight = getLabelHeight(title, fontSize);
           const overallHeight = labelHeight + POI_ICON_HEIGHT + 2;
@@ -314,7 +308,7 @@ const getActiveStyleFunction = (targetId) => {
   const styleFce = (feature, res) => {
     let result = defaultStyleFunction(feature, res, targetId);
     if (
-      munimap_range.contains(PoiResolutions.STAIRS, res) &&
+      mm_range.contains(PoiResolutions.STAIRS, res) &&
       result === getStaircase()
     ) {
       result = [...result, ...ROOM_STAIRCASE_ICON];

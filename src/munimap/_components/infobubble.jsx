@@ -1,4 +1,4 @@
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_utils from '../utils/utils.js';
 import * as ol_extent from 'ol/extent';
 import * as slctr from '../redux/selector.js';
 import MapContext from '../_contexts/mapcontext.jsx';
@@ -64,16 +64,13 @@ const getInfoBoxPosition = (infoEl, options) => {
     ]);
     const format = new GeoJSON();
     let intersect = featureExtentIntersect(building, reducedViewExt, format);
-    if (munimap_utils.isDefAndNotNull(intersect) && !!intersect.getGeometry()) {
+    if (mm_utils.isDefAndNotNull(intersect) && !!intersect.getGeometry()) {
       const closestPoint = intersect.getGeometry().getClosestPoint(topRight);
       result.coordinate = [closestPoint[0], closestPoint[1] + extHeight];
       result.hideTale = false;
     } else {
       intersect = featureExtentIntersect(building, extent, format);
-      if (
-        munimap_utils.isDefAndNotNull(intersect) &&
-        !!intersect.getGeometry()
-      ) {
+      if (mm_utils.isDefAndNotNull(intersect) && !!intersect.getGeometry()) {
         const bbox = intersect.getGeometry().getExtent();
         const topLeft = ol_extent.getTopLeft(extent);
         const upperExt = /**@type {ol.extent.Extent}*/ ([

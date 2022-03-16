@@ -1,4 +1,4 @@
-import * as munimap_lang from '../lang/lang.js';
+import * as mm_lang from '../lang/lang.js';
 import * as slctr from '../redux/selector.js';
 import React, {useEffect, useRef} from 'react';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
@@ -55,7 +55,7 @@ const LoadingMessageComponent = (props) => {
       <div id={`message_${targetId}`} className="loading-message" ref={msgEl}>
         <div className="inner" ref={innerEl}>
           <p className="text">
-            {munimap_lang.getMsg(munimap_lang.Translations.LOADING_MAP, lang)}
+            {mm_lang.getMsg(mm_lang.Translations.LOADING_MAP, lang)}
           </p>
         </div>
       </div>

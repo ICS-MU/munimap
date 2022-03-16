@@ -1,7 +1,7 @@
 /**
  * @module source/source
  */
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_utils from '../utils/utils.js';
 import * as srcs from './_constants.js';
 import {BUILDING_TYPE, DOOR_TYPE, ROOM_TYPE} from '../feature/_constants.js';
 import {GeoJSON} from 'ol/format';
@@ -107,7 +107,7 @@ const getFeaturesByIds = (targetId, requiredMarkerIds) => {
     }
   });
   //remove undefined (= invalid codes)
-  return munimap_utils.flat(result).filter((item) => item);
+  return mm_utils.flat(result).filter((item) => item);
 };
 
 /**
@@ -144,7 +144,7 @@ const getZoomToFeatures = (targetId, initZoomTos) => {
       );
     }
   });
-  return munimap_utils.flat(result).filter((item) => item);
+  return mm_utils.flat(result).filter((item) => item);
 };
 
 /**
@@ -163,7 +163,7 @@ const getPopupFeatureByUid = (targetId, uid) => {
   let feature = null;
   suitableStores.every((store) => {
     feature = store ? store.getFeatureByUid(uid) : null;
-    return !munimap_utils.isDefAndNotNull(feature);
+    return !mm_utils.isDefAndNotNull(feature);
   });
 
   //check custom markers
@@ -171,7 +171,7 @@ const getPopupFeatureByUid = (targetId, uid) => {
     const k = `CUSTOM_MARKER_${targetId}`;
     Object.entries(REQUIRED_CUSTOM_MARKERS).every(([key, feat]) => {
       feature = key.startsWith(k) && getUid(feat) === uid ? feat : null;
-      return !munimap_utils.isDefAndNotNull(feature);
+      return !mm_utils.isDefAndNotNull(feature);
     });
   }
   return feature;
@@ -192,7 +192,7 @@ const getLargestInExtent = (store, extent) => {
       const geom = intersect.getGeometry();
       if (geom instanceof Polygon || geom instanceof MultiPolygon) {
         const area = geom.getArea();
-        if (!munimap_utils.isDef(maxArea) || area > maxArea) {
+        if (!mm_utils.isDef(maxArea) || area > maxArea) {
           maxArea = area;
           selectFeature = f;
         }

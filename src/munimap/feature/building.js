@@ -2,12 +2,12 @@
  * @module feature/building
  */
 import * as actions from '../redux/action.js';
-import * as munimap_assert from '../assert/assert.js';
-import * as munimap_complex from './complex.js';
-import * as munimap_lang from '../lang/lang.js';
-import * as munimap_range from '../utils/range.js';
-import * as munimap_unit from './unit.js';
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_assert from '../assert/assert.js';
+import * as mm_complex from './complex.js';
+import * as mm_lang from '../lang/lang.js';
+import * as mm_range from '../utils/range.js';
+import * as mm_unit from './unit.js';
+import * as mm_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {
   BUILDING_COMPLEX_FIELD_NAME,
@@ -55,7 +55,7 @@ import {isBuilding, isDoor, isRoom} from './_constants.functions.js';
  */
 const getLocationCode = (building) => {
   const result = building.get(BUILDING_LOCATION_CODE_FIELD_NAME);
-  munimap_assert.assertString(
+  mm_assert.assertString(
     result,
     'Something is wrong! Location code of building should be a string!'
   );
@@ -87,7 +87,7 @@ const hasInnerGeometry = (building) => {
  * @return {boolean} whereas is selected
  */
 const isSelected = (building, selectedFeature) => {
-  munimap_assert.assert(isBuilding(building));
+  mm_assert.assert(isBuilding(building));
   const locCode = getLocationCode(building);
   //selectedFeature doesn't have to be only building
   return selectedFeature ? locCode === selectedFeature.substring(0, 5) : false;
@@ -109,7 +109,7 @@ const isClickable = (options) => {
   const {feature, resolution, selectedFeature, isIdentifyEnabled, targetId} =
     options;
 
-  if (munimap_range.contains(FLOOR_RESOLUTION, resolution)) {
+  if (mm_range.contains(FLOOR_RESOLUTION, resolution)) {
     return isIdentifyEnabled
       ? !isSelected(feature, selectedFeature)
       : !isSelected(feature, selectedFeature) && hasInnerGeometry(feature);
@@ -150,7 +150,7 @@ const getByCode = (targetId, code) => {
  * @return {boolean} whether is in extent
  */
 const isInExtent = (code, targetId, extent) => {
-  munimap_assert.assertString(code);
+  mm_assert.assertString(code);
   const building = getByCode(targetId, code);
   const geom = building.getGeometry();
   return geom.intersectsExtent(extent);
@@ -162,7 +162,7 @@ const isInExtent = (code, targetId, extent) => {
  */
 const getUnits = (building) => {
   const result = building.get(BUILDING_UNITS_FIELD_NAME);
-  munimap_assert.assertArray(result);
+  mm_assert.assertArray(result);
   return /**@type {Array<Feature>}*/ (result);
 };
 
@@ -183,7 +183,7 @@ const filterHeadquaters = (buildings) => {
 const filterFacultyHeadquaters = (buildings) => {
   return buildings.filter((bldg) => {
     return getUnits(bldg).some((unit) => {
-      return munimap_unit.getPriority(unit) > 0;
+      return mm_unit.getPriority(unit) > 0;
     });
   });
 };
@@ -198,10 +198,7 @@ const getTitleWithoutOrgUnit = (building, lang, opt_separator) => {
   let result;
   const title = /**@type {string}*/ (
     building.get(
-      munimap_lang.getMsg(
-        munimap_lang.Translations.BUILDING_TITLE_FIELD_NAME,
-        lang
-      )
+      mm_lang.getMsg(mm_lang.Translations.BUILDING_TITLE_FIELD_NAME, lang)
     )
   );
   result = title.split(', ');
@@ -251,7 +248,7 @@ const getSelectedFloorCode = (targetId, building) => {
  */
 const getNamePart = (feature, lang, opt_resolution) => {
   const units = getUnits(feature);
-  const titleParts = munimap_unit.getTitleParts(units, lang);
+  const titleParts = mm_unit.getTitleParts(units, lang);
   return titleParts.join('\n');
 };
 
@@ -261,7 +258,7 @@ const getNamePart = (feature, lang, opt_resolution) => {
  */
 const getComplex = (building) => {
   const result = building.get(BUILDING_COMPLEX_FIELD_NAME);
-  munimap_assert.assert(result === null || result instanceof Feature);
+  mm_assert.assert(result === null || result instanceof Feature);
   return result;
 };
 
@@ -273,24 +270,18 @@ const getComplex = (building) => {
  */
 const getAddressPart = (feature, resolution, lang) => {
   const titleParts = [];
-  if (munimap_utils.isDefAndNotNull(getComplex(feature))) {
+  if (mm_utils.isDefAndNotNull(getComplex(feature))) {
     const bldgAbbr = feature.get(
-      munimap_lang.getMsg(
-        munimap_lang.Translations.BUILDING_ABBR_FIELD_NAME,
-        lang
-      )
+      mm_lang.getMsg(mm_lang.Translations.BUILDING_ABBR_FIELD_NAME, lang)
     );
-    if (munimap_utils.isDefAndNotNull(bldgAbbr)) {
-      if (munimap_range.contains(FLOOR_RESOLUTION, resolution)) {
+    if (mm_utils.isDefAndNotNull(bldgAbbr)) {
+      if (mm_range.contains(FLOOR_RESOLUTION, resolution)) {
         const bldgType = feature.get(
-          munimap_lang.getMsg(
-            munimap_lang.Translations.BUILDING_TYPE_FIELD_NAME,
-            lang
-          )
+          mm_lang.getMsg(mm_lang.Translations.BUILDING_TYPE_FIELD_NAME, lang)
         );
-        if (munimap_utils.isDefAndNotNull(bldgType)) {
-          munimap_assert.assertString(bldgAbbr);
-          munimap_assert.assertString(bldgType);
+        if (mm_utils.isDefAndNotNull(bldgType)) {
+          mm_assert.assertString(bldgAbbr);
+          mm_assert.assertString(bldgType);
           const units = getUnits(feature);
           if (units.length === 0) {
             titleParts.push(alignTextToRows([bldgType, bldgAbbr], ' '));
@@ -327,7 +318,7 @@ const getDefaultLabel = (feature, resolution, lang) => {
   if (
     !namePart ||
     !complex ||
-    munimap_complex.getBuildingCount(complex) === 1 ||
+    mm_complex.getBuildingCount(complex) === 1 ||
     resolution < COMPLEX_RESOLUTION.min
   ) {
     const addressPart = getAddressPart(feature, resolution, lang);
@@ -344,7 +335,7 @@ const getDefaultLabel = (feature, resolution, lang) => {
  */
 const getFaculties = (building) => {
   const units = getUnits(building);
-  const result = units.filter((unit) => munimap_unit.getPriority(unit) > 0);
+  const result = units.filter((unit) => mm_unit.getPriority(unit) > 0);
   return result;
 };
 
@@ -388,45 +379,33 @@ const getTitle = (options) => {
   if (building) {
     bldgTitle = /**@type {string}*/ (
       building.get(
-        munimap_lang.getMsg(
-          munimap_lang.Translations.BUILDING_TITLE_FIELD_NAME,
-          lang
-        )
+        mm_lang.getMsg(mm_lang.Translations.BUILDING_TITLE_FIELD_NAME, lang)
       )
     );
     const complex = getComplex(building);
-    if (munimap_utils.isDefAndNotNull(complex)) {
+    if (mm_utils.isDefAndNotNull(complex)) {
       complexTitle = /**@type {string}*/ (
         complex.get(
-          munimap_lang.getMsg(
-            munimap_lang.Translations.COMPLEX_TITLE_FIELD_NAME,
-            lang
-          )
+          mm_lang.getMsg(mm_lang.Translations.COMPLEX_TITLE_FIELD_NAME, lang)
         )
       );
       const buildingType = /**@type {string}*/ (
         building.get(
-          munimap_lang.getMsg(
-            munimap_lang.Translations.BUILDING_TYPE_FIELD_NAME,
-            lang
-          )
+          mm_lang.getMsg(mm_lang.Translations.BUILDING_TYPE_FIELD_NAME, lang)
         )
       );
       const buildingTitle = /**@type {string}*/ (
         building.get(
-          munimap_lang.getMsg(
-            munimap_lang.Translations.BUILDING_ABBR_FIELD_NAME,
-            lang
-          )
+          mm_lang.getMsg(mm_lang.Translations.BUILDING_ABBR_FIELD_NAME, lang)
         )
       );
       if (
-        munimap_utils.isDefAndNotNull(buildingType) &&
-        munimap_utils.isDefAndNotNull(buildingTitle)
+        mm_utils.isDefAndNotNull(buildingType) &&
+        mm_utils.isDefAndNotNull(buildingTitle)
       ) {
         bldgTitle = buildingType + ' ' + buildingTitle;
       } else {
-        if (munimap_complex.getBuildingCount(complex) === 1) {
+        if (mm_complex.getBuildingCount(complex) === 1) {
           bldgTitle = getNamePart(building, lang);
         } else {
           bldgTitle = getTitleWithoutOrgUnit(building, lang);

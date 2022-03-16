@@ -2,14 +2,14 @@
 /**
  * @module redux/selector
  */
-import * as lyr from '../layer/_constants.js';
-import * as munimap_floor from '../feature/floor.js';
-import * as munimap_identify from '../identify/identify.js';
-import * as munimap_lang from '../lang/lang.js';
-import * as munimap_range from '../utils/range.js';
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_floor from '../feature/floor.js';
+import * as mm_identify from '../identify/identify.js';
+import * as mm_lang from '../lang/lang.js';
+import * as mm_lyr from '../layer/_constants.js';
+import * as mm_range from '../utils/range.js';
+import * as mm_srcs from '../source/_constants.js';
+import * as mm_utils from '../utils/utils.js';
 import * as ol_extent from 'ol/extent';
-import * as srcs from '../source/_constants.js';
 import {BUILDING_RESOLUTION, ROOM_RESOLUTION} from '../cluster/cluster.js';
 import {ENABLE_SELECTOR_LOGS, INITIAL_STATE} from '../conf.js';
 import {
@@ -370,7 +370,7 @@ export const getInitZoomTo = createSelector(
     }
     if (initZoomTo.length === 0 || zoomToTimestamp <= 0) {
       return [];
-    } else if (munimap_utils.isString(initZoomTo)) {
+    } else if (mm_utils.isString(initZoomTo)) {
       initZoomTo = [/**@type {string}*/ (initZoomTo)];
     }
     return getZoomToFeatures(targetId, initZoomTo);
@@ -459,7 +459,7 @@ export const getNoGeomCodes = createSelector(
       (initMarker) => !initMarkersWithGeom.includes(initMarker)
     );
 
-    return munimap_utils.flat(result.map((item) => item.get('polohKod')));
+    return mm_utils.flat(result.map((item) => item.get('polohKod')));
   }
 );
 
@@ -608,14 +608,11 @@ export const getMuAttrs = createSelector([getLang], (lang) => {
   if (ENABLE_SELECTOR_LOGS) {
     console.log('computing MU attrs');
   }
-  const munimapAttr = munimap_lang.getMsg(
-    munimap_lang.Translations.MUNIMAP_ATTRIBUTION_HTML,
+  const munimapAttr = mm_lang.getMsg(
+    mm_lang.Translations.MUNIMAP_ATTRIBUTION_HTML,
     lang
   );
-  const muAttr = munimap_lang.getMsg(
-    munimap_lang.Translations.MU_ATTRIBUTION_HTML,
-    lang
-  );
+  const muAttr = mm_lang.getMsg(mm_lang.Translations.MU_ATTRIBUTION_HTML, lang);
   return [munimapAttr, muAttr];
 });
 
@@ -669,21 +666,12 @@ export const getDefaultControls = createSelector(
     }
     return control_defaults({
       attributionOptions: {
-        tipLabel: munimap_lang.getMsg(
-          munimap_lang.Translations.ATTRIBUTIONS,
-          lang
-        ),
+        tipLabel: mm_lang.getMsg(mm_lang.Translations.ATTRIBUTIONS, lang),
       },
       rotate: false,
       zoomOptions: {
-        zoomInTipLabel: munimap_lang.getMsg(
-          munimap_lang.Translations.ZOOM_IN,
-          lang
-        ),
-        zoomOutTipLabel: munimap_lang.getMsg(
-          munimap_lang.Translations.ZOOM_OUT,
-          lang
-        ),
+        zoomInTipLabel: mm_lang.getMsg(mm_lang.Translations.ZOOM_IN, lang),
+        zoomOutTipLabel: mm_lang.getMsg(mm_lang.Translations.ZOOM_OUT, lang),
       },
     });
   }
@@ -706,7 +694,7 @@ export const getLoadedBuildingsCount = createSelector(
     if (buildingsTimestamp === null) {
       return 0;
     }
-    return srcs.getBuildingStore(targetId).getFeatures().length;
+    return mm_srcs.getBuildingStore(targetId).getFeatures().length;
   }
 );
 
@@ -749,7 +737,7 @@ export const getActiveFloorCodes = createSelector(
       return [];
     }
 
-    return munimap_floor.getActiveCodes(targetId, selectedFeature);
+    return mm_floor.getActiveCodes(targetId, selectedFeature);
   }
 );
 
@@ -767,8 +755,8 @@ const isInFloorResolutionRange = createSelector(
       console.log('computing whether is resolution in floor resolution. range');
     }
     return (
-      munimap_utils.isDef(resolution) &&
-      munimap_range.contains(FLOOR_RESOLUTION, resolution)
+      mm_utils.isDef(resolution) &&
+      mm_range.contains(FLOOR_RESOLUTION, resolution)
     );
   }
 );
@@ -821,7 +809,7 @@ export const isSelectedInExtent = createSelector(
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing whether is selected building in extent');
     }
-    if (munimap_utils.isDefAndNotNull(selectedFeature)) {
+    if (mm_utils.isDefAndNotNull(selectedFeature)) {
       return isInExtent(selectedFeature, targetId, refExtent);
     }
     return false;
@@ -847,7 +835,7 @@ const getFeatureForComputingSelected = createSelector(
     //buildingsTimestamp and markersTimestamp are important for recalculations
     return (
       getMarkerInExtent(targetId, refExt) ||
-      getLargestBldgInExtent(srcs.getBuildingStore(targetId), refExt)
+      getLargestBldgInExtent(mm_srcs.getBuildingStore(targetId), refExt)
     );
   }
 );
@@ -995,7 +983,7 @@ export const getFloorsByBuildingCode = createSelector(
     if (!floorsTimestamp || !selectedFeature) {
       return [];
     }
-    return munimap_floor.getFloorsByBuildingCode(targetId, selectedFeature);
+    return mm_floor.getFloorsByBuildingCode(targetId, selectedFeature);
   }
 );
 
@@ -1350,16 +1338,16 @@ export const getAllStyleFunctions = createSelector(
       console.log('STYLE - get all style functions');
     }
     return {
-      [lyr.BUILDING_LAYER_ID]: styleForBuildingLayer,
-      [lyr.BUILDING_LABEL_LAYER_ID]: styleForBuildingLabelLayer,
-      [lyr.COMPLEX_LAYER_ID]: styleForComplexLayer,
-      [lyr.MARKER_LAYER_ID]: styleForMarkerLayer,
-      [lyr.CLUSTER_LAYER_ID]: styleForClusterLayer,
-      [lyr.ROOM_LAYER_ID]: styleForRoomLayer,
-      [lyr.ROOM_LABEL_LAYER_ID]: styleForRoomLabelLayer,
-      [lyr.ACTIVE_ROOM_LAYER_ID]: styleForRoomActiveLayer,
-      [lyr.ACTIVE_POI_LAYER_ID]: styleForPoiActiveLayer,
-      [lyr.IDENTIFY_LAYER_ID]: styleForIdentifyLayer,
+      [mm_lyr.BUILDING_LAYER_ID]: styleForBuildingLayer,
+      [mm_lyr.BUILDING_LABEL_LAYER_ID]: styleForBuildingLabelLayer,
+      [mm_lyr.COMPLEX_LAYER_ID]: styleForComplexLayer,
+      [mm_lyr.MARKER_LAYER_ID]: styleForMarkerLayer,
+      [mm_lyr.CLUSTER_LAYER_ID]: styleForClusterLayer,
+      [mm_lyr.ROOM_LAYER_ID]: styleForRoomLayer,
+      [mm_lyr.ROOM_LABEL_LAYER_ID]: styleForRoomLabelLayer,
+      [mm_lyr.ACTIVE_ROOM_LAYER_ID]: styleForRoomActiveLayer,
+      [mm_lyr.ACTIVE_POI_LAYER_ID]: styleForPoiActiveLayer,
+      [mm_lyr.IDENTIFY_LAYER_ID]: styleForIdentifyLayer,
     };
   }
 );
@@ -1408,10 +1396,10 @@ export const isIdentifyEnabled = createSelector(
 export const isIdentifyControlEnabled = createSelector(
   [getIdentifyTimestamp, getTargetId],
   (identifyTimestamp, targetId) => {
-    if (!munimap_utils.isDefAndNotNull(identifyTimestamp)) {
+    if (!mm_utils.isDefAndNotNull(identifyTimestamp)) {
       return false;
     }
-    const features = srcs.getIdentifyStore(targetId).getFeatures();
+    const features = mm_srcs.getIdentifyStore(targetId).getFeatures();
     return Array.isArray(features) ? features.length > 0 : !!features;
   }
 );
@@ -1426,14 +1414,14 @@ export const isIdentifyControlEnabled = createSelector(
 export const isIdentifyLayerVisible = createSelector(
   [isIdentifyEnabled, getIdentifyTimestamp, getSelectedFeature, getTargetId],
   (identifyEnabled, identifyTimestamp, selectedFeature, targetId) => {
-    if (!munimap_utils.isDefAndNotNull(identifyTimestamp) || !identifyEnabled) {
+    if (!mm_utils.isDefAndNotNull(identifyTimestamp) || !identifyEnabled) {
       return false;
     }
-    const inSameFloor = munimap_identify.inSameFloorAsSelected(
+    const inSameFloor = mm_identify.inSameFloorAsSelected(
       targetId,
       selectedFeature
     );
-    return munimap_utils.isDefAndNotNull(inSameFloor) ? inSameFloor : true;
+    return mm_utils.isDefAndNotNull(inSameFloor) ? inSameFloor : true;
   }
 );
 
@@ -1468,7 +1456,7 @@ export const getFeatureForPopup = createSelector(
       console.log('get feature for popup');
     }
 
-    if (!munimap_utils.isDefAndNotNull(uid)) {
+    if (!mm_utils.isDefAndNotNull(uid)) {
       return null;
     }
     return getPopupFeatureByUid(targetId, uid);
@@ -1512,7 +1500,7 @@ export const isPopupVisible = createSelector([getPopupFeatureUid], (uid) => {
     console.log('computing whether popup is visible');
   }
 
-  return munimap_utils.isDefAndNotNull(uid);
+  return mm_utils.isDefAndNotNull(uid);
 });
 
 /**

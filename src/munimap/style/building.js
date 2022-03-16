@@ -2,17 +2,17 @@
  * @module style/building
  */
 
-import * as munimap_assert from '../assert/assert.js';
-import * as munimap_building from '../feature/building.js';
-import * as munimap_cluster from '../cluster/cluster.js';
-import * as munimap_geom from '../utils/geom.js';
-import * as munimap_markerStyle from './marker.js';
-import * as munimap_range from '../utils/range.js';
-import * as munimap_store from '../utils/store.js';
-import * as munimap_style from './style.js';
-import * as munimap_style_constants from './_constants.js';
-import * as munimap_unit from '../feature/unit.js';
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_assert from '../assert/assert.js';
+import * as mm_building from '../feature/building.js';
+import * as mm_cluster from '../cluster/cluster.js';
+import * as mm_geom from '../utils/geom.js';
+import * as mm_markerStyle from './marker.js';
+import * as mm_range from '../utils/range.js';
+import * as mm_store from '../utils/store.js';
+import * as mm_style from './style.js';
+import * as mm_style_constants from './_constants.js';
+import * as mm_unit from '../feature/unit.js';
+import * as mm_utils from '../utils/utils.js';
 import {COMPLEX_RESOLUTION, FLOOR_RESOLUTION} from '../feature/_constants.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
 import {RESOLUTION_COLOR} from './_constants.js';
@@ -79,42 +79,40 @@ const styleFunction = (feature, resolution, targetId, showSelected) => {
   let result;
   const marked = getMarkerStore(targetId).getFeatures().indexOf(feature) >= 0;
   if (marked) {
-    if (
-      !munimap_range.contains(munimap_cluster.BUILDING_RESOLUTION, resolution)
-    ) {
-      if (munimap_building.hasInnerGeometry(feature)) {
-        if (munimap_markerStyle.WHITE_TO_GREY_CACHE[resColor.resolution]) {
-          result = munimap_markerStyle.WHITE_TO_GREY_CACHE[resColor.resolution];
+    if (!mm_range.contains(mm_cluster.BUILDING_RESOLUTION, resolution)) {
+      if (mm_building.hasInnerGeometry(feature)) {
+        if (mm_markerStyle.WHITE_TO_GREY_CACHE[resColor.resolution]) {
+          result = mm_markerStyle.WHITE_TO_GREY_CACHE[resColor.resolution];
         } else {
           result = new Style({
             fill: new Fill({
               color: resColor.color,
             }),
-            stroke: munimap_style_constants.MARKER_BUILDING_STROKE,
+            stroke: mm_style_constants.MARKER_BUILDING_STROKE,
           });
-          munimap_markerStyle.WHITE_TO_GREY_CACHE[resColor.resolution] = result;
+          mm_markerStyle.WHITE_TO_GREY_CACHE[resColor.resolution] = result;
         }
       } else {
-        result = munimap_style_constants.MARKER_BUILDING_NO_GEOMETRY;
+        result = mm_style_constants.MARKER_BUILDING_NO_GEOMETRY;
       }
     } else {
-      result = munimap_style_constants.BUILDING_STYLE;
+      result = mm_style_constants.BUILDING_STYLE;
     }
   } else {
-    if (munimap_building.hasInnerGeometry(feature)) {
-      if (munimap_utils.isDef(WHITE_TO_GREY_CACHE[resColor.resolution])) {
+    if (mm_building.hasInnerGeometry(feature)) {
+      if (mm_utils.isDef(WHITE_TO_GREY_CACHE[resColor.resolution])) {
         result = WHITE_TO_GREY_CACHE[resColor.resolution];
       } else {
         result = new Style({
           fill: new Fill({
             color: resColor.color,
           }),
-          stroke: munimap_style_constants.BUILDING_STROKE,
+          stroke: mm_style_constants.BUILDING_STROKE,
         });
         WHITE_TO_GREY_CACHE[resColor.resolution] = result;
       }
     } else {
-      result = munimap_style_constants.BUILDING_NO_GEOMETRY;
+      result = mm_style_constants.BUILDING_NO_GEOMETRY;
     }
   }
 
@@ -142,24 +140,24 @@ const styleFunction = (feature, resolution, targetId, showSelected) => {
  * @protected
  */
 const defaultLabelFunction = (feature, resolution, extent, lang) => {
-  const uid = munimap_store.getUid(feature);
+  const uid = mm_store.getUid(feature);
   if (uid) {
-    munimap_assert.assertString(uid);
-    if (munimap_utils.isDef(munimap_style.LABEL_CACHE[uid])) {
-      return munimap_style.LABEL_CACHE[uid];
+    mm_assert.assertString(uid);
+    if (mm_utils.isDef(mm_style.LABEL_CACHE[uid])) {
+      return mm_style.LABEL_CACHE[uid];
     }
   }
 
-  const title = munimap_style.getDefaultLabel(feature, resolution, lang);
+  const title = mm_style.getDefaultLabel(feature, resolution, lang);
   const textStyle = new Style({
-    geometry: munimap_utils.partial(
-      munimap_geom.INTERSECT_CENTER_GEOMETRY_FUNCTION,
+    geometry: mm_utils.partial(
+      mm_geom.INTERSECT_CENTER_GEOMETRY_FUNCTION,
       extent
     ),
     text: new Text({
-      font: 'bold ' + munimap_style_constants.BUILDING_FONT_SIZE + 'px arial',
-      fill: munimap_style_constants.TEXT_FILL,
-      stroke: munimap_style_constants.TEXT_STROKE,
+      font: 'bold ' + mm_style_constants.BUILDING_FONT_SIZE + 'px arial',
+      fill: mm_style_constants.TEXT_FILL,
+      stroke: mm_style_constants.TEXT_STROKE,
       text: title,
       overflow: true,
     }),
@@ -167,8 +165,8 @@ const defaultLabelFunction = (feature, resolution, extent, lang) => {
   });
 
   if (uid) {
-    munimap_assert.assertString(uid);
-    munimap_style.LABEL_CACHE[uid] = textStyle;
+    mm_assert.assertString(uid);
+    mm_style.LABEL_CACHE[uid] = textStyle;
   }
   return textStyle;
 };
@@ -183,32 +181,32 @@ const defaultLabelFunction = (feature, resolution, extent, lang) => {
  */
 const smallScaleLabelFunction = (feature, resolution, extent, lang) => {
   let result = null;
-  const units = munimap_building.getUnits(feature);
+  const units = mm_building.getUnits(feature);
   if (units.length > 0) {
-    if (resolution < munimap_cluster.BUILDING_RESOLUTION.min) {
+    if (resolution < mm_cluster.BUILDING_RESOLUTION.min) {
       let title;
-      const complex = munimap_building.getComplex(feature);
+      const complex = mm_building.getComplex(feature);
       if (
-        munimap_range.contains(COMPLEX_RESOLUTION, resolution) &&
-        munimap_utils.isDefAndNotNull(complex) &&
+        mm_range.contains(COMPLEX_RESOLUTION, resolution) &&
+        mm_utils.isDefAndNotNull(complex) &&
         getBuildingCount(complex) > 1
       ) {
-        title = munimap_unit.getTitleParts(units, lang).join('\n');
+        title = mm_unit.getTitleParts(units, lang).join('\n');
       } else {
-        title = munimap_building.getDefaultLabel(feature, resolution, lang);
+        title = mm_building.getDefaultLabel(feature, resolution, lang);
       }
-      if (munimap_utils.isDef(title)) {
-        const geometryFunction = munimap_utils.partial(
-          munimap_geom.INTERSECT_CENTER_GEOMETRY_FUNCTION,
+      if (mm_utils.isDef(title)) {
+        const geometryFunction = mm_utils.partial(
+          mm_geom.INTERSECT_CENTER_GEOMETRY_FUNCTION,
           extent
         );
         const options = {
-          fill: munimap_style_constants.TEXT_FILL,
-          fontSize: munimap_style_constants.BUILDING_FONT_SIZE,
+          fill: mm_style_constants.TEXT_FILL,
+          fontSize: mm_style_constants.BUILDING_FONT_SIZE,
           geometry: geometryFunction,
           title: title,
         };
-        result = munimap_style.getLabelWithPin(options);
+        result = mm_style.getLabelWithPin(options);
       }
     }
   } else if (resolution < COMPLEX_RESOLUTION.min) {
@@ -226,41 +224,39 @@ const smallScaleLabelFunction = (feature, resolution, extent, lang) => {
  * @protected
  */
 const largeScaleLabelFunction = (feature, resolution, extent, lang) => {
-  const uid = munimap_store.getUid(feature);
+  const uid = mm_store.getUid(feature);
   if (uid) {
-    munimap_assert.assertString(uid);
-    if (munimap_utils.isDef(LABEL_CACHE[lang + uid])) {
+    mm_assert.assertString(uid);
+    if (mm_utils.isDef(LABEL_CACHE[lang + uid])) {
       return LABEL_CACHE[lang + uid];
     }
   }
 
   let result;
-  const title = munimap_building.getDefaultLabel(feature, resolution, lang);
+  const title = mm_building.getDefaultLabel(feature, resolution, lang);
 
-  if (munimap_utils.isDef(title)) {
-    const geometryFunction = munimap_utils.partial(
-      munimap_geom.INTERSECT_CENTER_GEOMETRY_FUNCTION,
+  if (mm_utils.isDef(title)) {
+    const geometryFunction = mm_utils.partial(
+      mm_geom.INTERSECT_CENTER_GEOMETRY_FUNCTION,
       extent
     );
-    const units = munimap_building.getUnits(feature);
+    const units = mm_building.getUnits(feature);
     if (units.length > 0) {
       const options = {
-        fill: munimap_style_constants.TEXT_FILL,
-        fontSize: munimap_style_constants.BUILDING_FONT_SIZE,
+        fill: mm_style_constants.TEXT_FILL,
+        fontSize: mm_style_constants.BUILDING_FONT_SIZE,
         geometry: geometryFunction,
         title: title,
       };
-      result = munimap_style.getLabelWithPin(options);
+      result = mm_style.getLabelWithPin(options);
     } else {
       result = new Style({
         geometry: geometryFunction,
         text: new Text({
           font:
-            'bold ' +
-            munimap_style_constants.BUILDING_BIG_FONT_SIZE +
-            'px arial',
-          fill: munimap_style_constants.TEXT_FILL,
-          stroke: munimap_style_constants.TEXT_STROKE,
+            'bold ' + mm_style_constants.BUILDING_BIG_FONT_SIZE + 'px arial',
+          fill: mm_style_constants.TEXT_FILL,
+          stroke: mm_style_constants.TEXT_STROKE,
           text: title,
           overflow: true,
         }),
@@ -271,7 +267,7 @@ const largeScaleLabelFunction = (feature, resolution, extent, lang) => {
     result = null;
   }
   if (uid) {
-    munimap_assert.assertString(uid);
+    mm_assert.assertString(uid);
     LABEL_CACHE[lang + uid] = result;
   }
   return result;
@@ -293,7 +289,7 @@ const labelFunction = (labelOptions, feature, resolution) => {
   let result = null;
   const marked = getMarkerStore(targetId).getFeatures().indexOf(feature) >= 0;
   if (!marked && resolution < COMPLEX_RESOLUTION.max) {
-    if (!munimap_range.contains(FLOOR_RESOLUTION, resolution)) {
+    if (!mm_range.contains(FLOOR_RESOLUTION, resolution)) {
       result = smallScaleLabelFunction(feature, resolution, extent, lang);
     } else {
       result = largeScaleLabelFunction(feature, resolution, extent, lang);
@@ -327,8 +323,7 @@ const getStyleFunction = (options) => {
   const selectedFloor = inFloorResolutionRange ? selectedFloorCode : null;
   const styleFce = (feature, res) => {
     const showSelected =
-      inFloorResolutionRange &&
-      munimap_building.isSelected(feature, selectedFloor);
+      inFloorResolutionRange && mm_building.isSelected(feature, selectedFloor);
     const style = styleFunction(feature, res, targetId, showSelected);
     return style;
   };
@@ -341,7 +336,7 @@ const getStyleFunction = (options) => {
  * @return {ol.style.StyleFunction} label style
  */
 const getPartialLabelFunction = (options) => {
-  return munimap_utils.partial(labelFunction, options);
+  return mm_utils.partial(labelFunction, options);
 };
 
 /**
@@ -354,8 +349,7 @@ const getLabelStyleFunction = (labelFn, options) => {
   const selectedFloor = inFloorResolutionRange ? selectedFloorCode : null;
   const styleFce = (feature, res) => {
     const showSelected =
-      inFloorResolutionRange &&
-      munimap_building.isSelected(feature, selectedFloor);
+      inFloorResolutionRange && mm_building.isSelected(feature, selectedFloor);
     if (showSelected) {
       return null;
     } else {

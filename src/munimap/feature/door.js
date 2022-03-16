@@ -2,7 +2,7 @@
  * @module feature/door
  */
 import * as actions from '../redux/action.js';
-import * as munimap_identify from '../identify/identify.js';
+import * as mm_identify from '../identify/identify.js';
 import {getActiveDoorStore} from '../source/_constants.js';
 import {isAllowed} from '../identify/identify.js';
 
@@ -52,10 +52,10 @@ const handleDoorClick = (options, asyncDispatch) => {
   } = options;
   const feature = getActiveDoorStore(targetId).getFeatureByUid(featureUid);
   const isIdentifyAllowed =
-    isIdentifyEnabled && munimap_identify.isAllowed(feature, identifyTypes);
+    isIdentifyEnabled && mm_identify.isAllowed(feature, identifyTypes);
 
   if (isIdentifyAllowed) {
-    munimap_identify.handleCallback(identifyCallback, asyncDispatch, targetId, {
+    mm_identify.handleCallback(identifyCallback, asyncDispatch, targetId, {
       feature,
       pixelInCoords,
     });

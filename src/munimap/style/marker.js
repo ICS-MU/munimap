@@ -2,13 +2,13 @@
  * @module style/marker
  */
 
-import * as munimap_asserts from '../assert/assert.js';
-import * as munimap_building from '../feature/building.js';
-import * as munimap_cluster from '../cluster/cluster.js';
-import * as munimap_range from '../utils/range.js';
-import * as munimap_style from './style.js';
-import * as munimap_style_constants from './_constants.js';
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_asserts from '../assert/assert.js';
+import * as mm_building from '../feature/building.js';
+import * as mm_cluster from '../cluster/cluster.js';
+import * as mm_range from '../utils/range.js';
+import * as mm_style from './style.js';
+import * as mm_style_constants from './_constants.js';
+import * as mm_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {
   CENTER_GEOMETRY_FUNCTION,
@@ -81,7 +81,7 @@ const getCorridor = () => CORRIDOR;
 const getPattern = (event) => {
   const context = event.context;
   const image = new Image();
-  const imgsrc = munimap_style_constants.MARKER_CORRIDOR_IMG_PATH;
+  const imgsrc = mm_style_constants.MARKER_CORRIDOR_IMG_PATH;
   image.src = imgsrc;
   image.onload = () => {
     const pattern = context.createPattern(image, 'repeat');
@@ -96,23 +96,23 @@ const getPattern = (event) => {
       fill: new Fill({
         color: '#ffffff',
       }),
-      stroke: munimap_style_constants.MARKER_BUILDING_STROKE,
+      stroke: mm_style_constants.MARKER_BUILDING_STROKE,
     });
     CORRIDOR = [corridorStyle, corridorBackground];
   };
 };
 
 /**
- * This must be a function because of asynchronous import of munimap_style.
+ * This must be a function because of asynchronous import of mm_style.
  * @return {Text} pin text
  */
 const getPinText = function () {
   return new Text({
     text: '\uf041',
-    font: 'normal ' + munimap_style_constants.PIN_SIZE + 'px MunimapFont',
-    fill: munimap_style_constants.MARKER_TEXT_FILL,
-    offsetY: -munimap_style_constants.PIN_SIZE / 2,
-    stroke: munimap_style_constants.TEXT_STROKE,
+    font: 'normal ' + mm_style_constants.PIN_SIZE + 'px MunimapFont',
+    fill: mm_style_constants.MARKER_TEXT_FILL,
+    offsetY: -mm_style_constants.PIN_SIZE / 2,
+    stroke: mm_style_constants.TEXT_STROKE,
     overflow: true,
   });
 };
@@ -130,7 +130,7 @@ const createPinFromGeometry = (geometry) => {
 };
 
 /**
- * This must be a function because of asynchronous import of munimap_style.
+ * This must be a function because of asynchronous import of mm_style.
  * @return {Style} PIN
  */
 const getPin = () => createPinFromGeometry(CENTER_GEOMETRY_FUNCTION);
@@ -149,21 +149,21 @@ const labelFunction = (feature, resolution, options) => {
   }
 
   let styleArray = [];
-  munimap_asserts.assertInstanceof(feature, Feature);
+  mm_asserts.assertInstanceof(feature, Feature);
   const isBuilding = isBuildingFeature(feature);
   const isRoom = isRoomFeature(feature);
   const isDoor = isDoorFeature(feature);
   const isCustomMarker = isCustomMarkerFeature(feature);
 
   let title;
-  if (munimap_utils.isDefAndNotNull(markerLabel)) {
+  if (mm_utils.isDefAndNotNull(markerLabel)) {
     const titleParts = [];
     const name = markerLabel(feature, resolution);
-    if (munimap_utils.isDefAndNotNull(name)) {
+    if (mm_utils.isDefAndNotNull(name)) {
       titleParts.push(name);
       if (isBuilding) {
         titleParts.push(
-          munimap_building.getAddressPart(
+          mm_building.getAddressPart(
             /** @type {Feature}*/ (feature),
             resolution,
             lang
@@ -173,11 +173,11 @@ const labelFunction = (feature, resolution, options) => {
       title = titleParts.join('\n');
     }
   }
-  if (!munimap_utils.isDefAndNotNull(title) && !isDoor) {
+  if (!mm_utils.isDefAndNotNull(title) && !isDoor) {
     const showLocationCodes = locationCodes;
     title = showLocationCodes
       ? /**@type {string}*/ (feature.get('polohKod'))
-      : munimap_style.getDefaultLabel(feature, resolution, lang);
+      : mm_style.getDefaultLabel(feature, resolution, lang);
   }
   const isMarked = markers.includes(/** @type {Feature}*/ (feature));
 
@@ -188,24 +188,21 @@ const labelFunction = (feature, resolution, options) => {
       color: color,
     });
   } else if (isMarked) {
-    fill = munimap_style_constants.MARKER_TEXT_FILL;
+    fill = mm_style_constants.MARKER_TEXT_FILL;
   } else {
-    fill = munimap_style_constants.TEXT_FILL;
+    fill = mm_style_constants.TEXT_FILL;
   }
 
   let fontSize;
   if (isRoom || isDoor) {
-    fontSize = munimap_style_constants.ROOM_FONT_SIZE;
-  } else if (
-    isBuilding &&
-    munimap_range.contains(FLOOR_RESOLUTION, resolution)
-  ) {
-    fontSize = munimap_style_constants.BUILDING_BIG_FONT_SIZE;
+    fontSize = mm_style_constants.ROOM_FONT_SIZE;
+  } else if (isBuilding && mm_range.contains(FLOOR_RESOLUTION, resolution)) {
+    fontSize = mm_style_constants.BUILDING_BIG_FONT_SIZE;
   } else {
-    fontSize = munimap_style_constants.BUILDING_FONT_SIZE;
+    fontSize = mm_style_constants.BUILDING_FONT_SIZE;
   }
 
-  const intersectFunction = munimap_utils.partial(
+  const intersectFunction = mm_utils.partial(
     INTERSECT_CENTER_GEOMETRY_FUNCTION,
     extent
   );
@@ -231,22 +228,22 @@ const labelFunction = (feature, resolution, options) => {
         }),
       })
     );
-    if (munimap_utils.isDefAndNotNull(opts.title)) {
+    if (mm_utils.isDefAndNotNull(opts.title)) {
       opts.icon = icon;
-      const textStyle = munimap_style.getTextStyleWithOffsetY(opts);
+      const textStyle = mm_style.getTextStyleWithOffsetY(opts);
       styleArray = styleArray.concat(textStyle);
     }
     return styleArray;
   }
 
   if (isBuilding || isCustomMarker) {
-    styleArray = munimap_style.getLabelWithPin(opts);
+    styleArray = mm_style.getLabelWithPin(opts);
   } else {
     if (title) {
-      const textStyle = munimap_style.getTextStyleWithOffsetY(opts);
+      const textStyle = mm_style.getTextStyleWithOffsetY(opts);
       styleArray = styleArray.concat(textStyle);
     }
-    const pin = isMarked ? getPin() : munimap_style.PIN;
+    const pin = isMarked ? getPin() : mm_style.PIN;
     styleArray.push(pin);
   }
   return styleArray;
@@ -259,15 +256,15 @@ const labelFunction = (feature, resolution, options) => {
  * @return {Array<Style>} style
  */
 const styleFunction = (feature, resolution, options) => {
-  munimap_asserts.assertInstanceof(feature, Feature);
+  mm_asserts.assertInstanceof(feature, Feature);
 
   const result = [];
   const isBuilding = isBuildingFeature(feature);
 
   if (
     isBuilding &&
-    munimap_range.contains(FLOOR_RESOLUTION, resolution) &&
-    munimap_building.hasInnerGeometry(feature)
+    mm_range.contains(FLOOR_RESOLUTION, resolution) &&
+    mm_building.hasInnerGeometry(feature)
   ) {
     return result;
   }
@@ -281,32 +278,29 @@ const styleFunction = (feature, resolution, options) => {
     );
     const hasPointGeom = feature.getGeometry() instanceof Point;
     if (
-      munimap_range.contains(FLOOR_RESOLUTION, resolution) &&
+      mm_range.contains(FLOOR_RESOLUTION, resolution) &&
       !inActiveFloor &&
       !hasPointGeom
     ) {
       return null;
     } else if (isRoom) {
-      const markedRoomResolution = munimap_range.createResolution(
+      const markedRoomResolution = mm_range.createResolution(
         FLOOR_RESOLUTION.max,
-        munimap_cluster.ROOM_RESOLUTION.min
+        mm_cluster.ROOM_RESOLUTION.min
       );
-      if (
-        munimap_range.contains(markedRoomResolution, resolution) ||
-        hasPointGeom
-      ) {
-        result.push(munimap_style_constants.MARKER_ROOM_STYLE);
+      if (mm_range.contains(markedRoomResolution, resolution) || hasPointGeom) {
+        result.push(mm_style_constants.MARKER_ROOM_STYLE);
       }
-    } else if (munimap_range.contains(DOOR_RESOLUTION, resolution)) {
-      result.push(munimap_style_constants.MARKER_DOOR_STYLE);
+    } else if (mm_range.contains(DOOR_RESOLUTION, resolution)) {
+      result.push(mm_style_constants.MARKER_DOOR_STYLE);
     }
   }
   if (
     !(isRoom || isDoor) ||
-    !munimap_range.contains(munimap_cluster.ROOM_RESOLUTION, resolution)
+    !mm_range.contains(mm_cluster.ROOM_RESOLUTION, resolution)
   ) {
     const textStyle = labelFunction(feature, resolution, options);
-    if (munimap_utils.isDefAndNotNull(textStyle)) {
+    if (mm_utils.isDefAndNotNull(textStyle)) {
       result.push(...textStyle);
     }
   }
@@ -324,7 +318,7 @@ const getStyleFunction = (inFloorResolutionRange, selectedFeature, options) => {
     if (
       inFloorResolutionRange &&
       isBuildingFeature(feature) &&
-      munimap_building.isSelected(feature, selectedFeature)
+      mm_building.isSelected(feature, selectedFeature)
     ) {
       return null;
     }

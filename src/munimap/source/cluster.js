@@ -3,7 +3,7 @@
 /**
  * @module source/cluster
  */
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_utils from '../utils/utils.js';
 import ClusterSource from 'ol/source/Cluster';
 import VectorSource from 'ol/source/Vector';
 import {Point} from 'ol/geom';
@@ -138,7 +138,7 @@ const createStore = (clusterFeatures, options) => {
     source: new VectorSource({
       features: clusterFeatures,
     }),
-    compareFn: munimap_utils.partial(clusterCompareFn, targetId, lang),
+    compareFn: mm_utils.partial(clusterCompareFn, targetId, lang),
     geometryFunction: (feature) => {
       let result = null;
       const geom = feature.getGeometry();
@@ -149,7 +149,7 @@ const createStore = (clusterFeatures, options) => {
       }
       return result;
     },
-    distance: munimap_utils.isDefAndNotNull(distance) ? distance : 80,
+    distance: mm_utils.isDefAndNotNull(distance) ? distance : 80,
   });
   setClusterStore(targetId, clusterStore);
   return clusterStore;

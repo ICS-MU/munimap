@@ -1,8 +1,8 @@
 /**
  * @module layer/cluster
  */
-import * as munimap_assert from '../assert/assert.js';
-import * as munimap_cluster from '../cluster/cluster.js';
+import * as mm_assert from '../assert/assert.js';
+import * as mm_cluster from '../cluster/cluster.js';
 import VectorLayer from 'ol/layer/Vector';
 import {CLUSTER_LAYER_ID} from './_constants.js';
 import {MUNIMAP_PROPS_ID} from '../constants.js';
@@ -32,7 +32,7 @@ const getLayer = (map) => {
   const layers = map.getLayers().getArray();
   const result = layers.find(isLayer);
   if (result) {
-    munimap_assert.assertInstanceof(result, VectorLayer);
+    mm_assert.assertInstanceof(result, VectorLayer);
   }
   return /** @type {VectorLayer|undefined} */ (result);
 };
@@ -56,8 +56,8 @@ const create = (map, options) => {
   const markerClusterLayer = new VectorLayer(
     /** @type {VectorLayerOptions} */ ({
       id: CLUSTER_LAYER_ID,
-      isFeatureClickable: munimap_cluster.isClickable,
-      featureClickHandler: munimap_cluster.featureClickHandler,
+      isFeatureClickable: mm_cluster.isClickable,
+      featureClickHandler: mm_cluster.featureClickHandler,
       source: markerClusterSrc,
       minResolution: clusterResolution.min,
       renderOrder: null,
@@ -69,8 +69,8 @@ const create = (map, options) => {
     const oldRes = mapProps.currentRes;
     const res = evt.frameState.viewState.resolution;
 
-    const oldRange = munimap_cluster.getResolutionRange(oldRes);
-    const range = munimap_cluster.getResolutionRange(res);
+    const oldRange = mm_cluster.getResolutionRange(oldRes);
+    const range = mm_cluster.getResolutionRange(res);
 
     if (range !== oldRange) {
       updateClusteredFeatures(targetId, res, labels);

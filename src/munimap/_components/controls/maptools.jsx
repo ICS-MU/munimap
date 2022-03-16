@@ -1,5 +1,5 @@
 import * as actions from '../../redux/action.js';
-import * as munimap_lang from '../../lang/lang.js';
+import * as mm_lang from '../../lang/lang.js';
 import * as slctr from '../../redux/selector.js';
 import MapContext from '../../_contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useLayoutEffect, useRef, useState} from 'react';
@@ -121,10 +121,10 @@ const MapToolsComponent = (props) => {
       >
         <div
           className="munimap-map-tools-button"
-          title={munimap_lang.getMsg(
+          title={mm_lang.getMsg(
             toolbarVisible
-              ? munimap_lang.Translations.MAP_TOOLS_CLOSE
-              : munimap_lang.Translations.MAP_TOOLS_OPEN,
+              ? mm_lang.Translations.MAP_TOOLS_CLOSE
+              : mm_lang.Translations.MAP_TOOLS_OPEN,
             lang
           )}
           onClick={() => setToolbarVisible(!toolbarVisible)}

@@ -1,5 +1,5 @@
 import * as actions from '../../redux/action.js';
-import * as munimap_lang from '../../lang/lang.js';
+import * as mm_lang from '../../lang/lang.js';
 import * as slctr from '../../redux/selector.js';
 import MapContext from '../../_contexts/mapcontext.jsx';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
@@ -35,8 +35,8 @@ const FullscreenComponent = forwardRef((props, ref) => {
     };
     if (map && parentEl) {
       const fullscreen = new FullScreen({
-        tipLabel: munimap_lang.getMsg(
-          munimap_lang.Translations.FULLSCREEN,
+        tipLabel: mm_lang.getMsg(
+          mm_lang.Translations.FULLSCREEN,
           lang
         ),
         target: parentEl,

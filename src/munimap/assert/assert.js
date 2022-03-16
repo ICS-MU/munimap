@@ -4,7 +4,7 @@
  * @module assert/assert
  */
 
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_utils from '../utils/utils.js';
 import {Feature} from 'ol';
 
 /**
@@ -39,8 +39,8 @@ const assert = (assertion, opt_msg) => {
  * @return {string} asserted value
  */
 const assertString = (val, opt_msg) => {
-  if (!munimap_utils.isString(val)) {
-    let m = `Expected string not ${munimap_utils.typeOf(val)}: ${val}.`;
+  if (!mm_utils.isString(val)) {
+    let m = `Expected string not ${mm_utils.typeOf(val)}: ${val}.`;
     if (opt_msg) {
       m += ` ${opt_msg}`;
     }
@@ -55,8 +55,8 @@ const assertString = (val, opt_msg) => {
  * @return {Array} asserted value
  */
 const assertArray = (val, opt_msg) => {
-  if (!munimap_utils.isArray(val)) {
-    let m = `Expected array not ${munimap_utils.typeOf(val)}: ${val}.`;
+  if (!mm_utils.isArray(val)) {
+    let m = `Expected array not ${mm_utils.typeOf(val)}: ${val}.`;
     if (opt_msg) {
       m += ` ${opt_msg}`;
     }
@@ -71,8 +71,8 @@ const assertArray = (val, opt_msg) => {
  * @return {boolean} asserted value
  */
 const assertBoolean = (val, opt_msg) => {
-  if (!munimap_utils.isBoolean(val)) {
-    let m = `Expected boolean not ${munimap_utils.typeOf(val)}: ${val}.`;
+  if (!mm_utils.isBoolean(val)) {
+    let m = `Expected boolean not ${mm_utils.typeOf(val)}: ${val}.`;
     if (opt_msg) {
       m += ` ${opt_msg}`;
     }
@@ -88,8 +88,8 @@ const assertBoolean = (val, opt_msg) => {
  * @return {number} asserted value
  */
 const assertNumber = (val, opt_msg) => {
-  if (!munimap_utils.isNumber(val)) {
-    let m = `Expected number not ${munimap_utils.typeOf(val)}: ${val}.`;
+  if (!mm_utils.isNumber(val)) {
+    let m = `Expected number not ${mm_utils.typeOf(val)}: ${val}.`;
     if (opt_msg) {
       m += ` ${opt_msg}`;
     }
@@ -105,8 +105,8 @@ const assertNumber = (val, opt_msg) => {
  * @throws {AssertionError} When the value is not an Element.
  */
 const assertElement = (val, opt_msg) => {
-  if (!munimap_utils.isObject(val) || val.nodeType !== Node.ELEMENT_NODE) {
-    let m = `Expected Element not ${munimap_utils.typeOf(val)}: ${val}.`;
+  if (!mm_utils.isObject(val) || val.nodeType !== Node.ELEMENT_NODE) {
+    let m = `Expected Element not ${mm_utils.typeOf(val)}: ${val}.`;
     if (opt_msg) {
       m += ` ${opt_msg}`;
     }
@@ -123,9 +123,9 @@ const assertElement = (val, opt_msg) => {
  */
 const assertInstanceof = (val, type, opt_msg) => {
   if (!(val instanceof type)) {
-    let m = `Expected instanceof ${munimap_utils.typeOf(
-      type
-    )} not ${munimap_utils.typeOf(val)}.`;
+    let m = `Expected instanceof ${mm_utils.typeOf(type)} not ${mm_utils.typeOf(
+      val
+    )}.`;
 
     if (opt_msg) {
       m += ` ${opt_msg}`;
@@ -142,7 +142,7 @@ const assertInstanceof = (val, type, opt_msg) => {
  * @throws {AssertionError} When the value is not an Element.
  */
 const assertExists = (val, opt_msg) => {
-  if (!munimap_utils.isDefAndNotNull(val)) {
+  if (!mm_utils.isDefAndNotNull(val)) {
     let m = `Expected to exist: ${val}.`;
     if (opt_msg) {
       m += ` ${opt_msg}`;
@@ -159,7 +159,7 @@ const assertExists = (val, opt_msg) => {
  * @throws {AssertionError} When the value is not a Function.
  */
 const assertFunction = (val, opt_msg) => {
-  if (!munimap_utils.isFunction(val)) {
+  if (!mm_utils.isFunction(val)) {
     let m = `Expected to exist: ${val}.`;
     if (opt_msg) {
       m += ` ${opt_msg}`;

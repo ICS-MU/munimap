@@ -2,9 +2,9 @@
  * @module feature/room
  */
 import * as actions from '../redux/action.js';
-import * as munimap_assert from '../assert/assert.js';
-import * as munimap_lang from '../lang/lang.js';
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_assert from '../assert/assert.js';
+import * as mm_lang from '../lang/lang.js';
+import * as mm_utils from '../utils/utils.js';
 import {alignRoomTitleToRows, wrapText} from '../style/_constants.functions.js';
 import {isAllowed} from '../identify/identify.js';
 import {isRoom} from './_constants.functions.js';
@@ -25,7 +25,7 @@ import {isRoom} from './_constants.functions.js';
  * @return {boolean} whether is room in selected floor
  */
 const isInSelectedFloor = (room, selectedFeature) => {
-  munimap_assert.assert(isRoom(room));
+  mm_assert.assert(isRoom(room));
   const locCode = /**@type {string}*/ (room.get('polohKod'));
   return selectedFeature ? locCode.startsWith(selectedFeature) : false;
 };
@@ -60,12 +60,12 @@ const featureClickHandler = (dispatch, options) => {
 const getNamePart = (feature, lang) => {
   let title;
   const fTitle = feature.get(
-    munimap_lang.getMsg(munimap_lang.Translations.ROOM_TITLE_FIELD_NAME, lang)
+    mm_lang.getMsg(mm_lang.Translations.ROOM_TITLE_FIELD_NAME, lang)
   );
   const fNumber = feature.get('cislo');
   if (fTitle || fNumber) {
     if (fTitle) {
-      title = munimap_assert.assertString(fTitle);
+      title = mm_assert.assertString(fTitle);
       title = alignRoomTitleToRows(title);
       if (fNumber) {
         const re = new RegExp('(^| )' + fNumber.toLowerCase() + '( |$)', 'g');
@@ -74,7 +74,7 @@ const getNamePart = (feature, lang) => {
         }
       }
     } else {
-      title = munimap_assert.assertString(fNumber);
+      title = mm_assert.assertString(fNumber);
     }
   }
   return title || undefined;
@@ -135,15 +135,15 @@ const addPoiDetail = (rooms, pois, lang) => {
       title = wrapText(poi.get('nazev_cs'));
       titleEn = wrapText(poi.get('nazev_en'));
 
-      if (lang === munimap_lang.Abbr.CZECH) {
+      if (lang === mm_lang.Abbr.CZECH) {
         name = poi.get('nazev_cs');
         open = poi.get('provozniDoba_cs') ? poi.get('provozniDoba_cs') : '';
-      } else if (lang === munimap_lang.Abbr.ENGLISH) {
+      } else if (lang === mm_lang.Abbr.ENGLISH) {
         name = poi.get('nazev_en') ? poi.get('nazev_en') : poi.get('nazev_cs');
         open = poi.get('provozniDoba_en') ? poi.get('provozniDoba_en') : '';
       }
 
-      if (munimap_utils.isDefAndNotNull(name)) {
+      if (mm_utils.isDefAndNotNull(name)) {
         name = wrapText(name, '</br>');
         if (url) {
           name = `<a href="${url}" target="_blank">${name}</a>`;
@@ -158,8 +158,8 @@ const addPoiDetail = (rooms, pois, lang) => {
       }
     });
 
-    if (munimap_utils.isDefAndNotNull(title)) {
-      const popupDetailsCleaned = munimap_utils.removeObjectDuplicatesFromArray(
+    if (mm_utils.isDefAndNotNull(title)) {
+      const popupDetailsCleaned = mm_utils.removeObjectDuplicatesFromArray(
         popupDetails,
         'name'
       );

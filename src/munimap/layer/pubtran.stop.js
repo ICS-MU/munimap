@@ -1,8 +1,8 @@
 /**
  * @module layer/pubtranstop
  */
-import * as munimap_lang from '../lang/lang.js';
-import * as munimap_pubtran_stop from '../feature/pubtran.stop.js';
+import * as mm_lang from '../lang/lang.js';
+import * as mm_pubtran_stop from '../feature/pubtran.stop.js';
 import VectorLayer from 'ol/layer/Vector';
 import {PUBTRAN_LAYER_ID} from './_constants.js';
 import {PUBTRAN_RESOLUTION} from '../feature/_constants.js';
@@ -27,16 +27,16 @@ const isLayer = (layer) => {
  * @return {VectorLayer} pubtran layer
  */
 const create = (targetId, lang) => {
-  const pubTranAttribution = munimap_lang.getMsg(
-    munimap_lang.Translations.PUBTRAN_ATTRIBUTION_HTML,
+  const pubTranAttribution = mm_lang.getMsg(
+    mm_lang.Translations.PUBTRAN_ATTRIBUTION_HTML,
     lang
   );
   const pubTranLayer = new VectorLayer(
     /** @type {VectorLayerOptions} */
     ({
       id: PUBTRAN_LAYER_ID,
-      isFeatureClickable: munimap_pubtran_stop.isClickable,
-      featureClickHandler: munimap_pubtran_stop.featureClickHandler,
+      isFeatureClickable: mm_pubtran_stop.isClickable,
+      featureClickHandler: mm_pubtran_stop.featureClickHandler,
       maxResolution: PUBTRAN_RESOLUTION.max,
       source: getPubTranStore(targetId),
       updateWhileAnimating: true,

@@ -2,7 +2,7 @@
  * @module view/view
  */
 import * as actions from '../redux/action.js';
-import * as munimap_assert from '../assert/assert.js';
+import * as mm_assert from '../assert/assert.js';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import {CLICK_HANDLER, IS_CLICKABLE} from '../layer/_constants.js';
@@ -246,7 +246,7 @@ const handleMapClick = (evt, dispatch, options) => {
       layer.get(IS_CLICKABLE)
     );
     if (isClickable) {
-      munimap_assert.assertFunction(isClickable);
+      mm_assert.assertFunction(isClickable);
 
       const handlerOpts = {
         feature: featureWithLayer.feature,
@@ -263,7 +263,7 @@ const handleMapClick = (evt, dispatch, options) => {
         );
         if (featureClickHandler) {
           setEventByType(EventType.CLICK, targetId, evt.originalEvent);
-          munimap_assert.assertFunction(featureClickHandler);
+          mm_assert.assertFunction(featureClickHandler);
           featureClickHandler(dispatch, {
             featureUid: getUid(featureWithLayer.feature),
             pixelInCoords: map.getCoordinateFromPixel(pixel),
@@ -306,7 +306,7 @@ const handlePointerMove = (evt, options) => {
     );
 
     if (isClickable) {
-      munimap_assert.assertFunction(isClickable);
+      mm_assert.assertFunction(isClickable);
       const handlerOpts = {
         feature,
         resolution: map.getView().getResolution(),

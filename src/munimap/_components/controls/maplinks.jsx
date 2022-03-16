@@ -1,5 +1,5 @@
 import * as actions from '../../redux/action.js';
-import * as munimap_lang from '../../lang/lang.js';
+import * as mm_lang from '../../lang/lang.js';
 import * as slctr from '../../redux/selector.js';
 import MapContext from '../../_contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useRef} from 'react';
@@ -129,13 +129,13 @@ const MapLinksComponent = (props) => {
       <div
         className="munimap-link-item"
         style={{backgroundImage: `url(${SEZNAM_IMG_PATH})`}}
-        title={munimap_lang.getMsg(munimap_lang.Translations.SEZNAM_MAP, lang)}
+        title={mm_lang.getMsg(mm_lang.Translations.SEZNAM_MAP, lang)}
         onClick={() => onClick(SEZNAM_IMG_PATH)}
       ></div>
       <div
         className="munimap-link-item"
         style={{backgroundImage: `url(${GOOGLE_IMG_PATH})`}}
-        title={munimap_lang.getMsg(munimap_lang.Translations.GOOGLE_MAP, lang)}
+        title={mm_lang.getMsg(mm_lang.Translations.GOOGLE_MAP, lang)}
         onClick={() => onClick(GOOGLE_IMG_PATH)}
       ></div>
     </div>

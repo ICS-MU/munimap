@@ -1,7 +1,7 @@
 /**
  * @module source/poi
  */
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_utils from '../utils/utils.js';
 import VectorSource from 'ol/source/Vector';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
 import {loadActivePois} from '../load.js';
@@ -37,7 +37,7 @@ const createActiveStore = (store, targetId, callback) => {
         tileSize: 512,
       })
     ),
-    loader: munimap_utils.partial(loadActivePois, {store, callback}),
+    loader: mm_utils.partial(loadActivePois, {store, callback}),
   });
   setActivePoiStore(targetId, poiStore);
   return poiStore;

@@ -2,7 +2,7 @@
  * @module layer/identify
  */
 
-import * as munimap_assert from '../assert/assert.js';
+import * as mm_assert from '../assert/assert.js';
 import VectorLayer from 'ol/layer/Vector';
 import {IDENTIFY_LAYER_ID} from './_constants.js';
 import {getIdentifyStore} from '../source/_constants.js';
@@ -29,7 +29,7 @@ const getLayer = (map) => {
   const layers = map.getLayers().getArray();
   const result = layers.find(isLayer);
   if (result) {
-    munimap_assert.assert(
+    mm_assert.assert(
       result instanceof VectorLayer,
       'Expected instanceof ol/layer/Vector.'
     );

@@ -1,7 +1,7 @@
 /**
  * @module layer/room
  */
-import * as munimap_assert from '../assert/assert.js';
+import * as mm_assert from '../assert/assert.js';
 import VectorLayer from 'ol/layer/Vector';
 import {
   ACTIVE_ROOM_LAYER_ID,
@@ -33,7 +33,7 @@ const getDefaultLayer = (map) => {
   const layers = map.getLayers().getArray();
   const result = layers.find(isDefaultLayer);
   if (result) {
-    munimap_assert.assertInstanceof(result, VectorLayer);
+    mm_assert.assertInstanceof(result, VectorLayer);
   }
   return /** @type {VectorLayer|undefined} */ (result);
 };
@@ -54,7 +54,7 @@ const getActiveLayer = (map) => {
   const layers = map.getLayers().getArray();
   const result = layers.find(isActiveLayer);
   if (result) {
-    munimap_assert.assertInstanceof(result, VectorLayer);
+    mm_assert.assertInstanceof(result, VectorLayer);
   }
   return /** @type {VectorLayer|undefined} */ (result);
 };

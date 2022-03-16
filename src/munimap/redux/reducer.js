@@ -2,9 +2,9 @@
  * @module redux/store
  */
 import * as actions from './action.js';
-import * as munimap_identify from '../identify/identify.js';
-import * as munimap_load from '../load.js';
-import * as munimap_range from '../utils/range.js';
+import * as mm_identify from '../identify/identify.js';
+import * as mm_load from '../load.js';
+import * as mm_range from '../utils/range.js';
 import * as slctr from './selector.js';
 import * as srcs from '../source/_constants.js';
 import {EventType} from '../view/_constants.js';
@@ -61,10 +61,10 @@ const handleIdentifyCallback = (options) => {
   const targetId = slctr.getTargetId(state);
   const isIdentifyAllowed =
     slctr.isIdentifyEnabled(state) &&
-    munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
+    mm_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
 
   if (isIdentifyAllowed) {
-    munimap_identify.handleCallback(
+    mm_identify.handleCallback(
       slctr.getIdentifyCallback(state),
       asyncDispatch,
       targetId,
@@ -78,7 +78,7 @@ const handleIdentifyCallback = (options) => {
  */
 const handleMarkerLocationCode = (options) => {
   const {locationCode, state, asyncDispatch} = options;
-  munimap_load.loadFloorsForMarker(locationCode, state, asyncDispatch);
+  mm_load.loadFloorsForMarker(locationCode, state, asyncDispatch);
   handleIdentifyCallback(options);
 };
 
@@ -87,7 +87,7 @@ const handleMarkerLocationCode = (options) => {
  */
 const handleRoomLocationCode = (options) => {
   const {locationCode, state, asyncDispatch} = options;
-  munimap_load.loadFloorsForRoom(locationCode, state, asyncDispatch);
+  mm_load.loadFloorsForRoom(locationCode, state, asyncDispatch);
   handleIdentifyCallback(options);
 };
 
@@ -116,7 +116,7 @@ const getMarkerAnimRequestOptions = (state, feature) => {
     popupCoords: slctr.getPopupPositionInCoords(state),
     isIdentifyAllowed:
       slctr.isIdentifyEnabled(state) &&
-      munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes),
+      mm_identify.isAllowed(feature, state.requiredOpts.identifyTypes),
   };
 };
 
@@ -194,11 +194,11 @@ const createReducer = (initialState) => {
       //CREATE_MUNIMAP
       case actions.CREATE_MUNIMAP:
         if (slctr.loadMarkers(state)) {
-          munimap_load.loadMarkers(state.requiredOpts, action.asyncDispatch);
+          mm_load.loadMarkers(state.requiredOpts, action.asyncDispatch);
         }
 
         if (slctr.loadZoomTo(state)) {
-          munimap_load.loadZoomTo(
+          mm_load.loadZoomTo(
             state.requiredOpts.targetId,
             state.requiredOpts.zoomTo,
             action.asyncDispatch
@@ -221,7 +221,7 @@ const createReducer = (initialState) => {
       case actions.FLOORS_LOADED:
         const floorCode = slctr.calculateSelectedFloor(state);
         if (floorCode) {
-          munimap_load.loadFloorsByFloorLayer(
+          mm_load.loadFloorsByFloorLayer(
             {
               targetId: slctr.getTargetId(state),
               floorCode,
@@ -290,7 +290,7 @@ const createReducer = (initialState) => {
         const isChanged = selectedFeature && selectedFeature !== newValue;
         if (isChanged) {
           const where = `polohKod LIKE '${newValue.substring(0, 5)}%'`;
-          munimap_load
+          mm_load
             .loadFloors(slctr.getTargetId(state), where)
             .then((floors) =>
               action.asyncDispatch(actions.floors_loaded(false))
@@ -375,7 +375,7 @@ const createReducer = (initialState) => {
         feature = srcs
           .getBuildingStore(slctr.getTargetId(state))
           .getFeatureByUid(action.payload.featureUid);
-        isVisible = munimap_range.contains(FLOOR_RESOLUTION, state.resolution);
+        isVisible = mm_range.contains(FLOOR_RESOLUTION, state.resolution);
         animationRequest = getBuildingAnimationRequest(state, action.payload);
 
         handleIdentifyCallback({
@@ -388,7 +388,7 @@ const createReducer = (initialState) => {
           locationCode =
             feature.get('vychoziPodlazi') || feature.get('polohKod');
           if (locationCode) {
-            munimap_load.loadFloorsForBuilding(
+            mm_load.loadFloorsForBuilding(
               locationCode,
               state,
               action.asyncDispatch
@@ -581,7 +581,7 @@ const createReducer = (initialState) => {
 
       //IDENTIFY_RESET
       case actions.IDENTIFY_RESETED:
-        munimap_identify.handleCallback(
+        mm_identify.handleCallback(
           slctr.getIdentifyCallback(state),
           action.asyncDispatch,
           slctr.getTargetId(state)

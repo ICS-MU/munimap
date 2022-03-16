@@ -2,7 +2,7 @@
  * @module view/marker
  */
 
-import * as munimap_range from '../utils/range.js';
+import * as mm_range from '../utils/range.js';
 import * as ol_extent from 'ol/extent';
 import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from '../feature/_constants.js';
 import {INITIAL_STATE} from '../conf.js';
@@ -60,7 +60,7 @@ const getAnimationRequest = (options) => {
   } = options;
 
   const resolutionRange = isDoor(feature) ? DOOR_RESOLUTION : FLOOR_RESOLUTION;
-  const isVisible = munimap_range.contains(resolutionRange, resolution);
+  const isVisible = mm_range.contains(resolutionRange, resolution);
   let animationRequest = null;
 
   if (!isVisible && !isIdentifyAllowed) {

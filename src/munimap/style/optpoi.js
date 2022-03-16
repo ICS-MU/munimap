@@ -2,7 +2,7 @@
  * @module style/optpoi
  */
 
-import * as munimap_lang from '../lang/lang.js';
+import * as mm_lang from '../lang/lang.js';
 import {getFeatures} from '../cluster/cluster.js';
 
 /**
@@ -24,10 +24,7 @@ const markerLabel = (ctgId, roomCodes, lang) => (feature, resolution) => {
   }
   clustered = clustered.filter((f) => roomCodes.includes(f.get('polohKod')));
 
-  const fieldName = munimap_lang.getMsg(
-    munimap_lang.Translations.LABEL_FIELD_NAME,
-    lang
-  );
+  const fieldName = mm_lang.getMsg(mm_lang.Translations.LABEL_FIELD_NAME, lang);
   let ctgLabel = feature.get(fieldName);
   let label;
   let clusteredNumber;
@@ -35,10 +32,10 @@ const markerLabel = (ctgId, roomCodes, lang) => (feature, resolution) => {
     clusteredNumber = clustered[0].get('numberOfDetails');
     label =
       clusteredNumber > 1
-        ? `${clusteredNumber}x ${munimap_lang.getMsg(ctgId, lang)}`
+        ? `${clusteredNumber}x ${mm_lang.getMsg(ctgId, lang)}`
         : ctgLabel;
   } else if (clustered.length > 1) {
-    ctgLabel = munimap_lang.getMsg(ctgId, lang);
+    ctgLabel = mm_lang.getMsg(ctgId, lang);
     if (ctgLabel === ' ') {
       ctgLabel = '';
     }

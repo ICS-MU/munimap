@@ -2,7 +2,7 @@
  * @module feature/poi
  */
 import * as actions from '../redux/action.js';
-import * as munimap_range from '../utils/range.js';
+import * as mm_range from '../utils/range.js';
 import {FLOOR_RESOLUTION, PoiPurpose} from '../feature/_constants.js';
 
 /**
@@ -23,7 +23,7 @@ import {FLOOR_RESOLUTION, PoiPurpose} from '../feature/_constants.js';
 const isClickable = (options) => {
   const {feature, resolution} = options;
 
-  if (!munimap_range.contains(FLOOR_RESOLUTION, resolution)) {
+  if (!mm_range.contains(FLOOR_RESOLUTION, resolution)) {
     const poiType = feature.get('typ');
     return (
       poiType === PoiPurpose.BUILDING_ENTRANCE ||

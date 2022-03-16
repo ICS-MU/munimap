@@ -1,5 +1,5 @@
 import * as actions from '../../redux/action.js';
-import * as munimap_lang from '../../lang/lang.js';
+import * as mm_lang from '../../lang/lang.js';
 import * as slctr from '../../redux/selector.js';
 import MapContext from '../../_contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useRef} from 'react';
@@ -63,8 +63,8 @@ const IdentifyComponent = (props) => {
           ? 'ol-touch munimap-identify'
           : 'munimap-identify'
       }
-      title={munimap_lang.getMsg(
-        munimap_lang.Translations.RESET_IDENTIFICATION,
+      title={mm_lang.getMsg(
+        mm_lang.Translations.RESET_IDENTIFICATION,
         lang
       )}
       ref={resetElRef}

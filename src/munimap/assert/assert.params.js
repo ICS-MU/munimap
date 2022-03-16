@@ -3,7 +3,7 @@
  * @module assert/assert.params
  */
 
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {Abbr} from '../lang/lang.js';
 import {
@@ -36,7 +36,7 @@ import {
  * @param {string|Element} target target
  */
 const target = (target) => {
-  if (munimap_utils.isString(target)) {
+  if (mm_utils.isString(target)) {
     assertElement(
       document.getElementById(/**@type {string}*/ (target)),
       'Target element "' + target + '" not found in document.'
@@ -66,12 +66,12 @@ const zoom = (zoom) => {
 const zoomTo = (zoomTo) => {
   if (zoomTo !== undefined) {
     assert(
-      munimap_utils.isArray(zoomTo) || munimap_utils.isString(zoomTo),
+      mm_utils.isArray(zoomTo) || mm_utils.isString(zoomTo),
       'ZoomTo should be string or array of strings.'
     );
 
     zoomTo = /**@type {Array.<string>}*/ (
-      munimap_utils.isString(zoomTo) ? [zoomTo] : zoomTo
+      mm_utils.isString(zoomTo) ? [zoomTo] : zoomTo
     );
 
     const onlyBuildings = zoomTo.every(isBuildingCodeOrLikeExpr);
@@ -92,7 +92,7 @@ const zoomTo = (zoomTo) => {
  */
 const lang = (lang) => {
   if (lang !== undefined) {
-    if (munimap_utils.isString(lang)) {
+    if (mm_utils.isString(lang)) {
       switch (lang) {
         case Abbr.CZECH:
         case Abbr.ENGLISH:
@@ -122,7 +122,7 @@ const markers = (markers) => {
     const featureMarkers = [];
 
     markers.forEach((el) => {
-      if (munimap_utils.isString(el)) {
+      if (mm_utils.isString(el)) {
         if (
           !isBuildingCodeOrLikeExpr(el) &&
           !isRoomCodeOrLikeExpr(el) &&
@@ -168,7 +168,7 @@ const markers = (markers) => {
  */
 const baseMap = (baseMap) => {
   if (baseMap !== undefined) {
-    if (munimap_utils.isString(baseMap)) {
+    if (mm_utils.isString(baseMap)) {
       const baseMaps = Object.values(BasemapIds);
       if (!baseMaps.includes(baseMap)) {
         throw new AssertionError(
@@ -236,7 +236,7 @@ const pubTran = (pubTran) => {
 const markerFilter = (filterArray) => {
   if (filterArray !== undefined) {
     assert(
-      munimap_utils.isArray(filterArray),
+      mm_utils.isArray(filterArray),
       'Parameter markerFilter should be array of strings.'
     );
   }
@@ -248,7 +248,7 @@ const markerFilter = (filterArray) => {
 const poiFilter = (filterArray) => {
   if (filterArray !== undefined) {
     assert(
-      munimap_utils.isArray(filterArray),
+      mm_utils.isArray(filterArray),
       'Parameter poiFilter should be array of strings.'
     );
   }
@@ -258,7 +258,7 @@ const poiFilter = (filterArray) => {
  * @param {getMainFeatureAtPixelFunction|undefined} fn function
  */
 const getMainFeatureAtPixel = (fn) => {
-  if (munimap_utils.isDef(fn)) {
+  if (mm_utils.isDef(fn)) {
     assertFunction(
       fn,
       'Parameter getMainFeatureAtPixel ' +
@@ -275,7 +275,7 @@ const identifyTypes = (types) => {
     assert(Array.isArray(types), 'Identify types should be an array.');
 
     types.forEach((type) => {
-      if (munimap_utils.isString(type)) {
+      if (mm_utils.isString(type)) {
         const identifyTypes = Object.values(IdentifyTypes);
         if (!identifyTypes.includes(type)) {
           throw new AssertionError(
@@ -294,7 +294,7 @@ const identifyTypes = (types) => {
  * @param {IdentifyCallbackFunction|undefined} fce fce
  */
 const identifyCallback = (fce) => {
-  if (munimap_utils.isDef(fce)) {
+  if (mm_utils.isDef(fce)) {
     assertFunction(fce, 'Parameter identifyCallback should be function.');
   }
 };
@@ -316,7 +316,7 @@ const assertOptions = (options) => {
   zoomTo(options.zoomTo);
   getMainFeatureAtPixel(options.getMainFeatureAtPixel);
   markers(options.markers);
-  // munimap_assert.layers(options.layers);
+  // mm_assert.layers(options.layers);
   lang(options.lang);
   baseMap(options.baseMap);
   pubTran(options.pubTran);
@@ -328,8 +328,8 @@ const assertOptions = (options) => {
   identifyTypes(options.identifyTypes);
   identifyCallback(options.identifyCallback);
   if (
-    munimap_utils.isDef(options.identifyTypes) &&
-    !munimap_utils.isDef(options.identifyCallback)
+    mm_utils.isDef(options.identifyTypes) &&
+    !mm_utils.isDef(options.identifyCallback)
   ) {
     throw new AssertionError(
       'IdentifyTypes must be defined together with identifyCallback.'

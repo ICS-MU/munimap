@@ -1,5 +1,5 @@
 import * as actions from '../redux/action.js';
-import * as munimap_view from '../view/view.js';
+import * as mm_view from '../view/view.js';
 import * as slctr from '../redux/selector.js';
 import Controls from './controls/controls.jsx';
 import ErrorMessage from './errormessage.jsx';
@@ -71,7 +71,7 @@ const MunimapComponent = (props) => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## MUNIMAP-useEffect-depListeners');
     }
-    const eventKeys = munimap_view.attachDependentMapListeners(map, dispatch, {
+    const eventKeys = mm_view.attachDependentMapListeners(map, dispatch, {
       requiredOpts,
       selectedFeature,
       isIdentifyEnabled,
@@ -84,7 +84,7 @@ const MunimapComponent = (props) => {
       console.log('########## MUNIMAP-useEffect-addLayers');
     }
     if (areMarkersLoaded && areZoomToLoaded) {
-      munimap_view.ensureLayers(map, {
+      mm_view.ensureLayers(map, {
         markers,
         muAttrs,
         clusterResolution,
@@ -107,7 +107,7 @@ const MunimapComponent = (props) => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## MUNIMAP-useEffect-clusterUpdate');
     }
-    munimap_view.ensureClusterUpdate(map, {
+    mm_view.ensureClusterUpdate(map, {
       targetId: requiredOpts.targetId,
       labels: requiredOpts.labels,
       buildingsCount,
@@ -118,21 +118,21 @@ const MunimapComponent = (props) => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## MUNIMAP-useEffect-ensureBasemap');
     }
-    munimap_view.ensureBaseMap(map, basemapLayer);
+    mm_view.ensureBaseMap(map, basemapLayer);
   }, [map, basemapLayer]);
 
   useEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## MUNIMAP-useEffect-refreshStyles');
     }
-    munimap_view.refreshStyles(map, allStyleFunctions, requiredOpts.pubTran);
+    mm_view.refreshStyles(map, allStyleFunctions, requiredOpts.pubTran);
   }, [map, allStyleFunctions, requiredOpts]);
 
   useEffect(() => {
     if (ENABLE_EFFECT_LOGS) {
       console.log('########## MUNIMAP-useEffect-refreshVisibility');
     }
-    munimap_view.refreshVisibility(map, {
+    mm_view.refreshVisibility(map, {
       isIdentifyEnabled,
       identifyVisibled,
     });
@@ -144,7 +144,7 @@ const MunimapComponent = (props) => {
     }
     const callback =
       resetTimestamp === 0 ? () => dispatch(actions.resetDone()) : undefined;
-    munimap_view.animate(map, animationRequest, callback);
+    mm_view.animate(map, animationRequest, callback);
   }, [map, animationRequest]);
 
   useEffect(() => {
@@ -163,7 +163,7 @@ const MunimapComponent = (props) => {
 
     if (map) {
       const key = map.on('pointermove', (evt) => {
-        munimap_view.ensureTooltip(evt, {
+        mm_view.ensureTooltip(evt, {
           selectedFeature,
           lang,
           tooltipProps,
@@ -197,7 +197,7 @@ const MunimapComponent = (props) => {
         });
         _map.set(MUNIMAP_PROPS_ID, mapProps);
         CREATED_MAPS[requiredOpts.targetId] = _map;
-        munimap_view.attachIndependentMapListeners(_map, dispatch);
+        mm_view.attachIndependentMapListeners(_map, dispatch);
       }
     }
   }, [areMarkersLoaded, areZoomToLoaded, requiredView]);

@@ -1,8 +1,8 @@
 /**
  * @module source/building
  */
-import * as munimap_load from '../load.js';
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_load from '../load.js';
+import * as mm_utils from '../utils/utils.js';
 import VectorSource from 'ol/source/Vector';
 import {BUILDING_TYPE} from '../feature/_constants.js';
 import {tile as ol_loadingstrategy_tile} from 'ol/loadingstrategy';
@@ -31,13 +31,10 @@ const createStore = (targetId, callback) => {
     ),
   });
   buildingStore.setLoader(
-    munimap_utils.partial(munimap_load.buildingFeaturesForMap, {
+    mm_utils.partial(mm_load.buildingFeaturesForMap, {
       source: buildingStore,
       type: BUILDING_TYPE,
-      processor: munimap_utils.partial(
-        munimap_load.buildingLoadProcessor,
-        targetId
-      ),
+      processor: mm_utils.partial(mm_load.buildingLoadProcessor, targetId),
       callback: callback,
     })
   );

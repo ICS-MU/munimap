@@ -2,8 +2,8 @@
  * @module identify/identify
  */
 import * as actions from '../redux/action.js';
-import * as munimap_assert from '../assert/assert.js';
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_assert from '../assert/assert.js';
+import * as mm_utils from '../utils/utils.js';
 import {Feature} from 'ol';
 import {
   IDENTIFIED_FEATURE_PROPERTY_NAME,
@@ -101,8 +101,8 @@ const createParamForCallback = (opt_options) => {
     const coordsInMeters = geom.getCoordinates();
     const coordsInDegrees = transform(coordsInMeters, 'EPSG:3857', 'EPSG:4326');
 
-    munimap_assert.assertInstanceof(feature, Feature);
-    munimap_assert.assertString(locCode);
+    mm_assert.assertInstanceof(feature, Feature);
+    mm_assert.assertString(locCode);
 
     return {
       coordsInMeters: coordsInMeters.map(
@@ -140,8 +140,8 @@ const handleCallback = (callback, asyncDispatch, targetId, opt_options) => {
   }
 
   if (opt_options) {
-    munimap_assert.assertExists(opt_options.feature);
-    munimap_assert.assertExists(opt_options.pixelInCoords);
+    mm_assert.assertExists(opt_options.feature);
+    mm_assert.assertExists(opt_options.pixelInCoords);
     const {feature, pixelInCoords} = opt_options;
     const pointFeature = new Feature({
       geometry: new Point(pixelInCoords),
@@ -150,9 +150,9 @@ const handleCallback = (callback, asyncDispatch, targetId, opt_options) => {
     const params = createParamForCallback({pointFeature, feature});
     const callbackResult = callback(params);
 
-    munimap_assert.assert(
-      munimap_utils.isDefAndNotNull(callbackResult) &&
-        munimap_utils.isBoolean(callbackResult),
+    mm_assert.assert(
+      mm_utils.isDefAndNotNull(callbackResult) &&
+        mm_utils.isBoolean(callbackResult),
       'Identify callback should return boolean.'
     );
 

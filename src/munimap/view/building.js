@@ -1,8 +1,8 @@
 /**
  * @module view/building
  */
-import * as munimap_identify from '../identify/identify.js';
-import * as munimap_range from '../utils/range.js';
+import * as mm_identify from '../identify/identify.js';
+import * as mm_range from '../utils/range.js';
 import * as slctr from '../redux/selector.js';
 import {FLOOR_RESOLUTION} from '../feature/_constants.js';
 import {INITIAL_STATE} from '../conf.js';
@@ -27,10 +27,10 @@ const getAnimationRequest = (state, options) => {
   const extent = slctr.getExtent(state);
   const targetId = slctr.getTargetId(state);
   const feature = getBuildingStore(targetId).getFeatureByUid(featureUid);
-  const isVisible = munimap_range.contains(FLOOR_RESOLUTION, state.resolution);
+  const isVisible = mm_range.contains(FLOOR_RESOLUTION, state.resolution);
   const isIdentifyAllowed =
     slctr.isIdentifyEnabled(state) &&
-    munimap_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
+    mm_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
 
   if (!isVisible && !isIdentifyAllowed) {
     const point = getClosestPointToPixel(feature, pixelInCoords, extent);

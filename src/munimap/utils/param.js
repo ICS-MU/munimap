@@ -2,8 +2,8 @@
  * @module utils/parameter
  */
 
-import * as munimap_assert from '../assert/assert.js';
-import * as munimap_utils from './utils.js';
+import * as mm_assert from '../assert/assert.js';
+import * as mm_utils from './utils.js';
 
 /**
  * @param {Array<string>} [requiredMarkers] required markers
@@ -12,8 +12,8 @@ import * as munimap_utils from './utils.js';
 const createMarkerStringsArray = (requiredMarkers) => {
   let markerStrings;
   if (requiredMarkers.length) {
-    munimap_assert.assertArray(requiredMarkers);
-    munimap_utils.removeArrayDuplicates(requiredMarkers);
+    mm_assert.assertArray(requiredMarkers);
+    mm_utils.removeArrayDuplicates(requiredMarkers);
     markerStrings = /** @type {Array<string>} */ (requiredMarkers);
   } else {
     markerStrings = /** @type {Array<string>} */ ([]);
@@ -29,7 +29,7 @@ const createZoomToStringsArray = (requiredZoomTo) => {
   let zoomToStrings;
   if (requiredZoomTo.length) {
     zoomToStrings = /**@type {Array<string>}*/ (
-      munimap_utils.isString(requiredZoomTo) ? [requiredZoomTo] : requiredZoomTo
+      mm_utils.isString(requiredZoomTo) ? [requiredZoomTo] : requiredZoomTo
     );
   } else {
     zoomToStrings = [];

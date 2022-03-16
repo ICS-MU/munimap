@@ -2,8 +2,8 @@
  * @module layer/layer
  */
 
-import * as munimap_layer_building from './building.js';
-import * as munimap_layer_complex from './complex.js';
+import * as mm_layer_building from './building.js';
+import * as mm_layer_complex from './complex.js';
 import {createActive as createActiveDoorLayer} from './door.js';
 import {createActive as createActivePoiLayer} from './poi.js';
 import {
@@ -38,13 +38,13 @@ import {
  */
 const getDefaultLayers = (targetId, showLabels, showLocationCodes) => {
   const result = [];
-  const buildings = munimap_layer_building.create(targetId);
+  const buildings = mm_layer_building.create(targetId);
   const rooms = createRoomLayer(targetId);
   const activeRooms = createActiveRoomLayer(targetId);
   const doors = createActiveDoorLayer(targetId);
   const poi = createActivePoiLayer(targetId);
   const roomLabels = createRoomLabelLayer(targetId, showLocationCodes);
-  const buildingLabels = munimap_layer_building.createLabel(targetId);
+  const buildingLabels = mm_layer_building.createLabel(targetId);
   result.push(
     buildings,
     rooms,
@@ -57,7 +57,7 @@ const getDefaultLayers = (targetId, showLabels, showLocationCodes) => {
   if (showLabels === false) {
     return result;
   }
-  const complexes = munimap_layer_complex.create(targetId);
+  const complexes = mm_layer_complex.create(targetId);
   result.push(complexes);
   return result;
 };

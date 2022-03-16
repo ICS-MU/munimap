@@ -1,8 +1,8 @@
 /**
  * @module view/complex
  */
-import * as munimap_assert from '../assert/assert.js';
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_assert from '../assert/assert.js';
+import * as mm_utils from '../utils/utils.js';
 import * as ol_extent from 'ol/extent';
 import * as slctr from '../redux/selector.js';
 import {
@@ -35,8 +35,8 @@ const getAnimationRequest = (state, options) => {
     .getFeatures()
     .filter((bldg) => {
       const cId = bldg.get('arealId');
-      if (munimap_utils.isDefAndNotNull(cId)) {
-        munimap_assert.assertNumber(cId);
+      if (mm_utils.isDefAndNotNull(cId)) {
+        mm_assert.assertNumber(cId);
         if (complexId === cId) {
           return true;
         }

@@ -1,5 +1,5 @@
 import * as actions from '../redux/action.js';
-import * as munimap_range from '../utils/range.js';
+import * as mm_range from '../utils/range.js';
 import * as slctr from '../redux/selector.js';
 import MapContext from '../_contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useLayoutEffect, useRef} from 'react';
@@ -71,7 +71,7 @@ const PopupComponent = (props) => {
       console.log('########## POPUP-useEffect-hideResolution');
     }
     if (hideResolution && resolution) {
-      if (!munimap_range.contains(hideResolution, resolution)) {
+      if (!mm_range.contains(hideResolution, resolution)) {
         closePopup();
       }
     }

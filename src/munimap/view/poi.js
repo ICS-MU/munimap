@@ -1,7 +1,7 @@
 /**
  * @module view/poi
  */
-import * as munimap_range from '../utils/range.js';
+import * as mm_range from '../utils/range.js';
 import * as slctr from '../redux/selector.js';
 import {FLOOR_RESOLUTION} from '../feature/_constants.js';
 import {INITIAL_STATE} from '../conf.js';
@@ -25,7 +25,7 @@ const getAnimationRequest = (state, options) => {
   const targetId = slctr.getTargetId(state);
   const feature = getActivePoiStore(targetId).getFeatureByUid(featureUid);
 
-  const isVisible = munimap_range.contains(FLOOR_RESOLUTION, state.resolution);
+  const isVisible = mm_range.contains(FLOOR_RESOLUTION, state.resolution);
   if (!isVisible) {
     const point = /**@type {ol.geom.Point}*/ (feature.getGeometry());
     const coords = point.getCoordinates();

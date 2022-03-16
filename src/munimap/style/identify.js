@@ -1,9 +1,9 @@
 /**
  * @module style/identify
  */
-import * as munimap_assert from '../assert/assert.js';
-import * as munimap_range from '../utils/range.js';
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_assert from '../assert/assert.js';
+import * as mm_range from '../utils/range.js';
+import * as mm_utils from '../utils/utils.js';
 import {
   BUILDING_BIG_FONT_SIZE,
   BUILDING_FONT_SIZE,
@@ -62,17 +62,14 @@ const styleFunction = (feature, resolution, options) => {
   let fontSize;
   if (_isRoom || _isDoor) {
     fontSize = ROOM_FONT_SIZE;
-  } else if (
-    _isBuilding &&
-    munimap_range.contains(FLOOR_RESOLUTION, resolution)
-  ) {
+  } else if (_isBuilding && mm_range.contains(FLOOR_RESOLUTION, resolution)) {
     fontSize = BUILDING_BIG_FONT_SIZE;
   } else {
     fontSize = BUILDING_FONT_SIZE;
   }
 
   let title;
-  if (munimap_utils.isDef(markerLabel)) {
+  if (mm_utils.isDef(markerLabel)) {
     title = markerLabel(identifiedFeature, resolution);
   }
   if (!title) {
@@ -86,7 +83,7 @@ const styleFunction = (feature, resolution, options) => {
   if (!title) {
     title = locCode || '';
   }
-  munimap_assert.assertString(title);
+  mm_assert.assertString(title);
 
   const opts = {
     fill: IDENTIFY_FILL,

@@ -1,7 +1,7 @@
 /**
  * @module feature/markercustom
  */
-import * as munimap_assert from '../assert/assert.js';
+import * as mm_assert from '../assert/assert.js';
 import * as ol_proj from 'ol/proj';
 import {
   CUSTOM_MARKER_LABEL_FIELD_NAME,
@@ -22,7 +22,7 @@ import {isString} from '../utils/utils.js';
  */
 const getLabel = (feature) => {
   const label = feature.get(CUSTOM_MARKER_LABEL_FIELD_NAME);
-  munimap_assert.assert(label === undefined || isString(label));
+  mm_assert.assert(label === undefined || isString(label));
   return /** @type {string|undefined}*/ (label);
 };
 

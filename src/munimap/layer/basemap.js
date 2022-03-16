@@ -2,8 +2,8 @@
  * @module layer/basemap
  */
 
-import * as munimap_lang from '../lang/lang.js';
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_lang from '../lang/lang.js';
+import * as mm_utils from '../utils/utils.js';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
@@ -83,8 +83,8 @@ const createLayer = (basemapId, lang) => {
     });
   } else if (basemapId === BasemapIds.OSM || basemapId === BasemapIds.OSM_BW) {
     assert(isDefAndNotNull(lang), 'Language must be set.');
-    const osmAttribution = munimap_lang.getMsg(
-      munimap_lang.Translations.OSM_ATTRIBUTION_HTML,
+    const osmAttribution = mm_lang.getMsg(
+      mm_lang.Translations.OSM_ATTRIBUTION_HTML,
       lang
     );
 
@@ -108,12 +108,12 @@ const createLayer = (basemapId, lang) => {
  * @return {string} id
  */
 const getId = (center, resolution, requiredBasemap) => {
-  const isSafeLatLon = munimap_utils.inRange(
+  const isSafeLatLon = mm_utils.inRange(
     center[1],
     -8399737.89, //60° N
     8399737.89 //60° S
   );
-  const isSafeResolution = munimap_utils.inRange(
+  const isSafeResolution = mm_utils.inRange(
     resolution,
     38.21851414258813,
     Infinity

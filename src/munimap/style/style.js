@@ -2,11 +2,11 @@
  * @module style/style
  */
 
-import * as munimap_assert from '../assert/assert.js';
-import * as munimap_building from '../feature/building.js';
-import * as munimap_customMarker from '../feature/marker.custom.js';
-import * as munimap_store from '../utils/store.js';
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_assert from '../assert/assert.js';
+import * as mm_building from '../feature/building.js';
+import * as mm_customMarker from '../feature/marker.custom.js';
+import * as mm_store from '../utils/store.js';
+import * as mm_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
 import {IconPosition, PIN_SIZE, TEXT_FILL, TEXT_STROKE} from './_constants.js';
@@ -91,19 +91,19 @@ const PIN = new Style({
  * @return {string|undefined} default label
  */
 const getDefaultLabel = (feature, resolution, lang) => {
-  munimap_assert.assertInstanceof(feature, Feature);
+  mm_assert.assertInstanceof(feature, Feature);
   let title;
-  const uid = munimap_store.getUid(feature);
-  munimap_assert.assert(!!uid);
+  const uid = mm_store.getUid(feature);
+  mm_assert.assert(!!uid);
   if (isBuilding(feature)) {
-    title = munimap_building.getDefaultLabel(
+    title = mm_building.getDefaultLabel(
       /** @type {Feature}*/ (feature),
       resolution,
       lang
     );
-    munimap_assert.assertString(title);
+    mm_assert.assertString(title);
   } else if (isCustomMarker(feature)) {
-    return munimap_customMarker.getLabel(feature);
+    return mm_customMarker.getLabel(feature);
   } else if (isRoom(feature)) {
     title = getDefaultRoomLabel(feature, lang);
   }
@@ -133,13 +133,13 @@ const getTextStyleWithOffsetY = (options) => {
   let fill = options.fill;
   let minorFill = TEXT_FILL;
   let result;
-  if (munimap_utils.isDef(title) && munimap_utils.isDef(fontSize)) {
+  if (mm_utils.isDef(title) && mm_utils.isDef(fontSize)) {
     if (!!minorTitle && icon && icon.position === IconPosition.BELOW) {
       [title, minorTitle] = [minorTitle, title];
       [fill, minorFill] = [minorFill, fill];
     }
-    munimap_assert.assertString(title);
-    munimap_assert.assertNumber(fontSize);
+    mm_assert.assertString(title);
+    mm_assert.assertNumber(fontSize);
 
     let offsetY = getLabelHeight(title, fontSize) / 2 + 2;
     if (icon) {
@@ -212,7 +212,7 @@ const getLabelWithPin = (options) => {
   });
   result.push(pin);
 
-  if (munimap_utils.isDefAndNotNull(options.title)) {
+  if (mm_utils.isDefAndNotNull(options.title)) {
     const textStyle = getTextStyleWithOffsetY(options);
     result = result.concat(textStyle);
   }

@@ -1,7 +1,7 @@
 /**
  * @module source/room
  */
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_utils from '../utils/utils.js';
 import VectorSource from 'ol/source/Vector';
 import {ROOM_TYPE} from '../feature/_constants.js';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
@@ -43,7 +43,7 @@ const createDefaultStore = (targetId, callback) => {
     ),
   });
   defaultStore.setLoader(
-    munimap_utils.partial(loadDefaultRooms, targetId, {
+    mm_utils.partial(loadDefaultRooms, targetId, {
       source: defaultStore,
       type: ROOM_TYPE,
       where: 'vychoziPodlazi = 1',
@@ -68,7 +68,7 @@ const createActiveStore = (store, targetId, callback) => {
         tileSize: 512,
       })
     ),
-    loader: munimap_utils.partial(loadActiveRooms, {store, callback}),
+    loader: mm_utils.partial(loadActiveRooms, {store, callback}),
   });
   setActiveRoomStore(targetId, activeStore);
   return activeStore;

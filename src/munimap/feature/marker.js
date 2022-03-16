@@ -3,8 +3,8 @@
  */
 
 import * as actions from '../redux/action.js';
-import * as munimap_building from './building.js';
-import * as munimap_range from '../utils/range.js';
+import * as mm_building from './building.js';
+import * as mm_range from '../utils/range.js';
 import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from './_constants.js';
 import {getMarkerStore} from '../source/_constants.js';
 import {
@@ -77,17 +77,17 @@ const isClickable = (options) => {
     return true;
   } else if (isBuilding(feature)) {
     return (
-      munimap_building.hasInnerGeometry(feature) &&
-      (!munimap_range.contains(FLOOR_RESOLUTION, resolution) ||
-        !munimap_building.isSelected(feature, selectedFeature))
+      mm_building.hasInnerGeometry(feature) &&
+      (!mm_range.contains(FLOOR_RESOLUTION, resolution) ||
+        !mm_building.isSelected(feature, selectedFeature))
     );
   } else if (isRoom(feature)) {
     return (
-      !munimap_range.contains(FLOOR_RESOLUTION, resolution) ||
+      !mm_range.contains(FLOOR_RESOLUTION, resolution) ||
       !isRoomInSelectedFloor(feature, selectedFeature)
     );
   } else if (isDoor(feature)) {
-    return !munimap_range.contains(DOOR_RESOLUTION, resolution);
+    return !mm_range.contains(DOOR_RESOLUTION, resolution);
   }
   return false;
 };

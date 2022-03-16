@@ -1,5 +1,5 @@
 import * as actions from '../redux/action.js';
-import * as munimap_lang from '../lang/lang.js';
+import * as mm_lang from '../lang/lang.js';
 import * as slctr from '../redux/selector.js';
 import PropTypes from 'prop-types';
 import React, {useLayoutEffect, useRef} from 'react';
@@ -50,19 +50,19 @@ const createInnerText = (invalidCodes, noGeomCodes, simpleScroll, lang) => {
   let msg;
   if (hasInvalidCodes) {
     msg =
-      munimap_lang.getMsg(munimap_lang.Translations.ACTIVATE_MAP, lang) +
+      mm_lang.getMsg(mm_lang.Translations.ACTIVATE_MAP, lang) +
       '\n' +
-      munimap_lang.getMsg(munimap_lang.Translations.NOT_FOUND, lang) +
+      mm_lang.getMsg(mm_lang.Translations.NOT_FOUND, lang) +
       ':\n' +
       invalidCodes.join(', ');
   } else if (shouldBlockMap || hasNoGeomCodes) {
-    msg = munimap_lang.getMsg(munimap_lang.Translations.ACTIVATE_MAP, lang);
+    msg = mm_lang.getMsg(mm_lang.Translations.ACTIVATE_MAP, lang);
   }
 
   if (hasNoGeomCodes) {
     msg = msg ? msg + '\n' : '';
     msg +=
-      munimap_lang.getMsg(munimap_lang.Translations.NO_GEOMETRY, lang) +
+      mm_lang.getMsg(mm_lang.Translations.NO_GEOMETRY, lang) +
       ': ' +
       noGeomCodes.join(', ');
   }

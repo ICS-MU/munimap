@@ -3,7 +3,7 @@
  */
 
 import * as actions from '../redux/action.js';
-import * as munimap_lang from '../lang/lang.js';
+import * as mm_lang from '../lang/lang.js';
 import {IDOS_URL} from '../conf.js';
 
 /**
@@ -40,14 +40,8 @@ const featureClickHandler = (dispatch, options) => {
 const getDetailHtml = (title, lang) => {
   const main = `<div class="munimap-title">${title}</div>`;
 
-  const toMsg = munimap_lang.getMsg(
-    munimap_lang.Translations.CONNECTION_TO,
-    lang
-  );
-  const fromMsg = munimap_lang.getMsg(
-    munimap_lang.Translations.CONNECTION_FROM,
-    lang
-  );
+  const toMsg = mm_lang.getMsg(mm_lang.Translations.CONNECTION_TO, lang);
+  const fromMsg = mm_lang.getMsg(mm_lang.Translations.CONNECTION_FROM, lang);
   const linkToHtml = `<a href="${encodeURI(
     IDOS_URL + '?t=' + title
   )}" target="_blank">${toMsg}</a>`;
@@ -55,10 +49,7 @@ const getDetailHtml = (title, lang) => {
     IDOS_URL + '?f=' + title
   )}" target="_blank">${fromMsg}</a>`;
 
-  const subtitle = munimap_lang.getMsg(
-    munimap_lang.Translations.FIND_CONNECTION,
-    lang
-  );
+  const subtitle = mm_lang.getMsg(mm_lang.Translations.FIND_CONNECTION, lang);
 
   const content = `<div>${subtitle}: ${linkToHtml} / ${linkFromHtml}</div>`;
   return `${main}${content}`;

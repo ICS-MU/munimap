@@ -1,7 +1,7 @@
 /**
  * @module feature/feature
  */
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
 import turf_booleanPointInPolygon from '@turf/boolean-point-in-polygon';
@@ -169,7 +169,7 @@ const getClosestPointToPixel = (feature, pixelCoord, extent) => {
     //e.g. corridor marker out of boundaries
     const intersect = featureExtentIntersect(feature, extent, format);
     let closestPoint;
-    if (munimap_utils.isDefAndNotNull(intersect)) {
+    if (mm_utils.isDefAndNotNull(intersect)) {
       closestPoint = intersect.getGeometry().getClosestPoint(pixelCoord);
     }
     return closestPoint || null;
@@ -203,7 +203,7 @@ const filterInvalidCodes = (requiredMarkerIds, initMarkers) => {
         return !Object.values(OptPoiIds).includes(markerString.split(':')[1]);
       }
 
-      return munimap_utils.isString(markerString) &&
+      return mm_utils.isString(markerString) &&
         !REQUIRED_CUSTOM_MARKERS[markerString]
         ? (initMarkersCodes.length === 0 ||
             !initMarkersCodes.every((code) =>

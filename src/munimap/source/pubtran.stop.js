@@ -1,7 +1,7 @@
 /**
  * @module source/pubtran.stop
  */
-import * as munimap_utils from '../utils/utils.js';
+import * as mm_utils from '../utils/utils.js';
 import VectorSource from 'ol/source/Vector';
 import {PUBTRAN_TYPE} from '../feature/_constants.js';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
@@ -23,7 +23,7 @@ const createStore = (targetId) => {
     ),
   });
   pubtranStore.setLoader(
-    munimap_utils.partial(pubtranFeaturesForMap, {
+    mm_utils.partial(pubtranFeaturesForMap, {
       source: pubtranStore,
       type: PUBTRAN_TYPE,
     })

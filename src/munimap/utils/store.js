@@ -2,7 +2,7 @@
  * @module utils/store
  */
 
-import * as munimap_assert from '../assert/assert.js';
+import * as mm_assert from '../assert/assert.js';
 import {FEATURE_TYPE_PROPERTY_NAME} from '../feature/_constants.js';
 
 /**
@@ -20,7 +20,7 @@ export const getUid = (feature) => {
   let uid = null;
   const code = feature.get('polohKod');
   if (code) {
-    uid = munimap_assert.assertString(code);
+    uid = mm_assert.assertString(code);
   } else {
     const type = /**@type {TypeOptions}*/ (
       feature.get(FEATURE_TYPE_PROPERTY_NAME)
