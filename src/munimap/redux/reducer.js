@@ -22,7 +22,6 @@ import {getFloorCode as getMarkerFloorCode} from '../feature/marker.js';
 import {getAnimationRequest as getPoiAnimationRequest} from '../view/poi.js';
 import {getAnimationRequest as getPubTranAnimationRequest} from '../view/pubtran.stop.js';
 import {getUid} from 'ol';
-import {handleDoorClick} from '../feature/door.js';
 import {handleMapViewChange} from '../view/view.js';
 import {handleOnClickCallback} from '../feature/feature.js';
 import {handleReset} from '../reset.js';
@@ -555,16 +554,16 @@ const createReducer = (initialState) => {
 
       // DOOR_CLICKED
       case actions.DOOR_CLICKED:
-        handleDoorClick(
-          {
-            ...action.payload,
-            targetId: slctr.getTargetId(state),
-            isIdentifyEnabled: slctr.isIdentifyEnabled(state),
-            identifyCallback: slctr.getIdentifyCallback(state),
-            identifyTypes: state.requiredOpts.identifyTypes,
-          },
-          action.asyncDispatch
-        );
+        feature = srcs
+          .getActiveDoorStore(slctr.getTargetId(state))
+          .getFeatureByUid(action.payload.featureUid);
+
+        handleIdentifyCallback({
+          state,
+          feature,
+          pixelInCoords: action.payload.pixelInCoords,
+          asyncDispatch: action.asyncDispatch,
+        });
         return {
           ...state,
         };

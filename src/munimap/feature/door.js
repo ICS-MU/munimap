@@ -2,8 +2,6 @@
  * @module feature/door
  */
 import * as actions from '../redux/action.js';
-import * as mm_identify from '../identify/identify.js';
-import {getActiveDoorStore} from '../source/_constants.js';
 import {isAllowed} from '../identify/identify.js';
 
 /**
@@ -37,29 +35,4 @@ const featureClickHandler = (dispatch, options) => {
   dispatch(actions.doorClicked(options));
 };
 
-/**
- * @param {FeatureClickHandlerOptions} options payload
- * @param {redux.Dispatch} asyncDispatch async dispatch
- */
-const handleDoorClick = (options, asyncDispatch) => {
-  const {
-    featureUid,
-    pixelInCoords,
-    targetId,
-    isIdentifyEnabled,
-    identifyCallback,
-    identifyTypes,
-  } = options;
-  const feature = getActiveDoorStore(targetId).getFeatureByUid(featureUid);
-  const isIdentifyAllowed =
-    isIdentifyEnabled && mm_identify.isAllowed(feature, identifyTypes);
-
-  if (isIdentifyAllowed) {
-    mm_identify.handleCallback(identifyCallback, asyncDispatch, targetId, {
-      feature,
-      pixelInCoords,
-    });
-  }
-};
-
-export {featureClickHandler, handleDoorClick, isClickable};
+export {featureClickHandler, isClickable};
