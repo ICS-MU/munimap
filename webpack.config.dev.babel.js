@@ -102,6 +102,7 @@ export default (env) => {
       },
       watchFiles: ['src/**/*.html'],
     },
+    devtool: 'eval-cheap-module-source-map',
     module: {
       rules: [
         {
