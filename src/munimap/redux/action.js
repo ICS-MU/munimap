@@ -217,12 +217,6 @@ export const RESET_MUNIMAP = 'RESET_MUNIMAP';
  * @type {string}
  * @const
  */
-export const IDENTIFY_FEATURE_CHANGED = 'IDENTIFY_FEATURE_CHANGED';
-
-/**
- * @type {string}
- * @const
- */
 export const RESET_DONE = 'RESET_DONE';
 
 /**
@@ -544,15 +538,6 @@ export function resetMunimap(object) {
   return {
     type: RESET_MUNIMAP,
     payload: object,
-  };
-}
-
-/**
- * @return {PayloadAsyncAction} action
- */
-export function identifyFeatureChanged() {
-  return {
-    type: IDENTIFY_FEATURE_CHANGED,
   };
 }
 

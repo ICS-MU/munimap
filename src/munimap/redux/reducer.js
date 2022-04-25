@@ -22,6 +22,10 @@ import {getFloorCode as getMarkerFloorCode} from '../feature/marker.js';
 import {getAnimationRequest as getPoiAnimationRequest} from '../view/poi.js';
 import {getAnimationRequest as getPubTranAnimationRequest} from '../view/pubtran.stop.js';
 import {getUid} from 'ol';
+import {
+  handleIdentifyCallback,
+  handleIdentifyCallbackByOptions,
+} from './utils/identify.js';
 import {handleMapViewChange} from '../view/view.js';
 import {handleOnClickCallback} from '../feature/feature.js';
 import {handleReset} from '../reset.js';
@@ -42,53 +46,6 @@ import {isSameCode} from '../feature/building.js';
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
  * @typedef {import("../view/marker.js").MarkerAnimRequestOptions} MarkerAnimRequestOptions
  */
-
-/**
- * @typedef {Object} IdentifyCallbackOptions
- * @property {ol.Feature} feature feature
- * @property {ol.coordinate.Coordinate} pixelInCoords pixelInCoords
- * @property {State} state state
- * @property {redux.Dispatch} asyncDispatch asyncDispatch
- * @property {string} [locationCode] locationCode
- */
-
-/**
- * @param {IdentifyCallbackOptions} options opts
- */
-const handleIdentifyCallback = (options) => {
-  const {feature, pixelInCoords, state, asyncDispatch} = options;
-  const targetId = slctr.getTargetId(state);
-  const isIdentifyAllowed =
-    slctr.isIdentifyEnabled(state) &&
-    mm_identify.isAllowed(feature, state.requiredOpts.identifyTypes);
-
-  if (isIdentifyAllowed) {
-    mm_identify.handleCallback(
-      slctr.getIdentifyCallback(state),
-      asyncDispatch,
-      targetId,
-      {feature, pixelInCoords}
-    );
-  }
-};
-
-/**
- * @param {IdentifyCallbackOptions} options opts
- */
-const handleMarkerLocationCode = (options) => {
-  const {locationCode, state, asyncDispatch} = options;
-  mm_load.loadFloorsForMarker(locationCode, state, asyncDispatch);
-  handleIdentifyCallback(options);
-};
-
-/**
- * @param {IdentifyCallbackOptions} options opts
- */
-const handleRoomLocationCode = (options) => {
-  const {locationCode, state, asyncDispatch} = options;
-  mm_load.loadFloorsForRoom(locationCode, state, asyncDispatch);
-  handleIdentifyCallback(options);
-};
 
 /**
  * @param {State} state state
@@ -137,6 +94,7 @@ const createReducer = (initialState) => {
     let result;
     let uid;
     let callbackResult;
+    let callbackId;
 
     switch (action.type) {
       // MARKERS_LOADED
@@ -377,11 +335,10 @@ const createReducer = (initialState) => {
         isVisible = mm_range.contains(FLOOR_RESOLUTION, state.resolution);
         animationRequest = getBuildingAnimationRequest(state, action.payload);
 
-        handleIdentifyCallback({
+        callbackId = handleIdentifyCallbackByOptions({
           state,
           feature,
           pixelInCoords: action.payload.pixelInCoords,
-          asyncDispatch: action.asyncDispatch,
         });
         if (isVisible) {
           locationCode =
@@ -405,6 +362,7 @@ const createReducer = (initialState) => {
             ...state.popup,
             uid: null,
           },
+          identifyTimestamp: callbackId ? Date.now() : state.identifyTimestamp,
         };
 
       //COMPLEX_CLICKED
@@ -476,16 +434,22 @@ const createReducer = (initialState) => {
         if (!isCustomMarker(feature)) {
           locationCode = getMarkerFloorCode(feature);
           if (locationCode) {
-            handleMarkerLocationCode({
+            mm_load.loadFloorsForMarker(
               locationCode,
+              state,
+              action.asyncDispatch
+            );
+            callbackId = handleIdentifyCallbackByOptions({
               state,
               feature,
               pixelInCoords: action.payload.pixelInCoords,
-              asyncDispatch: action.asyncDispatch,
             });
           }
         }
         newState.selectedFeature = locationCode || state.selectedFeature;
+        newState.identifyTimestamp = callbackId
+          ? Date.now()
+          : newState.identifyTimestamp;
         return newState;
 
       //POI_CLICKED
@@ -534,12 +498,11 @@ const createReducer = (initialState) => {
           if (wasOtherFloorSelected) {
             uid = null;
           }
-          handleRoomLocationCode({
-            locationCode,
+          mm_load.loadFloorsForRoom(locationCode, state, action.asyncDispatch);
+          callbackId = handleIdentifyCallbackByOptions({
             state,
             feature,
             pixelInCoords: action.payload.pixelInCoords,
-            asyncDispatch: action.asyncDispatch,
           });
         }
 
@@ -550,6 +513,7 @@ const createReducer = (initialState) => {
             ...state.popup,
             uid,
           },
+          identifyTimestamp: callbackId ? Date.now() : state.identifyTimestamp,
         };
 
       // DOOR_CLICKED
@@ -558,14 +522,14 @@ const createReducer = (initialState) => {
           .getActiveDoorStore(slctr.getTargetId(state))
           .getFeatureByUid(action.payload.featureUid);
 
-        handleIdentifyCallback({
+        callbackId = handleIdentifyCallbackByOptions({
           state,
           feature,
           pixelInCoords: action.payload.pixelInCoords,
-          asyncDispatch: action.asyncDispatch,
         });
         return {
           ...state,
+          identifyTimestamp: callbackId ? Date.now() : state.identifyTimestamp,
         };
 
       //POPUP_CLOSED
@@ -580,26 +544,19 @@ const createReducer = (initialState) => {
 
       //IDENTIFY_RESET
       case actions.IDENTIFY_RESETED:
-        mm_identify.handleCallback(
+        handleIdentifyCallback(
           slctr.getIdentifyCallback(state),
-          action.asyncDispatch,
           slctr.getTargetId(state)
         );
         return {
           ...state,
+          identifyTimestamp: Date.now(),
         };
 
       //RESET_MUNIMAP
       case actions.RESET_MUNIMAP:
         newState = handleReset(state, action.payload, action.asyncDispatch);
         return newState;
-
-      //IDENTIFY_FEATURE_CHANGED
-      case actions.IDENTIFY_FEATURE_CHANGED:
-        return {
-          ...state,
-          identifyTimestamp: Date.now(),
-        };
 
       // RESET_DONE
       case actions.RESET_DONE:

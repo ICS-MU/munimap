@@ -2,7 +2,6 @@
  * @module reset
  */
 import * as actions from './redux/action.js';
-import * as mm_identify from './identify/identify.js';
 import * as mm_utils from './utils/utils.js';
 import * as slctr from './redux/selector.js';
 import Feature from 'ol/Feature';
@@ -19,6 +18,7 @@ import {
   getIdentifyStore,
   getMarkerStore,
 } from './source/_constants.js';
+import {handleIdentifyCallback} from './redux/utils/identify.js';
 
 /**
  * @typedef {import("./conf.js").State} State
@@ -28,7 +28,7 @@ import {
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
  * @typedef {import("./conf.js").RequiredOptions} RequiredOptions
  * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
- * @typedef {import("./identify/identify.js").CallbackFunction} IdentifyCallbackFunction
+ * @typedef {import("./redux/utils/identify.js").CallbackFunction} IdentifyCallbackFunction
  * @typedef {import("./cluster/cluster.js").ClusterOptions} ClusterOptions
  */
 
@@ -107,30 +107,23 @@ const shouldClearMarkers = (state, payload) => {
 /**
  * @param {State} state state
  * @param {RequiredOptions} payload payload
- * @param {redux.Dispatch} asyncDispatch async dispatch
  * @return {string|undefined} callback id
  */
-const handleIdentifyCallback = (state, payload, asyncDispatch) => {
+const updateIdentifyCallback = (state, payload) => {
   const targetId = slctr.getTargetId(state);
   let result;
   if (payload.identifyCallbackId) {
     //new callback in munimap.reset
     const store = getIdentifyStore(targetId);
     if (store) {
-      store.once('clear', () =>
-        asyncDispatch(actions.identifyFeatureChanged())
-      );
       store.clear();
+      result = payload.identifyCallbackId;
     } else {
       createIdentifyStore(targetId);
     }
   } else if (slctr.isIdentifyEnabled(state)) {
     //same callback as in munimap.create => handle with undefined
-    mm_identify.handleCallback(
-      slctr.getIdentifyCallback(state),
-      asyncDispatch,
-      targetId
-    );
+    handleIdentifyCallback(slctr.getIdentifyCallback(state), targetId);
     result = state.requiredOpts.identifyCallbackId;
   }
   return result;
@@ -170,9 +163,10 @@ const handleReset = (state, payload, asyncDispatch) => {
   }
 
   //handle identify callback
-  const callbackId = handleIdentifyCallback(state, payload, asyncDispatch);
+  const callbackId = updateIdentifyCallback(state, payload);
   if (callbackId !== undefined) {
     newState.requiredOpts.identifyCallbackId = callbackId;
+    newState.identifyTimestamp = Date.now();
   }
 
   //set animation if loading ended
