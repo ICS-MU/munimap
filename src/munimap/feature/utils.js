@@ -1,4 +1,4 @@
-import * as constants from './_constants.js';
+import * as constants from './constants.js';
 import * as ol_extent from 'ol/extent';
 import * as ol_proj from 'ol/proj';
 import Point from 'ol/geom/Point';

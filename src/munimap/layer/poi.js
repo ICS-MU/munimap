@@ -3,10 +3,10 @@
  */
 
 import VectorLayer from 'ol/layer/Vector';
-import {ACTIVE_POI_LAYER_ID} from './_constants.js';
-import {POI_RESOLUTION, POI_TYPE} from '../feature/_constants.js';
+import {ACTIVE_POI_LAYER_ID} from './constants.js';
+import {POI_RESOLUTION, POI_TYPE} from '../feature/constants.js';
 import {featureClickHandler, isClickable} from '../feature/poi.js';
-import {getActivePoiStore} from '../source/_constants.js';
+import {getActivePoiStore} from '../source/constants.js';
 
 /**
  * @typedef {import("ol/Map").default} ol.Map

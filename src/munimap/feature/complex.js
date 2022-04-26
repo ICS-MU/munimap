@@ -9,8 +9,8 @@ import {
   COMPLEX_RESOLUTION,
   COMPLEX_TYPE,
   COMPLEX_UNITS_FIELD_NAME,
-} from './_constants.js';
-import {getComplexStore} from '../source/_constants.js';
+} from './constants.js';
+import {getComplexStore} from '../source/constants.js';
 
 /**
  * @typedef {import('../utils/range.js').RangeInterface} RangeInterface

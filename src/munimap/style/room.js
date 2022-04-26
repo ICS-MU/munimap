@@ -19,12 +19,12 @@ import {
   ROOM_STYLE,
   TEXT_FILL,
   TEXT_STROKE,
-} from './_constants.js';
-import {PoiPurpose} from '../feature/_constants.js';
+} from './constants.js';
+import {PoiPurpose} from '../feature/constants.js';
 import {LABEL_CACHE as STYLE_LABEL_CACHE, getLabelHeight} from './style.js';
 import {getDefaultLabel} from '../feature/room.js';
 import {getCorridor as getMarkerCorridorStyle} from './marker.js';
-import {getMarkerStore} from '../source/_constants.js';
+import {getMarkerStore} from '../source/constants.js';
 import {getUid} from '../utils/store.js';
 
 /**

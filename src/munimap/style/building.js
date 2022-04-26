@@ -10,14 +10,14 @@ import * as mm_markerStyle from './marker.js';
 import * as mm_range from '../utils/range.js';
 import * as mm_store from '../utils/store.js';
 import * as mm_style from './style.js';
-import * as mm_style_constants from './_constants.js';
+import * as mm_style_constants from './constants.js';
 import * as mm_unit from '../feature/unit.js';
 import * as mm_utils from '../utils/utils.js';
-import {COMPLEX_RESOLUTION, FLOOR_RESOLUTION} from '../feature/_constants.js';
+import {COMPLEX_RESOLUTION, FLOOR_RESOLUTION} from '../feature/constants.js';
 import {Fill, Stroke, Style, Text} from 'ol/style';
-import {RESOLUTION_COLOR} from './_constants.js';
+import {RESOLUTION_COLOR} from './constants.js';
 import {getBuildingCount} from '../feature/complex.js';
-import {getMarkerStore} from '../source/_constants.js';
+import {getMarkerStore} from '../source/constants.js';
 
 /**
  * @typedef {import("ol/render/Feature").default} ol.render.Feature

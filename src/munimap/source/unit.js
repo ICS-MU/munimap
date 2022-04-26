@@ -3,7 +3,7 @@
  */
 
 import VectorSource from 'ol/source/Vector';
-import {setUnitStore} from './_constants.js';
+import {setUnitStore} from './constants.js';
 
 /**
  * Create store for units.

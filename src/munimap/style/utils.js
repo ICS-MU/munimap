@@ -1,4 +1,4 @@
-import {CHAR_HEIGHT_WIDTH_RATIO} from './_constants.js';
+import {CHAR_HEIGHT_WIDTH_RATIO} from './constants.js';
 
 /**
  * @param {Array<string>} parts parts

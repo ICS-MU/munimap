@@ -9,11 +9,11 @@ import {Circle, Point} from 'ol/geom';
 import {
   GIS_PURPOSES_WITH_TOOLTIP,
   RoomPurposesWithTooltip,
-} from '../feature/_constants.js';
-import {POI_ICON_HEIGHT, ROOM_FONT_SIZE} from '../style/_constants.js';
-import {PoiPurpose} from '../feature/_constants.js';
+} from '../feature/constants.js';
+import {POI_ICON_HEIGHT, ROOM_FONT_SIZE} from '../style/constants.js';
+import {PoiPurpose} from '../feature/constants.js';
 import {fromCircle} from 'ol/geom/Polygon';
-import {getActiveRoomStore} from '../source/_constants.js';
+import {getActiveRoomStore} from '../source/constants.js';
 import {getDefaultLabel} from '../feature/room.js';
 import {getLabelHeight} from '../style/style.js';
 

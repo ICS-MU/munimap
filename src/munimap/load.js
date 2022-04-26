@@ -6,7 +6,7 @@ import * as mm_assert from './assert/assert.js';
 import * as mm_complex from './feature/complex.js';
 import * as mm_utils from './utils/utils.js';
 import * as slctr from './redux/selector.js';
-import * as srcs from './source/_constants.js';
+import * as srcs from './source/constants.js';
 import VectorSource from 'ol/source/Vector';
 import {
   BUILDING_COMPLEX_FIELD_NAME,
@@ -26,7 +26,7 @@ import {
   PoiPurpose,
   ROOM_TYPE,
   UNIT_TYPE,
-} from './feature/_constants.js';
+} from './feature/constants.js';
 import {EsriJSON} from 'ol/format';
 import {MARKER_LABEL_STORE, REQUIRED_CUSTOM_MARKERS} from './constants.js';
 import {addPoiDetail} from './feature/room.js';
@@ -52,7 +52,7 @@ import {
   isRoomCode,
   isRoomCodeOrLikeExpr,
   isRoomLikeExpr,
-} from './feature/_constants.functions.js';
+} from './feature/utils.js';
 import {markerLabel as optPoiMarkerLabel} from './style/optpoi.js';
 import {refreshFloorBasedStores} from './source/source.js';
 

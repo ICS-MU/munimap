@@ -9,11 +9,11 @@ import {
   COMPLEX_ID_FIELD_NAME,
   COMPLEX_RESOLUTION,
   FLOOR_RESOLUTION,
-} from '../../feature/_constants.js';
+} from '../../feature/constants.js';
 import {INITIAL_STATE} from '../../conf.js';
 import {ofFeatures as extentOfFeatures} from '../../utils/extent.js';
 import {getAnimationDuration} from '../../utils/animation.js';
-import {getBuildingStore, getComplexStore} from '../../source/_constants.js';
+import {getBuildingStore, getComplexStore} from '../../source/constants.js';
 
 /**
  * @typedef {import("../../conf.js").State} State

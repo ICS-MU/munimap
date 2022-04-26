@@ -5,9 +5,9 @@ import * as actions from '../redux/action.js';
 import * as mm_assert from '../assert/assert.js';
 import * as mm_lang from '../lang/lang.js';
 import * as mm_utils from '../utils/utils.js';
-import {alignRoomTitleToRows, wrapText} from '../style/_constants.functions.js';
+import {alignRoomTitleToRows, wrapText} from '../style/utils.js';
 import {isAllowed} from '../identify/identify.js';
-import {isRoom} from './_constants.functions.js';
+import {isRoom} from './utils.js';
 
 /**
  * @typedef {import("./feature.js").TypeOptions} TypeOptions

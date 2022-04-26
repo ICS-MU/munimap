@@ -1,7 +1,7 @@
 /**
  * @module view/cluster
  */
-import {getClusterVectorStore} from '../source/_constants.js';
+import {getClusterVectorStore} from '../source/constants.js';
 import {getClusteredFeatures} from '../cluster/cluster.js';
 
 /**

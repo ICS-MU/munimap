@@ -2,8 +2,8 @@
  * @module feature/floor
  */
 
-import {FloorTypes} from './_constants.js';
-import {getFloorStore} from '../source/_constants.js';
+import {FloorTypes} from './constants.js';
+import {getFloorStore} from '../source/constants.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature

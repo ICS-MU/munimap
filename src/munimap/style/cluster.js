@@ -9,23 +9,18 @@ import * as mm_geom from '../utils/geom.js';
 import * as mm_lang from '../lang/lang.js';
 import * as mm_marker from '../feature/marker.js';
 import * as mm_style from '../style/style.js';
-import * as mm_style_constants from '../style/_constants.js';
+import * as mm_style_constants from './constants.js';
 import * as mm_style_marker from '../style/marker.js';
 import * as mm_unit from '../feature/unit.js';
 import * as mm_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
-import {BUILDING_FONT_SIZE} from './_constants.js';
+import {BUILDING_FONT_SIZE} from './constants.js';
 import {Circle, Fill, Icon, Stroke, Style, Text} from 'ol/style';
 import {MultiPolygon} from 'ol/geom';
 import {calculateIconAnchor, extendTitleOffset} from './icon.js';
 import {getLabel} from '../feature/marker.custom.js';
-import {getMarkerStore} from '../source/_constants.js';
-import {
-  isBuilding,
-  isCustomMarker,
-  isDoor,
-  isRoom,
-} from '../feature/_constants.functions.js';
+import {getMarkerStore} from '../source/constants.js';
+import {isBuilding, isCustomMarker, isDoor, isRoom} from '../feature/utils.js';
 import {localeCompare} from '../utils/string.js';
 
 /**

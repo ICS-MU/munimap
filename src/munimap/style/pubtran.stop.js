@@ -3,8 +3,8 @@
  */
 
 import * as mm_range from '../utils/range.js';
-import {PUBTRAN_CLUSTER_RESOLUTION} from '../feature/_constants.js';
-import {PUBTRAN_STYLE} from './_constants.js';
+import {PUBTRAN_CLUSTER_RESOLUTION} from '../feature/constants.js';
+import {PUBTRAN_STYLE} from './constants.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature

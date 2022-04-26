@@ -15,15 +15,15 @@ import {
   assertFunction,
   assertInstanceof,
 } from './assert.js';
-import {BasemapIds} from '../layer/_constants.js';
-import {IdentifyTypes} from '../identify/_constants.js';
+import {BasemapIds} from '../layer/constants.js';
+import {IdentifyTypes} from '../identify/constants.js';
 import {
   isBuildingCodeOrLikeExpr,
   isCustomMarkerSuitable,
   isDoorCodeOrLikeExpr,
   isOptPoiCtgUid,
   isRoomCodeOrLikeExpr,
-} from '../feature/_constants.functions.js';
+} from '../feature/utils.js';
 
 /**
  * @typedef {import("ol/Feature").default} ol.Feature

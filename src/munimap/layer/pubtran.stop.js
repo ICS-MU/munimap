@@ -4,9 +4,9 @@
 import * as mm_lang from '../lang/lang.js';
 import * as mm_pubtran_stop from '../feature/pubtran.stop.js';
 import VectorLayer from 'ol/layer/Vector';
-import {PUBTRAN_LAYER_ID} from './_constants.js';
-import {PUBTRAN_RESOLUTION} from '../feature/_constants.js';
-import {getPubTranStore} from '../source/_constants.js';
+import {PUBTRAN_LAYER_ID} from './constants.js';
+import {PUBTRAN_RESOLUTION} from '../feature/constants.js';
+import {getPubTranStore} from '../source/constants.js';
 
 /**
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions

@@ -1,7 +1,7 @@
-import {EVENT_STORE} from './_constants.js';
+import {EVENT_STORE} from './constants.js';
 
 /**
- * @typedef {import("./_constants.js").EventType} EventType
+ * @typedef {import("./constants.js").EventType} EventType
  */
 
 /**

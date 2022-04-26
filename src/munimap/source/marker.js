@@ -2,7 +2,7 @@
  * @module source/marker
  */
 import VectorSource from 'ol/source/Vector';
-import {getMarkerStore, setMarkerStore} from './_constants.js';
+import {getMarkerStore, setMarkerStore} from './constants.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature

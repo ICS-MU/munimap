@@ -3,7 +3,7 @@
  */
 import * as actions from '../redux/action.js';
 import * as mm_range from '../utils/range.js';
-import {FLOOR_RESOLUTION, PoiPurpose} from '../feature/_constants.js';
+import {FLOOR_RESOLUTION, PoiPurpose} from './constants.js';
 
 /**
  * @typedef {import('../utils/range.js').RangeInterface} RangeInterface

@@ -17,7 +17,7 @@ import {
   FLOOR_RESOLUTION,
   POI_RESOLUTION,
   PoiPurpose,
-} from '../feature/_constants.js';
+} from '../feature/constants.js';
 import {MUNIMAP_PROPS_ID} from '../constants.js';
 import {Map} from 'ol';
 import {calculateParameters} from '../view/tooltip.js';

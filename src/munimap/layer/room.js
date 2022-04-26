@@ -7,10 +7,10 @@ import {
   ACTIVE_ROOM_LAYER_ID,
   ROOM_LABEL_LAYER_ID,
   ROOM_LAYER_ID,
-} from './_constants.js';
-import {FLOOR_RESOLUTION, ROOM_TYPE} from '../feature/_constants.js';
+} from './constants.js';
+import {FLOOR_RESOLUTION, ROOM_TYPE} from '../feature/constants.js';
 import {featureClickHandler, isClickable} from '../feature/room.js';
-import {getActiveRoomStore, getDefaultRoomStore} from '../source/_constants.js';
+import {getActiveRoomStore, getDefaultRoomStore} from '../source/constants.js';
 import {setCorridorStyle} from '../style/room.js';
 
 /**

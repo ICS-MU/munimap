@@ -3,7 +3,7 @@
  */
 
 import VectorSource from 'ol/source/Vector';
-import {setOptPoiStore} from './_constants.js';
+import {setOptPoiStore} from './constants.js';
 
 /**
  * Create store for opt_pois.

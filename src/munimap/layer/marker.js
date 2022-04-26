@@ -4,8 +4,8 @@
 import * as mm_assert from '../assert/assert.js';
 import * as mm_marker from '../feature/marker.js';
 import VectorLayer from 'ol/layer/Vector';
-import {MARKER_LAYER_ID} from './_constants.js';
-import {getMarkerStore} from '../source/_constants.js';
+import {MARKER_LAYER_ID} from './constants.js';
+import {getMarkerStore} from '../source/constants.js';
 import {getPattern} from '../style/marker.js';
 
 /**

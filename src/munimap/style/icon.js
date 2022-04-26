@@ -1,7 +1,7 @@
 /**
  * @module style/icon
  */
-import {IconPosition} from './_constants.js';
+import {IconPosition} from './constants.js';
 
 /**
  * @typedef {Object} IconOptions

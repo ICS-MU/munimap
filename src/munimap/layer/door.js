@@ -3,10 +3,10 @@
  */
 import * as mm_assert from '../assert/assert.js';
 import VectorLayer from 'ol/layer/Vector';
-import {ACTIVE_DOOR_LAYER_ID} from './_constants.js';
-import {DOOR_RESOLUTION, DOOR_TYPE} from '../feature/_constants.js';
+import {ACTIVE_DOOR_LAYER_ID} from './constants.js';
+import {DOOR_RESOLUTION, DOOR_TYPE} from '../feature/constants.js';
 import {featureClickHandler, isClickable} from '../feature/door.js';
-import {getActiveDoorStore} from '../source/_constants.js';
+import {getActiveDoorStore} from '../source/constants.js';
 
 /**
  * @typedef {import("ol/layer/Base").default} ol.layer.Base

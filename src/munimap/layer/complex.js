@@ -4,9 +4,9 @@
 
 import * as mm_complex from '../feature/complex.js';
 import VectorLayer from 'ol/layer/Vector';
-import {COMPLEX_LAYER_ID} from './_constants.js';
-import {COMPLEX_RESOLUTION, COMPLEX_TYPE} from '../feature/_constants.js';
-import {getComplexStore} from '../source/_constants.js';
+import {COMPLEX_LAYER_ID} from './constants.js';
+import {COMPLEX_RESOLUTION, COMPLEX_TYPE} from '../feature/constants.js';
+import {getComplexStore} from '../source/constants.js';
 
 /**
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions

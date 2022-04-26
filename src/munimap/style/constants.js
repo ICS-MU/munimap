@@ -6,7 +6,7 @@
  */
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
 import {Circle, Fill, Stroke, Style, Text} from 'ol/style';
-import {FLOOR_RESOLUTION} from '../feature/_constants.js';
+import {FLOOR_RESOLUTION} from '../feature/constants.js';
 import {createResolution} from '../utils/range.js';
 
 /**

@@ -3,7 +3,7 @@
  */
 
 import * as mm_assert from '../assert/assert.js';
-import {FEATURE_TYPE_PROPERTY_NAME} from '../feature/_constants.js';
+import {FEATURE_TYPE_PROPERTY_NAME} from '../feature/constants.js';
 
 /**
  * @typedef {import("ol/Feature").default} ol.Feature

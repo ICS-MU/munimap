@@ -7,7 +7,7 @@ import {
   CUSTOM_MARKER_LABEL_FIELD_NAME,
   CUSTOM_MARKER_TYPE,
   FEATURE_TYPE_PROPERTY_NAME,
-} from './_constants.js';
+} from './constants.js';
 import {isString} from '../utils/utils.js';
 
 /**

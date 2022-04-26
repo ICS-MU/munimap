@@ -6,7 +6,7 @@ import React from 'react';
 import Select from 'react-select';
 import {ENABLE_RENDER_LOGS} from '../conf.js';
 import {Feature} from 'ol';
-import {FloorTypes} from '../feature/_constants.js';
+import {FloorTypes} from '../feature/constants.js';
 import {hot} from 'react-hot-loader';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -199,10 +199,7 @@ const getLabel = (floorCode, lang) => {
   let floorTypeString;
   switch (letter) {
     case FloorTypes.UNDERGROUND:
-      floorTypeString = mm_lang.getMsg(
-        mm_lang.Translations.FLOOR_UNDER,
-        lang
-      );
+      floorTypeString = mm_lang.getMsg(mm_lang.Translations.FLOOR_UNDER, lang);
       label = numLabel + floorTypeString;
       break;
     case FloorTypes.UNDERGROUND_MEZZANINE:
@@ -220,10 +217,7 @@ const getLabel = (floorCode, lang) => {
       label = floorTypeString;
       break;
     case FloorTypes.ABOVEGROUND:
-      floorTypeString = mm_lang.getMsg(
-        mm_lang.Translations.FLOOR_ABOVE,
-        lang
-      );
+      floorTypeString = mm_lang.getMsg(mm_lang.Translations.FLOOR_ABOVE, lang);
       label = numLabel + floorTypeString;
       break;
     default:
@@ -269,10 +263,7 @@ const SelectComponent = (props) => {
       value={selectedFloor && options.find((opt) => opt.value == selectedFloor)}
       onChange={handleChange}
       options={options}
-      placeholder={mm_lang.getMsg(
-        mm_lang.Translations.INFOBOX_CHOOSE,
-        lang
-      )}
+      placeholder={mm_lang.getMsg(mm_lang.Translations.INFOBOX_CHOOSE, lang)}
       styles={customStyles(floorsWithMarkers)}
       noOptionsMessage={() => 'Žádné podlaží'}
       isSearchable={false}

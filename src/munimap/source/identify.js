@@ -3,7 +3,7 @@
  */
 
 import VectorSource from 'ol/source/Vector';
-import {setIdentifyStore} from './_constants.js';
+import {setIdentifyStore} from './constants.js';
 
 /**
  * Create store for identify.

@@ -4,7 +4,7 @@
 import * as mm_assert from '../assert/assert.js';
 import * as mm_lang from '../lang/lang.js';
 import * as mm_utils from '../utils/utils.js';
-import {UNIT_PRIORITY_FIELD_NAME} from './_constants.js';
+import {UNIT_PRIORITY_FIELD_NAME} from './constants.js';
 
 /**
  * @typedef {import("./feature.js").TypeOptions} TypeOptions

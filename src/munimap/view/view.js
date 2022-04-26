@@ -5,8 +5,8 @@ import * as actions from '../redux/action.js';
 import * as mm_assert from '../assert/assert.js';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
-import {CLICK_HANDLER, IS_CLICKABLE} from '../layer/_constants.js';
-import {EventType} from './_constants.js';
+import {CLICK_HANDLER, IS_CLICKABLE} from '../layer/constants.js';
+import {EventType} from './constants.js';
 import {
   GET_MAIN_FEATURE_AT_PIXEL_STORE,
   TARGET_ELEMENTS_STORE,
@@ -50,11 +50,11 @@ import {createStore as createUnitStore} from '../source/unit.js';
 import {getDefaultLayers} from '../layer/layer.js';
 import {getMainFeatureAtPixel} from '../feature/feature.js';
 import {getUid} from 'ol';
-import {isFloorCode} from '../feature/_constants.functions.js';
+import {isFloorCode} from '../feature/utils.js';
 import {loadFloors} from '../load.js';
 import {refreshActiveStyle as refreshActiveDoorStyle} from './door.js';
 import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
-import {setEventByType} from './_constants.functions.js';
+import {setEventByType} from './utils.js';
 import {updateClusteredFeatures} from './cluster.js';
 
 /**

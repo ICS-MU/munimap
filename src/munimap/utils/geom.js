@@ -16,7 +16,7 @@ import {
   Polygon,
 } from 'ol/geom';
 import {getBufferValue} from './extent.js';
-import {isBuilding} from '../feature/_constants.functions.js';
+import {isBuilding} from '../feature/utils.js';
 
 /**
  * @typedef {import("ol/render/Feature").default} ol.render.Feature

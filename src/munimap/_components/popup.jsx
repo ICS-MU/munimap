@@ -5,7 +5,7 @@ import MapContext from '../_contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useLayoutEffect, useRef} from 'react';
 import sanitizeHtml from 'sanitize-html';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
-import {POPUP_TALE_HEIGHT, POPUP_TALE_INDENT} from '../view/_constants.js';
+import {POPUP_TALE_HEIGHT, POPUP_TALE_INDENT} from '../view/constants.js';
 import {getElementSize} from '../utils/dom.js';
 import {getPixelFromCoordinate} from '../utils/map.js';
 import {hot} from 'react-hot-loader';

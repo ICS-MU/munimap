@@ -2,8 +2,8 @@
  * @module source/source
  */
 import * as mm_utils from '../utils/utils.js';
-import * as srcs from './_constants.js';
-import {BUILDING_TYPE, DOOR_TYPE, ROOM_TYPE} from '../feature/_constants.js';
+import * as srcs from './constants.js';
+import {BUILDING_TYPE, DOOR_TYPE, ROOM_TYPE} from '../feature/constants.js';
 import {GeoJSON} from 'ol/format';
 import {MultiPolygon, Point, Polygon} from 'ol/geom';
 import {REQUIRED_CUSTOM_MARKERS} from '../constants.js';
@@ -13,7 +13,7 @@ import {
   getByCode as getBuildingByCode,
   hasInnerGeometry,
 } from '../feature/building.js';
-import {getOptPoiStore} from './_constants.js';
+import {getOptPoiStore} from './constants.js';
 import {getUid} from 'ol';
 import {
   isBuilding,
@@ -21,7 +21,7 @@ import {
   isOptPoiCtgUid,
   isRoom,
   isRoomCodeOrLikeExpr,
-} from '../feature/_constants.functions.js';
+} from '../feature/utils.js';
 import {testCodeOrLikeExpr} from '../utils/regex.js';
 
 /**

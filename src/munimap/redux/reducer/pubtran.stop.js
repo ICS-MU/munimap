@@ -3,7 +3,7 @@
  */
 import {INITIAL_STATE} from '../../conf.js';
 import {getAnimationRequestParams} from '../../utils/animation.js';
-import {getPubTranStore} from '../../source/_constants.js';
+import {getPubTranStore} from '../../source/constants.js';
 
 /**
  * @typedef {import("ol/geom/Point").default} ol.geom.Point

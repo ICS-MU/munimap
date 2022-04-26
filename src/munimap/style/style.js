@@ -9,15 +9,11 @@ import * as mm_store from '../utils/store.js';
 import * as mm_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
-import {IconPosition, PIN_SIZE, TEXT_FILL, TEXT_STROKE} from './_constants.js';
+import {IconPosition, PIN_SIZE, TEXT_FILL, TEXT_STROKE} from './constants.js';
 import {Style, Text} from 'ol/style';
 import {extendTitleOffset} from './icon.js';
 import {getDefaultLabel as getDefaultRoomLabel} from '../feature/room.js';
-import {
-  isBuilding,
-  isCustomMarker,
-  isRoom,
-} from '../feature/_constants.functions.js';
+import {isBuilding, isCustomMarker, isRoom} from '../feature/utils.js';
 
 /**
  * @typedef {import("./marker").LabelFunction} MarkerLabelFunction

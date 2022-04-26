@@ -14,7 +14,7 @@ import {
   PoiPurpose,
   ROOM_TYPE,
   RoomPurposesWithTooltip,
-} from './_constants.js';
+} from './constants.js';
 import {Point} from 'ol/geom';
 import {REQUIRED_CUSTOM_MARKERS} from '../constants.js';
 import {featureExtentIntersect} from '../utils/geom.js';
@@ -34,7 +34,7 @@ import {
   isFloorCode,
   isOptPoiCtgUid,
   isRoom,
-} from './_constants.functions.js';
+} from './utils.js';
 import {testCodeOrLikeExpr} from '../utils/regex.js';
 
 /**

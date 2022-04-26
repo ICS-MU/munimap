@@ -12,13 +12,13 @@ import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
 import {
   COMPLEX_FONT_SIZE,
   COMPLEX_ID_FIELD_NAME,
-} from '../feature/_constants.js';
+} from '../feature/constants.js';
 import {Style, Text} from 'ol/style';
-import {TEXT_FILL, TEXT_STROKE} from './_constants.js';
-import {alignTextToRows} from './_constants.functions.js';
-import {getMarkerStore} from '../source/_constants.js';
+import {TEXT_FILL, TEXT_STROKE} from './constants.js';
+import {alignTextToRows} from './utils.js';
+import {getMarkerStore} from '../source/constants.js';
 import {getUid as getStoreUid} from '../utils/store.js';
-import {isBuilding} from '../feature/_constants.functions.js';
+import {isBuilding} from '../feature/utils.js';
 
 /**
  * @typedef {import("ol/render/Feature").default} ol.render.Feature

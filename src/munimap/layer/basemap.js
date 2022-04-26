@@ -7,7 +7,7 @@ import * as mm_utils from '../utils/utils.js';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
-import {BasemapIds} from './_constants.js';
+import {BasemapIds} from './constants.js';
 import {assert} from '../assert/assert.js';
 import {isDefAndNotNull} from '../utils/utils.js';
 import {setStyle as setBaseMapStyle} from '../style/basemap.js';

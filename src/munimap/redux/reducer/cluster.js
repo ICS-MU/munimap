@@ -4,7 +4,7 @@
 import * as mm_assert from '../../assert/assert.js';
 import * as mm_range from '../../utils/range.js';
 import * as ol_extent from 'ol/extent';
-import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from '../../feature/_constants.js';
+import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from '../../feature/constants.js';
 import {Feature} from 'ol';
 import {INITIAL_STATE} from '../../conf.js';
 import {
@@ -15,7 +15,7 @@ import {
   getAnimationDuration,
   getAnimationRequestParams,
 } from '../../utils/animation.js';
-import {isCustomMarker, isDoor} from '../../feature/_constants.functions.js';
+import {isCustomMarker, isDoor} from '../../feature/utils.js';
 
 /**
  * @typedef {import("../../conf.js").AnimationRequestOptions} AnimationRequestOptions

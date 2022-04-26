@@ -16,10 +16,10 @@ import {
   BUILDING_UNITS_FIELD_NAME,
   COMPLEX_RESOLUTION,
   FLOOR_RESOLUTION,
-} from './_constants.js';
-import {alignTextToRows} from '../style/_constants.functions.js';
-import {getBuildingStore, getMarkerStore} from '../source/_constants.js';
-import {isBuilding, isDoor, isRoom} from './_constants.functions.js';
+} from './constants.js';
+import {alignTextToRows} from '../style/utils.js';
+import {getBuildingStore, getMarkerStore} from '../source/constants.js';
+import {isBuilding, isDoor, isRoom} from './utils.js';
 
 /**
  * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions

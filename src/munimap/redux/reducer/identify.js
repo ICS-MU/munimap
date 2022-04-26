@@ -6,15 +6,11 @@ import * as mm_identify from '../../identify/identify.js';
 import * as mm_utils from '../../utils/utils.js';
 import * as slctr from '../selector.js';
 import {Feature} from 'ol';
-import {IDENTIFIED_FEATURE_PROPERTY_NAME} from '../../identify/_constants.js';
-import {LOCATION_CODE_FIELD_NAME} from '../../identify/_constants.js';
+import {IDENTIFIED_FEATURE_PROPERTY_NAME} from '../../identify/constants.js';
+import {LOCATION_CODE_FIELD_NAME} from '../../identify/constants.js';
 import {Point} from 'ol/geom';
-import {getIdentifyStore} from '../../source/_constants.js';
-import {
-  isBuilding,
-  isDoor,
-  isRoom,
-} from '../../feature/_constants.functions.js';
+import {getIdentifyStore} from '../../source/constants.js';
+import {isBuilding, isDoor, isRoom} from '../../feature/utils.js';
 import {transform} from 'ol/proj';
 
 /**

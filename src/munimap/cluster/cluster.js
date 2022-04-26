@@ -13,7 +13,7 @@ import {
   getBuildingStore,
   getClusterStore,
   getMarkerStore,
-} from '../source/_constants.js';
+} from '../source/constants.js';
 import {getPropertySafe} from '../utils/object.js';
 import {getUid} from 'ol';
 

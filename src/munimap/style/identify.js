@@ -9,16 +9,16 @@ import {
   BUILDING_FONT_SIZE,
   IDENTIFY_FILL,
   ROOM_FONT_SIZE,
-} from './_constants.js';
+} from './constants.js';
 import {
   CENTER_GEOMETRY_FUNCTION,
   INTERSECT_CENTER_GEOMETRY_FUNCTION,
 } from '../utils/geom.js';
-import {FLOOR_RESOLUTION} from '../feature/_constants.js';
+import {FLOOR_RESOLUTION} from '../feature/constants.js';
 import {getDefaultLabel, getLabelWithPin} from './style.js';
 import {getIdentifiedFeature, getLocationCode} from '../identify/identify.js';
-import {getMarkerStore} from '../source/_constants.js';
-import {isBuilding, isDoor, isRoom} from '../feature/_constants.functions.js';
+import {getMarkerStore} from '../source/constants.js';
+import {isBuilding, isDoor, isRoom} from '../feature/utils.js';
 
 /**
  * @typedef {import("ol").Feature} ol.Feature

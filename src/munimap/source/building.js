@@ -4,10 +4,10 @@
 import * as mm_load from '../load.js';
 import * as mm_utils from '../utils/utils.js';
 import VectorSource from 'ol/source/Vector';
-import {BUILDING_TYPE} from '../feature/_constants.js';
+import {BUILDING_TYPE} from '../feature/constants.js';
 import {tile as ol_loadingstrategy_tile} from 'ol/loadingstrategy';
 import {createXYZ as ol_tilegrid_createXYZ} from 'ol/tilegrid';
-import {setBuildingStore} from './_constants.js';
+import {setBuildingStore} from './constants.js';
 
 /**
  * @typedef {import("ol/layer/Base").default} ol.layer.Base

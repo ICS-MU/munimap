@@ -6,7 +6,7 @@ import Feature from 'ol/Feature';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import {Circle, Fill, Stroke, Style} from 'ol/style';
-import {GEOLOCATION_LAYER_ID} from './_constants.js';
+import {GEOLOCATION_LAYER_ID} from './constants.js';
 
 /**
  * @typedef {import("ol/layer/Base").default} ol.layer.Base

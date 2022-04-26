@@ -3,9 +3,9 @@
  */
 import * as mm_range from '../../utils/range.js';
 import * as slctr from '../selector.js';
-import {FLOOR_RESOLUTION} from '../../feature/_constants.js';
+import {FLOOR_RESOLUTION} from '../../feature/constants.js';
 import {INITIAL_STATE} from '../../conf.js';
-import {getActivePoiStore} from '../../source/_constants.js';
+import {getActivePoiStore} from '../../source/constants.js';
 import {getAnimationRequestParams} from '../../utils/animation.js';
 
 /**

@@ -5,9 +5,9 @@ import {
   IDENTIFIED_FEATURE_PROPERTY_NAME,
   IdentifyTypes,
   LOCATION_CODE_FIELD_NAME,
-} from './_constants.js';
-import {getIdentifyStore} from '../source/_constants.js';
-import {isBuilding, isDoor, isRoom} from '../feature/_constants.functions.js';
+} from './constants.js';
+import {getIdentifyStore} from '../source/constants.js';
+import {isBuilding, isDoor, isRoom} from '../feature/utils.js';
 import {isDef} from '../utils/utils.js';
 
 /**

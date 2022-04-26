@@ -7,14 +7,14 @@ import * as mm_building from '../feature/building.js';
 import * as mm_cluster from '../cluster/cluster.js';
 import * as mm_range from '../utils/range.js';
 import * as mm_style from './style.js';
-import * as mm_style_constants from './_constants.js';
+import * as mm_style_constants from './constants.js';
 import * as mm_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import {
   CENTER_GEOMETRY_FUNCTION,
   INTERSECT_CENTER_GEOMETRY_FUNCTION,
 } from '../utils/geom.js';
-import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from '../feature/_constants.js';
+import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from '../feature/constants.js';
 import {Fill, Icon, Style, Text} from 'ol/style';
 import {Point} from 'ol/geom';
 import {calculateIconAnchor} from './icon.js';
@@ -23,7 +23,7 @@ import {
   isCustomMarker as isCustomMarkerFeature,
   isDoor as isDoorFeature,
   isRoom as isRoomFeature,
-} from '../feature/_constants.functions.js';
+} from '../feature/utils.js';
 
 /**
  * @typedef {import("ol/render/Event").default} RenderEvent

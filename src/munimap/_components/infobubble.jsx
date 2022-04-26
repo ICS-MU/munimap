@@ -6,7 +6,7 @@ import React, {useContext, useLayoutEffect, useRef} from 'react';
 import Select from './select.jsx';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {GeoJSON} from 'ol/format';
-import {POPUP_TALE_HEIGHT, POPUP_TALE_INDENT} from '../view/_constants.js';
+import {POPUP_TALE_HEIGHT, POPUP_TALE_INDENT} from '../view/constants.js';
 import {featureExtentIntersect} from '../utils/geom.js';
 import {sort as floorSortFn} from '../feature/floor.js';
 import {getByCode as getBuildingByCode} from '../feature/building.js';

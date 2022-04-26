@@ -8,7 +8,7 @@ import {
   isDoor,
   isOptPoiCtgUid,
   isRoom,
-} from '../../feature/_constants.functions.js';
+} from '../../feature/utils.js';
 
 /**
  * @typedef {import("../../conf.js").State} State

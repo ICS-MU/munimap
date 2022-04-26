@@ -17,7 +17,7 @@ import {
   getClusterStore,
   getIdentifyStore,
   getMarkerStore,
-} from './source/_constants.js';
+} from './source/constants.js';
 import {handleIdentifyCallback} from './redux/reducer/identify.js';
 
 /**

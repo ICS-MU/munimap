@@ -4,8 +4,8 @@
 
 import * as mm_assert from '../assert/assert.js';
 import * as mm_range from '../utils/range.js';
-import * as mm_style_constants from './_constants.js';
-import {FLOOR_RESOLUTION, PoiPurpose} from '../feature/_constants.js';
+import * as mm_style_constants from './constants.js';
+import {FLOOR_RESOLUTION, PoiPurpose} from '../feature/constants.js';
 import {getByCode as getBuildingByCode} from '../feature/building.js';
 
 /**

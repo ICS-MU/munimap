@@ -5,14 +5,9 @@
 import * as actions from '../redux/action.js';
 import * as mm_building from './building.js';
 import * as mm_range from '../utils/range.js';
-import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from './_constants.js';
-import {getMarkerStore} from '../source/_constants.js';
-import {
-  isBuilding,
-  isCustomMarker,
-  isDoor,
-  isRoom,
-} from './_constants.functions.js';
+import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from './constants.js';
+import {getMarkerStore} from '../source/constants.js';
+import {isBuilding, isCustomMarker, isDoor, isRoom} from './utils.js';
 import {isInSelectedFloor as isRoomInSelectedFloor} from './room.js';
 
 /**

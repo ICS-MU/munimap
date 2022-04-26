@@ -5,10 +5,10 @@
 import * as mm_assert from '../assert/assert.js';
 import * as mm_building from '../feature/building.js';
 import VectorLayer from 'ol/layer/Vector';
-import {BUILDING_LABEL_LAYER_ID, BUILDING_LAYER_ID} from './_constants.js';
-import {BUILDING_TYPE} from '../feature/_constants.js';
-import {COMPLEX_RESOLUTION} from '../feature/_constants.js';
-import {getBuildingStore} from '../source/_constants.js';
+import {BUILDING_LABEL_LAYER_ID, BUILDING_LAYER_ID} from './constants.js';
+import {BUILDING_TYPE} from '../feature/constants.js';
+import {COMPLEX_RESOLUTION} from '../feature/constants.js';
+import {getBuildingStore} from '../source/constants.js';
 
 /**
  * @typedef {import("./layer.js").VectorLayerOptions} VectorLayerOptions

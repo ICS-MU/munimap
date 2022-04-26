@@ -4,8 +4,8 @@
 
 import * as mm_assert from '../assert/assert.js';
 import VectorLayer from 'ol/layer/Vector';
-import {IDENTIFY_LAYER_ID} from './_constants.js';
-import {getIdentifyStore} from '../source/_constants.js';
+import {IDENTIFY_LAYER_ID} from './constants.js';
+import {getIdentifyStore} from '../source/constants.js';
 
 /**
  * @typedef {import('ol').Map} ol.Map

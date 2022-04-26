@@ -2,7 +2,7 @@
  * @module source/floor
  */
 import VectorSource from 'ol/source/Vector';
-import {setFloorStore} from './_constants.js';
+import {setFloorStore} from './constants.js';
 
 /**
  * Create store for complexes.

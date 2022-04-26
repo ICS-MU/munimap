@@ -5,9 +5,9 @@
 import * as mm_floor from '../feature/floor.js';
 import * as mm_identify from '../identify/identify.js';
 import * as mm_lang from '../lang/lang.js';
-import * as mm_lyr from '../layer/_constants.js';
+import * as mm_lyr from '../layer/constants.js';
 import * as mm_range from '../utils/range.js';
-import * as mm_srcs from '../source/_constants.js';
+import * as mm_srcs from '../source/constants.js';
 import * as mm_utils from '../utils/utils.js';
 import * as ol_extent from 'ol/extent';
 import {BUILDING_RESOLUTION, ROOM_RESOLUTION} from '../cluster/cluster.js';
@@ -18,7 +18,7 @@ import {
   MARKER_RESOLUTION,
   PUBTRAN_RESOLUTION,
   PUBTRAN_TYPE,
-} from '../feature/_constants.js';
+} from '../feature/constants.js';
 import {IDENTIFY_CALLBACK_STORE, MARKER_LABEL_STORE} from '../constants.js';
 import {MultiPolygon, Polygon} from 'ol/geom';
 import {calculateBubbleOffsets} from '../style/icon.js';
@@ -59,13 +59,8 @@ import {getStyleFunction as getIdentifyStyleFunction} from '../style/identify.js
 import {getInExtent as getMarkerInExtent} from '../source/marker.js';
 import {getStyleFunction as getMarkerStyleFunction} from '../style/marker.js';
 import {getSelectedFloorCodesWithMarkers} from '../feature/marker.js';
-import {isBuildingCode} from '../feature/_constants.functions.js';
-import {
-  isDoor,
-  isFloorCode,
-  isOptPoiCtgUid,
-  isRoom,
-} from '../feature/_constants.functions.js';
+import {isBuildingCode} from '../feature/utils.js';
+import {isDoor, isFloorCode, isOptPoiCtgUid, isRoom} from '../feature/utils.js';
 
 /**
  * @typedef {import("../conf.js").State} State

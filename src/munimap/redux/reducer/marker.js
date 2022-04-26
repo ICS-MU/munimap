@@ -5,17 +5,13 @@ import * as mm_identify from '../../identify/identify.js';
 import * as mm_range from '../../utils/range.js';
 import * as ol_extent from 'ol/extent';
 import * as slctr from '../selector.js';
-import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from '../../feature/_constants.js';
+import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from '../../feature/constants.js';
 import {INITIAL_STATE} from '../../conf.js';
 import {ofFeature as extentOfFeature} from '../../utils/extent.js';
 import {getAnimationRequestParams} from '../../utils/animation.js';
 import {getClosestPointToPixel} from '../../feature/feature.js';
 import {getViewOptions} from './utils.js';
-import {
-  isCustomMarker,
-  isDoor,
-  isRoom,
-} from '../../feature/_constants.functions.js';
+import {isCustomMarker, isDoor, isRoom} from '../../feature/utils.js';
 
 /**
  * @typedef {import("../../conf.js").State} State

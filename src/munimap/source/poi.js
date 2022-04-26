@@ -5,7 +5,7 @@ import * as mm_utils from '../utils/utils.js';
 import VectorSource from 'ol/source/Vector';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
 import {loadActivePois} from '../load.js';
-import {setActivePoiStore, setPoiStore} from './_constants.js';
+import {setActivePoiStore, setPoiStore} from './constants.js';
 import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
 
 /**

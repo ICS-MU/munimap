@@ -4,10 +4,10 @@
 import * as mm_identify from '../../identify/identify.js';
 import * as mm_range from '../../utils/range.js';
 import * as slctr from '../selector.js';
-import {FLOOR_RESOLUTION} from '../../feature/_constants.js';
+import {FLOOR_RESOLUTION} from '../../feature/constants.js';
 import {INITIAL_STATE} from '../../conf.js';
 import {getAnimationRequestParams} from '../../utils/animation.js';
-import {getBuildingStore} from '../../source/_constants.js';
+import {getBuildingStore} from '../../source/constants.js';
 import {getClosestPointToPixel} from '../../feature/feature.js';
 
 /**

@@ -16,7 +16,7 @@ import {
 } from 'ol/extent';
 import {getUid} from 'ol/util';
 import {isMarker} from '../feature/marker.js';
-import {setClusterStore} from './_constants.js';
+import {setClusterStore} from './constants.js';
 
 /**
  * @typedef {import("ol/source/Cluster").Options} ClusterSourceOptions

@@ -5,14 +5,14 @@ import * as actions from '../action.js';
 import * as mm_load from '../../load.js';
 import * as mm_range from '../../utils/range.js';
 import * as slctr from '../selector.js';
-import * as srcs from '../../source/_constants.js';
-import {EventType} from '../../view/_constants.js';
-import {FLOOR_RESOLUTION} from '../../feature/_constants.js';
+import * as srcs from '../../source/constants.js';
+import {EventType} from '../../view/constants.js';
+import {FLOOR_RESOLUTION} from '../../feature/constants.js';
 import {INITIAL_STATE} from '../../conf.js';
 import {getAnimationRequest as getBuildingAnimationRequest} from './building.js';
 import {getAnimationRequest as getClusterAnimationRequest} from './cluster.js';
 import {getAnimationRequest as getComplexAnimationRequest} from './complex.js';
-import {getEventByType} from '../../view/_constants.functions.js';
+import {getEventByType} from '../../view/utils.js';
 import {
   getFeaturesByPriority,
   getPopupFeatureUid,
@@ -31,7 +31,7 @@ import {
 } from './identify.js';
 import {handleMapViewChange} from '../../view/view.js';
 import {handleReset} from '../../reset.js';
-import {isCustomMarker} from '../../feature/_constants.functions.js';
+import {isCustomMarker} from '../../feature/utils.js';
 import {isSameCode} from '../../feature/building.js';
 
 /**

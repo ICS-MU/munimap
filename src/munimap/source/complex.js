@@ -3,7 +3,7 @@
  */
 
 import VectorSource from 'ol/source/Vector';
-import {setComplexStore} from './_constants.js';
+import {setComplexStore} from './constants.js';
 
 /**
  * Create store for complexes.
