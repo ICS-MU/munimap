@@ -27,17 +27,16 @@ const createStore = (targetId) => {
  * Create store for active doors.
  * @param {redux.Store} store store
  * @param {string} targetId targetId
- * @param {Function} callback callback
  * @return {VectorSource} store
  */
-const createActiveStore = (store, targetId, callback) => {
+const createActiveStore = (store, targetId) => {
   const activeStore = new VectorSource({
     strategy: tileLoadingStrategy(
       createTilegridXYZ({
         tileSize: 512,
       })
     ),
-    loader: mm_utils.partial(loadActiveDoors, {store, callback}),
+    loader: mm_utils.partial(loadActiveDoors, store),
   });
   setActiveDoorStore(targetId, activeStore);
   return activeStore;

@@ -360,12 +360,12 @@ const createFeatureStores = (reduxStore) => {
   createUnitStore(targetId);
   createFloorStore(targetId);
   createRoomStore(targetId);
-  createDefaultRoomStore(targetId, callbackFn);
-  createActiveRoomStore(reduxStore, targetId, callbackFn);
+  createDefaultRoomStore(targetId);
+  createActiveRoomStore(reduxStore, targetId);
   createDoorStore(targetId);
-  createActiveDoorStore(reduxStore, targetId, callbackFn);
+  createActiveDoorStore(reduxStore, targetId);
   createPoiStore(targetId);
-  createActivePoiStore(reduxStore, targetId, callbackFn);
+  createActivePoiStore(reduxStore, targetId);
   createOptPoiStore(targetId);
 
   if (state.requiredOpts.pubTran) {

@@ -31,10 +31,9 @@ const createStore = (targetId) => {
 /**
  * Create store for default rooms.
  * @param {string} targetId targetId
- * @param {Function} callback callback
  * @return {VectorSource} store
  */
-const createDefaultStore = (targetId, callback) => {
+const createDefaultStore = (targetId) => {
   const defaultStore = new VectorSource({
     strategy: tileLoadingStrategy(
       createTilegridXYZ({
@@ -47,7 +46,6 @@ const createDefaultStore = (targetId, callback) => {
       source: defaultStore,
       type: ROOM_TYPE,
       where: 'vychoziPodlazi = 1',
-      callback: callback,
     })
   );
   setDefaultRoomStore(targetId, defaultStore);
@@ -58,17 +56,16 @@ const createDefaultStore = (targetId, callback) => {
  * Create store for active rooms.
  * @param {redux.Store} store store
  * @param {string} targetId targetId
- * @param {Function} callback callback
  * @return {VectorSource} store
  */
-const createActiveStore = (store, targetId, callback) => {
+const createActiveStore = (store, targetId) => {
   const activeStore = new VectorSource({
     strategy: tileLoadingStrategy(
       createTilegridXYZ({
         tileSize: 512,
       })
     ),
-    loader: mm_utils.partial(loadActiveRooms, {store, callback}),
+    loader: mm_utils.partial(loadActiveRooms, store),
   });
   setActiveRoomStore(targetId, activeStore);
   return activeStore;

@@ -8,7 +8,7 @@ import * as mm_range from '../utils/range.js';
 import * as slctr from './selector.js';
 import * as srcs from '../source/_constants.js';
 import {EventType} from '../view/_constants.js';
-import {FLOOR_RESOLUTION, RoomTypes} from '../feature/_constants.js';
+import {FLOOR_RESOLUTION} from '../feature/_constants.js';
 import {INITIAL_STATE} from '../conf.js';
 import {getAnimationRequest as getBuildingAnimationRequest} from '../view/building.js';
 import {getAnimationRequest as getClusterAnimationRequest} from '../view/cluster.js';
@@ -220,26 +220,6 @@ const createReducer = (initialState) => {
           result !== undefined ? result : state.selectedFeature;
         return newState;
 
-      //ROOMS_LOADED
-      case actions.ROOMS_LOADED:
-        const type = action.payload;
-        return {
-          ...state,
-          defaultRoomsTimestamp:
-            type === RoomTypes.DEFAULT
-              ? Date.now()
-              : state.defaultRoomsTimestamp,
-          activeRoomsTimestamp:
-            type === RoomTypes.ACTIVE ? Date.now() : state.activeRoomsTimestamp,
-        };
-
-      //DOORS_LOADED
-      case actions.DOORS_LOADED:
-        return {
-          ...state,
-          doorsTimestamp: Date.now(),
-        };
-
       //SELECTED_FEATURE_CHANGED:
       case actions.SELECTED_FEATURE_CHANGED:
         const newValue = action.payload;
@@ -310,13 +290,6 @@ const createReducer = (initialState) => {
             render: false,
             withMessage: false,
           },
-        };
-
-      //POIS_LOADED
-      case actions.POIS_LOADED:
-        return {
-          ...state,
-          poisTimestamp: Date.now(),
         };
 
       //GEOLOCATION_CLICKED

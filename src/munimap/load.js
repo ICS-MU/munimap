@@ -25,7 +25,6 @@ import {
   POI_TYPE,
   PoiPurpose,
   ROOM_TYPE,
-  RoomTypes,
   UNIT_TYPE,
 } from './feature/_constants.js';
 import {EsriJSON} from 'ol/format';
@@ -121,12 +120,6 @@ import {refreshFloorBasedStores} from './source/source.js';
  * @property {string} [method] method
  * @property {Processor} [processor] processor
  * @property {Function} [callback] callback
- */
-
-/**
- * @typedef {Object} LoadActiveOptions
- * @property {Function} [callback] callback
- * @property {redux.Store} [store] store
  */
 
 /**
@@ -880,25 +873,16 @@ const loadDefaultRooms = async (
   const defaultRoomStore = srcs.getDefaultRoomStore(targetId);
   const roomsToAdd = getNotYetAddedFeatures(defaultRoomStore, rooms);
   defaultRoomStore.addFeatures(roomsToAdd);
-
-  if (options.callback) {
-    options.callback(actions.rooms_loaded, RoomTypes.DEFAULT);
-  }
 };
 
 /**
  *
- * @param {LoadActiveOptions} options options
+ * @param {redux.Store} store store
  * @param {ol.extent.Extent} extent extent
  * @param {number} resolution resolution
  * @param {ol.proj.Projection} projection projection
  */
-const loadActiveRooms = async (
-  {store, callback},
-  extent,
-  resolution,
-  projection
-) => {
+const loadActiveRooms = async (store, extent, resolution, projection) => {
   const activeFloorCodes = slctr.getActiveFloorCodes(store.getState());
   const targetId = slctr.getTargetId(store.getState());
 
@@ -926,25 +910,16 @@ const loadActiveRooms = async (
       roomsFromActiveFloor
     );
     activeStore.addFeatures(roomsToAdd);
-
-    if (callback) {
-      callback(actions.rooms_loaded, RoomTypes.ACTIVE);
-    }
   }
 };
 
 /**
- * @param {LoadActiveOptions} options options
+ * @param {redux.Store} store store
  * @param {ol.extent.Extent} extent extent
  * @param {number} resolution resolution
  * @param {ol.proj.Projection} projection projection
  */
-const loadActiveDoors = async (
-  {store, callback},
-  extent,
-  resolution,
-  projection
-) => {
+const loadActiveDoors = async (store, extent, resolution, projection) => {
   const activeFloorCodes = slctr.getActiveFloorCodes(store.getState());
   const targetId = slctr.getTargetId(store.getState());
   let where;
@@ -970,25 +945,16 @@ const loadActiveDoors = async (
       doorsFromActiveFloor
     );
     activeStore.addFeatures(doorsToAdd);
-
-    if (callback) {
-      callback(actions.doors_loaded);
-    }
   }
 };
 
 /**
- * @param {LoadActiveOptions} options options
+ * @param {redux.Store} store store
  * @param {ol.extent.Extent} extent extent
  * @param {number} resolution resolution
  * @param {ol.proj.Projection} projection projection
  */
-const loadActivePois = async (
-  {store, callback},
-  extent,
-  resolution,
-  projection
-) => {
+const loadActivePois = async (store, extent, resolution, projection) => {
   const activeFloorCodes = slctr.getActiveFloorCodes(store.getState());
   const targetId = slctr.getTargetId(store.getState());
 
@@ -1016,10 +982,6 @@ const loadActivePois = async (
   const activeStore = srcs.getActivePoiStore(targetId);
   const poisToAdd = getNotYetAddedFeatures(activeStore, pois);
   activeStore.addFeatures(poisToAdd);
-
-  if (callback) {
-    callback(actions.pois_loaded);
-  }
 };
 
 /**

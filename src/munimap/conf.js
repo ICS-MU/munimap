@@ -88,10 +88,6 @@ import {IdentifyTypes} from './identify/_constants.js';
  * @property {number} buildingsTimestamp buildings timestamp
  * @property {string} selectedFeature selected feature (building or floor)
  * @property {number} floorsTimestamp floors timestamp
- * @property {number} defaultRoomsTimestamp default rooms timestamp
- * @property {number} activeRoomsTimestamp active rooms timestamp
- * @property {number} doorsTimestamp doors timestamp
- * @property {number} poisTimestamp pois timestamp
  * @property {number} optPoisTimestamp opt pois timestamp
  * @property {number} identifyTimestamp identify timestamp
  * @property {ErrorMessageState} errorMessage error message
@@ -175,10 +171,6 @@ export const INITIAL_STATE = {
   buildingsTimestamp: null,
   selectedFeature: null,
   floorsTimestamp: null,
-  defaultRoomsTimestamp: null,
-  activeRoomsTimestamp: null,
-  doorsTimestamp: null,
-  poisTimestamp: null,
   optPoisTimestamp: null,
   identifyTimestamp: null,
   errorMessage: {

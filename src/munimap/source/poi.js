@@ -27,17 +27,16 @@ const createStore = (targetId) => {
  * Create store for active pois.
  * @param {redux.Store} store store
  * @param {string} targetId targetId
- * @param {Function} callback callback
  * @return {VectorSource} store
  */
-const createActiveStore = (store, targetId, callback) => {
+const createActiveStore = (store, targetId) => {
   const poiStore = new VectorSource({
     strategy: tileLoadingStrategy(
       createTilegridXYZ({
         tileSize: 512,
       })
     ),
-    loader: mm_utils.partial(loadActivePois, {store, callback}),
+    loader: mm_utils.partial(loadActivePois, store),
   });
   setActivePoiStore(targetId, poiStore);
   return poiStore;

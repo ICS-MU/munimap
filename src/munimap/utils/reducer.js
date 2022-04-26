@@ -17,8 +17,6 @@ import {
 /**
  * @typedef {Object} FeatureTimestampOptions
  * @property {number} buildingsTimestamp timestamp
- * @property {number} defaultRoomsTimestamp timestamp
- * @property {number} doorsTimestamp timestamp
  */
 
 const getLoadedTypes = (features, opt_requiredMarkers) => {
@@ -43,10 +41,6 @@ const getFeaturesTimestamps = (state, loadedTypes) => {
     buildingsTimestamp: Object.values(loadedTypes).some((t) => t)
       ? Date.now()
       : state.buildingsTimestamp,
-    defaultRoomsTimestamp: loadedTypes.room
-      ? Date.now()
-      : state.defaultRoomsTimestamp,
-    doorsTimestamp: loadedTypes.door ? Date.now() : state.doorsTimestamp,
   };
 };
 

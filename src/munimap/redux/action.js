@@ -97,18 +97,6 @@ export const FLOORS_LOADED = 'FLOORS_LOADED';
  * @type {string}
  * @const
  */
-export const ROOMS_LOADED = 'ROOMS_LOADED';
-
-/**
- * @type {string}
- * @const
- */
-export const DOORS_LOADED = 'DOORS_LOADED';
-
-/**
- * @type {string}
- * @const
- */
 export const SELECTED_FEATURE_CHANGED = 'SELECTED_FEATURE_CHANGED';
 
 /**
@@ -134,12 +122,6 @@ export const TARGET_BLURRED = 'TARGET_BLURRED';
  * @const
  */
 export const TARGET_FOCUSED = 'TARGET_FOCUSED';
-
-/**
- * @type {string}
- * @const
- */
-export const POIS_LOADED = 'POIS_LOADED';
 
 /**
  * @type {string}
@@ -332,26 +314,6 @@ export function floors_loaded(newSelectedIsActive) {
 }
 
 /**
- * @param {string} roomType loaded room type
- * @return {PayloadAsyncAction} action
- */
-export function rooms_loaded(roomType) {
-  return {
-    type: ROOMS_LOADED,
-    payload: roomType,
-  };
-}
-
-/**
- * @return {PayloadAsyncAction} action
- */
-export function doors_loaded() {
-  return {
-    type: DOORS_LOADED,
-  };
-}
-
-/**
  * @param {string} code new code (bldg, floor)
  * @return {PayloadAsyncAction} action
  */
@@ -399,15 +361,6 @@ export function target_focused() {
 export function target_blurred() {
   return {
     type: TARGET_BLURRED,
-  };
-}
-
-/**
- * @return {PayloadAsyncAction} action
- */
-export function pois_loaded() {
-  return {
-    type: POIS_LOADED,
   };
 }
 
