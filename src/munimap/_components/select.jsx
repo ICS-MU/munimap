@@ -4,7 +4,6 @@ import * as slctr from '../redux/selector.js';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Select from 'react-select';
-import {ENABLE_RENDER_LOGS} from '../conf.js';
 import {Feature} from 'ol';
 import {FloorTypes} from '../feature/constants.js';
 import {hot} from 'react-hot-loader';
@@ -247,14 +246,14 @@ const SelectComponent = (props) => {
     const locCode = /**@type {string}*/ (floor.get('polohKod'));
     const floorCode = locCode.slice(5, 8);
     return {
-      label: getLabelAbbr(floorCode, lang),
+      label: (
+        <span title={getLabel(floorCode, lang)}>
+          {getLabelAbbr(floorCode, lang)}
+        </span>
+      ),
       value: locCode,
     };
   });
-
-  if (ENABLE_RENDER_LOGS) {
-    console.log('########## SELECT-render');
-  }
 
   return (
     <Select
