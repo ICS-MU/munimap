@@ -4,7 +4,6 @@ import * as slctr from '../redux/selector.js';
 import MapContext from '../_contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useLayoutEffect, useRef} from 'react';
 import sanitizeHtml from 'sanitize-html';
-import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {POPUP_TALE_HEIGHT, POPUP_TALE_INDENT} from '../view/constants.js';
 import {getElementSize} from '../utils/dom.js';
 import {getPixelFromCoordinate} from '../utils/map.js';
@@ -67,9 +66,6 @@ const PopupComponent = (props) => {
   }, []);
 
   useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## POPUP-useEffect-hideResolution');
-    }
     if (hideResolution && resolution) {
       if (!mm_range.contains(hideResolution, resolution)) {
         closePopup();
@@ -78,9 +74,6 @@ const PopupComponent = (props) => {
   }, [hideResolution, resolution]);
 
   useLayoutEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## POPUP-useEffect-content');
-    }
     if (map && popupContentElRef.current) {
       popupContentElRef.current.innerHTML = sanitizeHtml(content, {
         allowedAttributes: {
@@ -95,9 +88,6 @@ const PopupComponent = (props) => {
   }, [map, content]);
 
   useLayoutEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## POPUP-useLayoutEffect-position');
-    }
     if (map && popupElRef.current && positionInCoords) {
       const centroidAsPixel = getPixelFromCoordinate(positionInCoords, {
         size,
@@ -118,10 +108,6 @@ const PopupComponent = (props) => {
       return () => unlistenByKey(k);
     }
   }, [map, positionInCoords, offsetX, offsetY]);
-
-  if (ENABLE_RENDER_LOGS) {
-    console.log('########## POPUP-render');
-  }
 
   return (
     <div

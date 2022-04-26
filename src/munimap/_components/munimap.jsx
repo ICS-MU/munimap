@@ -12,7 +12,6 @@ import PropTypes from 'prop-types';
 import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import Tooltip from './tooltip.jsx';
 import {CREATED_MAPS, GET_MAIN_FEATURE_AT_PIXEL_STORE} from '../constants.js';
-import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {
   FLOOR_RESOLUTION,
   POI_RESOLUTION,
@@ -180,9 +179,6 @@ const MunimapComponent = (props) => {
   const map = /** @type {ol.Map}*/ (mapRef && mapRef.current);
 
   useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## MUNIMAP-useEffect-depListeners');
-    }
     const eventKeys = mm_view.attachDependentMapListeners(map, dispatch, {
       requiredOpts,
       selectedFeature,
@@ -192,9 +188,6 @@ const MunimapComponent = (props) => {
   }, [map, requiredOpts, selectedFeature, isIdentifyEnabled]);
 
   useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## MUNIMAP-useEffect-addLayers');
-    }
     if (areMarkersLoaded && areZoomToLoaded) {
       mm_view.ensureLayers(map, {
         markers,
@@ -216,9 +209,6 @@ const MunimapComponent = (props) => {
   ]);
 
   useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## MUNIMAP-useEffect-clusterUpdate');
-    }
     mm_view.ensureClusterUpdate(map, {
       targetId: requiredOpts.targetId,
       labels: requiredOpts.labels,
@@ -227,23 +217,14 @@ const MunimapComponent = (props) => {
   }, [map, requiredOpts, buildingsCount]);
 
   useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## MUNIMAP-useEffect-ensureBasemap');
-    }
     mm_view.ensureBaseMap(map, basemapLayer);
   }, [map, basemapLayer]);
 
   useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## MUNIMAP-useEffect-refreshStyles');
-    }
     mm_view.refreshStyles(map, allStyleFunctions, requiredOpts.pubTran);
   }, [map, allStyleFunctions, requiredOpts]);
 
   useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## MUNIMAP-useEffect-refreshVisibility');
-    }
     mm_view.refreshVisibility(map, {
       isIdentifyEnabled,
       identifyVisibled,
@@ -251,9 +232,6 @@ const MunimapComponent = (props) => {
   }, [map, isIdentifyEnabled, identifyVisibled]);
 
   useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## MUNIMAP-useEffect-animate');
-    }
     const callback =
       resetTimestamp === 0
         ? () => dispatch(actions.animationFinishedAfterReset())
@@ -262,19 +240,12 @@ const MunimapComponent = (props) => {
   }, [map, animationRequest]);
 
   useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## MUNIMAP-useEffect-afterInit');
-    }
     if (mapInitialized) {
       afterInit(map);
     }
   }, [map, mapInitialized]);
 
   useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## MUNIMAP-tooltip');
-    }
-
     if (map) {
       const key = map.on('pointermove', (evt) => {
         ensureTooltip(evt, {
@@ -291,10 +262,6 @@ const MunimapComponent = (props) => {
   }, [map, tooltipProps, selectedFeature, requiredOpts]);
 
   useLayoutEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## MUNIMAP-useLayoutEffect');
-    }
-
     if (areMarkersLoaded && areZoomToLoaded) {
       if (!mapRef.current) {
         const _map = new Map({
@@ -333,10 +300,6 @@ const MunimapComponent = (props) => {
       }
     }
   };
-
-  if (ENABLE_RENDER_LOGS) {
-    console.log('########## MUNIMAP-render');
-  }
 
   return (
     <>

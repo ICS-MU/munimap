@@ -1,7 +1,6 @@
 import MapContext from '../_contexts/mapcontext.jsx';
 import PropTypes from 'prop-types';
 import React, {useContext, useLayoutEffect, useRef} from 'react';
-import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {
   getCenter,
   getResolution,
@@ -58,9 +57,6 @@ const TooltipComponent = (props) => {
   const map = mapRef && mapRef.current;
 
   useLayoutEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## TOOLTIP-useLayoutEffect-position');
-    }
     if (map && tooltipElRef.current && positionInCoords) {
       const centroidAsPixel = getPixelFromCoordinate(positionInCoords, {
         size,
@@ -71,10 +67,6 @@ const TooltipComponent = (props) => {
       updatePosition(tooltipElRef.current, centroidAsPixel);
     }
   }, [map, positionInCoords, size, resolution, rotation, center]);
-
-  if (ENABLE_RENDER_LOGS) {
-    console.log('########## TOOLTIP-render');
-  }
 
   return (
     <div

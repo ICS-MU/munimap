@@ -4,7 +4,6 @@ import * as slctr from '../redux/selector.js';
 import MapContext from '../_contexts/mapcontext.jsx';
 import React, {useContext, useLayoutEffect, useRef} from 'react';
 import Select from './select.jsx';
-import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {GeoJSON} from 'ol/format';
 import {POPUP_TALE_HEIGHT, POPUP_TALE_INDENT} from '../view/constants.js';
 import {featureExtentIntersect} from '../utils/geom.js';
@@ -130,9 +129,6 @@ const InfoBubbleComponent = (props) => {
 
   const bubbleRef = useRef(null);
   useLayoutEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## INFOBUBBLE-useEffect-position');
-    }
     if (map && bubbleRef.current) {
       const opts = {extent, resolution, selectedFeature, targetId};
       const positionInfo = getInfoBoxPosition(bubbleRef.current, opts);
@@ -160,10 +156,6 @@ const InfoBubbleComponent = (props) => {
       }
     }
   }, [map, extent, resolution, selectedFeature, size, rotation, center]);
-
-  if (ENABLE_RENDER_LOGS) {
-    console.log('########## INFOBUBBLE-render');
-  }
 
   return (
     <div

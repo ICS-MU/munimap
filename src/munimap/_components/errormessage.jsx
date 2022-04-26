@@ -3,7 +3,6 @@ import * as mm_lang from '../lang/lang.js';
 import * as slctr from '../redux/selector.js';
 import PropTypes from 'prop-types';
 import React, {useLayoutEffect, useRef} from 'react';
-import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {hot} from 'react-hot-loader';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -113,9 +112,6 @@ const ErrorMessageComponent = (props) => {
 
   const msg = createInnerText(invalidCodes, noGeomCodes, simpleScroll, lang);
   useLayoutEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## ERRORMSG-useLayoutEffect');
-    }
     if (
       withMessage === true ||
       (hasInvalidCodes && withMessage === null) ||
@@ -130,10 +126,6 @@ const ErrorMessageComponent = (props) => {
       }
     }
   }, [withMessage, hasInvalidCodes, hasNoGeomCodes, msg]);
-
-  if (ENABLE_RENDER_LOGS) {
-    console.log('########## ERRORMSG-render');
-  }
 
   if (
     (hasInvalidCodes || shouldBlockMap || hasNoGeomCodes) &&

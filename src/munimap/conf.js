@@ -103,18 +103,6 @@ import {IdentifyTypes} from './identify/constants.js';
 export const ENABLE_SELECTOR_LOGS = false;
 
 /**
- * Whether to log react useEffect to console.
- * @type {boolean}
- */
-export const ENABLE_EFFECT_LOGS = false;
-
-/**
- * Whether to log react render to console.
- * @type {boolean}
- */
-export const ENABLE_RENDER_LOGS = false;
-
-/**
  * @type {string}
  */
 export const MUNIMAP_URL = PRODUCTION

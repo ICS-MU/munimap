@@ -2,7 +2,6 @@ import * as actions from '../../redux/action.js';
 import * as mm_lang from '../../lang/lang.js';
 import * as slctr from '../../redux/selector.js';
 import MapContext from '../../_contexts/mapcontext.jsx';
-import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
 import {FullScreen} from 'ol/control';
 import {forwardRef, useContext, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
@@ -22,9 +21,6 @@ const FullscreenComponent = forwardRef((props, ref) => {
     .current;
 
   useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## FULLSCREEN-useEffect-control');
-    }
     const onClick = () => {
       dispatch(
         actions.log_action_happened({
@@ -35,10 +31,7 @@ const FullscreenComponent = forwardRef((props, ref) => {
     };
     if (map && parentEl) {
       const fullscreen = new FullScreen({
-        tipLabel: mm_lang.getMsg(
-          mm_lang.Translations.FULLSCREEN,
-          lang
-        ),
+        tipLabel: mm_lang.getMsg(mm_lang.Translations.FULLSCREEN, lang),
         target: parentEl,
       });
       fullscreen.on(['enterfullscreen', 'leavefullscreen'], onClick);
@@ -49,10 +42,6 @@ const FullscreenComponent = forwardRef((props, ref) => {
       };
     }
   }, [map, parentEl]);
-
-  if (ENABLE_RENDER_LOGS) {
-    console.log('########## FULLSCREEN-render');
-  }
 
   return null;
 });

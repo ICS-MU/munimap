@@ -4,7 +4,6 @@ import MapContext from '../../_contexts/mapcontext.jsx';
 import PropTypes from 'prop-types';
 import React, {forwardRef, useContext, useEffect} from 'react';
 import {Control} from 'ol/control';
-import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
 
 /**
  * @type {React.ForwardRefExoticComponent<
@@ -21,9 +20,6 @@ const ToolbarComponent = forwardRef((props, ref) => {
     ref && /** @type {React.MutableRefObject<HTMLDivElement>}*/ (ref).current;
 
   useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## TOOLBAR-useEffect-control');
-    }
     let toolBarControl;
     if (map && toolBarEl && horizontal) {
       toolBarControl = new Control({
@@ -37,10 +33,6 @@ const ToolbarComponent = forwardRef((props, ref) => {
       }
     };
   }, [map, horizontal, toolBarEl]);
-
-  if (ENABLE_RENDER_LOGS) {
-    console.log('########## TOOLBAR-render');
-  }
 
   const className =
     'ontouchstart' in window ? 'ol-touch munimap-tool-bar' : 'munimap-tool-bar';

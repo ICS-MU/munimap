@@ -2,10 +2,9 @@ import * as actions from '../../redux/action.js';
 import * as mm_lang from '../../lang/lang.js';
 import * as slctr from '../../redux/selector.js';
 import MapContext from '../../_contexts/mapcontext.jsx';
-import React, {useContext, useEffect, useLayoutEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import ToolbarComponent from './toolbar.jsx';
 import {Control} from 'ol/control';
-import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
 import {hot} from 'react-hot-loader';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -61,9 +60,6 @@ const MapToolsComponent = (props) => {
   }
 
   useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## MAPTOOLS-useEffect-control');
-    }
     let toolBarControl;
     let mapToolsControl;
     if (map && toolBarElRef.current && mapToolsElRef.current && collapsed) {
@@ -101,10 +97,6 @@ const MapToolsComponent = (props) => {
       horizontal={!collapsed}
     />
   );
-
-  if (ENABLE_RENDER_LOGS) {
-    console.log('########## MAPTOOLS-render');
-  }
 
   if (collapsed) {
     const className =

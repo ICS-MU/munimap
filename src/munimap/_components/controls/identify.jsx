@@ -4,7 +4,6 @@ import * as slctr from '../../redux/selector.js';
 import MapContext from '../../_contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useRef} from 'react';
 import {Control} from 'ol/control';
-import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
 import {hot} from 'react-hot-loader';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -30,9 +29,6 @@ const IdentifyComponent = (props) => {
   const resetElRef = useRef(null);
 
   useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## IDENTIFY-useEffect-control');
-    }
     let control;
     if (map && resetElRef.current) {
       control = new Control({
@@ -51,10 +47,6 @@ const IdentifyComponent = (props) => {
     dispatch(actions.identifyReseted());
   }, []);
 
-  if (ENABLE_RENDER_LOGS) {
-    console.log('########## IDENTIFY-render');
-  }
-
   return (
     <div
       id="muni-identify"
@@ -63,10 +55,7 @@ const IdentifyComponent = (props) => {
           ? 'ol-touch munimap-identify'
           : 'munimap-identify'
       }
-      title={mm_lang.getMsg(
-        mm_lang.Translations.RESET_IDENTIFICATION,
-        lang
-      )}
+      title={mm_lang.getMsg(mm_lang.Translations.RESET_IDENTIFICATION, lang)}
       ref={resetElRef}
       onClick={enabled ? onReset : undefined}
     >

@@ -4,7 +4,6 @@ import * as slctr from '../../redux/selector.js';
 import MapContext from '../../_contexts/mapcontext.jsx';
 import React, {forwardRef, useContext, useEffect, useRef} from 'react';
 import {Control} from 'ol/control';
-import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
 import {useDispatch, useSelector} from 'react-redux';
 
 /**
@@ -62,9 +61,6 @@ const InitExtentComponent = forwardRef((props, ref) => {
   }, [map]);
 
   useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## INITEXTENT-useEffect-control');
-    }
     let initExtentControl;
     if (map && initExtentElRef && initExtentElRef.current) {
       // initialize Control - render should be done by React not by
@@ -82,28 +78,18 @@ const InitExtentComponent = forwardRef((props, ref) => {
     }
   }, [map, parentEl]);
 
-  if (ENABLE_RENDER_LOGS) {
-    console.log('########## INITEXTENT-render');
-  }
-
   return (
     <>
       <div
         id="muni-init-extent"
         className="munimap-initial-extent"
-        title={mm_lang.getMsg(
-          mm_lang.Translations.INITIAL_EXTENT,
-          lang
-        )}
+        title={mm_lang.getMsg(mm_lang.Translations.INITIAL_EXTENT, lang)}
         onClick={onInitExtentClick}
         ref={initExtentElRef}
       >
         <div
           className="munimap-init-extent-button"
-          title={mm_lang.getMsg(
-            mm_lang.Translations.INITIAL_EXTENT,
-            lang
-          )}
+          title={mm_lang.getMsg(mm_lang.Translations.INITIAL_EXTENT, lang)}
         >
           <i className="munimap-home">&#x2302;</i>
         </div>

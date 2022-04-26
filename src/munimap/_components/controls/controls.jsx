@@ -4,7 +4,6 @@ import IdentifyComponent from './identify.jsx';
 import MapLinks from './maplinks.jsx';
 import MapToolsComponent from './maptools.jsx';
 import React from 'react';
-import {ENABLE_RENDER_LOGS} from '../../conf.js';
 import {hot} from 'react-hot-loader';
 import {useSelector} from 'react-redux';
 
@@ -16,10 +15,6 @@ import {useSelector} from 'react-redux';
 const ControlsComponent = (props) => {
   const mapLinks = useSelector(slctr.getRequiredMapLinks);
   const isIdentifyEnabled = useSelector(slctr.isIdentifyEnabled);
-
-  if (ENABLE_RENDER_LOGS) {
-    console.log('########## CONTROLS-render');
-  }
 
   return (
     <>

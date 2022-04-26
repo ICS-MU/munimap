@@ -4,7 +4,6 @@ import * as slctr from '../../redux/selector.js';
 import MapContext from '../../_contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useRef} from 'react';
 import {Control} from 'ol/control';
-import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../../conf.js';
 import {Geolocation} from 'ol';
 import {Point} from 'ol/geom';
 import {isLayer} from '../../layer/geolocation.js';
@@ -35,9 +34,6 @@ const GeolocationComponent = (props) => {
   const geolocRef = useRef(null);
 
   useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## GEOLOCATION-useEffect-log');
-    }
     if (!(window.location.protocol === 'https:' || !PRODUCTION)) {
       dispatch(
         actions.log_action_happened({
@@ -49,9 +45,6 @@ const GeolocationComponent = (props) => {
   }, []);
 
   useEffect(() => {
-    if (ENABLE_EFFECT_LOGS) {
-      console.log('########## GEOLOCATION-useEffect-geolocation');
-    }
     let control;
     if (map && geolocElRef.current) {
       const geolocation = new Geolocation({
@@ -103,10 +96,6 @@ const GeolocationComponent = (props) => {
       callback();
     }
   }, [map]);
-
-  if (ENABLE_RENDER_LOGS) {
-    console.log('########## GEOLOCATION-render');
-  }
 
   if (window.location.protocol === 'https:' || !PRODUCTION) {
     return (
