@@ -1626,3 +1626,17 @@ export const calculateAnimationRequest = createSelector(
     }
   }
 );
+
+/**
+ * @type {import("reselect").OutputSelector<
+ *    State,
+ *    boolean,
+ *    function(number): boolean
+ * >}
+ */
+export const isResetAnimationDone = createSelector(
+  [getResetTimestamp],
+  (resetTimestamp) => {
+    return resetTimestamp > 0;
+  }
+);

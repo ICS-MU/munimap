@@ -199,7 +199,7 @@ export const RESET_MUNIMAP = 'RESET_MUNIMAP';
  * @type {string}
  * @const
  */
-export const RESET_DONE = 'RESET_DONE';
+export const ANIMATION_FINISHED_AFTER_RESET = 'ANIMATION_FINISHED_AFTER_RESET';
 
 /**
  * @param {boolean} hasCustom has custom markers
@@ -497,8 +497,8 @@ export function resetMunimap(object) {
 /**
  * @return {PayloadAsyncAction} action
  */
-export function resetDone() {
+export function animationFinishedAfterReset() {
   return {
-    type: RESET_DONE,
+    type: ANIMATION_FINISHED_AFTER_RESET,
   };
 }

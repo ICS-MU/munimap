@@ -231,7 +231,9 @@ const MunimapComponent = (props) => {
       console.log('########## MUNIMAP-useEffect-animate');
     }
     const callback =
-      resetTimestamp === 0 ? () => dispatch(actions.resetDone()) : undefined;
+      resetTimestamp === 0
+        ? () => dispatch(actions.animationFinishedAfterReset())
+        : undefined;
     mm_view.animate(map, animationRequest, callback);
   }, [map, animationRequest]);
 

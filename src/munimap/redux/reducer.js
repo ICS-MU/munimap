@@ -531,8 +531,8 @@ const createReducer = (initialState) => {
         newState = handleReset(state, action.payload, action.asyncDispatch);
         return newState;
 
-      // RESET_DONE
-      case actions.RESET_DONE:
+      // ANIMATION_FINISHED_AFTER_RESET
+      case actions.ANIMATION_FINISHED_AFTER_RESET:
         return {
           ...state,
           resetTimestamp: Date.now(),

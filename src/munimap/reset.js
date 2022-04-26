@@ -236,8 +236,7 @@ export default (map, options) => {
 
     //resolve map as animation callback
     unsubscribe = store.subscribe(() => {
-      const state = store.getState();
-      if (state.resetTimestamp > 0) {
+      if (slctr.isResetAnimationDone(store.getState())) {
         resolve(map);
         unsubscribe();
       }
