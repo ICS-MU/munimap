@@ -85,6 +85,11 @@ const store = {
 //legacy export as global ol
 if (!window.hasOwnProperty('ol')) {
   window['ol'] = ol;
+} else {
+  mm_matomo.sendEvent('alreadyHasOl', 'true');
+  throw new Error(
+    'Window already has property `ol`, cannot initialize munimap.'
+  );
 }
 
 export {create, reset, ol, slctr, load, store, getStoreByTargetId};
