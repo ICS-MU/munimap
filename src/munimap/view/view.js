@@ -13,11 +13,6 @@ import {
 } from '../constants.js';
 import {MUNIMAP_PROPS_ID} from '../constants.js';
 import {Point} from 'ol/geom';
-import {
-  calculateParameters,
-  inTooltipResolutionRange,
-  isSuitableForTooltip,
-} from './tooltip.js';
 import {clearFloorBasedStores} from '../source/source.js';
 import {
   createActiveStore as createActiveDoorStore,
@@ -89,8 +84,6 @@ import {updateClusteredFeatures} from './cluster.js';
  * @typedef {import("../redux/selector.js").AllStyleFunctionsResult} AllStyleFunctionsResult
  * @typedef {import("ol/events.js").EventsKey} EventsKey
  * @typedef {import("ol/view.js").AnimationOptions} AnimationOptions
- * @typedef {import("../view/tooltip.js").TooltipParams} TooltipParams
- * @typedef {import("react").Dispatch<TooltipParams>} DispatchTooltipParams
  */
 
 /**
@@ -98,15 +91,6 @@ import {updateClusteredFeatures} from './cluster.js';
  * @property {string} selectedFeature selected feature
  * @property {RequiredOptions} requiredOpts options
  * @property {boolean} isIdentifyEnabled isIdentifyEnabled
- */
-
-/**
- * @typedef {Object} EnsureTooltipOptions
- * @property {string} selectedFeature selected feature
- * @property {string} lang language
- * @property {string} tooltipProps selected feature
- * @property {DispatchTooltipParams} setTooltipProps selected feature
- * @property {RequiredOptions} requiredOpts options
  */
 
 /**
@@ -143,11 +127,6 @@ import {updateClusteredFeatures} from './cluster.js';
  * @property {string} purposeTitle purposeTitle
  * @property {string} purposeGis purposeGis
  */
-
-/**
- * @type {Object<string, number>}
- */
-const TIMEOUT_STORE = {};
 
 /**
  * Ensure basemap and change it if necessary.
@@ -322,73 +301,6 @@ const handlePointerMove = (evt, options) => {
     }
   } else {
     targetEl.style.cursor = '';
-  }
-};
-
-/**
- * @param {MapBrowserEvent} evt event
- * @param {EnsureTooltipOptions} options options
- */
-const ensureTooltip = (evt, options) => {
-  const {selectedFeature, lang, tooltipProps, setTooltipProps} = options;
-  const {
-    targetId,
-    getMainFeatureAtPixelId,
-    tooltips: tooltipsEnabled,
-    locationCodes,
-  } = options.requiredOpts;
-  const map = evt.map;
-  const resolution = map.getView().getResolution();
-  const pixel = map.getEventPixel(evt.originalEvent);
-  const getMainFeatureAtPixelFn = getMainFeatureAtPixelId
-    ? GET_MAIN_FEATURE_AT_PIXEL_STORE[getMainFeatureAtPixelId]
-    : getMainFeatureAtPixel;
-
-  const featureWithLayer = getMainFeatureAtPixelFn(map, pixel);
-  if (featureWithLayer) {
-    const feature = featureWithLayer.feature;
-    const inTooltipResolutionRange_ = inTooltipResolutionRange(
-      feature,
-      resolution,
-      selectedFeature
-    );
-    if (tooltipsEnabled && inTooltipResolutionRange_) {
-      if (TIMEOUT_STORE[targetId]) {
-        clearTimeout(TIMEOUT_STORE[targetId]);
-        delete TIMEOUT_STORE[targetId];
-        if (tooltipProps) {
-          setTooltipProps(null);
-        }
-      }
-
-      if (isSuitableForTooltip(feature)) {
-        const opts = {
-          title: feature.get('typ'),
-          featureUid: getUid(feature),
-          pixelInCoords: map.getCoordinateFromPixel(pixel),
-          purposeTitle: feature.get('ucel_nazev'),
-          purposeGis: feature.get('ucel_gis'),
-          resolution,
-          lang,
-          locationCodes,
-          targetId,
-        };
-        TIMEOUT_STORE[targetId] = setTimeout(
-          () => setTooltipProps(calculateParameters(opts)),
-          750
-        );
-      }
-    } else if (!inTooltipResolutionRange_ && tooltipProps) {
-      setTooltipProps(null);
-    }
-  } else {
-    if (TIMEOUT_STORE[targetId]) {
-      clearTimeout(TIMEOUT_STORE[targetId]);
-      delete TIMEOUT_STORE[targetId];
-    }
-    if (tooltipProps) {
-      setTooltipProps(null);
-    }
   }
 };
 
@@ -630,7 +542,6 @@ export {
   ensureBaseMap,
   ensureClusterUpdate,
   ensureLayers,
-  ensureTooltip,
   handleMapViewChange,
   refreshStyles,
   refreshVisibility,

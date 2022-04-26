@@ -1,4 +1,5 @@
 import * as actions from '../redux/action.js';
+import * as mm_tooltip from '../view/tooltip.js';
 import * as mm_view from '../view/view.js';
 import * as slctr from '../redux/selector.js';
 import Controls from './controls/controls.jsx';
@@ -10,21 +11,108 @@ import Popup from './popup.jsx';
 import PropTypes from 'prop-types';
 import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import Tooltip from './tooltip.jsx';
-import {CREATED_MAPS} from '../constants.js';
+import {CREATED_MAPS, GET_MAIN_FEATURE_AT_PIXEL_STORE} from '../constants.js';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
 import {MUNIMAP_PROPS_ID} from '../constants.js';
 import {Map} from 'ol';
+import {getMainFeatureAtPixel} from '../feature/feature.js';
+import {getUid} from 'ol';
 import {hot} from 'react-hot-loader';
 import {unlistenByKey} from 'ol/events';
 import {useDispatch, useSelector} from 'react-redux';
 
 /**
  * @typedef {import("../constants.js").MapProps} MapProps
+ * @typedef {import('../conf.js').RequiredOptions} RequiredOptions
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("react").MutableRefObject<Map>} MapRefObject
  * @typedef {import("react").Dispatch<import("react").SetStateAction<Map>>} MapStateAction
  * @typedef {Array<MapRefObject, MapStateAction>} MapRefUseState
+ * @typedef {import("../view/tooltip.js").TooltipParams} TooltipParams
+ * @typedef {import("react").Dispatch<TooltipParams>} DispatchTooltipParams
+ * @typedef {import("ol").MapBrowserEvent} MapBrowserEvent
  */
+
+/**
+ * @typedef {Object} EnsureTooltipOptions
+ * @property {string} selectedFeature selected feature
+ * @property {string} lang language
+ * @property {string} tooltipProps selected feature
+ * @property {DispatchTooltipParams} setTooltipProps selected feature
+ * @property {RequiredOptions} requiredOpts options
+ */
+
+/**
+ * @type {Object<string, number>}
+ */
+const TIMEOUT_STORE = {};
+
+/**
+ * @param {MapBrowserEvent} evt event
+ * @param {EnsureTooltipOptions} options options
+ */
+const ensureTooltip = (evt, options) => {
+  const {selectedFeature, lang, tooltipProps, setTooltipProps} = options;
+  const {
+    targetId,
+    getMainFeatureAtPixelId,
+    tooltips: tooltipsEnabled,
+    locationCodes,
+  } = options.requiredOpts;
+  const map = evt.map;
+  const resolution = map.getView().getResolution();
+  const pixel = map.getEventPixel(evt.originalEvent);
+  const getMainFeatureAtPixelFn = getMainFeatureAtPixelId
+    ? GET_MAIN_FEATURE_AT_PIXEL_STORE[getMainFeatureAtPixelId]
+    : getMainFeatureAtPixel;
+
+  const featureWithLayer = getMainFeatureAtPixelFn(map, pixel);
+  if (featureWithLayer) {
+    const feature = featureWithLayer.feature;
+    const inTooltipResolutionRange_ = mm_tooltip.inTooltipResolutionRange(
+      feature,
+      resolution,
+      selectedFeature
+    );
+    if (tooltipsEnabled && inTooltipResolutionRange_) {
+      if (TIMEOUT_STORE[targetId]) {
+        clearTimeout(TIMEOUT_STORE[targetId]);
+        delete TIMEOUT_STORE[targetId];
+        if (tooltipProps) {
+          setTooltipProps(null);
+        }
+      }
+
+      if (mm_tooltip.isSuitableForTooltip(feature)) {
+        const opts = {
+          title: feature.get('typ'),
+          featureUid: getUid(feature),
+          pixelInCoords: map.getCoordinateFromPixel(pixel),
+          purposeTitle: feature.get('ucel_nazev'),
+          purposeGis: feature.get('ucel_gis'),
+          resolution,
+          lang,
+          locationCodes,
+          targetId,
+        };
+        TIMEOUT_STORE[targetId] = setTimeout(
+          () => setTooltipProps(mm_tooltip.calculateParameters(opts)),
+          750
+        );
+      }
+    } else if (!inTooltipResolutionRange_ && tooltipProps) {
+      setTooltipProps(null);
+    }
+  } else {
+    if (TIMEOUT_STORE[targetId]) {
+      clearTimeout(TIMEOUT_STORE[targetId]);
+      delete TIMEOUT_STORE[targetId];
+    }
+    if (tooltipProps) {
+      setTooltipProps(null);
+    }
+  }
+};
 
 /**
  * @type {React.FC<{afterInit: Function}>}
@@ -163,7 +251,7 @@ const MunimapComponent = (props) => {
 
     if (map) {
       const key = map.on('pointermove', (evt) => {
-        mm_view.ensureTooltip(evt, {
+        ensureTooltip(evt, {
           selectedFeature,
           lang,
           tooltipProps,
