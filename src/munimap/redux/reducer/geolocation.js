@@ -1,12 +1,16 @@
+/**
+ * @module redux/reducer/geolocation
+ */
+
 import * as ol_extent from 'ol/extent';
-import * as slctr from '../redux/selector.js';
-import {INITIAL_STATE} from '../conf.js';
-import {getAnimationDuration} from '../utils/animation.js';
+import * as slctr from '../selector.js';
+import {INITIAL_STATE} from '../../conf.js';
+import {getAnimationDuration} from '../../utils/animation.js';
 
 /**
- * @typedef {import("../conf.js").State} State
- * @typedef {import("../conf.js").AnimationRequestOptions} AnimationRequestOptions
- * @typedef {import("../conf.js").AnimationRequestState} AnimationRequestState
+ * @typedef {import("../../conf.js").State} State
+ * @typedef {import("../../conf.js").AnimationRequestOptions} AnimationRequestOptions
+ * @typedef {import("../../conf.js").AnimationRequestState} AnimationRequestState
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
  */
 

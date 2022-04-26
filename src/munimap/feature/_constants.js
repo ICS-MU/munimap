@@ -331,6 +331,19 @@ const RoomTypes = {
 };
 
 /**
+ * @enum {string}
+ * @const
+ */
+const RoomPurposesWithTooltip = {
+  STAIRCASE: 'schodiště',
+};
+
+/**
+ * @type {Array<string>}
+ */
+const GIS_PURPOSES_WITH_TOOLTIP = [PoiPurpose.CLASSROOM];
+
+/**
  * @type {RegExp}
  * @protected
  */
@@ -398,6 +411,7 @@ export {
   FLOOR_CODE_REGEX,
   FLOOR_RESOLUTION,
   FLOOR_TYPE,
+  GIS_PURPOSES_WITH_TOOLTIP,
   MARKER_RESOLUTION,
   OPT_POI_TYPE,
   OPT_POI_UID_PREFIX,
@@ -412,6 +426,7 @@ export {
   ROOM_CODE_REGEX,
   ROOM_LIKE_EXPR_REGEX,
   ROOM_TYPE,
+  RoomPurposesWithTooltip,
   RoomTypes,
   UNIT_PRIORITY_FIELD_NAME,
   UNIT_TYPE,

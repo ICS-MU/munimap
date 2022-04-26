@@ -1,17 +1,19 @@
 /**
- * @module utils/reducer
+ * @module redux/reducer/utils
  */
+import * as slctr from '../selector.js';
 import {Feature} from 'ol';
 import {
   isBuilding,
   isDoor,
   isOptPoiCtgUid,
   isRoom,
-} from '../feature/_constants.functions.js';
+} from '../../feature/_constants.functions.js';
 
 /**
- * @typedef {import("../conf.js").State} State
- * @typedef {import("../redux/action.js").LoadedTypes} LoadedTypes
+ * @typedef {import("../../conf.js").State} State
+ * @typedef {import("../action.js").LoadedTypes} LoadedTypes
+ * @typedef {import("../../utils/animation.js").ViewOptions} ViewOptions
  */
 
 /**
@@ -33,15 +35,15 @@ const getLoadedTypes = (features, opt_requiredMarkers) => {
 
 /**
  * @param {State} state state
- * @param {LoadedTypes} loadedTypes loaded types
- * @return {FeatureTimestampOptions} timestamps
+ * @return {ViewOptions} result
  */
-const getFeaturesTimestamps = (state, loadedTypes) => {
+const getViewOptions = (state) => {
   return {
-    buildingsTimestamp: Object.values(loadedTypes).some((t) => t)
-      ? Date.now()
-      : state.buildingsTimestamp,
+    rotation: slctr.getRotation(state),
+    size: slctr.getSize(state),
+    extent: slctr.getExtent(state),
+    resolution: slctr.getResolution(state),
   };
 };
 
-export {getFeaturesTimestamps, getLoadedTypes};
+export {getLoadedTypes, getViewOptions};

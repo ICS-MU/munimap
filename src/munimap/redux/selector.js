@@ -85,7 +85,6 @@ import {
  * @typedef {import("ol/source/Source").AttributionLike} ol.AttributionLike
  * @typedef {import("ol/style/Style").default} ol.style.Style
  * @typedef {import("ol/style/Style").StyleFunction} StyleFunction
- * @typedef {import("../view/info.js").BuildingTitleOptions} BuildingTitleOptions
  * @typedef {import("../utils/range.js").RangeInterface} RangeInterface
  * @typedef {import("../feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("../identify/identify.js").CallbackFunction} IdentifyCallbackFunction
@@ -96,6 +95,12 @@ import {
 
 /**
  * @typedef {Object<string, StyleFunction>} AllStyleFunctionsResult
+ */
+
+/**
+ * @typedef {Object} BuildingTitleOptions
+ * @property {string} bldgTitle bldgTitle
+ * @property {string} complexTitle complex title
  */
 
 /**

@@ -1,6 +1,6 @@
 import * as redux from 'redux';
 import {asyncDispatchMiddleware} from './middleware.js';
-import {createReducer} from './reducer.js';
+import {createReducer} from './reducer/reducer.js';
 
 /**
  * @typedef {import("../conf.js").State} State

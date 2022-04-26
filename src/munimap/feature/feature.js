@@ -5,8 +5,16 @@ import * as mm_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
 import turf_booleanPointInPolygon from '@turf/boolean-point-in-polygon';
-import {BUILDING_TYPE, DOOR_TYPE, OptPoiIds, ROOM_TYPE} from './_constants.js';
-import {CustomMarkerOnClickAnimationOptions} from './_constants.js';
+import {
+  BUILDING_TYPE,
+  CustomMarkerOnClickAnimationOptions,
+  DOOR_TYPE,
+  GIS_PURPOSES_WITH_TOOLTIP,
+  OptPoiIds,
+  PoiPurpose,
+  ROOM_TYPE,
+  RoomPurposesWithTooltip,
+} from './_constants.js';
 import {Point} from 'ol/geom';
 import {REQUIRED_CUSTOM_MARKERS} from '../constants.js';
 import {featureExtentIntersect} from '../utils/geom.js';
@@ -301,6 +309,22 @@ const handleOnClickCallback = (feature, defaults, originalEvent) => {
   return {centerToFeature, zoomToFeature};
 };
 
+/**
+ * @param {ol.Feature} feature feature
+ * @return {boolean} whether is suitable for tooltip
+ */
+const isSuitableForTooltip = (feature) => {
+  const title = feature.get('typ');
+  const purposeTitle = feature.get('ucel_nazev');
+  const purposeGis = feature.get('ucel_gis');
+  return (
+    (!!title && Object.values(PoiPurpose).includes(title)) ||
+    (!!purposeTitle &&
+      Object.values(RoomPurposesWithTooltip).includes(purposeTitle)) ||
+    (!!purposeGis && GIS_PURPOSES_WITH_TOOLTIP.includes(purposeGis))
+  );
+};
+
 export {
   filterInvalidCodes,
   getClosestPointToPixel,
@@ -308,4 +332,5 @@ export {
   getMainFeatureAtPixel,
   getSelectedFloorCode,
   handleOnClickCallback,
+  isSuitableForTooltip,
 };

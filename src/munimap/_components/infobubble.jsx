@@ -17,7 +17,6 @@ import {useSelector} from 'react-redux';
 /**
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
- * @typedef {import("../view/info.js").PopupPositionOptions} PopupPositionOptions
  * @typedef {import("../conf.js").State} State
  */
 
@@ -27,6 +26,13 @@ import {useSelector} from 'react-redux';
  * @property {ol.extent.Extent} [extent] extent
  * @property {number} [resolution] resolution
  * @property {string} [selectedFeature] selectedFeature
+ */
+
+/**
+ * @typedef {Object} PopupPositionOptions
+ * @property {boolean} hideTale hide tale
+ * @property {Array<number>} [coordinate] coordinate
+ * @property {Array<number>} [position] coordinate
  */
 
 /**

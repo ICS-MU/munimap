@@ -38,7 +38,7 @@ import {decorate as decorateCustomMarker} from './feature/marker.custom.js';
 import {getByCode as getBldgByCode} from './feature/building.js';
 import {getFloorLayerIdByCode} from './feature/floor.js';
 import {getGeometryCenter} from './utils/geom.js';
-import {getLoadedTypes} from './utils/reducer.js';
+import {getLoadedTypes} from './redux/reducer/utils.js';
 import {getNotYetAddedFeatures} from './utils/store.js';
 import {
   isBuildingCode,

@@ -1,24 +1,24 @@
 /**
- * @module view/complex
+ * @module redux/reducer/complex
  */
-import * as mm_assert from '../assert/assert.js';
-import * as mm_utils from '../utils/utils.js';
+import * as mm_assert from '../../assert/assert.js';
+import * as mm_utils from '../../utils/utils.js';
 import * as ol_extent from 'ol/extent';
-import * as slctr from '../redux/selector.js';
+import * as slctr from '../selector.js';
 import {
   COMPLEX_ID_FIELD_NAME,
   COMPLEX_RESOLUTION,
   FLOOR_RESOLUTION,
-} from '../feature/_constants.js';
-import {INITIAL_STATE} from '../conf.js';
-import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
-import {getAnimationDuration} from '../utils/animation.js';
-import {getBuildingStore, getComplexStore} from '../source/_constants.js';
+} from '../../feature/_constants.js';
+import {INITIAL_STATE} from '../../conf.js';
+import {ofFeatures as extentOfFeatures} from '../../utils/extent.js';
+import {getAnimationDuration} from '../../utils/animation.js';
+import {getBuildingStore, getComplexStore} from '../../source/_constants.js';
 
 /**
- * @typedef {import("../conf.js").State} State
- * @typedef {import("../conf.js").AnimationRequestState} AnimationRequestState
- * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
+ * @typedef {import("../../conf.js").State} State
+ * @typedef {import("../../conf.js").AnimationRequestState} AnimationRequestState
+ * @typedef {import("../../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  */
 
 /**

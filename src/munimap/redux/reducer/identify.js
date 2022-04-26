@@ -1,5 +1,5 @@
 /**
- * @module redux/utils/identify
+ * @module redux/reducer/identify
  */
 import * as mm_assert from '../../assert/assert.js';
 import * as mm_identify from '../../identify/identify.js';

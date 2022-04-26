@@ -1,80 +1,43 @@
 /**
- * @module redux/store
+ * @module redux/reducer/reducer
  */
-import * as actions from './action.js';
-import * as mm_identify from '../identify/identify.js';
-import * as mm_load from '../load.js';
-import * as mm_range from '../utils/range.js';
-import * as slctr from './selector.js';
-import * as srcs from '../source/_constants.js';
-import {EventType} from '../view/_constants.js';
-import {FLOOR_RESOLUTION} from '../feature/_constants.js';
-import {INITIAL_STATE} from '../conf.js';
-import {getAnimationRequest as getBuildingAnimationRequest} from '../view/building.js';
-import {getAnimationRequest as getClusterAnimationRequest} from '../view/cluster.js';
-import {getAnimationRequest as getComplexAnimationRequest} from '../view/complex.js';
-import {getEventByType} from '../view/_constants.functions.js';
-import {getFeaturesByPriority, getPopupFeatureUid} from '../cluster/cluster.js';
-import {getFeaturesTimestamps} from '../utils/reducer.js';
-import {getAnimationRequest as getGeolocationAnimationRequest} from '../view/geolocation.js';
-import {getAnimationRequest as getMarkerAnimationRequest} from '../view/marker.js';
-import {getFloorCode as getMarkerFloorCode} from '../feature/marker.js';
-import {getAnimationRequest as getPoiAnimationRequest} from '../view/poi.js';
-import {getAnimationRequest as getPubTranAnimationRequest} from '../view/pubtran.stop.js';
+import * as actions from '../action.js';
+import * as mm_load from '../../load.js';
+import * as mm_range from '../../utils/range.js';
+import * as slctr from '../selector.js';
+import * as srcs from '../../source/_constants.js';
+import {EventType} from '../../view/_constants.js';
+import {FLOOR_RESOLUTION} from '../../feature/_constants.js';
+import {INITIAL_STATE} from '../../conf.js';
+import {getAnimationRequest as getBuildingAnimationRequest} from './building.js';
+import {getAnimationRequest as getClusterAnimationRequest} from './cluster.js';
+import {getAnimationRequest as getComplexAnimationRequest} from './complex.js';
+import {getEventByType} from '../../view/_constants.functions.js';
+import {
+  getFeaturesByPriority,
+  getPopupFeatureUid,
+} from '../../cluster/cluster.js';
+import {getAnimationRequest as getGeolocationAnimationRequest} from './geolocation.js';
+import {getAnimationRequest as getMarkerAnimationRequest} from './marker.js';
+import {getFloorCode as getMarkerFloorCode} from '../../feature/marker.js';
+import {getAnimationRequest as getPoiAnimationRequest} from './poi.js';
+import {getAnimationRequest as getPubTranAnimationRequest} from './pubtran.stop.js';
 import {getUid} from 'ol';
+import {getViewOptions} from './utils.js';
+import {handleOnClickCallback as handleFeatureOnClickCallback} from '../../feature/feature.js';
 import {
   handleIdentifyCallback,
   handleIdentifyCallbackByOptions,
-} from './utils/identify.js';
-import {handleMapViewChange} from '../view/view.js';
-import {handleOnClickCallback} from '../feature/feature.js';
-import {handleReset} from '../reset.js';
-import {isCustomMarker} from '../feature/_constants.functions.js';
-import {isSameCode} from '../feature/building.js';
+} from './identify.js';
+import {handleMapViewChange} from '../../view/view.js';
+import {handleReset} from '../../reset.js';
+import {isCustomMarker} from '../../feature/_constants.functions.js';
+import {isSameCode} from '../../feature/building.js';
 
 /**
- * @typedef {import("../conf.js").State} State
- * @typedef {import("redux").Dispatch} redux.Dispatch
+ * @typedef {import("../../conf.js").State} State
  * @typedef {import("redux").Reducer} redux.Reducer
- * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
- * @typedef {import("../utils/animation.js").ViewOptions} ViewOptions
- * @typedef {import("../style/icon.js").IconOptions} IconOptions
- * @typedef {import("../feature/_constants.js").CustomMarkerOnClickAnimationOptions} CustomMarkerOnClickAnimationOptions
- * @typedef {import("../feature/feature.js").OnClickFunction} CustomMarkerOnClickFn
- * @typedef {import("../feature/feature.js").OnClickOptions} CustomMarkerOnClickOpts
- * @typedef {import("ol/Feature").default} ol.Feature
- * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
- * @typedef {import("../view/marker.js").MarkerAnimRequestOptions} MarkerAnimRequestOptions
  */
-
-/**
- * @param {State} state state
- * @return {ViewOptions} result
- */
-const getViewOptions = (state) => {
-  return {
-    rotation: slctr.getRotation(state),
-    size: slctr.getSize(state),
-    extent: slctr.getExtent(state),
-    resolution: slctr.getResolution(state),
-  };
-};
-
-/**
- * @param {State} state state
- * @param {ol.Feature} feature feature
- * @return {MarkerAnimRequestOptions} opts
- */
-const getMarkerAnimRequestOptions = (state, feature) => {
-  return {
-    ...getViewOptions(state),
-    feature,
-    popupCoords: slctr.getPopupPositionInCoords(state),
-    isIdentifyAllowed:
-      slctr.isIdentifyEnabled(state) &&
-      mm_identify.isAllowed(feature, state.requiredOpts.identifyTypes),
-  };
-};
 
 /**
  *
@@ -86,7 +49,6 @@ const createReducer = (initialState) => {
     let newState;
     let locationCode;
     let loadedTypes;
-    let featuresTimestamps;
     let animationRequest;
     let feature;
     let isVisible;
@@ -100,11 +62,12 @@ const createReducer = (initialState) => {
       // MARKERS_LOADED
       case actions.MARKERS_LOADED:
         loadedTypes = action.payload;
-        featuresTimestamps = getFeaturesTimestamps(state, loadedTypes);
 
         newState = {
           ...state,
-          ...featuresTimestamps,
+          buildingsTimestamp: Object.values(loadedTypes).some((t) => t)
+            ? Date.now()
+            : state.buildingsTimestamp,
           markersTimestamp: Date.now(),
           optPoisTimestamp: loadedTypes.optPoi
             ? Date.now()
@@ -124,10 +87,11 @@ const createReducer = (initialState) => {
       // ZOOMTO_LOADED
       case actions.ZOOMTO_LOADED:
         loadedTypes = action.payload;
-        featuresTimestamps = getFeaturesTimestamps(state, loadedTypes);
         newState = {
           ...state,
-          ...featuresTimestamps,
+          buildingsTimestamp: Object.values(loadedTypes).some((t) => t)
+            ? Date.now()
+            : state.buildingsTimestamp,
           zoomToTimestamp: Date.now(),
         };
 
@@ -354,7 +318,7 @@ const createReducer = (initialState) => {
           slctr.getRequiredClusterOptions(state)
         );
         uid = getPopupFeatureUid(features);
-        callbackResult = handleOnClickCallback(
+        callbackResult = handleFeatureOnClickCallback(
           features[0],
           {centerToFeature: false, zoomToFeature: true},
           getEventByType(EventType.CLICK, slctr.getTargetId(state))
@@ -381,7 +345,7 @@ const createReducer = (initialState) => {
         feature = srcs
           .getMarkerStore(slctr.getTargetId(state))
           .getFeatureByUid(action.payload.featureUid);
-        callbackResult = handleOnClickCallback(
+        callbackResult = handleFeatureOnClickCallback(
           feature,
           {centerToFeature: true, zoomToFeature: true},
           getEventByType(EventType.CLICK, slctr.getTargetId(state))
@@ -398,7 +362,8 @@ const createReducer = (initialState) => {
         };
 
         animationRequest = getMarkerAnimationRequest({
-          ...getMarkerAnimRequestOptions(newState, feature),
+          state: newState,
+          feature,
           ...callbackResult,
           pixelInCoords: action.payload.pixelInCoords,
         });

@@ -18,7 +18,7 @@ import {
   getIdentifyStore,
   getMarkerStore,
 } from './source/_constants.js';
-import {handleIdentifyCallback} from './redux/utils/identify.js';
+import {handleIdentifyCallback} from './redux/reducer/identify.js';
 
 /**
  * @typedef {import("./conf.js").State} State
@@ -28,7 +28,7 @@ import {handleIdentifyCallback} from './redux/utils/identify.js';
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
  * @typedef {import("./conf.js").RequiredOptions} RequiredOptions
  * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
- * @typedef {import("./redux/utils/identify.js").CallbackFunction} IdentifyCallbackFunction
+ * @typedef {import("./redux/reducer/identify.js").CallbackFunction} IdentifyCallbackFunction
  * @typedef {import("./cluster/cluster.js").ClusterOptions} ClusterOptions
  */
 

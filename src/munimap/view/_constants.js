@@ -1,4 +1,6 @@
-import {PoiPurpose} from '../feature/_constants.js';
+/**
+ * @module view/_constants
+ */
 
 /**
  * @enum {string}
@@ -26,24 +28,4 @@ const POPUP_TALE_HEIGHT = 10;
  */
 const POPUP_TALE_INDENT = 8;
 
-/**
- * @enum {string}
- * @const
- */
-const RoomPurposesWithTooltip = {
-  STAIRCASE: 'schodiště',
-};
-
-/**
- * @type {Array<string>}
- */
-const GIS_PURPOSES_WITH_TOOLTIP = [PoiPurpose.CLASSROOM];
-
-export {
-  EVENT_STORE,
-  EventType,
-  GIS_PURPOSES_WITH_TOOLTIP,
-  POPUP_TALE_HEIGHT,
-  POPUP_TALE_INDENT,
-  RoomPurposesWithTooltip,
-};
+export {EVENT_STORE, EventType, POPUP_TALE_HEIGHT, POPUP_TALE_INDENT};

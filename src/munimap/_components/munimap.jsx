@@ -1,5 +1,5 @@
 import * as actions from '../redux/action.js';
-import * as mm_tooltip from '../view/tooltip.js';
+import * as mm_range from '../utils/range.js';
 import * as mm_view from '../view/view.js';
 import * as slctr from '../redux/selector.js';
 import Controls from './controls/controls.jsx';
@@ -13,9 +13,18 @@ import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import Tooltip from './tooltip.jsx';
 import {CREATED_MAPS, GET_MAIN_FEATURE_AT_PIXEL_STORE} from '../constants.js';
 import {ENABLE_EFFECT_LOGS, ENABLE_RENDER_LOGS} from '../conf.js';
+import {
+  FLOOR_RESOLUTION,
+  POI_RESOLUTION,
+  PoiPurpose,
+} from '../feature/_constants.js';
 import {MUNIMAP_PROPS_ID} from '../constants.js';
 import {Map} from 'ol';
-import {getMainFeatureAtPixel} from '../feature/feature.js';
+import {calculateParameters} from '../view/tooltip.js';
+import {
+  getMainFeatureAtPixel,
+  isSuitableForTooltip,
+} from '../feature/feature.js';
 import {getUid} from 'ol';
 import {hot} from 'react-hot-loader';
 import {unlistenByKey} from 'ol/events';
@@ -25,6 +34,7 @@ import {useDispatch, useSelector} from 'react-redux';
  * @typedef {import("../constants.js").MapProps} MapProps
  * @typedef {import('../conf.js').RequiredOptions} RequiredOptions
  * @typedef {import("ol").Map} ol.Map
+ * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("react").MutableRefObject<Map>} MapRefObject
  * @typedef {import("react").Dispatch<import("react").SetStateAction<Map>>} MapStateAction
  * @typedef {Array<MapRefObject, MapStateAction>} MapRefUseState
@@ -48,6 +58,20 @@ import {useDispatch, useSelector} from 'react-redux';
 const TIMEOUT_STORE = {};
 
 /**
+ * @param {ol.Feature} feature feature
+ * @param {number} resolution resolution
+ * @param {string} [selectedFeature] selectedFeature
+ * @return {boolean} whether is map resolution in tooltip resolution range
+ */
+const inTooltipResolutionRange = (feature, resolution, selectedFeature) => {
+  const title = feature.get('typ');
+  return title === PoiPurpose.COMPLEX_ENTRANCE ||
+    title === PoiPurpose.BUILDING_COMPLEX_ENTRANCE
+    ? mm_range.contains(POI_RESOLUTION, resolution)
+    : !!selectedFeature && mm_range.contains(FLOOR_RESOLUTION, resolution);
+};
+
+/**
  * @param {MapBrowserEvent} evt event
  * @param {EnsureTooltipOptions} options options
  */
@@ -69,7 +93,7 @@ const ensureTooltip = (evt, options) => {
   const featureWithLayer = getMainFeatureAtPixelFn(map, pixel);
   if (featureWithLayer) {
     const feature = featureWithLayer.feature;
-    const inTooltipResolutionRange_ = mm_tooltip.inTooltipResolutionRange(
+    const inTooltipResolutionRange_ = inTooltipResolutionRange(
       feature,
       resolution,
       selectedFeature
@@ -83,7 +107,7 @@ const ensureTooltip = (evt, options) => {
         }
       }
 
-      if (mm_tooltip.isSuitableForTooltip(feature)) {
+      if (isSuitableForTooltip(feature)) {
         const opts = {
           title: feature.get('typ'),
           featureUid: getUid(feature),
@@ -96,7 +120,7 @@ const ensureTooltip = (evt, options) => {
           targetId,
         };
         TIMEOUT_STORE[targetId] = setTimeout(
-          () => setTooltipProps(mm_tooltip.calculateParameters(opts)),
+          () => setTooltipProps(calculateParameters(opts)),
           750
         );
       }

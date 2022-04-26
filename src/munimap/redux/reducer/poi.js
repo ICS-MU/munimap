@@ -1,17 +1,17 @@
 /**
- * @module view/poi
+ * @module redux/reducer/poi
  */
-import * as mm_range from '../utils/range.js';
-import * as slctr from '../redux/selector.js';
-import {FLOOR_RESOLUTION} from '../feature/_constants.js';
-import {INITIAL_STATE} from '../conf.js';
-import {getActivePoiStore} from '../source/_constants.js';
-import {getAnimationRequestParams} from '../utils/animation.js';
+import * as mm_range from '../../utils/range.js';
+import * as slctr from '../selector.js';
+import {FLOOR_RESOLUTION} from '../../feature/_constants.js';
+import {INITIAL_STATE} from '../../conf.js';
+import {getActivePoiStore} from '../../source/_constants.js';
+import {getAnimationRequestParams} from '../../utils/animation.js';
 
 /**
- * @typedef {import("../conf.js").State} State
- * @typedef {import("../conf.js").AnimationRequestState} AnimationRequestState
- * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
+ * @typedef {import("../../conf.js").State} State
+ * @typedef {import("../../conf.js").AnimationRequestState} AnimationRequestState
+ * @typedef {import("../../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  * @typedef {import("ol/geom").Point} ol.geom.Point
  */
 
