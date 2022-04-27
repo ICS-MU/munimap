@@ -15,6 +15,7 @@ import create from './create.js';
 import reset from './reset.js';
 import {Attribution, Control, FullScreen, Zoom} from 'ol/control';
 import {Feature, Map, View} from 'ol';
+import {GeoJSON} from 'ol/format';
 import {Point} from 'ol/geom';
 import {Stroke, Style} from 'ol/style';
 import {Tile} from 'ol/layer';
@@ -68,6 +69,9 @@ const ol = {
   style: {
     Stroke,
     Style,
+  },
+  format: {
+    GeoJSON,
   },
 };
 
