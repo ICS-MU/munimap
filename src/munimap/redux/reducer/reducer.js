@@ -373,16 +373,18 @@ const createReducer = (initialState) => {
         if (!isCustomMarker(feature)) {
           locationCode = getMarkerFloorCode(feature);
           if (locationCode) {
-            mm_load_fl.loadFloorsForMarker(
-              locationCode,
-              state,
-              action.asyncDispatch
-            );
             callbackId = handleIdentifyCallbackByOptions({
               state,
               feature,
               pixelInCoords: action.payload.pixelInCoords,
             });
+            if (!callbackId) {
+              mm_load_fl.loadFloorsForMarker(
+                locationCode,
+                state,
+                action.asyncDispatch
+              );
+            }
           }
         }
         newState.selectedFeature = locationCode || state.selectedFeature;
