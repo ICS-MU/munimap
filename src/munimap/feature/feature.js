@@ -46,7 +46,7 @@ import {testCodeOrLikeExpr} from '../utils/regex.js';
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
  * @typedef {import("redux").Dispatch} redux.Dispatch
- * @typedef {import("../identify/identify.js").CallbackFunction} CallbackFunction
+ * @typedef {import("./identify.js").CallbackFunction} CallbackFunction
  */
 
 /**

@@ -29,7 +29,7 @@ import {handleIdentifyCallback} from './redux/reducer/identify.js';
  * @typedef {import("./conf.js").RequiredOptions} RequiredOptions
  * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("./redux/reducer/identify.js").CallbackFunction} IdentifyCallbackFunction
- * @typedef {import("./cluster/cluster.js").ClusterOptions} ClusterOptions
+ * @typedef {import("./feature/cluster.js").ClusterOptions} ClusterOptions
  */
 
 /**

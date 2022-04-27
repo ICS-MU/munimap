@@ -1,5 +1,5 @@
 import * as actions from '../redux/action.js';
-import * as mm_lang from '../lang/lang.js';
+import * as mm_lang from '../lang.js';
 import * as slctr from '../redux/selector.js';
 import PropTypes from 'prop-types';
 import React from 'react';

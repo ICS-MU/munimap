@@ -4,7 +4,7 @@
 
 import * as mm_asserts from '../assert/assert.js';
 import * as mm_building from '../feature/building.js';
-import * as mm_cluster from '../cluster/cluster.js';
+import * as mm_cluster from '../feature/cluster.js';
 import * as mm_range from '../utils/range.js';
 import * as mm_style from './style.js';
 import * as mm_style_constants from './constants.js';

@@ -16,7 +16,7 @@ import {
 } from '../utils/geom.js';
 import {FLOOR_RESOLUTION} from '../feature/constants.js';
 import {getDefaultLabel, getLabelWithPin} from './style.js';
-import {getIdentifiedFeature, getLocationCode} from '../identify/identify.js';
+import {getIdentifiedFeature, getLocationCode} from '../feature/identify.js';
 import {getMarkerStore} from '../source/constants.js';
 import {isBuilding, isDoor, isRoom} from '../feature/utils.js';
 

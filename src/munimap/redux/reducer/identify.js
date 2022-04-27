@@ -2,12 +2,14 @@
  * @module redux/reducer/identify
  */
 import * as mm_assert from '../../assert/assert.js';
-import * as mm_identify from '../../identify/identify.js';
+import * as mm_identify from '../../feature/identify.js';
 import * as mm_utils from '../../utils/utils.js';
 import * as slctr from '../selector.js';
 import {Feature} from 'ol';
-import {IDENTIFIED_FEATURE_PROPERTY_NAME} from '../../identify/constants.js';
-import {LOCATION_CODE_FIELD_NAME} from '../../identify/constants.js';
+import {
+  IDENTIFIED_FEATURE_PROPERTY_NAME,
+  IDENTIFY_LOCATION_CODE_FIELD_NAME,
+} from '../../feature/constants.js';
 import {Point} from 'ol/geom';
 import {getIdentifyStore} from '../../source/constants.js';
 import {isBuilding, isDoor, isRoom} from '../../feature/utils.js';
@@ -18,8 +20,8 @@ import {transform} from 'ol/proj';
  * @typedef {import("redux").Dispatch} redux.Dispatch
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
- * @typedef {import("../../identify/identify.js").Result} Result
- * @typedef {import("../../identify/identify.js").CallbackFunction} CallbackFunction
+ * @typedef {import("../../feature/identify.js").Result} Result
+ * @typedef {import("../../feature/identify.js").CallbackFunction} CallbackFunction
  */
 
 /**
@@ -50,7 +52,7 @@ import {transform} from 'ol/proj';
 const createParamForCallback = (opt_options) => {
   if (opt_options) {
     const {pointFeature, feature} = opt_options;
-    const locCode = feature.get(LOCATION_CODE_FIELD_NAME);
+    const locCode = feature.get(IDENTIFY_LOCATION_CODE_FIELD_NAME);
     const geom = /**@type {Point}*/ (pointFeature.getGeometry());
     const coordsInMeters = geom.getCoordinates();
     const coordsInDegrees = transform(coordsInMeters, 'EPSG:3857', 'EPSG:4326');

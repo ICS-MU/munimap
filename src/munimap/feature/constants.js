@@ -386,6 +386,31 @@ const UNIT_TYPE = {
   name: 'unit',
 };
 
+///////////////////////////////////////////////
+////////////////// IDENTIFY ///////////////////
+///////////////////////////////////////////////
+
+/**
+ * @enum {string}
+ */
+const IdentifyTypes = {
+  BUILDING: 'building',
+  ROOM: 'room',
+  DOOR: 'door',
+};
+
+/**
+ * @type {string}
+ * @const
+ */
+const IDENTIFIED_FEATURE_PROPERTY_NAME = 'identifiedFeature';
+
+/**
+ * @type {string}
+ * @const
+ */
+const IDENTIFY_LOCATION_CODE_FIELD_NAME = 'polohKod';
+
 export {
   BUILDING_CODE_REGEX,
   BUILDING_COMPLEX_FIELD_NAME,
@@ -412,6 +437,9 @@ export {
   FLOOR_RESOLUTION,
   FLOOR_TYPE,
   GIS_PURPOSES_WITH_TOOLTIP,
+  IDENTIFIED_FEATURE_PROPERTY_NAME,
+  IDENTIFY_LOCATION_CODE_FIELD_NAME,
+  IdentifyTypes,
   MARKER_RESOLUTION,
   OPT_POI_TYPE,
   OPT_POI_UID_PREFIX,

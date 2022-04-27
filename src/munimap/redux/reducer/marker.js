@@ -1,7 +1,7 @@
 /**
  * @module redux/reducer/marker
  */
-import * as mm_identify from '../../identify/identify.js';
+import * as mm_identify from '../../feature/identify.js';
 import * as mm_range from '../../utils/range.js';
 import * as ol_extent from 'ol/extent';
 import * as slctr from '../selector.js';

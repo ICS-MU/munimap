@@ -3,14 +3,14 @@
  * @module redux/selector
  */
 import * as mm_floor from '../feature/floor.js';
-import * as mm_identify from '../identify/identify.js';
-import * as mm_lang from '../lang/lang.js';
+import * as mm_identify from '../feature/identify.js';
+import * as mm_lang from '../lang.js';
 import * as mm_lyr from '../layer/constants.js';
 import * as mm_range from '../utils/range.js';
 import * as mm_srcs from '../source/constants.js';
 import * as mm_utils from '../utils/utils.js';
 import * as ol_extent from 'ol/extent';
-import {BUILDING_RESOLUTION, ROOM_RESOLUTION} from '../cluster/cluster.js';
+import {BUILDING_RESOLUTION, ROOM_RESOLUTION} from '../feature/cluster.js';
 import {ENABLE_SELECTOR_LOGS, INITIAL_STATE} from '../conf.js';
 import {
   FEATURE_TYPE_PROPERTY_NAME,
@@ -82,9 +82,9 @@ import {isDoor, isFloorCode, isOptPoiCtgUid, isRoom} from '../feature/utils.js';
  * @typedef {import("ol/style/Style").StyleFunction} StyleFunction
  * @typedef {import("../utils/range.js").RangeInterface} RangeInterface
  * @typedef {import("../feature/marker.js").LabelFunction} MarkerLabelFunction
- * @typedef {import("../identify/identify.js").CallbackFunction} IdentifyCallbackFunction
+ * @typedef {import("../feature/identify.js").CallbackFunction} IdentifyCallbackFunction
  * @typedef {import("../conf.js").PopupContentOptions} PopupContentOptions
- * @typedef {import("../cluster/cluster.js").ClusterOptions} ClusterOptions
+ * @typedef {import("../feature/cluster.js").ClusterOptions} ClusterOptions
  * @typedef {import("../style/icon.js").IconOptions} IconOptions
  */
 

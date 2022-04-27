@@ -9,7 +9,7 @@ import 'whatwg-fetch';
 import 'ol/ol.css';
 import '../css/munimaplib.css'; //must be after ol.css => rewrite some rules
 
-import * as mm_matomo from './matomo/matomo.js';
+import * as mm_matomo from './matomo.js';
 import VectorSource from 'ol/source/Vector';
 import create from './create.js';
 import reset from './reset.js';

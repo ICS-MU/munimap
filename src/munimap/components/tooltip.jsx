@@ -1,4 +1,4 @@
-import MapContext from '../_contexts/mapcontext.jsx';
+import MapContext from '../contexts/mapcontext.jsx';
 import PropTypes from 'prop-types';
 import React, {useContext, useLayoutEffect, useRef} from 'react';
 import {

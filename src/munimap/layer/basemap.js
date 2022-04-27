@@ -2,7 +2,7 @@
  * @module layer/basemap
  */
 
-import * as mm_lang from '../lang/lang.js';
+import * as mm_lang from '../lang.js';
 import * as mm_utils from '../utils/utils.js';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';

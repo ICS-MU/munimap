@@ -16,7 +16,7 @@ import {getEventByType} from '../../view/utils.js';
 import {
   getFeaturesByPriority,
   getPopupFeatureUid,
-} from '../../cluster/cluster.js';
+} from '../../feature/cluster.js';
 import {getAnimationRequest as getGeolocationAnimationRequest} from './geolocation.js';
 import {getAnimationRequest as getMarkerAnimationRequest} from './marker.js';
 import {getFloorCode as getMarkerFloorCode} from '../../feature/marker.js';

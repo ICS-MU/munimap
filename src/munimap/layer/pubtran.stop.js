@@ -1,7 +1,7 @@
 /**
  * @module layer/pubtranstop
  */
-import * as mm_lang from '../lang/lang.js';
+import * as mm_lang from '../lang.js';
 import * as mm_pubtran_stop from '../feature/pubtran.stop.js';
 import VectorLayer from 'ol/layer/Vector';
 import {PUBTRAN_LAYER_ID} from './constants.js';

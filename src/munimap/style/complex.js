@@ -4,7 +4,7 @@
 
 import * as mm_assert from '../assert/assert.js';
 import * as mm_complex from '../feature/complex.js';
-import * as mm_lang from '../lang/lang.js';
+import * as mm_lang from '../lang.js';
 import * as mm_style from './style.js';
 import * as mm_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';

@@ -1,6 +1,6 @@
 import FullScreenComponent from './fullscreen.jsx';
 import InitExtentComponent from './initextent.jsx';
-import MapContext from '../../_contexts/mapcontext.jsx';
+import MapContext from '../../contexts/mapcontext.jsx';
 import PropTypes from 'prop-types';
 import React, {forwardRef, useContext, useEffect} from 'react';
 import {Control} from 'ol/control';

@@ -6,7 +6,7 @@ import Controls from './controls/controls.jsx';
 import ErrorMessage from './errormessage.jsx';
 import InfoBubble from './infobubble.jsx';
 import LoadingMessage from './loadingmessage.jsx';
-import MapContext from '../_contexts/mapcontext.jsx';
+import MapContext from '../contexts/mapcontext.jsx';
 import Popup from './popup.jsx';
 import PropTypes from 'prop-types';
 import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';

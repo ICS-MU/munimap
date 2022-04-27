@@ -2,7 +2,7 @@
  * @module feature/door
  */
 import * as actions from '../redux/action.js';
-import {isAllowed} from '../identify/identify.js';
+import {isAllowed} from './identify.js';
 
 /**
  * @typedef {import("../conf.js").State} State

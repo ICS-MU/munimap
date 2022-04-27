@@ -7,7 +7,7 @@ import * as mm_utils from '../utils/utils.js';
 import ClusterSource from 'ol/source/Cluster';
 import VectorSource from 'ol/source/Vector';
 import {Point} from 'ol/geom';
-import {Translations, getMsg} from '../lang/lang.js';
+import {Translations, getMsg} from '../lang.js';
 import {
   buffer,
   createEmpty,

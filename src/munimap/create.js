@@ -5,7 +5,7 @@ import * as actions from './redux/action.js';
 import * as mm_utils from './utils/utils.js';
 import * as mm_view from './view/view.js';
 import Feature from 'ol/Feature';
-import MunimapComponent from './_components/munimap.jsx';
+import MunimapComponent from './components/munimap.jsx';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {
@@ -29,8 +29,8 @@ import {v4 as uuidv4} from 'uuid';
  * @typedef {import("redux").Store} redux.Store
  * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("./feature/feature.js").getMainFeatureAtPixelFunction} getMainFeatureAtPixelFunction
- * @typedef {import("./identify/identify.js").CallbackFunction} IdentifyCallbackFunction
- * @typedef {import("./cluster/cluster.js").ClusterOptions} ClusterOptions
+ * @typedef {import("./feature/identify.js").CallbackFunction} IdentifyCallbackFunction
+ * @typedef {import("./feature/cluster.js").ClusterOptions} ClusterOptions
  */
 
 /**

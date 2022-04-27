@@ -1,7 +1,7 @@
 import * as mm_utils from '../utils/utils.js';
 import * as ol_extent from 'ol/extent';
 import * as slctr from '../redux/selector.js';
-import MapContext from '../_contexts/mapcontext.jsx';
+import MapContext from '../contexts/mapcontext.jsx';
 import React, {useContext, useLayoutEffect, useRef} from 'react';
 import Select from './select.jsx';
 import {GeoJSON} from 'ol/format';

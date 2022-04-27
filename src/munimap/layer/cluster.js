@@ -2,7 +2,7 @@
  * @module layer/cluster
  */
 import * as mm_assert from '../assert/assert.js';
-import * as mm_cluster from '../cluster/cluster.js';
+import * as mm_cluster from '../feature/cluster.js';
 import VectorLayer from 'ol/layer/Vector';
 import {CLUSTER_LAYER_ID} from './constants.js';
 import {MUNIMAP_PROPS_ID} from '../constants.js';

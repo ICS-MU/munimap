@@ -2,15 +2,13 @@
  * @module conf
  */
 
-import {IdentifyTypes} from './identify/constants.js';
-
 /**
  * @typedef {import("ol/coordinate").Coordinate} ol.coordinate.Coordinate
  * @typedef {import("ol/layer").Vector} ol.layer.Vector
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/size").Size} ol.size.Size
  * @typedef {import("./feature/floor.js").Options} FloorOptions
- * @typedef {import("./cluster/cluster.js").ClusterOptions} ClusterOptions
+ * @typedef {import("./feature/cluster.js").ClusterOptions} ClusterOptions
  * @typedef {import("./utils/range.js").RangeInterface} RangeInterface
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/geom").Point} ol.geom.Point
@@ -148,7 +146,7 @@ export const INITIAL_STATE = {
     poiFilter: null,
     markerFilter: null,
     getMainFeatureAtPixelId: null,
-    identifyTypes: Object.values(IdentifyTypes),
+    identifyTypes: ['building', 'room', 'door'],
     identifyCallbackId: null,
     tooltips: true,
     cluster: null,

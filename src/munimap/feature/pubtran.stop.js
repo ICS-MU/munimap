@@ -3,7 +3,7 @@
  */
 
 import * as actions from '../redux/action.js';
-import * as mm_lang from '../lang/lang.js';
+import * as mm_lang from '../lang.js';
 import {IDOS_URL} from '../conf.js';
 
 /**

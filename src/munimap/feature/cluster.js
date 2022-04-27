@@ -3,12 +3,12 @@
  */
 import * as actions from '../redux/action.js';
 import * as mm_assert from '../assert/assert.js';
-import * as mm_building from '../feature/building.js';
-import * as mm_marker from '../feature/marker.js';
+import * as mm_building from './building.js';
+import * as mm_marker from './marker.js';
 import * as mm_range from '../utils/range.js';
 import * as mm_utils from '../utils/utils.js';
 import {Feature} from 'ol';
-import {getAbbr} from '../feature/unit.js';
+import {getAbbr} from './unit.js';
 import {
   getBuildingStore,
   getClusterStore,
@@ -21,8 +21,8 @@ import {getUid} from 'ol';
  * @typedef {import("../conf.js").State} State
  * @typedef {import("../utils/range").RangeInterface} RangeInterface
  * @typedef {import("../style/icon.js").IconOptions} IconOptions
- * @typedef {import("../feature/feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
- * @typedef {import("../feature/feature.js").IsClickableOptions} IsClickableOptions
+ * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
+ * @typedef {import("./feature.js").IsClickableOptions} IsClickableOptions
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import("ol/source/Vector").default} ol.source.Vector

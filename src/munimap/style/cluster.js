@@ -4,9 +4,9 @@
 
 import * as mm_assert from '../assert/assert.js';
 import * as mm_building from '../feature/building.js';
-import * as mm_cluster from '../cluster/cluster.js';
+import * as mm_cluster from '../feature/cluster.js';
 import * as mm_geom from '../utils/geom.js';
-import * as mm_lang from '../lang/lang.js';
+import * as mm_lang from '../lang.js';
 import * as mm_marker from '../feature/marker.js';
 import * as mm_style from '../style/style.js';
 import * as mm_style_constants from './constants.js';
@@ -30,7 +30,7 @@ import {localeCompare} from '../utils/string.js';
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("ol/geom/Point").default} ol.geom.Point
  * @typedef {import("ol/style/Style").StyleFunction} ol.style.StyleFunction
- * @typedef {import("../cluster/cluster.js").ClusterOptions} ClusterOptions
+ * @typedef {import("../feature/cluster.js").ClusterOptions} ClusterOptions
  */
 
 /**

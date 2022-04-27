@@ -6,7 +6,7 @@ import {
   sendEvent,
   sendEventForCustomMarker,
   sendEventForOptions,
-} from '../matomo/matomo.js';
+} from '../matomo.js';
 
 /**
  * @typedef {import("../create.js").Options} CreateOptions
@@ -19,7 +19,7 @@ import {
  * @typedef {import("ol/size").Size} ol.Size
  * @typedef {import("ol/coordinate").Coordinate} ol.Coordinate
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
- * @typedef {import("../matomo/matomo.js").Options} MatomoOptions
+ * @typedef {import("../matomo.js").Options} MatomoOptions
  * @typedef {import("../conf.js").AnimationRequestOptions} AnimationRequestOptions
  * @typedef {import("../conf.js").RequiredOptions} RequiredOptions
  */

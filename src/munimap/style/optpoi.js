@@ -2,8 +2,8 @@
  * @module style/optpoi
  */
 
-import * as mm_lang from '../lang/lang.js';
-import {getFeatures} from '../cluster/cluster.js';
+import * as mm_lang from '../lang.js';
+import {getFeatures} from '../feature/cluster.js';
 
 /**
  * @typedef {import("../feature/marker.js").LabelFunction} MarkerLabelFunction

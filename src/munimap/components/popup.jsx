@@ -1,7 +1,7 @@
 import * as actions from '../redux/action.js';
 import * as mm_range from '../utils/range.js';
 import * as slctr from '../redux/selector.js';
-import MapContext from '../_contexts/mapcontext.jsx';
+import MapContext from '../contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useLayoutEffect, useRef} from 'react';
 import sanitizeHtml from 'sanitize-html';
 import {POPUP_TALE_HEIGHT, POPUP_TALE_INDENT} from '../view/constants.js';

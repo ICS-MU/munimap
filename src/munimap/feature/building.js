@@ -4,7 +4,7 @@
 import * as actions from '../redux/action.js';
 import * as mm_assert from '../assert/assert.js';
 import * as mm_complex from './complex.js';
-import * as mm_lang from '../lang/lang.js';
+import * as mm_lang from '../lang.js';
 import * as mm_range from '../utils/range.js';
 import * as mm_unit from './unit.js';
 import * as mm_utils from '../utils/utils.js';

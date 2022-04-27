@@ -3,11 +3,11 @@
  */
 import {
   IDENTIFIED_FEATURE_PROPERTY_NAME,
+  IDENTIFY_LOCATION_CODE_FIELD_NAME,
   IdentifyTypes,
-  LOCATION_CODE_FIELD_NAME,
-} from './constants.js';
+} from '../feature/constants.js';
 import {getIdentifyStore} from '../source/constants.js';
-import {isBuilding, isDoor, isRoom} from '../feature/utils.js';
+import {isBuilding, isDoor, isRoom} from './utils.js';
 import {isDef} from '../utils/utils.js';
 
 /**
@@ -68,7 +68,7 @@ const getIdentifiedFeature = (pointFeature) => {
  */
 const getLocationCode = (pointFeature) => {
   const feature = getIdentifiedFeature(pointFeature);
-  return feature && feature.get(LOCATION_CODE_FIELD_NAME);
+  return feature && feature.get(IDENTIFY_LOCATION_CODE_FIELD_NAME);
 };
 
 /**

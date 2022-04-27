@@ -1,4 +1,4 @@
-import * as mm_lang from '../lang/lang.js';
+import * as mm_lang from '../lang.js';
 import * as slctr from '../redux/selector.js';
 import React, {useEffect, useRef} from 'react';
 import {hot} from 'react-hot-loader';

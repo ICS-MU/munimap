@@ -5,7 +5,7 @@
 
 import * as mm_utils from '../utils/utils.js';
 import Feature from 'ol/Feature';
-import {Abbr} from '../lang/lang.js';
+import {Abbr} from '../lang.js';
 import {
   AssertionError,
   assert,
@@ -16,7 +16,7 @@ import {
   assertInstanceof,
 } from './assert.js';
 import {BasemapIds} from '../layer/constants.js';
-import {IdentifyTypes} from '../identify/constants.js';
+import {IdentifyTypes} from '../feature/constants.js';
 import {
   isBuildingCodeOrLikeExpr,
   isCustomMarkerSuitable,
@@ -28,7 +28,7 @@ import {
 /**
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("../feature/feature.js").getMainFeatureAtPixelFunction} getMainFeatureAtPixelFunction
- * @typedef {import("../identify/identify.js").CallbackFunction} IdentifyCallbackFunction
+ * @typedef {import("../feature/identify.js").CallbackFunction} IdentifyCallbackFunction
  * @typedef {import("../create.js").Options} Options
  */
 

@@ -6,7 +6,7 @@
  * @typedef {import("redux").Store} redux.Store
  * @typedef {import("./feature/marker.js").LabelFunction} MarkerLabelFunction
  * @typedef {import("./feature/feature.js").getMainFeatureAtPixelFunction} getMainFeatureAtPixelFunction
- * @typedef {import("./identify/identify.js").CallbackFunction} IdentifyCallbackFunction
+ * @typedef {import("./feature/identify.js").CallbackFunction} IdentifyCallbackFunction
  */
 
 /**

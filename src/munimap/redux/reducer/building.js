@@ -1,7 +1,7 @@
 /**
  * @module redux/reducer/building
  */
-import * as mm_identify from '../../identify/identify.js';
+import * as mm_identify from '../../feature/identify.js';
 import * as mm_range from '../../utils/range.js';
 import * as slctr from '../selector.js';
 import {FLOOR_RESOLUTION} from '../../feature/constants.js';
