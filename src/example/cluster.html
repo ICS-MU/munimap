@@ -169,8 +169,10 @@
         label: 'Vojenská nemocnice',
         detail:'&lt;h4&gt;Vojenská nemocnice&lt;/h4&gt;&lt;a href="www.vnbrno.cz" target="_blank"&gt;www.vnbrno.cz&lt;/a&gt;',
         color: 'green',
-        onClick: function (evt, options) { //evt: PointerEvent
-          options.animation = 'zoomTo'; //enum ['zoomTo', 'centerTo', 'none']
+        onClick: function (evt) { //evt: PointerEvent
+          return {
+            animation: 'zoomTo', //enum ['zoomTo', 'centerTo', 'none']
+          };
         },
         icon: {
           url: '../munimap/rectangle.png',
@@ -285,10 +287,11 @@
           label: 'Vojenská nemocnice',
           detail:'<h4>Vojenská nemocnice</h4><a href="https://www.vnbrno.cz" target="_blank">www.vnbrno.cz</a>',
           color: 'green',
-          onClick: function (evt, options) { //evt: PointerEvent
-            console.log(evt)
-            options.animation = 'zoomTo'; //enum ['zoomTo', 'centerTo', 'none']
-          },
+          onClick: function (evt) { //evt: PointerEvent
+          return {
+            animation: 'zoomTo', //enum ['zoomTo', 'centerTo', 'none']
+          };
+        },
           icon: {
             url: '../img/rectangle.png',
             size: [20, 20], // [width, height] in px

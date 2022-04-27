@@ -108,7 +108,7 @@ import {testCodeOrLikeExpr} from '../utils/regex.js';
  * @typedef {Object} OnClickOptions
  * @property {CustomMarkerOnClickAnimationOptions} animation animation
  *
- * @typedef {function(Event, OnClickOptions): void} OnClickFunction
+ * @typedef {function(Event): (OnClickOptions|undefined)} OnClickFunction
  */
 
 /**
@@ -291,13 +291,10 @@ const handleOnClickCallback = (feature, defaults, originalEvent) => {
       feature.get('onClick')
     );
     if (onClick) {
-      const opts = /** @type {OnClickOptions}*/ ({
-        animation: animationOpts.ZOOM_TO,
-      });
-      //opts is passed as reference - user can change values from onClick body
-      onClick(originalEvent, opts);
-      if (Object.values(animationOpts).includes(opts.animation)) {
-        animation = opts.animation;
+      // get result from onClick function that was set as ol.Feature parameter
+      const result = onClick(originalEvent);
+      if (result && Object.values(animationOpts).includes(result.animation)) {
+        animation = result.animation;
       }
     }
 

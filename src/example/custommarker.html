@@ -68,8 +68,8 @@
         V případě vlastní ikony nastaví pouze barvu popisku - nepovinný parametr
       </li>
       <li>
-        <b>onClick</b> - callback po kliknutí (<i>evt</i> - <a href="https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent">PointerEvent</a>, <i>options</i> - {<i>animation</i>: 'zoomTo'}).
-        Změnou hodnoty v <i>options</i> je možné přizpůsobit chování mapy po kliknutí na "špendlík". onClick - nepovinný parametr
+        <b>onClick</b> - callback po kliknutí (<i>evt</i> - <a href="https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent">PointerEvent</a>). Funkce může vracet objekt (<a href="../doc/#markers">OnClickOptions</a>), kterým lze
+        přizpůsobit chování mapy po kliknutí na "špendlík". onClick - nepovinný parametr
       </li>
       <li>
         <b>icon</b> - nastaví vlastní ikonu - nepovinný parametr
@@ -97,9 +97,10 @@
         label: 'Vojenská nemocnice',
         detail:'&lt;h4&gt;Vojenská nemocnice&lt;/h4&gt;&lt;a href="www.vnbrno.cz" target="_blank"&gt;www.vnbrno.cz&lt;/a&gt;',
         color: 'green',
-        onClick: function (evt, options) { //evt: PointerEvent
-          options.animation = 'zoomTo'; //enum ['zoomTo', 'centerTo', 'none']
-        },
+        onClick: function (evt) { //evt: PointerEvent
+          return {
+            animation: 'centerTo', //enum ['zoomTo', 'centerTo', 'none']
+          };
         icon: {
           url: '../munimap/rectangle.png',
           size: [20, 20], // [width, height] in px
@@ -172,8 +173,10 @@
           label: 'Vojenská nemocnice',
           detail:'<h4>Vojenská nemocnice</h4><a href="https://www.vnbrno.cz" target="_blank">www.vnbrno.cz</a>',
           color: 'green',
-          onClick: function (evt, options) { //evt: PointerEvent
-            options.animation = 'zoomTo'; //enum ['zoomTo', 'centerTo', 'none']
+          onClick: function (evt) { //evt: PointerEvent
+            return {
+              animation: 'centerTo', //enum ['zoomTo', 'centerTo', 'none']
+            };
           },
           icon: {
             url: '../img/rectangle.png',
