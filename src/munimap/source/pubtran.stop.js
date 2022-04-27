@@ -5,7 +5,7 @@ import * as mm_utils from '../utils/utils.js';
 import VectorSource from 'ol/source/Vector';
 import {PUBTRAN_TYPE} from '../feature/constants.js';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
-import {pubtranFeaturesForMap} from '../load.js';
+import {pubtranFeaturesForMap} from '../load/feature/pubtran.stop.js';
 import {setPubTranStore} from './constants.js';
 import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
 

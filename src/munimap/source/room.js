@@ -5,7 +5,7 @@ import * as mm_utils from '../utils/utils.js';
 import VectorSource from 'ol/source/Vector';
 import {ROOM_TYPE} from '../feature/constants.js';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
-import {loadActiveRooms, loadDefaultRooms} from '../load.js';
+import {loadActiveRooms, loadDefaultRooms} from '../load/feature/room.js';
 import {
   setActiveRoomStore,
   setDefaultRoomStore,

@@ -15,8 +15,6 @@ import {getComplexStore} from '../source/constants.js';
 /**
  * @typedef {import('../utils/range.js').RangeInterface} RangeInterface
  * @typedef {import('./feature.js').TypeOptions} TypeOptions
- * @typedef {import("../load.js").Processor} Processor
- * @typedef {import("../load.js").ProcessorOptions} ProcessorOptions
  * @typedef {import("ol/Feature").default} ol.Feature
  * @typedef {import("./feature.js").FeatureClickHandlerOptions} FeatureClickHandlerOptions
  * @typedef {import("./feature.js").IsClickableOptions} IsClickableOptions

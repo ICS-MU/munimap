@@ -10,7 +10,6 @@ import {UNIT_PRIORITY_FIELD_NAME} from './constants.js';
  * @typedef {import("./feature.js").TypeOptions} TypeOptions
  * @typedef {import("ol/source").Vector} ol.source.Vector
  * @typedef {import("ol").Feature} ol.Feature
- * @typedef {import("../load.js").ProcessorOptions} ProcessorOptions
  */
 
 /**

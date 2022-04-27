@@ -21,7 +21,7 @@ import {Tile} from 'ol/layer';
 import {Vector} from 'ol/layer';
 import {createSelector} from 'reselect';
 import {createXYZ} from 'ol/tilegrid';
-import {featuresForMap} from './load.js';
+import {featuresForMap} from './load/load.js';
 import {
   getActiveFloorCodes,
   getSelectedFloorCode,

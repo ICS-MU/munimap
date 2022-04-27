@@ -2,7 +2,7 @@
  * @module redux/reducer/reducer
  */
 import * as actions from '../action.js';
-import * as mm_load from '../../load.js';
+import * as mm_load_fl from '../../load/feature/floor.js';
 import * as mm_range from '../../utils/range.js';
 import * as slctr from '../selector/selector.js';
 import * as srcs from '../../source/constants.js';
@@ -33,6 +33,7 @@ import {handleMapViewChange} from '../../view/view.js';
 import {handleReset} from '../../reset.js';
 import {isCustomMarker} from '../../feature/utils.js';
 import {isSameCode} from '../../feature/building.js';
+import {loadMarkers, loadZoomTo} from '../../load/feature/marker.js';
 
 /**
  * @typedef {import("../../conf.js").State} State
@@ -115,11 +116,11 @@ const createReducer = (initialState) => {
       //CREATE_MUNIMAP
       case actions.CREATE_MUNIMAP:
         if (slctr.loadMarkers(state)) {
-          mm_load.loadMarkers(state.requiredOpts, action.asyncDispatch);
+          loadMarkers(state.requiredOpts, action.asyncDispatch);
         }
 
         if (slctr.loadZoomTo(state)) {
-          mm_load.loadZoomTo(
+          loadZoomTo(
             state.requiredOpts.targetId,
             state.requiredOpts.zoomTo,
             action.asyncDispatch
@@ -142,7 +143,7 @@ const createReducer = (initialState) => {
       case actions.FLOORS_LOADED:
         const floorCode = slctr.calculateSelectedFloor(state);
         if (floorCode) {
-          mm_load.loadFloorsByFloorLayer(
+          mm_load_fl.loadFloorsByFloorLayer(
             {
               targetId: slctr.getTargetId(state),
               floorCode,
@@ -191,7 +192,7 @@ const createReducer = (initialState) => {
         const isChanged = selectedFeature && selectedFeature !== newValue;
         if (isChanged) {
           const where = `polohKod LIKE '${newValue.substring(0, 5)}%'`;
-          mm_load
+          mm_load_fl
             .loadFloors(slctr.getTargetId(state), where)
             .then((floors) =>
               action.asyncDispatch(actions.floors_loaded(false))
@@ -281,7 +282,7 @@ const createReducer = (initialState) => {
           locationCode =
             feature.get('vychoziPodlazi') || feature.get('polohKod');
           if (locationCode) {
-            mm_load.loadFloorsForBuilding(
+            mm_load_fl.loadFloorsForBuilding(
               locationCode,
               state,
               action.asyncDispatch
@@ -372,7 +373,7 @@ const createReducer = (initialState) => {
         if (!isCustomMarker(feature)) {
           locationCode = getMarkerFloorCode(feature);
           if (locationCode) {
-            mm_load.loadFloorsForMarker(
+            mm_load_fl.loadFloorsForMarker(
               locationCode,
               state,
               action.asyncDispatch
@@ -436,7 +437,11 @@ const createReducer = (initialState) => {
           if (wasOtherFloorSelected) {
             uid = null;
           }
-          mm_load.loadFloorsForRoom(locationCode, state, action.asyncDispatch);
+          mm_load_fl.loadFloorsForRoom(
+            locationCode,
+            state,
+            action.asyncDispatch
+          );
           callbackId = handleIdentifyCallbackByOptions({
             state,
             feature,

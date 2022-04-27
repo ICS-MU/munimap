@@ -27,11 +27,9 @@ import {isBuilding, isDoor, isRoom} from './utils.js';
  * @typedef {import("ol/source").Vector} ol.source.Vector
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/proj/Projection").default} ol.proj.Projection
- * @typedef {import("../load.js").FeaturesForMapOptions} featuresForMapOptions
  * @typedef {import("ol/layer/Base").default} ol.layer.Base
  * @typedef {import("ol/layer/Vector").default} ol.layer.Vector
  * @typedef {import("ol/Map").default} ol.Map
- * @typedef {import("../load.js").ProcessorOptions} ProcessorOptions
  * @typedef {import("ol/featureloader")} ol.FeatureLoader
  * @typedef {import("ol/render/Feature").default} ol.render.Feature
  * @typedef {import("../feature/floor.js").Options} FloorOptions

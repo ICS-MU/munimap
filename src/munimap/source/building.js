@@ -1,7 +1,7 @@
 /**
  * @module source/building
  */
-import * as mm_load from '../load.js';
+import * as mm_load_bldg from '../load/feature/building.js';
 import * as mm_utils from '../utils/utils.js';
 import VectorSource from 'ol/source/Vector';
 import {BUILDING_TYPE} from '../feature/constants.js';
@@ -31,10 +31,10 @@ const createStore = (targetId, callback) => {
     ),
   });
   buildingStore.setLoader(
-    mm_utils.partial(mm_load.buildingFeaturesForMap, {
+    mm_utils.partial(mm_load_bldg.buildingFeaturesForMap, {
       source: buildingStore,
       type: BUILDING_TYPE,
-      processor: mm_utils.partial(mm_load.buildingLoadProcessor, targetId),
+      processor: mm_utils.partial(mm_load_bldg.buildingLoadProcessor, targetId),
       callback: callback,
     })
   );

@@ -51,7 +51,7 @@ import {getDefaultLayers} from '../layer/layer.js';
 import {getMainFeatureAtPixel} from '../feature/feature.js';
 import {getUid} from 'ol';
 import {isFloorCode} from '../feature/utils.js';
-import {loadFloors} from '../load.js';
+import {loadFloors} from '../load/feature/floor.js';
 import {refreshActiveStyle as refreshActiveDoorStyle} from './door.js';
 import {refreshStyle as refreshPubtranStyle} from './pubtran.stop.js';
 import {setEventByType} from './utils.js';

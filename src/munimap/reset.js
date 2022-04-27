@@ -11,7 +11,7 @@ import {
   getStoreByTargetId,
 } from './constants.js';
 import {INITIAL_STATE} from './conf.js';
-import {clearAndLoadMarkers, loadZoomTo} from './load.js';
+import {clearAndLoadMarkers, loadZoomTo} from './load/feature/marker.js';
 import {createStore as createIdentifyStore} from './source/identify.js';
 import {
   getClusterStore,

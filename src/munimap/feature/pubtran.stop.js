@@ -13,7 +13,6 @@ import {IDOS_URL} from '../conf.js';
  * @typedef {import("./feature.js").IsClickableOptions} IsClickableOptions
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/proj/Projection").default} ol.proj.Projection
- * @typedef {import("../load.js").FeaturesForMapOptions} featuresForMapOptions
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("redux").Dispatch} redux.Dispatch
  */
