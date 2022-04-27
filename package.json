@@ -24,6 +24,9 @@
     "url": "https://github.com/jirik/munimap-dev-stack/issues"
   },
   "homepage": "https://github.com/jirik/munimap-dev-stack#readme",
+  "engines": {
+    "node": ">=12"
+  },
   "browserslist": [
     "last 2 versions",
     "> 1%",
