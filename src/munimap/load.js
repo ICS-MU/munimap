@@ -5,7 +5,7 @@ import * as actions from './redux/action.js';
 import * as mm_assert from './assert/assert.js';
 import * as mm_complex from './feature/complex.js';
 import * as mm_utils from './utils/utils.js';
-import * as slctr from './redux/selector.js';
+import * as slctr from './redux/selector/selector.js';
 import * as srcs from './source/constants.js';
 import VectorSource from 'ol/source/Vector';
 import {

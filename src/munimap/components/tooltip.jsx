@@ -6,7 +6,7 @@ import {
   getResolution,
   getRotation,
   getSize,
-} from '../redux/selector.js';
+} from '../redux/selector/selector.js';
 import {getElementSize} from '../utils/dom.js';
 import {getPixelFromCoordinate} from '../utils/map.js';
 import {hot} from 'react-hot-loader';

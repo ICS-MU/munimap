@@ -4,7 +4,7 @@
 import * as mm_assert from '../../assert/assert.js';
 import * as mm_utils from '../../utils/utils.js';
 import * as ol_extent from 'ol/extent';
-import * as slctr from '../selector.js';
+import * as slctr from '../selector/selector.js';
 import {
   COMPLEX_ID_FIELD_NAME,
   COMPLEX_RESOLUTION,

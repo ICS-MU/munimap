@@ -1,7 +1,7 @@
 /**
  * @module redux/reducer/utils
  */
-import * as slctr from '../selector.js';
+import * as slctr from '../selector/selector.js';
 import {Feature} from 'ol';
 import {
   isBuilding,

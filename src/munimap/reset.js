@@ -3,7 +3,7 @@
  */
 import * as actions from './redux/action.js';
 import * as mm_utils from './utils/utils.js';
-import * as slctr from './redux/selector.js';
+import * as slctr from './redux/selector/selector.js';
 import Feature from 'ol/Feature';
 import {
   IDENTIFY_CALLBACK_STORE,

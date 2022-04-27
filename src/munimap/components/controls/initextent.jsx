@@ -1,6 +1,6 @@
 import * as actions from '../../redux/action.js';
 import * as mm_lang from '../../lang.js';
-import * as slctr from '../../redux/selector.js';
+import * as slctr from '../../redux/selector/selector.js';
 import MapContext from '../../contexts/mapcontext.jsx';
 import React, {forwardRef, useContext, useEffect, useRef} from 'react';
 import {Control} from 'ol/control';

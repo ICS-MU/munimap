@@ -2,7 +2,7 @@
  * @module redux/reducer/poi
  */
 import * as mm_range from '../../utils/range.js';
-import * as slctr from '../selector.js';
+import * as slctr from '../selector/selector.js';
 import {FLOOR_RESOLUTION} from '../../feature/constants.js';
 import {INITIAL_STATE} from '../../conf.js';
 import {getActivePoiStore} from '../../source/constants.js';

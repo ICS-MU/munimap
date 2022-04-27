@@ -81,7 +81,7 @@ import {updateClusteredFeatures} from './cluster.js';
  * @typedef {import("../feature/feature.js").featureClickHandlerFunction} featureClickHandlerFunction
  * @typedef {import("../conf.js").AnimationRequestOptions} AnimationRequestOptions
  * @typedef {import("ol/style/Style").StyleFunction} StyleFunction
- * @typedef {import("../redux/selector.js").AllStyleFunctionsResult} AllStyleFunctionsResult
+ * @typedef {import("../redux/selector/selector.js").AllStyleFunctionsResult} AllStyleFunctionsResult
  * @typedef {import("ol/events.js").EventsKey} EventsKey
  * @typedef {import("ol/view.js").AnimationOptions} AnimationOptions
  */

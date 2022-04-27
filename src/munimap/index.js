@@ -22,7 +22,10 @@ import {Vector} from 'ol/layer';
 import {createSelector} from 'reselect';
 import {createXYZ} from 'ol/tilegrid';
 import {featuresForMap} from './load.js';
-import {getActiveFloorCodes, getSelectedFloorCode} from './redux/selector.js';
+import {
+  getActiveFloorCodes,
+  getSelectedFloorCode,
+} from './redux/selector/selector.js';
 import {getNotYetAddedFeatures} from './utils/store.js';
 import {getStoreByTargetId} from './constants.js';
 import {tile} from 'ol/loadingstrategy';

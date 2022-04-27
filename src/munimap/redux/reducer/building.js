@@ -3,7 +3,7 @@
  */
 import * as mm_identify from '../../feature/identify.js';
 import * as mm_range from '../../utils/range.js';
-import * as slctr from '../selector.js';
+import * as slctr from '../selector/selector.js';
 import {FLOOR_RESOLUTION} from '../../feature/constants.js';
 import {INITIAL_STATE} from '../../conf.js';
 import {getAnimationRequestParams} from '../../utils/animation.js';

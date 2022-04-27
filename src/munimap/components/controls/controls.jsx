@@ -1,4 +1,4 @@
-import * as slctr from '../../redux/selector.js';
+import * as slctr from '../../redux/selector/selector.js';
 import GeolocationComponent from './geolocation.jsx';
 import IdentifyComponent from './identify.jsx';
 import MapLinks from './maplinks.jsx';

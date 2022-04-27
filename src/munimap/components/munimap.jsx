@@ -1,7 +1,7 @@
 import * as actions from '../redux/action.js';
 import * as mm_range from '../utils/range.js';
 import * as mm_view from '../view/view.js';
-import * as slctr from '../redux/selector.js';
+import * as slctr from '../redux/selector/selector.js';
 import Controls from './controls/controls.jsx';
 import ErrorMessage from './errormessage.jsx';
 import InfoBubble from './infobubble.jsx';

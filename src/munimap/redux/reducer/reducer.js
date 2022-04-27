@@ -4,7 +4,7 @@
 import * as actions from '../action.js';
 import * as mm_load from '../../load.js';
 import * as mm_range from '../../utils/range.js';
-import * as slctr from '../selector.js';
+import * as slctr from '../selector/selector.js';
 import * as srcs from '../../source/constants.js';
 import {EventType} from '../../view/constants.js';
 import {FLOOR_RESOLUTION} from '../../feature/constants.js';

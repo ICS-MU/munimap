@@ -4,7 +4,7 @@
 import * as mm_assert from '../../assert/assert.js';
 import * as mm_identify from '../../feature/identify.js';
 import * as mm_utils from '../../utils/utils.js';
-import * as slctr from '../selector.js';
+import * as slctr from '../selector/selector.js';
 import {Feature} from 'ol';
 import {
   IDENTIFIED_FEATURE_PROPERTY_NAME,
