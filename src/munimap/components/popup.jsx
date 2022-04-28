@@ -1,9 +1,9 @@
 import * as actions from '../redux/action.js';
 import * as mm_range from '../utils/range.js';
 import * as slctr from '../redux/selector/selector.js';
+import DOMPurify from 'dompurify';
 import MapContext from '../contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useLayoutEffect, useRef} from 'react';
-import sanitizeHtml from 'sanitize-html';
 import {POPUP_TALE_HEIGHT, POPUP_TALE_INDENT} from '../view/constants.js';
 import {getElementSize} from '../utils/dom.js';
 import {getPixelFromCoordinate} from '../utils/map.js';
@@ -75,12 +75,7 @@ const PopupComponent = (props) => {
 
   useLayoutEffect(() => {
     if (map && popupContentElRef.current) {
-      popupContentElRef.current.innerHTML = sanitizeHtml(content, {
-        allowedAttributes: {
-          ...sanitizeHtml.defaults.allowedAttributes,
-          '*': ['id', 'class', 'style'],
-        },
-      });
+      popupContentElRef.current.innerHTML = DOMPurify.sanitize(content);
       return () => {
         popupContentElRef.current.innerHTML = '';
       };

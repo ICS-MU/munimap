@@ -5,6 +5,7 @@
 
 //polyfills for IE11
 import 'whatwg-fetch';
+import 'core-js/stable/object/assign';
 
 import 'ol/ol.css';
 import '../css/munimaplib.css'; //must be after ol.css => rewrite some rules
