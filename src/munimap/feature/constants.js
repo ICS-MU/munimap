@@ -219,6 +219,7 @@ const OptPoiLabels = {
   IT_CENTER: 'Centrum informačních technologií',
   CANTEEN: 'Jídelna',
   DORMITORY: 'Kolej',
+  OFFICE_FOR_STUDIES: 'Studijní oddělení',
 };
 
 /**
@@ -235,6 +236,7 @@ const OptPoiIds = {
   IT_CENTER: 'it-center',
   CANTEEN: 'canteen',
   DORMITORY: 'dormitory',
+  OFFICE_FOR_STUDIES: 'office-for-studies',
 };
 
 /**
