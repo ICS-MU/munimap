@@ -317,8 +317,13 @@ const getStyleForActiveRoomLayer = createSelector(
  * >}
  */
 const getStyleForActivePoiLayer = createSelector(
-  [sfl.getActiveFloorCodes, ss.getSelectedFeature, ss.getTargetId],
-  (activeFloorCodes, selectedFeature, targetId) => {
+  [
+    sfl.getActiveFloorCodes,
+    ss.getSelectedFeature,
+    ss.getTargetId,
+    sfl.isInFloorResolutionRange,
+  ],
+  (activeFloorCodes, selectedFeature, targetId, inFloorResolutionRange) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('STYLE - computing style for pois');
     }
@@ -327,6 +332,7 @@ const getStyleForActivePoiLayer = createSelector(
       selectedFeature,
       activeFloorCodes,
       targetId,
+      inFloorResolutionRange,
     });
   }
 );

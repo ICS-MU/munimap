@@ -21,6 +21,7 @@ import {getByCode as getBuildingByCode} from '../feature/building.js';
  * @property {string} targetId targetId
  * @property {string} selectedFeature selected feature
  * @property {Array<string>} activeFloorCodes activeFloorCodes
+ * @property {boolean} inFloorResolutionRange inFloorResolutionRange
  */
 
 /**
@@ -165,30 +166,34 @@ const outdoorStyleFunction = (
  * @return {ol.style.StyleFunction} style function
  */
 const getActiveStyleFunction = (options) => {
-  const {selectedFeature, activeFloorCodes, targetId} = options;
+  const {selectedFeature, activeFloorCodes, targetId, inFloorResolutionRange} =
+    options;
 
   const styleFce = (feature, res) => {
-    const locCode = /**@type {string}*/ (feature.get('polohKodPodlazi'));
-    if (locCode && activeFloorCodes.includes(locCode)) {
-      return activeStyleFunction(feature, res);
-    }
-
     const poiType = feature.get('typ');
     const entranceTypes = [
       PoiPurpose.BUILDING_ENTRANCE,
       PoiPurpose.BUILDING_COMPLEX_ENTRANCE,
     ];
-    if (entranceTypes.includes(poiType)) {
-      const defaultFloor = feature.get('vychoziPodlazi');
-      mm_assert.assertNumber(defaultFloor);
+
+    if (inFloorResolutionRange) {
       const locCode = /**@type {string}*/ (feature.get('polohKodPodlazi'));
-      if (
-        defaultFloor === 1 &&
-        activeFloorCodes.every(
-          (floor) => !locCode.startsWith(floor.substring(0, 5))
-        )
-      ) {
-        return defaultStyleFunction(feature, res);
+      if (locCode && activeFloorCodes.includes(locCode)) {
+        return activeStyleFunction(feature, res);
+      }
+
+      if (entranceTypes.includes(poiType)) {
+        const defaultFloor = feature.get('vychoziPodlazi');
+        mm_assert.assertNumber(defaultFloor);
+        const locCode = /**@type {string}*/ (feature.get('polohKodPodlazi'));
+        if (
+          defaultFloor === 1 &&
+          activeFloorCodes.every(
+            (floor) => !locCode.startsWith(floor.substring(0, 5))
+          )
+        ) {
+          return defaultStyleFunction(feature, res);
+        }
       }
     }
 
