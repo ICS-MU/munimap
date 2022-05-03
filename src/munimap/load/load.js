@@ -11,6 +11,7 @@ import {
   ROOM_TYPE,
 } from '../feature/constants.js';
 import {EsriJSON} from 'ol/format';
+import {getUid} from 'ol';
 
 /**
  * @typedef {import("../feature/feature.js").TypeOptions} TypeOptions
@@ -90,28 +91,27 @@ import {EsriJSON} from 'ol/format';
 /**
  * newProcessedFeatures: Cache of new features that are currently being
  * processed, but are not yet stored in the store.
- * @type {Array<{
+ * @type {Object<string, {
  *  type: TypeOptions,
  *  newProcessedFeatures: Array<ol.Feature>
  * }>}
  * @protected
  */
-const ProcessorCache = [];
+const ProcessorCache = {};
 
 /**
  * @param {TypeOptions} type type
+ * @param {string} sourceUid source uid (from OL)
  * @return {Array<ol.Feature>} new processed features
  */
-const getNewProcessedFeatures = (type) => {
-  let cache = ProcessorCache.find((c) => {
-    return c.type === type;
-  });
+const getNewProcessedFeatures = (type, sourceUid) => {
+  let cache = ProcessorCache[sourceUid];
   if (!cache) {
     cache = {
       type: type,
       newProcessedFeatures: [],
     };
-    ProcessorCache.push(cache);
+    ProcessorCache[sourceUid] = cache;
   }
   return cache.newProcessedFeatures;
 };
@@ -310,7 +310,7 @@ const featuresForMap = async (options, extent, resolution, projection) => {
     method: options.method,
     postContent: isPost ? formData : undefined,
     processor: options.processor,
-    newProcessedFeatures: getNewProcessedFeatures(type),
+    newProcessedFeatures: getNewProcessedFeatures(type, getUid(options.source)),
   });
 };
 
@@ -322,6 +322,7 @@ const featuresForMap = async (options, extent, resolution, projection) => {
 const features = async (options) => {
   const type = options.type;
   const url = type.serviceUrl + type.layerId + '/query?';
+  mm_assert.assertExists(options.source, 'Source must be defined!');
   mm_assert.assert(
     !options.where || options.where.indexOf('"') < 0,
     'Use single quotes instead of double quotes.'
@@ -362,7 +363,7 @@ const features = async (options) => {
     method: options.method,
     postContent: isPost ? formData : undefined,
     processor: options.processor,
-    newProcessedFeatures: getNewProcessedFeatures(type),
+    newProcessedFeatures: getNewProcessedFeatures(type, getUid(options.source)),
   });
 };
 
