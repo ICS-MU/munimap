@@ -67,11 +67,11 @@ const PopupComponent = (props) => {
 
   useEffect(() => {
     if (hideResolution && resolution) {
-      if (!mm_range.contains(hideResolution, resolution)) {
+      if (!mm_range.contains(hideResolution, resolution) && visible) {
         closePopup();
       }
     }
-  }, [hideResolution, resolution]);
+  }, [hideResolution, resolution, visible]);
 
   useLayoutEffect(() => {
     if (map && popupContentElRef.current) {
