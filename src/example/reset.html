@@ -100,86 +100,16 @@
     </div>
 
     <script type="text/javascript">
-      const fn = (opts) => {
-              console.log('create', {opts: opts})
-              return true;
-            }
-      const map_promise = munimap.create({
+      munimap.create({
         target: 'map',
-        // markers: ['BMB01'],
-        // zoom: 17,
-        // markers: ['poi.ctg:virtual-tour'],
-        // markerFilter: ['PřF'],
-        // poiFilter: ['tech']
-        // identifyTypes: ['building'],
-        // identifyCallback: fn,
-        // identifyCallback: (opts) => {
-        //       console.log('create', {opts: opts})
-        //       return true;
-        //     }
-      });
-
-      (async () => {
-        const map = await map_promise;
+      }).then(function (map) {
         var button = document.getElementById('resetButton');
         button.onclick = function() {
           munimap.reset(map, {
             markers: ['BMB01'],
-            // zoomTo: 'BMA01',
-            // zoom: 12,
-            // center: [16.615390495656977, 49.1686567194723],
-            // markers: ['poi.ctg:virtual-tour'],
-            // markerFilter: ['RMU'],
-            // poiFilter: ['tech']
-            // identifyTypes: ['room'],
-            // identifyCallback: fn,
-            // identifyCallback: (opts) => {
-            //   console.log('reset', {opts})
-            //   return true;
-            // }
-            // cluster: {
-            //   marked: {
-            //     icon: {
-            //       single: {
-            //         url: '../img/rectangle_blue.png',
-            //         size: [20, 20], // [width, height] in px
-            //         position: 'above', // enum ['above', 'below', 'origin']
-            //       },
-            //       multiple: {
-            //         url: '../img/rectangle_purple.png',
-            //         size: [20, 20],
-            //         position: 'above',
-            //       }
-            //     },
-            //     color: {
-            //       single: '#0000dc',
-            //       multiple: 'purple'
-            //     }
-            //   },
-            //   unmarked: {
-            //     icon: {
-            //       single: {
-            //         url: '../img/triangle_orange.png',
-            //         size: [20, 20],
-            //         position: 'below',
-            //       },
-            //       multiple: {
-            //         url: '../img/triangle_cyan.png',
-            //         size: [20, 20],
-            //         position: 'below',
-            //       }
-            //     },
-            //     color: {
-            //       single: 'orange',
-            //       multiple: 'darkcyan'
-            //     }
-            //   },
-            //   facultyAbbr: true,
-            //   distance: 120
-            // }
           });
         };
-      })();
+      })
     </script>
     <script type="text/plain" class="mc-analytics">
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

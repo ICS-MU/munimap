@@ -35,7 +35,7 @@
             Javascriptová knihovna umožňující zobrazení interaktivních plánů budov a místností
             Masarykovy univerzity <b>na libovolných webových stránkách</b>.
           </p>
-          <div id="map-example" style="height: 350px;"></div>
+          <div id="map-example"></div>
           <p>
             Mapové okno vytvořené prostřednictvím této knihovny je možné velmi jednoduchým způsobem
             začlenit do jakékoli webové stránky a přizpůsobit si mapu dle potřeb konkrétního účelu.
@@ -167,11 +167,7 @@
     <script type="text/javascript">
       const map_promise = munimap.create({
         target: 'map-example',
-        markers: ['BMA01N05055'],
-        pubTran: true,
-        // simpleScroll: false,
-        mapLinks: true,
-        // loadingMessage: false,
+        markers: ['BMA01']
       });
     </script>
     <script type="text/plain" class="mc-analytics">
