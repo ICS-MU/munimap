@@ -3,7 +3,6 @@ import GeolocationComponent from './geolocation.jsx';
 import IdentifyComponent from './identify.jsx';
 import MapLinks from './maplinks.jsx';
 import MapToolsComponent from './maptools.jsx';
-import React from 'react';
 import {useSelector} from 'react-redux';
 
 /**

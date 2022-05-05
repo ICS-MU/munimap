@@ -2,8 +2,8 @@ import * as actions from '../redux/action.js';
 import * as mm_lang from '../lang.js';
 import * as slctr from '../redux/selector/selector.js';
 import PropTypes from 'prop-types';
-import React, {useLayoutEffect, useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {useLayoutEffect, useRef} from 'react';
 
 /**
  * @typedef {import("ol/Map").default} ol.Map

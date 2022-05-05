@@ -9,7 +9,6 @@ import LoadingMessage from './loadingmessage.jsx';
 import MapContext from '../contexts/mapcontext.jsx';
 import Popup from './popup.jsx';
 import PropTypes from 'prop-types';
-import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import Tooltip from './tooltip.jsx';
 import {
   CREATED_MAPS,
@@ -29,6 +28,7 @@ import {
 } from '../feature/feature.js';
 import {unlistenByKey} from 'ol/events';
 import {useDispatch, useSelector} from 'react-redux';
+import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 
 /**
  * @typedef {import("../constants.js").MapProps} MapProps

@@ -2,7 +2,6 @@ import * as actions from '../redux/action.js';
 import * as mm_lang from '../lang.js';
 import * as slctr from '../redux/selector/selector.js';
 import PropTypes from 'prop-types';
-import React from 'react';
 import Select from 'react-select';
 import {Feature} from 'ol';
 import {FloorTypes} from '../feature/constants.js';

@@ -1,6 +1,6 @@
 import * as mm_lang from '../lang.js';
 import * as slctr from '../redux/selector/selector.js';
-import React, {useEffect, useRef} from 'react';
+import {useEffect, useRef} from 'react';
 import {useSelector} from 'react-redux';
 
 /**

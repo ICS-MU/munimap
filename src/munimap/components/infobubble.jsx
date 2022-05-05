@@ -2,7 +2,6 @@ import * as mm_utils from '../utils/utils.js';
 import * as ol_extent from 'ol/extent';
 import * as slctr from '../redux/selector/selector.js';
 import MapContext from '../contexts/mapcontext.jsx';
-import React, {useContext, useLayoutEffect, useRef} from 'react';
 import Select from './select.jsx';
 import {GeoJSON} from 'ol/format';
 import {POPUP_TALE_HEIGHT, POPUP_TALE_INDENT} from '../view/constants.js';
@@ -11,6 +10,7 @@ import {sort as floorSortFn} from '../feature/floor.js';
 import {getByCode as getBuildingByCode} from '../feature/building.js';
 import {getElementSize} from '../utils/dom.js';
 import {getPixelFromCoordinate} from '../utils/map.js';
+import {useContext, useLayoutEffect, useRef} from 'react';
 import {useSelector} from 'react-redux';
 
 /**

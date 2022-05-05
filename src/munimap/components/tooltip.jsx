@@ -1,6 +1,5 @@
 import MapContext from '../contexts/mapcontext.jsx';
 import PropTypes from 'prop-types';
-import React, {useContext, useLayoutEffect, useRef} from 'react';
 import {
   getCenter,
   getResolution,
@@ -9,6 +8,7 @@ import {
 } from '../redux/selector/selector.js';
 import {getElementSize} from '../utils/dom.js';
 import {getPixelFromCoordinate} from '../utils/map.js';
+import {useContext, useLayoutEffect, useRef} from 'react';
 import {useSelector} from 'react-redux';
 
 /**

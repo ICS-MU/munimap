@@ -96,9 +96,15 @@
         "jsx": true
       }
     },
+    "settings": {
+      "react": {
+          "version": "detect"
+      }
+    },
     "extends": [
       "openlayers",
-      "plugin:react/recommended"
+      "plugin:react/recommended",
+      "plugin:react/jsx-runtime"
     ],
     "plugins": [
       "@openlayers"
