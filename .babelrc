@@ -1,15 +1,3 @@
 {
-  "presets": [
-    [
-      "@babel/preset-env",
-      {
-        "corejs": { "version": 3.22 },
-        "useBuiltIns": "usage"
-      }
-    ],
-    "@babel/preset-react"
-  ],
-  "plugins": [
-    ["@babel/plugin-proposal-decorators", {"decoratorsBeforeExport": true}]
-  ]
+  "presets": ["@babel/preset-env", "@babel/preset-react"]
 }

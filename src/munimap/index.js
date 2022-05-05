@@ -1,13 +1,12 @@
-/* eslint-disable sort-imports-es6-autofix/sort-imports-es6 */
 /**
  * @module index
  */
 
-//polyfills for IE11
+//polyfills
 import 'whatwg-fetch';
-import 'core-js/stable/object/assign';
 
 import 'ol/ol.css';
+
 import '../css/munimaplib.css'; //must be after ol.css => rewrite some rules
 
 import * as mm_matomo from './matomo.js';
@@ -33,6 +32,7 @@ import {tile} from 'ol/loadingstrategy';
 
 import '../img/google.png';
 import '../img/seznam.png';
+
 import '../img/marker.style.coridors.bg.png';
 import '../img/room.style.coridors.bg.png';
 

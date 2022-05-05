@@ -1,8 +1,5 @@
 /* eslint-disable no-var,no-unused-vars*/
 
-/**
- * MUST BE IE11 COMPATIBILE!
- */
 const munimap_ext = {
   'addDoorOpenings': function (map) {
     var mapTargetEl = map.getTargetElement();
