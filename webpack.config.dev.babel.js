@@ -1,3 +1,5 @@
+/* eslint-disable import/default */
+
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -158,11 +160,6 @@ export default (env) => {
           test: /\.(js|jsx)$/,
           exclude: /node_modules/,
           use: 'babel-loader',
-        },
-        {
-          test: /\.(js|jsx)$/,
-          use: 'react-hot-loader/webpack',
-          include: /node_modules/,
         },
         {
           test: /\.(png|jpg|jpeg|svg|ico)/,

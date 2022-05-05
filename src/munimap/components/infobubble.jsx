@@ -20,7 +20,7 @@ import {useSelector} from 'react-redux';
  */
 
 /**
- * @typedef {Object} InfoPositionOptions
+ * @typedef {object} InfoPositionOptions
  * @property {string} targetId targetId
  * @property {ol.extent.Extent} [extent] extent
  * @property {number} [resolution] resolution
@@ -28,7 +28,7 @@ import {useSelector} from 'react-redux';
  */
 
 /**
- * @typedef {Object} PopupPositionOptions
+ * @typedef {object} PopupPositionOptions
  * @property {boolean} hideTale hide tale
  * @property {Array<number>} [coordinate] coordinate
  * @property {Array<number>} [position] coordinate

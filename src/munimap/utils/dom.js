@@ -4,7 +4,7 @@
 
 /**
  * @param {HTMLElement} element element
- * @return {Object} size
+ * @return {object} size
  *
  * @license
  * Copyright The Closure Library Authors.

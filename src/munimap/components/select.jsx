@@ -6,7 +6,6 @@ import React from 'react';
 import Select from 'react-select';
 import {Feature} from 'ol';
 import {FloorTypes} from '../feature/constants.js';
-import {hot} from 'react-hot-loader';
 import {useDispatch, useSelector} from 'react-redux';
 
 const customStyles = (floorsWithMarkers) => {
@@ -274,4 +273,4 @@ SelectComponent.propTypes = {
   floors: PropTypes.arrayOf(PropTypes.instanceOf(Feature)),
 };
 
-export default hot(module)(SelectComponent);
+export default SelectComponent;

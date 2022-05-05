@@ -4,7 +4,6 @@ import IdentifyComponent from './identify.jsx';
 import MapLinks from './maplinks.jsx';
 import MapToolsComponent from './maptools.jsx';
 import React from 'react';
-import {hot} from 'react-hot-loader';
 import {useSelector} from 'react-redux';
 
 /**
@@ -26,4 +25,4 @@ const ControlsComponent = (props) => {
   );
 };
 
-export default hot(module)(ControlsComponent);
+export default ControlsComponent;

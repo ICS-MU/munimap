@@ -17,7 +17,7 @@ import {
  */
 
 /**
- * @typedef {Object} FeatureTimestampOptions
+ * @typedef {object} FeatureTimestampOptions
  * @property {number} buildingsTimestamp timestamp
  */
 

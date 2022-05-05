@@ -27,7 +27,7 @@ import {isCustomMarker, isDoor} from '../../feature/utils.js';
  */
 
 /**
- * @typedef {Object} Props
+ * @typedef {object} Props
  * @property {Array<ol.Feature>} clusteredFeatures features
  * @property {ol.coordinate.Coordinate} popupCoords coords
  *

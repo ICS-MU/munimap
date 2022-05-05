@@ -15,7 +15,7 @@ import {getBuildingStore} from '../../../source/constants.js';
  */
 
 /**
- * @typedef {Object} BuildingTitleOptions
+ * @typedef {object} BuildingTitleOptions
  * @property {string} bldgTitle bldgTitle
  * @property {string} complexTitle complex title
  */

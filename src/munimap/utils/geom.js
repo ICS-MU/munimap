@@ -25,6 +25,7 @@ import {isBuilding} from '../feature/utils.js';
  * @typedef {import("ol/format/GeoJSON").GeoJSONFeature} GeoJSONFeature
  * @typedef {import("ol/geom/LinearRing").default} ol.geom.LinearRing
  * @typedef {import("@turf/helpers").Polygon} TurfPolygon
+ * @typedef {import("@turf/helpers").BBox} TurfBBox
  * @typedef {import("ol/Feature").FeatureLike} ol.FeatureLike
  */
 
@@ -40,9 +41,9 @@ import {isBuilding} from '../feature/utils.js';
  */
 const featureExtentIntersect = (feature, extent, format) => {
   const turfFeature = /**@type {TurfPolygon}*/ (
-    format.writeFeatureObject(feature)
+    /**@type {unknown}*/ (format.writeFeatureObject(feature))
   );
-  const turfBBox = turf_bboxPolygon(extent);
+  const turfBBox = turf_bboxPolygon(/** @type {TurfBBox} */ (extent));
   const turfIntersect = turf_intersect(turfFeature, turfBBox);
   return mm_utils.isDef(turfIntersect)
     ? format.readFeature(turfIntersect)

@@ -25,7 +25,7 @@ import {
  */
 
 /**
- * @typedef {Object} PayloadPropObj
+ * @typedef {object} PayloadPropObj
  * @property {*} [payload] payload
  * @property {redux.Dispatch} [asyncDispatch] dispatch
  *
@@ -33,7 +33,7 @@ import {
  */
 
 /**
- * @typedef {Object} LoadedTypes
+ * @typedef {object} LoadedTypes
  * @property {boolean} building building
  * @property {boolean} room room
  * @property {boolean} door door

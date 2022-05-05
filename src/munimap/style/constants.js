@@ -14,7 +14,7 @@ import {createResolution} from '../utils/range.js';
  */
 
 /**
- * @typedef {Object} ResolutionColorObject
+ * @typedef {object} ResolutionColorObject
  * @property {number} resolution resolution
  * @property {string} color color
  * @property {number} opacity opacity

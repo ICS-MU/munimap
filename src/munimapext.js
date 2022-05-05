@@ -16,7 +16,7 @@ const munimap_ext = {
     var style = new munimap.ol.style.Style({
       stroke: new munimap.ol.style.Stroke({
         color: '#999999',
-        width: 1
+        width: 1,
       }),
     });
 
@@ -43,13 +43,13 @@ const munimap_ext = {
       primaryKey: 'OBJECTID',
       serviceUrl: serviceUrl,
       layerId: 0,
-      name: 'door-opening'
+      name: 'door-opening',
     };
 
     var source = new munimap.ol.source.Vector({
       strategy: munimap.ol.loadingstrategy.tile(
         munimap.ol.tilegrid.createXYZ({
-          tileSize: 512
+          tileSize: 512,
         })
       ),
     });
@@ -67,7 +67,7 @@ const munimap_ext = {
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       renderOrder: null,
-      style: getStyleForLayer(store.getState())
+      style: getStyleForLayer(store.getState()),
     });
 
     var loader = function (extent, resolution, projection) {
@@ -83,7 +83,7 @@ const munimap_ext = {
           source: getStore(),
           type: type,
           where: where,
-          method: 'POST'
+          method: 'POST',
         };
 
         munimap.load
@@ -110,7 +110,7 @@ const munimap_ext = {
     layers.insertAt(4, layer);
 
     var currFloorCode;
-    store.subscribe(function() {
+    store.subscribe(function () {
       var state = store.getState();
       var style = getStyleForLayer(state);
       var lyrs = map.getLayers().getArray();

@@ -4,7 +4,7 @@
 import {IconPosition} from './constants.js';
 
 /**
- * @typedef {Object} IconOptions
+ * @typedef {object} IconOptions
  * @property {string} url url
  * @property {Array<number>} size size
  * @property {IconPosition} [position] position

@@ -29,7 +29,7 @@ import {isBuilding, isDoor, isRoom} from '../feature/utils.js';
  */
 
 /**
- * @typedef {Object} StyleFunctionOptions
+ * @typedef {object} StyleFunctionOptions
  * @property {string} targetId targetId
  * @property {string} lang language
  * @property {boolean} [locationCodes] whether to show only location codes

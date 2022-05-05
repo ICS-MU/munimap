@@ -17,7 +17,7 @@ import {refreshFloorBasedStores} from '../../source/source.js';
  */
 
 /**
- * @typedef {Object} LoadFloorsOptions
+ * @typedef {object} LoadFloorsOptions
  * @property {string} targetId targetId
  * @property {string} floorCode floorCode
  * @property {boolean} newSelectedIsActive whether is already active

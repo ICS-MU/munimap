@@ -9,9 +9,9 @@ import {CLICK_HANDLER, IS_CLICKABLE} from '../layer/constants.js';
 import {EventType} from './constants.js';
 import {
   GET_MAIN_FEATURE_AT_PIXEL_STORE,
+  MUNIMAP_PROPS_ID,
   TARGET_ELEMENTS_STORE,
 } from '../constants.js';
-import {MUNIMAP_PROPS_ID} from '../constants.js';
 import {Point} from 'ol/geom';
 import {clearFloorBasedStores} from '../source/source.js';
 import {
@@ -87,14 +87,14 @@ import {updateClusteredFeatures} from './cluster.js';
  */
 
 /**
- * @typedef {Object} MapListenersOptions
+ * @typedef {object} MapListenersOptions
  * @property {string} selectedFeature selected feature
  * @property {RequiredOptions} requiredOpts options
  * @property {boolean} isIdentifyEnabled isIdentifyEnabled
  */
 
 /**
- * @typedef {Object} AddLayersOptions
+ * @typedef {object} AddLayersOptions
  * @property {Array<ol.Feature>} markers markers
  * @property {ol.AttributionLike} muAttrs mu attributions
  * @property {RangeInterface} clusterResolution cluster resolution
@@ -103,13 +103,13 @@ import {updateClusteredFeatures} from './cluster.js';
  */
 
 /**
- * @typedef {Object} VisibilityOptions
+ * @typedef {object} VisibilityOptions
  * @property {boolean} isIdentifyEnabled isIdentifyEnabled
  * @property {boolean} identifyVisibled identifyVisibled
  */
 
 /**
- * @typedef {Object} ErrorMessageOptions
+ * @typedef {object} ErrorMessageOptions
  * @property {HTMLDivElement} munimapEl munimapEl
  * @property {HTMLDivElement} infoEl infoEl
  * @property {string} lang lang
@@ -120,7 +120,7 @@ import {updateClusteredFeatures} from './cluster.js';
  */
 
 /**
- * @typedef {Object} PointerMoveTimeoutOptions
+ * @typedef {object} PointerMoveTimeoutOptions
  * @property {string} title title
  * @property {string} featureUid featureUid
  * @property {ol.coordinate.Coordinate} pixelInCoords pixelInCoords
@@ -411,7 +411,7 @@ const refreshStyles = (map, styleFunctions, pubTran) => {
 /**
  * Ensure update clusters in map.
  * @param {ol.Map} map map
- * @param {Object} options options
+ * @param {object} options options
  * @param {boolean} options.labels labels
  * @param {string} options.targetId targetId
  * @param {number} options.buildingsCount buildings count

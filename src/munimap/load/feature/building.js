@@ -21,7 +21,7 @@ import {unitLoadProcessor} from './unit.js';
  */
 
 /**
- * @typedef {Object} BuildingsByCodeOptions
+ * @typedef {object} BuildingsByCodeOptions
  * @property {Array<string>} codes codes
  * @property {Array<string>} likeExprs like expressions
  */

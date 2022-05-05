@@ -8,9 +8,9 @@ import {
   BUILDING_COMPLEX_FIELD_NAME,
   BUILDING_COMPLEX_ID_FIELD_NAME,
   COMPLEX_ID_FIELD_NAME,
+  COMPLEX_TYPE,
   COMPLEX_UNITS_FIELD_NAME,
 } from '../../feature/constants.js';
-import {COMPLEX_TYPE} from '../../feature/constants.js';
 import {features} from '../load.js';
 import {getComplexStore} from '../../source/constants.js';
 import {loadUnitsByHeadquartersComplexIds} from './unit.js';
@@ -22,7 +22,7 @@ import {loadUnitsByHeadquartersComplexIds} from './unit.js';
  */
 
 /**
- * @typedef {Object} ComplexByIdsOptions
+ * @typedef {object} ComplexByIdsOptions
  * @property {Array<number>} ids ids
  * @property {Processor} [processor] processor
  */

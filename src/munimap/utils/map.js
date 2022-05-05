@@ -16,7 +16,7 @@ import {isDefAndNotNull} from './utils.js';
  */
 
 /**
- * @typedef {Object} Options
+ * @typedef {object} Options
  * @property {ol.Size} size size
  * @property {number} rotation rotation
  * @property {number} resolution resolution

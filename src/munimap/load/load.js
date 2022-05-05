@@ -23,7 +23,7 @@ import {getUid} from 'ol';
  */
 
 /**
- * @typedef {Object} FeaturesOptions
+ * @typedef {object} FeaturesOptions
  * @property {ol.source.Vector} source source
  * @property {TypeOptions} type type
  * @property {string} [where] where
@@ -33,7 +33,7 @@ import {getUid} from 'ol';
  */
 
 /**
- * @typedef {Object} FeaturesByCodeOptions
+ * @typedef {object} FeaturesByCodeOptions
  * @property {Array<string>} codes codes
  * @property {TypeOptions} type type
  * @property {ol.source.Vector} source source
@@ -42,7 +42,7 @@ import {getUid} from 'ol';
  */
 
 /**
- * @typedef {Object} FeaturesForMapOptions
+ * @typedef {object} FeaturesForMapOptions
  * @property {ol.source.Vector} source source
  * @property {TypeOptions|function(): TypeOptions} type type
  * @property {string} [where] where
@@ -52,7 +52,7 @@ import {getUid} from 'ol';
  */
 
 /**
- * @typedef {Object} FeaturesFromUrlOptions
+ * @typedef {object} FeaturesFromUrlOptions
  * @property {ol.source.Vector} source source
  * @property {TypeOptions} type type
  * @property {string} url url
@@ -64,7 +64,7 @@ import {getUid} from 'ol';
  */
 
 /**
- * @typedef {Object} WaitForNewProcessedFeaturesOptions
+ * @typedef {object} WaitForNewProcessedFeaturesOptions
  * @property {ol.source.Vector} source source
  * @property {Array<ol.Feature>} loadedNewProcessedFeatures new features
  */
@@ -82,7 +82,7 @@ import {getUid} from 'ol';
  * new: features that were loaded in this request and are not yet in the store
  * existing: features that were loaded in this request and are already in the
  *   store
- * @typedef {Object} ProcessorOptions
+ * @typedef {object} ProcessorOptions
  * @property {Array<ol.Feature>} all all features
  * @property {Array<ol.Feature>} new new features
  * @property {Array<ol.Feature>} existing existing features

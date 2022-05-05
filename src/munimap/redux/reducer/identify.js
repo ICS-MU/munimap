@@ -25,7 +25,7 @@ import {transform} from 'ol/proj';
  */
 
 /**
- * @typedef {Object} IdentifyCallbackOptions
+ * @typedef {object} IdentifyCallbackOptions
  * @property {ol.Feature} feature feature
  * @property {ol.coordinate.Coordinate} pixelInCoords pixelInCoords
  * @property {State} state state
@@ -34,13 +34,13 @@ import {transform} from 'ol/proj';
  */
 
 /**
- * @typedef {Object} Options
+ * @typedef {object} Options
  * @property {ol.Feature} pointFeature point feature
  * @property {ol.Feature} feature identified feature
  */
 
 /**
- * @typedef {Object} HandleCallbackOptions
+ * @typedef {object} HandleCallbackOptions
  * @property {ol.Feature} feature identified feature
  * @property {ol.coordinate.Coordinate} pixelInCoords coords
  */

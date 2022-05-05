@@ -7,7 +7,6 @@ import * as mm_view from './view/view.js';
 import Feature from 'ol/Feature';
 import MunimapComponent from './components/munimap.jsx';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {
   GET_MAIN_FEATURE_AT_PIXEL_STORE,
   IDENTIFY_CALLBACK_STORE,
@@ -19,6 +18,7 @@ import {
 import {INITIAL_STATE} from './conf.js';
 import {Provider} from 'react-redux';
 import {assertOptions} from './assert/assert.params.js';
+import {createRoot} from 'react-dom/client';
 import {createStore} from './redux/store.js';
 import {v4 as uuidv4} from 'uuid';
 
@@ -34,7 +34,7 @@ import {v4 as uuidv4} from 'uuid';
  */
 
 /**
- * @typedef {Object} Options
+ * @typedef {object} Options
  * @property {string|HTMLElement} target target
  * @property {number} [zoom] zoom
  * @property {ol.coordinate.Coordinate} [center] center
@@ -192,11 +192,13 @@ export default (options) => {
       })
     );
 
-    ReactDOM.render(
+    const root = createRoot(TARGET_ELEMENTS_STORE[targetId]);
+    root.render(
       <Provider store={store}>
-        <MunimapComponent afterInit={(map) => resolve(map)} />
-      </Provider>,
-      TARGET_ELEMENTS_STORE[targetId]
+        <React.StrictMode>
+          <MunimapComponent afterInit={(map) => resolve(map)} />
+        </React.StrictMode>
+      </Provider>
     );
   });
 };

@@ -4,7 +4,6 @@ import * as slctr from '../../redux/selector/selector.js';
 import MapContext from '../../contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useRef} from 'react';
 import {Control} from 'ol/control';
-import {hot} from 'react-hot-loader';
 import {useDispatch, useSelector} from 'react-redux';
 
 /**
@@ -69,4 +68,4 @@ const IdentifyComponent = (props) => {
   );
 };
 
-export default hot(module)(IdentifyComponent);
+export default IdentifyComponent;

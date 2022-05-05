@@ -17,7 +17,7 @@ import {getByCode as getBuildingByCode} from '../feature/building.js';
  */
 
 /**
- * @typedef {Object} StyleFunctionOptions
+ * @typedef {object} StyleFunctionOptions
  * @property {string} targetId targetId
  * @property {string} selectedFeature selected feature
  * @property {Array<string>} activeFloorCodes activeFloorCodes

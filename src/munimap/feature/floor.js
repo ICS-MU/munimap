@@ -12,7 +12,7 @@ import {getFloorStore} from '../source/constants.js';
  */
 
 /**
- * @typedef {Object} Options
+ * @typedef {object} Options
  * @property {string} locationCode location code
  * @property {number} floorLayerId floor layer id
  */

@@ -14,7 +14,7 @@ import {getArea, getEnlargedArea, getForViewAndSize} from 'ol/extent';
  */
 
 /**
- * @typedef {Object} ViewOptions
+ * @typedef {object} ViewOptions
  * @property {number} resolution resolution
  * @property {number} rotation rotation
  * @property {ol.Size} size size

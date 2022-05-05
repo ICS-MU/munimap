@@ -22,7 +22,7 @@ import {getNotYetAddedFeatures} from '../../utils/store.js';
  */
 
 /**
- * @typedef {Object} RoomsByCodeOptions
+ * @typedef {object} RoomsByCodeOptions
  * @property {Array<string>} codes codes
  * @property {Array<string>} likeExprs like expressions
  */

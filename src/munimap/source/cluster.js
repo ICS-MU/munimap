@@ -32,7 +32,7 @@ import {setClusterStore} from './constants.js';
  */
 
 /**
- * @typedef {Object} CreateStoreOptions
+ * @typedef {object} CreateStoreOptions
  * @property {string} targetId targetId
  * @property {ol.AttributionLike} muAttrs attributions
  * @property {string} lang language
@@ -81,17 +81,17 @@ class EnhancedClusterSource extends ClusterSource {
           createOrUpdateFromCoordinate(coordinates, extent);
           buffer(extent, mapDistance, extent);
 
-          let neighbors = this.source.getFeaturesInExtent(extent);
-          neighbors = neighbors.filter(function (neighbor) {
-            const uid = getUid(neighbor);
-            if (!(uid in clustered)) {
+          const neighbors = this.source
+            .getFeaturesInExtent(extent)
+            .filter(function (neighbor) {
+              const uid = getUid(neighbor);
+              if (uid in clustered) {
+                return false;
+              }
               clustered[uid] = true;
               return true;
-            } else {
-              return false;
-            }
-          });
-          this.features.push(this.createCluster(neighbors));
+            });
+          this.features.push(this.createCluster(neighbors, extent));
         }
       }
     }

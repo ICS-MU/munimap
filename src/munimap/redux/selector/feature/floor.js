@@ -13,8 +13,7 @@ import {FLOOR_RESOLUTION} from '../../../feature/constants.js';
 import {createSelector} from '../reselect.js';
 import {getSelectedFloorCode as getSelectedFloorCodeBySelectedFeature} from '../../../feature/feature.js';
 import {getSelectedFloorCodesWithMarkers} from '../../../feature/marker.js';
-import {isBuildingCode} from '../../../feature/utils.js';
-import {isFloorCode} from '../../../feature/utils.js';
+import {isBuildingCode, isFloorCode} from '../../../feature/utils.js';
 
 /**
  * @typedef {import("../../../conf.js").State} State

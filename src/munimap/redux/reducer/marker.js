@@ -24,7 +24,7 @@ import {isCustomMarker, isDoor, isRoom} from '../../feature/utils.js';
  */
 
 /**
- * @typedef {Object} MarkerAnimRequestParam
+ * @typedef {object} MarkerAnimRequestParam
  * @property {ol.coordinate.Coordinate} popupCoords coords
  * @property {boolean} isIdentifyAllowed whether is identify allowed
  *
@@ -32,7 +32,7 @@ import {isCustomMarker, isDoor, isRoom} from '../../feature/utils.js';
  */
 
 /**
- * @typedef {Object} AnimationRequestParams
+ * @typedef {object} AnimationRequestParams
  * @property {State} state state
  * @property {ol.Feature} feature feature
  * @property {ol.coordinate.Coordinate} pixelInCoords pixel

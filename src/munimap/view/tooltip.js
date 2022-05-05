@@ -8,10 +8,10 @@ import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
 import {Circle, Point} from 'ol/geom';
 import {
   GIS_PURPOSES_WITH_TOOLTIP,
+  PoiPurpose,
   RoomPurposesWithTooltip,
 } from '../feature/constants.js';
 import {POI_ICON_HEIGHT, ROOM_FONT_SIZE} from '../style/constants.js';
-import {PoiPurpose} from '../feature/constants.js';
 import {fromCircle} from 'ol/geom/Polygon';
 import {getActiveRoomStore} from '../source/constants.js';
 import {getDefaultLabel} from '../feature/room.js';
@@ -23,7 +23,7 @@ import {getLabelHeight} from '../style/style.js';
  */
 
 /**
- * @typedef {Object} TooltipExtendedProps
+ * @typedef {object} TooltipExtendedProps
  * @property {number} resolution resolution
  * @property {string} lang lang
  * @property {string} targetId targetId
@@ -33,7 +33,7 @@ import {getLabelHeight} from '../style/style.js';
  */
 
 /**
- * @typedef {Object} TooltipParams
+ * @typedef {object} TooltipParams
  * @property {string} title title
  * @property {ol.coordinate.Coordinate} positionInCoords positionInCoords
  */

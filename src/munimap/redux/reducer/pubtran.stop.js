@@ -12,7 +12,7 @@ import {getPubTranStore} from '../../source/constants.js';
  */
 
 /**
- * @typedef {Object} Props
+ * @typedef {object} Props
  * @property {string} featureUid featureUid
  * @property {string} targetId targetId
  *

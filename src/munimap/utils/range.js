@@ -3,7 +3,7 @@
  */
 
 /**
- * @typedef {Object} RangeInterface
+ * @typedef {object} RangeInterface
  * @property {number} min minimum
  * @property {number} max maximum
  * @property {boolean} includesMin includes minimum

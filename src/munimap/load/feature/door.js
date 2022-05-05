@@ -15,7 +15,7 @@ import {getNotYetAddedFeatures} from '../../utils/store.js';
  */
 
 /**
- * @typedef {Object} DoorsByCodeOptions
+ * @typedef {object} DoorsByCodeOptions
  * @property {Array<string>} codes codes
  * @property {Array<string>} likeExprs like expressions
  */

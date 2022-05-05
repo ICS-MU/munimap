@@ -11,21 +11,22 @@ import Popup from './popup.jsx';
 import PropTypes from 'prop-types';
 import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import Tooltip from './tooltip.jsx';
-import {CREATED_MAPS, GET_MAIN_FEATURE_AT_PIXEL_STORE} from '../constants.js';
+import {
+  CREATED_MAPS,
+  GET_MAIN_FEATURE_AT_PIXEL_STORE,
+  MUNIMAP_PROPS_ID,
+} from '../constants.js';
 import {
   FLOOR_RESOLUTION,
   POI_RESOLUTION,
   PoiPurpose,
 } from '../feature/constants.js';
-import {MUNIMAP_PROPS_ID} from '../constants.js';
-import {Map} from 'ol';
+import {Map, getUid} from 'ol';
 import {calculateParameters} from '../view/tooltip.js';
 import {
   getMainFeatureAtPixel,
   isSuitableForTooltip,
 } from '../feature/feature.js';
-import {getUid} from 'ol';
-import {hot} from 'react-hot-loader';
 import {unlistenByKey} from 'ol/events';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -43,7 +44,7 @@ import {useDispatch, useSelector} from 'react-redux';
  */
 
 /**
- * @typedef {Object} EnsureTooltipOptions
+ * @typedef {object} EnsureTooltipOptions
  * @property {string} selectedFeature selected feature
  * @property {string} lang language
  * @property {string} tooltipProps selected feature
@@ -335,4 +336,4 @@ MunimapComponent.propTypes = {
   afterInit: PropTypes.func.isRequired,
 };
 
-export default hot(module)(MunimapComponent);
+export default MunimapComponent;

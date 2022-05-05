@@ -28,7 +28,7 @@ import {getMarkerStore} from '../source/constants.js';
  */
 
 /**
- * @typedef {Object} LabelOptions
+ * @typedef {object} LabelOptions
  * @property {string} targetId targetId
  * @property {string} lang lang
  * @property {boolean} showLabels wherther to show labels for MU objects
@@ -36,14 +36,14 @@ import {getMarkerStore} from '../source/constants.js';
  */
 
 /**
- * @typedef {Object} StyleFunctionOptions
+ * @typedef {object} StyleFunctionOptions
  * @property {string} targetId targetId
  * @property {string} selectedFloorCode selected floor code
  * @property {boolean} inFloorResolutionRange inFloorResolutionRange
  */
 
 /**
- * @typedef {Object} LabelStyleFunctionOptions
+ * @typedef {object} LabelStyleFunctionOptions
  * @property {string} selectedFloorCode selected floor code
  * @property {boolean} inFloorResolutionRange inFloorResolutionRange
  */

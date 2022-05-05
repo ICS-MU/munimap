@@ -41,13 +41,13 @@ import {isBuilding, isCustomMarker, isRoom} from '../feature/utils.js';
  */
 
 /**
- * @typedef {Object} StyleFunctionOptions
+ * @typedef {object} StyleFunctionOptions
  * @property {Array<Feature>}  [markers] markers
  * }}
  */
 
 /**
- * @typedef {Object} LabelWithPinOptions
+ * @typedef {object} LabelWithPinOptions
  * @property {ol.style.Fill}  fill fill
  * @property {number}  [fontSize] font size
  * @property {GeometryFunction|ol.geom.Geometry}  geometry geom

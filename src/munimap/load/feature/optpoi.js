@@ -15,7 +15,7 @@ import {getOptPoiStore} from '../../source/constants.js';
  */
 
 /**
- * @typedef {Object} OptPoiLoadOptions
+ * @typedef {object} OptPoiLoadOptions
  * @property {Array<string>} [ids] ids
  * @property {Array<string>} [labels] labels
  * @property {Array<string>} [workplaces] workplaces

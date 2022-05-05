@@ -1,7 +1,6 @@
 import * as mm_lang from '../lang.js';
 import * as slctr from '../redux/selector/selector.js';
 import React, {useEffect, useRef} from 'react';
-import {hot} from 'react-hot-loader';
 import {useSelector} from 'react-redux';
 
 /**
@@ -55,4 +54,4 @@ const LoadingMessageComponent = (props) => {
   );
 };
 
-export default hot(module)(LoadingMessageComponent);
+export default LoadingMessageComponent;

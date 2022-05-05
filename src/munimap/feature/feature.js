@@ -50,7 +50,7 @@ import {testCodeOrLikeExpr} from '../utils/regex.js';
  */
 
 /**
- * @typedef {Object} FeatureClickHandlerOptions
+ * @typedef {object} FeatureClickHandlerOptions
  * @property {string} featureUid feature uid
  * @property {ol.Coordinate} pixelInCoords feature uid
  * @property {string} [targetId] targetId
@@ -60,7 +60,7 @@ import {testCodeOrLikeExpr} from '../utils/regex.js';
  */
 
 /**
- * @typedef {Object} IsClickableOptions
+ * @typedef {object} IsClickableOptions
  * @property {ol.Feature} feature feature
  * @property {string} [targetId] targetId
  * @property {number} [resolution] resolution
@@ -71,7 +71,7 @@ import {testCodeOrLikeExpr} from '../utils/regex.js';
  */
 
 /**
- * @typedef {Object} TypeOptions
+ * @typedef {object} TypeOptions
  * @property {string} primaryKey pk
  * @property {string} serviceUrl url
  * @property {ol.source.Vector} [store] store
@@ -80,13 +80,13 @@ import {testCodeOrLikeExpr} from '../utils/regex.js';
  */
 
 /**
- * @typedef {Object} FeatureWithLayer
+ * @typedef {object} FeatureWithLayer
  * @property {ol.Feature} feature feature
  * @property {ol.layer.Vector}  layer vector layer
  */
 
 /**
- * @typedef {Object} SelectedOptions
+ * @typedef {object} SelectedOptions
  * @property {string} targetId targetId
  * @property {string} selectedFeature selected feature
  * @property {Array<string>} activeFloorCodes activeFloorCodes
@@ -105,14 +105,14 @@ import {testCodeOrLikeExpr} from '../utils/regex.js';
  */
 
 /**
- * @typedef {Object} OnClickOptions
+ * @typedef {object} OnClickOptions
  * @property {CustomMarkerOnClickAnimationOptions} animation animation
  *
  * @typedef {function(Event): (OnClickOptions|undefined)} OnClickFunction
  */
 
 /**
- * @typedef {Object} OnClickResult
+ * @typedef {object} OnClickResult
  * @property {boolean} zoomToFeature zoomToFeature
  * @property {boolean} centerToFeature centerToFeature
  */

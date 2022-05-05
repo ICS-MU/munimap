@@ -5,7 +5,6 @@ import MapContext from '../../contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import ToolbarComponent from './toolbar.jsx';
 import {Control} from 'ol/control';
-import {hot} from 'react-hot-loader';
 import {useDispatch, useSelector} from 'react-redux';
 
 /**
@@ -133,4 +132,4 @@ const MapToolsComponent = (props) => {
   }
 };
 
-export default hot(module)(MapToolsComponent);
+export default MapToolsComponent;

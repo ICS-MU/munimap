@@ -31,7 +31,7 @@ import {markerLabel as optPoiMarkerLabel} from '../../style/optpoi.js';
  */
 
 /**
- * @typedef {Object} LoadOrDecorateMarkersOptions
+ * @typedef {object} LoadOrDecorateMarkersOptions
  * @property {Array<string>} [poiFilter] poi filter
  * @property {Array<string>} [markerFilter] marker filter
  * @property {string} [lang] language

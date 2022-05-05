@@ -35,7 +35,7 @@ import {getUid} from '../utils/store.js';
  */
 
 /**
- * @typedef {Object} StyleFunctionOptions
+ * @typedef {object} StyleFunctionOptions
  * @property {string} targetId targetId
  * @property {string} lang lang
  * @property {boolean} requiredLocationCodes requiredLocationCodes
@@ -68,7 +68,7 @@ const LABEL_CACHE = {};
  */
 const setCorridorStyle = (event) => {
   if (CORRIDOR.length === 0) {
-    const context = event.context;
+    const context = /** @type {CanvasRenderingContext2D} */ (event.context);
     const image = new Image();
     image.src = ROOM_CORRIDOR_IMG_PATH;
     image.onload = () => {

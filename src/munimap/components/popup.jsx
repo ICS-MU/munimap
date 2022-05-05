@@ -7,7 +7,6 @@ import React, {useContext, useEffect, useLayoutEffect, useRef} from 'react';
 import {POPUP_TALE_HEIGHT, POPUP_TALE_INDENT} from '../view/constants.js';
 import {getElementSize} from '../utils/dom.js';
 import {getPixelFromCoordinate} from '../utils/map.js';
-import {hot} from 'react-hot-loader';
 import {unlistenByKey} from 'ol/events';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -118,4 +117,4 @@ const PopupComponent = (props) => {
   );
 };
 
-export default hot(module)(PopupComponent);
+export default PopupComponent;

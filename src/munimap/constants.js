@@ -10,7 +10,7 @@
  */
 
 /**
- * @typedef {Object} MapProps
+ * @typedef {object} MapProps
  * @property {number} currentRes current resolution
  */
 

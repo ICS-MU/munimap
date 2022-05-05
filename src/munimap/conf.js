@@ -15,7 +15,7 @@
  */
 
 /**
- * @typedef {Object} RequiredOptions
+ * @typedef {object} RequiredOptions
  * @property {string} targetId target id
  * @property {number} [zoom] zoom
  * @property {ol.coordinate.Coordinate} [center] center
@@ -40,30 +40,30 @@
  */
 
 /**
- * @typedef {Object} ErrorMessageState
+ * @typedef {object} ErrorMessageState
  * @property {boolean} render whether to rende error div
  * @property {boolean} withMessage whether to render with message
  */
 
 /**
- * @typedef {Object} PopupContentOptions
+ * @typedef {object} PopupContentOptions
  * @property {string} [name] title
  * @property {string} [open] text
  */
 
 /**
- * @typedef {Object} PopupState
+ * @typedef {object} PopupState
  * @property {string} uid unique identifier from vector source
  */
 
 /**
- * @typedef {Object} TooltipState
+ * @typedef {object} TooltipState
  * @property {string} title title
  * @property {ol.coordinate.Coordinate} positionInCoords positionInCoords
  */
 
 /**
- * @typedef {Object} AnimationRequestOptions
+ * @typedef {object} AnimationRequestOptions
  * @property {ol.geom.Point|ol.coordinate.Coordinate} center center
  * @property {number} resolution resolution
  * @property {number} duration duration
@@ -73,7 +73,7 @@
  */
 
 /**
- * @typedef {Object} State
+ * @typedef {object} State
  * @property {boolean} mapInitialized whther is map initialized
  * @property {ol.size.Size} mapSize map size
  * @property {ol.coordinate.Coordinate} center center

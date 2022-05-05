@@ -19,13 +19,13 @@ import {isDef} from '../utils/utils.js';
  */
 
 /**
- * @typedef {Object} FeatureWithLayer
+ * @typedef {object} FeatureWithLayer
  * @property {ol.Feature} feature feature
  * @property {ol.layer.Vector} layer layer
  */
 
 /**
- * @typedef {Object} Result
+ * @typedef {object} Result
  * @property {ol.coordinate.Coordinate} [coordsInMeters] coordsInMeters
  * @property {ol.coordinate.Coordinate} [coordsInDegrees] coordsInDegrees
  * @property {string} [buildingCode] buildingCode

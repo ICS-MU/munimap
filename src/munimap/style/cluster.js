@@ -34,7 +34,7 @@ import {localeCompare} from '../utils/string.js';
  */
 
 /**
- * @typedef {Object} StyleFunctionOptions
+ * @typedef {object} StyleFunctionOptions
  * @property {string} targetId targetId
  * @property {string} lang language
  * @property {boolean} [locationCodes] whether to show only location codes
@@ -43,7 +43,7 @@ import {localeCompare} from '../utils/string.js';
  */
 
 /**
- * @typedef {Object} PinFunctionOptions
+ * @typedef {object} PinFunctionOptions
  * @property {Feature} feature feature
  * @property {LabelWithPinOptions} pinOpts pinOpts
  * @property {boolean} isMarked isMarked

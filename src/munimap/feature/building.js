@@ -37,12 +37,12 @@ import {isBuilding, isDoor, isRoom} from './utils.js';
  */
 
 /**
- * @typedef {Object} TitleOptions
+ * @typedef {object} TitleOptions
  * @property {string} selectedFeature selectedFeature
  * @property {string} lang lang
  * @property {string} targetId targetId
  *
- * @typedef {Object} TitleResult
+ * @typedef {object} TitleResult
  * @property {string} bldgTitle title
  * @property {string} complexTitle title
  */

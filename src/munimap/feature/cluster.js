@@ -7,7 +7,7 @@ import * as mm_building from './building.js';
 import * as mm_marker from './marker.js';
 import * as mm_range from '../utils/range.js';
 import * as mm_utils from '../utils/utils.js';
-import {Feature} from 'ol';
+import {Feature, getUid} from 'ol';
 import {getAbbr} from './unit.js';
 import {
   getBuildingStore,
@@ -15,7 +15,6 @@ import {
   getMarkerStore,
 } from '../source/constants.js';
 import {getPropertySafe} from '../utils/object.js';
-import {getUid} from 'ol';
 
 /**
  * @typedef {import("../conf.js").State} State
@@ -32,7 +31,7 @@ import {getUid} from 'ol';
  */
 
 /**
- * @typedef {Object} GetPopupFeatureOptions
+ * @typedef {object} GetPopupFeatureOptions
  * @property {string} targetId targetId
  * @property {string} featureUid featureUid
  */

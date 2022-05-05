@@ -39,7 +39,7 @@ import {
  */
 
 /**
- * @typedef {Object} LabelFunctionOptions
+ * @typedef {object} LabelFunctionOptions
  * @property {ol.Map} map map
  * @property {string} lang lang
  * @property {ol.source.Vector} markerSource marker source
@@ -49,7 +49,7 @@ import {
  */
 
 /**
- * @typedef {Object} StyleFunctionOptions
+ * @typedef {object} StyleFunctionOptions
  * @property {Array<Feature>} markers markers
  * @property {string} lang language
  * @property {ol.Extent} extent extent
@@ -79,7 +79,7 @@ const getCorridor = () => CORRIDOR;
  * @param {RenderEvent} event event
  */
 const getPattern = (event) => {
-  const context = event.context;
+  const context = /** @type {CanvasRenderingContext2D} */ (event.context);
   const image = new Image();
   const imgsrc = mm_style_constants.MARKER_CORRIDOR_IMG_PATH;
   image.src = imgsrc;

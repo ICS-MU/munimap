@@ -9,7 +9,6 @@ import {
 } from '../redux/selector/selector.js';
 import {getElementSize} from '../utils/dom.js';
 import {getPixelFromCoordinate} from '../utils/map.js';
-import {hot} from 'react-hot-loader';
 import {useSelector} from 'react-redux';
 
 /**
@@ -84,4 +83,4 @@ TooltipComponent.propTypes = {
   positionInCoords: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 
-export default hot(module)(TooltipComponent);
+export default TooltipComponent;

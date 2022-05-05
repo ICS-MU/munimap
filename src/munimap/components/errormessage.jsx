@@ -3,7 +3,6 @@ import * as mm_lang from '../lang.js';
 import * as slctr from '../redux/selector/selector.js';
 import PropTypes from 'prop-types';
 import React, {useLayoutEffect, useRef} from 'react';
-import {hot} from 'react-hot-loader';
 import {useDispatch, useSelector} from 'react-redux';
 
 /**
@@ -11,7 +10,7 @@ import {useDispatch, useSelector} from 'react-redux';
  */
 
 /**
- * @typedef {Object} InvalidCodeOptions
+ * @typedef {object} InvalidCodeOptions
  * @property {Array<string>} invalidCodes invalid codes
  * @property {string} lang language
  * @property {ol.Map} map map
@@ -151,4 +150,4 @@ ErrorMessageComponent.propTypes = {
   onClick: PropTypes.func,
 };
 
-export default hot(module)(ErrorMessageComponent);
+export default ErrorMessageComponent;

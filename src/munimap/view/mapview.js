@@ -15,7 +15,7 @@ import {getBuildingForFictive} from '../source/source.js';
  */
 
 /**
- * @typedef {Object} InitExtentOptions
+ * @typedef {object} InitExtentOptions
  * @property {ol.extent.Extent|undefined} extent extent
  * @property {ol.Size} size size
  * @property {ol.coordinate.Coordinate|undefined} center center

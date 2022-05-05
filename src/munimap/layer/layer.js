@@ -13,7 +13,8 @@ import {
 } from './room.js';
 
 /**
- * @typedef {import("ol/layer/BaseVector").Options} BaseLayerOptions
+ * @typedef {import("ol/source/Vector").default} ol.source.Vector
+ * @typedef {import("ol/layer/BaseVector").Options<ol.source.Vector>} BaseLayerOptions
  * @typedef {import("ol/layer/Vector").default} ol.layer.Vector
  * @typedef {import("ol").Map} ol.Map
  * @typedef {import("../feature/feature.js").featureClickHandlerFunction} FeatureClickHandlerFunction
@@ -21,7 +22,7 @@ import {
  */
 
 /**
- * @typedef {Object} VectorLayerExtendedOptions
+ * @typedef {object} VectorLayerExtendedOptions
  * @property {string} id id
  * @property {IsClickableFunction} [isFeatureClickable] whether is feature clickable
  * @property {FeatureClickHandlerFunction} [featureClickHandler] what to do if user clicked on feature

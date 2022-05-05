@@ -33,7 +33,7 @@ import {handleIdentifyCallback} from './redux/reducer/identify.js';
  */
 
 /**
- * @typedef {Object} Options
+ * @typedef {object} Options
  * @property {number} zoom zoom
  * @property {ol.coordinate.Coordinate} center center
  * @property {Array<string>|Array<ol.Feature>} markers markers

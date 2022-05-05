@@ -3,7 +3,7 @@
  */
 
 /**
- * @typedef {Object} Options
+ * @typedef {object} Options
  * @property {boolean} [mapLinks] maplinks
  * @property {boolean} [pubTran] pubtran
  * @property {string} [baseMap] basemap

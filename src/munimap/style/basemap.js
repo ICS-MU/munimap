@@ -16,7 +16,7 @@ import {isUserAgentIE} from '../utils/utils.js';
  */
 const setStyle = (raster, baseMap) => {
   raster.on('prerender', (evt) => {
-    const ctx = evt.context;
+    const ctx = /** @type {CanvasRenderingContext2D} */ (evt.context);
     ctx.fillStyle = '#dddddd';
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
@@ -32,7 +32,7 @@ const setStyle = (raster, baseMap) => {
     !isUserAgentIE()
   ) {
     raster.on('postrender', (evt) => {
-      const ctx = evt.context;
+      const ctx = /** @type {CanvasRenderingContext2D} */ (evt.context);
       ctx.globalCompositeOperation = 'color';
       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       ctx.fillStyle = '#000000';
