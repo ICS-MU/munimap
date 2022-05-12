@@ -419,11 +419,6 @@
   font-style: normal;
   color: #fff;
   position: relative;
-  top: 1px;
-}
-
-.munimap-map-tools .munimap-home {
-  top: 1px;
 }
 
 .munimap-map-tools .munimap-vertical-line {
@@ -520,6 +515,7 @@
   background-color: #0000dc;
   line-height: 0;
   font-family: Arial, Helvetica Neue, sans-serif;
+  font-size: 1.14em;
 }
 
 .ol-control button:focus {
@@ -659,10 +655,6 @@
 
 .ol-touch .munimap-home {
     font-size: 1.3em;
-}
-
-.ol-touch .nested .munimap-home {
-    top: 8px;
 }
 
 .ol-touch.munimap-map-tools .munimap-vertical-line {

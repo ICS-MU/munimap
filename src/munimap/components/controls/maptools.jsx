@@ -12,21 +12,21 @@ import {useDispatch, useSelector} from 'react-redux';
  * @type number
  * @const
  */
-const CONTROL_SIZE = 'ontouchstart' in window ? 33 : 30;
+const CONTROL_SIZE = 'ontouchstart' in window ? 35 : 27;
 
 /**
  * Size of Zoom in/out control.
  * @type number
  * @const
  */
-const ZOOM_IN_OUT_SIZE = 'ontouchstart' in window ? 83 : 70;
+const ZOOM_IN_OUT_SIZE = 'ontouchstart' in window ? 70 : 55;
 
 /**
  * Size of Map Links control.
  * @type number
  * @const
  */
-const MAP_LINKS_SIZE = 'ontouchstart' in window ? 83 : 70;
+const MAP_LINKS_SIZE = 'ontouchstart' in window ? 80 : 70;
 
 /**
  * @type {React.FC}
@@ -93,7 +93,7 @@ const MapToolsComponent = (props) => {
     <ToolbarComponent
       ref={toolBarElRef}
       visible={collapsed ? toolbarVisible : true}
-      horizontal={!collapsed}
+      horizontal={collapsed}
     />
   );
 

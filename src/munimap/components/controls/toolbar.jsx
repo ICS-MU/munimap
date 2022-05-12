@@ -21,7 +21,7 @@ const ToolbarComponent = forwardRef((props, ref) => {
 
   useEffect(() => {
     let toolBarControl;
-    if (map && toolBarEl && horizontal) {
+    if (map && toolBarEl && !horizontal) {
       toolBarControl = new Control({
         element: toolBarEl,
       });
@@ -40,12 +40,13 @@ const ToolbarComponent = forwardRef((props, ref) => {
   return (
     <div
       id="muni-tool-bar"
-      className={`${className}${horizontal ? ' default' : ' nested'}`}
+      className={`${className}${!horizontal ? ' default' : ' nested'}`}
       ref={ref}
       style={{display: visible ? '' : 'none'}}
     >
-      <FullScreenComponent ref={ref} />
       <InitExtentComponent ref={ref} />
+      {horizontal && <div className="munimap-vertical-line"></div>}
+      <FullScreenComponent ref={ref} />
     </div>
   );
 });

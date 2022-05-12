@@ -79,23 +79,20 @@ const InitExtentComponent = forwardRef((props, ref) => {
   }, [map, parentEl]);
 
   return (
-    <>
+    <div
+      id="muni-init-extent"
+      className="munimap-initial-extent"
+      title={mm_lang.getMsg(mm_lang.Translations.INITIAL_EXTENT, lang)}
+      onClick={onInitExtentClick}
+      ref={initExtentElRef}
+    >
       <div
-        id="muni-init-extent"
-        className="munimap-initial-extent"
+        className="munimap-init-extent-button"
         title={mm_lang.getMsg(mm_lang.Translations.INITIAL_EXTENT, lang)}
-        onClick={onInitExtentClick}
-        ref={initExtentElRef}
       >
-        <div
-          className="munimap-init-extent-button"
-          title={mm_lang.getMsg(mm_lang.Translations.INITIAL_EXTENT, lang)}
-        >
-          <i className="munimap-home">&#x2302;</i>
-        </div>
+        <i className="munimap-home">&#x2302;</i>
       </div>
-      <div className="munimap-vertical-line"></div>
-    </>
+    </div>
   );
 });
 
