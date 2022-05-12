@@ -34,8 +34,8 @@ const setStyle = (raster, baseMap) => {
     raster.on('postrender', (evt) => {
       const ctx = /** @type {CanvasRenderingContext2D} */ (evt.context);
       ctx.globalCompositeOperation = 'color';
-      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       ctx.globalCompositeOperation = 'source-over';
     });
   }
