@@ -3,6 +3,7 @@ import * as mm_range from '../utils/range.js';
 import * as mm_view from '../view/view.js';
 import * as slctr from '../redux/selector/selector.js';
 import Controls from './controls/controls.jsx';
+import ErrorBoundary from './errorboundary.jsx';
 import ErrorMessage from './errormessage.jsx';
 import InfoBubble from './infobubble.jsx';
 import LoadingMessage from './loadingmessage.jsx';
@@ -305,28 +306,30 @@ const MunimapComponent = (props) => {
   return (
     <>
       <MapContext.Provider value={mapRef}>
-        {addMsg && !map && <LoadingMessage />}
-        <div
-          className="munimap"
-          onBlur={onBlur}
-          tabIndex={hasInvalidCodes || shouldBlockMap ? 0 : undefined}
-          ref={munimapElRef}
-        >
-          <div ref={munimapTargetElRef} className="map-target">
-            {tooltipProps && (
-              <Tooltip
-                title={tooltipProps.title}
-                positionInCoords={tooltipProps.positionInCoords}
-              />
-            )}
-            <InfoBubble />
-            <Popup />
-            {map && <Controls />}
+        <ErrorBoundary>
+          {addMsg && !map && <LoadingMessage />}
+          <div
+            className="munimap"
+            onBlur={onBlur}
+            tabIndex={hasInvalidCodes || shouldBlockMap ? 0 : undefined}
+            ref={munimapElRef}
+          >
+            <div ref={munimapTargetElRef} className="map-target">
+              {tooltipProps && (
+                <Tooltip
+                  title={tooltipProps.title}
+                  positionInCoords={tooltipProps.positionInCoords}
+                />
+              )}
+              <InfoBubble />
+              <Popup />
+              {map && <Controls />}
+            </div>
           </div>
-        </div>
-        {areMarkersLoaded && areZoomToLoaded && (
-          <ErrorMessage onClick={onErrorClick} />
-        )}
+          {areMarkersLoaded && areZoomToLoaded && (
+            <ErrorMessage onClick={onErrorClick} />
+          )}
+        </ErrorBoundary>
       </MapContext.Provider>
     </>
   );
