@@ -36,6 +36,12 @@ import '../img/seznam.png';
 import '../img/marker.style.coridors.bg.png';
 import '../img/room.style.coridors.bg.png';
 
+import '../img/rectangle.png';
+import '../img/rectangle_blue.png';
+import '../img/rectangle_purple.png';
+import '../img/triangle_cyan.png';
+import '../img/triangle_orange.png';
+
 mm_matomo.init();
 
 // Example how to "export" openlayers classes
