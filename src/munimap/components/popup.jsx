@@ -61,16 +61,19 @@ const PopupComponent = (props) => {
   const map = mapRef && mapRef.current;
 
   const closePopup = React.useCallback(() => {
-    dispatch(actions.popupClosed());
-  }, []);
+    if (visible) {
+      dispatch(actions.popupClosed());
+    }
+  }, [visible]);
 
   useEffect(() => {
     if (hideResolution && resolution) {
-      if (!mm_range.contains(hideResolution, resolution) && visible) {
+      if (!mm_range.contains(hideResolution, resolution)) {
         closePopup();
       }
     }
-  }, [hideResolution, resolution, visible]);
+    //other deps should caused unexpected behavior on cluster/marker click
+  }, [hideResolution, resolution]);
 
   useLayoutEffect(() => {
     if (map && popupContentElRef.current) {
