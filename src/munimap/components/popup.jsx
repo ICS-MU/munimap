@@ -77,7 +77,9 @@ const PopupComponent = (props) => {
 
   useLayoutEffect(() => {
     if (map && popupContentElRef.current) {
-      popupContentElRef.current.innerHTML = DOMPurify.sanitize(content);
+      popupContentElRef.current.innerHTML = DOMPurify.sanitize(content, {
+        ADD_ATTR: ['target'],
+      });
       return () => {
         popupContentElRef.current.innerHTML = '';
       };
