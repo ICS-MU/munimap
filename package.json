@@ -88,7 +88,8 @@
       "PRODUCTION": "readonly",
       "VERSION": "readonly",
       "APP_PATH": "readonly",
-      "PROD_DOMAIN": "readonly"
+      "PROD_DOMAIN": "readonly",
+      "DEV_DOMAIN": "readonly"
     },
     "parserOptions": {
       "ecmaVersion": 2018,

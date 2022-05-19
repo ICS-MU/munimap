@@ -9,6 +9,8 @@ import path from 'path';
 import webpack from 'webpack';
 import {CleanWebpackPlugin} from 'clean-webpack-plugin';
 
+const PORT = 8079;
+
 export default (env) => {
   let dir;
   let warningWrapperClass = '';
@@ -22,7 +24,8 @@ export default (env) => {
   }
 
   const APP_PATH = `/munimap/${dir}/`;
-  const PROD_DOMAIN = 'maps.muni.cz';
+  const PROD_DOMAIN = `https://maps.muni.cz`;
+  const DEV_DOMAIN = `http://localhost:${PORT}`;
   const OUTPUT_PATH = path.join(path.resolve(__dirname, 'dist'), APP_PATH);
 
   const opts = {
@@ -163,6 +166,7 @@ export default (env) => {
         VERSION: JSON.stringify(PACKAGE.version),
         APP_PATH: JSON.stringify(APP_PATH),
         PROD_DOMAIN: JSON.stringify(PROD_DOMAIN),
+        DEV_DOMAIN: JSON.stringify(DEV_DOMAIN),
       }),
       new MiniCssExtractPlugin(),
       new CleanWebpackPlugin({

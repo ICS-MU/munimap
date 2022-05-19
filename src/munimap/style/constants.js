@@ -242,7 +242,9 @@ const PUBTRAN_STYLE = [
  * @type {string}
  * @const
  */
-const MARKER_CORRIDOR_IMG_PATH = APP_PATH + 'img/marker.style.coridors.bg.png';
+const MARKER_CORRIDOR_IMG_PATH = PRODUCTION
+  ? PROD_DOMAIN + APP_PATH + 'img/marker.style.coridors.bg.png'
+  : DEV_DOMAIN + APP_PATH + 'img/marker.style.coridors.bg.png';
 
 /**
  * @type {Fill}
@@ -587,7 +589,9 @@ const TOILET_W = [
  * @type {string}
  * @const
  */
-const ROOM_CORRIDOR_IMG_PATH = APP_PATH + 'img/room.style.coridors.bg.png';
+const ROOM_CORRIDOR_IMG_PATH = PRODUCTION
+  ? PROD_DOMAIN + APP_PATH + 'img/room.style.coridors.bg.png'
+  : DEV_DOMAIN + APP_PATH + 'img/room.style.coridors.bg.png';
 
 /**
  * @type {import('../utils/range.js').RangeInterface}

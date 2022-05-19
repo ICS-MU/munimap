@@ -9,9 +9,12 @@ import glob from 'glob';
 import path from 'path';
 import webpack from 'webpack';
 
+const PORT = 8079;
+
 export default (env) => {
   const APP_PATH = '/munimap/testing/';
-  const PROD_DOMAIN = `maps.muni.cz`;
+  const PROD_DOMAIN = `https://maps.muni.cz`;
+  const DEV_DOMAIN = `http://localhost:${PORT}`;
 
   const OUTPUT_PATH = path.join(path.resolve(__dirname, 'dist'), APP_PATH);
 
@@ -81,6 +84,7 @@ export default (env) => {
       },
       hot: true,
       open: [APP_PATH],
+      port: PORT,
       devMiddleware: {
         publicPath: APP_PATH,
         writeToDisk: false,
@@ -186,6 +190,7 @@ export default (env) => {
         VERSION: JSON.stringify(PACKAGE.version),
         APP_PATH: JSON.stringify(APP_PATH),
         PROD_DOMAIN: JSON.stringify(PROD_DOMAIN),
+        DEV_DOMAIN: JSON.stringify(DEV_DOMAIN),
       }),
       new CopyPlugin({
         patterns: [
