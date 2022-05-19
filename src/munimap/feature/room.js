@@ -5,6 +5,7 @@ import * as actions from '../redux/action.js';
 import * as mm_assert from '../assert/assert.js';
 import * as mm_lang from '../lang.js';
 import * as mm_utils from '../utils/utils.js';
+import {OptPoiIds, OptPoiLabels} from './constants.js';
 import {alignRoomTitleToRows, wrapText} from '../style/utils.js';
 import {isAllowed} from './identify.js';
 import {isRoom} from './utils.js';
@@ -176,6 +177,14 @@ const addPoiDetail = (rooms, pois, lang) => {
         'nazev_cs': title,
         'nazev_en': titleEn,
       });
+    }
+
+    const poiType = pois.length > 0 && pois[0].get('typ');
+    const poiKey = Object.keys(OptPoiLabels).find(
+      (key) => OptPoiLabels[key] === poiType
+    );
+    if (poiKey) {
+      room.set('poiType', OptPoiIds[poiKey]);
     }
     result.push(room);
   });
