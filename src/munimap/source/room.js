@@ -2,7 +2,7 @@
  * @module source/room
  */
 import * as mm_utils from '../utils/utils.js';
-import VectorSource from 'ol/source/Vector';
+import EnhancedVectorSource from './vector.js';
 import {ROOM_TYPE} from '../feature/constants.js';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
 import {loadActiveRooms, loadDefaultRooms} from '../load/feature/room.js';
@@ -20,10 +20,10 @@ import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
 /**
  * Create store for rooms.
  * @param {string} targetId targetId
- * @return {VectorSource} store
+ * @return {EnhancedVectorSource} store
  */
 const createStore = (targetId) => {
-  const store = new VectorSource();
+  const store = new EnhancedVectorSource();
   setRoomStore(targetId, store);
   return store;
 };
@@ -31,10 +31,10 @@ const createStore = (targetId) => {
 /**
  * Create store for default rooms.
  * @param {string} targetId targetId
- * @return {VectorSource} store
+ * @return {EnhancedVectorSource} store
  */
 const createDefaultStore = (targetId) => {
-  const defaultStore = new VectorSource({
+  const defaultStore = new EnhancedVectorSource({
     strategy: tileLoadingStrategy(
       createTilegridXYZ({
         tileSize: 512,
@@ -56,10 +56,10 @@ const createDefaultStore = (targetId) => {
  * Create store for active rooms.
  * @param {redux.Store} store store
  * @param {string} targetId targetId
- * @return {VectorSource} store
+ * @return {EnhancedVectorSource} store
  */
 const createActiveStore = (store, targetId) => {
-  const activeStore = new VectorSource({
+  const activeStore = new EnhancedVectorSource({
     strategy: tileLoadingStrategy(
       createTilegridXYZ({
         tileSize: 512,

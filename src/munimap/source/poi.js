@@ -2,7 +2,7 @@
  * @module source/poi
  */
 import * as mm_utils from '../utils/utils.js';
-import VectorSource from 'ol/source/Vector';
+import EnhancedVectorSource from './vector.js';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
 import {loadActivePois} from '../load/feature/poi.js';
 import {setActivePoiStore, setPoiStore} from './constants.js';
@@ -15,10 +15,10 @@ import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
 /**
  * Create store for pois.
  * @param {string} targetId targetId
- * @return {VectorSource} store
+ * @return {EnhancedVectorSource} store
  */
 const createStore = (targetId) => {
-  const store = new VectorSource();
+  const store = new EnhancedVectorSource();
   setPoiStore(targetId, store);
   return store;
 };
@@ -27,10 +27,10 @@ const createStore = (targetId) => {
  * Create store for active pois.
  * @param {redux.Store} store store
  * @param {string} targetId targetId
- * @return {VectorSource} store
+ * @return {EnhancedVectorSource} store
  */
 const createActiveStore = (store, targetId) => {
-  const poiStore = new VectorSource({
+  const poiStore = new EnhancedVectorSource({
     strategy: tileLoadingStrategy(
       createTilegridXYZ({
         tileSize: 512,

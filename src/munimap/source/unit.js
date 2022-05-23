@@ -2,16 +2,16 @@
  * @module source/unit
  */
 
-import VectorSource from 'ol/source/Vector';
+import EnhancedVectorSource from './vector.js';
 import {setUnitStore} from './constants.js';
 
 /**
  * Create store for units.
  * @param {string} targetId targetId
- * @return {VectorSource} store
+ * @return {EnhancedVectorSource} store
  */
 const createStore = (targetId) => {
-  const store = new VectorSource();
+  const store = new EnhancedVectorSource();
   setUnitStore(targetId, store);
   return store;
 };

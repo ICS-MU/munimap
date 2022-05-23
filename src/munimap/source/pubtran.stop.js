@@ -2,7 +2,7 @@
  * @module source/pubtran.stop
  */
 import * as mm_utils from '../utils/utils.js';
-import VectorSource from 'ol/source/Vector';
+import EnhancedVectorSource from './vector.js';
 import {PUBTRAN_TYPE} from '../feature/constants.js';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
 import {pubtranFeaturesForMap} from '../load/feature/pubtran.stop.js';
@@ -12,10 +12,10 @@ import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
 /**
  * Create store for public transportation stops.
  * @param {string} targetId targetId
- * @return {VectorSource} store
+ * @return {EnhancedVectorSource} store
  */
 const createStore = (targetId) => {
-  const pubtranStore = new VectorSource({
+  const pubtranStore = new EnhancedVectorSource({
     strategy: tileLoadingStrategy(
       createTilegridXYZ({
         tileSize: 512,

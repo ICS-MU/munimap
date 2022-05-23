@@ -2,7 +2,7 @@
  * @module source/room
  */
 import * as mm_utils from '../utils/utils.js';
-import VectorSource from 'ol/source/Vector';
+import EnhancedVectorSource from './vector.js';
 import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
 import {loadActiveDoors} from '../load/feature/door.js';
 import {setActiveDoorStore, setDoorStore} from './constants.js';
@@ -15,10 +15,10 @@ import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
 /**
  * Create store for doors.
  * @param {string} targetId targetId
- * @return {VectorSource} store
+ * @return {EnhancedVectorSource} store
  */
 const createStore = (targetId) => {
-  const store = new VectorSource();
+  const store = new EnhancedVectorSource();
   setDoorStore(targetId, store);
   return store;
 };
@@ -27,10 +27,10 @@ const createStore = (targetId) => {
  * Create store for active doors.
  * @param {redux.Store} store store
  * @param {string} targetId targetId
- * @return {VectorSource} store
+ * @return {EnhancedVectorSource} store
  */
 const createActiveStore = (store, targetId) => {
-  const activeStore = new VectorSource({
+  const activeStore = new EnhancedVectorSource({
     strategy: tileLoadingStrategy(
       createTilegridXYZ({
         tileSize: 512,

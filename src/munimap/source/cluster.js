@@ -5,7 +5,7 @@
  */
 import * as mm_utils from '../utils/utils.js';
 import ClusterSource from 'ol/source/Cluster';
-import VectorSource from 'ol/source/Vector';
+import EnhancedVectorSource from './vector.js';
 import {Point} from 'ol/geom';
 import {Translations, getMsg} from '../lang.js';
 import {
@@ -135,7 +135,7 @@ const createStore = (clusterFeatures, options) => {
   const {targetId, muAttrs, lang, distance} = options;
   const clusterStore = new EnhancedClusterSource({
     attributions: muAttrs,
-    source: new VectorSource({
+    source: new EnhancedVectorSource({
       features: clusterFeatures,
     }),
     compareFn: mm_utils.partial(clusterCompareFn, targetId, lang),

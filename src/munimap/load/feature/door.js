@@ -12,6 +12,7 @@ import {getNotYetAddedFeatures} from '../../utils/store.js';
  * @typedef {import("ol/proj/Projection").default} ol.proj.Projection
  * @typedef {import("redux").Store} redux.Store
  * @typedef {import("ol").Feature} ol.Feature
+ * @typedef {import("../load.js").FeatureLoaderParams} FeatureLoaderParams
  */
 
 /**
@@ -37,11 +38,9 @@ const doorsByCode = async (targetId, options) => {
 
 /**
  * @param {redux.Store} store store
- * @param {ol.extent.Extent} extent extent
- * @param {number} resolution resolution
- * @param {ol.proj.Projection} projection projection
+ * @param {FeatureLoaderParams} featureLoaderParams parameters for feature loader
  */
-const loadActiveDoors = async (store, extent, resolution, projection) => {
+const loadActiveDoors = async (store, ...featureLoaderParams) => {
   const activeFloorCodes = slctr.getActiveFloorCodes(store.getState());
   const targetId = slctr.getTargetId(store.getState());
   let where;
@@ -57,7 +56,7 @@ const loadActiveDoors = async (store, extent, resolution, projection) => {
       where: where,
       method: 'POST',
     };
-    const doors = await featuresForMap(opts, extent, resolution, projection);
+    const doors = await featuresForMap(opts, featureLoaderParams);
     const activeStore = getActiveDoorStore(targetId);
     const doorsFromActiveFloor = doors.filter((door) =>
       activeFloorCodes.includes(door.get('polohKodPodlazi'))
@@ -67,6 +66,9 @@ const loadActiveDoors = async (store, extent, resolution, projection) => {
       doorsFromActiveFloor
     );
     activeStore.addFeatures(doorsToAdd);
+
+    const onSuccess = featureLoaderParams[3];
+    onSuccess && onSuccess(doorsToAdd);
   }
 };
 

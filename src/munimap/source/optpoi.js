@@ -2,16 +2,16 @@
  * @module source/optpoi
  */
 
-import VectorSource from 'ol/source/Vector';
+import EnhancedVectorSource from './vector.js';
 import {setOptPoiStore} from './constants.js';
 
 /**
  * Create store for opt_pois.
  * @param {string} targetId targetId
- * @return {VectorSource} store
+ * @return {EnhancedVectorSource} store
  */
 const createStore = (targetId) => {
-  const store = new VectorSource();
+  const store = new EnhancedVectorSource();
   setOptPoiStore(targetId, store);
   return store;
 };

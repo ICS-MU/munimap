@@ -2,9 +2,9 @@
  * @module layer/geolocate
  */
 
+import EnhancedVectorSource from '../source/vector.js';
 import Feature from 'ol/Feature';
 import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
 import {Circle, Fill, Stroke, Style} from 'ol/style';
 import {GEOLOCATION_LAYER_ID} from './constants.js';
 
@@ -41,7 +41,7 @@ const create = () => {
   );
 
   const layer = new VectorLayer({
-    source: new VectorSource({
+    source: new EnhancedVectorSource({
       features: [positionFeature],
     }),
   });

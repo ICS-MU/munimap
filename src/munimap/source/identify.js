@@ -2,16 +2,16 @@
  * @module source/identify
  */
 
-import VectorSource from 'ol/source/Vector';
+import EnhancedVectorSource from './vector.js';
 import {setIdentifyStore} from './constants.js';
 
 /**
  * Create store for identify.
  * @param {string} targetId targetId
- * @return {VectorSource} store
+ * @return {EnhancedVectorSource} store
  */
 const createStore = (targetId) => {
-  const store = new VectorSource();
+  const store = new EnhancedVectorSource();
   setIdentifyStore(targetId, store);
   return store;
 };

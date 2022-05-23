@@ -15,9 +15,11 @@ import {unitLoadProcessor} from './unit.js';
  * @typedef {import("../load.js").Processor} Processor
  * @typedef {import("../load.js").ProcessorOptions} ProcessorOptions
  * @typedef {import("../load.js").FeaturesForMapOptions} FeaturesForMapOptions
+ * @typedef {import("../load.js").FeatureLoaderParams} FeatureLoaderParams
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("ol/extent").Extent} ol.extent.Extent
  * @typedef {import("ol/proj/Projection").default} ol.proj.Projection
+ * @typedef {import("ol/featureloader").FeatureLoader} ol.featureloader
  */
 
 /**
@@ -28,25 +30,13 @@ import {unitLoadProcessor} from './unit.js';
 
 /**
  * @param {FeaturesForMapOptions} options options
- * @param {ol.extent.Extent} extent extent
- * @param {number} resolution resolution
- * @param {ol.proj.Projection} projection projection
+ * @param {FeatureLoaderParams} featureLoaderParams feature loader params
  * @return {Promise<Array<ol.Feature>>} promise of features contained
  * in server response
  * @this {ol.source.Vector}
  */
-const buildingFeaturesForMap = async (
-  options,
-  extent,
-  resolution,
-  projection
-) => {
-  const buildings = await featuresForMap(
-    options,
-    extent,
-    resolution,
-    projection
-  );
+const buildingFeaturesForMap = async (options, ...featureLoaderParams) => {
+  const buildings = await featuresForMap(options, featureLoaderParams);
 
   if (options.callback) {
     options.callback(actions.buildings_loaded);

@@ -1,7 +1,7 @@
 /**
  * @module source/marker
  */
-import VectorSource from 'ol/source/Vector';
+import EnhancedVectorSource from './vector.js';
 import {getMarkerStore, setMarkerStore} from './constants.js';
 
 /**
@@ -12,10 +12,10 @@ import {getMarkerStore, setMarkerStore} from './constants.js';
 /**
  * Create store for markers.
  * @param {string} targetId targetId
- * @return {VectorSource} store
+ * @return {EnhancedVectorSource} store
  */
 const createStore = (targetId) => {
-  const store = new VectorSource();
+  const store = new EnhancedVectorSource();
   setMarkerStore(targetId, store);
   return store;
 };

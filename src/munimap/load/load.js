@@ -30,6 +30,8 @@ import {getUid} from 'ol';
  * @property {string} [method] method
  * @property {boolean} [returnGeometry] whether to return geometry
  * @property {Processor} [processor] processor
+ * @property {function(Array<ol.Feature>): void} [onSuccess] Success
+ * @property {function(): void} [onFailure] Failure
  */
 
 /**
@@ -39,6 +41,8 @@ import {getUid} from 'ol';
  * @property {ol.source.Vector} source source
  * @property {Array<string>} [likeExprs] like expressions
  * @property {Processor} [processor] processor
+ * @property {function(Array<ol.Feature>): void} [onSuccess] Success
+ * @property {function(): void} [onFailure] Failure
  */
 
 /**
@@ -61,12 +65,19 @@ import {getUid} from 'ol';
  * @property {FormData} [postContent] post content
  * @property {Processor} [processor] processor
  * @property {Array<ol.Feature>} [newProcessedFeatures] new features
+ * @property {function(Array<ol.Feature>): void} [onSuccess] Success
+ * @property {function(): void} [onFailure] Failure
  */
 
 /**
  * @typedef {object} WaitForNewProcessedFeaturesOptions
  * @property {ol.source.Vector} source source
  * @property {Array<ol.Feature>} loadedNewProcessedFeatures new features
+ */
+
+/**
+ * //typescript has new type "tuple"
+ * @typedef {[Array<ol.extent.Extent>, number, ol.proj.Projection, function(Array<ol.Feature>): void, function(): void]} FeatureLoaderParams
  */
 
 /**
@@ -170,11 +181,19 @@ const featuresFromUrl = async (options) => {
   const projection = options.projection;
   const method = options.method || 'GET';
   const body = options.postContent;
+  const {onSuccess, onFailure} = options;
 
-  const response = await fetch(url, {
-    method: method,
-    body: body,
-  });
+  let response;
+  try {
+    response = await fetch(url, {
+      method: method,
+      body: body,
+    });
+  } catch (error) {
+    if (onFailure) {
+      onFailure();
+    }
+  }
 
   mm_assert.assert(response.status === 200);
   const json = await response.json();
@@ -245,18 +264,24 @@ const featuresFromUrl = async (options) => {
     allNewProcessedFeatures.splice(allNewProcessedFeatures.indexOf(item), 1);
   });
   source.addFeatures(procOptions.new);
+
+  if (onSuccess) {
+    onSuccess(procOptions.new);
+  }
   return procOptions.all;
 };
 
 /**
  * @param {FeaturesForMapOptions} options opts
- * @param {ol.extent.Extent} extent extent
- * @param {number} resolution resolution
- * @param {ol.proj.Projection} projection projection
+ * @param {FeatureLoaderParams} featureLoaderParams rest parameters from ol/featureloader
  * @return {Promise<Array<ol.Feature>>} promise of features contained in response
  */
-const featuresForMap = async (options, extent, resolution, projection) => {
+const featuresForMap = async (options, featureLoaderParams) => {
   mm_assert.assertExists(options.source, 'Source must be defined!');
+
+  // eslint-disable-next-line no-unused-vars
+  const [extent, resolution, projection, onSuccess, onFailure] =
+    featureLoaderParams;
   const type = mm_utils.isFunction(options.type)
     ? /**@type {function}*/ (options.type)()
     : options.type;
@@ -306,11 +331,13 @@ const featuresForMap = async (options, extent, resolution, projection) => {
     source: options.source,
     type: type,
     url: !isPost ? url + queryParams.toString() : url,
-    projection: projection,
+    projection: /**@type {ol.proj.Projection} */ (projection),
     method: options.method,
     postContent: isPost ? formData : undefined,
     processor: options.processor,
     newProcessedFeatures: getNewProcessedFeatures(type, getUid(options.source)),
+    onSuccess,
+    onFailure,
   });
 };
 
@@ -364,6 +391,8 @@ const features = async (options) => {
     postContent: isPost ? formData : undefined,
     processor: options.processor,
     newProcessedFeatures: getNewProcessedFeatures(type, getUid(options.source)),
+    onSuccess: options.onSuccess,
+    onFailure: options.onFailure,
   });
 };
 
@@ -405,6 +434,8 @@ const featuresByCode = async (options) => {
     type: options.type,
     where: where,
     processor: options.processor,
+    onSuccess: options.onSuccess,
+    onFailure: options.onFailure,
   });
 };
 

@@ -19,6 +19,7 @@ import {getNotYetAddedFeatures} from '../../utils/store.js';
  * @typedef {import("redux").Store} redux.Store
  * @typedef {import("ol").Feature} ol.Feature
  * @typedef {import("../load.js").FeaturesForMapOptions} FeaturesForMapOptions
+ * @typedef {import("../load.js").FeatureLoaderParams} FeatureLoaderParams
  */
 
 /**
@@ -45,31 +46,24 @@ const roomsByCode = async (targetId, options) => {
 /**
  * @param {string} targetId targetId
  * @param {FeaturesForMapOptions} options options
- * @param {ol.extent.Extent} extent extent
- * @param {number} resolution resolution
- * @param {ol.proj.Projection} projection projection
+ * @param {FeatureLoaderParams} featureLoaderParams feature loader params
  */
-const loadDefaultRooms = async (
-  targetId,
-  options,
-  extent,
-  resolution,
-  projection
-) => {
-  const rooms = await featuresForMap(options, extent, resolution, projection);
+const loadDefaultRooms = async (targetId, options, ...featureLoaderParams) => {
+  const rooms = await featuresForMap(options, featureLoaderParams);
   const defaultRoomStore = getDefaultRoomStore(targetId);
   const roomsToAdd = getNotYetAddedFeatures(defaultRoomStore, rooms);
   defaultRoomStore.addFeatures(roomsToAdd);
+
+  const onSuccess = featureLoaderParams[3];
+  onSuccess && onSuccess(roomsToAdd);
 };
 
 /**
  *
  * @param {redux.Store} store store
- * @param {ol.extent.Extent} extent extent
- * @param {number} resolution resolution
- * @param {ol.proj.Projection} projection projection
+ * @param {FeatureLoaderParams} featureLoaderParams feature loader params
  */
-const loadActiveRooms = async (store, extent, resolution, projection) => {
+const loadActiveRooms = async (store, ...featureLoaderParams) => {
   const activeFloorCodes = slctr.getActiveFloorCodes(store.getState());
   const targetId = slctr.getTargetId(store.getState());
 
@@ -86,7 +80,7 @@ const loadActiveRooms = async (store, extent, resolution, projection) => {
       where: where,
       method: 'POST',
     };
-    const rooms = await featuresForMap(opts, extent, resolution, projection);
+    const rooms = await featuresForMap(opts, featureLoaderParams);
     const activeStore = getActiveRoomStore(targetId);
     mm_assert.assertInstanceof(activeStore, VectorSource);
     const roomsFromActiveFloor = rooms.filter((room) =>
@@ -97,6 +91,9 @@ const loadActiveRooms = async (store, extent, resolution, projection) => {
       roomsFromActiveFloor
     );
     activeStore.addFeatures(roomsToAdd);
+
+    const onSuccess = featureLoaderParams[3];
+    onSuccess && onSuccess(roomsToAdd);
   }
 };
 
