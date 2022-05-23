@@ -16,19 +16,19 @@ import {VOID} from 'ol/functions';
  */
 
 /**
- * @typedef {'mm:tilesloadstart'|'mm:tilesloadend'|'mm:featuresadded'} CustomVectorEventTypes
+ * @typedef {'mm:loadstart'|'mm:loadend'|'mm:featuresadded'} CustomVectorEventTypes
  */
 
 /**
  * @type {{
- *    MMTILESLOADSTART: CustomVectorEventTypes,
- *    MMTILESLOADEND: CustomVectorEventTypes,
+ *    MMLOADSTART: CustomVectorEventTypes,
+ *    MMLOADEND: CustomVectorEventTypes,
  *    MMFEATURESADDED: CustomVectorEventTypes
  * }}
  */
 const CustomVectorEventType = {
-  MMTILESLOADSTART: 'mm:tilesloadstart',
-  MMTILESLOADEND: 'mm:tilesloadend',
+  MMLOADSTART: 'mm:loadstart',
+  MMLOADEND: 'mm:loadend',
   MMFEATURESADDED: 'mm:featuresadded',
 };
 
@@ -110,6 +110,13 @@ class EnhancedVectorSource extends VectorSource {
       this.attachCustomListeners_();
     }
     super.setLoader(loader);
+  }
+
+  /**
+   * @return {boolean} whether is source still loading
+   */
+  isLoading() {
+    return this.loadingCounter_ > 0;
   }
 }
 
