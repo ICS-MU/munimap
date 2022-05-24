@@ -67,7 +67,7 @@ const munimap_ext = {
       style: getStyleForLayer(store.getState()),
     });
 
-    var loader = function (extent, resolution, projection) {
+    var loader = function (extent, resolution, projection, success, failure) {
       var floors = munimap.slctr.getActiveFloorCodes(store.getState());
       let where;
       if (floors.length > 0) {
@@ -83,8 +83,15 @@ const munimap_ext = {
           method: 'POST',
         };
 
+        var featureLoaderParams = [
+          extent,
+          resolution,
+          projection,
+          success,
+          failure,
+        ];
         munimap.load
-          .featuresForMap(opts, extent, resolution, projection)
+          .featuresForMap(opts, featureLoaderParams)
           .then(function (doorOpenings) {
             var activeStore = layer.getSource();
             var doorOpeningsFromActiveFloors = doorOpenings.filter(function (
