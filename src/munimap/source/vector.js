@@ -1,7 +1,4 @@
-// @ts-nocheck
-
 import VectorSource, {VectorSourceEvent} from 'ol/source/Vector';
-import {VOID} from 'ol/functions';
 
 /**
  * @typedef {import("ol/source/Vector").Options} Options
@@ -58,7 +55,7 @@ class EnhancedVectorSource extends VectorSource {
      */
     this.once;
 
-    if (this.loader_ != VOID) {
+    if (opt_options && (opt_options.loader || opt_options.url)) {
       this.attachCustomListeners_();
     }
   }
@@ -72,7 +69,7 @@ class EnhancedVectorSource extends VectorSource {
     this.on('featuresloadstart', (evt) => {
       if (this.loadingCounter_ === 0) {
         this.dispatchEvent(
-          new VectorSourceEvent(CustomVectorEventType.MMTILESLOADSTART)
+          new VectorSourceEvent(CustomVectorEventType.MMLOADSTART)
         );
       }
       this.loadingCounter_ += 1;
@@ -83,7 +80,7 @@ class EnhancedVectorSource extends VectorSource {
 
       if (this.loadingCounter_ === 0) {
         this.dispatchEvent(
-          new VectorSourceEvent(CustomVectorEventType.MMTILESLOADEND)
+          new VectorSourceEvent(CustomVectorEventType.MMLOADEND)
         );
       }
     });
@@ -106,9 +103,7 @@ class EnhancedVectorSource extends VectorSource {
    * @param {import("ol/featureloader").FeatureLoader} loader The loader to set.
    */
   setLoader(loader) {
-    if (this.loader_ != VOID) {
-      this.attachCustomListeners_();
-    }
+    this.attachCustomListeners_();
     super.setLoader(loader);
   }
 
