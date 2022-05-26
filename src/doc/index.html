@@ -74,7 +74,7 @@
               <li><code>label: string|undefined</code> - popisek "špendlíku"</li>
               <li><code>detail: string|HTML|undefined</code> - podrobné informace</li>
               <li><code>color: string|undefined</code> - barva popisku a výchozího "špendlíku"</li>
-              <li><code>onClick: (function(evt, options): void)|undefined</code> - callback po kliknutí na "špendlík"</li>
+              <li><code>onClick: (function(evt): (OnClickOptions|undefined))|undefined</code> - callback po kliknutí na "špendlík"</li>
               <li><code>icon: Object|undefined</code> - definice vlastní ikony
                 <ul>
                   <li><code>url: string</code> - url adresa symbolu</li>
@@ -111,6 +111,7 @@
                 <li><code>poi.ctg:it-center</code> (IT centra)</li>
                 <li><code>poi.ctg:canteen</code> (menzy)</li>
                 <li><code>poi.ctg:dormitory</code> (koleje)</li>
+                <li><code>poi.ctg:office-for-studies</code> (studijní oddělení)</li>
               </ul>
               <li>od verze 1.1 je možné umístit "špendlík" na libovolné místo v mapě, a to pomocí pole objektů typu <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_Feature-Feature.html" target="_blank">ol.Feature</a> s parametry:
                 <ul>
@@ -139,7 +140,7 @@
                   <li>onClick pro nastavení callbacku po kliknutí na ikonu (nepovinný parametr)
                     <ul>
                       <li>předává <code>evt</code> typu <a href="https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent">PointerEvent</a></li>
-                      <li>předává objekt <code>options</code> jako referenci, proto je možné změnou jeho vlastností ovlivňovat chování mapy po kliknutí na "špendlík"</li>
+                      <li>může vracet objekt <code>options</code>, díky kterému je možné ovlivňovat chování mapy po kliknutí na "špendlík"</li>
                       <ul>
                         <li><code>animation</code> - po kliknutí animovat na "špendlík" (<i>zoomTo</i> - nazoomovat, <i>centerTo</i> - jen vycentrovat, <i>none</i> - bez animace)</li>
                       </ul>
