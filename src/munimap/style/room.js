@@ -4,7 +4,7 @@
 import * as mm_range from '../utils/range.js';
 import * as mm_utils from '../utils/utils.js';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
-import {Fill, Style, Text} from 'ol/style';
+import {Fill, Style, Text} from 'ol/style.js';
 import {
   MARKER_ROOM_STYLE,
   POI_ICON_HEIGHT,

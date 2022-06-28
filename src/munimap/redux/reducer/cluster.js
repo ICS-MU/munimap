@@ -3,7 +3,7 @@
  */
 import * as mm_assert from '../../assert/assert.js';
 import * as mm_range from '../../utils/range.js';
-import * as ol_extent from 'ol/extent';
+import * as ol_extent from 'ol/extent.js';
 import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from '../../feature/constants.js';
 import {Feature} from 'ol';
 import {INITIAL_STATE} from '../../conf.js';

@@ -4,17 +4,17 @@
  * @module source/cluster
  */
 import * as mm_utils from '../utils/utils.js';
-import ClusterSource from 'ol/source/Cluster';
+import ClusterSource from 'ol/source/Cluster.js';
 import EnhancedVectorSource from './vector.js';
-import {Point} from 'ol/geom';
+import {Point} from 'ol/geom.js';
 import {Translations, getMsg} from '../lang.js';
 import {
   buffer,
   createEmpty,
   createOrUpdateFromCoordinate,
   getCenter,
-} from 'ol/extent';
-import {getUid} from 'ol/util';
+} from 'ol/extent.js';
+import {getUid} from 'ol/util.js';
 import {isMarker} from '../feature/marker.js';
 import {setClusterStore} from './constants.js';
 

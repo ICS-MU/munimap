@@ -2,8 +2,8 @@
  * @module feature/feature
  */
 import * as mm_utils from '../utils/utils.js';
-import Feature from 'ol/Feature';
-import GeoJSON from 'ol/format/GeoJSON';
+import Feature from 'ol/Feature.js';
+import GeoJSON from 'ol/format/GeoJSON.js';
 import turf_booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import {
   BUILDING_TYPE,
@@ -15,7 +15,7 @@ import {
   ROOM_TYPE,
   RoomPurposesWithTooltip,
 } from './constants.js';
-import {Point} from 'ol/geom';
+import {Point} from 'ol/geom.js';
 import {REQUIRED_CUSTOM_MARKERS} from '../constants.js';
 import {featureExtentIntersect} from '../utils/geom.js';
 import {

@@ -10,10 +10,10 @@ import {
   IDENTIFIED_FEATURE_PROPERTY_NAME,
   IDENTIFY_LOCATION_CODE_FIELD_NAME,
 } from '../../feature/constants.js';
-import {Point} from 'ol/geom';
+import {Point} from 'ol/geom.js';
 import {getIdentifyStore} from '../../source/constants.js';
 import {isBuilding, isDoor, isRoom} from '../../feature/utils.js';
-import {transform} from 'ol/proj';
+import {transform} from 'ol/proj.js';
 
 /**
  * @typedef {import("../../conf.js").State} State

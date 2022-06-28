@@ -1,7 +1,7 @@
 import * as constants from './constants.js';
-import * as ol_extent from 'ol/extent';
-import * as ol_proj from 'ol/proj';
-import Point from 'ol/geom/Point';
+import * as ol_extent from 'ol/extent.js';
+import * as ol_proj from 'ol/proj.js';
+import Point from 'ol/geom/Point.js';
 import {isString} from '../utils/utils.js';
 
 /**

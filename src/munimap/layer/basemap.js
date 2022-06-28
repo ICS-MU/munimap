@@ -4,9 +4,9 @@
 
 import * as mm_lang from '../lang.js';
 import * as mm_utils from '../utils/utils.js';
-import OSM from 'ol/source/OSM';
-import TileLayer from 'ol/layer/Tile';
-import XYZ from 'ol/source/XYZ';
+import OSM from 'ol/source/OSM.js';
+import TileLayer from 'ol/layer/Tile.js';
+import XYZ from 'ol/source/XYZ.js';
 import {BasemapIds} from './constants.js';
 import {assert} from '../assert/assert.js';
 import {isDefAndNotNull} from '../utils/utils.js';

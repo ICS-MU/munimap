@@ -5,8 +5,8 @@ import * as mm_load_bldg from '../load/feature/building.js';
 import * as mm_utils from '../utils/utils.js';
 import EnhancedVectorSource from './vector.js';
 import {BUILDING_TYPE} from '../feature/constants.js';
-import {tile as ol_loadingstrategy_tile} from 'ol/loadingstrategy';
-import {createXYZ as ol_tilegrid_createXYZ} from 'ol/tilegrid';
+import {tile as ol_loadingstrategy_tile} from 'ol/loadingstrategy.js';
+import {createXYZ as ol_tilegrid_createXYZ} from 'ol/tilegrid.js';
 import {setBuildingStore} from './constants.js';
 
 /**

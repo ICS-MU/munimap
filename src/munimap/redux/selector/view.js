@@ -5,12 +5,12 @@
 
 import * as mm_lang from '../../lang.js';
 import * as mm_utils from '../../utils/utils.js';
-import * as ol_extent from 'ol/extent';
+import * as ol_extent from 'ol/extent.js';
 import * as sf from './feature/feature.js';
 import * as sfl from './feature/floor.js';
 import * as ss from './simple.js';
 import {ENABLE_SELECTOR_LOGS, INITIAL_STATE} from '../../conf.js';
-import {defaults as control_defaults} from 'ol/control';
+import {defaults as control_defaults} from 'ol/control.js';
 import {create as createMapView} from '../../view/mapview.js';
 import {createSelector} from './reselect.js';
 import {getAnimationDuration} from '../../utils/animation.js';

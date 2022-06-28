@@ -3,7 +3,7 @@
  */
 import * as mm_lang from '../lang.js';
 import * as mm_pubtran_stop from '../feature/pubtran.stop.js';
-import VectorLayer from 'ol/layer/Vector';
+import VectorLayer from 'ol/layer/Vector.js';
 import {PUBTRAN_LAYER_ID} from './constants.js';
 import {PUBTRAN_RESOLUTION} from '../feature/constants.js';
 import {getPubTranStore} from '../source/constants.js';

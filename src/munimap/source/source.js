@@ -4,8 +4,8 @@
 import * as mm_utils from '../utils/utils.js';
 import * as srcs from './constants.js';
 import {BUILDING_TYPE, DOOR_TYPE, ROOM_TYPE} from '../feature/constants.js';
-import {GeoJSON} from 'ol/format';
-import {MultiPolygon, Point, Polygon} from 'ol/geom';
+import {GeoJSON} from 'ol/format.js';
+import {MultiPolygon, Point, Polygon} from 'ol/geom.js';
 import {REQUIRED_CUSTOM_MARKERS} from '../constants.js';
 import {assertExists} from '../assert/assert.js';
 import {featureExtentIntersect} from '../utils/geom.js';

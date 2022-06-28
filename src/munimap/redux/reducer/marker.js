@@ -3,7 +3,7 @@
  */
 import * as mm_identify from '../../feature/identify.js';
 import * as mm_range from '../../utils/range.js';
-import * as ol_extent from 'ol/extent';
+import * as ol_extent from 'ol/extent.js';
 import * as slctr from '../selector/selector.js';
 import {DOOR_RESOLUTION, FLOOR_RESOLUTION} from '../../feature/constants.js';
 import {INITIAL_STATE} from '../../conf.js';

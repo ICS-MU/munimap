@@ -3,13 +3,20 @@
 import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import PACKAGE from './package.json';
 import glob from 'glob';
 import path from 'path';
 import webpack from 'webpack';
 import {CleanWebpackPlugin} from 'clean-webpack-plugin';
+import {createRequire} from 'module';
+import {fileURLToPath} from 'url';
 
+const require = createRequire(import.meta.url);
+
+const PACKAGE = require('./package.json');
 const PORT = 8079;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default (env) => {
   let dir;

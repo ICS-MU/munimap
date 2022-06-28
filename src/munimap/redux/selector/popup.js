@@ -3,7 +3,7 @@
  * @module
  */
 import * as mm_utils from '../../utils/utils.js';
-import * as ol_extent from 'ol/extent';
+import * as ol_extent from 'ol/extent.js';
 import * as ss from './simple.js';
 import {ENABLE_SELECTOR_LOGS} from '../../conf.js';
 import {
@@ -12,7 +12,7 @@ import {
   PUBTRAN_RESOLUTION,
   PUBTRAN_TYPE,
 } from '../../feature/constants.js';
-import {MultiPolygon, Polygon} from 'ol/geom';
+import {MultiPolygon, Polygon} from 'ol/geom.js';
 import {calculateBubbleOffsets} from '../../style/icon.js';
 import {createSelector} from './reselect.js';
 import {getBetterInteriorPoint} from '../../utils/geom.js';

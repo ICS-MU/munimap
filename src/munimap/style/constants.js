@@ -5,7 +5,7 @@
  * circular dependency.
  */
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
-import {Circle, Fill, Stroke, Style, Text} from 'ol/style';
+import {Circle, Fill, Stroke, Style, Text} from 'ol/style.js';
 import {FLOOR_RESOLUTION} from '../feature/constants.js';
 import {createResolution} from '../utils/range.js';
 

@@ -4,7 +4,7 @@
 import * as actions from './redux/action.js';
 import * as mm_utils from './utils/utils.js';
 import * as mm_view from './view/view.js';
-import Feature from 'ol/Feature';
+import Feature from 'ol/Feature.js';
 import MunimapComponent from './components/munimap.jsx';
 import React from 'react';
 import {
@@ -18,6 +18,7 @@ import {
 import {INITIAL_STATE} from './conf.js';
 import {Provider} from 'react-redux';
 import {assertOptions} from './assert/assert.params.js';
+// eslint-disable-next-line import/extensions
 import {createRoot} from 'react-dom/client';
 import {createStore} from './redux/store.js';
 import {v4 as uuidv4} from 'uuid';

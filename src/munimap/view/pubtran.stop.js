@@ -1,7 +1,7 @@
 /**
  * @module view/pubtran.stop
  */
-import VectorLayer from 'ol/layer/Vector';
+import VectorLayer from 'ol/layer/Vector.js';
 import {isLayer} from '../layer/pubtran.stop.js';
 import {styleFunction} from '../style/pubtran.stop.js';
 

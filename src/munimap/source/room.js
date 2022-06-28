@@ -4,14 +4,14 @@
 import * as mm_utils from '../utils/utils.js';
 import EnhancedVectorSource from './vector.js';
 import {ROOM_TYPE} from '../feature/constants.js';
-import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
+import {createXYZ as createTilegridXYZ} from 'ol/tilegrid.js';
 import {loadActiveRooms, loadDefaultRooms} from '../load/feature/room.js';
 import {
   setActiveRoomStore,
   setDefaultRoomStore,
   setRoomStore,
 } from './constants.js';
-import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
+import {tile as tileLoadingStrategy} from 'ol/loadingstrategy.js';
 
 /**
  * @typedef {import("redux").Store} redux.Store

@@ -2,7 +2,7 @@
  * @module feature/markercustom
  */
 import * as mm_assert from '../assert/assert.js';
-import * as ol_proj from 'ol/proj';
+import * as ol_proj from 'ol/proj.js';
 import {
   CUSTOM_MARKER_LABEL_FIELD_NAME,
   CUSTOM_MARKER_TYPE,

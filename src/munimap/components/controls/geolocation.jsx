@@ -3,9 +3,9 @@ import * as mm_lang from '../../lang.js';
 import * as slctr from '../../redux/selector/selector.js';
 import MapContext from '../../contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useRef} from 'react';
-import {Control} from 'ol/control';
+import {Control} from 'ol/control.js';
 import {Geolocation} from 'ol';
-import {Point} from 'ol/geom';
+import {Point} from 'ol/geom.js';
 import {isLayer} from '../../layer/geolocation.js';
 import {useDispatch, useSelector} from 'react-redux';
 

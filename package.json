@@ -3,6 +3,7 @@
   "version": "2.0.0-dev",
   "description": "",
   "main": "dist/munimap.js",
+  "type": "module",
   "scripts": {
     "dev": "webpack serve --config webpack.config.dev.babel.js",
     "build": "webpack --config webpack.config.production.babel.js --env dir=latest",
@@ -119,6 +120,7 @@
       "@openlayers"
     ],
     "rules": {
+      "import/extensions": ["error", "always"],
       "valid-jsdoc": "off",
       "@openlayers/valid-tsdoc": [
         "error",

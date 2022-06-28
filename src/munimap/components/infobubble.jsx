@@ -1,9 +1,9 @@
 import * as mm_utils from '../utils/utils.js';
-import * as ol_extent from 'ol/extent';
+import * as ol_extent from 'ol/extent.js';
 import * as slctr from '../redux/selector/selector.js';
 import MapContext from '../contexts/mapcontext.jsx';
 import Select from './select.jsx';
-import {GeoJSON} from 'ol/format';
+import {GeoJSON} from 'ol/format.js';
 import {POPUP_TALE_HEIGHT, POPUP_TALE_INDENT} from '../view/constants.js';
 import {featureExtentIntersect} from '../utils/geom.js';
 import {sort as floorSortFn} from '../feature/floor.js';

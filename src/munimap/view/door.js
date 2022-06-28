@@ -1,7 +1,7 @@
 /**
  * @module view/room
  */
-import VectorLayer from 'ol/layer/Vector';
+import VectorLayer from 'ol/layer/Vector.js';
 import {DOOR_STYLE} from '../style/constants.js';
 import {isActiveLayer} from '../layer/door.js';
 

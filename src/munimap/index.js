@@ -10,17 +10,17 @@ import 'ol/ol.css';
 import '../css/munimaplib.css'; //must be after ol.css => rewrite some rules
 
 import * as mm_matomo from './matomo.js';
-import VectorSource from 'ol/source/Vector';
+import VectorSource from 'ol/source/Vector.js';
 import create from './create.js';
 import reset from './reset.js';
-import {Attribution, Control, FullScreen, Zoom} from 'ol/control';
+import {Attribution, Control, FullScreen, Zoom} from 'ol/control.js';
 import {Feature, Map, View} from 'ol';
-import {GeoJSON} from 'ol/format';
-import {Point} from 'ol/geom';
-import {Stroke, Style} from 'ol/style';
-import {Tile, Vector} from 'ol/layer';
+import {GeoJSON} from 'ol/format.js';
+import {Point} from 'ol/geom.js';
+import {Stroke, Style} from 'ol/style.js';
+import {Tile, Vector} from 'ol/layer.js';
 import {createSelector} from 'reselect';
-import {createXYZ} from 'ol/tilegrid';
+import {createXYZ} from 'ol/tilegrid.js';
 import {featuresForMap} from './load/load.js';
 import {
   getActiveFloorCodes,
@@ -28,7 +28,7 @@ import {
 } from './redux/selector/selector.js';
 import {getNotYetAddedFeatures} from './utils/store.js';
 import {getStoreByTargetId} from './constants.js';
-import {tile} from 'ol/loadingstrategy';
+import {tile} from 'ol/loadingstrategy.js';
 
 import '../img/google.png';
 import '../img/seznam.png';

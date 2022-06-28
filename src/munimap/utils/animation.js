@@ -2,7 +2,7 @@
  * @module utils/animation
  */
 
-import {getArea, getEnlargedArea, getForViewAndSize} from 'ol/extent';
+import {getArea, getEnlargedArea, getForViewAndSize} from 'ol/extent.js';
 
 /**
  * @typedef {import("ol/extent").Extent} ol.Extent

@@ -3,13 +3,20 @@
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import PACKAGE from './package.json';
 import express from 'express';
 import glob from 'glob';
 import path from 'path';
 import webpack from 'webpack';
+import {createRequire} from 'module';
+import {fileURLToPath} from 'url';
 
+const require = createRequire(import.meta.url);
+
+const PACKAGE = require('./package.json');
 const PORT = 8079;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default (env) => {
   const APP_PATH = '/munimap/testing/';

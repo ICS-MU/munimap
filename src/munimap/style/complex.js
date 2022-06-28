@@ -7,13 +7,13 @@ import * as mm_complex from '../feature/complex.js';
 import * as mm_lang from '../lang.js';
 import * as mm_style from './style.js';
 import * as mm_utils from '../utils/utils.js';
-import Feature from 'ol/Feature';
+import Feature from 'ol/Feature.js';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
 import {
   COMPLEX_FONT_SIZE,
   COMPLEX_ID_FIELD_NAME,
 } from '../feature/constants.js';
-import {Style, Text} from 'ol/style';
+import {Style, Text} from 'ol/style.js';
 import {TEXT_FILL, TEXT_STROKE} from './constants.js';
 import {alignTextToRows} from './utils.js';
 import {getMarkerStore} from '../source/constants.js';

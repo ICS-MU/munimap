@@ -8,7 +8,7 @@ import * as mm_lang from '../lang.js';
 import * as mm_range from '../utils/range.js';
 import * as mm_unit from './unit.js';
 import * as mm_utils from '../utils/utils.js';
-import Feature from 'ol/Feature';
+import Feature from 'ol/Feature.js';
 import {
   BUILDING_COMPLEX_FIELD_NAME,
   BUILDING_LOCATION_CODE_FIELD_NAME,
