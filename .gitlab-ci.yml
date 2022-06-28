@@ -6,4 +6,4 @@ local_integration_test:
   image: registry.gitlab.com/gitlab-ci-utils/docker-puppeteer:node-14
   script:
     - npm install
-    - npm test
+    - npm run test
