@@ -11,7 +11,7 @@ describe('basemap.html', async () => {
   before(async () => {
     page = await browser.newPage();
     await page.setViewport(viewport);
-    const response = await page.goto(`${test_server_url}/test/basemap.html`);
+    const response = await page.goto(`${test_server_url}/example/basemap.html`);
     assert.equal(response.status(), 200, 'Unexpected HTTP status code');
   });
 
