@@ -8,7 +8,12 @@ const puppeteer_opts = {
   headless: true,
   // slowMo: 100,
   // timeout: 0,
-  args: ['--start-maximized', '--window-size=1920,1040'],
+  args: [
+    '--start-maximized',
+    '--window-size=1920,1040',
+    '--no-sandbox',
+    '--disable-setuid-sandbox'
+  ],
 };
 
 export const mochaHooks = {
