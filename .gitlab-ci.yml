@@ -7,3 +7,4 @@ local_integration_test:
   script:
     - npm install
     - npm run test
+  when: manual
