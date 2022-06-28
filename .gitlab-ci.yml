@@ -8,3 +8,4 @@ local_integration_test:
     - npm install
     - npm run test
   when: manual
+  allow_failure: false
