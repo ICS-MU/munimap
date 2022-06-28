@@ -6,7 +6,7 @@ import {
   apply as applyTransform,
   compose as composeTransform,
   create as createTransform,
-} from 'ol/transform';
+} from 'ol/transform.js';
 import {isDefAndNotNull} from './utils.js';
 
 /**

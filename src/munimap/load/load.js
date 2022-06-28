@@ -10,7 +10,7 @@ import {
   FEATURE_TYPE_PROPERTY_NAME,
   ROOM_TYPE,
 } from '../feature/constants.js';
-import {EsriJSON} from 'ol/format';
+import {EsriJSON} from 'ol/format.js';
 import {getUid} from 'ol';
 
 /**

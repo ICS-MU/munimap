@@ -14,7 +14,7 @@ import * as mm_style_constants from './constants.js';
 import * as mm_unit from '../feature/unit.js';
 import * as mm_utils from '../utils/utils.js';
 import {COMPLEX_RESOLUTION, FLOOR_RESOLUTION} from '../feature/constants.js';
-import {Fill, Stroke, Style, Text} from 'ol/style';
+import {Fill, Stroke, Style, Text} from 'ol/style.js';
 import {RESOLUTION_COLOR} from './constants.js';
 import {getBuildingCount} from '../feature/complex.js';
 import {getMarkerStore} from '../source/constants.js';

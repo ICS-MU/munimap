@@ -3,8 +3,8 @@ import * as mm_lang from '../../lang.js';
 import * as slctr from '../../redux/selector/selector.js';
 import MapContext from '../../contexts/mapcontext.jsx';
 import React, {useContext, useEffect, useRef} from 'react';
-import {Control} from 'ol/control';
-import {get as getProjection, transform} from 'ol/proj';
+import {Control} from 'ol/control.js';
+import {get as getProjection, transform} from 'ol/proj.js';
 import {useDispatch, useSelector} from 'react-redux';
 
 /**

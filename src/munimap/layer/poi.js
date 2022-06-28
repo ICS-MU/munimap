@@ -2,7 +2,7 @@
  * @module layer/poi
  */
 
-import VectorLayer from 'ol/layer/Vector';
+import VectorLayer from 'ol/layer/Vector.js';
 import {ACTIVE_POI_LAYER_ID} from './constants.js';
 import {POI_RESOLUTION, POI_TYPE} from '../feature/constants.js';
 import {featureClickHandler, isClickable} from '../feature/poi.js';

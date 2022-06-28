@@ -3,10 +3,10 @@
  */
 import * as mm_utils from '../utils/utils.js';
 import EnhancedVectorSource from './vector.js';
-import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
+import {createXYZ as createTilegridXYZ} from 'ol/tilegrid.js';
 import {loadActiveDoors} from '../load/feature/door.js';
 import {setActiveDoorStore, setDoorStore} from './constants.js';
-import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
+import {tile as tileLoadingStrategy} from 'ol/loadingstrategy.js';
 
 /**
  * @typedef {import("redux").Store} redux.Store

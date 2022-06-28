@@ -1,18 +1,18 @@
 /**
  * @module view/tooltip
  */
-import Feature from 'ol/Feature';
-import GeoJSON from 'ol/format/GeoJSON';
+import Feature from 'ol/Feature.js';
+import GeoJSON from 'ol/format/GeoJSON.js';
 import turf_booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import {CENTER_GEOMETRY_FUNCTION} from '../utils/geom.js';
-import {Circle, Point} from 'ol/geom';
+import {Circle, Point} from 'ol/geom.js';
 import {
   GIS_PURPOSES_WITH_TOOLTIP,
   PoiPurpose,
   RoomPurposesWithTooltip,
 } from '../feature/constants.js';
 import {POI_ICON_HEIGHT, ROOM_FONT_SIZE} from '../style/constants.js';
-import {fromCircle} from 'ol/geom/Polygon';
+import {fromCircle} from 'ol/geom/Polygon.js';
 import {getActiveRoomStore} from '../source/constants.js';
 import {getDefaultLabel} from '../feature/room.js';
 import {getLabelHeight} from '../style/style.js';

@@ -2,7 +2,7 @@
  * @module layer/room
  */
 import * as mm_assert from '../assert/assert.js';
-import VectorLayer from 'ol/layer/Vector';
+import VectorLayer from 'ol/layer/Vector.js';
 import {
   ACTIVE_ROOM_LAYER_ID,
   ROOM_LABEL_LAYER_ID,

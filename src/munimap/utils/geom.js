@@ -3,9 +3,9 @@
  */
 import * as mm_assert from '../assert/assert.js';
 import * as mm_utils from './utils.js';
-import * as ol_extent from 'ol/extent';
-import Feature from 'ol/Feature';
-import GeoJSON from 'ol/format/GeoJSON';
+import * as ol_extent from 'ol/extent.js';
+import Feature from 'ol/Feature.js';
+import GeoJSON from 'ol/format/GeoJSON.js';
 import turf_bboxPolygon from '@turf/bbox-polygon';
 import turf_intersect from '@turf/intersect';
 import {
@@ -14,7 +14,7 @@ import {
   MultiPolygon,
   Point,
   Polygon,
-} from 'ol/geom';
+} from 'ol/geom.js';
 import {getBufferValue} from './extent.js';
 import {isBuilding} from '../feature/utils.js';
 

@@ -4,7 +4,7 @@
  */
 
 import * as mm_utils from '../utils/utils.js';
-import Feature from 'ol/Feature';
+import Feature from 'ol/Feature.js';
 import {Abbr} from '../lang.js';
 import {
   AssertionError,

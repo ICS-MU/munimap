@@ -2,7 +2,7 @@
  * @module utils/extent
  */
 
-import * as ol_extent from 'ol/extent';
+import * as ol_extent from 'ol/extent.js';
 import {Feature} from 'ol';
 
 /**

@@ -3,10 +3,10 @@
  */
 import * as mm_utils from '../utils/utils.js';
 import EnhancedVectorSource from './vector.js';
-import {createXYZ as createTilegridXYZ} from 'ol/tilegrid';
+import {createXYZ as createTilegridXYZ} from 'ol/tilegrid.js';
 import {loadActivePois} from '../load/feature/poi.js';
 import {setActivePoiStore, setPoiStore} from './constants.js';
-import {tile as tileLoadingStrategy} from 'ol/loadingstrategy';
+import {tile as tileLoadingStrategy} from 'ol/loadingstrategy.js';
 
 /**
  * @typedef {import("redux").Store} redux.Store

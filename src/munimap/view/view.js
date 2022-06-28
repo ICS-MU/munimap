@@ -3,8 +3,8 @@
  */
 import * as actions from '../redux/action.js';
 import * as mm_assert from '../assert/assert.js';
-import TileLayer from 'ol/layer/Tile';
-import VectorLayer from 'ol/layer/Vector';
+import TileLayer from 'ol/layer/Tile.js';
+import VectorLayer from 'ol/layer/Vector.js';
 import {CLICK_HANDLER, IS_CLICKABLE} from '../layer/constants.js';
 import {EventType} from './constants.js';
 import {
@@ -12,7 +12,7 @@ import {
   MUNIMAP_PROPS_ID,
   TARGET_ELEMENTS_STORE,
 } from '../constants.js';
-import {Point} from 'ol/geom';
+import {Point} from 'ol/geom.js';
 import {clearFloorBasedStores} from '../source/source.js';
 import {
   createActiveStore as createActiveDoorStore,

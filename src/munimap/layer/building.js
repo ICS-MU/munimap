@@ -4,7 +4,7 @@
 
 import * as mm_assert from '../assert/assert.js';
 import * as mm_building from '../feature/building.js';
-import VectorLayer from 'ol/layer/Vector';
+import VectorLayer from 'ol/layer/Vector.js';
 import {BUILDING_LABEL_LAYER_ID, BUILDING_LAYER_ID} from './constants.js';
 import {BUILDING_TYPE, COMPLEX_RESOLUTION} from '../feature/constants.js';
 import {getBuildingStore} from '../source/constants.js';

@@ -1,4 +1,4 @@
-import VectorSource, {VectorSourceEvent} from 'ol/source/Vector';
+import VectorSource, {VectorSourceEvent} from 'ol/source/Vector.js';
 
 /**
  * @typedef {import("ol/source/Vector").Options} Options

@@ -3,9 +3,9 @@
  */
 
 import EnhancedVectorSource from '../source/vector.js';
-import Feature from 'ol/Feature';
-import VectorLayer from 'ol/layer/Vector';
-import {Circle, Fill, Stroke, Style} from 'ol/style';
+import Feature from 'ol/Feature.js';
+import VectorLayer from 'ol/layer/Vector.js';
+import {Circle, Fill, Stroke, Style} from 'ol/style.js';
 import {GEOLOCATION_LAYER_ID} from './constants.js';
 
 /**

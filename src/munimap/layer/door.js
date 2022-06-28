@@ -2,7 +2,7 @@
  * @module layer/room
  */
 import * as mm_assert from '../assert/assert.js';
-import VectorLayer from 'ol/layer/Vector';
+import VectorLayer from 'ol/layer/Vector.js';
 import {ACTIVE_DOOR_LAYER_ID} from './constants.js';
 import {DOOR_RESOLUTION, DOOR_TYPE} from '../feature/constants.js';
 import {featureClickHandler, isClickable} from '../feature/door.js';

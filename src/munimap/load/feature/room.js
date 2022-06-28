@@ -3,7 +3,7 @@
  */
 import * as mm_assert from '../../assert/assert.js';
 import * as slctr from '../../redux/selector/selector.js';
-import VectorSource from 'ol/source/Vector';
+import VectorSource from 'ol/source/Vector.js';
 import {ROOM_TYPE} from '../../feature/constants.js';
 import {featuresByCode, featuresForMap} from '../load.js';
 import {

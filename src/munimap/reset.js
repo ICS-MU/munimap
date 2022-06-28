@@ -4,7 +4,7 @@
 import * as actions from './redux/action.js';
 import * as mm_utils from './utils/utils.js';
 import * as slctr from './redux/selector/selector.js';
-import Feature from 'ol/Feature';
+import Feature from 'ol/Feature.js';
 import {
   IDENTIFY_CALLBACK_STORE,
   REQUIRED_CUSTOM_MARKERS,

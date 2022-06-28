@@ -1,7 +1,7 @@
 import * as mm_assert from '../assert/assert.js';
-import * as ol_extent from 'ol/extent';
-import * as ol_proj from 'ol/proj';
-import View from 'ol/View';
+import * as ol_extent from 'ol/extent.js';
+import * as ol_proj from 'ol/proj.js';
+import View from 'ol/View.js';
 import {TARGET_ELEMENTS_STORE} from '../constants.js';
 import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
 import {getBuildingForFictive} from '../source/source.js';
