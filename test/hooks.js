@@ -19,8 +19,7 @@ const puppeteer_opts = {
 export const mochaHooks = {
   beforeAll: async () => {
     global.browser = await puppeteer.launch(puppeteer_opts);
-    global.test_server_url = `${process.env.cwd}/munimap/latest`;
-    console.log(global.test_server_url)
+    global.test_server_url = `http://localhost:8080/munimap/latest`;
     return new Promise((resolve, reject) => {
       app.use(express.static('dist'));
       app.listen(port, () => {
