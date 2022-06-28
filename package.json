@@ -44,6 +44,7 @@
     "@types/uuid": "^8.3.4",
     "@types/webpack-env": "^1.16.3",
     "babel-loader": "^8.2.5",
+    "chai": "^4.3.6",
     "circular-dependency-plugin": "^5.2.2",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^10.2.4",
@@ -58,6 +59,9 @@
     "html-loader": "^3.1.0",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.6.0",
+    "mocha": "^10.0.0",
+    "node-html-parser": "^5.3.3",
+    "puppeteer": "^14.1.1",
     "style-loader": "^3.3.1",
     "typescript": "^4.6.4",
     "webpack": "^5.72.0",
@@ -102,6 +106,9 @@
       "react": {
         "version": "detect"
       }
+    },
+    "env": {
+      "mocha": true
     },
     "extends": [
       "openlayers",
