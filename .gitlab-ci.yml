@@ -3,6 +3,7 @@ stages:
   - build-test
 local_integration_test:
   stage: build-test
+  image: registry.gitlab.com/gitlab-ci-utils/docker-puppeteer:node-14
   script:
     - npm install
     - npm test
