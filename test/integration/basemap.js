@@ -9,7 +9,7 @@ describe('basemap.html', async () => {
   let page;
 
   before(async () => {
-    page = await global.browser.newPage();
+    page = await global.global.browser.newPage();
     await page.setViewport(viewport);
     const response = await page.goto(
       `${global.test_server_url}/example/basemap.html`

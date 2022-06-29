@@ -100,7 +100,7 @@
     </div>
 
     <script type="text/javascript">
-      munimap.create({
+      const map_promise = munimap.create({
         target: 'map',
       }).then(function (map) {
         var button = document.getElementById('resetButton');
@@ -109,6 +109,7 @@
             markers: ['BMB01'],
           });
         };
+        return map;
       })
     </script>
     <script type="text/plain" class="mc-analytics">

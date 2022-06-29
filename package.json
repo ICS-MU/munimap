@@ -97,7 +97,8 @@
       "APP_PATH": "readonly",
       "PROD_DOMAIN": "readonly",
       "DEV_DOMAIN": "readonly",
-      "map_promise": "readonly"
+      "map_promise": "readonly",
+      "map_promise2": "readonly"
     },
     "parserOptions": {
       "ecmaVersion": 2021,
