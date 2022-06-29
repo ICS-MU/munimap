@@ -1,12 +1,21 @@
 image: node:14
 stages:
-  - build-test
-local_integration_test:
-  stage: build-test
-  image: registry.gitlab.com/gitlab-ci-utils/docker-puppeteer:node-14
+  - build:latest
+  - test
+
+build_latest_lib:
+  stage: build:latest
   script:
     - npm install
     - npm run build
+  when: manual
+  allow_failure: false
+
+local_integration_test:
+  stage: test
+  image: registry.gitlab.com/gitlab-ci-utils/docker-puppeteer:node-14
+  script:
     - npm run test-mocha
+  
   when: manual
   allow_failure: false
