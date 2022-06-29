@@ -139,14 +139,10 @@ describe('cluster.html', async () => {
 
     let {result} = info;
 
-    const expectedMarkedSingle =
-      'https://maps.muni.cz/munimap/testing/img/rectangle_blue.png';
-    const expectedMarkedMultiple =
-      'https://maps.muni.cz/munimap/testing/img/rectangle_purple.png';
-    const expectedUnmarkedSingle =
-      'https://maps.muni.cz/munimap/testing/img/triangle_orange.png';
-    const expectedUnmarkedMultiple =
-      'https://maps.muni.cz/munimap/testing/img/triangle_cyan.png';
+    const expectedMarkedSingle = 'img/rectangle_blue.png';
+    const expectedMarkedMultiple = 'img/rectangle_purple.png';
+    const expectedUnmarkedSingle = 'img/triangle_orange.png';
+    const expectedUnmarkedMultiple = 'img/triangle_cyan.png';
     const expectedMarkedSingleColor = '#0000dc';
     const expectedMarkedMultipleColor = 'purple';
     const expectedUnmarkedSingleColor = 'orange';
@@ -158,23 +154,23 @@ describe('cluster.html', async () => {
       if (featuresCount === 1) {
         //single
         if (isMarked) {
-          assert.equal(
+          assert.include(
             imgSrc,
             expectedMarkedSingle,
             'Unexpected src for single marked cluster icon!'
           );
-          assert.equal(
+          assert.include(
             color,
             expectedMarkedSingleColor,
             'Unexpected color for single marked cluster label!'
           );
         } else {
-          assert.equal(
+          assert.include(
             imgSrc,
             expectedUnmarkedSingle,
             'Unexpected src for single unmarked cluster icon!'
           );
-          assert.equal(
+          assert.include(
             color,
             expectedUnmarkedSingleColor,
             'Unexpected color for single unmarked cluster label!'
@@ -183,23 +179,23 @@ describe('cluster.html', async () => {
       } else if (featuresCount > 1) {
         //multiple
         if (isMarked) {
-          assert.equal(
+          assert.include(
             imgSrc,
             expectedMarkedMultiple,
             'Unexpected src for multiple marked cluster icon!'
           );
-          assert.equal(
+          assert.include(
             color,
             expectedMarkedMultipleColor,
             'Unexpected color for multiple marked cluster label!'
           );
         } else {
-          assert.equal(
+          assert.include(
             imgSrc,
             expectedUnmarkedMultiple,
             'Unexpected src for multiple unmarked cluster icon!'
           );
-          assert.equal(
+          assert.include(
             color,
             expectedUnmarkedMultipleColor,
             'Unexpected color for multiple unmarked cluster label!'
