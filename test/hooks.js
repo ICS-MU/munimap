@@ -12,7 +12,7 @@ const puppeteer_opts = {
     '--start-maximized',
     '--window-size=1920,1040',
     '--no-sandbox',
-    '--disable-setuid-sandbox'
+    '--disable-setuid-sandbox',
   ],
 };
 
@@ -23,13 +23,14 @@ export const mochaHooks = {
     return new Promise((resolve, reject) => {
       app.use(express.static('dist'));
       app.listen(port, () => {
+        // eslint-disable-next-line no-console
         console.log(`Server listening at http://localhost:${port}`);
         resolve();
       });
     });
   },
   afterAll: async () => {
-    browser.close();
+    global.browser.close();
     global.browser = null;
     global.test_server_url = null;
   },

@@ -9,13 +9,16 @@ describe('basemap.html', async () => {
   let page;
 
   before(async () => {
-    page = await browser.newPage();
+    page = await global.browser.newPage();
     await page.setViewport(viewport);
-    const response = await page.goto(`${test_server_url}/example/basemap.html`);
+    const response = await page.goto(
+      `${global.test_server_url}/example/basemap.html`
+    );
     assert.equal(
       response.status(),
       200,
-      `Unexpected HTTP status code for ${test_server_url}/example/basemap.html`
+      `Unexpected HTTP status code for ${global.test_server_url}/` +
+        `example/basemap.html`
     );
   });
 
@@ -39,8 +42,8 @@ describe('basemap.html', async () => {
         layerId,
         url,
         canvasFillStyle,
-      }
-    })
+      };
+    });
 
     const {layerId, url, canvasFillStyle} = info;
 

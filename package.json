@@ -96,7 +96,8 @@
       "VERSION": "readonly",
       "APP_PATH": "readonly",
       "PROD_DOMAIN": "readonly",
-      "DEV_DOMAIN": "readonly"
+      "DEV_DOMAIN": "readonly",
+      "map_promise": "readonly"
     },
     "parserOptions": {
       "ecmaVersion": 2021,
