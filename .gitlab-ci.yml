@@ -6,6 +6,7 @@ local_integration_test:
   image: registry.gitlab.com/gitlab-ci-utils/docker-puppeteer:node-14
   script:
     - npm install
-    - npm run test
+    - npm run build
+    - npm run test-mocha
   when: manual
   allow_failure: false
