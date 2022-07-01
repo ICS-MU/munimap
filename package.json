@@ -12,7 +12,10 @@
     "lint": "eslint src server.js webpack.config.dev.babel.js webpack.config.production.babel.js --ext .js --ext .jsx",
     "fix-lint": "eslint --fix src server.js webpack.config.dev.babel.js webpack.config.production.babel.js --ext .js --ext .jsx",
     "start-build": "node -r esm server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "mocha": "mocha --timeout 0 --require test/hooks.js --recursive test/integration --reporter spec --exit",
+    "test:build": "npm run build --domain=http://localhost:8080",
+    "test:mocha": "npm run mocha --port=8080",
+    "test": "npm run test:build & npm run test:mocha",
     "typecheck": "tsc --pretty"
   },
   "repository": {
@@ -45,6 +48,7 @@
     "@types/uuid": "^8.3.4",
     "@types/webpack-env": "^1.16.3",
     "babel-loader": "^8.2.5",
+    "chai": "^4.3.6",
     "circular-dependency-plugin": "^5.2.2",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^10.2.4",
@@ -59,6 +63,9 @@
     "html-loader": "^3.1.0",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.6.0",
+    "mocha": "^10.0.0",
+    "node-html-parser": "^5.3.3",
+    "puppeteer": "^14.1.1",
     "style-loader": "^3.3.1",
     "typescript": "^4.6.4",
     "webpack": "^5.72.0",
@@ -91,7 +98,9 @@
       "VERSION": "readonly",
       "APP_PATH": "readonly",
       "PROD_DOMAIN": "readonly",
-      "DEV_DOMAIN": "readonly"
+      "DEV_DOMAIN": "readonly",
+      "map_promise": "readonly",
+      "map_promise2": "readonly"
     },
     "parserOptions": {
       "ecmaVersion": 2021,
@@ -103,6 +112,9 @@
       "react": {
         "version": "detect"
       }
+    },
+    "env": {
+      "mocha": true
     },
     "extends": [
       "openlayers",

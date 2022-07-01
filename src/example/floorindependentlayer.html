@@ -169,12 +169,13 @@
         })
       });
       
-      munimap.create({
+      const map_promise = munimap.create({
         target: 'map',
         markers: ['BVA01', 'BVA02', 'BVA03', 'BVA04', 'BVA05', 'BVA06', 'BVA07', 'BVA08', 'BVA13', 'BVA14', 'BVA21', 
           'BMB05', 'BSC05', 'BVE01']
       }).then(function(map) {
         map.addLayer(layer);
+        return map;
       });
     </script>
     <script type="text/plain" class="mc-analytics">

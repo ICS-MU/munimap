@@ -87,12 +87,12 @@
     </div>
 
     <script type="text/javascript">
-      munimap.create({
+      const map_promise = munimap.create({
         target: 'map',
         zoom: 17,
         markers: ['BMB01']
       });
-      munimap.create({
+      const map_promise2 = munimap.create({
         target: 'map2',
         zoom: 19,
         markers: ['BMA01'],
