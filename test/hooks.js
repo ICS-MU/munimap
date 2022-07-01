@@ -1,10 +1,12 @@
+import express from 'express';
 import puppeteer from 'puppeteer';
 
-import express from 'express';
-const app = express();
-const port = 8080;
+const APP = express();
+const PORT = process.env['npm_config_port']
+  ? process.env['npm_config_port']
+  : 8080;
 
-const puppeteer_opts = {
+const PUPPETEER_OPTS = {
   headless: true,
   // slowMo: 100,
   // timeout: 0,
@@ -18,13 +20,13 @@ const puppeteer_opts = {
 
 export const mochaHooks = {
   beforeAll: async () => {
-    global.browser = await puppeteer.launch(puppeteer_opts);
-    global.test_server_url = `http://localhost:8080/munimap/latest`;
+    global.browser = await puppeteer.launch(PUPPETEER_OPTS);
+    global.test_server_url = `http://localhost:${PORT}/munimap/latest`;
     return new Promise((resolve, reject) => {
-      app.use(express.static('dist'));
-      app.listen(port, () => {
+      APP.use(express.static('dist'));
+      APP.listen(PORT, () => {
         // eslint-disable-next-line no-console
-        console.log(`Server listening at http://localhost:${port}`);
+        console.log(`Server listening at http://localhost:${PORT}`);
         resolve();
       });
     });

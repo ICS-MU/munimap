@@ -12,8 +12,10 @@
     "lint": "eslint src server.js webpack.config.dev.babel.js webpack.config.production.babel.js --ext .js --ext .jsx",
     "fix-lint": "eslint --fix src server.js webpack.config.dev.babel.js webpack.config.production.babel.js --ext .js --ext .jsx",
     "start-build": "node -r esm server.js",
-    "test-mocha": "mocha --timeout 0 --require test/hooks.js --recursive test/integration --reporter spec --exit",
-    "test": "npm run build & npm run test-mocha",
+    "mocha": "mocha --timeout 0 --require test/hooks.js --recursive test/integration --reporter spec --exit",
+    "test:build": "npm run build --domain=http://localhost:8080",
+    "test:mocha": "npm run mocha --port=8080",
+    "test": "npm run test:build & npm run test:mocha",
     "typecheck": "tsc --pretty"
   },
   "repository": {

@@ -13,15 +13,17 @@ import {fileURLToPath} from 'url';
 const require = createRequire(import.meta.url);
 
 const PACKAGE = require('./package.json');
-const PORT = 8079;
+const PORT = process.env['npm_config_port']
+  ? process.env['npm_config_port']
+  : 8080;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default (env) => {
   const APP_PATH = '/munimap/testing/';
-  const PROD_DOMAIN = `https://maps.muni.cz`;
-  const DEV_DOMAIN = `http://localhost:${PORT}`;
+  const PROD_DOMAIN = env.domain ? env.domain : `https://maps.muni.cz`;
+  const DEV_DOMAIN = `http://localhost:${env.port || PORT}`;
 
   const OUTPUT_PATH = path.join(path.resolve(__dirname, 'dist'), APP_PATH);
 
@@ -91,7 +93,7 @@ export default (env) => {
       },
       hot: true,
       open: [APP_PATH],
-      port: PORT,
+      port: env.port || PORT,
       devMiddleware: {
         publicPath: APP_PATH,
         writeToDisk: false,
