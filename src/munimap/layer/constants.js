@@ -43,7 +43,7 @@ export const BUILDING_LABEL_LAYER_ID = 'building-label';
  * @type {string}
  * @const
  */
-export const CLUSTER_LAYER_ID = 'markercluster';
+export const CLUSTER_LAYER_ID = 'marker-cluster';
 
 /**
  * @type {string}
@@ -85,7 +85,7 @@ export const ACTIVE_POI_LAYER_ID = 'active-poi';
  * @type {string}
  * @const
  */
-export const PUBTRAN_LAYER_ID = 'publictransport';
+export const PUBTRAN_LAYER_ID = 'public-transport';
 
 /**
  * @type {string}
@@ -103,4 +103,4 @@ export const ACTIVE_ROOM_LAYER_ID = 'active-room';
  * @type {string}
  * @const
  */
-export const ROOM_LABEL_LAYER_ID = 'roomlabel';
+export const ROOM_LABEL_LAYER_ID = 'room-label';

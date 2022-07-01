@@ -27,7 +27,7 @@ describe('pubtran.html', async () => {
       const pubtranLayer = map
         .getLayers()
         .getArray()
-        .find((l) => l.get('id') === 'publictransport');
+        .find((l) => l.get('id') === 'public-transport');
 
       return {hasPubtranLayer: !!pubtranLayer};
     });
@@ -49,7 +49,7 @@ describe('pubtran.html', async () => {
       const pubtranLayer = map
         .getLayers()
         .getArray()
-        .find((l) => l.get('id') === 'publictransport');
+        .find((l) => l.get('id') === 'public-transport');
 
       let result = {pixel: null};
       if (pubtranLayer) {

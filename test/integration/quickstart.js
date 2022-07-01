@@ -249,10 +249,10 @@ describe('quickstart.html', async () => {
         'active-room',
         'active-door',
         'active-poi',
-        'roomlabel',
+        'room-label',
         'building-label',
         'complex',
-        'markercluster',
+        'marker-cluster',
         'marker',
       ],
       'Unexpected default layer id!'
@@ -265,7 +265,7 @@ describe('quickstart.html', async () => {
     });
     assert.deepEqual(
       hasPrerenderListener,
-      ['room', 'active-room', 'markercluster', 'marker'],
+      ['room', 'active-room', 'marker-cluster', 'marker'],
       'Unexpected layer with prerender listener!'
     );
 
@@ -275,10 +275,10 @@ describe('quickstart.html', async () => {
       ['active-room', [0, 0.3]],
       ['active-door', [0, 0.13]],
       ['active-poi', [0, 1.195]],
-      ['roomlabel', [0, 0.3]], //podminka
+      ['room-label', [0, 0.3]], //podminka
       ['building-label', [0, 'Infinity']],
       ['complex', [1.19, 4.77]],
-      ['markercluster', [2.39, 'Infinity']], //podminka
+      ['marker-cluster', [2.39, 'Infinity']], //podminka
       ['marker', [0, 2.39]], //podminka
     ];
     assert.deepEqual(
@@ -293,10 +293,10 @@ describe('quickstart.html', async () => {
       ['active-room', true, true],
       ['active-door', true, true],
       ['active-poi', true, true],
-      ['roomlabel', true, true],
+      ['room-label', true, true],
       ['building-label', true, true],
       ['complex', true, true],
-      ['markercluster', true, true],
+      ['marker-cluster', true, true],
       ['marker', true, true],
     ];
     assert.deepEqual(

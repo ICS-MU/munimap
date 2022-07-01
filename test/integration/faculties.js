@@ -31,7 +31,7 @@ describe('faculties.html', async () => {
       const markerClusterLayer = map
         .getLayers()
         .getArray()
-        .find((l) => l.get('id') === 'markercluster');
+        .find((l) => l.get('id') === 'marker-cluster');
 
       let result = [];
       if (markerClusterLayer) {

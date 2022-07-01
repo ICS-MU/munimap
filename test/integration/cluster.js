@@ -34,7 +34,7 @@ describe('cluster.html', async () => {
       const markerClusterLayer = map
         .getLayers()
         .getArray()
-        .find((l) => l.get('id') === 'markercluster');
+        .find((l) => l.get('id') === 'marker-cluster');
       const markerLayer = map
         .getLayers()
         .getArray()
@@ -214,7 +214,7 @@ describe('cluster.html', async () => {
       const markerClusterLayer = map
         .getLayers()
         .getArray()
-        .find((l) => l.get('id') === 'markercluster');
+        .find((l) => l.get('id') === 'marker-cluster');
       const source = markerClusterLayer.getSource();
       return {distance: source.getDistance()};
     });

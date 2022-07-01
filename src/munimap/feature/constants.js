@@ -316,7 +316,7 @@ const PUBTRAN_TYPE = {
   primaryKey: 'OBJECTID',
   serviceUrl: MUNIMAP_PUBTRAN_URL,
   layerId: 0,
-  name: 'publictransport',
+  name: 'public-transport',
 };
 
 ///////////////////////////////////////////////
