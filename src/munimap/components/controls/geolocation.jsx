@@ -100,7 +100,6 @@ const GeolocationComponent = (props) => {
   if (window.location.protocol === 'https:' || !PRODUCTION) {
     return (
       <div
-        id="muni-locate"
         className={
           'ontouchstart' in window
             ? 'ol-touch munimap-geolocate'

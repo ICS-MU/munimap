@@ -80,7 +80,6 @@ const InitExtentComponent = forwardRef((props, ref) => {
 
   return (
     <div
-      id="muni-init-extent"
       className="munimap-initial-extent"
       title={mm_lang.getMsg(mm_lang.Translations.INITIAL_EXTENT, lang)}
       onClick={onInitExtentClick}

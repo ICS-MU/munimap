@@ -39,7 +39,6 @@ const ToolbarComponent = forwardRef((props, ref) => {
 
   return (
     <div
-      id="muni-tool-bar"
       className={`${className}${!horizontal ? ' default' : ' nested'}`}
       ref={ref}
       style={{display: visible ? '' : 'none'}}

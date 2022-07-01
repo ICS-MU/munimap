@@ -582,6 +582,13 @@
   opacity: 1;
 }
 
+.munimap-tool-bar > div {
+  position: static;
+  float: left;
+  border-radius: 4px;
+  padding: 0;
+}
+
 .munimap-tool-bar .ol.full-screen.ol-unselectable.ol-control {
   position: static;
   float: left;
@@ -602,13 +609,6 @@
   color: #0000dc;
   background-color: #fff;
   cursor: pointer;
-}
-
-#muni-tool-bar > div {
-  position: static;
-  float: left;
-  border-radius: 4px;
-  padding: 0;
 }
 
 .ol-touch.munimap-map-tools {

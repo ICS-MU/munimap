@@ -42,7 +42,7 @@ describe('identifycallback.html', async () => {
     const info = await page.evaluate(async () => {
       const map = await map_promise;
       const targetEl = map.getTargetElement();
-      const controlEl = targetEl.querySelector('#muni-identify');
+      const controlEl = targetEl.querySelector('.munimap-identify');
 
       return {hasControl: !!controlEl};
     });
@@ -199,7 +199,7 @@ describe('identifycallback.html', async () => {
       );
     });
 
-    await page.click('#muni-identify');
+    await page.click('.munimap-identify');
 
     const info3 = await page.evaluate(async () => ({
       ...window['MUNIMAP_TEST_CB'],

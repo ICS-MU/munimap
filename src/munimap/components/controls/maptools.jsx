@@ -105,7 +105,6 @@ const MapToolsComponent = (props) => {
 
     return (
       <div
-        id="muni-map-tools"
         className={`${className}${toolbarVisible ? '' : ' collapsed'}`}
         ref={mapToolsElRef}
         style={{display: collapsed ? '' : 'none'}}

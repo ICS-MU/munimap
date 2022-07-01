@@ -48,7 +48,6 @@ const IdentifyComponent = (props) => {
 
   return (
     <div
-      id="muni-identify"
       className={
         'ontouchstart' in window
           ? 'ol-touch munimap-identify'

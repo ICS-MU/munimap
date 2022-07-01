@@ -388,27 +388,24 @@ describe('quickstart.html', async () => {
         });
 
         const targetEl = map.getTargetElement();
-        const toolbar = targetEl.querySelector('#muni-tool-bar');
-        const initExtent = targetEl.querySelector('#muni-init-extent');
-        const mapTools = targetEl.querySelector('#muni-map-tools');
+        const toolbar = targetEl.querySelector('.munimap-tool-bar');
+        const initExtent = targetEl.querySelector('.munimap-initial-extent');
+        const mapTools = targetEl.querySelector('.munimap-map-tools');
 
         const custom_types = [
           {
-            id: (toolbar && toolbar.id) || 'muni-tool-bar',
             class: toolbar && toolbar.className,
             ctor_name: 'ol.control.Control',
             parent_className: toolbar && toolbar.parentElement.className,
             in_document: document.body.contains(toolbar),
           },
           {
-            id: (initExtent && initExtent.id) || 'muni-init-extent',
             class: initExtent && initExtent.className,
             ctor_name: 'ol.control.Control',
             parent_className: initExtent && initExtent.parentElement.className,
             in_document: document.body.contains(initExtent),
           },
           {
-            id: (mapTools && mapTools.id) || 'muni-map-tools',
             class: mapTools && mapTools.className,
             ctor_name: 'ol.control.Control',
             parent_className: mapTools && mapTools.parentElement.className,
@@ -435,7 +432,6 @@ describe('quickstart.html', async () => {
       const cunstom_types = info.custom_types;
       cunstom_types.forEach((type) => {
         identifiers.push([
-          type['id'],
           type['class'],
           type['parent_className'],
           type['in_document'],
@@ -455,14 +451,9 @@ describe('quickstart.html', async () => {
 
       const identifiers_assert = (arr) => {
         const expectedArr = [
-          ['muni-tool-bar', 'munimap-tool-bar default', 'map-target', true],
-          [
-            'muni-init-extent',
-            'munimap-initial-extent',
-            'munimap-tool-bar default',
-            true,
-          ],
-          ['muni-map-tools', null, null, false],
+          ['munimap-tool-bar default', 'map-target', true],
+          ['munimap-initial-extent', 'munimap-tool-bar default', true],
+          [null, null, false],
         ];
         assert.deepEqual(
           arr,

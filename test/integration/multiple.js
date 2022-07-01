@@ -82,15 +82,15 @@ describe('multiple.html', async () => {
       const map2 = await map_promise2;
 
       const targetEl = map.getTargetElement();
-      const toolbar = targetEl.querySelector('#muni-tool-bar');
-      const initExtent = targetEl.querySelector('#muni-init-extent');
+      const toolbar = targetEl.querySelector('.munimap-tool-bar');
+      const initExtent = targetEl.querySelector('.munimap-initial-extent');
       const olControls = map.getControls().getArray();
       let controls = [...olControls, toolbar, initExtent];
       controls = [...controls].filter((i) => i);
 
       const targetEl2 = map2.getTargetElement();
-      const toolbar2 = targetEl2.querySelector('#muni-tool-bar');
-      const initExtent2 = targetEl2.querySelector('#muni-init-extent');
+      const toolbar2 = targetEl2.querySelector('.munimap-tool-bar');
+      const initExtent2 = targetEl2.querySelector('.munimap-initial-extent');
       const olControls2 = map2.getControls().getArray();
       let controls2 = [...olControls2, toolbar2, initExtent2];
       controls2 = [...controls2].filter((i) => i);

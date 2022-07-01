@@ -25,8 +25,8 @@ describe('language.html', async () => {
     const info = await page.evaluate(async () => {
       const map = await map_promise;
       const targetEl = map.getTargetElement();
-      const toolbar = targetEl.querySelector('#muni-tool-bar');
-      const initExtent = targetEl.querySelector('#muni-init-extent');
+      const toolbar = targetEl.querySelector('.munimap-tool-bar');
+      const initExtent = targetEl.querySelector('.munimap-initial-extent');
 
       const olControls = map.getControls().getArray();
       const controlElements = olControls.map((c) => c.element);
