@@ -67,7 +67,7 @@ describe('identifycallback.html', async () => {
       const layer = map
         .getLayers()
         .getArray()
-        .find((l) => l.get('id') === 'building');
+        .find((l) => l.get('id') === 'active-room');
       const source = layer.getSource();
 
       const promise = wrapTimeout(
@@ -82,7 +82,7 @@ describe('identifycallback.html', async () => {
           };
           source.isLoading() ? source.on('mm:loadend', fn) : fn();
         }),
-        3000
+        15000
       );
 
       return {
