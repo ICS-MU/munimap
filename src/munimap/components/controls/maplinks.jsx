@@ -7,17 +7,10 @@ import {Control} from 'ol/control.js';
 import {get as getProjection, transform} from 'ol/proj.js';
 import {useDispatch, useSelector} from 'react-redux';
 
-/**
- * @type {string}
- * @const
- */
-const SEZNAM_IMG_PATH = APP_PATH + 'img/seznam.png';
-
-/**
- * @type {string}
- * @const
- */
-const GOOGLE_IMG_PATH = APP_PATH + 'img/google.png';
+// @ts-ignore 2307
+import GOOGLE_IMG from '../../../img/google.png';
+// @ts-ignore 2307
+import SEZNAM_IMG from '../../../img/seznam.png';
 
 /**
  * Limit of map size to under which the map tools are hidden.
@@ -53,7 +46,7 @@ const MapLinksComponent = (props) => {
       ).map((coord) => coord.toString());
 
       let matomoAction;
-      if (path === SEZNAM_IMG_PATH) {
+      if (path === SEZNAM_IMG) {
         matomoAction = 'mapy.cz';
         if (markerIds.length === 1) {
           window.open(
@@ -117,15 +110,15 @@ const MapLinksComponent = (props) => {
     >
       <div
         className="munimap-link-item"
-        style={{backgroundImage: `url(${SEZNAM_IMG_PATH})`}}
+        style={{backgroundImage: `url(${SEZNAM_IMG})`}}
         title={mm_lang.getMsg(mm_lang.Translations.SEZNAM_MAP, lang)}
-        onClick={() => onClick(SEZNAM_IMG_PATH)}
+        onClick={() => onClick(SEZNAM_IMG)}
       ></div>
       <div
         className="munimap-link-item"
-        style={{backgroundImage: `url(${GOOGLE_IMG_PATH})`}}
+        style={{backgroundImage: `url(${GOOGLE_IMG})`}}
         title={mm_lang.getMsg(mm_lang.Translations.GOOGLE_MAP, lang)}
-        onClick={() => onClick(GOOGLE_IMG_PATH)}
+        onClick={() => onClick(GOOGLE_IMG)}
       ></div>
     </div>
   );

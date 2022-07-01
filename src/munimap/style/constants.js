@@ -9,6 +9,11 @@ import {Circle, Fill, Stroke, Style, Text} from 'ol/style.js';
 import {FLOOR_RESOLUTION} from '../feature/constants.js';
 import {createResolution} from '../utils/range.js';
 
+// @ts-ignore 2307
+import MARKER_CORRIDORS_IMG from '../../img/marker.style.coridors.bg.png';
+// @ts-ignore 2307
+import ROOM_CORRIDORS_IMG from '../../img/room.style.coridors.bg.png';
+
 /**
  * @typedef {import('../utils/range.js').RangeInterface} RangeInterface
  */
@@ -242,9 +247,7 @@ const PUBTRAN_STYLE = [
  * @type {string}
  * @const
  */
-const MARKER_CORRIDOR_IMG_PATH = PRODUCTION
-  ? PROD_DOMAIN + APP_PATH + 'img/marker.style.coridors.bg.png'
-  : DEV_DOMAIN + APP_PATH + 'img/marker.style.coridors.bg.png';
+const MARKER_CORRIDOR_IMG_PATH = MARKER_CORRIDORS_IMG;
 
 /**
  * @type {Fill}
@@ -589,9 +592,7 @@ const TOILET_W = [
  * @type {string}
  * @const
  */
-const ROOM_CORRIDOR_IMG_PATH = PRODUCTION
-  ? PROD_DOMAIN + APP_PATH + 'img/room.style.coridors.bg.png'
-  : DEV_DOMAIN + APP_PATH + 'img/room.style.coridors.bg.png';
+const ROOM_CORRIDOR_IMG_PATH = ROOM_CORRIDORS_IMG;
 
 /**
  * @type {import('../utils/range.js').RangeInterface}

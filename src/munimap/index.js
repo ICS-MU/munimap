@@ -30,12 +30,6 @@ import {getNotYetAddedFeatures} from './utils/store.js';
 import {getStoreByTargetId} from './constants.js';
 import {tile} from 'ol/loadingstrategy.js';
 
-import '../img/google.png';
-import '../img/seznam.png';
-
-import '../img/marker.style.coridors.bg.png';
-import '../img/room.style.coridors.bg.png';
-
 import '../img/rectangle.png';
 import '../img/rectangle_blue.png';
 import '../img/rectangle_purple.png';
