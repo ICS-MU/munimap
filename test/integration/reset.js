@@ -42,23 +42,6 @@ describe('reset.html', async () => {
     });
   };
 
-  const eval_map2_properties = async () => {
-    return await page.evaluate(async () => {
-      const map = await map_promise2;
-      const view = map.getView();
-      const center = view.getCenter();
-      const zoom = view.getZoom();
-      const extent = view.calculateExtent();
-      const resolution = view.getResolution();
-      return {
-        center,
-        zoom,
-        extent,
-        resolution,
-      };
-    });
-  };
-
   const resetMapAndEval = async () => {
     await page.evaluate(async () => await map_promise);
     await page.click('#resetButton');
@@ -66,15 +49,8 @@ describe('reset.html', async () => {
     return await eval_map_properties();
   };
 
-  const resetMapAndEval2 = async () => {
-    await page.evaluate(async () => await map_promise2);
-    await page.click('#resetButton2');
-    await page.waitForSelector('#resetButton2.done');
-    return await eval_map2_properties();
-  };
-
   describe('should get correct view properties', async () => {
-    it('map1', async () => {
+    it('map', async () => {
       const info = await eval_map_properties();
 
       //zoom
@@ -95,7 +71,7 @@ describe('reset.html', async () => {
   });
 
   describe('should get correct view properties after reset', async () => {
-    it('map 1', async () => {
+    it('map', async () => {
       const info = await resetMapAndEval();
 
       //zoom
@@ -114,12 +90,12 @@ describe('reset.html', async () => {
       });
     });
 
-    it('map 2 (two different viewports)', async () => {
+    it('map (two different viewports)', async () => {
       await page.setViewport({
         width: 680,
         height: 780,
       });
-      let info = await resetMapAndEval2();
+      let info = await resetMapAndEval();
 
       //zoom
       assert.equal(info.zoom, 18, `Unexpected zoom`);
@@ -155,7 +131,7 @@ describe('reset.html', async () => {
 
       await page.setViewport(viewport);
       await page.reload({waitUntil: ['networkidle0', 'domcontentloaded']});
-      info = await resetMapAndEval2();
+      info = await resetMapAndEval();
 
       //zoom
       assert.equal(info.zoom, 18, `Unexpected zoom`);
@@ -188,7 +164,7 @@ describe('reset.html', async () => {
   });
 
   describe('should get correct view properties and markers after reset', async () => {
-    it('map 1 - set zoom, center, markers', async () => {
+    it('set zoom, center, markers', async () => {
       const info = await page.evaluate(async () => {
         const map = await map_promise;
         await munimap.reset(map, {
@@ -209,72 +185,6 @@ describe('reset.html', async () => {
           .getSource()
           .getFeatures()
           .map((f) => f.get('polohKod'));
-        return {
-          center,
-          zoom,
-          extent,
-          resolution,
-          markers,
-        };
-      });
-
-      //zoom
-      assert.equal(info.zoom, 16, `Unexpected zoom`);
-
-      //center
-      const expected_center = [1847256, 6310316];
-      const spatial_precision = 1;
-      info.center.forEach((coord, idx) => {
-        assert.approximately(
-          coord,
-          expected_center[idx],
-          spatial_precision,
-          `Unexpected center: ${info.center} != ${expected_center}`
-        );
-      });
-
-      //resolution
-      const res_precision = 0.1;
-      const expected_res = 2.4;
-      assert.approximately(
-        info.resolution,
-        expected_res,
-        res_precision,
-        `Unexpected resolution: ${info.resolution} != ${expected_res}`
-      );
-
-      //markers
-      assert.isArray(info.markers, 'Markers should be array');
-      const expected_markers = ['BMB01'];
-      assert.deepEqual(
-        info.markers,
-        expected_markers,
-        `Unexpected markers: ${info.markers} != ${expected_markers}`
-      );
-    });
-
-    it('map 2 - set zoom, center, markers', async () => {
-      const info = await page.evaluate(async () => {
-        const map = await map_promise2;
-        await munimap.reset(map, {
-          zoom: 16,
-          center: [16.594188297821372, 49.20851336342541],
-          markers: ['BMB01'],
-        });
-        const view = map.getView();
-        const center = view.getCenter();
-        const zoom = view.getZoom();
-        const extent = view.calculateExtent();
-        const resolution = view.getResolution();
-        const markerLayer = map
-          .getLayers()
-          .getArray()
-          .find((layer) => layer.get('id') === 'marker');
-        const markers = markerLayer
-          .getSource()
-          .getFeatures()
-          .map((f) => f.get('polohKod'));
-
         return {
           center,
           zoom,

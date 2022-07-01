@@ -102,12 +102,15 @@
     <script type="text/javascript">
       const map_promise = munimap.create({
         target: 'map',
+        zoom: 17,
+        markers: ['BMA01']
       }).then(function (map) {
         var button = document.getElementById('resetButton');
-        button.onclick = function() {
-          munimap.reset(map, {
+        button.onclick = async () => {
+          await munimap.reset(map, {
             markers: ['BMB01'],
           });
+          button.classList.add('done'); //for tests
         };
         return map;
       })
