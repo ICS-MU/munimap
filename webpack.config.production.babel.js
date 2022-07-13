@@ -196,6 +196,10 @@ export default (env) => {
             from: './src/munimapext.js',
             context: path.resolve(__dirname),
           },
+          {
+            from: './LICENSE',
+            context: path.resolve(__dirname),
+          },
         ],
       }),
       new HtmlWebpackPlugin({
