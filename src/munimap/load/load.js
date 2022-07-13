@@ -151,23 +151,22 @@ const waitForNewProcessedFeatures = async (options) => {
   if (!loadedNewProcessedFeatures.length) {
     return true;
   }
-  return async () => {
+
+  const addFeatureHandlerPromise = new Promise((resolve, reject) => {
     const source = options.source;
-    /**
-     * @param {ol.source.Vector.Event} evt evt
-     * @return {boolean} done
-     */
     const addFeatureHandler = (evt) => {
       const feature = evt.feature;
       const idx = loadedNewProcessedFeatures.findIndex((f) => f === feature);
       loadedNewProcessedFeatures.splice(idx, 1);
       if (!loadedNewProcessedFeatures.length) {
         source.un('addfeature', addFeatureHandler);
-        return true;
+        resolve(true);
       }
     };
     source.on('addfeature', addFeatureHandler);
-  };
+  });
+
+  return await addFeatureHandlerPromise;
 };
 
 /**
