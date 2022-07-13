@@ -27,7 +27,7 @@ import {
   getMainFeatureAtPixel,
   isSuitableForTooltip,
 } from '../feature/feature.js';
-import {unlistenByKey} from 'ol/events';
+import {unlistenByKey} from 'ol/events.js';
 import {useDispatch, useSelector} from 'react-redux';
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 
