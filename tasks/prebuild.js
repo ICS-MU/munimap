@@ -17,8 +17,7 @@ const checkRepoState = () => {
       '(untracked, modified, deleted, etc.).';
   }
   if (msg) {
-    console.log(msg, '\n', state, '\n\n');
-    throw new Error(msg);
+    console.warning(msg, '\n', state, '\n\n');
   }
 };
 
