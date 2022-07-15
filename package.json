@@ -8,11 +8,11 @@
     "dev": "webpack serve --config webpack.config.dev.babel.js",
     "serve:build": "node server.js",
     "prebuild": "node tasks/prebuild.js",
-    "build": "webpack --config webpack.config.production.babel.js --env dir=latest",
-    "build:latest": "npm run build",
-    "build:v2n": "webpack --config webpack.config.production.babel.js --env dir=v2n",
-    "build:testing": "webpack --config webpack.config.production.babel.js --env dir=testing",
     "postbuild": "node tasks/postbuild.js",
+    "build": "npm run webpack:latest",
+    "build:latest": "npm run build",
+    "build:v2n": "npm run webpack:v2n && npm run postbuild",
+    "build:testing": "npm run webpack:testing && npm run postbuild",
     "lint": "eslint src server.js webpack.config.dev.babel.js webpack.config.production.babel.js --ext .js --ext .jsx",
     "fixlint": "eslint --fix src server.js webpack.config.dev.babel.js webpack.config.production.babel.js --ext .js --ext .jsx",
     "mocha": "mocha --timeout 0 --require test/hooks.js --recursive test/integration --reporter spec --exit",
@@ -22,7 +22,10 @@
     "test:mocha-file": "npm run mocha:file --port=8079",
     "test": "npm run test:build & npm run test:mocha",
     "test:file": "npm run test:build & npm run test:mocha-file",
-    "typecheck": "tsc --pretty"
+    "typecheck": "tsc --pretty",
+    "webpack:latest": "webpack --config webpack.config.production.babel.js --env dir=latest",
+    "webpack:v2n": "webpack --config webpack.config.production.babel.js --env dir=v2n",
+    "webpack:testing": "webpack --config webpack.config.production.babel.js --env dir=testing"
   },
   "repository": {
     "type": "git",
