@@ -7,7 +7,7 @@ const PORT = process.env['npm_config_port']
   : 8080;
 
 const PUPPETEER_OPTS = {
-  headless: false,
+  headless: true,
   // slowMo: 100,
   // timeout: 0,
   args: [
