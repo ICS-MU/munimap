@@ -12,7 +12,8 @@ describe('identifycallback.html', async () => {
     page = await global.browser.newPage();
     await page.setViewport(viewport);
     const response = await page.goto(
-      `${global.test_server_url}/example/identifycallback.html`
+      `${global.test_server_url}/example/identifycallback.html`,
+      {waitUntil: 'networkidle2'}
     );
     assert.equal(response.status(), 200, 'Unexpected HTTP status code');
   });
