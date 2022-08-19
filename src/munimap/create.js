@@ -170,12 +170,33 @@ const getInitialState = (options, targetId) => {
 };
 
 /**
+ * Add css as external stylesheet.
+ * External websites only add JS file and CSS must be added by script (see
+ * munimap quickstart docs).
+ */
+const ensureCss = () => {
+  if (PRODUCTION) {
+    const links = document.head.querySelectorAll(
+      'link[href$="munimaplib.css"]'
+    );
+
+    if (links.length === 0) {
+      const cssLink = document.createElement('link');
+      cssLink.rel = 'stylesheet';
+      cssLink.href = `${PROD_DOMAIN}${APP_PATH}munimaplib.css`;
+      document.head.appendChild(cssLink);
+    }
+  }
+};
+
+/**
  * @param {Options} options Options
  * @return {Promise<ol.Map>} initialized map
  */
 export default (options) => {
   return new Promise((resolve, reject) => {
     assertOptions(options);
+    ensureCss();
 
     const targetId = addTargetElementToStore(options);
     const initialState = getInitialState(options, targetId);
