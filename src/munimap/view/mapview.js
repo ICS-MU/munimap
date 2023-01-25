@@ -5,6 +5,7 @@ import View from 'ol/View.js';
 import {TARGET_ELEMENTS_STORE} from '../constants.js';
 import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
 import {getBuildingForFictive} from '../source/source.js';
+import {isCustomMarker} from '../feature/utils.js';
 
 /**
  * @typedef {import("ol/size").Size} ol.Size
@@ -68,20 +69,21 @@ const create = (targetId, requiredCenter, requiredZoom, markers, zoomTo) => {
           initExtentOpts.extent = extent;
           initExtentOpts.size = [target.offsetWidth, target.offsetHeight];
         }
-        /** constrainResolution not exists in OL6, */
-        /** use view.getConstrainedResolution(resolution), */
-        /** https://github.com/openlayers/openlayers/pull/9137 */
-        // if (munimap.marker.custom.isCustom(zoomTo[0])) {
-        //   if (view.getResolution() < munimap.floor.RESOLUTION.max) {
-        //     res = view.constrainResolution(
-        //       munimap.floor.RESOLUTION.max,
-        //       undefined,
-        //       1
-        //     );
-        //     initExtentOpts.resolution = res;
-        //     view.setResolution(res);
-        //   }
-        // }
+        if (isCustomMarker(zoomTo[0])) {
+          /** constrainResolution not exists in OL6, */
+          /** use view.getConstrainedResolution(resolution), */
+          /** https://github.com/openlayers/openlayers/pull/9137 */
+          //   if (view.getResolution() < munimap.floor.RESOLUTION.max) {
+          //     res = view.constrainResolution(
+          //       munimap.floor.RESOLUTION.max,
+          //       undefined,
+          //       1
+          //     );
+          //     initExtentOpts.resolution = res;
+          //     view.setResolution(res);
+          //   }
+          initExtentOpts.center = ol_extent.getCenter(extent);
+        }
       } else if (requiredCenter === null) {
         initExtentOpts.center = ol_extent.getCenter(extent);
         view.setCenter(ol_extent.getCenter(extent));
