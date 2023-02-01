@@ -173,20 +173,23 @@ const getInitialState = (options, targetId) => {
  * Add css as external stylesheet.
  * External websites only add JS file and CSS must be added by script (see
  * munimap quickstart docs).
+ * @return {Promise<void>} nothing
  */
 const ensureCss = () => {
-  if (PRODUCTION) {
+  return new Promise((resolve, reject) => {
     const links = document.head.querySelectorAll(
       'link[href$="munimaplib.css"]'
     );
-
-    if (links.length === 0) {
-      const cssLink = document.createElement('link');
-      cssLink.rel = 'stylesheet';
-      cssLink.href = `${PROD_DOMAIN}${APP_PATH}munimaplib.css`;
-      document.head.appendChild(cssLink);
+    if (!PRODUCTION || links.length > 0) {
+      resolve();
     }
-  }
+    const cssLink = document.createElement('link');
+    cssLink.rel = 'stylesheet';
+    cssLink.type = 'text/css';
+    cssLink.href = `${PROD_DOMAIN}${APP_PATH}munimaplib.css`;
+    cssLink.onload = () => resolve();
+    document.head.appendChild(cssLink);
+  });
 };
 
 /**
@@ -196,31 +199,31 @@ const ensureCss = () => {
 export default (options) => {
   return new Promise((resolve, reject) => {
     assertOptions(options);
-    ensureCss();
+    ensureCss().then(() => {
+      const targetId = addTargetElementToStore(options);
+      const initialState = getInitialState(options, targetId);
+      const store = createStore(initialState);
+      setStoreByTargetId(targetId, store);
 
-    const targetId = addTargetElementToStore(options);
-    const initialState = getInitialState(options, targetId);
-    const store = createStore(initialState);
-    setStoreByTargetId(targetId, store);
+      mm_view.createFeatureStores(store);
+      store.dispatch(
+        actions.create_munimap({
+          mapLinks: options.mapLinks,
+          pubTran: options.pubTran,
+          baseMap: options.baseMap,
+          identifyTypes: options.identifyTypes,
+          identifyCallback: options.identifyCallback,
+        })
+      );
 
-    mm_view.createFeatureStores(store);
-    store.dispatch(
-      actions.create_munimap({
-        mapLinks: options.mapLinks,
-        pubTran: options.pubTran,
-        baseMap: options.baseMap,
-        identifyTypes: options.identifyTypes,
-        identifyCallback: options.identifyCallback,
-      })
-    );
-
-    const root = createRoot(TARGET_ELEMENTS_STORE[targetId]);
-    root.render(
-      <Provider store={store}>
-        <React.StrictMode>
-          <MunimapComponent afterInit={(map) => resolve(map)} />
-        </React.StrictMode>
-      </Provider>
-    );
+      const root = createRoot(TARGET_ELEMENTS_STORE[targetId]);
+      root.render(
+        <Provider store={store}>
+          <React.StrictMode>
+            <MunimapComponent afterInit={(map) => resolve(map)} />
+          </React.StrictMode>
+        </Provider>
+      );
+    });
   });
 };
