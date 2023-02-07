@@ -79,7 +79,7 @@ export default (env) => {
     },
     output: {
       path: OUTPUT_PATH,
-      publicPath: APP_PATH,
+      publicPath: DEV_DOMAIN + APP_PATH,
       filename: '[name].js',
       library: {
         name: 'munimap',
