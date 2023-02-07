@@ -2,6 +2,7 @@ import * as mm_assert from '../assert/assert.js';
 import * as ol_extent from 'ol/extent.js';
 import * as ol_proj from 'ol/proj.js';
 import View from 'ol/View.js';
+import {FLOOR_RESOLUTION} from '../feature/constants.js';
 import {TARGET_ELEMENTS_STORE} from '../constants.js';
 import {ofFeatures as extentOfFeatures} from '../utils/extent.js';
 import {getBuildingForFictive} from '../source/source.js';
@@ -70,18 +71,10 @@ const create = (targetId, requiredCenter, requiredZoom, markers, zoomTo) => {
           initExtentOpts.size = [target.offsetWidth, target.offsetHeight];
         }
         if (isCustomMarker(zoomTo[0])) {
-          /** constrainResolution not exists in OL6, */
-          /** use view.getConstrainedResolution(resolution), */
-          /** https://github.com/openlayers/openlayers/pull/9137 */
-          //   if (view.getResolution() < munimap.floor.RESOLUTION.max) {
-          //     res = view.constrainResolution(
-          //       munimap.floor.RESOLUTION.max,
-          //       undefined,
-          //       1
-          //     );
-          //     initExtentOpts.resolution = res;
-          //     view.setResolution(res);
-          //   }
+          if (view.getResolution() < FLOOR_RESOLUTION.max) {
+            initExtentOpts.resolution = FLOOR_RESOLUTION.max;
+            view.setResolution(FLOOR_RESOLUTION.max);
+          }
           initExtentOpts.center = ol_extent.getCenter(extent);
         }
       } else if (requiredCenter === null) {
