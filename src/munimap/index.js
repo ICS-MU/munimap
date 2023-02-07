@@ -10,6 +10,7 @@ import 'ol/ol.css';
 import '../css/munimaplib.css'; //must be after ol.css => rewrite some rules
 
 import * as mm_matomo from './matomo.js';
+import * as ol_extent from 'ol/extent.js';
 import ClusterSource from 'ol/source/Cluster.js';
 import EnhancedVectorSource from './source/vector.js';
 import VectorSource from 'ol/source/Vector.js';
@@ -63,6 +64,9 @@ const ol = {
     Control,
     FullScreen,
     Zoom,
+  },
+  extent: {
+    ...ol_extent,
   },
   source: {
     Cluster: ClusterSource,
