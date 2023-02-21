@@ -211,12 +211,15 @@ const MunimapComponent = (props) => {
   ]);
 
   useEffect(() => {
-    mm_view.ensureClusterUpdate(map, {
-      targetId: requiredOpts.targetId,
-      labels: requiredOpts.labels,
-      buildingsCount,
-    });
-  }, [map, requiredOpts, buildingsCount]);
+    // ensure that everything is loaded after reset
+    if (areMarkersLoaded && areZoomToLoaded) {
+      mm_view.ensureClusterUpdate(map, {
+        targetId: requiredOpts.targetId,
+        labels: requiredOpts.labels,
+        buildingsCount,
+      });
+    }
+  }, [map, requiredOpts, buildingsCount, areMarkersLoaded, areZoomToLoaded]);
 
   useEffect(() => {
     mm_view.ensureBaseMap(map, basemapLayer);
