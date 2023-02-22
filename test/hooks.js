@@ -10,11 +10,15 @@ const PUPPETEER_OPTS = {
   headless: true,
   // slowMo: 100,
   // timeout: 0,
+  // devtools: true,
   args: [
     '--start-maximized',
     '--window-size=1920,1040',
     '--no-sandbox',
     '--disable-setuid-sandbox',
+    '--disable-web-security',
+    '--disable-features=IsolateOrigins',
+    '--disable-site-isolation-trials',
   ],
 };
 
