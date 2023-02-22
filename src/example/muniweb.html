@@ -150,7 +150,7 @@
 
 
     <script type="text/javascript">
-    munimap.create({
+    const map_promise_muni = munimap.create({
             target: 'map-muni',
             lang: 'cs',
             markers: [],
@@ -160,14 +160,15 @@
     }).then(function(map) {
         var button = document.getElementById('reset-button');
         button.onclick = function() {
-        munimap.reset(map, {
-            lang: 'cs',
-            markers: ["BMA01","BMB01"],
-            zoomTo: ["BMA01","BMB01"],
-            pubTran: true,
-            loadingMessage: false
-        }).then(function (map) { window.mapDiv = map; });
+            munimap.reset(map, {
+                lang: 'cs',
+                markers: ["BMA01","BMB01"],
+                zoomTo: ["BMA01","BMB01"],
+                pubTran: true,
+                loadingMessage: false
+            }).then(function (map) { window.mapDiv = map;});
         };
+        return map;
     });
 
     munimap.create({
