@@ -104,14 +104,14 @@ export const ENABLE_SELECTOR_LOGS = false;
  * @type {string}
  */
 export const MUNIMAP_URL = PRODUCTION
-  ? '//maps.muni.cz/arcgis/rest/services/munimap/MapServer/'
+  ? 'https://maps.muni.cz/arcgis/rest/services/munimap/MapServer/'
   : '//gis-dev.dis.ics.muni.cz/arcgis/rest/services/munimap/MapServer/';
 
 /**
  * @type {string}
  */
 export const MUNIMAP_PUBTRAN_URL = PRODUCTION
-  ? '//maps.muni.cz/arcgis/rest/services/munimap_mhd/MapServer/'
+  ? 'https://maps.muni.cz/arcgis/rest/services/munimap_mhd/MapServer/'
   : '//gis-dev.dis.ics.muni.cz/arcgis/rest/services/munimap_mhd/MapServer/';
 
 /**

@@ -60,11 +60,11 @@ const MapLinksComponent = (props) => {
         matomoAction = 'maps.google.com';
         if (markerIds.length === 1) {
           window.open(
-            `http://www.google.com/maps/place/${x},` +
+            `https://www.google.com/maps/place/${x},` +
               `${y}/@${x},${y},${zoomLevel}z`
           );
         } else {
-          window.open(`http://www.google.com/maps/@${x},${y},${zoomLevel}z`);
+          window.open(`https://www.google.com/maps/@${x},${y},${zoomLevel}z`);
         }
       }
 
