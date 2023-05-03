@@ -74,16 +74,16 @@ const Translations = {
 const CS_TRANSLATIONS = {
   'ATTRIBUTIONS': 'Zdroje dat',
   'MU_ATTRIBUTION_HTML':
-    '© <a href="http://www.muni.cz/?lang=cs"' +
+    '© <a href="https://www.muni.cz/?lang=cs"' +
     ' target="_blank">Masarykova univerzita</a>',
   'OSM_ATTRIBUTION_HTML':
-    '© Přispěvatelé <a href="http://www.openstreetmap.org/copyright"' +
+    '© Přispěvatelé <a href="https://www.openstreetmap.org/copyright"' +
     ' target="_blank">OpenStreetMap</a>',
   'MUNIMAP_ATTRIBUTION_HTML':
     `<a href="//${PROD_DOMAIN}${APP_PATH}` +
     `" target="_blank" title="Mapová knihovna munimap">munimap</a>`,
   'PUBTRAN_ATTRIBUTION_HTML':
-    '© <a href="http://www.idsjmk.cz/"' +
+    '© <a href="https://www.idsjmk.cz/"' +
     ' target="_blank" title="Informace o umístění zastávek MHD poskytuje' +
     ' firma KORDIS JMK, a.s.">KORDIS JMK, a.s.</a>',
   'ZOOM_IN': 'Přiblížit',
@@ -148,16 +148,16 @@ const CS_TRANSLATIONS = {
 const EN_TRANSLATIONS = {
   'ATTRIBUTIONS': 'Attributions',
   'MU_ATTRIBUTION_HTML':
-    '© <a href="http://www.muni.cz/?lang=en"' +
+    '© <a href="https://www.muni.cz/?lang=en"' +
     ' target="_blank">Masaryk University</a>',
   'OSM_ATTRIBUTION_HTML':
-    '© <a href="http://www.openstreetmap.org/copyright"' +
+    '© <a href="https://www.openstreetmap.org/copyright"' +
     ' target="_blank">OpenStreetMap</a> contributors',
   'MUNIMAP_ATTRIBUTION_HTML':
     `<a href="//${PROD_DOMAIN}${APP_PATH}` +
     `" target="_blank" title="munimap mapping library">munimap</a>`,
   'PUBTRAN_ATTRIBUTION_HTML':
-    '© <a href="http://www.idsjmk.cz/EN/default.aspx"' +
+    '© <a href="https://www.idsjmk.cz/EN/default.aspx"' +
     ' target="_blank" title="Public transport data is provided by' +
     ' KORDIS JMK, a.s. company">KORDIS JMK, a.s.</a>',
   'ZOOM_IN': 'Zoom in',

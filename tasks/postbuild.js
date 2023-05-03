@@ -33,4 +33,9 @@ const prependLicenseInfo = () => {
   });
 };
 
-prependLicenseInfo();
+try {
+  prependLicenseInfo();
+} catch (error) {
+  // if e.g. git command failed, pass check
+  console.error(error);
+}

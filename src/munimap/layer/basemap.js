@@ -69,7 +69,7 @@ const createLayer = (basemapId, lang) => {
 
   if (basemapId === BasemapIds.ARCGIS || basemapId === BasemapIds.ARCGIS_BW) {
     const esriAttribution =
-      '© <a href="http://help.arcgis.com/' +
+      '© <a href="https://help.arcgis.com/' +
       'en/communitymaps/pdf/WorldTopographicMap_Contributors.pdf"' +
       ' target="_blank">Esri</a>';
 

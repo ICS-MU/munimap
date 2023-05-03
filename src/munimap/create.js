@@ -182,6 +182,7 @@ const ensureCss = () => {
     );
     if (!PRODUCTION || links.length > 0) {
       resolve();
+      return;
     }
     const cssLink = document.createElement('link');
     cssLink.rel = 'stylesheet';

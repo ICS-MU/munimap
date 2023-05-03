@@ -8,13 +8,19 @@ const PORT = process.env['npm_config_port']
 
 const PUPPETEER_OPTS = {
   headless: true,
-  // slowMo: 100,
+  // slowMo: 50,
   // timeout: 0,
+  // devtools: true,
+  // dumpio: true,
   args: [
+    '--proxy-server=http://proxy.dis.ics.muni.cz:3128',
     '--start-maximized',
-    '--window-size=1920,1040',
+    '--window-size=1920,1080',
     '--no-sandbox',
     '--disable-setuid-sandbox',
+    '--disable-web-security',
+    '--disable-features=IsolateOrigins',
+    '--disable-site-isolation-trials',
   ],
 };
 
