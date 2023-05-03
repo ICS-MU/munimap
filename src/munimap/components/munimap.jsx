@@ -237,12 +237,14 @@ const MunimapComponent = (props) => {
   }, [map, isIdentifyEnabled, identifyVisibled]);
 
   useEffect(() => {
-    const callback =
-      resetTimestamp === 0
-        ? () => dispatch(actions.animationFinishedAfterReset())
-        : undefined;
-    mm_view.animate(map, animationRequest, callback);
-  }, [map, animationRequest]);
+    if (areMarkersLoaded && areZoomToLoaded) {
+      const callback =
+        resetTimestamp === 0
+          ? () => dispatch(actions.animationFinishedAfterReset())
+          : undefined;
+      mm_view.animate(map, animationRequest, callback);
+    }
+  }, [map, animationRequest, areMarkersLoaded, areZoomToLoaded]);
 
   useEffect(() => {
     if (mapInitialized) {

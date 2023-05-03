@@ -192,6 +192,7 @@ const featuresFromUrl = async (options) => {
     if (onFailure) {
       onFailure();
     }
+    return [];
   }
 
   mm_assert.assert(response.status === 200);
@@ -326,7 +327,7 @@ const featuresForMap = async (options, featureLoaderParams) => {
     }
   }
 
-  return featuresFromUrl({
+  return await featuresFromUrl({
     source: options.source,
     type: type,
     url: !isPost ? url + queryParams.toString() : url,
@@ -382,7 +383,7 @@ const features = async (options) => {
       formData.append(key, value);
     }
   }
-  return featuresFromUrl({
+  return await featuresFromUrl({
     source: options.source,
     type: type,
     url: !isPost ? url + queryParams.toString() : url,
@@ -428,7 +429,7 @@ const featuresByCode = async (options) => {
   } else {
     where = '1=1';
   }
-  return features({
+  return await features({
     source: options.source,
     type: options.type,
     where: where,

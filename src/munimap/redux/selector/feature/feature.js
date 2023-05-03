@@ -25,12 +25,19 @@ import {isOptPoiCtgUid} from '../../../feature/utils.js';
  * @type {import("reselect").OutputSelector<
  *    import("reselect").SelectorArray,
  *    Array<ol.Feature>,
- *    function(Array<string>, number, string): Array<ol.Feature>
+ *    function(Array<string>, number, number, string): Array<ol.Feature>
  * >}
  */
 const getInitMarkers = createSelector(
-  [ss.getRequiredMarkerIds, ss.getMarkersTimestamp, ss.getTargetId],
-  (requiredMarkerIds, markersTimestamp, targetId) => {
+  [
+    ss.getRequiredMarkerIds,
+    ss.getMarkersTimestamp,
+    ss.getZoomToTimestamp,
+    ss.getTargetId,
+  ],
+  // zoomToTimestamp needed in order to wait for both markers and zoomTos
+  // during render
+  (requiredMarkerIds, markersTimestamp, zoomToTimestamp, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing init markers');
     }
@@ -65,12 +72,18 @@ const getInitMarkersWithGeometry = createSelector(
  * @type {import("reselect").OutputSelector<
  *    State,
  *    Array<ol.Feature>,
- *    function(Array<string>|string, number): Array<ol.Feature>
+ *    function(Array<string>|string, number, number, string): Array<ol.Feature>
  * >}
  */
 const getInitZoomTo = createSelector(
-  [ss.getRequiredZoomTo, ss.getZoomToTimestamp, ss.getTargetId],
-  (initZoomTo, zoomToTimestamp, targetId) => {
+  [
+    ss.getRequiredZoomTo,
+    ss.getMarkersTimestamp,
+    ss.getZoomToTimestamp,
+    ss.getTargetId,
+  ],
+  // markerTimestamp needed to wait with animation for both markers and zoomTos
+  (initZoomTo, markerTimestamp, zoomToTimestamp, targetId) => {
     if (ENABLE_SELECTOR_LOGS) {
       console.log('computing init zoomTo');
     }

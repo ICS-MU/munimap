@@ -71,7 +71,7 @@ const buildingLoadProcessor = async (targetId, options) => {
  * in server response
  */
 const buildingsByCode = async (targetId, options) => {
-  return featuresByCode({
+  return await featuresByCode({
     codes: options.codes,
     type: BUILDING_TYPE,
     source: getBuildingStore(targetId),

@@ -189,7 +189,7 @@ const createReducer = (initialState) => {
       case actions.SELECTED_FEATURE_CHANGED:
         const newValue = action.payload;
         const selectedFeature = state.selectedFeature;
-        const isChanged = selectedFeature && selectedFeature !== newValue;
+        const isChanged = selectedFeature !== newValue;
         if (isChanged) {
           const where = `polohKod LIKE '${newValue.substring(0, 5)}%'`;
           mm_load_fl
