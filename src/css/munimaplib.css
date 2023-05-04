@@ -381,6 +381,10 @@
   right: 0px;
 }
 
+.munimap-tool-bar {
+  font-size: 16px;
+}
+
 .munimap-tool-bar.default {
   position: absolute;
   display: inline-block;
@@ -396,29 +400,15 @@
   margin-left: 6px;
 }
 
-.munimap-initial-extent {
-  float: left;
-  width: 27.09px;
-  border-radius: 4px;
-}
-
-.munimap-initial-extent .munimap-init-extent-button {
+.munimap-tool-bar.nested .munimap-initial-extent {
   background-color: #0000dc;
-  margin: 1px;
-  margin-bottom: 0px;
-  padding: 0;
-  line-height: 25.09px;
-  text-align: center;
-  height: 25.09px;
-  border-radius: 2px;
+  color: #0000dc;
 }
 
 .munimap-home {
   font-family: 'MunimapFont';
-  font-size: 1.14em;
   font-style: normal;
-  color: #fff;
-  position: relative;
+  font-weight: normal;
 }
 
 .munimap-map-tools .munimap-vertical-line {
@@ -442,20 +432,6 @@
 .munimap-map-tools.collapsed .munimap-map-tools-button:hover { 
   background-color: #000;
   cursor: pointer;
-}
-
-.munimap-init-extent-button:hover { 
-  background-color: #000;
-  cursor: pointer;
-}
-
-.munimap-map-tools .munimap-init-extent-button:hover { 
-  background-color: #fff;
-  cursor: pointer;
-}
-
-.munimap-map-tools .munimap-init-extent-button:hover .munimap-home { 
-  color: #0000dc;
 }
 
 .munimap-identify {
@@ -528,6 +504,13 @@
 {
   background-color: #000;
   cursor: pointer;
+}
+
+.munimap-tool-bar.nested .munimap-initial-extent:hover,
+.munimap-tool-bar.nested .munimap-initial-extent:hover button,
+.munimap-tool-bar.nested .munimap-initial-extent button:hover {
+  background-color: white;
+  color: #000000;
 }
 
 .ol-attribution {
@@ -641,27 +624,6 @@
   width: 33px;
 }
 
-.ol-touch .munimap-initial-extent {
-  position: absolute;
-  top: 81px;
-  width: 35px;
-}
-
-.ol-touch .munimap-init-extent-button {
-  position: relative;
-  line-height: 33px;
-  height: 33px;
-}
-
-.ol-touch .munimap-home {
-    font-size: 1.3em;
-}
-
 .ol-touch.munimap-map-tools .munimap-vertical-line {
   height: 1.95em;
-}
-
-.ol-touch .ol-full-screen.ol-unselectable.ol-control {
-  top: 115px;
-  width: 35px;
 }
