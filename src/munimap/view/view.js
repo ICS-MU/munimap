@@ -482,7 +482,8 @@ const animate = (map, animationRequest, opt_callback) => {
     } else {
       const {extent, duration} = animationReqItem;
       if (extent) {
-        view.fit(extent, {duration, callback: opt_callback});
+        // added param. nearest regarding https://rt.muni.cz/rt/Ticket/Display.html?id=1096814
+        view.fit(extent, {nearest: true, duration, callback: opt_callback});
       } else {
         if (opt_callback) {
           view.animate(
