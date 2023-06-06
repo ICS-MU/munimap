@@ -1,7 +1,7 @@
 /**
  * @module view/cluster
  */
-import {getClusterVectorStore} from '../source/constants.js';
+import {getClusterStore, getClusterVectorStore} from '../source/constants.js';
 import {getClusteredFeatures} from '../feature/cluster.js';
 
 /**
@@ -20,9 +20,13 @@ const updateClusteredFeatures = (targetId, resolution, showLabels) => {
   const featuresToRemove = oldFeatures.filter((x) => !newFeatures.includes(x));
   const featuresToAdd = newFeatures.filter((x) => !oldFeatures.includes(x));
 
-  featuresToRemove.forEach((feature) => source.removeFeature(feature));
-  if (featuresToAdd.length > 0) {
-    source.addFeatures(featuresToAdd);
+  if (featuresToRemove.length === 0 && featuresToAdd.length === 0) {
+    getClusterStore(targetId).refresh();
+  } else {
+    featuresToRemove.forEach((feature) => source.removeFeature(feature));
+    if (featuresToAdd.length > 0) {
+      source.addFeatures(featuresToAdd);
+    }
   }
 };
 

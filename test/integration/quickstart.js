@@ -452,7 +452,7 @@ describe('quickstart.html', async () => {
       const identifiers_assert = (arr) => {
         const expectedArr = [
           ['munimap-tool-bar default', 'map-target', true],
-          ['munimap-initial-extent', 'munimap-tool-bar default', true],
+          ['munimap-initial-extent ol-unselectable ol-control', 'munimap-tool-bar default', true],
           [null, null, false],
         ];
         assert.deepEqual(

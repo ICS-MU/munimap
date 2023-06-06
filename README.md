@@ -36,7 +36,7 @@ npm run build
 
 Build script runs webpack with configuration in `webpack.config.production.babel.js`. Webpack builds everything (including CSS styles) into `dist/latest`.
 
-Content of `dist` folder is then prepare to be published online.
+Content of `dist` folder is then prepared to be published online.
 
 You can also start server to see built version, just run
 ```
