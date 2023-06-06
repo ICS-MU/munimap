@@ -405,6 +405,10 @@
   color: #0000dc;
 }
 
+.munimap-tool-bar.default .munimap-initial-extent > button {
+  margin: 1px 1px 0 1px;
+}
+
 .munimap-home {
   font-family: 'MunimapFont';
   font-style: normal;
