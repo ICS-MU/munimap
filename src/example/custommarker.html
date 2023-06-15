@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+  <link href="../css/example/example.css" media="all" rel="stylesheet" type="text/css" />
+  <link href="../css/munimap.css" media="all" rel="stylesheet" type="text/css" />
+
+  <link rel='shortcut icon' type='image/x-icon' href='../img/favicon.ico' />
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+
+  <title>munimap - označeni místa mimo MU</title>
+
+  <!-- Start Matomo Code -->
+  <script>
+    var _paq = window._paq = window._paq || [];
+    _paq.push(['disableCookies']);
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+      var u="//analytics.ics.muni.cz/";
+      _paq.push(['setTrackerUrl', u+'matomo.php']);
+      _paq.push(['setSiteId', '90']);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    })();
+  </script>
+  <!-- End Matomo Code -->
+</head>
+
+<body>
+  <div class="header">
+    <img src="../img/logo_muni.svg" alt="Masarykova univerzita" title="Masarykova univerzita">
+  </div>
+  <h1>
+    <a href="../">
+      <span class="munimap-logo">
+        <span class="muni">muni</span><span class="map">map</span>
+      </span>
+    </a> - označení místa mimo MU</h1>
+  <div class="munimap-warning-wrapper <%= warningWrapperClass %>">
+    <div class="munimap-warning">
+      <span class="munimap-warning">Upozornění</span> Toto je starší verze (<%= appVersion %>) munimapu. Doporučujeme použít
+      <a href="/munimap/latest/example/custommarker.html">nejnovější verzi</a>.
+    </div>
+  </div>
+  <div class="separator-solid">
+  </div>
+  <div class="navigation">
+    <div class="left">
+      <a href="../">
+        <span class="munimap-logo">
+          <span class="muni">muni</span><span class="map">map</span>
+        </span>
+      </a> &gt;
+      <a href="index.html">příklady použití</a> &gt;
+      <span>označení místa mimo MU</span>
+    </div>
+  </div>
+  <div class="content">
+    <div id="map" class="map"></div>
+  </div>
+  <div class="content">
+    <p>
+      Knihovna munimap umožňuje vložit "špendlík" na libovolné místo v mapě. V tomto příkladu je v mapě vyznačena poloha brněnského
+      hlavního nádraží a autobusového nádraží. "Špendlík" je definován jako objekt typu
+      <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_Feature-Feature.html" target="_blank">ol/Feature</a> s parametry:</p>
+    <ul class="">
+      <li>
+        <b>geometry</b> - pomocí objektu typu
+        <a href="http://openlayers.org/en/<%= olVersion %>/apidoc/module-ol_geom_Point-Point.html" target="_blank">ol/geom/Point</a> definuje polohu "špendlíku" v mapě
+      </li>
+      <li>
+        <b>label</b> - textový popis, který se zobrazí u "špendlíku" v mapě
+      </li>
+      <li>
+        <b>detail</b> - textový / HTML popis, který se zobrazí po kliknutí na "špendlík" - nepovinný parametr
+      </li>
+      <li>
+        <b>color</b> - nastaví vlastní barvu (hexadecimální zápis #RRGGBB) špendlíku a popisku.
+        V případě vlastní ikony nastaví pouze barvu popisku - nepovinný parametr
+      </li>
+      <li>
+        <b>onClick</b> - callback po kliknutí (<i>evt</i> - <a href="https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent">PointerEvent</a>). Funkce může vracet objekt (<a href="../doc/#markers">OnClickOptions</a>), kterým lze
+        přizpůsobit chování mapy po kliknutí na "špendlík". onClick - nepovinný parametr
+      </li>
+      <li>
+        <b>icon</b> - nastaví vlastní ikonu - nepovinný parametr
+        <ul>
+          <li>
+            <b>url</b> - url ikony - povinný parametr
+          </li>
+          <li>
+            <b>size</b> - velikost ikony (šířka a výška v pixelech) - povinný parametr
+          </li>
+          <li>
+            <b>position</b> - pozice ikony (<i>above</i> - nad souřadnicemi, <i>below</i> - pod souřadnicemi, <i>origin</i> - na souřadnice) - nepovinný parametr
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p>"Špendlíky" je možné kombinovat s polohovými kódy - v tomto případě rektorát 'BMA01'. Polohové kódy můžete dohledat např. v <a href="https://kompas.muni.cz" target="_blank">Kompasu</a>.</p>
+    <pre class="prettyprint">
+&lt;script type="text/javascript"&gt;
+  munimap.create({
+    target: 'map',
+    markers: [
+      new ol.Feature({
+        geometry: new ol.geom.Point([16.6311797, 49.2019158]),
+        label: 'Vojenská nemocnice',
+        detail:'&lt;h4&gt;Vojenská nemocnice&lt;/h4&gt;&lt;a href="www.vnbrno.cz" target="_blank"&gt;www.vnbrno.cz&lt;/a&gt;',
+        color: 'green',
+        onClick: function (evt) { //evt: PointerEvent
+          return {
+            animation: 'centerTo', //enum ['zoomTo', 'centerTo', 'none']
+          };
+        icon: {
+          url: '../munimap/rectangle.png',
+          size: [20, 20], // [width, height] in px
+          position: 'origin', // enum ['above', 'below', 'origin']           
+        },
+      }),
+      new ol.Feature({
+        geometry: new ol.geom.Point([16.612802, 49.190582]),
+        label: 'Brno hlavní nádraží',
+        detail: '&lt;h4&gt;Hlavní nádraží&lt;/h4&gt;&lt;a href="https://www.cd.cz" target="_blank">www.cd.cz&lt;/a&gt;',
+        color: '#009900'
+      }),
+      new ol.Feature({
+        geometry: new ol.geom.Point([16.616667, 49.185833]),
+        label: 'Autobusové nádraží Zvonařka'
+      }),
+      'BMA01'
+    ]
+  });
+&lt;/script&gt;
+      </pre>
+    <p>
+      Parametry funkce
+      <code><a href="../doc/#create">munimap.create</a></code> jsou následující:
+    </p>
+    <ul>
+      <li>
+        <code><a href="../doc/#target">target</a></code> - určuje id elementu, do kterého se mapa vykreslí</li>
+      <li>
+        <code><a href="../doc/#markers">markers</a></code> - pole zvýrazněných bodů (špendlíků). Poloha je popsána zeměpisnými souřadnicemi v pořadí zemepisná délka, zeměpisná
+        šířka.
+      </li>
+    </ul>
+    <p>
+      Více se dozvíte v naší <a href="../doc/">dokumentaci</a>.
+    </p>      
+  </div>
+  <div class="navigation">
+    <div class="left">
+      <a href="../">
+        <span class="munimap-logo">
+          <span class="muni">muni</span><span class="map">map</span>
+        </span>
+      </a> &gt;
+      <a href="index.html">příklady použití</a> &gt;
+      <span>označení místa mimo MU</span>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="left">
+      Kontakt:
+      <a href="mailto:gishelp%40ics.muni.cz">gishelp&#064;ics.muni.cz</a>
+    </div>
+     
+    <div class="right">
+      <a href="http://www.ics.muni.cz/" target="_blank">
+        <img class="logo-uvt" src="../img/logo_ics.png" alt="Ústav výpočetní techniky MU" title="Ústav výpočetní techniky MU">
+      </a>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    const map_promise = munimap.create({
+      target: 'map',
+      markers: [
+        new munimap.ol.Feature({
+          geometry: new ol.geom.Point([16.6311797, 49.2019158]),
+          label: 'Vojenská nemocnice',
+          detail:'<h4>Vojenská nemocnice</h4><a href="https://www.vnbrno.cz" target="_blank">www.vnbrno.cz</a>',
+          color: 'green',
+          onClick: function (evt) { //evt: PointerEvent
+            return {
+              animation: 'centerTo', //enum ['zoomTo', 'centerTo', 'none']
+            };
+          },
+          icon: {
+            url: '../img/rectangle.png',
+            size: [20, 20], // [width, height] in px
+            position: 'origin', // enum ['above', 'below', 'origin']            
+          },
+        }),
+        new munimap.ol.Feature({
+          geometry: new munimap.ol.geom.Point([16.612802, 49.190582]),
+          label: 'Brno hlavní nádraží',
+          detail: '<h4>Hlavní nádraží</h4><a href="https://www.cd.cz" target="_blank">www.cd.cz</a>',
+          color: '#009900'
+        }),
+        new munimap.ol.Feature({
+          geometry: new munimap.ol.geom.Point([16.616667, 49.185833]),
+          label: 'Autobusové nádraží Zvonařka'
+        }),
+        'BMA01'
+      ]
+    });
+  </script>
+</body>
+
+</html>

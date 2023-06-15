@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link href="../css/example/example.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="../css/munimap.css" media="all" rel="stylesheet" type="text/css" />
+    <link rel='shortcut icon' type='image/x-icon' href='../img/favicon.ico' />
+
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    
+    <title>munimap - jak začít</title>
+
+    <!-- Start Matomo Code -->
+    <script>
+      var _paq = window._paq = window._paq || [];
+      _paq.push(['disableCookies']);
+      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="//analytics.ics.muni.cz/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '90']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+      })();
+    </script>
+    <!-- End Matomo Code -->
+  </head>
+
+  <body>
+    <div class="header">
+      <img src="../img/logo_muni.svg" alt="Masarykova univerzita" title="Masarykova univerzita">
+    </div>
+    <h1><a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> - jak začít</h1>
+    <div class="munimap-warning-wrapper <%= warningWrapperClass %>">
+      <div class="munimap-warning">
+        <span class="munimap-warning">Upozornění</span> Toto je starší verze (<%= appVersion %>) munimapu. Doporučujeme použít <a href="/munimap/latest/example/quickstart.html">nejnovější verzi</a>.
+      </div>
+    </div>
+    <div class="separator-solid">
+    </div>
+    <div class="navigation">
+      <div class="left">
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>jak začít</span>
+      </div>
+    </div>
+    <div class="content">
+      <h2 class="page-title">Vložení základní mapky na stránku</h2>
+      <p>Ve třech jednoduchých krocích si ukážeme, jak pomocí knihovny munimap vložit základní mapku do vašich webových stránek.</p>
+      <div class="guide-step">
+        <div class="guide-step-title">
+          <span class="guide-step-number">Krok 1</span>
+          <span class="guide-step-name">Nahrání knihovny</span>
+        </div>
+        <p>
+          Pro vložení mapy s budovami a místnostmi Masarykovy univerzity na webovou stránku je nejprve potřeba nahrát knihovnu munimap.
+          To uděláte tak, že do hlavičky stránky (mezi značky <code>&lt;head&gt;</code> a <code>&lt;/head&gt;</code>) vložíte následující kód:
+        </p>
+        <pre class="prettyprint">
+    &lt;script src="//<%= prodDomain %><%= appPath %>munimaplib.js" type="text/javascript"&gt;&lt;/script&gt;
+        </pre>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-title">
+          <span class="guide-step-number">Krok 2</span>
+          <span class="guide-step-name">Vytvoření elementu pro umístění mapy</span>
+        </div>
+        <p>
+          Na vybrané místo vaší webové stránky (mezi značky <code>&lt;body&gt;</code> a <code>&lt;/body&gt;</code>) vložte
+          značku <code>&lt;div&gt;</code> s&nbsp;atributem <code>id</code> nastaveným například na hodnotu <code>'map'</code>.
+          Na tomto místě se pak zobrazí mapa.
+        </p>
+        <p>
+          Id elementu, do kterého se má vykreslit mapa, můžete zvolit libovolně,
+          stejné id ale musíte předat funkci <code><a href="../doc/#create">munimap.create</a></code>.
+          Velikost mapy ovlivníte nastavením CSS stylu daného elementu (vlastnosti <code>width</code> a <code>height</code>).
+        </p>
+        <pre class="prettyprint">
+    &lt;div id="map"&gt;
+    &lt;/div&gt;
+        </pre>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-title">
+          <span class="guide-step-number">Krok 3</span>
+          <span class="guide-step-name">Vytvoření a nastavení mapy</span>
+        </div>
+        <p>
+          Mapu vytvoříte zavoláním funkce <code><a href="../doc/#create">munimap.create</a></code>. Parametr
+          <code><a href="../doc/#target">target</a></code> je povinný, určuje id elementu, do kterého se mapa vykreslí.
+          Na konec stránky (před uzavírací značku <code>&lt;/body&gt;</code>) vložte následující kód (a případně změňte hodnotu
+          atributu <code><a href="../doc/#target">target</a></code> na id elementu, do něhož chcete mapu vykreslit):
+        </p>
+        <pre class="prettyprint">
+    &lt;script type="text/javascript"&gt;
+      munimap.create({
+        target: 'map'
+      });
+    &lt;/script&gt;
+        </pre>
+      </div>
+      <div class="separator"></div>
+      <div class="columns">
+        <div class="left">
+          <h3>Výsledek</h3>
+          <p>
+            Jestliže jste postupovali podle předchozího návodu, uvidíte na své webové stránce
+            následující interaktivní mapu, jejíž velikost můžete ovlivnit pomocí CSS vlastností
+            elementu, do kterého jste mapu vytvořili:
+          </p>
+          <div id="map" class="map" style="height: 250px;"></div>
+        </div>
+        <div class="right">
+          <h3>... a jak dál?</h3>
+          <p>
+            Pomocí parametrů funkce <code><a href="../doc/#create">munimap.create</a></code> můžete ovlivnit další nastavení mapy,
+            jako je zvýraznění vybraných budov, volba jazyka mapy či varianta podkladové mapy. Kompletní přehled funkcí knihovny munimap a
+            jejich parametrů (včetně vysvětlení jejich významu) naleznete v&nbsp;<a href="../doc/">popisu&nbsp;rozhraní</a>.
+            A pro větší názornost jsme pro vás připravili jednoduché i pokročilejší <a href="../example/">příklady použití</a> knihovny.
+          </p>
+          <div class="munimap-links">
+            <a href="../doc/">Popis rozhraní</a>
+            <a href="../example/">Příklady použití</a>
+          </div>
+        </div>
+      </div>
+      <div class="separator"></div>
+      <h3>Stále si nejste jistí jak na to?</h3>
+      <p>
+          Následující kód jednoduché HTML stránky si můžete zkopírovat, v&nbsp;textovém editoru uložit
+          do souboru s příponou .html a následně nahrát na svůj server. Dostanete tak prázdnou stránku se základní mapou.
+          A pak si můžete sami zkoušet různá nastavení parametrů funkce <code><a href="../doc/#create">munimap.create</a></code>.
+          Kompletní přehled všech parametrů a vysvětlení jejich významu naleznete
+          v&nbsp;<a href="../doc/">popisu&nbsp;rozhraní</a>. Pro inspiraci, jak použít a nastavit jednotlivé parametry,
+          vám mohou posloužit připravené <a href="../example/">příklady použití</a>.
+      </p>
+      <pre class="prettyprint">
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Jednoduchá mapka&lt;/title&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;script src="//<%= prodDomain %><%= appPath %>munimaplib.js" type="text/javascript"&gt;&lt;/script&gt;
+    &lt;style&gt;
+      #map { width: 800px; height: 400px; }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id="map"&gt;
+    &lt;/div&gt;
+    &lt;script type="text/javascript"&gt;
+      munimap.create({
+	target: 'map'
+      });
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+      </pre>
+    </div>
+    <div class="navigation">
+      <div class="left">
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>jak začít</span>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="left">
+        Kontakt: <a href="mailto:gishelp%40ics.muni.cz">gishelp&#064;ics.muni.cz</a>
+      </div>
+       
+      <div class="right">
+        <a href="http://www.ics.muni.cz/" target="_blank"><img class="logo-uvt" src="../img/logo_ics.png" alt="Ústav výpočetní techniky MU" title="Ústav výpočetní techniky MU"></a>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      const map_promise = munimap.create({
+        target: 'map'
+      });
+    </script>
+  
+  </body>
+</html>

@@ -1,0 +1,134 @@
+{
+  "name": "",
+  "css_prefix_text": "munimap-",
+  "css_use_suffix": false,
+  "hinting": true,
+  "units_per_em": 1000,
+  "ascent": 850,
+  "glyphs": [
+    {
+      "uid": "8a67014b864fb93503348593979ddce3",
+      "css": "wheelchair",
+      "code": 61843,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "ca2d64f8a3ea7cbf6af45898b2dcf35e",
+      "css": "male",
+      "code": 61827,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "9bf7e14698cccdca37a6f1a02cf7d79e",
+      "css": "female",
+      "code": 61826,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "3a00327e61b997b58518bd43ed83c3df",
+      "css": "entrance",
+      "code": 61584,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "3d4ea8a78dc34efe891f3a0f3d961274",
+      "css": "info",
+      "code": 61737,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "d3b3f17bc3eb7cd809a07bbd4d178bee",
+      "css": "vertical-arrow",
+      "code": 61565,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "8c0ffa714cecbf5144e022d9c3df4a1f",
+      "css": "university",
+      "code": 61852,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "20fc52f9a88bb7bda023ef209acac095",
+      "css": "classroom",
+      "code": 61853,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "2c2ca8a96b31781c9c8056d05c0a8980",
+      "css": "background",
+      "code": 61640,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "ccddff8e8670dcd130e3cb55fdfc2fd0",
+      "css": "drop-down",
+      "code": 61703,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "0d08dbb1dd648a43bdea81b7e6c9e036",
+      "css": "location",
+      "code": 61505,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "e5eb76c1da310374d6672d0575da4fd5",
+      "css": "staircase",
+      "code": 59398,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M583.8 187.5L583.8 435.3 302.6 435.3 302.6 683.1 51.8 683.1 51.8 815.1 434.7 815.1 434.7 567.3 715.8 567.3 715.8 319.6 947.6 319.6 947.6 187.5 583.8 187.5Z",
+        "width": 1000
+      },
+      "search": [
+        "schody_final"
+      ]
+    },
+    {
+      "uid": "5b17c7263caa553039655f2fef81ecaf",
+      "css": "bus",
+      "code": 61959,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "42a1e8a3f5fa9a93e4d8965dcbeef8be",
+      "css": "crosshairs",
+      "code": 59399,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M976.6 437.5H917.3C890.1 254.5 745.5 109.9 562.5 82.7V23.4C562.5 10.5 552 0 539.1 0H460.9C448 0 437.5 10.5 437.5 23.4V82.7C254.5 109.9 109.9 254.5 82.7 437.5H23.4C10.5 437.5 0 448 0 460.9V539.1C0 552 10.5 562.5 23.4 562.5H82.7C109.9 745.5 254.5 890.1 437.5 917.3V976.6C437.5 989.5 448 1000 460.9 1000H539.1C552 1000 562.5 989.5 562.5 976.6V917.3C745.5 890.1 890.1 745.5 917.3 562.5H976.6C989.5 562.5 1000 552 1000 539.1V460.9C1000 448 989.5 437.5 976.6 437.5ZM562.5 790.3V710.9C562.5 698 552 687.5 539.1 687.5H460.9C448 687.5 437.5 698 437.5 710.9V790.3C323.9 766.1 234 676.3 209.7 562.5H289.1C302 562.5 312.5 552 312.5 539.1V460.9C312.5 448 302 437.5 289.1 437.5H209.7C233.9 323.9 323.7 234 437.5 209.7V289.1C437.5 302 448 312.5 460.9 312.5H539.1C552 312.5 562.5 302 562.5 289.1V209.7C676.1 233.9 766 323.7 790.3 437.5H710.9C698 437.5 687.5 448 687.5 460.9V539.1C687.5 552 698 562.5 710.9 562.5H790.3C766.1 676.1 676.3 766 562.5 790.3ZM562.5 500C562.5 534.5 534.5 562.5 500 562.5S437.5 534.5 437.5 500C437.5 465.5 465.5 437.5 500 437.5S562.5 465.5 562.5 500Z",
+        "width": 1000
+      },
+      "search": [
+        "crosshairs"
+      ]
+    },
+    {
+      "uid": "98d9c83c1ee7c2c25af784b518c522c5",
+      "css": "block",
+      "code": 128683,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "d7271d490b71df4311e32cdacae8b331",
+      "css": "home",
+      "code": 8962,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "399ef63b1e23ab1b761dfbb5591fa4da",
+      "css": "right-open",
+      "code": 59396,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "d870630ff8f81e6de3958ecaeac532f2",
+      "css": "left-open",
+      "code": 59394,
+      "src": "fontawesome"
+    }
+  ]
+}

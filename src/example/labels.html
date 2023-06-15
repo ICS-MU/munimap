@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link href="../css/example/example.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="../css/munimap.css" media="all" rel="stylesheet" type="text/css" />
+    
+    <link rel='shortcut icon' type='image/x-icon' href='../img/favicon.ico' />
+
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    
+    <title>munimap - vlastní popisky budov</title>
+
+    <!-- Start Matomo Code -->
+    <script>
+      var _paq = window._paq = window._paq || [];
+      _paq.push(['disableCookies']);
+      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="//analytics.ics.muni.cz/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '90']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+      })();
+    </script>
+    <!-- End Matomo Code -->
+  </head>
+  <body>
+    <div class="header">
+      <img src="../img/logo_muni.svg" alt="Masarykova univerzita" title="Masarykova univerzita">
+    </div>
+    <h1><a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> - vlastní popisky budov</h1>
+    <div class="munimap-warning-wrapper <%= warningWrapperClass %>">
+      <div class="munimap-warning">
+        <span class="munimap-warning">Upozornění</span> Toto je starší verze (<%= appVersion %>) munimapu. Doporučujeme použít <a href="/munimap/latest/example/labels.html">nejnovější verzi</a>.
+      </div>
+    </div>
+    <div class="separator-solid">
+    </div>
+    <div class="navigation">
+      <div class="left">
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>vlastní popisky budov</span>
+      </div>
+    </div>
+    <div class="content">
+      <div id="map" class="map"></div>
+    </div>
+    <div class="content">
+      <p>
+        Pokročilejší uživatelé si mohou například předefinovat popisky budov.
+        Toho lze dosáhnout předáním vlastní funkce, která vrací popisky,
+        do parametru <code>markerLabel</code> funkce <code><a href="../doc/#create">munimap.create</a></code>.
+      </p>
+      <pre class="prettyprint">
+&lt;script type="text/javascript"&gt;
+  /**
+   * @param {ol.Feature|ol.render.Feature} feature
+   * @param {number} resolution
+   * @return {string|null|undefined}
+   */
+  var getHeadquartersLabels = function(feature, resolution) {
+    var headquatersCount = 10;
+    var title;
+    if (feature.get('features')) {
+      var clusteredFeatures = feature.get('features');
+      if (clusteredFeatures.length === headquatersCount) {
+        title = 'MU';
+      } else if (clusteredFeatures.length === 1) {
+        title = getHeadquartersBuildingLabels(
+            clusteredFeatures[0], resolution);
+      } else {
+        var titleParts = clusteredFeatures.map(function(cf) {
+          return getHeadquartersLabels(cf, resolution);
+        });
+        title = munimap.style.alignTextToRows(titleParts, ', ');
+      }
+    } else {
+      title =
+          getHeadquartersBuildingLabels(feature, resolution);
+    }
+    return title;
+  };
+
+
+  /**
+   *
+   * @param {ol.Feature|ol.render.Feature} feature
+   * @param {number} resolution
+   * @return {string|null|undefined}
+   */
+  var getHeadquartersBuildingLabels =
+      function(feature, resolution) {
+    var title;
+    var locCode = /**@type (string)*/ (feature.get('polohKod'));
+    var showShortcuts = resolution > 2.4;
+    switch (locCode) {
+      case 'BMA01':
+        title = showShortcuts ? 'RMU' : 'Rektorát MU';
+        break;
+      case 'BVC01':
+        title = showShortcuts ? 'PrF' : 'Právnická\nfakulta';
+        break;
+      case 'BHA18':
+        title = showShortcuts ? 'LF' : 'Lékařská\nfakulta';
+        break;
+      case 'BVB01':
+        title = showShortcuts ? 'PřF' : 'Přírodovědecká\nfakulta';
+        break;
+      case 'BVA04':
+        title = showShortcuts ? 'FF' : 'Filozofická\nfakulta';
+        break;
+      case 'BBA01':
+        title = showShortcuts ? 'PdF' : 'Pedagogická\nfakulta';
+        break;
+      case 'BPA11':
+        title = showShortcuts ? 'ESF' : 'Ekonomicko-správní\nfakulta';
+        break;
+      case 'BNA01':
+        title = showShortcuts ? 'FI' : 'Fakulta\ninformatiky';
+        break;
+      case 'BMB02':
+        title = showShortcuts ? 'FSS' : 'Fakulta\nsociálních studií';
+        break;
+      case 'BHA35':
+        title = showShortcuts ? 'FSpS' : 'Fakulta\nsportovních studií';
+        break;
+      default:
+        title = null;
+    }
+    return title;
+  };
+
+  munimap.create({
+    target: 'map',
+    markers: ['BMA01', 'BVC01', 'BHA18', 'BVB01', 'BVA04', 'BBA01', 'BPA11',
+      'BNA01', 'BMB02', 'BHA35'],
+    markerLabel: getHeadquartersLabels
+  });
+&lt;/script&gt;
+      </pre>
+    </div>
+    <div class="navigation">
+      <div class="left">
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>vlastní popisky budov</span>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="left">
+        Kontakt: <a href="mailto:gishelp%40ics.muni.cz">gishelp&#064;ics.muni.cz</a>
+      </div>
+       
+      <div class="right">
+        <a href="http://www.ics.muni.cz/" target="_blank"><img class="logo-uvt" src="../img/logo_ics.png" alt="Ústav výpočetní techniky MU" title="Ústav výpočetní techniky MU"></a>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      /**
+       * @param {ol.Feature|ol.render.Feature} feature
+       * @param {number} resolution
+       * @return {string|null|undefined}
+       */
+      var getHeadquartersLabels = function(feature, resolution) {
+        var headquatersCount = 10;
+        var title;
+        if (feature.get('features')) {
+          var clusteredFeatures = feature.get('features');
+          if (clusteredFeatures.length === headquatersCount) {
+            title = 'MU';
+          } else if (clusteredFeatures.length === 1) {
+            title = getHeadquartersBuildingLabels(
+                clusteredFeatures[0], resolution);
+          } else {
+            var titleParts = clusteredFeatures.map(function(cf) {
+              return getHeadquartersLabels(cf, resolution);
+            });
+            titleParts = titleParts.filter(function(part) {
+              return !!part;
+            });
+            title = munimap.style.alignTextToRows(titleParts, ', ');
+          }
+        } else {
+          title =
+              getHeadquartersBuildingLabels(feature, resolution);
+        }
+        return title;
+      };
+
+
+      /**
+       *
+       * @param {ol.Feature|ol.render.Feature} feature
+       * @param {number} resolution
+       * @return {string|null|undefined}
+       */
+      var getHeadquartersBuildingLabels =
+          function(feature, resolution) {
+        var title;
+        var locCode = /**@type (string)*/ (feature.get('polohKod'));
+        var showShortcuts = resolution > 2.4;
+        switch (locCode) {
+          case 'BMA01':
+            title = showShortcuts ? 'RMU' : 'Rektorát MU';
+            break;
+          case 'BVC01':
+            title = showShortcuts ? 'PrF' : 'Právnická\nfakulta';
+            break;
+          case 'BHA18':
+            title = showShortcuts ? 'LF' : 'Lékařská\nfakulta';
+            break;
+          case 'BVB01':
+            title = showShortcuts ? 'PřF' : 'Přírodovědecká\nfakulta';
+            break;
+          case 'BVA04':
+            title = showShortcuts ? 'FF' : 'Filozofická\nfakulta';
+            break;
+          case 'BBA01':
+            title = showShortcuts ? 'PdF' : 'Pedagogická\nfakulta';
+            break;
+          case 'BPA11':
+            title = showShortcuts ? 'ESF' : 'Ekonomicko-správní\nfakulta';
+            break;
+          case 'BNA01':
+            title = showShortcuts ? 'FI' : 'Fakulta\ninformatiky';
+            break;
+          case 'BMB02':
+            title = showShortcuts ? 'FSS' : 'Fakulta\nsociálních studií';
+            break;
+          case 'BHA35':
+            title = showShortcuts ? 'FSpS' : 'Fakulta\nsportovních studií';
+            break;
+          default:
+            title = null;
+        }
+        return title;
+      };
+
+      const map_promise = munimap.create({
+        target: 'map',
+        markers: ['BMA01', 'BVC01', 'BHA18', 'BVB01', 'BVA04', 'BBA01', 'BPA11',
+          'BNA01', 'BMB02', 'BHA35'],
+        markerLabel: getHeadquartersLabels
+      });
+    </script>
+  
+  </body>
+</html>
