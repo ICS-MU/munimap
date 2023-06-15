@@ -1,6 +1,6 @@
 {
   "name": "munimap",
-  "version": "2.0.0-dev",
+  "version": "2.0.0",
   "description": "",
   "main": "dist/munimap.js",
   "type": "module",
@@ -29,14 +29,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jirik/munimap-dev-stack.git"
+    "url": "https://gitlab.ics.muni.cz/gis-dis-uvt/munimap/munimap.git"
   },
-  "author": "Jiri Kozel",
+  "contributors": [
+    "Jan Tajovsky <tajovsky@ics.muni.cz>",
+    "Bretislav Dancak"
+  ],
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/jirik/munimap-dev-stack/issues"
+    "email": "gishelp@ics.muni.cz"
   },
-  "homepage": "https://github.com/jirik/munimap-dev-stack#readme",
+  "homepage": "https://maps.muni.cz/munimap",
   "engines": {
     "node": ">=12"
   },
