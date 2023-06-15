@@ -1,0 +1,260 @@
+body {
+  margin: 0px;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+h1 {
+  font-size: 38px;
+  line-height: 38px;
+  padding: 20px 0 10px 0;
+  margin: 0 20px;
+}
+h3, h4 {
+  margin: 0px;
+  clear: both;
+}
+p {
+  padding: 0 5px;
+  margin: 10px 0;
+}
+a {
+  color: #0000dc;
+  padding: 0px;
+}
+a:link {
+  text-decoration: none;
+}
+a:hover {
+  color: #e51c23;
+}
+ul {
+  padding-left: 10px;
+  margin: 0px 20px 0px 20px;
+}
+li {
+  list-style-type: square;
+}
+
+#map-example {
+  margin: 0 5px;
+  min-height: 300px;
+  position: relative;
+}
+
+/** munimap-logo **/
+.munimap-logo {
+  font-family: Tahoma, sans-serif;
+  font-weight: bold; 
+}
+h3 .munimap-logo {
+  font-size: 26px;
+}
+.munimap-logo > .muni {
+  color: #0000dc;
+  font-size: 100%;
+  text-shadow: none;
+  vertical-align: initial;
+}
+a .munimap-logo:hover > .muni {
+  color: #e51c23;
+}
+.munimap-logo > .map {
+  /*background: none;*/
+  color: #fff;
+  margin: 0;
+  letter-spacing: 1px;
+  text-shadow: -1px 0 #0000dc, 0 1px #0000dc, 1px 0 #0000dc, 0 -1px #0000dc;
+}
+a .munimap-logo:hover > .map {
+  text-shadow: -1px 0 #e51c23, 0 1px #e51c23, 1px 0 #e51c23, 0 -1px #e51c23;
+}
+h1 > a .munimap-logo > .map {
+  font-size: 92%;
+  vertical-align: 1px;
+}
+h3 > .munimap-logo > .map, h4 > .munimap-logo > .map {
+  font-size: 90%;
+  vertical-align: 1px;
+}
+
+.left, .right {
+  display: inline-block;
+  height: 100%;
+  margin: 0;
+  padding: 0 10px;
+  position: relative;
+  vertical-align: top;
+}
+.left {
+  left: 0;
+  padding: 0;
+}
+.right {
+  right: 0;
+  padding: 0;
+}
+
+.header {
+  padding-top: 15px;
+  padding-left: 22px;
+}
+
+.footer {
+  bottom: 0;
+  border-top: solid 1px #ddd;
+  font-size: 12px;
+  font-weight: normal;
+  padding-top: 5px;
+  position: relative;
+}
+.footer > .left, .footer > .right {
+  height: auto;
+  margin-bottom: 5px;
+  position: absolute;
+}
+
+.navigation {
+  color: #0000dc;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 20px;
+}
+.navigation.top {
+  margin-top: 0;
+}
+.navigation.bottom {
+  margin-bottom: 0;
+}
+.navigation > div > .munimap-logo > .map {
+  font-size: 97%;
+}
+.navigation > div > span:last-child{
+  font-weight: normal;
+}
+
+.separator {
+  border-bottom: dotted 1px #ddd;
+  margin: 10px 0;
+  width: 100%;
+}
+
+/* .content {
+  margin: 10px 0;
+  overflow: hidden;
+  padding: 0 20px;
+} */
+
+.content {
+  margin: 10px 20px;
+  overflow: hidden;
+}
+
+.content p {
+  text-align: justify; 
+}
+
+.columns {
+  position: relative;  
+}
+.columns > div {
+  margin: 0 auto;
+  /* padding: 0 2%; */
+}
+
+.munimap-links {
+  font-size: 24px;
+  font-weight: bold;
+  display: inline-block;
+  margin: 10px;
+  width: 80%;
+}
+.munimap-links a, .munimap-links.inverse a:hover {
+  border: solid 2px #0000dc;
+  background-color: #0000dc;
+  color: #fff;
+  display: block;
+  margin: auto;
+  margin-bottom: 10px;
+  max-width: 550px;
+  padding: 15px 10%;
+  text-align: center;
+  text-transform: uppercase;
+  width: 100%;
+}
+.munimap-links.inverse a, .munimap-links a:hover {
+  background-color: #fff;
+  color: #0000dc;
+}
+
+.center {
+  text-align: center;
+}
+
+.logo-uvt {
+  width: 45px;
+  height: 34px;
+}
+
+.munimap-warning {
+  color: #8a6d3b;
+  background-color: #fcf8e3;
+  border: 1px solid transparent;
+  border-color: #faebcc;
+  padding: 15px;
+  max-width: 1500px;
+}
+span.munimap-warning {
+  color: brown;
+  text-transform: uppercase;
+  border: none;
+  padding: 0;
+}
+.munimap-warning-wrapper {
+  padding: 0 20px;
+  /* display: none; hide warning about latest version */
+}
+.munimap-warning-wrapper.hide {
+  display: none;
+}
+.munimap-warning.latest {
+  display: none;
+}
+body > .separator {
+  padding: 0 40px;
+}
+.separator-solid {
+  margin: 10px 0px;
+  border-top: solid 1px #ddd;
+}
+
+/**styles for change log**/
+div.version-description {
+  border-left: solid 8px #0000dc;
+  margin: 0 10px 20px;
+  padding: 0 20px;
+}
+h2.version-number {
+  margin-bottom: 0;
+}
+
+/**styles for windows of a greater width**/
+@media (min-width: 1092px) {
+  body {
+    padding: 0 100px;
+  }
+}
+
+@media (min-width: 800px) {
+  .columns > div {
+    width: 45%;
+  }
+  .left {
+    left: 0;
+    padding: 0 2% 0 0;
+  }
+  .right {
+    right: 0;
+    padding: 0 0 0 2%;
+  }
+}

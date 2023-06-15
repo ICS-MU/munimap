@@ -1,0 +1,111 @@
+@import url("https://maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css");
+
+pre {
+  border: 1px solid #eee;
+  border-radius: 0;
+  max-height: 400px;
+  overflow: auto;
+  padding: 10px 0 10px 0;
+  margin-bottom: 5px !important;
+}
+code {
+  background-color: lightgrey;
+  border: none;
+  color: black;
+  font-family: monospace;
+}
+.content > .map {
+  position: relative;  
+  width: 100%;
+  height: 400px;
+  background-color: lightgrey;
+  margin: 0;
+  padding: 0;
+}
+.content > .multi-map {
+  width: calc(50% - 43px);
+  height: 400px;
+  background-color: lightgrey;
+  margin: 0px 20px 20px 20px;
+  padding: 0;
+}
+
+.content > .columns > .left > .map {
+    position: relative;
+    min-height: 200px;
+}
+
+@media screen and (max-width: 850px) {
+  .content > .multi-map {
+      margin: 15px 0 0 0;
+      width: 100%;
+  }
+}
+
+
+
+
+/**examples**/
+.example-wrap {
+  box-sizing: border-box;
+  min-height: 1px;
+  padding: 0;
+  position: relative;
+}
+a.example {
+  background-color: #0000dc;
+  border: solid 1px #0000dc;
+  color: #fff;
+  display: block;
+  height: 125px;
+  margin: 10px;
+  overflow: auto;
+  padding: 15px;
+}
+a.example:hover {
+  background-color: #fff; 
+  color: #0000dc;
+}
+.example-name {
+  font-size: 20px;
+  font-weight: bold;
+  display: block;
+  padding: 20px 0;
+}
+
+/***quickstart example styles***/
+.page-title {
+  text-transform: uppercase;
+}
+
+.guide-step {
+  margin-top: 40px;
+}
+.guide-step-title {
+}
+.guide-step-name {
+  font-size: 20px; 
+  font-weight: bold; 
+}
+.guide-step-number {
+  margin-right: 5px;
+  text-transform: uppercase;
+}
+
+
+/**styles for windows of a greater width**/
+@media (min-width: 800px) {
+  .example-wrap {
+    float: left;
+    width: 33.33333%;
+  }
+  .example-name {
+    padding: 10px 0;
+  }
+}
+
+@media (min-width: 1092px) {
+  .example-name {
+    padding: 20px 0;
+  }
+}

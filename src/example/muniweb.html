@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link href="../css/example/muniweb.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="../css/munimap.css" media="all" rel="stylesheet" type="text/css" />
+    
+    <link rel='shortcut icon' type='image/x-icon' href='../img/favicon.ico' />
+
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    
+    <title>munimap - příklady map</title>
+
+    <!-- Start Matomo Code -->
+    <script>
+        var _paq = window._paq = window._paq || [];
+        _paq.push(['disableCookies']);
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+          var u="//analytics.ics.muni.cz/";
+          _paq.push(['setTrackerUrl', u+'matomo.php']);
+          _paq.push(['setSiteId', '90']);
+          var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+          g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+      </script>
+      <!-- End Matomo Code -->
+  </head>
+
+  <body style="padding: 0; font-size: 18px;">
+    <div class="header">
+    <img src="../img/logo_muni.svg" alt="Masarykova univerzita" title="Masarykova univerzita">
+    </div>
+    <h1><a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> - příklady map pro testování</h1>
+    <div class="munimap-warning-wrapper <%= warningWrapperClass %>">
+    <div class="munimap-warning">
+        <span class="munimap-warning">Upozornění</span> Toto je starší verze (<%= appVersion %>) munimapu. Doporučujeme použít <a href="/munimap/latest/example/test_examples.html">nejnovější verzi</a>.
+    </div>
+    </div>
+    <div class="separator-solid">
+    </div>
+
+    <div class="navigation">
+        <div class="left">
+            <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>příklady map pro testování</span>
+        </div>
+    </div>
+
+
+<!-- web MUNI -->
+
+    <h4 style="font-size: 24px; margin-top: 20px; margin-left: 20px; color: #0000dc;">MAPA muni.cz</h4>
+    <ul style="color: #0000dc; margin-bottom: 50px;">
+        <li style="margin-left: 20px;">velikost mapy se mění podle velikosti okna</li>
+        <li style="margin-left: 20px;">rozměry nastaveny přes parametry 'width' a 'height' a reagují na změnu okna pomocí klíčového slova media</li>
+        <li style="margin-left: 20px;">rozložení obsahu na grid</li>
+        <li style="margin-left: 20px;">stisknutím tlačítka 'REKTORÁT' se provede reset mapy</li>
+    </ul>
+
+    <main class="main">
+        <div class="box-map-1">
+            <div class="box-map-2">
+                <div class="main-row">
+                    <div class="grid">
+                        <div class="grid grid-cell-1">
+                            <div id="map-muni" class="map-muni"></div>
+                        </div>
+                        <div class="grid grid-cell-2">
+                            <div class="list-container">
+                                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Integer pellentesque quam vel velit. Nunc tincidunt ante vitae massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nulla quis diam. Nunc dapibus tortor vel mi dapibus sollicitudin. Nulla turpis magna, cursus sit amet, suscipit a, interdum id, felis. Aenean vel massa quis mauris vehicula lacinia. Suspendisse sagittis ultrices augue. Mauris tincidunt sem sed arcu. Fusce nibh. Nulla est. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Praesent in mauris eu tortor porttitor accumsan. Maecenas fermentum, sem in pharetra pellentesque, velit turpis volutpat ante, in pharetra metus odio a lectus. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Integer pellentesque quam vel velit. Nunc tincidunt ante vitae massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nulla quis diam. Nunc dapibus tortor vel mi dapibus sollicitudin. Nulla turpis magna, cursus sit amet, suscipit a, interdum id, felis.</p>
+                                <p class="center"> 
+                                    <a id="reset-button" class="reset-button">
+                                        <span class="button-style">Rektorát</span>
+                                    </a>   
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <div class="separator-solid">
+    </div>
+
+
+<!-- UVT -->
+
+    <h4 style="font-size: 24px; margin-top: 20px; margin-left: 20px; color: #0000dc;">MAPA ÚVT</h4>
+    <ul style="color: #0000dc; margin-bottom: 50px;">
+        <li style="margin-left: 20px;">příklad "běžného" použití munimapu na webových stránkách</li>
+        <li style="margin-left: 20px;">velikost mapy se nastavuje pomocí parametru 'padding-top'</li>
+        <li style="margin-left: 20px;">stejné rozložení obsahu jako u muni.cz mapy</li>
+        <li style="margin-left: 20px;">obsahuje všechna dostupná tlačítka</li>
+    </ul>
+
+    <main class="main">
+        <div class="main-row">
+            <div class="grid">
+                <div class="grid-cell-3">
+                    <div class="uvt-list">
+                        <h4 style="font-size: 24px;">CENTRUM ŠUMAVSKÁ</h4>
+                        <p><span>Šumavská 416/15, budova A a B</span></p>
+                        <ul>
+                            <li>tramvajové linky 1, 6 (zastávka Hrnčířská), 12 (zastávka Klusáčkova)</li>
+                            <li>trolejbusové linky 32 (zastávka Botanická), 34, 36 (zastávka Klusáčkova)</li>
+                            <li>autobus 81 (zastávka Klusáčkova).</li>
+                            <li>k parkování lze po předchozí domluvě využít dvě místa na parkovišti vedle budovy Centrum Šumavská, popřípadě volná místa v modré zóně (do 17 hodin zdarma) </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="grid-cell-4">
+                    <div class="map-container-uvt">
+                        <div id="map-uvt" class="map-uvt"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <div class="separator-solid">
+    </div>
+
+
+<!-- UKB -->
+
+    <h4 style="font-size: 24px; margin-top: 20px; margin-left: 20px; color: #0000dc;">MAPA UKB</h4>
+    <ul style="color: #0000dc; margin-bottom: 50px;">
+        <li style="margin-left: 20px;">mapa je aktivní až po kliknutí</li>
+        <li style="margin-left: 20px;">velikost mapy se nastavuje pomocí parametru 'padding-top'</li>
+        <li style="margin-left: 20px;">může nastat situace, že je mapa moc nízká a tím pádem se schovají Map Tools</li>
+        <li style="margin-left: 20px;">oproti běžnému použití, je mapa přes celou obrazovku a má jinou podkladovou mapu</li>
+    </ul>
+
+    <div class="ukb-map">
+        <div class="map-container-ukb">
+            <div id="map-ukb" class="map-ukb"></div>
+        </div>
+    </div>
+
+
+    <div class="navigation">
+        <div class="left">
+            <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>příklady map pro testování</span>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="left" style="margin-left: 20px;">
+            Kontakt: <a href="mailto:gishelp%40ics.muni.cz">gishelp&#064;ics.muni.cz</a>
+        </div>
+        <div class="right">
+            <a href="http://www.ics.muni.cz/" target="_blank"><img class="logo-uvt" src="../img/logo_ics.png" alt="Ústav výpočetní techniky MU" title="Ústav výpočetní techniky MU"></a>
+        </div>
+      </div>
+
+
+    <script type="text/javascript">
+    const map_promise_muni = munimap.create({
+            target: 'map-muni',
+            lang: 'cs',
+            markers: [],
+            zoomTo: [],
+            pubTran: true,
+            loadingMessage: false
+    }).then(function(map) {
+        var button = document.getElementById('reset-button');
+        button.onclick = function() {
+            munimap.reset(map, {
+                lang: 'cs',
+                markers: ["BMA01","BMB01"],
+                zoomTo: ["BMA01","BMB01"],
+                pubTran: true,
+                loadingMessage: false
+            }).then(function (map) { window.mapDiv = map;});
+        };
+        return map;
+    });
+
+    munimap.create({
+        target: 'map-uvt',
+        zoom: '13',
+        markers: ['BNA02'],
+        mapLinks: true,
+        baseMap: 'arcgis-bw',
+        lang: 'cs',
+        pubTran: true,
+        labels: true,
+        simpleScroll: false,
+        loadingMessage: false
+    }).then(function (map) { window.mapDiv = map; });
+
+    munimap.create({
+        target: 'map-ukb',
+        zoom: '17',
+        markers: [new munimap.ol.Feature({
+            geometry: new munimap.ol.geom.Point([
+                16.569055658303,
+                49.177133037659175
+            ]),
+            label: 'Správa Univerzitního kampusu Bohunice',
+            detail: '<p>Správa Univerzitního kampusu Bohunice</p>'
+        }),],
+        mapLinks: true,
+        baseMap: 'arcgis',
+        lang: 'cs',
+        pubTran: true,
+        labels: true,
+        simpleScroll: false,
+        loadingMessage: false
+    }).then(function (map) { window.mapDiv = map; });
+
+
+
+    </script>
+  </body>
+</html>

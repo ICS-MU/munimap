@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link href="../css/example/example.css" media="all" rel="stylesheet" type="text/css" />
+    
+    <link href="../css/munimap.css" media="all" rel="stylesheet" type="text/css" />
+    <link rel='shortcut icon' type='image/x-icon' href='../img/favicon.ico' />
+
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    
+    <title>munimap - úprava popisků zvýrazněných místností</title>
+
+    <!-- Start Matomo Code -->
+    <script>
+      var _paq = window._paq = window._paq || [];
+      _paq.push(['disableCookies']);
+      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="//analytics.ics.muni.cz/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '90']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+      })();
+    </script>
+    <!-- End Matomo Code -->
+  </head>
+
+  <body>
+    <div class="header">
+      <img src="../img/logo_muni.svg" alt="Masarykova univerzita" title="Masarykova univerzita">
+    </div>
+    <h1><a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> - úprava popisků zvýrazněných místností</h1>
+    <div class="munimap-warning-wrapper <%= warningWrapperClass %>">
+      <div class="munimap-warning">
+        <span class="munimap-warning">Upozornění</span> Toto je starší verze (<%= appVersion %>) munimapu. Doporučujeme použít <a href="/munimap/latest/example/markerlabel.html">nejnovější verzi</a>.
+      </div>
+    </div>
+    <div class="separator-solid">
+    </div>
+    <div class="navigation">
+      <div class="left">
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>úprava popisků zvýrazněných místností</span>
+      </div>
+    </div>
+    <div class="content">
+      <div id="map" class="map"></div>
+    </div>
+    <div class="content">
+      <p>
+        U zvýrazněných objektů (budov, místností) v mapě, které definujeme pomocí parametru <code><a href="../doc/#markers">markers</a></code>, můžeme zobrazit vlastní popisky. V tomto příkladu se jedná 
+        o zobrazení místností studijních oddělení a přiřazení odpovídajících popisků. To provedeme pomocí parametru <code><a href="../doc/#markerLabel">markerLabel</a></code>. Parametr představuje funkci, která 
+        pro konkrétní místnost vrátí její popisek, tedy pro místnost s polohovým kódem 'BVB02N01015b' vrátí 'Doktorské studium' a pro místnost 'BVB02N01007' vrátí 'Studijní oddělení'.       
+      </p>      
+      <pre class="prettyprint">
+&lt;script type="text/javascript"&gt;
+  /**
+   * @param {ol.Feature|ol.render.Feature} feature
+   * @param {number} resolution
+   * @return {string|null|undefined}
+   */
+      var markerLabel = function(feature, resolution) {
+        var locCode = /**@type (string)*/ (feature.get('polohKod'));
+        var title;
+          switch (locCode) {
+            case 'BVB02N01015b':
+            title = 'Doktorské studium';
+              break;
+            case 'BVB02N01007':
+            title = 'Studijní oddělení';
+              break;
+          }
+        return title;      
+      };
+
+  munimap.create({
+    target: 'map',
+    zoom: 20,
+    markers: ['BVB02N01015b', 'BVB02N01007'],
+    markerLabel: markerLabel
+  });
+&lt;/script&gt;
+      </pre>
+      <p>
+        V příkladu použité parametry funkce <code><a href="../doc/#create">munimap.create</a></code> jsou následující:
+      </p>
+      <ul>
+        <li><code><a href="../doc/#target">target</a></code> - určuje id elementu, do kterého se mapa vykreslí</li>
+        <li><code><a href="../doc/#zoom">zoom</a></code> - určuje úroveň přiblížení mapy po načtení stránky</li>
+        <li><code><a href="../doc/#markers">markers</a></code> - určuje, která místnost či místnosti se v mapě označí a mapa se na ně vycentruje</li>
+        <li><code><a href="../doc/#markerLabel">markerLabel</a></code> - definuje funkci pro zobrazení vlastních popisků budov a místností</li>
+      </ul>
+      <p>
+        Parametr <code>markers</code> akceptuje polohový kód místnosti (nebo jejich seznam oddělený čárkou).
+        Tyto polohové kódy můžete k jednotlivým místnostem dohledat například v aplikaci
+        <a href="https://maps.muni.cz/kompas" target="_blank">Kompas</a>.
+      </p>
+      <p>
+        Více se dozvíte v naší <a href="../doc/">dokumentaci</a>.
+      </p>            
+    </div>
+    <div class="navigation">
+      <div class="left">
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>úprava popisků zvýrazněných místností</span>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="left">
+        Kontakt: <a href="mailto:gishelp%40ics.muni.cz">gishelp&#064;ics.muni.cz</a>
+      </div>
+       
+      <div class="right">
+        <a href="http://www.ics.muni.cz/" target="_blank"><img class="logo-uvt" src="../img/logo_ics.png" alt="Ústav výpočetní techniky MU" title="Ústav výpočetní techniky MU"></a>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      /**
+       * @param {ol.Feature|ol.render.Feature} feature
+       * @param {number} resolution
+       * @return {string|null|undefined}
+       */
+      var markerLabel = function(feature, resolution) {
+        var locCode = /**@type (string)*/ (feature.get('polohKod'));
+        var title;
+          switch (locCode) {
+            case 'BVB02N01015b':
+            title = 'Doktorské studium';
+              break;
+            case 'BVB02N01007':
+            title = 'Studijní oddělení';
+              break;
+          }
+        return title;      
+      };
+
+      const map_promise = munimap.create({
+        target: 'map',
+        zoom: 20,
+        markers: ['BVB02N01015b', 'BVB02N01007'],
+        markerLabel: markerLabel
+      });
+    </script>
+  
+  </body>
+</html>

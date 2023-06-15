@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link href="../css/example/example.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="../css/munimap.css" media="all" rel="stylesheet" type="text/css" />
+    
+    <link rel='shortcut icon' type='image/x-icon' href='../img/favicon.ico' />
+
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    
+    <title>munimap - změna jazyka</title>
+
+    <!-- Start Matomo Code -->
+    <script>
+      var _paq = window._paq = window._paq || [];
+      _paq.push(['disableCookies']);
+      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="//analytics.ics.muni.cz/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '90']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+      })();
+    </script>
+    <!-- End Matomo Code -->
+  </head>
+
+  <body>
+    <div class="header">
+      <img src="../img/logo_muni.svg" alt="Masarykova univerzita" title="Masarykova univerzita">
+    </div>
+    <h1><a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> - změna jazyka</h1>
+    <div class="munimap-warning-wrapper <%= warningWrapperClass %>">
+      <div class="munimap-warning">
+        <span class="munimap-warning">Upozornění</span> Toto je starší verze (<%= appVersion %>) munimapu. Doporučujeme použít <a href="/munimap/latest/example/language.html">nejnovější verzi</a>.
+      </div>
+    </div>
+    <div class="separator-solid">
+    </div>
+    <div class="navigation">
+      <div class="left">
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>změna jazyka</span>
+      </div>
+    </div>
+    <div class="content">
+      <div id="map" class="map"></div>
+    </div>
+    <div class="content">
+      <p>
+        Mapové okno vytvořené pomocí knihovny munimap může být prezentováno v češtině a angličtině. Jazyk, který je
+        použit pro zobrazení popisků a názvů nástrojů v mapě, si vyberete pomocí parametru <code><a href="../doc/#lang">lang</a></code> funkce
+        <code><a href="../doc/#create">munimap.create</a></code>. Pro češtinu použijte
+        jako hodnotu tohoto parametru řetězec <code>cs</code> a pro angličtinu <code>en</code>:
+      </p>
+      <pre class="prettyprint">
+&lt;script type="text/javascript"&gt;
+  munimap.create({
+    target: 'map',
+    lang: 'en'
+  });
+&lt;/script&gt;
+      </pre>
+      <p>
+        Změnu jazyka můžete ověřit například v bublinovém popisku tlačítek pro přiblížení
+        a oddálení mapy.
+      </p>
+      <p>
+        V příkladu použité parametry funkce <code><a href="../doc/#create">munimap.create</a></code> jsou následující:
+      </p>
+      <ul>
+        <li><code><a href="../doc/#target">target</a></code> - určuje id elementu, do kterého se mapa vykreslí</li>
+        <li><code><a href="../doc/#lang">lang</a></code> - umožňuje přepínat mezi českými a anglickými popisy v mapě</li>
+      </ul>      
+      <p>
+        Více se dozvíte v naší <a href="../doc/">dokumentaci</a>.
+      </p>      
+    </div>
+    <div class="navigation">
+      <div class="left">
+        <a href="../"><span class="munimap-logo"><span class="muni">muni</span><span class="map">map</span></span></a> &gt; <a href="index.html">příklady použití</a> &gt; <span>změna jazyka</span>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="left">
+        Kontakt: <a href="mailto:gishelp%40ics.muni.cz">gishelp&#064;ics.muni.cz</a>
+      </div>
+       
+      <div class="right">
+        <a href="http://www.ics.muni.cz/" target="_blank"><img class="logo-uvt" src="../img/logo_ics.png" alt="Ústav výpočetní techniky MU" title="Ústav výpočetní techniky MU"></a>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      const map_promise = munimap.create({
+        target: 'map',
+        lang: 'en'
+      });
+    </script>
+  
+  </body>
+</html>
