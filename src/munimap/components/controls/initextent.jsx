@@ -85,7 +85,10 @@ const InitExtentComponent = forwardRef((props, ref) => {
       onClick={onInitExtentClick}
       ref={initExtentElRef}
     >
-      <button title={mm_lang.getMsg(mm_lang.Translations.INITIAL_EXTENT, lang)}>
+      <button
+        title={mm_lang.getMsg(mm_lang.Translations.INITIAL_EXTENT, lang)}
+        type="button"
+      >
         <i className="munimap-home">&#x2302;</i>
       </button>
     </div>
