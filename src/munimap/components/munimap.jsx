@@ -312,13 +312,13 @@ const MunimapComponent = (props) => {
     <>
       <MapContext.Provider value={mapRef}>
         <ErrorBoundary>
-          {addMsg && !map && <LoadingMessage />}
           <div
             className="munimap"
             onBlur={onBlur}
             tabIndex={hasInvalidCodes || shouldBlockMap ? 0 : undefined}
             ref={munimapElRef}
           >
+            {addMsg && !map && <LoadingMessage />}
             <div ref={munimapTargetElRef} className="map-target">
               {tooltipProps && (
                 <Tooltip
@@ -330,10 +330,10 @@ const MunimapComponent = (props) => {
               <Popup />
               {map && <Controls />}
             </div>
+            {areMarkersLoaded && areZoomToLoaded && (
+              <ErrorMessage onClick={onErrorClick} />
+            )}
           </div>
-          {areMarkersLoaded && areZoomToLoaded && (
-            <ErrorMessage onClick={onErrorClick} />
-          )}
         </ErrorBoundary>
       </MapContext.Provider>
     </>
