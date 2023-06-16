@@ -38,8 +38,7 @@ li {
 
 #map-example {
   margin: 0 5px;
-  min-height: 300px;
-  position: relative;
+  height: 300px;
 }
 
 /** munimap-logo **/
