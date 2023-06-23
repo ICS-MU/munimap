@@ -497,6 +497,7 @@
   line-height: 0;
   font-family: Arial, Helvetica Neue, sans-serif;
   font-size: 1.14em;
+  min-height: initial; /*IS MU - CSS collision */
 }
 
 .ol-control button:focus {
