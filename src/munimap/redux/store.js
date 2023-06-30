@@ -14,10 +14,12 @@ const createStore = (initialState) => {
   const reducer = createReducer(initialState);
   const w = /** @type any */ (window);
 
+  const enableDevtools = !PRODUCTION || APP_PATH.includes('testing');
   const reduxToolsExt =
     w.__REDUX_DEVTOOLS_EXTENSION__ && w.__REDUX_DEVTOOLS_EXTENSION__();
+
   let enhancer;
-  if (reduxToolsExt) {
+  if (reduxToolsExt && enableDevtools) {
     enhancer = redux.compose(
       redux.applyMiddleware(asyncDispatchMiddleware),
       w.__REDUX_DEVTOOLS_EXTENSION__ && w.__REDUX_DEVTOOLS_EXTENSION__()
